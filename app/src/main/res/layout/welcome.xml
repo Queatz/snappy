@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/welcome"
+        android:scaleType="centerCrop"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.queatz.snappy.ui.TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            android:layout_gravity="center_horizontal"
+            android:text="Welcome to"
+            android:textColor="#fff8f8f8"
+            android:gravity="center_horizontal"
+            android:textSize="32dp"
+            android:textIsSelectable="false"
+            android:layout_marginTop="32dp"
+            android:layout_weight="0"
+            android:textStyle="bold" />
+
+        <com.queatz.snappy.ui.TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView2"
+            android:layout_gravity="center_horizontal"
+            android:text="SNAPPY"
+            android:textColor="#ff000000"
+            android:gravity="center_horizontal"
+            android:textSize="48dp"
+            android:layout_marginBottom="32dp"
+            android:layout_weight="0" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/rocket"
+            android:layout_weight="1" />
+
+        <com.queatz.snappy.ui.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/signin_buttom"
+            android:cropToPadding="false"
+            android:scaleType="centerInside"
+            android:background="@android:color/transparent"
+            android:layout_weight="0"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+</RelativeLayout>
