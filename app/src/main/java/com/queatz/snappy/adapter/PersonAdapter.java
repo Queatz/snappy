@@ -4,15 +4,16 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 
-import com.queatz.snappy.fragment.Into;
-import com.queatz.snappy.fragment.Upto;
+import com.queatz.snappy.fragment.PersonInto;
+import com.queatz.snappy.fragment.PersonUpto;
 import com.queatz.snappy.ui.SlideScreen;
+import com.queatz.snappy.ui.SlideScreen.SlideScreenAdapter;
 
 /**
- * Created by jacob on 10/19/14.
+ * Created by jacob on 10/23/14.
  */
-public class MainAdapter extends SlideScreen.SlideScreenAdapter {
-    public MainAdapter(FragmentManager fragmentManager) {
+public class PersonAdapter extends SlideScreen.SlideScreenAdapter {
+    public PersonAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
 
@@ -23,9 +24,9 @@ public class MainAdapter extends SlideScreen.SlideScreenAdapter {
     public Fragment getSlide(int page) {
         switch (page) {
             case 0:
-                return new Upto();
+                return new PersonUpto();
             case 1:
-                return new Into();
+                return new PersonInto();
             default:
                 return null;
         }

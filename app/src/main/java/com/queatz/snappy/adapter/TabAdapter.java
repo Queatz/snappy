@@ -7,7 +7,7 @@ import com.queatz.snappy.ui.ActionBar;
 /**
  * Created by jacob on 10/19/14.
  */
-public class TabAdapter implements ActionBar.TabAdapter {
+public class TabAdapter extends ActionBar.TabAdapter {
     Context mContext;
 
     public TabAdapter(Context context) {

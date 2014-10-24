@@ -22,9 +22,9 @@ public class ActionBar extends FrameLayout {
         public void onPageChange(int page);
     }
 
-    public interface TabAdapter {
-        public int getCount();
-        public String getTabName(int tab);
+    public abstract static class TabAdapter {
+        public abstract int getCount();
+        public abstract String getTabName(int tab);
     }
 
     private ViewGroup mTabBar;
@@ -78,9 +78,8 @@ public class ActionBar extends FrameLayout {
 
     @Override
     protected void onLayout(boolean b, int i, int i1, int i2, int i3) {
-        super.onLayout(b, i, i1, i2, i3);
-
         setSlide(mSlidePosition);
+        super.onLayout(b, i, i1, i2, i3);
     }
 
     public void setTitle(String title) {
@@ -133,12 +132,14 @@ public class ActionBar extends FrameLayout {
         mOnPageChangeListener = a;
     }
 
-    public void setPage(int page) {
-        setSlide(page);
-
+    public void selectPage(int page) {
         for(int x = 0; x < mTabBar.getChildCount(); x++) {
             ((TextView) mTabBar.getChildAt(x)).setTextColor(getResources().getColor(page == x ? R.color.red : R.color.info));
         }
+    }
+
+    public void setPage(int page) {
+        selectPage(page);
 
         if(mOnPageChangeListener != null) {
             mOnPageChangeListener.onPageChange(page);
@@ -152,23 +153,32 @@ public class ActionBar extends FrameLayout {
         mSlidePosition = f;
 
         int t1 = (int) Math.floor(mSlidePosition);
-        float offset = mSlidePosition - t1;
+        float offset = mSlidePosition - (float) t1;
 
         if(t1 >= mTabBar.getChildCount()) {
             t1 = mTabBar.getChildCount() - 1;
-            offset = 0f;
+            offset = 0.0f;
+        }
+
+        if(t1 < 0) {
+            t1 = 0;
+            offset = 0.0f;
         }
 
         View v1 = mTabBar.getChildAt(t1);
         View v2 = mTabBar.getChildAt(t1 == mTabBar.getChildCount() - 1 ? t1 : t1 + 1);
+
+        if(v1 == null || v2 == null)
+            return;
+
         float x1 = v1.getLeft() + v1.getPaddingLeft();
         float x2 = v2.getLeft() + v2.getPaddingLeft();
         float w1 = v1.getWidth() - v1.getPaddingLeft() - v1.getPaddingRight();
         float w2 = v2.getWidth() - v2.getPaddingLeft() - v2.getPaddingRight();
 
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mSlider.getLayoutParams();
-        lp.width = (int) (w1 * (1f - offset) + w2 * offset);
-        lp.leftMargin = ((View) mTabBar.getParent()).getLeft() + (int) (x1 + x2 * offset);
+        lp.width = (int) (w1 * (1.0f - offset) + w2 * offset);
+        lp.leftMargin = ((View) mTabBar.getParent()).getLeft() + (int) (x1 * (1.0f - offset) + x2 * offset);
         mSlider.setLayoutParams(lp);
     }
 }

@@ -3,6 +3,10 @@ package com.queatz.snappy.activity;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.transition.Fade;
+import android.view.animation.Animation;
+
+import com.queatz.snappy.R;
 
 /**
  * Created by jacob on 10/19/14.
@@ -14,9 +18,9 @@ public class ViewActivity extends Activity {
         current = fragment;
 
         if(fragment != null) {
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(android.R.id.content, fragment);
-            transaction.commit();
+            getFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, fragment)
+                    .commit();
         }
     }
 }
