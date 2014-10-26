@@ -9,8 +9,9 @@ import android.view.ViewGroup;
 import com.queatz.snappy.MainActivity;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
+import com.queatz.snappy.activity.ViewActivity;
+import com.queatz.snappy.adapter.PeopleTabAdapter;
 import com.queatz.snappy.adapter.PersonAdapter;
-import com.queatz.snappy.adapter.TabAdapter;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.ui.ActionBar;
 import com.queatz.snappy.ui.SlideScreen;
@@ -32,18 +33,18 @@ public class Person extends Fragment {
         View view = inflater.inflate(R.layout.person, container, false);
 
         mActionBar = (ActionBar) view.findViewById(R.id.actionBar);
-        mActionBar.setAdapter(new TabAdapter(getActivity()));
+        mActionBar.setAdapter(new PeopleTabAdapter(getActivity()));
         mActionBar.setTitle("Amanda Zhang");
         mActionBar.setLeftContent(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Team team = ((MainApplication) getActivity().getApplication()).team;
 
-                team.view.show(((MainActivity) team.view).mMainView);
+                team.view.pop(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.IN_THE_VOID);
             }
         });
 
-        mSlideScreen = (SlideScreen) view.findViewById(R.id.content);
+        mSlideScreen = (SlideScreen) view.findViewById(R.id.person_content);
         mSlideScreen.setAdapter(new PersonAdapter(getFragmentManager()));
         mSlideScreen.setOnSlideCallback(new SlideScreen.OnSlideCallback() {
             @Override

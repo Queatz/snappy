@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -11,6 +12,8 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.queatz.snappy.MainActivity;
+import com.queatz.snappy.activity.ViewActivity;
+import com.queatz.snappy.transition.Transition;
 
 /**
  * Created by jacob on 10/19/14.
@@ -44,7 +47,26 @@ public class Auth implements
         return mGoogleApiClient.isConnected();
     }
 
+    public void showMain() {
+        team.view.pop(ViewActivity.Transition.GRAND_REVEAL, null, new ViewActivity.OnCompleteCallback() {
+            @Override
+            public void onComplete() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        team.view.push(ViewActivity.Transition.SPACE_GAME, null, ((MainActivity) team.view).mMainView);
+                    }
+                }, 1000);
+            }
+        });
+    }
+
     public void signin() {
+        if(mGoogleApiClient.isConnected()) {
+            showMain();
+            return;
+        }
+
         mGoogleApiClient.connect();
     }
 
@@ -82,7 +104,7 @@ public class Auth implements
     public void onConnected(Bundle connectionHint) {
         Log.i(TAG, "GoogleApiClient connected");
 
-        team.view.show(((MainActivity) team.view).mMainView);
+        showMain();
     }
 
     @Override

@@ -5,20 +5,20 @@ import android.content.Context;
 import com.queatz.snappy.ui.ActionBar;
 
 /**
- * Created by jacob on 10/19/14.
+ * Created by jacob on 10/25/14.
  */
-public class TabAdapter extends ActionBar.TabAdapter {
+public class MainTabAdapter extends ActionBar.TabAdapter {
     Context mContext;
 
-    public TabAdapter(Context context) {
+    public MainTabAdapter(Context context) {
         mContext = context;
     }
 
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     public String getTabName(int i) {
-        return i == 0 ? "Upto" : "Into";
+        return new String[]{"Explore", "Search", "Messages"}[i];
     }
 }

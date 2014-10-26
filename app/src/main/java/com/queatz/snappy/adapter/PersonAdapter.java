@@ -2,12 +2,11 @@ package com.queatz.snappy.adapter;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 
-import com.queatz.snappy.fragment.PersonInto;
-import com.queatz.snappy.fragment.PersonUpto;
+import com.queatz.snappy.fragment.MessagesSlide;
+import com.queatz.snappy.fragment.PersonIntoSlide;
+import com.queatz.snappy.fragment.PersonUptoSlide;
 import com.queatz.snappy.ui.SlideScreen;
-import com.queatz.snappy.ui.SlideScreen.SlideScreenAdapter;
 
 /**
  * Created by jacob on 10/23/14.
@@ -18,15 +17,17 @@ public class PersonAdapter extends SlideScreen.SlideScreenAdapter {
     }
 
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     public Fragment getSlide(int page) {
         switch (page) {
             case 0:
-                return new PersonUpto();
+                return new PersonUptoSlide();
             case 1:
-                return new PersonInto();
+                return new PersonIntoSlide();
+            case 2:
+                return new MessagesSlide();
             default:
                 return null;
         }

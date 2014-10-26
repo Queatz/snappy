@@ -15,6 +15,10 @@ android {
     signingConfigs {
         debug {
             storeFile file("/home/jacob/Documents/android-studio/android.jks")
+        }
+
+        release {
+            storeFile file("/home/jacob/Documents/android-studio/android.jks")
             storePassword "256Raccoons!"
             keyAlias "android"
             keyPassword "android"
@@ -23,8 +27,10 @@ android {
 
     buildTypes {
         release {
+            debuggable false
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 

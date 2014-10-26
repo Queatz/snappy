@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import com.queatz.snappy.R;
 
 /**
- * Created by jacob on 10/19/14.
+ * Created by jacob on 10/26/14.
  */
-public class Into extends Fragment {
+public class MessagesSlide extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,7 +19,7 @@ public class Into extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.into, container, false);
+        View view = inflater.inflate(R.layout.messages, container, false);
 
         return view;
     }

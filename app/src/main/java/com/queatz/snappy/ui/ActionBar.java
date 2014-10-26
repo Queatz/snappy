@@ -118,11 +118,7 @@ public class ActionBar extends FrameLayout {
             tab.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    setPage(_x); // XX just for fun for now, really is handled by SlideScreen
-
-                    if(mOnPageChangeListener != null) {
-                        mOnPageChangeListener.onPageChange(_x);
-                    }
+                    setPage(_x);
                 }
             });
         }
@@ -133,6 +129,7 @@ public class ActionBar extends FrameLayout {
     }
 
     public void selectPage(int page) {
+        page = Math.max(0, Math.min(mTabAdapter.getCount() - 1, page));
         for(int x = 0; x < mTabBar.getChildCount(); x++) {
             ((TextView) mTabBar.getChildAt(x)).setTextColor(getResources().getColor(page == x ? R.color.red : R.color.info));
         }

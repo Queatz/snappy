@@ -6,14 +6,11 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
-import java.lang.annotation.Documented;
 import java.util.Date;
 
 /**
@@ -97,7 +94,7 @@ public class SlideScreen extends ViewGroup {
         }
 
         public float interpolate(float dt) {
-            return (float) Math.abs(Math.sin(dt * Math.PI / 2f));
+            return (float) Math.abs((Math.sin((dt - .5) * Math.PI) + 1) / 2f);
         }
 
         public float getDelta() {
@@ -221,6 +218,9 @@ public class SlideScreen extends ViewGroup {
         for(int c = 0; c < getChildCount(); c++) {
             View view = getChildAt(c);
             SlideAsChild child = slideFromView(view);
+
+            if(child == null)
+                continue;
 
             view.setVisibility(child.position < fr || child.position > to ? View.GONE : View.VISIBLE);
             int l = width * child.position - (int) (mOffset * (float) getWidth());

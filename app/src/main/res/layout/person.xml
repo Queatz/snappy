@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.queatz.snappy.ui.ActionBar
@@ -10,7 +11,7 @@
         android:layout_height="wrap_content" />
 
     <com.queatz.snappy.ui.SlideScreen
-        android:id="@+id/content"
+        android:id="@+id/person_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

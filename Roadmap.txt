@@ -1,17 +1,8 @@
-1. Make app
+fun:
+Helping page slide, exact from start + a little speed
+Make intos clickable fade gray
+profile pic sliding
 
-
-
-
-
-
-
-
-
-
-Later:
-
-
-
-
-88. Make backend
+fix:
+It crashed to do with going back into the app
+Crashes when a fragment is animating out and is opened again (fragment already added)

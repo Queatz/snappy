@@ -54,6 +54,6 @@ public class MainActivity extends ViewActivity {
     // Functions
 
     public void showStartView() {
-        show(team.auth.isSignedIn() ? mMainView : mSigninView);
+        replace(team.auth.isSignedIn() ? mMainView : mSigninView);
     }
 }

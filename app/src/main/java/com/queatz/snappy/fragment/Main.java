@@ -1,18 +1,17 @@
 package com.queatz.snappy.fragment;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.queatz.snappy.MainActivity;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
+import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.adapter.MainAdapter;
-import com.queatz.snappy.adapter.TabAdapter;
+import com.queatz.snappy.adapter.MainTabAdapter;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.ui.ActionBar;
 import com.queatz.snappy.ui.SlideScreen;
@@ -34,17 +33,17 @@ public class Main extends Fragment {
         View view = inflater.inflate(R.layout.main, container, false);
 
         mActionBar = (ActionBar) view.findViewById(R.id.actionBar);
-        mActionBar.setAdapter(new TabAdapter(getActivity()));
+        mActionBar.setAdapter(new MainTabAdapter(getActivity()));
         mActionBar.setRightContent(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Team team = ((MainApplication) getActivity().getApplication()).team;
 
-                team.view.show(((MainActivity) team.view).mPersonView);
+                team.view.push(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.IN_THE_VOID, ((MainActivity) team.view).mPersonView);
             }
         });
 
-        mSlideScreen = (SlideScreen) view.findViewById(R.id.content);
+        mSlideScreen = (SlideScreen) view.findViewById(R.id.main_content);
         mSlideScreen.setAdapter(new MainAdapter(getFragmentManager()));
 
         mSlideScreen.setOnSlideCallback(new SlideScreen.OnSlideCallback() {

@@ -27,6 +27,7 @@
                 <com.queatz.snappy.ui.TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
                     android:textSize="29sp"
                     android:textStyle="bold"
                     android:paddingLeft="32dp"
@@ -34,11 +35,13 @@
                     android:paddingBottom="16dp"
                     android:paddingTop="16dp"
                     android:textColor="@color/text"
+                    android:background="@drawable/into_background"
                     android:text="Fashion Journalism"/>
 
                 <com.queatz.snappy.ui.TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
                     android:textSize="29sp"
                     android:textStyle="bold"
                     android:paddingLeft="32dp"
@@ -46,11 +49,13 @@
                     android:paddingBottom="16dp"
                     android:paddingTop="16dp"
                     android:textColor="@color/text"
+                    android:background="@drawable/into_background"
                     android:text="Pearl Scouting"/>
 
                 <com.queatz.snappy.ui.TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
                     android:textSize="29sp"
                     android:textStyle="bold"
                     android:paddingLeft="32dp"
@@ -58,11 +63,13 @@
                     android:paddingBottom="16dp"
                     android:paddingTop="16dp"
                     android:textColor="@color/text"
+                    android:background="@drawable/into_background"
                     android:text="Bear Pups"/>
 
                 <com.queatz.snappy.ui.TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
                     android:textSize="29sp"
                     android:textStyle="bold"
                     android:paddingLeft="32dp"
@@ -70,11 +77,13 @@
                     android:paddingBottom="16dp"
                     android:paddingTop="16dp"
                     android:textColor="@color/text"
+                    android:background="@drawable/into_background"
                     android:text="Hair Beauty"/>
 
                 <com.queatz.snappy.ui.TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
                     android:textSize="29sp"
                     android:textStyle="bold"
                     android:paddingLeft="32dp"
@@ -82,11 +91,13 @@
                     android:paddingBottom="16dp"
                     android:paddingTop="16dp"
                     android:textColor="@color/text"
+                    android:background="@drawable/into_background"
                     android:text="Glamour"/>
 
                 <com.queatz.snappy.ui.TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
                     android:textSize="29sp"
                     android:textStyle="bold"
                     android:paddingLeft="32dp"
@@ -94,6 +105,7 @@
                     android:paddingBottom="16dp"
                     android:paddingTop="16dp"
                     android:textColor="@color/text"
+                    android:background="@drawable/into_background"
                     android:text="Violin"/>
 
             </LinearLayout>

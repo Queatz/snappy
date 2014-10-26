@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <objectAnimator
+        android:valueFrom="1"
+        android:valueTo=".75"
+        android:propertyName="scaleX"
+        android:interpolator="@android:interpolator/decelerate_quad"
+        android:duration="@integer/animation_speed" />
+
+    <objectAnimator
+        android:valueFrom="1"
+        android:valueTo=".75"
+        android:propertyName="scaleY"
+        android:interpolator="@android:interpolator/decelerate_quad"
+        android:duration="@integer/animation_speed" />
+
+    <objectAnimator
+        android:valueFrom="1"
+        android:valueTo="0"
+        android:propertyName="alpha"
+        android:interpolator="@android:interpolator/decelerate_quad"
+        android:duration="@integer/animation_speed" />
+
+</set>

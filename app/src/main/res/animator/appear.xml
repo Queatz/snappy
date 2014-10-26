@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <objectAnimator
+        android:valueFrom="1"
+        android:valueTo="0"
+        android:propertyName="xFraction"
+        android:interpolator="@android:interpolator/decelerate_quad"
+        android:duration="@integer/animation_speed" />
+
+</set>

@@ -24,7 +24,7 @@
             android:textColorHint="@color/gray"
             android:textSize="20sp"
             android:padding="12dp"
-            android:hint="Search"
+            android:hint="Into"
             android:textCursorDrawable="@drawable/red_carat"
             android:inputType="textCapWords"
             android:maxLines="1"
