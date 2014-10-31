@@ -20,14 +20,14 @@
             android:layout_gravity="top"
             android:gravity="top">
 
-            <RelativeLayout
+            <com.queatz.snappy.ui.SquareLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="0dp">
 
-                <com.queatz.snappy.ui.Photo
+                <com.queatz.snappy.ui.SlideScreen
+                    android:id="@+id/profileSlider"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:src="@drawable/upto_1"/>
+                    android:layout_height="match_parent"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -57,7 +57,7 @@
 
                 </LinearLayout>
 
-            </RelativeLayout>
+            </com.queatz.snappy.ui.SquareLayout>
 
             <LinearLayout
                 android:orientation="horizontal"

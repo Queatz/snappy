@@ -7,13 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.queatz.snappy.R;
-import com.queatz.snappy.adapter.ProfilePictureAdapter;
-import com.queatz.snappy.ui.SlideScreen;
 
 /**
  * Created by jacob on 10/23/14.
  */
-public class PersonUptoSlide extends Fragment {
+public class ProfilePictureSlide extends Fragment {
+    private int page;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,12 +21,12 @@ public class PersonUptoSlide extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.person_upto, container, false);
-
-        SlideScreen profileSlider = (SlideScreen) view.findViewById(R.id.profileSlider);
-
-        profileSlider.setAdapter(new ProfilePictureAdapter(getFragmentManager()));
+        View view = inflater.inflate(R.layout.person_upto_profile_picture, container, false);
 
         return view;
+    }
+
+    public void setPage(int page) {
+
     }
 }

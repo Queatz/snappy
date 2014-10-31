@@ -6,10 +6,13 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.queatz.snappy.Config;
 
 import java.util.Date;
 
@@ -127,6 +130,8 @@ public class SlideScreen extends ViewGroup {
     private SlideScreenAdapter mAdapter;
     private SlideAnimation mAnimation;
     private float mXFlingDelta;
+    private float mDownX, mDownY;
+    private boolean mSnatched;
 
     public SlideScreen(Context context) {
         super(context);
@@ -146,6 +151,7 @@ public class SlideScreen extends ViewGroup {
     private void init(Context context) {
         mContext = context;
         mSlides = new SparseArray<SlideAsChild>();
+        mSnatched = false;
     }
 
     public void setOnSlideCallback(OnSlideCallback onSlideCallback) {
@@ -168,7 +174,8 @@ public class SlideScreen extends ViewGroup {
         mAnimation = new SlideAnimation(this, slide);
         mAnimation.start();
 
-        mOnSlideCallback.onSlideChange(slide);
+        if(mOnSlideCallback != null)
+            mOnSlideCallback.onSlideChange(slide);
     }
 
     private void setOffset(float offset) {
@@ -181,7 +188,7 @@ public class SlideScreen extends ViewGroup {
         }
     }
 
-    private String getFragName(Object id, Object slide) {
+    private String getFragName(Object slide) {
         return "slidescreen:" + getId() + ":" + slide;
     }
 
@@ -193,7 +200,7 @@ public class SlideScreen extends ViewGroup {
         for(int slide = 0; slide < mAdapter.getCount(); slide++) {
             Fragment fragment = mAdapter.getSlide(slide);
             mSlides.append(slide, new SlideAsChild(slide, fragment));
-            transaction.add(getId(), fragment, getFragName(getId(), slide));
+            transaction.add(getId(), fragment, getFragName(slide));
         }
 
         transaction.commitAllowingStateLoss();
@@ -255,6 +262,7 @@ public class SlideScreen extends ViewGroup {
 
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
             mXFlingDelta = 0;
+            getParent().requestDisallowInterceptTouchEvent(true);
         }
         else if(event.getAction() == MotionEvent.ACTION_MOVE) {
             setOffset(mOffset - xdiff / getWidth());
@@ -268,6 +276,9 @@ public class SlideScreen extends ViewGroup {
             }
         }
         else if(event.getAction() == MotionEvent.ACTION_UP) {
+                getParent().requestDisallowInterceptTouchEvent(false);
+                mSnatched = false;
+
                 int slide;
 
                 if(Math.abs(mXFlingDelta) > 15) {
@@ -287,12 +298,33 @@ public class SlideScreen extends ViewGroup {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        if(event.getHistorySize() < 1)
-            return false;
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mDownX = event.getRawX();
+                mDownY = event.getRawY();
 
-        float xdif = event.getHistoricalX(event.getHistorySize() - 1) - event.getX();
-        float ydif = event.getHistoricalY(event.getHistorySize() - 1) - event.getY();
+                return false;
+            case MotionEvent.ACTION_MOVE:
+                if(mSnatched)
+                    return true;
 
-        return Math.abs(xdif) > Math.abs(ydif) && Math.abs(xdif) > 8;
+                float xdif = event.getRawX() - mDownX;
+                float ydif = event.getRawY() - mDownY;
+
+                boolean edged = (xdif < 0 && mSlide >= mAdapter.getCount() - 1) ||
+                        (xdif > 0 && mSlide <= 0);
+                boolean snatch = Math.abs(xdif) > Math.abs(ydif) && Math.abs(xdif) > 16 && !edged;
+
+                if(snatch) {
+                    getParent().requestDisallowInterceptTouchEvent(true);
+                    event.setAction(MotionEvent.ACTION_CANCEL);
+                }
+
+                mSnatched = snatch;
+
+                return snatch;
+            default:
+                return false;
+        }
     }
 }
