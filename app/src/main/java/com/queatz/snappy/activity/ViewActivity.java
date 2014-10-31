@@ -34,12 +34,24 @@ public class ViewActivity extends Activity {
         INSTANT
     }
 
+    private class BelowAbove {
+        public Transition below;
+        public Transition above;
+
+        public BelowAbove(Transition b, Transition a) {
+            below = b;
+            above = a;
+        }
+    }
+
+    private Stack<BelowAbove> belowAboves;
     private Stack<Fragment> fragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fragments = new Stack<Fragment>();
+        belowAboves = new Stack<BelowAbove>();
 
         setContentView(R.layout.activity);
     }
@@ -62,6 +74,8 @@ public class ViewActivity extends Activity {
                     .commit();
         }
 
+        belowAboves.push(new BelowAbove(transition2, transition));
+
         if(fragment != null) {
             getTransition(transition).fragment(fragment).in();
         }
@@ -78,6 +92,8 @@ public class ViewActivity extends Activity {
             transaction.remove(fragments.pop());
         }
 
+        belowAboves.clear();
+
         if(fragment != null) {
             transaction.add(R.id.activity, fragment);
         }
@@ -87,15 +103,28 @@ public class ViewActivity extends Activity {
         fragments.push(fragment);
     }
 
-    public void pop(Transition transition, Transition transition2) {
-        pop(transition, transition2, null);
+    public void setDeparture(Transition transition) {
+        belowAboves.push(new BelowAbove(transition, transition));
     }
 
-    public void pop(Transition transition, Transition transition2, final OnCompleteCallback onCompleteCallback) {
+    public void pop() {
+        pop(null);
+    }
+
+    public void pop(final OnCompleteCallback onCompleteCallback) {
         if(fragments.size() < 1)
             return;
 
-        getTransition(transition).fragment(fragments.pop()).onComplete(new com.queatz.snappy.transition.Transition.OnCompleteCallback() {
+        BelowAbove belowAbove;
+
+        if(belowAboves.size() > 0) {
+            belowAbove = belowAboves.pop();
+        }
+        else {
+            belowAbove = new BelowAbove(Transition.IN_THE_VOID, Transition.IN_THE_VOID);
+        }
+
+        getTransition(belowAbove.above).fragment(fragments.pop()).onComplete(new com.queatz.snappy.transition.Transition.OnCompleteCallback() {
             @Override
             public void onComplete(Fragment fragment) {
                 if(onCompleteCallback != null)
@@ -110,7 +139,7 @@ public class ViewActivity extends Activity {
         }).out();
 
         if(fragments.size() > 0) {
-            getTransition(transition2).fragment(fragments.lastElement()).in();
+            getTransition(belowAbove.below).fragment(fragments.lastElement()).in();
         }
     }
 
@@ -139,6 +168,12 @@ public class ViewActivity extends Activity {
             fragment.getView().bringToFront();
     }
 
+    public int getDepth() {
+        return fragments.size();
+
+
+    }
+
     @Override
     public void onBackPressed() {
         if(fragments.size() < 2) {
@@ -146,6 +181,6 @@ public class ViewActivity extends Activity {
             return;
         }
 
-        pop(Transition.IN_THE_VOID, Transition.IN_THE_VOID);
+        pop();
     }
 }

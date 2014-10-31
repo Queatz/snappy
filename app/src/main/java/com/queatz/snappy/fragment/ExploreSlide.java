@@ -25,14 +25,21 @@ public class ExploreSlide extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.explore, container, false);
 
-        view.findViewById(R.id.profilelink).setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener oclk = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Team team = ((MainApplication) getActivity().getApplication()).team;
 
                 team.view.push(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.IN_THE_VOID, ((MainActivity) team.view).mPersonView);
             }
-        });
+        };
+
+        view.findViewById(R.id.profilelink).setOnClickListener(oclk);
+        view.findViewById(R.id.profilelink2).setOnClickListener(oclk);
+        view.findViewById(R.id.profilelink3).setOnClickListener(oclk);
+        view.findViewById(R.id.profilelink4).setOnClickListener(oclk);
+        view.findViewById(R.id.profilelink5).setOnClickListener(oclk);
+        view.findViewById(R.id.profilelink6).setOnClickListener(oclk);
 
         return view;
     }

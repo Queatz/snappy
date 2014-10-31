@@ -1,8 +1,10 @@
 fun:
-Helping page slide, exact from start + a little speed
-Make intos clickable fade gray
 profile pic sliding
+Gray out sign in button once pressed
 
 fix:
 It crashed to do with going back into the app
 Crashes when a fragment is animating out and is opened again (fragment already added)
+
+maybe:
+Make home more apparent that the user is only for the 1st image

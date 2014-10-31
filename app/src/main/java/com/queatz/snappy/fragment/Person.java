@@ -40,7 +40,7 @@ public class Person extends Fragment {
             public void onClick(View view) {
                 Team team = ((MainApplication) getActivity().getApplication()).team;
 
-                team.view.pop(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.IN_THE_VOID);
+                team.view.pop();
             }
         });
 

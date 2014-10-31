@@ -17,6 +17,7 @@
             android:scaleType="centerCrop"/>
 
         <com.queatz.snappy.ui.FloatingSearch
+            android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/search_box"
@@ -32,6 +33,7 @@
             android:layout_margin="24dp"/>
 
         <ImageView
+            android:id="@+id/profilelink"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="54dp"
@@ -40,6 +42,7 @@
             android:src="@drawable/profile"/>
 
         <ImageView
+            android:id="@+id/profilelink2"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="254dp"

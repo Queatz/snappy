@@ -18,4 +18,9 @@ public class MainApplication extends Application {
 
         team = new Team(this);
     }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+    }
 }

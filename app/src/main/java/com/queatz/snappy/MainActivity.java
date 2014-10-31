@@ -3,12 +3,15 @@ package com.queatz.snappy;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.inputmethod.EditorInfo;
 
 import com.queatz.snappy.fragment.Person;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.fragment.Main;
 import com.queatz.snappy.fragment.Signin;
+import com.queatz.snappy.ui.ActionBar;
+import com.queatz.snappy.ui.FloatingSearch;
 
 public class MainActivity extends ViewActivity {
     public Team team;
@@ -23,6 +26,8 @@ public class MainActivity extends ViewActivity {
 
         team = ((MainApplication) getApplication()).team;
         team.view = this;
+
+        team.auth.fromBundle(savedInstanceState);
 
         mSigninView = new Signin();
         mMainView = new Main();
@@ -41,8 +46,8 @@ public class MainActivity extends ViewActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         team.auth.toBundle(outState);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -53,7 +58,25 @@ public class MainActivity extends ViewActivity {
 
     // Functions
 
+    public void search(String s) {
+        while(getDepth() > 1) {
+            pop();
+        }
+
+        ActionBar actionBar = (ActionBar) findViewById(R.id.actionBar);
+
+        actionBar.setPage(1);
+
+        FloatingSearch search = (FloatingSearch) findViewById(R.id.search);
+
+        if(search != null) {
+            search.setText(s);
+            search.onEditorAction(EditorInfo.IME_ACTION_SEARCH);
+        }
+    }
+
     public void showStartView() {
-        replace(team.auth.isSignedIn() ? mMainView : mSigninView);
+        replace(team.auth.isAuthenticated() ? mMainView : mSigninView);
+        setDeparture(ViewActivity.Transition.GRAND_REVEAL);
     }
 }
