@@ -251,46 +251,55 @@ public class SlideScreen extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(mAnimation != null && mAnimation.isAlive())
-            mAnimation.stop();
-
         float xdiff = 0;
 
         if(event.getHistorySize() > 0) {
             xdiff = event.getX() - event.getHistoricalX(0);
         }
 
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            mXFlingDelta = 0;
-            getParent().requestDisallowInterceptTouchEvent(true);
-        }
-        else if(event.getAction() == MotionEvent.ACTION_MOVE) {
-            setOffset(mOffset - xdiff / getWidth());
+        switch(event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                if(mAnimation != null && mAnimation.isAlive())
+                    mAnimation.stop();
 
-            if(event.getHistorySize() > 0) {
-                int h = Math.min(10, event.getHistorySize() - 1);
-                mXFlingDelta = (
-                        (event.getHistoricalX(h) - event.getX()) /
-                        ((float) (event.getEventTime() - event.getHistoricalEventTime(h)) / 1000.0f)
-                );
-            }
-        }
-        else if(event.getAction() == MotionEvent.ACTION_UP) {
-                getParent().requestDisallowInterceptTouchEvent(false);
                 mSnatched = false;
+                mDownX = event.getRawX();
+                mDownY = event.getRawY();
+                mXFlingDelta = 0;
+                getParent().requestDisallowInterceptTouchEvent(true);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                setOffset(mOffset - xdiff / getWidth());
 
-                int slide;
-
-                if(Math.abs(mXFlingDelta) > 15) {
-                    if(mXFlingDelta < 0)
-                        slide = (int) Math.floor(mOffset);
-                    else
-                        slide = (int) Math.ceil(mOffset);
+                if (event.getHistorySize() > 0) {
+                    int h = Math.min(10, event.getHistorySize() - 1);
+                    mXFlingDelta = (
+                            (event.getHistoricalX(h) - event.getX()) /
+                                    ((float) (event.getEventTime() - event.getHistoricalEventTime(h)) / 1000.0f)
+                    );
                 }
-                else
-                    slide = Math.round(mOffset);
 
-            setSlide(slide);
+                if(!mSnatched) {
+                    if(shouldLetGo(event)) {
+                        resolve(false);
+                        getParent().requestDisallowInterceptTouchEvent(false);
+                        return false;
+                    }
+                    else {
+                        mSnatched = shouldSnatch(event);
+
+                        if(mSnatched) {
+                            getParent().requestDisallowInterceptTouchEvent(true);
+                        }
+                    }
+                }
+
+                break;
+            case MotionEvent.ACTION_UP:
+                getParent().requestDisallowInterceptTouchEvent(false);
+
+                resolve(true);
+                return false;
         }
 
         return true;
@@ -298,33 +307,65 @@ public class SlideScreen extends ViewGroup {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
+        Log.d(Config.TAG, "ACTION " + event.getAction() + " " + mSnatched);
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                mSnatched = false;
                 mDownX = event.getRawX();
                 mDownY = event.getRawY();
+                mXFlingDelta = 0;
 
-                return false;
+                break;
+            case MotionEvent.ACTION_UP:
+                mSnatched = false;
+
+                break;
             case MotionEvent.ACTION_MOVE:
                 if(mSnatched)
                     return true;
 
-                float xdif = event.getRawX() - mDownX;
-                float ydif = event.getRawY() - mDownY;
+                mSnatched = shouldSnatch(event);
 
-                boolean edged = (xdif < 0 && mSlide >= mAdapter.getCount() - 1) ||
-                        (xdif > 0 && mSlide <= 0);
-                boolean snatch = Math.abs(xdif) > Math.abs(ydif) && Math.abs(xdif) > 16 && !edged;
-
-                if(snatch) {
-                    getParent().requestDisallowInterceptTouchEvent(true);
-                    event.setAction(MotionEvent.ACTION_CANCEL);
-                }
-
-                mSnatched = snatch;
-
-                return snatch;
-            default:
-                return false;
+                break;
         }
+
+        return mSnatched;
+    }
+
+    private boolean shouldSnatch(MotionEvent event) {
+        float xdif = event.getRawX() - mDownX;
+        float ydif = event.getRawY() - mDownY;
+
+        Log.d(Config.TAG, xdif + " | " + (mSlide) + " | " + mAdapter.getCount());
+        Log.d(Config.TAG, (xdif < 0 && mSlide >= mAdapter.getCount() - 1) + " / " + (xdif > 0 && mSlide <= 0));
+
+        boolean edged = (xdif < 0 && mSlide >= mAdapter.getCount() - 1) ||
+                (xdif > 0 && mSlide <= 0);
+
+        return Math.abs(xdif) > Math.abs(ydif) && Math.abs(xdif) > 16 && !edged;
+    }
+
+    private boolean shouldLetGo(MotionEvent event) {
+        float xdif = event.getRawX() - mDownX;
+        float ydif = event.getRawY() - mDownY;
+        return Math.abs(ydif) > Math.abs(xdif) && Math.abs(ydif) > 16;
+    }
+
+    private void resolve(boolean fling) {
+        mSnatched = false;
+
+        int slide;
+
+        if (fling && Math.abs(mXFlingDelta) > 15) {
+            if (mXFlingDelta < 0)
+                slide = (int) Math.floor(mOffset);
+            else
+                slide = (int) Math.ceil(mOffset);
+        } else {
+            slide = Math.round(mOffset);
+        }
+
+        setSlide(slide);
     }
 }

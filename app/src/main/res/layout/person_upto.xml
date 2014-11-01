@@ -29,33 +29,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
-                <LinearLayout
+                <com.queatz.snappy.ui.CurrentSlideIndicator
+                    android:id="@+id/slideIndicator"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <FrameLayout
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:layout_margin="4dp"
-                        android:background="@drawable/circle_full"/>
-
-                    <FrameLayout
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:layout_margin="4dp"
-                        android:background="@drawable/circle_empty"/>
-
-                    <FrameLayout
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:layout_margin="4dp"
-                        android:background="@drawable/circle_empty"/>
-
-                </LinearLayout>
+                    android:gravity="center_horizontal" />
 
             </com.queatz.snappy.ui.SquareLayout>
 

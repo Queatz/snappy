@@ -78,8 +78,10 @@ public class ActionBar extends FrameLayout {
 
     @Override
     protected void onLayout(boolean b, int i, int i1, int i2, int i3) {
-        setSlide(mSlidePosition);
         super.onLayout(b, i, i1, i2, i3);
+
+        if(b)
+            setSlide(mSlidePosition);
     }
 
     public void setTitle(String title) {
