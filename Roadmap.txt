@@ -1,90 +1,5 @@
-next:
-    Simple CherryPy API
-    Hosted on Compute Engine
-
-
-~ Api ~
-
-    /api
-        /batch
-            GET Returns multiple requests in one go
-            GET paths=[/explore,/search,/messages]
-        /explore?start=5&end=10
-            GET Returns nearby posts for user, ordered
-        /search?q=into&l=23.34434,32.43432
-            GET Returns nearby people for map
-        /people/3223
-            GET Returns specific person
-            /message?q=...
-                GET Sends message to person
-            /messages
-                GET Returns messages for person
-            /upto?start=0&end=20
-                GET Returns recent posts of person
-            /photo/3
-                GET Returns photo of a person
-        /messages?start=0&end=20
-            GET Returns latest messages for all people
-        /me
-            GET Returns you
-            PUT about="..."
-            PUT interests=one,two,three
-            PUT pictures=1,2,3
-            /post?picture=RAW&l=12.32232,32.23237&comment=...
-                => Post new
-        /post/3223
-            GET Gets post
-            /comment?q=...
-                => Adds comment to post
-
-~ Models ~
-
-Person
-    {
-        id: Id,
-        name: 'Brittany Combs'
-        into: ['one', 'two', 'three']
-        messages: [Message, ...]
-        upto: [Post, Post, ...]
-        about: "..."
-        photos: 4
-    }
-
-Post
-    {
-        id: Id
-        person: Person
-        time: Date
-        comments: [Comment, Comment, ...]
-        location: ['Pangea', [12.2121, 4.4313]]
-    }
-
-Comment
-    {
-        id: Id,
-        person: Person
-        post: Post.id
-        time: Date
-        text: "..."
-    }
-
-Message
-    {
-        id: Id
-        from: Person.id
-        to: Person.id
-        text: "..."
-        time: Date
-    }
-
-
-
-
-
-
-
 fun:
-Gray out sign in button once pressed
+    Gray out sign in button once pressed
 
 fix:
     sometimes returning to view stops reporting slides? (actionbar / pageslider don't update)
@@ -94,3 +9,8 @@ fix:
 
 
 maybe:
+
+
+
+dev:
+    http://realm.io
