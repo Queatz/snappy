@@ -2,16 +2,19 @@ package com.queatz.snappy.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.queatz.snappy.Config;
 import com.queatz.snappy.MainActivity;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.adapter.MainAdapter;
 import com.queatz.snappy.adapter.MainTabAdapter;
+import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.ui.ActionBar;
 import com.queatz.snappy.ui.SlideScreen;
@@ -26,6 +29,22 @@ public class Main extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Team team = ((MainApplication) getActivity().getApplication()).team;
+
+        Log.d(Config.TAG, "auth = " + team.auth.getAuthParam());
+
+        team.api.get("explore", new Api.Callback() {
+            @Override
+            public void success(String response) {
+                Log.d(Config.TAG, "explore: " + response);
+            }
+
+            @Override
+            public void fail(String response) {
+                Log.d(Config.TAG, "explore:fail: " + response);
+            }
+        });
     }
 
     @Override

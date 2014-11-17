@@ -14,12 +14,12 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file("/home/jacob/Documents/android-studio/android.jks")
+            storeFile file("/Applications/Android Studio.app/Contents/bin/android.jks")
         }
 
         release {
-            storeFile file("/home/jacob/Documents/android-studio/android.jks")
-            storePassword "256Raccoons!"
+            storeFile file("/Applications/Android Studio.app/Contents/bin/android.jks")
+            storePassword "skunks2cute"
             keyAlias "android"
             keyPassword "android"
         }
@@ -44,4 +44,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-v4:20.0.+'
     compile 'com.google.android.gms:play-services:6.+'
+    compile 'com.loopj.android:android-async-http:1.4.5'
 }

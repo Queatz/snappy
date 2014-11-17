@@ -27,8 +27,6 @@ public class MainActivity extends ViewActivity {
         team = ((MainApplication) getApplication()).team;
         team.view = this;
 
-        team.auth.fromBundle(savedInstanceState);
-
         mSigninView = new Signin();
         mMainView = new Main();
         mPersonView = new Person();
@@ -46,7 +44,6 @@ public class MainActivity extends ViewActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        team.auth.toBundle(outState);
         super.onSaveInstanceState(outState);
     }
 
@@ -71,6 +68,7 @@ public class MainActivity extends ViewActivity {
 
         if(search != null) {
             search.setText(s);
+            search.setSelection(s.length());
             search.onEditorAction(EditorInfo.IME_ACTION_SEARCH);
         }
     }

@@ -1,64 +1,95 @@
 package com.queatz.snappy.team;
 
-import android.content.DialogInterface;
+import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.Intent;
-import android.content.IntentSender;
-import android.content.SharedPreferences;
-import android.os.Bundle;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.plus.Plus;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.android.gms.common.AccountPicker;
 import com.queatz.snappy.Config;
-import com.queatz.snappy.MainActivity;
 import com.queatz.snappy.activity.ViewActivity;
-import com.queatz.snappy.transition.Transition;
+
+import java.io.IOException;
 
 /**
  * Created by jacob on 10/19/14.
  */
-public class Auth implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
-
-    private String TAG = "snappy.team.auth";
-
-    private static final String KEY_IN_RESOLUTION = "is_in_resolution";
-    private static final String KEY_AUTHENTICATED = "is_authenticated";
-    protected static final int REQUEST_CODE_RESOLUTION = 1;
+public class Auth {
+    private static final String SCOPE = "oauth2: email profile";
 
     public Team team;
+    private String mAuthToken;
+    private String mUser;
+    private GetAuthTokenTask mFetchTask;
 
-    private GoogleApiClient mGoogleApiClient;
-    private boolean mIsInResolution;
-    private boolean mIsAuthenticated;
+    private static class GetAuthTokenTask extends AsyncTask<Void, Void, String> {
+        Auth mAuth;
+
+        GetAuthTokenTask (Auth auth) {
+            mAuth = auth;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                return fetchToken();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String token) {
+            mAuth.setAuthToken(token);
+        }
+
+        protected String fetchToken() throws IOException {
+            try {
+                return GoogleAuthUtil.getToken(mAuth.team.view, mAuth.mUser, SCOPE);
+            } catch (UserRecoverableAuthException e) {
+                mAuth.team.view.startActivityForResult(e.getIntent(), Config.REQUEST_CODE_AUTH_RESOLUTION);
+            } catch (GoogleAuthException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
 
     public Auth(Team t) {
         team = t;
 
-        mGoogleApiClient = new GoogleApiClient.Builder(team.context)
-                .addApi(Plus.API)
-                .addScope(Plus.SCOPE_PLUS_LOGIN)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+        load();
     }
 
     public void save() {
-        Log.d(Config.TAG, "[Auth Save] " + mIsAuthenticated);
-        team.preferences.edit().putBoolean(KEY_AUTHENTICATED, mIsAuthenticated).apply();
+        team.preferences.edit()
+                .putString(Config.PREFERENCE_USER, mUser)
+                .putString(Config.PREFERENCE_AUTH_TOKEN, mAuthToken)
+                .apply();
     }
 
     public void load() {
-        Log.d(Config.TAG, "[Auth Load] " + mIsAuthenticated);
-        mIsAuthenticated = team.preferences.getBoolean(KEY_AUTHENTICATED, false);
+        mUser = team.preferences.getString(Config.PREFERENCE_USER, null);
+        mAuthToken = team.preferences.getString(Config.PREFERENCE_AUTH_TOKEN, null);
     }
 
     public boolean isAuthenticated() {
-        return mIsAuthenticated;
+        return mUser != null && mAuthToken != null;
+    }
+
+    public String getAuthParam() {
+        if(!isAuthenticated())
+            return null;
+
+        return mUser + ";" + mAuthToken;
     }
 
     public void showMain() {
@@ -68,7 +99,7 @@ public class Auth implements
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        team.view.push(ViewActivity.Transition.SPACE_GAME, null, ((MainActivity) team.view).mMainView);
+                        team.view.push(ViewActivity.Transition.SPACE_GAME, null, team.view.mMainView);
                     }
                 }, 1000);
             }
@@ -76,91 +107,61 @@ public class Auth implements
     }
 
     public void signin() {
-        if(mIsAuthenticated) {
+        if(isAuthenticated()) {
             showMain();
-            return;
         }
+        else {
+            if(mUser == null) {
+                Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"},
+                        false, null, null, null, null);
 
-        mGoogleApiClient.connect();
+                team.view.startActivityForResult(intent, Config.REQUEST_CODE_ACCOUNT_PICKER);
+            }
+            else if(mAuthToken == null) {
+                fetchAuthToken();
+            }
+        }
     }
 
-    public void fromBundle(Bundle bundle) {
-        if (bundle != null) {
-            mIsInResolution = bundle.getBoolean(KEY_IN_RESOLUTION, false);
-        }
-
-        load();
-    }
-
-    public void toBundle(Bundle bundle) {
-        bundle.putBoolean(KEY_IN_RESOLUTION, mIsInResolution);
-
+    private void setUser(String user) {
+        mUser = user;
         save();
+    }
+
+    private void setAuthToken(String auth) {
+        mAuthToken = auth;
+        save();
+        signin();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUEST_CODE_RESOLUTION:
-                mIsInResolution = false;
-
-                Log.d("snappy", resultCode + " " + data);
-                if(data != null)
-                    retryConnecting();
+            case Config.REQUEST_CODE_ACCOUNT_PICKER:
+                if(resultCode == Activity.RESULT_OK && data != null) {
+                    setUser(data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
+                    fetchAuthToken();
+                }
+                break;
+            case Config.REQUEST_CODE_AUTH_RESOLUTION:
+                if(resultCode == Activity.RESULT_OK && data != null) {
+                    setAuthToken(data.getStringExtra("authtoken"));
+                }
 
                 break;
         }
-    }
 
-    private void retryConnecting() {
-        mIsInResolution = false;
-        if (!mGoogleApiClient.isConnecting()) {
-            mIsAuthenticated = false;
-            mGoogleApiClient.connect();
+        Log.d(Config.TAG, "Auth.onActRes " + requestCode + " " + resultCode + " " + data);
+
+        if(data != null && data.getExtras() != null) for (String key : data.getExtras().keySet()) {
+            Log.d(Config.TAG, key + ": " + data.getExtras().get(key));
         }
     }
 
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        Log.i(TAG, "GoogleApiClient connected");
-
-        mIsAuthenticated = true;
-
-        showMain();
-    }
-
-    @Override
-    public void onConnectionSuspended(int cause) {
-        Log.i(TAG, "GoogleApiClient connection suspended");
-        retryConnecting();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        mIsAuthenticated = false;
-        Log.i(TAG, "GoogleApiClient connection failed: " + result.toString());
-
-        if (!result.hasResolution()) {
-            GooglePlayServicesUtil.getErrorDialog(
-                    result.getErrorCode(), team.view, 0, new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            retryConnecting();
-                        }
-                    }).show();
+    private void fetchAuthToken() {
+        if(mFetchTask != null && mFetchTask.getStatus() != AsyncTask.Status.FINISHED)
             return;
-        }
 
-        if (mIsInResolution) {
-            return;
-        }
-
-        mIsInResolution = true;
-
-        try {
-            result.startResolutionForResult(team.view, REQUEST_CODE_RESOLUTION);
-        } catch (IntentSender.SendIntentException e) {
-            Log.e(TAG, "Exception while starting resolution activity", e);
-            retryConnecting();
-        }
+        mFetchTask = new GetAuthTokenTask(this);
+        mFetchTask.execute();
     }
 }
