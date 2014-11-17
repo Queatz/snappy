@@ -6,25 +6,43 @@ import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 
 import org.apache.http.Header;
+import org.apache.http.HttpStatus;
 
 /**
  * Created by jacob on 11/16/14.
  */
 
 public class Api {
-    public static class Callback extends AsyncHttpResponseHandler {
+    public static interface Callback {
+        public void success(String response);
+        public void fail(String response);
+    }
+
+    private static class ApiCallback extends AsyncHttpResponseHandler {
+        Api mApi;
+        Callback mCallback;
+
+        public ApiCallback(Api api, Callback callback) {
+            mApi = api;
+            mCallback = callback;
+        }
+
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-            success(new String(responseBody));
+
+            if(mCallback != null)
+                mCallback.success(new String(responseBody));
         }
 
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-            fail(new String(responseBody));
+            switch (statusCode) {
+                case HttpStatus.SC_UNAUTHORIZED:
+                    mApi.team.auth.reauth();
+            }
 
+            if(mCallback != null)
+                mCallback.fail(new String(responseBody));
         }
-
-        public void success(String response) {}
-        public void fail(String response) {}
     }
 
     Team team;
@@ -80,26 +98,18 @@ public class Api {
     }
 
     public void get(String url, RequestParams params, Callback callback) {
-        if(callback == null) callback = new Callback();
-
-        mClient.get(Config.API_URL + "/" + url, auth(params), callback);
+        mClient.get(Config.API_URL + "/" + url, auth(params), new ApiCallback(this, callback));
     }
 
     public void post(String url, RequestParams params, Callback callback) {
-        if(callback == null) callback = new Callback();
-
-        mClient.post(Config.API_URL + "/" + url, auth(params), callback);
+        mClient.post(Config.API_URL + "/" + url, auth(params), new ApiCallback(this, callback));
     }
 
     public void put(String url, RequestParams params, Callback callback) {
-        if(callback == null) callback = new Callback();
-
-        mClient.put(Config.API_URL + "/" + url, auth(params), callback);
+        mClient.put(Config.API_URL + "/" + url, auth(params), new ApiCallback(this, callback));
     }
 
     public void delete(String url, RequestParams params, Callback callback) {
-        if(callback == null) callback = new Callback();
-
-        mClient.delete(Config.API_URL + "/" + url + "?" + auth(params).toString(), callback);
+        mClient.delete(Config.API_URL + "/" + url + "?" + auth(params).toString(), new ApiCallback(this, callback));
     }
 }

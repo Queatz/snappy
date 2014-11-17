@@ -106,6 +106,16 @@ public class Auth {
         });
     }
 
+    public void reauth() {
+        if(mAuthToken != null) {
+            GoogleAuthUtil.invalidateToken(team.view, mAuthToken);
+        }
+
+        mUser = null;
+        mAuthToken = null;
+        save();
+    }
+
     public void signin() {
         if(isAuthenticated()) {
             showMain();
