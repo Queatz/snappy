@@ -13,4 +13,5 @@ maybe:
 
 
 dev:
+    Proguard
     http://realm.io
