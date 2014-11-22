@@ -337,9 +337,6 @@ public class SlideScreen extends ViewGroup {
         float xdif = event.getRawX() - mDownX;
         float ydif = event.getRawY() - mDownY;
 
-        Log.d(Config.TAG, xdif + " | " + (mSlide) + " | " + mAdapter.getCount());
-        Log.d(Config.TAG, (xdif < 0 && mSlide >= mAdapter.getCount() - 1) + " / " + (xdif > 0 && mSlide <= 0));
-
         boolean edged = (xdif < 0 && mSlide >= mAdapter.getCount() - 1) ||
                 (xdif > 0 && mSlide <= 0);
 
