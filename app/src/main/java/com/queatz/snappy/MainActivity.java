@@ -3,6 +3,7 @@ package com.queatz.snappy;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.inputmethod.EditorInfo;
 
 import com.queatz.snappy.fragment.Person;
@@ -32,6 +33,14 @@ public class MainActivity extends ViewActivity {
         mPersonView = new Person();
 
         showStartView();
+        onNewIntent(getIntent());
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        if(intent != null) {
+            Log.d(Config.TAG, "new action! " + intent.getAction() + " | " + intent.getType());
+        }
     }
 
     @Override
