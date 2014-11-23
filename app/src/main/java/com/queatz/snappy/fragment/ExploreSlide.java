@@ -34,12 +34,22 @@ public class ExploreSlide extends Fragment {
             }
         };
 
+        View.OnClickListener oclk_map = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Team team = ((MainApplication) getActivity().getApplication()).team;
+
+                team.view.search("");
+            }
+        };
+
         view.findViewById(R.id.profilelink).setOnClickListener(oclk);
         view.findViewById(R.id.profilelink2).setOnClickListener(oclk);
         view.findViewById(R.id.profilelink3).setOnClickListener(oclk);
         view.findViewById(R.id.profilelink4).setOnClickListener(oclk);
         view.findViewById(R.id.profilelink5).setOnClickListener(oclk);
         view.findViewById(R.id.profilelink6).setOnClickListener(oclk);
+        view.findViewById(R.id.maplink).setOnClickListener(oclk_map);
 
         return view;
     }

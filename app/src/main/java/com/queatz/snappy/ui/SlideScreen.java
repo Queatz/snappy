@@ -307,8 +307,6 @@ public class SlideScreen extends ViewGroup {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        Log.d(Config.TAG, "ACTION " + event.getAction() + " " + mSnatched);
-
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mSnatched = false;

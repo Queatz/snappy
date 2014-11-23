@@ -70,6 +70,7 @@
                         android:orientation="horizontal">
 
                         <com.queatz.snappy.ui.TextView
+                            android:id="@+id/maplink"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="6dp"

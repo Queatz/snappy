@@ -19,6 +19,6 @@ public class MainTabAdapter extends ActionBar.TabAdapter {
     }
 
     public String getTabName(int i) {
-        return new String[]{"Explore", "Search", "Messages"}[i];
+        return new String[]{"Explore", "Map", "Activity"}[i];
     }
 }
