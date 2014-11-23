@@ -2,24 +2,20 @@ package com.queatz.snappy.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
-import com.queatz.snappy.MainActivity;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.ui.ActionBar;
 
 /**
- * Created by jacob on 10/19/14.
+ * Created by jacob on 11/23/14.
  */
-public class ExploreSlide extends Fragment {
+public class Upto extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,23 +23,14 @@ public class ExploreSlide extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.explore, container, false);
+        View view = inflater.inflate(R.layout.upto_expanded, container, false);
 
         View.OnClickListener oclk = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Team team = ((MainApplication) getActivity().getApplication()).team;
 
-                team.view.push(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.IN_THE_VOID, team.view.mPersonView);
-            }
-        };
-
-        View.OnClickListener oclk2 = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Team team = ((MainApplication) getActivity().getApplication()).team;
-
-                team.view.push(ViewActivity.Transition.EXAMINE, ViewActivity.Transition.INSTANT, team.view.mUptoView);
+                team.view.push(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.INSTANT, team.view.mPersonView);
             }
         };
 
@@ -57,10 +44,7 @@ public class ExploreSlide extends Fragment {
         };
 
         View upto = view.findViewById(R.id.uptolink);
-        upto.setOnClickListener(oclk2);
         registerForContextMenu(upto);
-
-        view.findViewById(R.id.uptolink2).setOnClickListener(oclk2);
 
         view.findViewById(R.id.profilelink).setOnClickListener(oclk);
         view.findViewById(R.id.profilelink2).setOnClickListener(oclk);
@@ -74,20 +58,7 @@ public class ExploreSlide extends Fragment {
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getActivity().getMenuInflater();
-        inflater.inflate(R.menu.upto, menu);
-    }
+    public void onViewCreated(View view, Bundle savedInstanceState) {
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch (item.getItemId()) {
-            case R.id.delete:
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
     }
 }

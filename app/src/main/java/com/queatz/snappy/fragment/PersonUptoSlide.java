@@ -6,8 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
+import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.adapter.ProfilePictureAdapter;
+import com.queatz.snappy.team.Team;
 import com.queatz.snappy.ui.CurrentSlideIndicator;
 import com.queatz.snappy.ui.SlideScreen;
 
@@ -45,6 +48,17 @@ public class PersonUptoSlide extends Fragment {
 
             }
         });
+
+        View.OnClickListener oclk2 = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Team team = ((MainApplication) getActivity().getApplication()).team;
+
+                team.view.push(ViewActivity.Transition.EXAMINE, ViewActivity.Transition.INSTANT, team.view.mUptoView);
+            }
+        };
+
+        view.findViewById(R.id.uptolink2).setOnClickListener(oclk2);
 
         return view;
     }

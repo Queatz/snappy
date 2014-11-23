@@ -4,9 +4,13 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.queatz.snappy.MainActivity;
 import com.queatz.snappy.R;
@@ -40,32 +44,27 @@ public class PersonIntoSlide extends Fragment {
                 }
             });
 
-            interest.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    delete(s);
-
-                    return true;
-                }
-            });
+            registerForContextMenu(interest);
         }
 
         return view;
     }
 
-    private void delete(String into) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(into)
-                .setPositiveButton("Remove", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.into, menu);
+    }
 
-                    }
-                })
-                .setNegativeButton("Keep", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                    }
-                })
-                .show();
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.delete:
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 }

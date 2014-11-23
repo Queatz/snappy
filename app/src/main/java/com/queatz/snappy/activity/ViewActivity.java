@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.queatz.snappy.R;
+import com.queatz.snappy.transition.Examine;
 import com.queatz.snappy.transition.GrandReveal;
 import com.queatz.snappy.transition.InTheVoid;
 import com.queatz.snappy.transition.Instant;
@@ -21,6 +22,7 @@ import java.util.Stack;
 /**
  * Created by jacob on 10/19/14.
  */
+
 public class ViewActivity extends Activity {
     public static interface OnCompleteCallback {
         public void onComplete();
@@ -31,7 +33,8 @@ public class ViewActivity extends Activity {
         IN_THE_VOID,
         SEXY_PROFILE,
         SPACE_GAME,
-        INSTANT
+        INSTANT,
+        EXAMINE
     }
 
     private class BelowAbove {
@@ -66,15 +69,20 @@ public class ViewActivity extends Activity {
         if(fragments.size() > 0)
             beneath = fragments.lastElement();
 
-        if(fragment != null && !fragments.contains(fragment)) {
+        if(fragment != null && fragments.contains(fragment)) {
+            navigateTo(fragment);
+            return;
+        }
+
+        if(fragment != null) {
             fragments.push(fragment);
 
             getFragmentManager().beginTransaction()
                     .add(R.id.activity, fragment)
                     .commit();
-        }
 
-        belowAboves.push(new BelowAbove(transition2, transition));
+            belowAboves.push(new BelowAbove(transition2, transition));
+        }
 
         if(fragment != null) {
             getTransition(transition).fragment(fragment).in();
@@ -101,6 +109,12 @@ public class ViewActivity extends Activity {
         transaction.commit();
 
         fragments.push(fragment);
+    }
+
+    public void navigateTo(Fragment fragment) {
+        while(fragments.size() > 0 && fragments.lastElement() != fragment) {
+            pop();
+        }
     }
 
     public void setDeparture(Transition transition) {
@@ -157,6 +171,8 @@ public class ViewActivity extends Activity {
                 return new SpaceGame();
             case IN_THE_VOID:
                 return new InTheVoid();
+            case EXAMINE:
+                return new Examine();
             case INSTANT:
             default:
                 return new Instant();

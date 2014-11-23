@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.inputmethod.EditorInfo;
 
 import com.queatz.snappy.fragment.Person;
+import com.queatz.snappy.fragment.Upto;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.fragment.Main;
@@ -20,6 +21,7 @@ public class MainActivity extends ViewActivity {
     public Fragment mSigninView;
     public Fragment mMainView;
     public Fragment mPersonView;
+    public Fragment mUptoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class MainActivity extends ViewActivity {
         mSigninView = new Signin();
         mMainView = new Main();
         mPersonView = new Person();
+        mUptoView = new Upto();
 
         showStartView();
         onNewIntent(getIntent());
