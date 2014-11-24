@@ -62,6 +62,9 @@ public class ExploreSlide extends Fragment {
 
         view.findViewById(R.id.uptolink2).setOnClickListener(oclk2);
 
+        registerForContextMenu(view.findViewById(R.id.commentclick));
+        registerForContextMenu(view.findViewById(R.id.commentclick2));
+
         view.findViewById(R.id.profilelink).setOnClickListener(oclk);
         view.findViewById(R.id.profilelink2).setOnClickListener(oclk);
         view.findViewById(R.id.profilelink3).setOnClickListener(oclk);
@@ -77,7 +80,15 @@ public class ExploreSlide extends Fragment {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getActivity().getMenuInflater();
-        inflater.inflate(R.menu.upto, menu);
+
+        int m;
+
+        if(v.getId() == R.id.commentclick || v.getId() == R.id.commentclick2)
+            m = R.menu.comment;
+        else
+            m = R.menu.upto;
+
+        inflater.inflate(m, menu);
     }
 
     @Override

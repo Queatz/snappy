@@ -109,6 +109,19 @@
                     android:background="@drawable/into_background"
                     android:text="Violin"/>
 
+                <com.queatz.snappy.ui.TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:textSize="29sp"
+                    android:paddingLeft="32dp"
+                    android:paddingRight="32dp"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp"
+                    android:textColor="@color/clickable_text"
+                    android:background="@drawable/clickable_background"
+                    android:text="New" />
+
             </LinearLayout>
 
         </LinearLayout>

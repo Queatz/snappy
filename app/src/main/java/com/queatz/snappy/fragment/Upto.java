@@ -2,9 +2,13 @@ package com.queatz.snappy.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
@@ -46,6 +50,9 @@ public class Upto extends Fragment {
         View upto = view.findViewById(R.id.uptolink);
         registerForContextMenu(upto);
 
+        registerForContextMenu(view.findViewById(R.id.commentclick));
+        registerForContextMenu(view.findViewById(R.id.commentclick2));
+
         view.findViewById(R.id.profilelink).setOnClickListener(oclk);
         view.findViewById(R.id.profilelink2).setOnClickListener(oclk);
         view.findViewById(R.id.profilelink3).setOnClickListener(oclk);
@@ -60,5 +67,31 @@ public class Upto extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+
+        int m;
+
+        if(v.getId() == R.id.commentclick || v.getId() == R.id.commentclick2)
+            m = R.menu.comment;
+        else
+            m = R.menu.upto;
+
+        inflater.inflate(m, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.delete:
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 }

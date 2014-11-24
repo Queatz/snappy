@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.inputmethod.EditorInfo;
 
+import com.queatz.snappy.fragment.NewUpto;
 import com.queatz.snappy.fragment.Person;
 import com.queatz.snappy.fragment.Upto;
 import com.queatz.snappy.team.Team;
@@ -22,6 +23,7 @@ public class MainActivity extends ViewActivity {
     public Fragment mMainView;
     public Fragment mPersonView;
     public Fragment mUptoView;
+    public Fragment mNewUpto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class MainActivity extends ViewActivity {
         mMainView = new Main();
         mPersonView = new Person();
         mUptoView = new Upto();
+        mNewUpto= new NewUpto();
 
         showStartView();
         onNewIntent(getIntent());
@@ -43,12 +46,15 @@ public class MainActivity extends ViewActivity {
     public void onNewIntent(Intent intent) {
         if(intent != null) {
             Log.d(Config.TAG, "new action! " + intent.getAction() + " | " + intent.getType());
+
+            if(intent.getAction().equals(Intent.ACTION_SEND)) {
+                team.view.push(Transition.EXAMINE, Transition.INSTANT, team.view.mNewUpto);
+            }
         }
     }
 
     @Override
     protected void onDestroy() {
-        team = ((MainApplication) getApplication()).team;
         team.view = null;
 
         super.onDestroy();

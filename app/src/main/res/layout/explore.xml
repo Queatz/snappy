@@ -105,9 +105,12 @@
                     android:orientation="vertical">
 
                     <LinearLayout
+                        android:id="@+id/commentclick"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:clickable="true"
+                        android:background="@drawable/softclick">
 
                         <FrameLayout
                             android:id="@+id/profilelink2"
@@ -158,9 +161,12 @@
                     android:orientation="vertical">
 
                     <LinearLayout
+                        android:id="@+id/commentclick2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:clickable="true"
+                        android:background="@drawable/softclick">
 
                         <FrameLayout
                             android:id="@+id/profilelink3"
