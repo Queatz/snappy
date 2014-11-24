@@ -45,9 +45,9 @@ public class Api {
         }
     }
 
-    Team team;
+    public Team team;
 
-    AsyncHttpClient mClient;
+    private AsyncHttpClient mClient;
 
     public Api(Team t) {
         team = t;
@@ -60,7 +60,7 @@ public class Api {
             params = new RequestParams();
         }
 
-        params.put("auth", team.auth.getAuthParam());
+        params.put(Config.PARAM_AUTH, team.auth.getAuthParam());
 
         return params;
     }

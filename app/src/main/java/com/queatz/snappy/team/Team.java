@@ -15,11 +15,13 @@ public class Team {
     public MainActivity view;
     public SharedPreferences preferences;
     public Api api;
+    public Action action;
 
     public Team(Context c) {
         context = c;
         preferences = c.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
         auth = new Auth(this);
         api = new Api(this);
+        action = new Action(this);
     }
 }
