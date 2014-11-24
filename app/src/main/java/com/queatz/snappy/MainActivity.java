@@ -48,6 +48,7 @@ public class MainActivity extends ViewActivity {
             Log.d(Config.TAG, "new action! " + intent.getAction() + " | " + intent.getType());
 
             if(intent.getAction().equals(Intent.ACTION_SEND)) {
+                ((NewUpto) team.view.mNewUpto).setintent(intent);
                 team.view.push(Transition.EXAMINE, Transition.INSTANT, team.view.mNewUpto);
             }
         }

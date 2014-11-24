@@ -5,7 +5,7 @@ package com.queatz.snappy;
  */
 public class Config {
     public static String TAG = "SNAPPY_LOG";
-    public static String API_URL = "http://queatz-snappy.appspot.com/api/";
+    public static String API_URL = "http://queatz-snappy.appspot.com/api";
 
     public static final String PREFERENCE_USER = "auth.user";
     public static final String PREFERENCE_AUTH_TOKEN = "auth.auth_token";

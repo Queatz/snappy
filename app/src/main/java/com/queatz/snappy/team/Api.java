@@ -65,6 +65,14 @@ public class Api {
         return params;
     }
 
+    private String makeUrl(String url) {
+        return makeUrl(url, null);
+    }
+
+    private String makeUrl(String url, RequestParams params) {
+        return Config.API_URL + "/" + url + "?" + auth(params).toString();
+    }
+
     public void get(String url) {
         get(url, null, null);
     }
@@ -102,14 +110,14 @@ public class Api {
     }
 
     public void post(String url, RequestParams params, Callback callback) {
-        mClient.post(Config.API_URL + "/" + url, auth(params), new ApiCallback(this, callback));
+        mClient.post(makeUrl(url), params, new ApiCallback(this, callback));
     }
 
     public void put(String url, RequestParams params, Callback callback) {
-        mClient.put(Config.API_URL + "/" + url, auth(params), new ApiCallback(this, callback));
+        mClient.put(makeUrl(url), params, new ApiCallback(this, callback));
     }
 
     public void delete(String url, RequestParams params, Callback callback) {
-        mClient.delete(Config.API_URL + "/" + url + "?" + auth(params).toString(), new ApiCallback(this, callback));
+        mClient.delete(makeUrl(url, params), new ApiCallback(this, callback));
     }
 }
