@@ -6,12 +6,13 @@ import android.util.Log;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 /**
  * Created by jacob on 11/23/14.
  */
+
 public class Action {
     public Team team;
 
@@ -19,11 +20,17 @@ public class Action {
         team = t;
     }
 
-    public void uploadUpto(Uri image, String location) {
+    public boolean uploadUpto(Uri image, String location) {
         RequestParams params = new RequestParams();
 
-        params.put("photo", image);
-        params.put("location", location);
+        try {
+            params.put("photo", team.context.getContentResolver().openInputStream(image));
+            params.put("location", location);
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
 
         team.api.post(Config.PATH_ME_UPTO, params, new Api.Callback() {
             @Override
@@ -36,5 +43,7 @@ public class Action {
                 Log.e(Config.TAG, "error uploading new upto: " + response);
             }
         });
+
+        return true;
     }
 }
