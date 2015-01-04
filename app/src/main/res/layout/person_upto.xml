@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/brown"
     android:orientation="vertical">
 
     <ScrollView
@@ -15,58 +15,176 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:orientation="vertical"
             android:layout_gravity="top"
-            android:gravity="top">
-
-            <com.queatz.snappy.ui.SquareLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp">
-
-                <com.queatz.snappy.ui.SlideScreen
-                    android:id="@+id/profileSlider"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-                <com.queatz.snappy.ui.CurrentSlideIndicator
-                    android:id="@+id/slideIndicator"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:gravity="center_horizontal" />
-
-            </com.queatz.snappy.ui.SquareLayout>
+            android:gravity="top"
+            android:padding="4dp"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="@drawable/white_rounded"
+                android:orientation="vertical">
+
+                <com.queatz.snappy.ui.SquareLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp">
+
+                    <com.queatz.snappy.ui.Photo
+                        android:id="@+id/imageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/upto_1" />
+
+                </com.queatz.snappy.ui.SquareLayout>
 
                 <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp">
 
                     <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:id="@+id/list1"
+                        android:clickable="true"
+                        android:background="@drawable/softclick"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="8dp">
 
-                        <com.queatz.snappy.ui.TextView
-                            android:clickable="true"
-                            android:background="@drawable/softclick"
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="Hey! I'm Evelyn and I do cool stuff all throughout the day."
-                            android:lineSpacingMultiplier="1.5"
-                            android:textColor="@color/text"
-                            android:textSize="20sp"
-                            android:paddingTop="16dp"
-                            android:paddingBottom="8dp"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp" />
+                            android:padding="4dp"
+                            android:text="233"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:padding="4dp"
+                            android:text="Followers"
+                            android:textColor="@color/gray"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/list2"
+                        android:clickable="true"
+                        android:background="@drawable/softclick"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:padding="4dp"
+                            android:text="18"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:padding="4dp"
+                            android:text="Following"
+                            android:textColor="@color/gray"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:clickable="true"
+                        android:background="@drawable/softclick"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:padding="4dp"
+                            android:text="14"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:padding="4dp"
+                            android:text="Hosted"
+                            android:textColor="@color/gray"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/button"
+                    android:clickable="true"
+                    android:gravity="center_horizontal"
+                    android:padding="8dp"
+                    android:text="Follow Evelyn"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.queatz.snappy.ui.TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/softclick"
+                                android:clickable="true"
+                                android:gravity="center_horizontal"
+                                android:lineSpacingMultiplier="1.5"
+                                android:padding="8dp"
+                                android:text="Hey! I'm Evelyn and I do cool stuff all throughout the day."
+                                android:textColor="@color/text"
+                                android:textSize="20sp" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -74,219 +192,73 @@
 
             </LinearLayout>
 
-
             <LinearLayout
-                android:id="@+id/uptolink2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_margin="4dp"
+                android:background="@drawable/clickable_card"
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:padding="8dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/profile" />
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_margin="8dp"
+                    android:text="Evelyn is hosting Glamour Show tonight at 6pm"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="@drawable/clickable_card"
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:padding="8dp">
 
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/profile" />
 
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_margin="8dp"
+                    android:text="Evelyn went to Get abs"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="@drawable/clickable_card"
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:padding="8dp">
 
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/profile" />
 
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                    <com.queatz.snappy.ui.Photo
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/sm_square"/>
-
-                </LinearLayout>
-
+                    android:layout_margin="8dp"
+                    android:text="Evelyn hosted Glamour Show"
+                    android:textSize="18sp" />
             </LinearLayout>
 
         </LinearLayout>

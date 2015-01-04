@@ -15,10 +15,10 @@ public class MainTabAdapter extends ActionBar.TabAdapter {
     }
 
     public int getCount() {
-        return 3;
+        return 2;
     }
 
     public String getTabName(int i) {
-        return new String[]{"Explore", "Map", "Activity"}[i];
+        return new String[]{"Parties", "Messages"}[i];
     }
 }

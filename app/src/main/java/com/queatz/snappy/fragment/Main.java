@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.queatz.snappy.Config;
 import com.queatz.snappy.MainActivity;
@@ -58,7 +59,7 @@ public class Main extends Fragment {
             public void onClick(View view) {
                 Team team = ((MainApplication) getActivity().getApplication()).team;
 
-                team.view.push(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.IN_THE_VOID, ((MainActivity) team.view).mPersonView);
+                team.action.openMinimenu(view);
             }
         });
 

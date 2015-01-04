@@ -14,12 +14,11 @@ import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.ui.ActionBar;
 
 /**
- * Created by jacob on 11/23/14.
+ * Created by jacob on 1/4/15.
  */
-public class Upto extends Fragment {
+public class PersonList extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,25 +26,7 @@ public class Upto extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.upto_expanded, container, false);
-
-        View.OnClickListener oclk = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Team team = ((MainApplication) getActivity().getApplication()).team;
-
-                team.view.push(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.INSTANT, team.view.mPersonView);
-            }
-        };
-
-        View.OnClickListener oclk_map = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Team team = ((MainApplication) getActivity().getApplication()).team;
-
-                team.view.search("");
-            }
-        };
+        View view = inflater.inflate(R.layout.person_list, container, false);
 
         return view;
     }

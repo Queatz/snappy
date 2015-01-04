@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/shadow"
     android:orientation="vertical">
 
     <ScrollView
@@ -15,251 +15,210 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:background="@android:color/white"
-            android:gravity="top"
+            android:padding="4dp"
             android:orientation="vertical">
 
-            <com.queatz.snappy.ui.Photo
-                android:id="@+id/uptolink"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:src="@drawable/square" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <FrameLayout
-                    android:id="@+id/profilelink"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="76dp"
-                        android:layout_height="76dp"
-                        android:padding="8dp"
-                        android:src="@drawable/profile" />
-
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <com.queatz.snappy.ui.TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="8dp"
-                            android:paddingTop="8dp"
-                            android:text="Amanda Zhang"
-                            android:textColor="@color/text"
-                            android:textSize="24sp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <com.queatz.snappy.ui.TextView
-                            android:id="@+id/maplink"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="6dp"
-                            android:text="⚑ Palace of Fine Arts"
-                            android:textColor="@color/clickable"
-                            android:textSize="18sp" />
-
-                        <com.queatz.snappy.ui.TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="6dp"
-                            android:text="2m ago"
-                            android:textColor="@color/gray"
-                            android:textSize="18sp" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/white_rounded"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_margin="4dp"
+                    android:padding="8dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:src="@drawable/profile"
+                        android:layout_margin="4dp" />
 
                     <LinearLayout
-                        android:id="@+id/commentclick"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_margin="8dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:text="Glamour Show"
+                            android:textColor="@color/black"
+                            android:textSize="26sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:text="by Jacob Ferrero"
+                            android:textColor="@color/gray"
+                            android:textSize="17sp" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:background="@drawable/softclick"
+                        android:clickable="true"
+                        android:padding="4dp">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/profile"
+                            android:layout_margin="8dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="6 Minimum"
+                            android:textSize="16sp"
+                            android:gravity="center_horizontal"
+                            android:textColor="@color/blue" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:background="@drawable/softclick"
+                        android:clickable="true"
+                        android:padding="4dp">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/profile"
+                            android:layout_margin="8dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Tonight, 7pm"
+                            android:textSize="16sp"
+                            android:gravity="center_horizontal"
+                            android:textColor="@color/blue" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:background="@drawable/softclick"
+                        android:clickable="true"
+                        android:padding="4dp">
+
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/profile"
+                            android:layout_margin="8dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Hotel Spa"
+                            android:textSize="16sp"
+                            android:gravity="center_horizontal"
+                            android:textColor="@color/blue" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:padding="8dp"
+                    android:textSize="24sp"
+                    android:text="Request to Join"
+                    android:background="@drawable/button"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:clickable="true" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="22sp"
+                    android:text="Hey guys!  Come check out my latest fashion show!  It&apos;ll be a blast!"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Who's in?"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:paddingLeft="8dp" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:clickable="true"
-                        android:background="@drawable/softclick">
+                        android:padding="4dp">
 
-                        <FrameLayout
-                            android:id="@+id/profilelink2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
 
-                            <ImageView
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:padding="6dp"
-                                android:layout_marginLeft="12dp"
-                                android:src="@drawable/profile" />
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/profile"
+                            android:layout_margin="8dp" />
 
-                        </FrameLayout>
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/profile"
+                            android:layout_margin="8dp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
-                            android:layout_margin="6dp"
-                            android:gravity="center_vertical">
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/profile"
+                            android:layout_margin="8dp" />
 
-                            <com.queatz.snappy.ui.TextView
-                                android:id="@+id/profilelink5"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Amanda"
-                                android:textColor="@color/red"
-                                android:textSize="20sp" />
-
-                            <com.queatz.snappy.ui.TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="6sp"
-                                android:text="Betty Boop"
-                                android:textColor="@color/text"
-                                android:textSize="20sp" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/commentclick2"
-                        android:clickable="true"
-                        android:background="@drawable/softclick"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <FrameLayout
-                            android:id="@+id/profilelink3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <ImageView
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:padding="6dp"
-                                android:layout_marginLeft="12dp"
-                                android:src="@drawable/profile" />
-
-                        </FrameLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
-                            android:layout_margin="6dp"
-                            android:gravity="center_vertical">
-
-                            <com.queatz.snappy.ui.TextView
-                                android:id="@+id/profilelink6"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Jacob"
-                                android:textColor="@color/red"
-                                android:textSize="20sp" />
-
-                            <com.queatz.snappy.ui.TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="6sp"
-                                android:text="Sweet charming girl!"
-                                android:textColor="@color/text"
-                                android:textSize="20sp" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <FrameLayout
-                            android:id="@+id/profilelink4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <ImageView
-                                android:layout_width="48dp"
-                                android:layout_height="48dp"
-                                android:padding="6dp"
-                                android:layout_marginLeft="12dp"
-                                android:src="@drawable/profile" />
-
-                        </FrameLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
-
-                            <EditText
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_margin="6dp"
-                                android:hint=""
-                                android:inputType="textCapSentences"
-                                android:textColorHint="@color/gray"
-                                android:textColor="@color/text"
-                                android:textSize="20sp" />
-
-                            <ImageButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="6dp"
-                                android:src="@android:drawable/ic_menu_send"
-                                android:background="@android:color/transparent" />
-
-                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/profile"
+                            android:layout_margin="8dp" />
 
                     </LinearLayout>
 
@@ -267,8 +226,51 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+            <LinearLayout
+                android:background="@drawable/clickable_card"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:padding="8dp"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/profile"
+                    android:layout_margin="8dp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Evelyn joined"
+                    android:textSize="18sp"
+                    android:layout_margin="8dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@drawable/clickable_card"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:padding="8dp"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/profile"
+                    android:layout_margin="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Stacy joined"
+                    android:textSize="18sp"
+                    android:layout_margin="8dp" />
+            </LinearLayout>
+
+        </LinearLayout>
     </ScrollView>
 
 </LinearLayout>

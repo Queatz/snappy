@@ -27,38 +27,17 @@ public class PersonUptoSlide extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.person_upto, container, false);
 
-        final SlideScreen profileSlider = (SlideScreen) view.findViewById(R.id.profileSlider);
-
-        final ProfilePictureAdapter adapter = new ProfilePictureAdapter(getFragmentManager());
-
-        profileSlider.setAdapter(adapter);
-
-        final CurrentSlideIndicator slideIndicator = (CurrentSlideIndicator) view.findViewById(R.id.slideIndicator);
-        slideIndicator.setCount(adapter.getCount());
-        slideIndicator.setOffset(0);
-
-        profileSlider.setOnSlideCallback(new SlideScreen.OnSlideCallback() {
-            @Override
-            public void onSlide(int currentSlide, float offsetPercentage) {
-                slideIndicator.setOffset(offsetPercentage);
-            }
-
-            @Override
-            public void onSlideChange(int currentSlide) {
-
-            }
-        });
-
-        View.OnClickListener oclk2 = new View.OnClickListener() {
+        View.OnClickListener oclk_list = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Team team = ((MainApplication) getActivity().getApplication()).team;
 
-                team.view.push(ViewActivity.Transition.EXAMINE, ViewActivity.Transition.INSTANT, team.view.mUptoView);
+                team.view.push(ViewActivity.Transition.EXAMINE, ViewActivity.Transition.INSTANT, team.view.mPersonList);
             }
         };
 
-        view.findViewById(R.id.uptolink2).setOnClickListener(oclk2);
+        view.findViewById(R.id.list1).setOnClickListener(oclk_list);
+        view.findViewById(R.id.list2).setOnClickListener(oclk_list);
 
         return view;
     }

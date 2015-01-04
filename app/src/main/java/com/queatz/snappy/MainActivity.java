@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.inputmethod.EditorInfo;
 
+import com.queatz.snappy.fragment.HostParty;
 import com.queatz.snappy.fragment.NewUpto;
 import com.queatz.snappy.fragment.Person;
+import com.queatz.snappy.fragment.PersonList;
 import com.queatz.snappy.fragment.Upto;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.activity.ViewActivity;
@@ -24,6 +26,8 @@ public class MainActivity extends ViewActivity {
     public Fragment mPersonView;
     public Fragment mUptoView;
     public Fragment mNewUpto;
+    public Fragment mHostParty;
+    public Fragment mPersonList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,8 @@ public class MainActivity extends ViewActivity {
         mPersonView = new Person();
         mUptoView = new Upto();
         mNewUpto= new NewUpto();
+        mHostParty = new HostParty();
+        mPersonList = new PersonList();
 
         showStartView();
         onNewIntent(getIntent());

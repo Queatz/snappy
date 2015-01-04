@@ -15,7 +15,7 @@ public class ProfilePictureAdapter extends SlideScreen.SlideScreenAdapter {
     }
 
     public int getCount() {
-        return 6;
+        return 4;
     }
 
     public Fragment getSlide(int page) {

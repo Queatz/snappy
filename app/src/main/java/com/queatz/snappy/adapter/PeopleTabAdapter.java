@@ -15,10 +15,10 @@ public class PeopleTabAdapter extends ActionBar.TabAdapter {
     }
 
     public int getCount() {
-        return 3;
+        return 2;
     }
 
     public String getTabName(int i) {
-        return new String[]{"Upto", "Into", "Messages"}[i];
+        return new String[]{"Upto", "Messages"}[i];
     }
 }

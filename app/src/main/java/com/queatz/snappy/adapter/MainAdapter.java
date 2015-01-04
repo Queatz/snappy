@@ -19,7 +19,7 @@ public class MainAdapter extends SlideScreen.SlideScreenAdapter {
     }
 
     public int getCount() {
-        return 3;
+        return 2;
     }
 
     public Fragment getSlide(int page) {
@@ -27,8 +27,6 @@ public class MainAdapter extends SlideScreen.SlideScreenAdapter {
             case 0:
                 return new ExploreSlide();
             case 1:
-                return new MapSlide();
-            case 2:
                 return new ActivitySlide();
             default:
                 return null;

@@ -56,22 +56,21 @@ public class ExploreSlide extends Fragment {
             }
         };
 
-        View upto = view.findViewById(R.id.uptolink);
-        upto.setOnClickListener(oclk2);
-        registerForContextMenu(upto);
 
-        view.findViewById(R.id.uptolink2).setOnClickListener(oclk2);
+        View.OnClickListener oclk_party = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Team team = ((MainApplication) getActivity().getApplication()).team;
 
-        registerForContextMenu(view.findViewById(R.id.commentclick));
-        registerForContextMenu(view.findViewById(R.id.commentclick2));
+                team.view.push(ViewActivity.Transition.EXAMINE, ViewActivity.Transition.INSTANT, team.view.mUptoView);
+            }
+        };
 
-        view.findViewById(R.id.profilelink).setOnClickListener(oclk);
-        view.findViewById(R.id.profilelink2).setOnClickListener(oclk);
-        view.findViewById(R.id.profilelink3).setOnClickListener(oclk);
-        view.findViewById(R.id.profilelink4).setOnClickListener(oclk);
-        view.findViewById(R.id.profilelink5).setOnClickListener(oclk);
-        view.findViewById(R.id.profilelink6).setOnClickListener(oclk);
-        view.findViewById(R.id.maplink).setOnClickListener(oclk_map);
+        view.findViewById(R.id.person1).setOnClickListener(oclk);
+        view.findViewById(R.id.card1).setOnClickListener(oclk_party);
+        view.findViewById(R.id.card2).setOnClickListener(oclk_party);
+        view.findViewById(R.id.card3).setOnClickListener(oclk_party);
+        view.findViewById(R.id.card4).setOnClickListener(oclk_party);
 
         return view;
     }
@@ -81,14 +80,6 @@ public class ExploreSlide extends Fragment {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getActivity().getMenuInflater();
 
-        int m;
-
-        if(v.getId() == R.id.commentclick || v.getId() == R.id.commentclick2)
-            m = R.menu.comment;
-        else
-            m = R.menu.upto;
-
-        inflater.inflate(m, menu);
     }
 
     @Override

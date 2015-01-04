@@ -10,9 +10,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <com.queatz.snappy.ui.SlideScreen
-        android:id="@+id/main_content"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <com.queatz.snappy.ui.SlideScreen
+            android:id="@+id/main_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.queatz.snappy.ui.MiniMenu
+            android:id="@+id/miniMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true" />
+
+    </RelativeLayout>
 
 </LinearLayout>

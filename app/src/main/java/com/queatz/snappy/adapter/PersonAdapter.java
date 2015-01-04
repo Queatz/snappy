@@ -17,7 +17,7 @@ public class PersonAdapter extends SlideScreen.SlideScreenAdapter {
     }
 
     public int getCount() {
-        return 3;
+        return 2;
     }
 
     public Fragment getSlide(int page) {
@@ -25,8 +25,6 @@ public class PersonAdapter extends SlideScreen.SlideScreenAdapter {
             case 0:
                 return new PersonUptoSlide();
             case 1:
-                return new PersonIntoSlide();
-            case 2:
                 return new MessagesSlide();
             default:
                 return null;

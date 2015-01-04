@@ -2,9 +2,12 @@ package com.queatz.snappy.team;
 
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
 
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
+import com.queatz.snappy.R;
+import com.queatz.snappy.ui.MiniMenu;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,6 +21,10 @@ public class Action {
 
     public Action(Team t) {
         team = t;
+    }
+
+    public void openMinimenu(View source) {
+        ((MiniMenu) team.view.findViewById(R.id.miniMenu)).show();
     }
 
     public boolean uploadUpto(Uri image, String location) {
