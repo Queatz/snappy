@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/brown"
+    android:background="@color/spacer"
     android:orientation="vertical">
 
     <ScrollView
@@ -154,7 +154,7 @@
                     android:padding="8dp"
                     android:text="Follow Evelyn"
                     android:textColor="@color/white"
-                    android:textSize="24sp" />
+                    android:textSize="18sp" />
 
 
                 <LinearLayout

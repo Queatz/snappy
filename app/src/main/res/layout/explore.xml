@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/brown"
+    android:background="@color/spacer"
     android:orientation="vertical">
 
     <ScrollView
@@ -70,8 +70,26 @@
                             android:textSize="17sp" />
 
                     </LinearLayout>
-                </LinearLayout>
 
+                    <ImageView
+                        android:clickable="true"
+                        android:background="@drawable/softclick"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@android:drawable/ic_menu_more"/>
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:padding="8dp"
+                    android:textSize="18sp"
+                    android:text="Request to Join"
+                    android:clickable="true"
+                    android:background="@drawable/button"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal" />
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -98,34 +116,8 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="6 Minimum"
-                            android:textSize="16sp"
-                            android:gravity="center_horizontal"
-                            android:textColor="@color/blue" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:background="@drawable/softclick"
-                        android:clickable="true"
-                        android:padding="4dp">
-
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/profile"
-                            android:layout_margin="8dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
                             android:text="Tonight, 7pm"
-                            android:textSize="16sp"
+                            android:textSize="18sp"
                             android:gravity="center_horizontal"
                             android:textColor="@color/blue" />
 
@@ -151,8 +143,8 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Hotel Spa"
-                            android:textSize="16sp"
+                            android:text="Baker Beach"
+                            android:textSize="18sp"
                             android:gravity="center_horizontal"
                             android:textColor="@color/blue" />
 
@@ -160,27 +152,17 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:padding="8dp"
-                    android:textSize="24sp"
-                    android:text="Request to Join"
-                    android:clickable="true"
-                    android:background="@drawable/button"
-                    android:textColor="@color/white"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal" />
+
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
                     android:text="Hey guys!  Come check out my latest fashion show!  It&apos;ll be a blast!"
                     android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="8dp" />
+                    android:paddingRight="16dp" />
+
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -193,7 +175,7 @@
                         android:text="Who's in?"
                         android:textStyle="bold"
                         android:textSize="16sp"
-                        android:paddingLeft="8dp" />
+                        android:padding="8dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -281,8 +263,27 @@
                             android:textSize="17sp" />
 
                     </LinearLayout>
+
+                    <ImageView
+                        android:clickable="true"
+                        android:background="@drawable/softclick"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@android:drawable/ic_menu_more"/>
                 </LinearLayout>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:padding="8dp"
+                    android:textSize="18sp"
+                    android:text="Request to Join"
+                    android:clickable="true"
+                    android:background="@drawable/button"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal" />
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -309,34 +310,8 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="6 Minimum"
-                            android:textSize="16sp"
-                            android:gravity="center_horizontal"
-                            android:textColor="@color/blue" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:background="@drawable/softclick"
-                        android:clickable="true"
-                        android:padding="4dp">
-
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/profile"
-                            android:layout_margin="8dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
                             android:text="Tonight, 7pm"
-                            android:textSize="16sp"
+                            android:textSize="18sp"
                             android:gravity="center_horizontal"
                             android:textColor="@color/blue" />
 
@@ -362,8 +337,8 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Hotel Spa"
-                            android:textSize="16sp"
+                            android:text="Baker Beach"
+                            android:textSize="18sp"
                             android:gravity="center_horizontal"
                             android:textColor="@color/blue" />
 
@@ -371,27 +346,14 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:padding="8dp"
-                    android:textSize="24sp"
-                    android:text="Request to Join"
-                    android:clickable="true"
-                    android:background="@drawable/button"
-                    android:textColor="@color/white"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
                     android:text="Hey guys!  Come check out my latest fashion show!  It&apos;ll be a blast!"
                     android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="8dp" />
+                    android:paddingRight="16dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -491,8 +453,27 @@
                             android:textSize="17sp" />
 
                     </LinearLayout>
+
+                    <ImageView
+                        android:clickable="true"
+                        android:background="@drawable/softclick"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@android:drawable/ic_menu_more"/>
                 </LinearLayout>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:padding="8dp"
+                    android:textSize="18sp"
+                    android:text="Request to Join"
+                    android:clickable="true"
+                    android:background="@drawable/button"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal" />
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -519,34 +500,8 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="6 Minimum"
-                            android:textSize="16sp"
-                            android:gravity="center_horizontal"
-                            android:textColor="@color/blue" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:background="@drawable/softclick"
-                        android:clickable="true"
-                        android:padding="4dp">
-
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/profile"
-                            android:layout_margin="8dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
                             android:text="Tonight, 7pm"
-                            android:textSize="16sp"
+                            android:textSize="18sp"
                             android:gravity="center_horizontal"
                             android:textColor="@color/blue" />
 
@@ -572,8 +527,8 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Hotel Spa"
-                            android:textSize="16sp"
+                            android:text="Baker Beach"
+                            android:textSize="18sp"
                             android:gravity="center_horizontal"
                             android:textColor="@color/blue" />
 
@@ -581,27 +536,14 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:padding="8dp"
-                    android:textSize="24sp"
-                    android:text="Request to Join"
-                    android:clickable="true"
-                    android:background="@drawable/button"
-                    android:textColor="@color/white"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
                     android:text="Hey guys!  Come check out my latest fashion show!  It&apos;ll be a blast!"
                     android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="8dp" />
+                    android:paddingRight="16dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -702,8 +644,27 @@
                             android:textSize="17sp" />
 
                     </LinearLayout>
+
+                    <ImageView
+                        android:clickable="true"
+                        android:background="@drawable/softclick"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@android:drawable/ic_menu_more"/>
                 </LinearLayout>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:padding="8dp"
+                    android:textSize="18sp"
+                    android:text="Request to Join"
+                    android:clickable="true"
+                    android:background="@drawable/button"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal" />
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -730,34 +691,8 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="6 Minimum"
-                            android:textSize="16sp"
-                            android:gravity="center_horizontal"
-                            android:textColor="@color/blue" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:background="@drawable/softclick"
-                        android:clickable="true"
-                        android:padding="4dp">
-
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/profile"
-                            android:layout_margin="8dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
                             android:text="Tonight, 7pm"
-                            android:textSize="16sp"
+                            android:textSize="18sp"
                             android:gravity="center_horizontal"
                             android:textColor="@color/blue" />
 
@@ -783,8 +718,8 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Hotel Spa"
-                            android:textSize="16sp"
+                            android:text="Baker Beach"
+                            android:textSize="18sp"
                             android:gravity="center_horizontal"
                             android:textColor="@color/blue" />
 
@@ -792,27 +727,14 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:padding="8dp"
-                    android:textSize="24sp"
-                    android:text="Request to Join"
-                    android:clickable="true"
-                    android:background="@drawable/button"
-                    android:textColor="@color/white"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
                     android:text="Hey guys!  Come check out my latest fashion show!  It&apos;ll be a blast!"
                     android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="8dp" />
+                    android:paddingRight="16dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

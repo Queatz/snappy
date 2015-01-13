@@ -19,6 +19,130 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:background="@drawable/action_required_card_rounded"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:gravity="center_vertical"
+                android:padding="8dp"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/profile"
+                    android:padding="4dp" />
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:text="Macy Lacey"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Requested to join"
+                        android:textColor="@color/gray"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:clickable="true"
+                    android:background="@drawable/softclick"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:src="@android:drawable/ic_menu_close_clear_cancel"
+                    android:padding="8dp" />
+
+                <ImageView
+                    android:clickable="true"
+                    android:background="@drawable/softclick"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:src="@android:drawable/checkbox_on_background"
+                    android:padding="8dp" />
+            </LinearLayout><LinearLayout
+            android:background="@drawable/action_required_card_rounded"
+            android:clickable="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:src="@drawable/profile"
+                android:padding="4dp" />
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="Stacy Arroyo"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Requested to join"
+                    android:textColor="@color/gray"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:clickable="true"
+                android:background="@drawable/softclick"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:padding="8dp" />
+
+            <ImageView
+                android:clickable="true"
+                android:background="@drawable/softclick"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:src="@android:drawable/checkbox_on_background"
+                android:padding="8dp" />
+        </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
@@ -50,7 +174,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:gravity="center_vertical"
-                            android:text="Glamour Show"
+                            android:text="Yoga + Code"
                             android:textColor="@color/black"
                             android:textSize="26sp" />
 
@@ -59,11 +183,18 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:gravity="center_vertical"
-                            android:text="by Jacob Ferrero"
+                            android:text="by Zoey Angalas"
                             android:textColor="@color/gray"
                             android:textSize="17sp" />
 
                     </LinearLayout>
+
+                    <ImageView
+                        android:clickable="true"
+                        android:background="@drawable/softclick"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@android:drawable/ic_menu_more"/>
                 </LinearLayout>
 
 
@@ -73,31 +204,7 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:background="@drawable/softclick"
-                        android:clickable="true"
-                        android:padding="4dp">
 
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/profile"
-                            android:layout_margin="8dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="6 Minimum"
-                            android:textSize="16sp"
-                            android:gravity="center_horizontal"
-                            android:textColor="@color/blue" />
-
-                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -119,7 +226,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Tonight, 7pm"
-                            android:textSize="16sp"
+                            android:textSize="18sp"
                             android:gravity="center_horizontal"
                             android:textColor="@color/blue" />
 
@@ -145,8 +252,8 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Hotel Spa"
-                            android:textSize="16sp"
+                            android:text="Baker Beach"
+                            android:textSize="18sp"
                             android:gravity="center_horizontal"
                             android:textColor="@color/blue" />
 
@@ -154,27 +261,27 @@
 
                 </LinearLayout>
 
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="Hey guys!  Come check out my latest fashion show!  It&apos;ll be a blast!"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:padding="8dp"
-                    android:textSize="24sp"
-                    android:text="Request to Join"
+                    android:textSize="18sp"
+                    android:text="Mark Event as Full"
                     android:background="@drawable/button"
                     android:textColor="@color/white"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center_horizontal"
                     android:clickable="true" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="22sp"
-                    android:text="Hey guys!  Come check out my latest fashion show!  It&apos;ll be a blast!"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="8dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -224,6 +331,36 @@
 
                 </LinearLayout>
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@drawable/white_rounded"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:padding="4dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:background="@drawable/softclick"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:hint="Write message"
+                    android:inputType="text|textMultiLine|textCapSentences"
+                    android:textColorHint="@color/gray"
+                    android:textSize="18sp"
+                    android:padding="8dp"/>
+                <ImageView
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/softclick"
+                    android:gravity="center_vertical"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@android:drawable/ic_menu_send" />
             </LinearLayout>
 
             <LinearLayout

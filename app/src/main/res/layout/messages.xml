@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/brown">
+    android:background="@color/spacer">
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -266,7 +266,8 @@
             android:minHeight="48dp"
             android:padding="8dp"
             android:background="@drawable/softclick"
-            android:hint="Say"
+            android:hint="Write message"
+            android:textSize="18sp"
             android:textColorHint="@color/gray"
             android:inputType="text|textMultiLine|textCapSentences" />
         <ImageView
