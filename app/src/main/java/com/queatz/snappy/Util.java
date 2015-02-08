@@ -1,7 +1,6 @@
 package com.queatz.snappy;
 
 import android.content.Context;
-import android.util.TypedValue;
 
 /**
  * Created by jacob on 10/31/14.

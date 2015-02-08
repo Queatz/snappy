@@ -2,7 +2,6 @@ package com.queatz.snappy;
 
 import android.app.Application;
 
-import com.queatz.snappy.team.Auth;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.ui.Global;
 

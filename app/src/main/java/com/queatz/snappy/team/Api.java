@@ -1,5 +1,7 @@
 package com.queatz.snappy.team;
 
+import android.util.Log;
+
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -29,9 +31,10 @@ public class Api {
 
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
             if(mCallback != null)
                 mCallback.success(new String(responseBody));
+
+            Log.w(Config.TAG, "api - success - " + new String(responseBody));
         }
 
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
@@ -42,6 +45,8 @@ public class Api {
 
             if(mCallback != null)
                 mCallback.fail(new String(responseBody));
+
+            Log.w(Config.TAG, "api - fail - " + new String(responseBody));
         }
     }
 
@@ -103,6 +108,22 @@ public class Api {
 
     public void delete(String url, Callback callback) {
         delete(url, null, callback);
+    }
+
+    public void get(String url, RequestParams params) {
+        get(url, params, null);
+    }
+
+    public void put(String url, RequestParams params) {
+        put(url, params, null);
+    }
+
+    public void post(String url, RequestParams params) {
+        post(url, params, null);
+    }
+
+    public void delete(String url, RequestParams params) {
+        delete(url, params, null);
     }
 
     public void get(String url, RequestParams params, Callback callback) {

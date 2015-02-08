@@ -9,10 +9,7 @@ import android.view.ViewGroup;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.ViewActivity;
-import com.queatz.snappy.adapter.ProfilePictureAdapter;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.ui.CurrentSlideIndicator;
-import com.queatz.snappy.ui.SlideScreen;
 
 /**
  * Created by jacob on 10/23/14.

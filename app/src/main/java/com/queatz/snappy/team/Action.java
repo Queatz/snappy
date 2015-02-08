@@ -9,7 +9,6 @@ import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
 import com.queatz.snappy.ui.MiniMenu;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
@@ -25,6 +24,21 @@ public class Action {
 
     public void openMinimenu(View source) {
         ((MiniMenu) team.view.findViewById(R.id.miniMenu)).show();
+    }
+
+    public void hostParty(long id, String name, String time, String location, String details) {
+        RequestParams params = new RequestParams();
+
+        if(id > 0)
+            params.put("id", id);
+        else
+            params.put("name", name);
+
+        params.put("time", time);
+        params.put("location", location);
+        params.put("details", details);
+
+        team.api.post(Config.PATH_PARTIES, params);
     }
 
     public boolean uploadUpto(Uri image, String location) {

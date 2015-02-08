@@ -3,15 +3,11 @@ package com.queatz.snappy.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
-import android.graphics.Interpolator;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnticipateInterpolator;
-import android.view.animation.BounceInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;

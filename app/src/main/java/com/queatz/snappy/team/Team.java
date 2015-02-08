@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.queatz.snappy.MainActivity;
-import com.queatz.snappy.activity.ViewActivity;
 
 /**
  * Created by jacob on 10/19/14.

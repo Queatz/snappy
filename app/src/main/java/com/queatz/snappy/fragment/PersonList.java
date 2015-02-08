@@ -10,10 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
-import com.queatz.snappy.activity.ViewActivity;
-import com.queatz.snappy.team.Team;
 
 /**
  * Created by jacob on 1/4/15.

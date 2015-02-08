@@ -9,10 +9,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
-import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.team.Team;
 
 /**
@@ -26,25 +26,47 @@ public class HostParty extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.host_party, container, false);
+        final View view = inflater.inflate(R.layout.host_party, container, false);
 
         View.OnClickListener oclk = new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 Team team = ((MainApplication) getActivity().getApplication()).team;
 
-                team.view.push(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.INSTANT, team.view.mPersonView);
+                String name = ((EditText) view.findViewById(R.id.name)).getText().toString();
+                String time = ((EditText) view.findViewById(R.id.time)).getText().toString();
+                String location = ((EditText) view.findViewById(R.id.location)).getText().toString();
+                String details = ((EditText) view.findViewById(R.id.details)).getText().toString();
+
+                team.action.hostParty(0, name, time, location, details);
+                team.view.pop();
             }
         };
 
-        View.OnClickListener oclk_map = new View.OnClickListener() {
+        view.findViewById(R.id.action_host).setOnClickListener(oclk);
+
+        View.OnClickListener oclk2 = new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Team team = ((MainApplication) getActivity().getApplication()).team;
+            public void onClick(View v) {
+                EditText name;
 
-                team.view.search("");
+                name = ((EditText) view.findViewById(R.id.name));
+                name.setText("Code and Jazz");
+                name.setEnabled(false);
+
+                name = ((EditText) view.findViewById(R.id.time));
+                name.setText("5pm");
+
+                name = ((EditText) view.findViewById(R.id.location));
+                name.setText("Chestnut Mini-Mansion");
+
+                name = ((EditText) view.findViewById(R.id.details));
+                name.setText("Chess night");
             }
         };
+
+        view.findViewById(R.id.click_glam).setOnClickListener(oclk2);
+        view.findViewById(R.id.click_code).setOnClickListener(oclk2);
 
         return view;
     }

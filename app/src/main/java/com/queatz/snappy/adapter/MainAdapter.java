@@ -5,9 +5,6 @@ import android.app.FragmentManager;
 
 import com.queatz.snappy.fragment.ActivitySlide;
 import com.queatz.snappy.fragment.ExploreSlide;
-import com.queatz.snappy.fragment.MapSlide;
-import com.queatz.snappy.fragment.MessagesSlide;
-import com.queatz.snappy.fragment.PersonIntoSlide;
 import com.queatz.snappy.ui.SlideScreen;
 
 /**

@@ -6,13 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.queatz.snappy.Config;
-import com.queatz.snappy.MainActivity;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
-import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.adapter.MainAdapter;
 import com.queatz.snappy.adapter.MainTabAdapter;
 import com.queatz.snappy.team.Api;
@@ -34,18 +31,6 @@ public class Main extends Fragment {
         Team team = ((MainApplication) getActivity().getApplication()).team;
 
         Log.d(Config.TAG, "auth = " + team.auth.getAuthParam());
-
-        team.api.get("explore", new Api.Callback() {
-            @Override
-            public void success(String response) {
-                Log.d(Config.TAG, "explore: " + response);
-            }
-
-            @Override
-            public void fail(String response) {
-                Log.d(Config.TAG, "explore:fail: " + response);
-            }
-        });
     }
 
     @Override

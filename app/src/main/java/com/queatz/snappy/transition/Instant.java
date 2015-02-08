@@ -1,7 +1,6 @@
 package com.queatz.snappy.transition;
 
 import android.app.Fragment;
-import android.view.View;
 
 /**
  * Created by jacob on 10/25/14.

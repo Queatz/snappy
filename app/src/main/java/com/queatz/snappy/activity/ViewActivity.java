@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.view.View;
 
 import com.queatz.snappy.R;
 import com.queatz.snappy.transition.Examine;
@@ -13,10 +12,7 @@ import com.queatz.snappy.transition.InTheVoid;
 import com.queatz.snappy.transition.Instant;
 import com.queatz.snappy.transition.SexyProfile;
 import com.queatz.snappy.transition.SpaceGame;
-import com.queatz.snappy.transition.Transition;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Stack;
 
 /**
@@ -53,8 +49,8 @@ public class ViewActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fragments = new Stack<Fragment>();
-        belowAboves = new Stack<BelowAbove>();
+        fragments = new Stack<>();
+        belowAboves = new Stack<>();
 
         setContentView(R.layout.activity);
     }

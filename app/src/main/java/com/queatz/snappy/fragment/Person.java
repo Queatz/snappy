@@ -6,10 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.queatz.snappy.MainActivity;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
-import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.adapter.PeopleTabAdapter;
 import com.queatz.snappy.adapter.PersonAdapter;
 import com.queatz.snappy.team.Team;

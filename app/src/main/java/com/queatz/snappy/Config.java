@@ -15,7 +15,7 @@ public class Config {
 
     public static String PARAM_AUTH = "auth";
     public static String PATH_API = "api";
-    public static String PATH_EXPLORE = "explore";
+    public static String PATH_PARTIES = "parties";
     public static String PATH_PEOPLE = "people";
     public static String PATH_SEARCH = "search";
     public static String PATH_ACTIVITY = "messages";

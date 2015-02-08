@@ -3,10 +3,8 @@ package com.queatz.snappy.transition;
 import android.app.Fragment;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 
 import com.queatz.snappy.Config;
-import com.queatz.snappy.ui.Global;
 
 import java.util.Date;
 
