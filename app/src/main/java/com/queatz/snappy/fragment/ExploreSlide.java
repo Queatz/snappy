@@ -54,6 +54,7 @@ public class ExploreSlide extends Fragment {
             }
         });
 
+        mRefresh.setRefreshing(true);
         refresh();
 
         return view;
