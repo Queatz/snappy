@@ -3,7 +3,6 @@ package com.queatz.snappy.fragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -41,7 +40,7 @@ public class ExploreSlide extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.explore, container, false);
+        View view = inflater.inflate(R.layout.parties, container, false);
 
         mList = (ListView) view.findViewById(R.id.list);
         mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);

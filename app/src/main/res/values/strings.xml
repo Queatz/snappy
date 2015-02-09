@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Snappy</string>
+    <string name="whos_in">Who\'s in?</string>
+    <string name="request_to_join">Request to Join</string>
 </resources>

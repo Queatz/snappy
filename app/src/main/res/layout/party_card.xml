@@ -72,7 +72,7 @@
             android:layout_margin="8dp"
             android:padding="8dp"
             android:textSize="18sp"
-            android:text="Request to Join"
+            android:text="@string/request_to_join"
             android:clickable="true"
             android:background="@drawable/button"
             android:textColor="@color/white"
@@ -99,14 +99,13 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/profile"
+                    android:src="@drawable/night"
                     android:layout_margin="8dp" />
 
                 <TextView
                     android:id="@+id/time_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Tonight, 7pm"
                     android:textSize="18sp"
                     android:gravity="center_horizontal"
                     android:textColor="@color/blue" />
@@ -128,14 +127,13 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/profile"
+                    android:src="@drawable/location"
                     android:layout_margin="8dp" />
 
                 <TextView
                     android:id="@+id/location_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Baker Beach"
                     android:textSize="18sp"
                     android:gravity="center_horizontal"
                     android:textColor="@color/blue" />
@@ -151,11 +149,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:text="Hey guys!  Come check out my latest fashion show!  It&apos;ll be a blast!"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp" />
-
-
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp" />
 
         <LinearLayout
             android:id="@+id/whos_in_layout"
@@ -166,10 +162,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Who's in?"
+                android:text="@string/whos_in"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:padding="8dp" />
+                android:paddingLeft="8dp"
+                android:paddingBottom="8dp" />
 
             <LinearLayout
                 android:id="@+id/whos_in"
@@ -178,16 +175,16 @@
                 android:orientation="horizontal"
                 android:padding="4dp">
 
-
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:src="@drawable/profile"
-                    android:layout_margin="8dp" />
+                    android:layout_margin="8dp"
+                    android:src="@drawable/profile" />
 
             </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
+
 </FrameLayout>
