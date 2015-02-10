@@ -71,7 +71,9 @@ public class PartyAdapter extends ArrayAdapter<JSONObject> {
             ImageView awho = (ImageView) whosin.getChildAt(0);
             ViewGroup.LayoutParams lps = awho.getLayoutParams();
 
-            for (int i = 0; i < incount - 1; i++) {
+            whosin.removeAllViews();
+
+            for (int i = 0; i < incount; i++) {
                 awho = new ImageView(getContext());
                 awho.setLayoutParams(lps);
                 awho.setImageResource(R.drawable.profile);
