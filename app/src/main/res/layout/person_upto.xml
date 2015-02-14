@@ -152,7 +152,7 @@
                     android:clickable="true"
                     android:gravity="center_horizontal"
                     android:padding="8dp"
-                    android:text="Follow Evelyn"
+                    android:text="Follow Connie"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
@@ -180,7 +180,7 @@
                                 android:gravity="center_horizontal"
                                 android:lineSpacingMultiplier="1.5"
                                 android:padding="8dp"
-                                android:text="Hey! I'm Evelyn and I do cool stuff all throughout the day."
+                                android:text="Hey! I'm Connie. I bar tend and don't drink."
                                 android:textColor="@color/text"
                                 android:textSize="20sp" />
 
@@ -211,7 +211,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="Evelyn is hosting Glamour Show tonight at 6pm"
+                    android:text="Connie is hosting Glamour Show tonight at 6pm"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -234,7 +234,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="Evelyn went to Get abs"
+                    android:text="Connie went to Get abs"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -257,7 +257,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="Evelyn hosted Glamour Show"
+                    android:text="Connie hosted Glamour Show"
                     android:textSize="18sp" />
             </LinearLayout>
 

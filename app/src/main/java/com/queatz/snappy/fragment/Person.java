@@ -32,7 +32,7 @@ public class Person extends Fragment {
 
         mActionBar = (ActionBar) view.findViewById(R.id.actionBar);
         mActionBar.setAdapter(new PeopleTabAdapter(getActivity()));
-        mActionBar.setTitle("Amanda Zhang");
+        mActionBar.setTitle("Connie Chung");
         mActionBar.setLeftContent(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

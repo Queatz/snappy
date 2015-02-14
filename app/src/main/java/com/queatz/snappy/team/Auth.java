@@ -114,6 +114,8 @@ public class Auth {
         mUser = null;
         mAuthToken = null;
         save();
+
+        team.view.showStartView();
     }
 
     public void signin() {

@@ -15,6 +15,7 @@ public class Team {
     public SharedPreferences preferences;
     public Api api;
     public Action action;
+    public Things things;
 
     public Team(Context c) {
         context = c;
@@ -22,5 +23,6 @@ public class Team {
         auth = new Auth(this);
         api = new Api(this);
         action = new Action(this);
+        things = new Things(this);
     }
 }

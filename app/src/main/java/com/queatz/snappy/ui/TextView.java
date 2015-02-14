@@ -25,7 +25,6 @@ public class TextView extends android.widget.TextView {
 
     private void init() {
         if(Global.defaultFont == null) {
-            Log.w(Global.LOG_TAG, "Default font not set up!");
             return;
         }
 

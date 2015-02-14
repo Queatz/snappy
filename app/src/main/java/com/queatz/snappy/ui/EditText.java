@@ -25,7 +25,6 @@ public class EditText extends android.widget.EditText {
 
     private void init() {
         if(Global.defaultFont == null) {
-            Log.w(Global.LOG_TAG, "Default font not set up!");
             return;
         }
 
