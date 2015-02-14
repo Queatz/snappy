@@ -18,7 +18,7 @@ public class Config {
     public static String PATH_PARTIES = "parties";
     public static String PATH_PEOPLE = "people";
     public static String PATH_SEARCH = "search";
-    public static String PATH_ACTIVITY = "messages";
+    public static String PATH_MESSAGES = "messages";
     public static String PATH_UPTO = "upto";
     public static String PATH_ME= "me";
     public static String PATH_ME_UPTO= "me/upto";

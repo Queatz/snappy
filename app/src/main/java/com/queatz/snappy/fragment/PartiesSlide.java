@@ -30,12 +30,16 @@ import java.util.List;
  * Created by jacob on 10/19/14.
  */
 public class PartiesSlide extends Fragment {
+    Team team;
+
     SwipeRefreshLayout mRefresh;
     ListView mList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        team = ((MainApplication) getActivity().getApplication()).team;
     }
 
     @Override
@@ -62,8 +66,6 @@ public class PartiesSlide extends Fragment {
     public void refresh() {
         if(getActivity() == null)
             return;
-
-        Team team = ((MainApplication) getActivity().getApplication()).team;
 
         team.api.get(Config.PATH_PARTIES, new Api.Callback() {
             @Override

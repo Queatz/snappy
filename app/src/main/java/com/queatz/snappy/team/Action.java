@@ -41,7 +41,7 @@ public class Action {
         team.api.post(Config.PATH_PARTIES, params);
     }
 
-    public boolean uploadUpto(Uri image, String location) {
+    public boolean uploadUpto(Uri image, String location) { // TODO this will turn into post photo to party
         RequestParams params = new RequestParams();
 
         try {
