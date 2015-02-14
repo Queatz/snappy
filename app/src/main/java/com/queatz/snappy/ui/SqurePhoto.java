@@ -5,16 +5,16 @@ import android.widget.ImageView;
 /**
  * Created by jacob on 10/18/14.
  */
-public class Photo extends ImageView {
-    public Photo(android.content.Context context) {
+public class SqurePhoto extends ImageView {
+    public SqurePhoto(android.content.Context context) {
         super(context);
     }
 
-    public Photo(android.content.Context context, android.util.AttributeSet attrs) {
+    public SqurePhoto(android.content.Context context, android.util.AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public Photo(android.content.Context context, android.util.AttributeSet attrs, int defStyle) {
+    public SqurePhoto(android.content.Context context, android.util.AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 

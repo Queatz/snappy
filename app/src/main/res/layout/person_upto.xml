@@ -31,7 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp">
 
-                    <com.queatz.snappy.ui.Photo
+                    <com.queatz.snappy.ui.SqurePhoto
                         android:id="@+id/imageView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -58,7 +58,7 @@
                         android:orientation="vertical"
                         android:padding="8dp">
 
-                        <TextView
+                        <com.queatz.snappy.ui.TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
@@ -68,7 +68,7 @@
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
-                        <TextView
+                        <com.queatz.snappy.ui.TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
@@ -89,7 +89,7 @@
                         android:orientation="vertical"
                         android:padding="8dp">
 
-                        <TextView
+                        <com.queatz.snappy.ui.TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
@@ -99,7 +99,7 @@
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
-                        <TextView
+                        <com.queatz.snappy.ui.TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
@@ -119,7 +119,7 @@
                         android:orientation="vertical"
                         android:padding="8dp">
 
-                        <TextView
+                        <com.queatz.snappy.ui.TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
@@ -129,7 +129,7 @@
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
-                        <TextView
+                        <com.queatz.snappy.ui.TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
@@ -143,7 +143,7 @@
                 </LinearLayout>
 
 
-                <TextView
+                <com.queatz.snappy.ui.TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -207,7 +207,7 @@
                     android:layout_margin="8dp"
                     android:src="@drawable/profile" />
 
-                <TextView
+                <com.queatz.snappy.ui.TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
@@ -230,7 +230,7 @@
                     android:layout_margin="8dp"
                     android:src="@drawable/profile" />
 
-                <TextView
+                <com.queatz.snappy.ui.TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
@@ -253,7 +253,7 @@
                     android:layout_margin="8dp"
                     android:src="@drawable/profile" />
 
-                <TextView
+                <com.queatz.snappy.ui.TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"

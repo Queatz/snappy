@@ -3,23 +3,22 @@ package com.queatz.snappy.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.widget.EditText;
 
 /**
- * Created by jacob on 10/18/14.
+ * Created by jacob on 2/14/15.
  */
-public class FloatingSearch extends EditText {
-    public FloatingSearch(Context context) {
+public class EditText extends android.widget.EditText {
+    public EditText(Context context) {
         super(context);
         init();
     }
 
-    public FloatingSearch(Context context, AttributeSet attrs) {
+    public EditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public FloatingSearch(Context context, AttributeSet attrs, int defStyle) {
+    public EditText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }

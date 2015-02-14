@@ -16,7 +16,7 @@
             android:src="@drawable/map"
             android:scaleType="centerCrop"/>
 
-        <com.queatz.snappy.ui.FloatingSearch
+        <com.queatz.snappy.ui.EditText
             android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

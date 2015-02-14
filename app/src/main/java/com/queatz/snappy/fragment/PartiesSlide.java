@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Created by jacob on 10/19/14.
  */
-public class ExploreSlide extends Fragment {
+public class PartiesSlide extends Fragment {
     SwipeRefreshLayout mRefresh;
     ListView mList;
 
@@ -60,6 +60,9 @@ public class ExploreSlide extends Fragment {
     }
 
     public void refresh() {
+        if(getActivity() == null)
+            return;
+
         Team team = ((MainApplication) getActivity().getApplication()).team;
 
         team.api.get(Config.PATH_PARTIES, new Api.Callback() {

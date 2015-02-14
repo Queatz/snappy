@@ -20,7 +20,7 @@
             android:gravity="top"
             android:orientation="vertical">
 
-            <com.queatz.snappy.ui.Photo
+            <com.queatz.snappy.ui.SqurePhoto
                 android:id="@+id/uptolink"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"

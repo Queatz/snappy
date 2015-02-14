@@ -15,7 +15,7 @@ import com.queatz.snappy.R;
 /**
  * Created by jacob on 11/23/14.
  */
-public class Upto extends Fragment {
+public class Party extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +23,7 @@ public class Upto extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.upto_expanded, container, false);
+        View view = inflater.inflate(R.layout.party, container, false);
 
         return view;
     }

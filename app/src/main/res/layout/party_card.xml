@@ -34,7 +34,7 @@
                 android:orientation="vertical"
                 android:layout_margin="8dp">
 
-                <TextView
+                <com.queatz.snappy.ui.TextView
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
                     android:textColor="@color/black"
                     android:textSize="26sp" />
 
-                <TextView
+                <com.queatz.snappy.ui.TextView
                     android:id="@+id/by_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
                 android:src="@android:drawable/ic_menu_more"/>
         </LinearLayout>
 
-        <TextView
+        <com.queatz.snappy.ui.TextView
             android:id="@+id/action_join"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -102,7 +102,7 @@
                     android:src="@drawable/night"
                     android:layout_margin="8dp" />
 
-                <TextView
+                <com.queatz.snappy.ui.TextView
                     android:id="@+id/time_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -130,7 +130,7 @@
                     android:src="@drawable/location"
                     android:layout_margin="8dp" />
 
-                <TextView
+                <com.queatz.snappy.ui.TextView
                     android:id="@+id/location_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -144,7 +144,7 @@
 
 
 
-        <TextView
+        <com.queatz.snappy.ui.TextView
             android:id="@+id/details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -159,7 +159,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <com.queatz.snappy.ui.TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/whos_in"

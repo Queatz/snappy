@@ -45,20 +45,20 @@
                         android:orientation="vertical"
                         android:layout_margin="8dp">
 
-                        <EditText
+                        <com.queatz.snappy.ui.EditText
                             android:id="@+id/name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:gravity="center_vertical"
                             android:background="@android:color/transparent"
-                            android:hint="Enter party name"
+                            android:hint="@string/enter_party_name"
                             android:inputType="textCapWords"
                             android:lines="1"
                             android:textColorHint="@color/gray"
                             android:textSize="26sp" />
 
-                        <TextView
+                        <com.queatz.snappy.ui.TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -77,7 +77,7 @@
                         android:src="@android:drawable/ic_menu_more"/>
                 </LinearLayout>
 
-                <EditText
+                <com.queatz.snappy.ui.EditText
                     android:id="@+id/time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
                     android:textColorHint="@color/gray"
                     android:padding="16dp" />
 
-                <EditText
+                <com.queatz.snappy.ui.EditText
                     android:id="@+id/location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
                     android:textColorHint="@color/gray"
                     android:padding="16dp" />
 
-                <EditText
+                <com.queatz.snappy.ui.EditText
                     android:id="@+id/details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -112,14 +112,14 @@
                     android:textColorHint="@color/gray"
                     android:padding="16dp" />
 
-                <TextView
+                <com.queatz.snappy.ui.TextView
                     android:id="@+id/action_host"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:padding="8dp"
                     android:textSize="18sp"
-                    android:text="Host Party"
+                    android:text="@string/host_party"
                     android:background="@drawable/button"
                     android:textColor="@color/white"
                     android:layout_gravity="center_horizontal"
@@ -159,7 +159,7 @@
                         android:orientation="vertical"
                         android:layout_margin="8dp">
 
-                        <TextView
+                        <com.queatz.snappy.ui.TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -173,21 +173,21 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <TextView
+                            <com.queatz.snappy.ui.TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:gravity="center_vertical"
-                                android:text="Host again  "
+                                android:text="@string/host_again"
                                 android:textSize="18sp"
                                 android:textColor="@color/blue" />
 
-                            <TextView
+                            <com.queatz.snappy.ui.TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:gravity="center_vertical"
-                                android:text="3 days ago"
+                                android:text="  3 days ago"
                                 android:textSize="18sp"
                                 android:textColor="@color/gray" />
 
@@ -230,7 +230,7 @@
                         android:orientation="vertical"
                         android:layout_margin="8dp">
 
-                        <TextView
+                        <com.queatz.snappy.ui.TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -244,7 +244,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <TextView
+                            <com.queatz.snappy.ui.TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
@@ -253,7 +253,7 @@
                                 android:textSize="18sp"
                                 android:textColor="@color/blue" />
 
-                            <TextView
+                            <com.queatz.snappy.ui.TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"

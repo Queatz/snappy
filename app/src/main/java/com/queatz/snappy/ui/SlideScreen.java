@@ -147,7 +147,7 @@ public class SlideScreen extends ViewGroup {
 
     private void init(Context context) {
         mContext = context;
-        mSlides = new SparseArray<SlideAsChild>();
+        mSlides = new SparseArray<>();
         mSnatched = false;
     }
 

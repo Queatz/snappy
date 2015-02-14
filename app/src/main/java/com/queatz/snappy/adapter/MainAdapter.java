@@ -3,8 +3,8 @@ package com.queatz.snappy.adapter;
 import android.app.Fragment;
 import android.app.FragmentManager;
 
-import com.queatz.snappy.fragment.ActivitySlide;
-import com.queatz.snappy.fragment.ExploreSlide;
+import com.queatz.snappy.fragment.MessagesSlide;
+import com.queatz.snappy.fragment.PartiesSlide;
 import com.queatz.snappy.ui.SlideScreen;
 
 /**
@@ -22,9 +22,9 @@ public class MainAdapter extends SlideScreen.SlideScreenAdapter {
     public Fragment getSlide(int page) {
         switch (page) {
             case 0:
-                return new ExploreSlide();
+                return new PartiesSlide();
             case 1:
-                return new ActivitySlide();
+                return new MessagesSlide();
             default:
                 return null;
         }

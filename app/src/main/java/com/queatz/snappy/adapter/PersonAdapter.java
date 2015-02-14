@@ -3,7 +3,7 @@ package com.queatz.snappy.adapter;
 import android.app.Fragment;
 import android.app.FragmentManager;
 
-import com.queatz.snappy.fragment.MessagesSlide;
+import com.queatz.snappy.fragment.PersonMessagesSlide;
 import com.queatz.snappy.fragment.PersonUptoSlide;
 import com.queatz.snappy.ui.SlideScreen;
 
@@ -24,7 +24,7 @@ public class PersonAdapter extends SlideScreen.SlideScreenAdapter {
             case 0:
                 return new PersonUptoSlide();
             case 1:
-                return new MessagesSlide();
+                return new PersonMessagesSlide();
             default:
                 return null;
         }

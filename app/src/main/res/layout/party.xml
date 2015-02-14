@@ -41,7 +41,7 @@
                     android:orientation="vertical"
                     android:padding="8dp">
 
-                    <TextView
+                    <com.queatz.snappy.ui.TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -51,7 +51,7 @@
                         android:text="Macy Lacey"
                         android:textSize="18sp" />
 
-                    <TextView
+                    <com.queatz.snappy.ui.TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -102,7 +102,7 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <TextView
+                <com.queatz.snappy.ui.TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -112,7 +112,7 @@
                     android:text="Stacy Arroyo"
                     android:textSize="18sp" />
 
-                <TextView
+                <com.queatz.snappy.ui.TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -169,7 +169,7 @@
                         android:orientation="vertical"
                         android:layout_margin="8dp">
 
-                        <TextView
+                        <com.queatz.snappy.ui.TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -178,7 +178,7 @@
                             android:textColor="@color/black"
                             android:textSize="26sp" />
 
-                        <TextView
+                        <com.queatz.snappy.ui.TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -222,7 +222,7 @@
                             android:src="@drawable/profile"
                             android:layout_margin="8dp" />
 
-                        <TextView
+                        <com.queatz.snappy.ui.TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Tonight, 7pm"
@@ -249,7 +249,7 @@
                             android:src="@drawable/profile"
                             android:layout_margin="8dp" />
 
-                        <TextView
+                        <com.queatz.snappy.ui.TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Baker Beach"
@@ -262,7 +262,7 @@
                 </LinearLayout>
 
 
-                <TextView
+                <com.queatz.snappy.ui.TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
@@ -270,13 +270,13 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
                     android:paddingBottom="8dp" />
-                <TextView
+                <com.queatz.snappy.ui.TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:padding="8dp"
                     android:textSize="18sp"
-                    android:text="Mark Event as Full"
+                    android:text="Mark Party Full"
                     android:background="@drawable/button"
                     android:textColor="@color/white"
                     android:layout_gravity="center_horizontal"
@@ -288,7 +288,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
+                    <com.queatz.snappy.ui.TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Who's in?"
@@ -342,7 +342,7 @@
                 android:padding="4dp"
                 android:orientation="horizontal">
 
-                <EditText
+                <com.queatz.snappy.ui.EditText
                     android:background="@drawable/softclick"
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
@@ -377,7 +377,7 @@
                     android:src="@drawable/profile"
                     android:layout_margin="8dp" />
 
-                <TextView
+                <com.queatz.snappy.ui.TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Evelyn joined"
@@ -399,7 +399,7 @@
                     android:src="@drawable/profile"
                     android:layout_margin="8dp" />
 
-                <TextView
+                <com.queatz.snappy.ui.TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Stacy joined"

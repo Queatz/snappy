@@ -6,16 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.queatz.snappy.MainActivity;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
-import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.team.Team;
 
 /**
  * Created by jacob on 10/19/14.
  */
-public class MapSlide extends Fragment {
+public class Welcome extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,19 +21,15 @@ public class MapSlide extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.map, container, false);
+        View view = inflater.inflate(R.layout.welcome, container, false);
 
-        View.OnClickListener openProfile = new View.OnClickListener() {
+        view.findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Team team = ((MainApplication) getActivity().getApplication()).team;
-
-                team.view.push(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.IN_THE_VOID, ((MainActivity) team.view).mPersonView);
+                team.auth.signin();
             }
-        };
-
-        view.findViewById(R.id.profilelink).setOnClickListener(openProfile);
-        view.findViewById(R.id.profilelink2).setOnClickListener(openProfile);
+        });
 
         return view;
     }

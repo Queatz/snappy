@@ -9,10 +9,10 @@ import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.fragment.HostParty;
 import com.queatz.snappy.fragment.Main;
 import com.queatz.snappy.fragment.NewUpto;
+import com.queatz.snappy.fragment.Party;
 import com.queatz.snappy.fragment.Person;
 import com.queatz.snappy.fragment.PersonList;
-import com.queatz.snappy.fragment.Signin;
-import com.queatz.snappy.fragment.Upto;
+import com.queatz.snappy.fragment.Welcome;
 import com.queatz.snappy.team.Team;
 
 public class MainActivity extends ViewActivity {
@@ -33,10 +33,10 @@ public class MainActivity extends ViewActivity {
         team = ((MainApplication) getApplication()).team;
         team.view = this;
 
-        mSigninView = new Signin();
+        mSigninView = new Welcome();
         mMainView = new Main();
         mPersonView = new Person();
-        mUptoView = new Upto();
+        mUptoView = new Party();
         mNewUpto= new NewUpto();
         mHostParty = new HostParty();
         mPersonList = new PersonList();

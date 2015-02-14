@@ -5,15 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 
-import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
-import com.queatz.snappy.team.Team;
 
 /**
- * Created by jacob on 10/19/14.
+ * Created by jacob on 10/26/14.
  */
-public class Signin extends Fragment {
+public class PersonMessagesSlide extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,13 +20,14 @@ public class Signin extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.welcome, container, false);
+        View view = inflater.inflate(R.layout.person_messages, container, false);
 
-        view.findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
+        final ScrollView scroll = (ScrollView) view.findViewById(R.id.scroll);
+
+        scroll.post(new Runnable() {
             @Override
-            public void onClick(View view) {
-                Team team = ((MainApplication) getActivity().getApplication()).team;
-                team.auth.signin();
+            public void run() {
+                scroll.fullScroll(View.FOCUS_DOWN);
             }
         });
 

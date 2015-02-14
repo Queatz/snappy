@@ -2,4 +2,9 @@
     <string name="app_name">Snappy</string>
     <string name="whos_in">Who\'s in?</string>
     <string name="request_to_join">Request to Join</string>
+    <string name="requested">Requested</string>
+    <string name="host_party">Host Party</string>
+    <string name="enter_party_name">Enter party name</string>
+    <string name="host_again">Host again</string>
+    <string name="write_message">Write message</string>
 </resources>
