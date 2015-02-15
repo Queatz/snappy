@@ -21,7 +21,6 @@ public class MainActivity extends ViewActivity {
     public Fragment mSigninView;
     public Fragment mMainView;
     public Fragment mPersonView;
-    public Fragment mUptoView;
     public Fragment mNewUpto;
     public Fragment mHostParty;
     public Fragment mPersonList;
@@ -36,7 +35,6 @@ public class MainActivity extends ViewActivity {
         mSigninView = new Welcome();
         mMainView = new Main();
         mPersonView = new Person();
-        mUptoView = new Party();
         mNewUpto= new NewUpto();
         mHostParty = new HostParty();
         mPersonList = new PersonList();

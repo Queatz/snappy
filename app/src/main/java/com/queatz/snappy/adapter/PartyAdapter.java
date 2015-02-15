@@ -38,15 +38,6 @@ public class PartyAdapter extends ArrayAdapter<JSONObject> {
         else {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.party_card, parent, false);
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Team team = ((MainApplication) getContext().getApplicationContext()).team;
-
-                    team.view.push(ViewActivity.Transition.EXAMINE, ViewActivity.Transition.INSTANT, team.view.mUptoView);
-                }
-            });
         }
 
         try {
