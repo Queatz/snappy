@@ -1,6 +1,7 @@
 package com.queatz.snappy.ui;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -28,6 +29,6 @@ public class EditText extends android.widget.EditText {
             return;
         }
 
-        setTypeface(Global.defaultFont);
+        setTypeface(Global.defaultFont, getTypeface() == null ? Typeface.NORMAL : getTypeface().getStyle());
     }
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
@@ -13,10 +13,8 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
             android:padding="8dp"
             android:orientation="horizontal">
 
@@ -65,25 +63,12 @@
                 android:src="@android:drawable/ic_menu_more"/>
         </LinearLayout>
 
-        <com.queatz.snappy.ui.TextView
-            android:id="@+id/action_join"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:padding="8dp"
-            android:textSize="18sp"
-            android:text="@string/request_to_join"
-            android:clickable="true"
-            android:background="@drawable/button"
-            android:textColor="@color/white"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal" />
-
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -100,7 +85,7 @@
                     android:layout_height="48dp"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/night"
-                    android:layout_margin="8dp" />
+                    android:layout_marginBottom="8dp" />
 
                 <com.queatz.snappy.ui.TextView
                     android:id="@+id/time_text"
@@ -128,7 +113,7 @@
                     android:layout_height="48dp"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/location"
-                    android:layout_margin="8dp" />
+                    android:layout_marginBottom="8dp" />
 
                 <com.queatz.snappy.ui.TextView
                     android:id="@+id/location_text"
@@ -142,8 +127,6 @@
 
         </LinearLayout>
 
-
-
         <com.queatz.snappy.ui.TextView
             android:id="@+id/details"
             android:layout_width="match_parent"
@@ -151,6 +134,7 @@
             android:textSize="18sp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
+            android:paddingTop="8dp"
             android:paddingBottom="8dp" />
 
         <LinearLayout
@@ -164,9 +148,9 @@
                 android:layout_height="wrap_content"
                 android:text="@string/whos_in"
                 android:textStyle="bold"
+                android:textColor="@color/black"
                 android:textSize="16sp"
-                android:paddingLeft="8dp"
-                android:paddingBottom="8dp" />
+                android:paddingLeft="16dp" />
 
             <LinearLayout
                 android:id="@+id/whos_in"
@@ -184,6 +168,21 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <com.queatz.snappy.ui.TextView
+            android:visibility="gone"
+            android:id="@+id/action_join"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:padding="8dp"
+            android:textSize="18sp"
+            android:text="@string/request_to_join"
+            android:clickable="true"
+            android:background="@drawable/button"
+            android:textColor="@color/white"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal" />
 
     </LinearLayout>
 

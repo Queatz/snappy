@@ -6,177 +6,183 @@
     android:layout_height="match_parent"
     android:background="@color/spacer">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:background="@drawable/softclick_white"
-            android:clickable="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:orientation="horizontal"
-            android:layout_marginBottom="1dp">
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:src="@drawable/profile"
-                android:layout_margin="8dp" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <LinearLayout
+                android:background="@drawable/softclick_white"
+                android:clickable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_margin="8dp">
+                android:padding="8dp"
+                android:orientation="horizontal"
+                android:layout_marginBottom="1dp">
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/profile"
+                    android:layout_margin="8dp" />
 
-
-                <com.queatz.snappy.ui.TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Stacy"
-                    android:textSize="18sp"
-                    android:textColor="@color/black"
-                    android:layout_marginBottom="4dp"/>
+                    android:orientation="vertical"
+                    android:layout_margin="8dp">
+
+
+                    <com.queatz.snappy.ui.TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Stacy"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="4dp"/>
 
 
 
-                <com.queatz.snappy.ui.TextView
-                    android:layout_width="wrap_content"
+                    <com.queatz.snappy.ui.TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Me: Hey Stacy, thanks for bringing the cake last night!"
+                        android:textColor="@color/gray"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@drawable/softclick_white"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:orientation="horizontal"
+                android:layout_marginBottom="1dp">
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/profile"
+                    android:layout_margin="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Me: Hey Stacy, thanks for bringing the cake last night!"
-                    android:textColor="@color/gray"
-                    android:textSize="16sp"/>
+                    android:orientation="vertical"
+                    android:layout_margin="8dp">
+
+
+                    <com.queatz.snappy.ui.TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rebecca"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="4dp"
+                        android:textStyle="bold" />
+
+
+
+                    <com.queatz.snappy.ui.TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Yup!"
+                        android:textColor="@color/gray"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:background="@drawable/softclick_white"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:orientation="horizontal"
+                android:layout_marginBottom="1dp">
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/profile"
+                    android:layout_margin="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="8dp">
+
+
+                    <com.queatz.snappy.ui.TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Brad"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="4dp"/>
+
+
+
+                    <com.queatz.snappy.ui.TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="See you there"
+                        android:textColor="@color/gray"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:background="@drawable/softclick_white"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/profile"
+                    android:layout_margin="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="8dp">
+
+
+                    <com.queatz.snappy.ui.TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Gregory"
+                        android:textSize="18sp"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="4dp"/>
+
+
+
+                    <com.queatz.snappy.ui.TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hahaha"
+                        android:textColor="@color/gray"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:background="@drawable/softclick_white"
-            android:clickable="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:orientation="horizontal"
-            android:layout_marginBottom="1dp">
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:src="@drawable/profile"
-                android:layout_margin="8dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_margin="8dp">
-
-
-                <com.queatz.snappy.ui.TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rebecca"
-                    android:textSize="18sp"
-                    android:textColor="@color/black"
-                    android:layout_marginBottom="4dp"
-                    android:textStyle="bold" />
-
-
-
-                <com.queatz.snappy.ui.TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Yup!"
-                    android:textColor="@color/gray"
-                    android:textSize="16sp"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-        <LinearLayout
-            android:background="@drawable/softclick_white"
-            android:clickable="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:orientation="horizontal"
-            android:layout_marginBottom="1dp">
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:src="@drawable/profile"
-                android:layout_margin="8dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_margin="8dp">
-
-
-                <com.queatz.snappy.ui.TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Brad"
-                    android:textSize="18sp"
-                    android:textColor="@color/black"
-                    android:layout_marginBottom="4dp"/>
-
-
-
-                <com.queatz.snappy.ui.TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="See you there"
-                    android:textColor="@color/gray"
-                    android:textSize="16sp"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-        <LinearLayout
-            android:background="@drawable/softclick_white"
-            android:clickable="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:src="@drawable/profile"
-                android:layout_margin="8dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_margin="8dp">
-
-
-                <com.queatz.snappy.ui.TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Gregory"
-                    android:textSize="18sp"
-                    android:textColor="@color/black"
-                    android:layout_marginBottom="4dp"/>
-
-
-
-                <com.queatz.snappy.ui.TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Hahaha"
-                    android:textColor="@color/gray"
-                    android:textSize="16sp"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </ScrollView>
 
 </android.support.v4.widget.SwipeRefreshLayout>

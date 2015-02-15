@@ -50,10 +50,11 @@ public class PartyAdapter extends ArrayAdapter<JSONObject> {
         }
 
         try {
-            ((TextView) view.findViewById(R.id.name)).setText(getItem(position).getString("name"));
-            ((TextView) view.findViewById(R.id.location_text)).setText(getItem(position).getString("location"));
-            ((TextView) view.findViewById(R.id.time_text)).setText(getItem(position).getString("time"));
-            ((TextView) view.findViewById(R.id.details)).setText(getItem(position).getString("details"));
+            JSONObject party = getItem(position);
+            ((TextView) view.findViewById(R.id.name)).setText(party.getString("name"));
+            ((TextView) view.findViewById(R.id.location_text)).setText(party.getString("location"));
+            ((TextView) view.findViewById(R.id.time_text)).setText(party.getString("time"));
+            ((TextView) view.findViewById(R.id.details)).setText(party.getString("details"));
         }
         catch (JSONException e) {
             e.printStackTrace();

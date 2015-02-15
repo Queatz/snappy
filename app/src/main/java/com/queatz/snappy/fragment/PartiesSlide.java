@@ -47,8 +47,8 @@ public class PartiesSlide extends Fragment {
         View view = inflater.inflate(R.layout.parties, container, false);
 
         mList = (ListView) view.findViewById(R.id.list);
-        mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
 
+        mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         mRefresh.setColorSchemeResources(R.color.red);
         mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -56,7 +56,6 @@ public class PartiesSlide extends Fragment {
                 refresh();
             }
         });
-
         mRefresh.setRefreshing(true);
         refresh();
 

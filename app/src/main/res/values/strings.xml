@@ -7,4 +7,7 @@
     <string name="enter_party_name">Enter party name</string>
     <string name="host_again">Host again</string>
     <string name="write_message">Write message</string>
+    <string name="TEMP_update_1">Connie is hosting <b>Glamour Show</b> tonight at 6pm</string>
+    <string name="TEMP_update_2">Connie went to <b>Get abs</b></string>
+    <string name="TEMP_update_3">Connie hosted <b>Glamour Show</b></string>
 </resources>
