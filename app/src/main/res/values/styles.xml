@@ -1,13 +1,7 @@
 <resources>
-    <style name="RobotoTextViewStyle" parent="@android:style/Widget.TextView">
-        <item name="android:fontFamily">sans-serif-light</item>
-    </style>
-
-    <style name="RobotoButtonStyle" parent="@android:style/Widget.Button">
-        <item name="android:fontFamily">sans-serif-light</item>
-    </style>
-
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/shadow</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 </resources>

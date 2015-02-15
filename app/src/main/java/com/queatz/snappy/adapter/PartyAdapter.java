@@ -54,7 +54,15 @@ public class PartyAdapter extends ArrayAdapter<JSONObject> {
             ((TextView) view.findViewById(R.id.name)).setText(party.getString("name"));
             ((TextView) view.findViewById(R.id.location_text)).setText(party.getString("location"));
             ((TextView) view.findViewById(R.id.time_text)).setText(party.getString("time"));
-            ((TextView) view.findViewById(R.id.details)).setText(party.getString("details"));
+
+            String details = party.getString("details");
+
+            if(details.isEmpty())
+                view.findViewById(R.id.details).setVisibility(View.GONE);
+            else {
+                view.findViewById(R.id.details).setVisibility(View.VISIBLE);
+                ((TextView) view.findViewById(R.id.details)).setText(details);
+            }
         }
         catch (JSONException e) {
             e.printStackTrace();
@@ -81,6 +89,26 @@ public class PartyAdapter extends ArrayAdapter<JSONObject> {
                 whosin.addView(awho);
             }
         }
+
+        incount = Math.abs(new Random().nextInt() % 5);
+
+        ((ImageView) view.findViewById(R.id.backdrop)).setImageResource(new int[] {
+                R.drawable.backdrop_location,
+                R.drawable.backdrop_location_2,
+                R.drawable.backdrop_location_3,
+                R.drawable.backdrop_location_4,
+                R.drawable.backdrop_location_5
+        }[incount]);
+
+        if(position < 2) {
+            ((TextView) view.findViewById(R.id.action_join)).setText(getContext().getText(R.string.mark_party_full));
+        }
+        else {
+            ((TextView) view.findViewById(R.id.action_join)).setText(getContext().getText(R.string.request_to_join));
+        }
+
+        view.findViewById(R.id.action_requested).setVisibility(position < 1 ? View.VISIBLE : View.GONE);
+        view.findViewById(R.id.updates).setVisibility(position < 2 ? View.VISIBLE : View.GONE);
 
         return view;
     }

@@ -2,6 +2,7 @@
     <string name="app_name">Snappy</string>
     <string name="whos_in">Who\'s in?</string>
     <string name="request_to_join">Request to Join</string>
+    <string name="mark_party_full">Mark Party Full</string>
     <string name="requested">Requested</string>
     <string name="host_party">Host Party</string>
     <string name="enter_party_name">Enter party name</string>
@@ -10,4 +11,9 @@
     <string name="TEMP_update_1">Connie is hosting <b>Glamour Show</b> tonight at 6pm</string>
     <string name="TEMP_update_2">Connie went to <b>Get abs</b></string>
     <string name="TEMP_update_3">Connie hosted <b>Glamour Show</b></string>
+    <string name="TEMP_party_update_1"><b>Connie</b> joined</string>
+    <string name="TEMP_party_update_2"><b>Connie</b> where are the silly things?</string>
+    <string name="TEMP_party_update_3"><b>Stacy</b> joined</string>
+    <string name="TEMP_party_update_4">Accept <b>Adam Richards</b></string>
+    <string name="TEMP_party_update_5">Accept <b>Sarah Ferrero</b></string>
 </resources>

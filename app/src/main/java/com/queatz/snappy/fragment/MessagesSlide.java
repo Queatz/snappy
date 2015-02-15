@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
+import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.adapter.PartyAdapter;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
@@ -51,6 +52,18 @@ public class MessagesSlide extends Fragment {
 
         mRefresh.setRefreshing(true);
         refresh();
+
+        View.OnClickListener click = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.view.push(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.IN_THE_VOID, team.view.mPersonView);
+            }
+        };
+
+        view.findViewById(R.id.m1).setOnClickListener(click);
+        view.findViewById(R.id.m2).setOnClickListener(click);
+        view.findViewById(R.id.m3).setOnClickListener(click);
+        view.findViewById(R.id.m4).setOnClickListener(click);
 
         return view;
     }

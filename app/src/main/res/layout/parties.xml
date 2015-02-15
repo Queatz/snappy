@@ -3,7 +3,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/spacer"
     android:orientation="vertical">
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -15,7 +14,10 @@
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@null"
+            android:dividerHeight="8dp"
+            android:headerDividersEnabled="true"
+            android:footerDividersEnabled="true"
+            android:divider="@android:color/transparent"
             />
 
     </android.support.v4.widget.SwipeRefreshLayout>

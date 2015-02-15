@@ -9,6 +9,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -47,6 +49,8 @@ public class PartiesSlide extends Fragment {
         View view = inflater.inflate(R.layout.parties, container, false);
 
         mList = (ListView) view.findViewById(R.id.list);
+        mList.addHeaderView(new View(getActivity()));
+        mList.addFooterView(new View(getActivity()));
 
         mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         mRefresh.setColorSchemeResources(R.color.red);
@@ -66,6 +70,11 @@ public class PartiesSlide extends Fragment {
         if(getActivity() == null)
             return;
 
+        if(getView() != null) {
+            Animation anim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
+            getView().startAnimation(anim);
+        }
+
         team.api.get(Config.PATH_PARTIES, new Api.Callback() {
             @Override
             public void success(String response) {
@@ -75,6 +84,11 @@ public class PartiesSlide extends Fragment {
                         for (int i = 0; i < list.length(); i++) l.add(list.getJSONObject(i));
 
                     mList.setAdapter(new PartyAdapter(getActivity(), l));
+
+                    if(getView() != null && getActivity() != null) {
+                        Animation anim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
+                        getView().startAnimation(anim);
+                    }
                 }
                 catch (JSONException e) {
                     e.printStackTrace();
@@ -94,7 +108,6 @@ public class PartiesSlide extends Fragment {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getActivity().getMenuInflater();
-
     }
 
     @Override
