@@ -270,7 +270,8 @@
             android:hint="@string/write_message"
             android:textSize="18sp"
             android:textColorHint="@color/gray"
-            android:inputType="text|textMultiLine|textCapSentences" />
+            android:maxLines="1"
+            android:inputType="text|textShortMessage|textCapSentences" />
         <ImageView
             android:clickable="true"
             android:background="@drawable/softclick"

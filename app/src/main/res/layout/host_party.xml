@@ -25,57 +25,19 @@
                 android:background="@drawable/white_rounded"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <com.queatz.snappy.ui.EditText
+                    android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:padding="8dp"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:src="@drawable/profile"
-                        android:layout_margin="4dp" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_margin="8dp">
-
-                        <com.queatz.snappy.ui.EditText
-                            android:id="@+id/name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:gravity="center_vertical"
-                            android:background="@android:color/transparent"
-                            android:hint="@string/enter_party_name"
-                            android:inputType="textCapWords"
-                            android:lines="1"
-                            android:textColorHint="@color/gray"
-                            android:textSize="26sp" />
-
-                        <com.queatz.snappy.ui.TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:gravity="center_vertical"
-                            android:text="by Jacob Ferrero"
-                            android:textColor="@color/gray"
-                            android:textSize="17sp" />
-
-                    </LinearLayout>
-
-                    <ImageView
-                        android:clickable="true"
-                        android:background="@drawable/softclick"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@android:drawable/ic_menu_more"/>
-                </LinearLayout>
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/enter_party_name"
+                    android:inputType="textCapWords"
+                    android:lines="1"
+                    android:textColorHint="@color/gray"
+                    android:padding="16dp"
+                    android:textSize="26sp" />
 
                 <com.queatz.snappy.ui.EditText
                     android:id="@+id/time"
@@ -142,7 +104,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:padding="8dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -213,7 +174,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:padding="8dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -249,7 +209,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:gravity="center_vertical"
-                                android:text="Host again  "
+                                android:text="@string/host_again"
                                 android:textSize="18sp"
                                 android:textColor="@color/blue" />
 
@@ -258,7 +218,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:gravity="center_vertical"
-                                android:text="2 weeks ago"
+                                android:text="  2 weeks ago"
                                 android:textSize="18sp"
                                 android:textColor="@color/gray" />
 

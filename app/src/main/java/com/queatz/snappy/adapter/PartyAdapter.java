@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -100,6 +101,8 @@ public class PartyAdapter extends ArrayAdapter<JSONObject> {
 
         view.findViewById(R.id.action_requested).setVisibility(position < 1 ? View.VISIBLE : View.GONE);
         view.findViewById(R.id.updates).setVisibility(position < 2 ? View.VISIBLE : View.GONE);
+
+        ((EditText) view.findViewById(R.id.write_message)).setText("");
 
         return view;
     }

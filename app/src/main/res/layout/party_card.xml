@@ -36,7 +36,6 @@
             android:id="@+id/action_requested"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:orientation="vertical"
             android:background="@drawable/action_required_rounded">
 
@@ -275,9 +274,10 @@
                 android:orientation="horizontal">
 
                 <com.queatz.snappy.ui.EditText
+                    android:id="@+id/write_message"
                     android:background="@drawable/softclick"
                     android:layout_weight="1"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
@@ -285,14 +285,16 @@
                     android:inputType="text|textShortMessage|textCapSentences"
                     android:textColorHint="@color/gray"
                     android:textSize="18sp"
+                    android:minHeight="48dp"
                     android:maxLines="1"
-                    android:padding="12dp"/>
+                    android:padding="8dp"/>
                 <ImageView
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/softclick"
                     android:gravity="center_vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
                     android:src="@android:drawable/ic_menu_send" />
             </LinearLayout>
 

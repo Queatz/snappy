@@ -9,7 +9,6 @@ import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.fragment.HostParty;
 import com.queatz.snappy.fragment.Main;
 import com.queatz.snappy.fragment.NewUpto;
-import com.queatz.snappy.fragment.Party;
 import com.queatz.snappy.fragment.Person;
 import com.queatz.snappy.fragment.PersonList;
 import com.queatz.snappy.fragment.Welcome;
