@@ -23,3 +23,8 @@
 }
 
 -keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault
+
+-keepnames public class * extends io.realm.RealmObject
+-keep class io.realm.** { *; }
+-dontwarn javax.**
+-dontwarn io.realm.**

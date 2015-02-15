@@ -157,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:background="@drawable/softclick"
+                android:background="@drawable/floating_click"
                 android:clickable="true"
                 android:padding="4dp">
 
@@ -185,7 +185,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:background="@drawable/softclick"
+                android:background="@drawable/floating_click"
                 android:clickable="true"
                 android:padding="4dp">
 

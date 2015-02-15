@@ -1,12 +1,8 @@
 package com.queatz.snappy.ui;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
-
-import com.queatz.snappy.Config;
 
 /**
  * Created by jacob on 10/18/14.

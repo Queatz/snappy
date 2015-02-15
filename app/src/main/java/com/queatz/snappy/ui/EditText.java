@@ -3,7 +3,6 @@ package com.queatz.snappy.ui;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 
 /**
  * Created by jacob on 2/14/15.

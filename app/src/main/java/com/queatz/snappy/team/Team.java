@@ -5,14 +5,16 @@ import android.content.SharedPreferences;
 
 import com.queatz.snappy.MainActivity;
 
+import io.realm.Realm;
+
 /**
  * Created by jacob on 10/19/14.
  */
 public class Team {
     public Context context;
-    public Auth auth;
-    public MainActivity view;
     public SharedPreferences preferences;
+    public MainActivity view;
+    public Auth auth;
     public Api api;
     public Action action;
     public Things things;
@@ -24,5 +26,9 @@ public class Team {
         api = new Api(this);
         action = new Action(this);
         things = new Things(this);
+    }
+
+    public Realm realm() {
+        return Realm.getInstance(context);
     }
 }

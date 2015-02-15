@@ -20,13 +20,9 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.adapter.PartyAdapter;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Party;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
+import io.realm.RealmResults;
 
 /**
  * Created by jacob on 10/19/14.
@@ -61,9 +57,14 @@ public class PartiesSlide extends Fragment {
             }
         });
         mRefresh.setRefreshing(true);
+        update();
         refresh();
 
         return view;
+    }
+
+    public void update() {
+        mList.setAdapter(new PartyAdapter(getActivity(), team.realm().allObjects(Party.class)));
     }
 
     public void refresh() {
@@ -78,20 +79,12 @@ public class PartiesSlide extends Fragment {
         team.api.get(Config.PATH_PARTIES, new Api.Callback() {
             @Override
             public void success(String response) {
-                try {
-                    JSONArray list = new JSONArray(response);
-                    List<JSONObject> l = new ArrayList<>();
-                        for (int i = 0; i < list.length(); i++) l.add(list.getJSONObject(i));
+                team.things.getAll(Party.class, response);
+                update();
 
-                    mList.setAdapter(new PartyAdapter(getActivity(), l));
-
-                    if(getView() != null && getActivity() != null) {
-                        Animation anim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
-                        getView().startAnimation(anim);
-                    }
-                }
-                catch (JSONException e) {
-                    e.printStackTrace();
+                if(getView() != null && getActivity() != null) {
+                    Animation anim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
+                    getView().startAnimation(anim);
                 }
 
                 mRefresh.setRefreshing(false);

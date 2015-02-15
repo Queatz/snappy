@@ -4,29 +4,25 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
-import com.queatz.snappy.activity.ViewActivity;
-import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Party;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.List;
 import java.util.Random;
+
+import io.realm.RealmBaseAdapter;
+import io.realm.RealmResults;
 
 /**
  * Created by jacob on 2/8/15.
  */
-public class PartyAdapter extends ArrayAdapter<JSONObject> {
-    public PartyAdapter(Context context, List<JSONObject> values) {
-        super(context, R.layout.party_card, values);
+public class PartyAdapter extends RealmBaseAdapter<Party> {
+    public PartyAdapter(Context context, RealmResults<Party> realmResults) {
+        super(context, realmResults, true);
     }
 
     @Override
@@ -37,27 +33,22 @@ public class PartyAdapter extends ArrayAdapter<JSONObject> {
             view = convertView;
         }
         else {
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.party_card, parent, false);
         }
 
-        try {
-            JSONObject party = getItem(position);
-            ((TextView) view.findViewById(R.id.name)).setText(party.getString("name"));
-            ((TextView) view.findViewById(R.id.location_text)).setText(party.getString("location"));
-            ((TextView) view.findViewById(R.id.time_text)).setText(party.getString("time"));
+        Party party = realmResults.get(position);
+        ((TextView) view.findViewById(R.id.name)).setText(party.getName());
+        ((TextView) view.findViewById(R.id.location_text)).setText(party.getLocation() == null ? "" : party.getLocation().getName());
+        ((TextView) view.findViewById(R.id.time_text)).setText(party.getDate() == null ? "" : party.getDate().toString());
 
-            String details = party.getString("details");
+        String details = party.getDetails();
 
-            if(details.isEmpty())
-                view.findViewById(R.id.details).setVisibility(View.GONE);
-            else {
-                view.findViewById(R.id.details).setVisibility(View.VISIBLE);
-                ((TextView) view.findViewById(R.id.details)).setText(details);
-            }
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
+        if(details.isEmpty())
+            view.findViewById(R.id.details).setVisibility(View.GONE);
+        else {
+            view.findViewById(R.id.details).setVisibility(View.VISIBLE);
+            ((TextView) view.findViewById(R.id.details)).setText(details);
         }
 
         int incount = new Random().nextInt() % 8;
@@ -75,7 +66,7 @@ public class PartyAdapter extends ArrayAdapter<JSONObject> {
             whosin.removeAllViews();
 
             for (int i = 0; i < incount; i++) {
-                awho = new ImageView(getContext());
+                awho = new ImageView(context);
                 awho.setLayoutParams(lps);
                 awho.setImageResource(R.drawable.profile);
                 whosin.addView(awho);
@@ -93,10 +84,10 @@ public class PartyAdapter extends ArrayAdapter<JSONObject> {
         }[incount]);
 
         if(position < 2) {
-            ((TextView) view.findViewById(R.id.action_join)).setText(getContext().getText(R.string.mark_party_full));
+            ((TextView) view.findViewById(R.id.action_join)).setText(context.getText(R.string.mark_party_full));
         }
         else {
-            ((TextView) view.findViewById(R.id.action_join)).setText(getContext().getText(R.string.request_to_join));
+            ((TextView) view.findViewById(R.id.action_join)).setText(context.getText(R.string.request_to_join));
         }
 
         view.findViewById(R.id.action_requested).setVisibility(position < 1 ? View.VISIBLE : View.GONE);

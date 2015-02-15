@@ -204,6 +204,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:text="@string/TEMP_update_1"
+                        android:textColor="@color/event"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -228,6 +229,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:text="@string/TEMP_update_2"
+                        android:textColor="@color/event"
                         android:textSize="18sp" />
                 </LinearLayout>
 
@@ -252,6 +254,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:text="@string/TEMP_update_3"
+                        android:textColor="@color/event"
                         android:textSize="18sp" />
                 </LinearLayout>
 
