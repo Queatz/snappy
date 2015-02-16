@@ -107,7 +107,7 @@
     <LinearLayout
         android:id="@+id/underline"
         android:layout_width="match_parent"
-        android:layout_height="3.5dp"
+        android:layout_height="2.5dp"
         android:orientation="horizontal"
         android:background="@drawable/white_bottom_bordered">
 
@@ -115,7 +115,6 @@
             android:id="@+id/slider"
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="1dp"
             android:layout_marginLeft="0dp"
             android:background="@drawable/red_line" />
 
