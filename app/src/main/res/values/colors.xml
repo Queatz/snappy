@@ -13,6 +13,7 @@
     <color name="black">#000000</color>
     <color name="blackout">#88000000</color>
 
+    <color name="background">#f0f0f0</color>
     <color name="spacer">#e0e0e0</color>
     <color name="info">#9e9e9e</color>
 

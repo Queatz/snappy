@@ -58,7 +58,7 @@
                         <LinearLayout
                             android:id="@+id/list1"
                             android:clickable="true"
-                            android:background="@drawable/softclick"
+                            android:background="@drawable/floating_click"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -90,7 +90,7 @@
                         <LinearLayout
                             android:id="@+id/list2"
                             android:clickable="true"
-                            android:background="@drawable/softclick"
+                            android:background="@drawable/floating_click"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -121,7 +121,7 @@
 
                         <LinearLayout
                             android:clickable="true"
-                            android:background="@drawable/softclick"
+                            android:background="@drawable/floating_click"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
