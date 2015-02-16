@@ -1,7 +1,7 @@
 <resources>
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowIsTranslucent">false</item>
-        <item name="android:windowBackground">@color/background</item>
+        <item name="android:windowBackground">@color/white</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="colorPrimaryDark">@color/red</item>
     </style>

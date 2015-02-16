@@ -86,6 +86,13 @@ public class Auth {
         Log.d(Config.LOG_TAG, "user = " + mUser);
     }
 
+    public Person me() {
+        if(mUser == null)
+            return null;
+
+        return team.realm.where(Person.class).equalTo("id", mUser).findFirst();
+    }
+
     public String getUser() {
         return mUser;
     }
