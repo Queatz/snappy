@@ -13,6 +13,7 @@ public class Person extends RealmObject implements Thing {
     private String firstName;
     private String lastName;
     private String about;
+    private String imageUrl;
     private long infoFollowers;
     private long infoFollowing;
     private long infoHosted;
@@ -49,6 +50,14 @@ public class Person extends RealmObject implements Thing {
 
     public void setAbout(String about) {
         this.about = about;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public long getInfoFollowers() {

@@ -112,11 +112,9 @@ public class Things {
     }
 
     public <T extends RealmObject & Thing> T get(Class<T> clazz, JSONObject jsonObject) {
-        Realm realm = team.realm();
-        realm.beginTransaction();
-        T o = get(realm, clazz, jsonObject);
-        realm.commitTransaction();
-        realm.close();
+        team.realm.beginTransaction();
+        T o = get(team.realm, clazz, jsonObject);
+        team.realm.commitTransaction();
 
         return o;
     }
@@ -132,11 +130,9 @@ public class Things {
     }
 
     public <T extends RealmObject & Thing> RealmList<T> getAll(Class<T> clazz, JSONArray jsonArray) {
-        Realm realm = team.realm();
-        realm.beginTransaction();
-        RealmList<T> o = getAll(realm, clazz, jsonArray);
-        realm.commitTransaction();
-        realm.close();
+        team.realm.beginTransaction();
+        RealmList<T> o = getAll(team.realm, clazz, jsonArray);
+        team.realm.commitTransaction();
 
         return o;
     }

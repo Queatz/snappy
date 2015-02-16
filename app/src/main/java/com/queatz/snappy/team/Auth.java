@@ -11,10 +11,14 @@ import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
+import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.activity.ViewActivity;
+import com.queatz.snappy.things.Person;
 
 import java.io.IOException;
+
+import io.realm.Realm;
 
 /**
  * Created by jacob on 10/19/14.
@@ -24,13 +28,14 @@ public class Auth {
 
     public Team team;
     private String mAuthToken;
+    private String mEmail;
     private String mUser;
     private GetAuthTokenTask mFetchTask;
 
     private static class GetAuthTokenTask extends AsyncTask<Void, Void, String> {
         Auth mAuth;
 
-        GetAuthTokenTask (Auth auth) {
+        GetAuthTokenTask(Auth auth) {
             mAuth = auth;
         }
 
@@ -52,7 +57,7 @@ public class Auth {
 
         protected String fetchToken() throws IOException {
             try {
-                return GoogleAuthUtil.getToken(mAuth.team.view, mAuth.mUser, SCOPE);
+                return GoogleAuthUtil.getToken(mAuth.team.view, mAuth.mEmail, SCOPE);
             } catch (UserRecoverableAuthException e) {
                 mAuth.team.view.startActivityForResult(e.getIntent(), Config.REQUEST_CODE_AUTH_RESOLUTION);
             } catch (GoogleAuthException e) {
@@ -89,7 +94,7 @@ public class Auth {
         if(!isAuthenticated())
             return null;
 
-        return mUser + ";" + mAuthToken;
+        return mAuthToken;
     }
 
     public void showMain() {
@@ -112,6 +117,7 @@ public class Auth {
         }
 
         mUser = null;
+        mEmail = null;
         mAuthToken = null;
         save();
 
@@ -123,8 +129,8 @@ public class Auth {
             showMain();
         }
         else {
-            if(mUser == null) {
-                Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"},
+            if(mEmail == null) {
+                Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[] {"com.google"},
                         false, null, null, null, null);
 
                 team.view.startActivityForResult(intent, Config.REQUEST_CODE_ACCOUNT_PICKER);
@@ -132,12 +138,38 @@ public class Auth {
             else if(mAuthToken == null) {
                 fetchAuthToken();
             }
+            else if(mUser == null) {
+                RequestParams params = new RequestParams();
+                params.put(Config.PARAM_EMAIL, mEmail);
+                params.put(Config.PARAM_AUTH, mAuthToken);
+
+                team.api.get(Config.PATH_ME, params, new Api.Callback() {
+                    @Override
+                    public void success(String response) {
+                        setUser(team.things.get(Person.class, response));
+                    }
+
+                    @Override
+                    public void fail(String response) {
+
+                    }
+                });
+            }
         }
     }
 
-    private void setUser(String user) {
-        mUser = user;
+    private void setEmail(String email) {
+        mEmail = email;
+    }
+
+    private void setUser(Person user) {
+        if(user == null)
+            return;
+
+        mUser = user.getId();
+
         save();
+        signin();
     }
 
     private void setAuthToken(String auth) {
@@ -150,7 +182,7 @@ public class Auth {
         switch (requestCode) {
             case Config.REQUEST_CODE_ACCOUNT_PICKER:
                 if(resultCode == Activity.RESULT_OK && data != null) {
-                    setUser(data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
+                    setEmail(data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
                     fetchAuthToken();
                 }
                 break;

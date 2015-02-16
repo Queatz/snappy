@@ -14,6 +14,8 @@ public class Config {
     public static final int REQUEST_CODE_ACCOUNT_PICKER = 2;
 
     public static String PARAM_AUTH = "auth";
+    public static String PARAM_EMAIL = "email";
+
     public static String PATH_API = "api";
     public static String PATH_PARTIES = "parties";
     public static String PATH_PEOPLE = "people";

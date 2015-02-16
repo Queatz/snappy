@@ -64,6 +64,8 @@ public class Api {
         if(params == null) {
             params = new RequestParams();
         }
+        else if(params.has(Config.PARAM_AUTH))
+            return params;
 
         params.put(Config.PARAM_AUTH, team.auth.getAuthParam());
 
