@@ -33,8 +33,11 @@ public class Util {
             else
                 day = R.string.today;
         }
-        else {
+        else if(now.get(Calendar.DAY_OF_YEAR) + 1 == party.get(Calendar.DAY_OF_YEAR)) {
             day = R.string.tomorrow;
+        }
+        else {
+            return "-";
         }
 
         String time = party.get(Calendar.HOUR) + (party.get(Calendar.AM_PM) == Calendar.AM ? "am" : "pm");
