@@ -4,7 +4,7 @@ package com.queatz.snappy;
  * Created by jacob on 10/25/14.
  */
 public class Config {
-    public static String TAG = "SNAPPY_LOG";
+    public static String LOG_TAG = "SNAPPY_LOG";
     public static String API_URL = "http://queatz-snappy.appspot.com/api";
 
     public static final String PREFERENCE_USER = "auth.user";

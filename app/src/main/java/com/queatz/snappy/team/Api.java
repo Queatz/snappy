@@ -34,7 +34,7 @@ public class Api {
             if(mCallback != null)
                 mCallback.success(new String(responseBody));
 
-            Log.w(Config.TAG, "api - success - " + new String(responseBody));
+            Log.w(Config.LOG_TAG, "api - success - " + new String(responseBody));
         }
 
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
@@ -46,7 +46,7 @@ public class Api {
             if(mCallback != null)
                 mCallback.fail(new String(responseBody));
 
-            Log.w(Config.TAG, "api - fail - " + new String(responseBody));
+            Log.w(Config.LOG_TAG, "api - fail - " + new String(responseBody));
         }
     }
 

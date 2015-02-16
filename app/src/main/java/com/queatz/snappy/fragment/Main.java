@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
@@ -15,11 +17,15 @@ import com.queatz.snappy.adapter.MainTabAdapter;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.ui.ActionBar;
 import com.queatz.snappy.ui.SlideScreen;
+import com.queatz.snappy.things.Person;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by jacob on 10/19/14.
  */
 public class Main extends Fragment {
+    public Team team;
+
     private ActionBar mActionBar;
     private SlideScreen mSlideScreen;
 
@@ -27,9 +33,9 @@ public class Main extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Team team = ((MainApplication) getActivity().getApplication()).team;
+        team = ((MainApplication) getActivity().getApplication()).team;
 
-        Log.d(Config.TAG, "auth = " + team.auth.getAuthParam());
+        Log.d(Config.LOG_TAG, "auth = " + team.auth.getAuthParam());
     }
 
     @Override
@@ -46,6 +52,20 @@ public class Main extends Fragment {
                 team.action.openMinimenu(view);
             }
         });
+
+        ImageView profile = ((ImageView) ((FrameLayout) mActionBar.findViewById(R.id.rightContent)).getChildAt(0));
+
+        if(profile != null) {
+            String usr = team.auth.getUser();
+
+            if(usr != null) {
+                Person person = team.things.get(Person.class, usr);
+
+                if(person != null) {
+                    Picasso.with(getActivity()).load(person.getImageUrl()).placeholder(R.color.spacer).into(profile);
+                }
+            }
+        }
 
         mSlideScreen = (SlideScreen) view.findViewById(R.id.main_content);
         mSlideScreen.setAdapter(new MainAdapter(getFragmentManager()));

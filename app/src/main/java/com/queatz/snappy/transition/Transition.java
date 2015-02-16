@@ -93,7 +93,7 @@ public abstract class Transition extends Handler {
 
     public void start(Direction direction) {
         if(mFrag == null) {
-            Log.w(Config.TAG, "Must call .fragment() first.");
+            Log.w(Config.LOG_TAG, "Must call .fragment() first.");
             return;
         }
 

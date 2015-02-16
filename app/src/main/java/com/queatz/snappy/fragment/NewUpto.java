@@ -52,7 +52,7 @@ public class NewUpto extends Fragment {
 
     public void done() {
         if(mIntent == null) {
-            Log.e(Config.TAG, "No intent");
+            Log.e(Config.LOG_TAG, "No intent");
             return;
         }
 

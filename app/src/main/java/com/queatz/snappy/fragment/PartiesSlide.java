@@ -9,8 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -76,7 +74,7 @@ public class PartiesSlide extends Fragment {
         team.api.get(Config.PATH_PARTIES, new Api.Callback() {
             @Override
             public void success(String response) {
-                team.things.getAll(Party.class, response);
+                team.things.putAll(Party.class, response);
                 update();
 
                 mRefresh.setRefreshing(false);

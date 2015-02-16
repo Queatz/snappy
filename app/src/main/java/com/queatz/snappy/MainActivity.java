@@ -45,7 +45,7 @@ public class MainActivity extends ViewActivity {
     @Override
     public void onNewIntent(Intent intent) {
         if(intent != null) {
-            Log.d(Config.TAG, "new action! " + intent.getAction() + " | " + intent.getType());
+            Log.d(Config.LOG_TAG, "new action! " + intent.getAction() + " | " + intent.getType());
 
             if(intent.getAction().equals(Intent.ACTION_SEND)) {
                 ((NewUpto) team.view.mNewUpto).setintent(intent);

@@ -18,8 +18,6 @@ import com.queatz.snappy.things.Person;
 
 import java.io.IOException;
 
-import io.realm.Realm;
-
 /**
  * Created by jacob on 10/19/14.
  */
@@ -84,6 +82,12 @@ public class Auth {
     public void load() {
         mUser = team.preferences.getString(Config.PREFERENCE_USER, null);
         mAuthToken = team.preferences.getString(Config.PREFERENCE_AUTH_TOKEN, null);
+
+        Log.d(Config.LOG_TAG, "user = " + mUser);
+    }
+
+    public String getUser() {
+        return mUser;
     }
 
     public boolean isAuthenticated() {
@@ -146,7 +150,7 @@ public class Auth {
                 team.api.get(Config.PATH_ME, params, new Api.Callback() {
                     @Override
                     public void success(String response) {
-                        setUser(team.things.get(Person.class, response));
+                        setUser(team.things.put(Person.class, response));
                     }
 
                     @Override
@@ -194,10 +198,10 @@ public class Auth {
                 break;
         }
 
-        Log.d(Config.TAG, "Auth.onActRes " + requestCode + " " + resultCode + " " + data);
+        Log.d(Config.LOG_TAG, "Auth.onActRes " + requestCode + " " + resultCode + " " + data);
 
         if(data != null && data.getExtras() != null) for (String key : data.getExtras().keySet()) {
-            Log.d(Config.TAG, key + ": " + data.getExtras().get(key));
+            Log.d(Config.LOG_TAG, key + ": " + data.getExtras().get(key));
         }
     }
 

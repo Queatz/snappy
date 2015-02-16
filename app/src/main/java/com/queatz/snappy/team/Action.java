@@ -56,12 +56,12 @@ public class Action {
         team.api.post(Config.PATH_ME_UPTO, params, new Api.Callback() {
             @Override
             public void success(String response) {
-                Log.d(Config.TAG, "yay new upto posted");
+                Log.d(Config.LOG_TAG, "yay new upto posted");
             }
 
             @Override
             public void fail(String response) {
-                Log.e(Config.TAG, "error uploading new upto: " + response);
+                Log.e(Config.LOG_TAG, "error uploading new upto: " + response);
             }
         });
 
