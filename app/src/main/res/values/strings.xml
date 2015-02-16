@@ -16,4 +16,8 @@
     <string name="TEMP_party_update_3"><b>Stacy</b> joined</string>
     <string name="TEMP_party_update_4">Accept <b>Adam Richards</b></string>
     <string name="TEMP_party_update_5">Accept <b>Sarah Ferrero</b></string>
+    <string name="today">Today, %1$s</string>
+    <string name="tomorrow">Tomorrow, %1$s</string>
+    <string name="tonight">Tonight, %1$s</string>
+    <string name="hidden">Hidden</string>
 </resources>
