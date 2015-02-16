@@ -24,7 +24,7 @@
     <color name="event">#636363</color>
     <color name="darkgreen">#ff7aca32</color>
     <color name="brightblue">#ff33a6e8</color>
-    <color name="shadow">#88000000</color>
+    <color name="shadow">#64000000</color>
     <color name="action_required">#FFECB3</color>
     <color name="action_required_pressed">#FFE082</color>
 </resources>

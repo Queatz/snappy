@@ -9,8 +9,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
 
@@ -94,7 +96,11 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
                 R.drawable.backdrop_location_5
         }[incount]);
 
-        if(position < 2) {
+        Team team = ((MainApplication) context.getApplicationContext()).team;
+
+        String userId = team.auth.getUser();
+
+        if(userId != null && party.getHost() != null && userId.equals(party.getHost().getId())) {
             ((TextView) view.findViewById(R.id.action_join)).setText(context.getText(R.string.mark_party_full));
         }
         else {

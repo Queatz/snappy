@@ -25,4 +25,9 @@
     <string name="enter_location">Enter location</string>
     <string name="enter_details">Enter details</string>
     <string name="days_ago">%1$s %2$s ago</string>
+    <string name="social_mode">Social Mode</string>
+    <string name="on">On</string>
+    <string name="invite">Invite</string>
+    <string name="my_profile">My Profile</string>
+    <string name="host_a_party">Host a Party</string>
 </resources>

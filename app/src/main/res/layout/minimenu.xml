@@ -3,12 +3,9 @@
     android:orientation="vertical"
     android:layout_width="256dp"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
     android:background="@drawable/white_rounded_bordered"
-    android:paddingTop="6dp"
-    android:paddingBottom="6dp"
-    android:paddingLeft="2dp"
-    android:paddingRight="2dp">
+    android:paddingBottom="1dp"
+    android:paddingLeft="1dp">
 
     <com.queatz.snappy.ui.TextView
         android:clickable="true"
@@ -18,7 +15,8 @@
         android:textSize="22sp"
         android:padding="8dp"
         android:textColor="@color/black"
-        android:text="Host a Party"
+        android:textStyle="bold"
+        android:text="@string/host_a_party"
         android:id="@+id/action_host" />
 
     <com.queatz.snappy.ui.TextView
@@ -29,7 +27,7 @@
         android:textSize="22sp"
         android:padding="8dp"
         android:textColor="@color/black"
-        android:text="My Profile"
+        android:text="@string/my_profile"
         android:id="@+id/action_profile" />
 
     <LinearLayout
@@ -47,7 +45,7 @@
             android:textSize="22sp"
             android:padding="8dp"
             android:textColor="@color/black"
-            android:text="Invite" />
+            android:text="@string/invite" />
 
         <com.queatz.snappy.ui.TextView
             android:layout_width="wrap_content"
@@ -74,7 +72,7 @@
             android:textSize="22sp"
             android:padding="8dp"
             android:textColor="@color/black"
-            android:text="Social Mode" />
+            android:text="@string/social_mode" />
 
         <com.queatz.snappy.ui.TextView
             android:layout_width="wrap_content"
@@ -82,8 +80,19 @@
             android:textSize="22sp"
             android:padding="8dp"
             android:textColor="@color/green"
-            android:text="On" />
+            android:text="@string/on" />
 
     </LinearLayout>
+
+    <com.queatz.snappy.ui.TextView
+        android:clickable="true"
+        android:background="@drawable/softclick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:padding="8dp"
+        android:textColor="@color/black"
+        android:text="Log Out"
+        android:id="@+id/action_logout" />
 
 </LinearLayout>

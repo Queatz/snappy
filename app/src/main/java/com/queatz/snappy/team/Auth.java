@@ -110,7 +110,7 @@ public class Auth {
                     public void run() {
                         team.view.push(ViewActivity.Transition.SPACE_GAME, null, team.view.mMainView);
                     }
-                }, 1000);
+                }, 0);
             }
         });
     }

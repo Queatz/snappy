@@ -86,6 +86,17 @@ public class MiniMenu extends FrameLayout {
 
             }
         });
+
+        findViewById(R.id.action_logout).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Team team = ((MainApplication) getContext().getApplicationContext()).team;
+
+                team.auth.reauth();
+
+                show(false);
+            }
+        });
     }
 
     public void show() {
@@ -101,13 +112,13 @@ public class MiniMenu extends FrameLayout {
             setScaleY(0);
             animate()
                     .scaleY(1)
-                    .setDuration(250)
+                    .setDuration(150)
                     .setInterpolator(new OvershootInterpolator())
                     .setListener(null);
         }
         else {
             animate()
-                    .setDuration(250)
+                    .setDuration(150)
                     .scaleY(0)
                     .setInterpolator(new AnticipateInterpolator())
                     .setListener(new AnimatorListenerAdapter() {

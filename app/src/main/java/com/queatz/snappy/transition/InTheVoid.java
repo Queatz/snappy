@@ -14,7 +14,7 @@ public class InTheVoid extends Transition {
         float t = interpolate(direction == Direction.IN ? time : 1.0f - time);
 
         frag.getView().setAlpha(t);
-        frag.getView().setScaleX(0.5f + 0.5f * t);
-        frag.getView().setScaleY(0.5f + 0.5f * t);
+        frag.getView().setScaleX(0.75f + 0.25f * t);
+        frag.getView().setScaleY(0.75f + 0.25f * t);
     }
 }
