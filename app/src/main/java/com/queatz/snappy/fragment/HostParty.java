@@ -10,65 +10,102 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
+import com.queatz.snappy.Util;
+import com.queatz.snappy.adapter.HostPartyAdapter;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Party;
+
+import io.realm.RealmResults;
 
 /**
  * Created by jacob on 1/3/15.
  */
 public class HostParty extends Fragment {
+    public Team team;
+    private String mGroup;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        team = ((MainApplication) getActivity().getApplication()).team;
+        mGroup = null;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.host_party, container, false);
 
+        final ListView partyList = ((ListView) view.findViewById(R.id.partyList));
+
+        /* New Party */
+
+        final View newParty = View.inflate(getActivity(), R.layout.host_party_new, null);
+
+        RealmResults<Party> recentParties = team.realm.where(Party.class).findAll();
+        recentParties.sort("date", false);
+
+        /* TODO Only my parties! */ partyList.setAdapter(new HostPartyAdapter(getActivity(), recentParties));
+
         View.OnClickListener oclk = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Team team = ((MainApplication) getActivity().getApplication()).team;
 
-                String name = ((EditText) view.findViewById(R.id.name)).getText().toString();
-                String date = ((EditText) view.findViewById(R.id.date)).getText().toString();
-                String location = ((EditText) view.findViewById(R.id.location)).getText().toString();
-                String details = ((EditText) view.findViewById(R.id.details)).getText().toString();
+                String name = ((EditText) newParty.findViewById(R.id.name)).getText().toString();
+                String date = ((EditText) newParty.findViewById(R.id.date)).getText().toString();
+                String location = ((EditText) newParty.findViewById(R.id.location)).getText().toString();
+                String details = ((EditText) newParty.findViewById(R.id.details)).getText().toString();
 
-                team.action.hostParty(0, name, date, location, details);
+                team.action.hostParty(mGroup, name, date, location, details);
                 team.view.pop();
             }
         };
 
-        view.findViewById(R.id.action_host).setOnClickListener(oclk);
+        newParty.findViewById(R.id.action_host).setOnClickListener(oclk);
 
-        View.OnClickListener oclk2 = new View.OnClickListener() {
+        partyList.addHeaderView(newParty);
+        partyList.addFooterView(new View(getActivity()));
+
+        partyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                EditText name;
-
-                name = ((EditText) view.findViewById(R.id.name));
-                name.setText("Code and Jazz");
-                name.setEnabled(false);
-
-                name = ((EditText) view.findViewById(R.id.date));
-                name.setText("5pm");
-
-                name = ((EditText) view.findViewById(R.id.location));
-                name.setText("Chestnut Mini-Mansion");
-
-                name = ((EditText) view.findViewById(R.id.details));
-                name.setText("Chess night");
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                setParty((Party) partyList.getAdapter().getItem(position));
             }
-        };
+        });
 
-        view.findViewById(R.id.click_glam).setOnClickListener(oclk2);
-        view.findViewById(R.id.click_code).setOnClickListener(oclk2);
+        /* Host Again */
 
         return view;
+    }
+
+    public void setParty(Party party) {
+        mGroup = party.getId();
+
+        if(getView() == null)
+            return;
+
+        View view = getView();
+        EditText name;
+
+        name = ((EditText) view.findViewById(R.id.name));
+        name.setText(party.getName());
+        name.setEnabled(false);
+
+        name = ((EditText) view.findViewById(R.id.date));
+        name.setText(Util.cuteDate(getActivity(), party.getDate()));
+
+        name = ((EditText) view.findViewById(R.id.location));
+        name.setText(party.getLocation().getName());
+
+        name = ((EditText) view.findViewById(R.id.details));
+        name.setText(party.getDetails());
+
+        ((ListView) view.findViewById(R.id.partyList)).smoothScrollToPosition(0);
     }
 
     @Override

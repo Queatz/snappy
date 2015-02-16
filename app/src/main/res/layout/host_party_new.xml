@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/white_rounded"
+        android:orientation="vertical">
+
+        <com.queatz.snappy.ui.EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:hint="@string/enter_party_name"
+            android:inputType="textCapWords"
+            android:lines="1"
+            android:textColorHint="@color/gray"
+            android:padding="16dp"
+            android:textSize="26sp" />
+
+        <com.queatz.snappy.ui.EditText
+            android:id="@+id/date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:hint="@string/enter_time"
+            android:inputType="textCapWords"
+            android:lines="1"
+            android:background="@android:color/transparent"
+            android:textColorHint="@color/gray"
+            android:padding="16dp" />
+
+        <com.queatz.snappy.ui.EditText
+            android:id="@+id/location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:hint="@string/enter_location"
+            android:inputType="textCapWords"
+            android:lines="1"
+            android:background="@android:color/transparent"
+            android:textColorHint="@color/gray"
+            android:padding="16dp" />
+
+        <com.queatz.snappy.ui.EditText
+            android:id="@+id/details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:hint="@string/enter_details"
+            android:inputType="textCapSentences|textMultiLine"
+            android:background="@android:color/transparent"
+            android:textColorHint="@color/gray"
+            android:padding="16dp" />
+
+        <com.queatz.snappy.ui.TextView
+            android:id="@+id/action_host"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:padding="8dp"
+            android:textSize="18sp"
+            android:text="@string/host_party"
+            android:background="@drawable/button"
+            android:textColor="@color/white"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:clickable="true" />
+
+    </LinearLayout>
+
+</FrameLayout>

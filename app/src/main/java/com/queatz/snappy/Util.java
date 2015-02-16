@@ -20,6 +20,9 @@ public class Util {
     }
 
     public static String cuteDate(Context context, Date date) {
+        if(context == null || date == null)
+            return "-";
+
         Calendar now = GregorianCalendar.getInstance();
         Calendar party = GregorianCalendar.getInstance();
         party.setTime(date);
@@ -40,7 +43,10 @@ public class Util {
             return "-";
         }
 
-        String time = party.get(Calendar.HOUR) + (party.get(Calendar.AM_PM) == Calendar.AM ? "am" : "pm");
+        int hour = party.get(Calendar.HOUR);
+        if(hour == 0) hour = 12;
+
+        String time = hour + (party.get(Calendar.AM_PM) == Calendar.AM ? "am" : "pm");
 
         return String.format(context.getResources().getString(day), time);
     }

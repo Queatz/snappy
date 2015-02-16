@@ -3,5 +3,6 @@
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowBackground">@color/background</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="colorPrimaryDark">@color/red</item>
     </style>
 </resources>

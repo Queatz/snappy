@@ -26,14 +26,13 @@ public class Action {
         ((MiniMenu) team.view.findViewById(R.id.miniMenu)).show();
     }
 
-    public void hostParty(long id, String name, String date, String location, String details) {
+    public void hostParty(String group, String name, String date, String location, String details) {
         RequestParams params = new RequestParams();
 
-        if(id > 0)
-            params.put("id", id);
-        else
-            params.put("name", name);
+        if(group != null && !group.isEmpty())
+            params.put("id", group);
 
+        params.put("name", name);
         params.put("date", date);
         params.put("location", location);
         params.put("details", details);
