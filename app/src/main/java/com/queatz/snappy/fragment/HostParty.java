@@ -34,11 +34,11 @@ public class HostParty extends Fragment {
                 Team team = ((MainApplication) getActivity().getApplication()).team;
 
                 String name = ((EditText) view.findViewById(R.id.name)).getText().toString();
-                String time = ((EditText) view.findViewById(R.id.time)).getText().toString();
+                String date = ((EditText) view.findViewById(R.id.date)).getText().toString();
                 String location = ((EditText) view.findViewById(R.id.location)).getText().toString();
                 String details = ((EditText) view.findViewById(R.id.details)).getText().toString();
 
-                team.action.hostParty(0, name, time, location, details);
+                team.action.hostParty(0, name, date, location, details);
                 team.view.pop();
             }
         };
@@ -54,7 +54,7 @@ public class HostParty extends Fragment {
                 name.setText("Code and Jazz");
                 name.setEnabled(false);
 
-                name = ((EditText) view.findViewById(R.id.time));
+                name = ((EditText) view.findViewById(R.id.date));
                 name.setText("5pm");
 
                 name = ((EditText) view.findViewById(R.id.location));

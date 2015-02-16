@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.util.Date;
 import java.util.Iterator;
 
 import io.realm.Realm;
@@ -29,7 +30,7 @@ public class Things {
         team = t;
     }
 
-    private void deepJson(RealmObject thing, JSONObject o) {
+    private void deepJson(Realm realm, RealmObject thing, JSONObject o) {
         Log.e(Config.TAG, "JSON new " + thing.getClass().getSuperclass());
 
         Iterator<String> keys = o.keys();
@@ -59,12 +60,15 @@ public class Things {
 
                 if(setter != null) {
                     if(RealmObject.class.isAssignableFrom(fieldType)) {
-                        setter.invoke(thing, team.things.get(fieldType, o.getJSONObject(fieldName)));
+                        setter.invoke(thing, team.things.get(realm, fieldType, o.getJSONObject(fieldName)));
                     }
                     else if(RealmList.class.isAssignableFrom(fieldType)) {
                         Class t = (Class) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
 
-                        setter.invoke(thing, team.things.getAll(t, o.getJSONArray(fieldName)));
+                        setter.invoke(thing, team.things.getAll(realm, t, o.getJSONArray(fieldName)));
+                    }
+                    else if(Date.class.isAssignableFrom(fieldType)) {
+                        setter.invoke(thing, new Date(o.getString(fieldName)));
                     }
                     else {
                         Log.e(Config.TAG, "JSON fieldName: " + fieldName + " = " + o.get(fieldName));
@@ -75,7 +79,7 @@ public class Things {
                     Log.w(Config.TAG, "JSON setter not found for: " + fieldType.getName() + "." + fieldName);
                 }
             }
-            catch (JSONException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            catch (JSONException | IllegalArgumentException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
             }
         }
@@ -85,7 +89,7 @@ public class Things {
         return null;
     }
 
-    public <T extends RealmObject & Thing> T get(Class<T> clazz, JSONObject jsonObject) {
+    public <T extends RealmObject & Thing> T get(Realm realm, Class<T> clazz, JSONObject jsonObject) {
         String id;
 
         try {
@@ -97,37 +101,24 @@ public class Things {
             return null;
         }
 
-        Realm realm = team.realm();
-        realm.beginTransaction();
-
         T o = realm.where(clazz).equalTo("id", id).findFirst();
 
         if(o == null)
             o = realm.createObject(clazz);
 
-        deepJson(o, jsonObject);
-
-        realm.commitTransaction();
-        realm.close();
+        deepJson(realm, o, jsonObject);
 
         return o;
     }
 
-    public <T extends RealmObject & Thing> RealmList<T> getAll(Class<T> clazz, JSONArray jsonArray) {
-        try {
-            RealmList<T> results = new RealmList<>();
+    public <T extends RealmObject & Thing> T get(Class<T> clazz, JSONObject jsonObject) {
+        Realm realm = team.realm();
+        realm.beginTransaction();
+        T o = get(realm, clazz, jsonObject);
+        realm.commitTransaction();
+        realm.close();
 
-            for (int i = 0; i < jsonArray.length(); i++) {
-                T o = get(clazz, jsonArray.getJSONObject(i));
-                results.add(o);
-            }
-
-            return results;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        return o;
     }
 
     public <T extends RealmObject & Thing> T get(Class<T> clazz, String jsonObject) {
@@ -138,6 +129,33 @@ public class Things {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public <T extends RealmObject & Thing> RealmList<T> getAll(Class<T> clazz, JSONArray jsonArray) {
+        Realm realm = team.realm();
+        realm.beginTransaction();
+        RealmList<T> o = getAll(realm, clazz, jsonArray);
+        realm.commitTransaction();
+        realm.close();
+
+        return o;
+    }
+
+    public <T extends RealmObject & Thing> RealmList<T> getAll(Realm realm, Class<T> clazz, JSONArray jsonArray) {
+        try {
+            RealmList<T> results = new RealmList<>();
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                T o = get(realm, clazz, jsonArray.getJSONObject(i));
+                results.add(o);
+            }
+
+            return results;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public <T extends RealmObject & Thing> RealmList<T> getAll(Class<T> clazz, String jsonArray) {

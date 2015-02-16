@@ -26,7 +26,7 @@ public class Action {
         ((MiniMenu) team.view.findViewById(R.id.miniMenu)).show();
     }
 
-    public void hostParty(long id, String name, String time, String location, String details) {
+    public void hostParty(long id, String name, String date, String location, String details) {
         RequestParams params = new RequestParams();
 
         if(id > 0)
@@ -34,7 +34,7 @@ public class Action {
         else
             params.put("name", name);
 
-        params.put("time", time);
+        params.put("date", date);
         params.put("location", location);
         params.put("details", details);
 

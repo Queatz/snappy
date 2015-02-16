@@ -64,28 +64,20 @@ public class PartiesSlide extends Fragment {
     }
 
     public void update() {
-        mList.setAdapter(new PartyAdapter(getActivity(), team.realm().allObjects(Party.class)));
+        RealmResults<Party> list = team.realm().allObjects(Party.class);
+        list.sort("date", false);
+        mList.setAdapter(new PartyAdapter(getActivity(), list));
     }
 
     public void refresh() {
         if(getActivity() == null)
             return;
 
-        if(getView() != null) {
-            Animation anim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out);
-            getView().startAnimation(anim);
-        }
-
         team.api.get(Config.PATH_PARTIES, new Api.Callback() {
             @Override
             public void success(String response) {
                 team.things.getAll(Party.class, response);
                 update();
-
-                if(getView() != null && getActivity() != null) {
-                    Animation anim = AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in);
-                    getView().startAnimation(anim);
-                }
 
                 mRefresh.setRefreshing(false);
             }
