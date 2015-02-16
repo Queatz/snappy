@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.things.Party;
+import com.queatz.snappy.things.Person;
 
 import java.util.Date;
 import java.util.Random;
@@ -41,6 +42,14 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
 
         Party party = realmResults.get(position);
         ((TextView) view.findViewById(R.id.name)).setText(party.getName());
+
+        Person host = party.getHost();
+
+        if(host != null) {
+            String name = String.format(context.getString(R.string.by), host.getFirstName() + " " + host.getLastName());
+            ((TextView) view.findViewById(R.id.by_text)).setText(name);
+        }
+
         ((TextView) view.findViewById(R.id.location_text)).setText(party.getLocation() == null ? context.getString(R.string.hidden) : party.getLocation().getName());
         ((TextView) view.findViewById(R.id.time_text)).setText(party.getDate() == null ? context.getString(R.string.hidden) : Util.cuteDate(context, party.getDate()));
 
