@@ -63,7 +63,7 @@ public class Main extends Fragment {
                 Person person = team.things.get(Person.class, usr);
 
                 if(person != null) {
-                    Picasso.with(getActivity()).load(person.getImageUrlForSize((int) Util.px(getActivity(), 60))).placeholder(R.color.spacer).into(profile);
+                    Picasso.with(getActivity()).load(person.getImageUrlForSize((int) Util.px(getActivity(), 64))).placeholder(R.color.spacer).into(profile);
                 }
             }
         }
