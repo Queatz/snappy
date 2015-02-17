@@ -97,7 +97,7 @@
             <com.makeramen.RoundedImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                app:riv_corner_radius="30dp"
+                app:riv_corner_radius="60dp"
                 android:padding="8dp"/>
 
         </FrameLayout>

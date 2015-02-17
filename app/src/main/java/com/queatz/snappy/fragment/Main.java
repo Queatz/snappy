@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
+import com.queatz.snappy.Util;
 import com.queatz.snappy.adapter.MainAdapter;
 import com.queatz.snappy.adapter.MainTabAdapter;
 import com.queatz.snappy.team.Team;
@@ -62,7 +63,7 @@ public class Main extends Fragment {
                 Person person = team.things.get(Person.class, usr);
 
                 if(person != null) {
-                    Picasso.with(getActivity()).load(person.getImageUrl()).placeholder(R.color.spacer).into(profile);
+                    Picasso.with(getActivity()).load(person.getImageUrlForSize((int) Util.px(getActivity(), 60))).placeholder(R.color.spacer).into(profile);
                 }
             }
         }

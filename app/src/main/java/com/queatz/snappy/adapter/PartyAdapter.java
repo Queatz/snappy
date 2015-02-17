@@ -9,12 +9,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.makeramen.RoundedImageView;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
+import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 import java.util.Random;
@@ -45,6 +47,9 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
         final Party party = realmResults.get(position);
         final Person host = party.getHost();
 
+        ImageView profile = ((ImageView) view.findViewById(R.id.profile));
+        Picasso.with(context).load(host == null ? "" : host.getImageUrlForSize((int) Util.px(context, 64))).placeholder(R.color.spacer).into(profile);
+
         ((TextView) view.findViewById(R.id.name)).setText(party.getName());
 
         if(host != null) {
@@ -73,15 +78,18 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
 
             LinearLayout whosin = ((LinearLayout) view.findViewById(R.id.whos_in));
 
-            ImageView awho = (ImageView) whosin.getChildAt(0);
+            RoundedImageView awho = (RoundedImageView) whosin.getChildAt(0);
             ViewGroup.LayoutParams lps = awho.getLayoutParams();
 
             whosin.removeAllViews();
 
+            float radius = awho.getCornerRadius();
+
             for (int i = 0; i < incount; i++) {
-                awho = new ImageView(context);
+                awho = new RoundedImageView(context);
+                awho.setCornerRadius(radius);
                 awho.setLayoutParams(lps);
-                awho.setImageResource(R.drawable.profile);
+                awho.setImageResource(R.drawable.sherry);
                 whosin.addView(awho);
             }
         }
@@ -127,7 +135,7 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
             });
         }
 
-        view.findViewById(R.id.action_requested).setVisibility(View.GONE);
+        view.findViewById(R.id.action_requested).setVisibility(position == 0 ? View.VISIBLE : View.GONE);
         view.findViewById(R.id.updates).setVisibility(View.GONE);
 
         ((EditText) view.findViewById(R.id.write_message)).setText("");
