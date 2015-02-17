@@ -15,9 +15,12 @@ public class Config {
 
     public static String PARAM_AUTH = "auth";
     public static String PARAM_EMAIL = "email";
+    public static String PARAM_JOIN = "join";
 
     public static String PATH_API = "api";
     public static String PATH_PARTIES = "parties";
+    public static String PATH_PARTY = "party";
+    public static String PATH_PARTY_ID = "party/%s";
     public static String PATH_PEOPLE = "people";
     public static String PATH_SEARCH = "search";
     public static String PATH_MESSAGES = "messages";

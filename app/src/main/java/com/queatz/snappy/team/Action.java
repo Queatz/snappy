@@ -1,12 +1,14 @@
 package com.queatz.snappy.team;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
+import com.queatz.snappy.things.Party;
 import com.queatz.snappy.ui.MiniMenu;
 
 import java.io.FileNotFoundException;
@@ -24,6 +26,13 @@ public class Action {
 
     public void openMinimenu(View source) {
         ((MiniMenu) team.view.findViewById(R.id.miniMenu)).show();
+    }
+
+    public void joinParty(@NonNull Party party) {
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_JOIN, true);
+
+        team.api.post(String.format(Config.PATH_PARTY_ID, party.getId()), params);
     }
 
     public void hostParty(String group, String name, String date, String location, String details) {

@@ -46,10 +46,11 @@ public class HostParty extends Fragment {
 
         final View newParty = View.inflate(getActivity(), R.layout.host_party_new, null);
 
-        RealmResults<Party> recentParties = team.realm.where(Party.class).equalTo("host.id", team.auth.getUser()).findAll();
+        RealmResults<Party> recentParties = team.realm.where(Party.class)
+                .equalTo("host.id", team.auth.getUser())
+                .findAll();
         recentParties.sort("date", false);
-
-        /* TODO Only my parties! */ partyList.setAdapter(new HostPartyAdapter(getActivity(), recentParties));
+        partyList.setAdapter(new HostPartyAdapter(getActivity(), recentParties));
 
         View.OnClickListener oclk = new View.OnClickListener() {
             @Override

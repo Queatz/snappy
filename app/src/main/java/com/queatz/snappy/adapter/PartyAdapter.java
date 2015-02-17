@@ -42,10 +42,10 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
             view = inflater.inflate(R.layout.party_card, parent, false);
         }
 
-        Party party = realmResults.get(position);
-        ((TextView) view.findViewById(R.id.name)).setText(party.getName());
+        final Party party = realmResults.get(position);
+        final Person host = party.getHost();
 
-        Person host = party.getHost();
+        ((TextView) view.findViewById(R.id.name)).setText(party.getName());
 
         if(host != null) {
             String name = String.format(context.getString(R.string.by), host.getFirstName() + " " + host.getLastName());
@@ -96,15 +96,29 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
                 R.drawable.backdrop_location_5
         }[incount]);
 
-        Team team = ((MainApplication) context.getApplicationContext()).team;
+        final Team team = ((MainApplication) context.getApplicationContext()).team;
 
         String userId = team.auth.getUser();
 
+        TextView action = ((TextView) view.findViewById(R.id.action_join));
+
         if(userId != null && party.getHost() != null && userId.equals(party.getHost().getId())) {
-            ((TextView) view.findViewById(R.id.action_join)).setText(context.getText(R.string.mark_party_full));
+            action.setText(context.getText(R.string.mark_party_full));
+            action.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    team.action.joinParty(null);
+                }
+            });
         }
         else {
-            ((TextView) view.findViewById(R.id.action_join)).setText(context.getText(R.string.request_to_join));
+            action.setText(context.getText(R.string.request_to_join));
+            action.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    team.action.joinParty(party);
+                }
+            });
         }
 
         view.findViewById(R.id.action_requested).setVisibility(position < 1 ? View.VISIBLE : View.GONE);
