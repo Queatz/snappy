@@ -66,6 +66,9 @@ public class Things {
                     else if(Date.class.isAssignableFrom(fieldType)) {
                         setter.invoke(thing, new Date(o.getString(fieldName)));
                     }
+                    else if(boolean.class.isAssignableFrom(fieldType)) {
+                        setter.invoke(thing, Boolean.valueOf(o.getString(fieldName)));
+                    }
                     else {
                         setter.invoke(thing, o.get(fieldName));
                     }

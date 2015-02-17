@@ -175,7 +175,7 @@
                     android:textStyle="bold"
                     android:textSize="18sp"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/clickable" />
 
             </LinearLayout>
 
@@ -204,7 +204,7 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/clickable" />
 
             </LinearLayout>
 
@@ -266,6 +266,7 @@
             android:background="@drawable/white_rounded">
 
             <LinearLayout
+                android:id="@+id/write_message_layout"
                 android:background="@drawable/white_rounded"
                 android:clickable="true"
                 android:layout_width="match_parent"

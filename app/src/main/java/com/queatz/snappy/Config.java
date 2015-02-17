@@ -16,6 +16,7 @@ public class Config {
     public static String PARAM_AUTH = "auth";
     public static String PARAM_EMAIL = "email";
     public static String PARAM_JOIN = "join";
+    public static String PARAM_FULL = "full";
 
     public static String PATH_API = "api";
     public static String PATH_PARTIES = "parties";

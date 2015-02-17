@@ -62,6 +62,9 @@ public class PartiesSlide extends Fragment {
     }
 
     public void update() {
+        if(getActivity() == null)
+            return;
+
         RealmResults<Party> list = team.realm().allObjects(Party.class);
         list.sort("date", false);
         mList.setAdapter(new PartyAdapter(getActivity(), list));

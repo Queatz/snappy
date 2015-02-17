@@ -28,6 +28,13 @@ public class Action {
         ((MiniMenu) team.view.findViewById(R.id.miniMenu)).show();
     }
 
+    public void markPartyFull(@NonNull Party party) {
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_FULL, true);
+
+        team.api.post(String.format(Config.PATH_PARTY_ID, party.getId()), params);
+    }
+
     public void joinParty(@NonNull Party party) {
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_JOIN, true);

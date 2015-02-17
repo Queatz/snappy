@@ -103,13 +103,19 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
         TextView action = ((TextView) view.findViewById(R.id.action_join));
 
         if(userId != null && party.getHost() != null && userId.equals(party.getHost().getId())) {
-            action.setText(context.getText(R.string.mark_party_full));
-            action.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    team.action.joinParty(null);
-                }
-            });
+            if(party.isFull()) {
+                action.setVisibility(View.GONE);
+            }
+            else {
+                action.setVisibility(View.VISIBLE);
+                action.setText(context.getText(R.string.mark_party_full));
+                action.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        team.action.markPartyFull(party);
+                    }
+                });
+            }
         }
         else {
             action.setText(context.getText(R.string.request_to_join));
@@ -121,8 +127,8 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
             });
         }
 
-        view.findViewById(R.id.action_requested).setVisibility(position < 1 ? View.VISIBLE : View.GONE);
-        view.findViewById(R.id.updates).setVisibility(position < 2 ? View.VISIBLE : View.GONE);
+        view.findViewById(R.id.action_requested).setVisibility(View.GONE);
+        view.findViewById(R.id.updates).setVisibility(View.GONE);
 
         ((EditText) view.findViewById(R.id.write_message)).setText("");
 

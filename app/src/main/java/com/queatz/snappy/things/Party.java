@@ -17,6 +17,7 @@ public class Party extends RealmObject implements Thing {
     private Date date;
     private Location location;
     private Person host;
+    private boolean full;
     private RealmList<Update> updates;
 
     public String getId() {
@@ -65,6 +66,14 @@ public class Party extends RealmObject implements Thing {
 
     public void setHost(Person host) {
         this.host = host;
+    }
+
+    public boolean isFull() {
+        return full;
+    }
+
+    public void setFull(boolean full) {
+        this.full = full;
     }
 
     public RealmList<Update> getUpdates() {
