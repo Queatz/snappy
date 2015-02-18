@@ -28,4 +28,7 @@ public class Config {
     public static String PATH_UPTO = "upto";
     public static String PATH_ME= "me";
     public static String PATH_ME_UPTO= "me/upto";
+
+    public static String JOIN_STATUS_REQUESTED = "requested";
+    public static String JOIN_STATUS_IN = "in";
 }

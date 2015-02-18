@@ -7,18 +7,20 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.makeramen.RoundedImageView;
+import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Join;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
 import com.squareup.picasso.Picasso;
 
-import java.util.Date;
 import java.util.Random;
 
 import io.realm.RealmBaseAdapter;
@@ -135,7 +137,20 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
             });
         }
 
-        view.findViewById(R.id.action_requested).setVisibility(View.GONE);
+        ListView actions = (ListView) view.findViewById(R.id.actions);
+
+        RealmResults<Join> joinRequests = team.realm.where(Join.class)
+                .equalTo("party.id", party.getId())
+                .equalTo("status", Config.JOIN_STATUS_REQUESTED).findAll();
+
+        if(joinRequests.size() > 0) {
+            actions.setVisibility(View.VISIBLE);
+            actions.setAdapter(new ActionAdapter(context, joinRequests));
+        }
+        else {
+            actions.setVisibility(View.GONE);
+        }
+
         view.findViewById(R.id.updates).setVisibility(View.GONE);
 
         ((EditText) view.findViewById(R.id.write_message)).setText("");

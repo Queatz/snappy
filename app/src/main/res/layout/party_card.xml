@@ -30,67 +30,12 @@
         android:padding="8dp"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/action_requested"
+        <com.queatz.snappy.ui.ExpandedListView
+            android:id="@+id/actions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/action_required_rounded">
-
-            <LinearLayout
-                android:background="@drawable/action_required_card_rounded"
-                android:clickable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/profile" />
-
-                <com.queatz.snappy.ui.TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/TEMP_party_update_4"
-                    android:textColor="@color/event"
-                    android:textSize="18sp"
-                    android:layout_marginLeft="8dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:background="@drawable/action_required_card_rounded"
-                android:clickable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/profile" />
-
-                <com.queatz.snappy.ui.TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/TEMP_party_update_5"
-                    android:textColor="@color/event"
-                    android:textSize="18sp"
-                    android:layout_marginLeft="8dp" />
-            </LinearLayout>
-
-        </LinearLayout>
+            android:background="@drawable/actions_rounded" />
 
         <LinearLayout
             android:layout_width="match_parent"

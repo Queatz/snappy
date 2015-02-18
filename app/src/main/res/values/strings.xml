@@ -30,4 +30,5 @@
     <string name="invite">Invite</string>
     <string name="my_profile">My Profile</string>
     <string name="host_a_party">Host a Party</string>
+    <string name="accept_person">Accept <b>%1$s</b></string>
 </resources>

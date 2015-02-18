@@ -19,6 +19,7 @@ public class Party extends RealmObject implements Thing {
     private Person host;
     private boolean full;
     private RealmList<Update> updates;
+    private RealmList<Join> people;
 
     public String getId() {
         return id;
@@ -82,5 +83,13 @@ public class Party extends RealmObject implements Thing {
 
     public void setUpdates(RealmList<Update> updates) {
         this.updates = updates;
+    }
+
+    public RealmList<Join> getPeople() {
+        return people;
+    }
+
+    public void setPeople(RealmList<Join> people) {
+        this.people = people;
     }
 }

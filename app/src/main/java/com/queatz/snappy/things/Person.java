@@ -20,6 +20,10 @@ public class Person extends RealmObject implements Thing {
     private RealmList<Update> updates;
     private RealmList<Message> messages;
 
+    public String getName() {
+        return getFirstName() + " " + getLastName();
+    }
+
     public String getImageUrlForSize(int size) {
         if(getImageUrl() == null || getImageUrl().isEmpty() || !getImageUrl().contains("="))
             return null;
