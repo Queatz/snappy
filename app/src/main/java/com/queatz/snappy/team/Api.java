@@ -32,9 +32,9 @@ public class Api {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             if(mCallback != null)
-                mCallback.success(new String(responseBody));
+                mCallback.success((responseBody == null ? null : new String(responseBody)));
 
-            Log.w(Config.LOG_TAG, "api - success - " + new String(responseBody));
+            Log.w(Config.LOG_TAG, "api - success - " + (responseBody == null ? null : new String(responseBody)));
         }
 
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
@@ -44,9 +44,9 @@ public class Api {
             }
 
             if(mCallback != null)
-                mCallback.fail(new String(responseBody));
+                mCallback.fail(responseBody == null ? null : new String(responseBody));
 
-            Log.w(Config.LOG_TAG, "api - fail - " + new String(responseBody));
+            Log.w(Config.LOG_TAG, "api - fail - " + (responseBody == null ? null : new String(responseBody)));
         }
     }
 
