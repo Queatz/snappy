@@ -96,6 +96,7 @@
             android:layout_marginTop="8dp">
 
             <LinearLayout
+                android:id="@+id/time_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -124,6 +125,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/location_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -161,7 +163,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center_horizontal"
-            android:text="What where when why."
             android:textSize="19sp"
             android:paddingBottom="8dp" />
 
@@ -169,22 +170,7 @@
             android:id="@+id/whos_in_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/whos_in"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.makeramen.RoundedImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_margin="8dp"
-                    app:riv_corner_radius="48dp"
-                    android:src="@drawable/sherry" />
-
-            </LinearLayout>
+            android:orientation="horizontal">
 
         </LinearLayout>
 

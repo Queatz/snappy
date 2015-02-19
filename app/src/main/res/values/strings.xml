@@ -30,5 +30,9 @@
     <string name="invite">Invite</string>
     <string name="my_profile">My Profile</string>
     <string name="host_a_party">Host a Party</string>
-    <string name="accept_person">Accept <b>%1$s</b></string>
+    <string name="accept_person"><![CDATA[Accept <b>%1$s</b>]]></string>
+    <string name="hosted">Hosted</string>
+    <string name="Following">Following</string>
+    <string name="Followers">Followers</string>
+    <string name="follow_person">Follow %1$s</string>
 </resources>

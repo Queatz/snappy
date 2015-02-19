@@ -5,14 +5,19 @@ import android.app.FragmentManager;
 
 import com.queatz.snappy.fragment.PersonMessagesSlide;
 import com.queatz.snappy.fragment.PersonUptoSlide;
+import com.queatz.snappy.things.Person;
 import com.queatz.snappy.ui.SlideScreen;
 
 /**
  * Created by jacob on 10/23/14.
  */
 public class PersonAdapter extends SlideScreen.SlideScreenAdapter {
-    public PersonAdapter(FragmentManager fragmentManager) {
+    Person mPerson;
+
+    public PersonAdapter(FragmentManager fragmentManager, Person person) {
         super(fragmentManager);
+
+        mPerson = person;
     }
 
     public int getCount() {
@@ -22,9 +27,13 @@ public class PersonAdapter extends SlideScreen.SlideScreenAdapter {
     public Fragment getSlide(int page) {
         switch (page) {
             case 0:
-                return new PersonUptoSlide();
+                PersonUptoSlide personUptoSlide = new PersonUptoSlide();
+                personUptoSlide.setPerson(mPerson);
+                return personUptoSlide;
             case 1:
-                return new PersonMessagesSlide();
+                PersonMessagesSlide personMessagesSlide = new PersonMessagesSlide();
+                personMessagesSlide.setPerson(mPerson);
+                return personMessagesSlide;
             default:
                 return null;
         }

@@ -109,6 +109,9 @@ public class Auth {
     }
 
     public void showMain() {
+//        team.view.pop();
+//        team.view.push(ViewActivity.Transition.SPACE_GAME, null, team.view.mMainView);
+//        team.view.front(team.view.mSigninView);
         team.view.pop(new ViewActivity.OnCompleteCallback() {
             @Override
             public void onComplete() {

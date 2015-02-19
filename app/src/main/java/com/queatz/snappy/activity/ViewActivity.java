@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.queatz.snappy.R;
 import com.queatz.snappy.transition.Examine;
@@ -71,6 +73,9 @@ public class ViewActivity extends Activity {
         }
 
         if(fragment != null) {
+            if(fragment.isAdded())
+                return;
+
             fragments.push(fragment);
 
             getFragmentManager().beginTransaction()
@@ -175,9 +180,14 @@ public class ViewActivity extends Activity {
         }
     }
 
-    public void front(Fragment fragment) {
-        if(fragment.getView() != null)
-            fragment.getView().bringToFront();
+    public void front(final Fragment fragment) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if(fragment.getView() != null)
+                    fragment.getView().bringToFront();
+            }
+        });
     }
 
     public int getDepth() {

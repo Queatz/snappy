@@ -13,6 +13,7 @@ import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Person;
 
 /**
  * Created by jacob on 1/3/15.
@@ -67,7 +68,9 @@ public class MiniMenu extends FrameLayout {
             public void onClick(View view) {
                 Team team = ((MainApplication) getContext().getApplicationContext()).team;
 
-                team.view.push(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.IN_THE_VOID, team.view.mPersonView);
+                Person person = team.things.get(Person.class, team.auth.getUser());
+
+                team.action.openProfile(person);
 
                 show(false);
             }

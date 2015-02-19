@@ -1,6 +1,9 @@
 package com.queatz.snappy.team;
 
+import android.content.ContentUris;
+import android.content.Intent;
 import android.net.Uri;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
@@ -8,10 +11,13 @@ import android.view.View;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
-import com.queatz.snappy.things.Party;
+import com.queatz.snappy.activity.ViewActivity;
+import com.queatz.snappy.things.*;
 import com.queatz.snappy.ui.MiniMenu;
 
 import java.io.FileNotFoundException;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by jacob on 11/23/14.
@@ -22,6 +28,35 @@ public class Action {
 
     public Action(Team t) {
         team = t;
+    }
+
+    public void openDate(Party party) {
+        if(party == null)
+            return;
+
+        Intent intent = new Intent(Intent.ACTION_INSERT, CalendarContract.Events.CONTENT_URI);
+        intent.setType("vnd.android.cursor.dir/event");
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, party.getDate().getTime());
+        intent.putExtra(CalendarContract.Events.TITLE, party.getName());
+        intent.putExtra(CalendarContract.Events.DESCRIPTION, party.getDetails());
+        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, party.getLocation().getText());
+
+        team.view.startActivity(intent);
+    }
+
+    public void openLocation(com.queatz.snappy.things.Location location) {
+        if(location == null)
+            return;
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + location.getText()));
+
+        team.view.startActivity(intent);
+    }
+
+    public void openProfile(Person person) {
+        com.queatz.snappy.fragment.Person fragment = new com.queatz.snappy.fragment.Person();
+        fragment.setPerson(person);
+        team.view.push(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.IN_THE_VOID, fragment);
     }
 
     public void openMinimenu(View source) {
@@ -40,6 +75,13 @@ public class Action {
         params.put(Config.PARAM_JOIN, true);
 
         team.api.post(String.format(Config.PATH_PARTY_ID, party.getId()), params);
+    }
+
+    public void acceptJoin(@NonNull Join join) {
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_ACCEPT, true);
+
+        team.api.post(String.format(Config.PATH_JOIN_ID, join.getId()), params);
     }
 
     public void hostParty(String group, String name, String date, String location, String details) {

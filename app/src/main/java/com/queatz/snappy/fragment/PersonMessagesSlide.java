@@ -8,11 +8,18 @@ import android.view.ViewGroup;
 import android.widget.ScrollView;
 
 import com.queatz.snappy.R;
+import com.queatz.snappy.things.*;
 
 /**
  * Created by jacob on 10/26/14.
  */
 public class PersonMessagesSlide extends Fragment {
+    com.queatz.snappy.things.Person mPerson;
+
+    public void setPerson(com.queatz.snappy.things.Person person) {
+        mPerson = person;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

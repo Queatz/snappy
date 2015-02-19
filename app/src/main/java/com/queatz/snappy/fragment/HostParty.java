@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
@@ -62,6 +63,21 @@ public class HostParty extends Fragment {
                 String location = ((EditText) newParty.findViewById(R.id.location)).getText().toString();
                 String details = ((EditText) newParty.findViewById(R.id.details)).getText().toString();
 
+                if(name.isEmpty()) {
+                    Toast.makeText(getActivity(), ((EditText) newParty.findViewById(R.id.name)).getHint().toString(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(date.isEmpty()) {
+                    Toast.makeText(getActivity(), ((EditText) newParty.findViewById(R.id.date)).getHint().toString(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(location.isEmpty()) {
+                    Toast.makeText(getActivity(), ((EditText) newParty.findViewById(R.id.location)).getHint().toString(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 team.action.hostParty(mGroup, name, date, location, details);
                 team.view.pop();
             }
@@ -78,8 +94,6 @@ public class HostParty extends Fragment {
                 setParty((Party) partyList.getAdapter().getItem(position));
             }
         });
-
-        /* Host Again */
 
         return view;
     }
@@ -98,7 +112,7 @@ public class HostParty extends Fragment {
         name.setEnabled(false);
 
         name = ((EditText) view.findViewById(R.id.date));
-        name.setText(Util.cuteDate(getActivity(), party.getDate()));
+        name.setText(Util.cuteDate(party.getDate()));
 
         name = ((EditText) view.findViewById(R.id.location));
         name.setText(party.getLocation().getName());

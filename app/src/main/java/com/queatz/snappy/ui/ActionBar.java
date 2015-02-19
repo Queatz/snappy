@@ -30,8 +30,8 @@ public class ActionBar extends FrameLayout {
 
     private TextView mTitle;
     private View mUpButton;
-    private View mLeftContent;
-    private View mRightContent;
+    private FrameLayout mLeftContent;
+    private FrameLayout mRightContent;
     private View mUnderline;
     private View mSlider;
 
@@ -62,8 +62,8 @@ public class ActionBar extends FrameLayout {
         mTitle = (TextView) findViewById(R.id.title);
         mTabBar = (ViewGroup) findViewById(R.id.tabbar);
         mUpButton = findViewById(R.id.upButton);
-        mLeftContent = findViewById(R.id.leftContent);
-        mRightContent = findViewById(R.id.rightContent);
+        mLeftContent = (FrameLayout) findViewById(R.id.leftContent);
+        mRightContent = (FrameLayout) findViewById(R.id.rightContent);
         mUnderline = findViewById(R.id.underline);
         mSlider = findViewById(R.id.slider);
 
@@ -85,6 +85,14 @@ public class ActionBar extends FrameLayout {
 
     public void setTitle(String title) {
         mTitle.setText(title);
+    }
+
+    public FrameLayout getLeftContent() {
+        return mLeftContent;
+    }
+
+    public FrameLayout getRightContent() {
+        return mRightContent;
     }
 
     public void setLeftContent(View.OnClickListener action) {

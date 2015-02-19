@@ -46,11 +46,20 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
             view = inflater.inflate(R.layout.party_card, parent, false);
         }
 
+        final Team team = ((MainApplication) context.getApplicationContext()).team;
+
         final Party party = realmResults.get(position);
         final Person host = party.getHost();
 
         ImageView profile = ((ImageView) view.findViewById(R.id.profile));
-        Picasso.with(context).load(host == null ? "" : host.getImageUrlForSize((int) Util.px(context, 64))).placeholder(R.color.spacer).into(profile);
+        Picasso.with(context).load(host == null ? "" : host.getImageUrlForSize((int) Util.px(64))).placeholder(R.color.spacer).into(profile);
+
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.action.openProfile(host);
+            }
+        });
 
         ((TextView) view.findViewById(R.id.name)).setText(party.getName());
 
@@ -59,8 +68,26 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
             ((TextView) view.findViewById(R.id.by_text)).setText(name);
         }
 
+        ImageView timeIcon = ((ImageView) view.findViewById(R.id.time_icon));
+
+        timeIcon.setImageResource(Util.isDaytime(party.getDate()) ? R.drawable.day : R.drawable.night);
+
+        view.findViewById(R.id.time_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.action.openDate(party);
+            }
+        });
+
+        view.findViewById(R.id.location_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.action.openLocation(party.getLocation());
+            }
+        });
+
         ((TextView) view.findViewById(R.id.location_text)).setText(party.getLocation() == null ? context.getString(R.string.hidden) : party.getLocation().getName());
-        ((TextView) view.findViewById(R.id.time_text)).setText(party.getDate() == null ? context.getString(R.string.hidden) : Util.cuteDate(context, party.getDate()));
+        ((TextView) view.findViewById(R.id.time_text)).setText(party.getDate() == null ? context.getString(R.string.hidden) : Util.cuteDate(party.getDate()));
 
         String details = party.getDetails();
 
@@ -71,32 +98,35 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
             ((TextView) view.findViewById(R.id.details)).setText(details);
         }
 
-        int incount = new Random().nextInt() % 8;
+        RealmResults<Join> in = team.realm.where(Join.class)
+                .equalTo("party.id", party.getId())
+                .equalTo("status", Config.JOIN_STATUS_IN).findAll();
 
-        if(incount < 1)
+        if(in.size() < 1)
             view.findViewById(R.id.whos_in_layout).setVisibility(View.GONE);
         else {
             view.findViewById(R.id.whos_in_layout).setVisibility(View.VISIBLE);
 
-            LinearLayout whosin = ((LinearLayout) view.findViewById(R.id.whos_in));
-
-            RoundedImageView awho = (RoundedImageView) whosin.getChildAt(0);
-            ViewGroup.LayoutParams lps = awho.getLayoutParams();
+            LinearLayout whosin = ((LinearLayout) view.findViewById(R.id.whos_in_layout));
 
             whosin.removeAllViews();
 
-            float radius = awho.getCornerRadius();
+            for (Join j : in) {
+                LinearLayout memoberProfile = (LinearLayout) View.inflate(context, R.layout.party_member, whosin);
+                Picasso.with(context).load(j.getPerson() == null ? "" : j.getPerson().getImageUrlForSize((int) Util.px(64))).placeholder(R.color.spacer).into((RoundedImageView) memoberProfile.findViewById(R.id.profile));
 
-            for (int i = 0; i < incount; i++) {
-                awho = new RoundedImageView(context);
-                awho.setCornerRadius(radius);
-                awho.setLayoutParams(lps);
-                awho.setImageResource(R.drawable.sherry);
-                whosin.addView(awho);
+                final Person member = j.getPerson();
+
+                memoberProfile.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        team.action.openProfile(member);
+                    }
+                });
             }
         }
 
-        incount = Math.abs(new Random().nextInt() % 5);
+        int randomBackground = Math.abs(new Random().nextInt() % 5);
 
         ((ImageView) view.findViewById(R.id.backdrop)).setImageResource(new int[] {
                 R.drawable.backdrop_location,
@@ -104,9 +134,7 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
                 R.drawable.backdrop_location_3,
                 R.drawable.backdrop_location_4,
                 R.drawable.backdrop_location_5
-        }[incount]);
-
-        final Team team = ((MainApplication) context.getApplicationContext()).team;
+        }[randomBackground]);
 
         String userId = team.auth.getUser();
 
@@ -128,22 +156,49 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
             }
         }
         else {
-            action.setText(context.getText(R.string.request_to_join));
-            action.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    team.action.joinParty(party);
+            Join requested = team.realm.where(Join.class)
+                    .equalTo("party.id", party.getId())
+                    .equalTo("person.id", team.auth.getUser()).findFirst();
+
+            if (requested != null) {
+                if(Config.JOIN_STATUS_REQUESTED.equals(requested.getStatus())) {
+                    action.setVisibility(View.VISIBLE);
+
+                    action.setText(context.getText(R.string.requested));
+                    action.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //team.action.cancelJoin(requested);
+                        }
+                    });
                 }
-            });
+                else {
+                    action.setVisibility(View.GONE);
+                }
+            }
+            else  {
+                action.setVisibility(View.VISIBLE);
+                action.setText(context.getText(R.string.request_to_join));
+                action.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        team.action.joinParty(party);
+                    }
+                });
+            }
         }
 
         ListView actions = (ListView) view.findViewById(R.id.actions);
 
-        RealmResults<Join> joinRequests = team.realm.where(Join.class)
-                .equalTo("party.id", party.getId())
-                .equalTo("status", Config.JOIN_STATUS_REQUESTED).findAll();
+        RealmResults<Join> joinRequests = null;
 
-        if(joinRequests.size() > 0) {
+        if(team.auth.getUser() != null && party.getHost() != null && team.auth.getUser().equals(party.getHost().getId())) {
+            joinRequests = team.realm.where(Join.class)
+                    .equalTo("party.id", party.getId())
+                    .equalTo("status", Config.JOIN_STATUS_REQUESTED).findAll();
+        }
+
+        if(joinRequests != null && joinRequests.size() > 0) {
             actions.setVisibility(View.VISIBLE);
             actions.setAdapter(new ActionAdapter(context, joinRequests));
         }

@@ -14,6 +14,7 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         Global.setupWithContext(this);
+        Util.setupWithContext(this);
 
         team = new Team(this);
     }

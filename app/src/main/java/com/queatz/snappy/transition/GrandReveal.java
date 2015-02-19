@@ -10,7 +10,7 @@ public class GrandReveal extends Transition {
     public GrandReveal() {
         super();
 
-        mDuration = 2400;
+        mDuration = 800;
     }
 
     public void onDraw(Fragment frag, float time, Direction direction) {

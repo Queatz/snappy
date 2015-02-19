@@ -40,7 +40,7 @@ public class CurrentSlideIndicator extends RelativeLayout {
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         mAllSlides.setLayoutParams(lp);
 
-        int p = (int) Util.px(getContext(), 16);
+        int p = (int) Util.px(16);
         mAllSlides.setPadding(p, p, p, p);
         mAllSlides.setGravity(Gravity.CENTER_HORIZONTAL);
 
@@ -81,7 +81,7 @@ public class CurrentSlideIndicator extends RelativeLayout {
         if(filled) {
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(MeasureSpec.EXACTLY, MeasureSpec.EXACTLY);
 
-            int m = (int) Util.px(getContext(), 4);
+            int m = (int) Util.px(4);
             lp.height = m * 2;
             lp.width = m * 2;
             lp.setMargins(m, m, m, m);
@@ -90,7 +90,7 @@ public class CurrentSlideIndicator extends RelativeLayout {
         else {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(MeasureSpec.EXACTLY, MeasureSpec.EXACTLY);
 
-            int m = (int) Util.px(getContext(), 4);
+            int m = (int) Util.px(4);
             lp.height = m * 2;
             lp.width = m * 2;
             lp.setMargins(m, m, m, m);

@@ -13,6 +13,10 @@ public class Location extends RealmObject implements Thing {
     private double latitude;
     private double longitude;
 
+    public String getText() {
+        return getLatitude() + "," + getLongitude() + "(" + getName() + ")";
+    }
+
     public String getId() {
         return id;
     }

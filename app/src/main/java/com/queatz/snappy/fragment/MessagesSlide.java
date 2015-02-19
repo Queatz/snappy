@@ -55,7 +55,7 @@ public class MessagesSlide extends Fragment {
         View.OnClickListener click = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.view.push(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.IN_THE_VOID, team.view.mPersonView);
+                team.action.openProfile(null);
             }
         };
 

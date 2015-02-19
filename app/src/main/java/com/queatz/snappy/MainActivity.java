@@ -19,9 +19,9 @@ public class MainActivity extends ViewActivity {
 
     public Fragment mSigninView;
     public Fragment mMainView;
+    public Fragment mHostParty;
     public Fragment mPersonView;
     public Fragment mNewUpto;
-    public Fragment mHostParty;
     public Fragment mPersonList;
 
     @Override
@@ -76,6 +76,6 @@ public class MainActivity extends ViewActivity {
 
     public void showStartView() {
         replace(team.auth.isAuthenticated() ? mMainView : mSigninView);
-        setDeparture(ViewActivity.Transition.GRAND_REVEAL);
+        setDeparture(Transition.GRAND_REVEAL);
     }
 }

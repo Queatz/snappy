@@ -17,12 +17,14 @@ public class Config {
     public static String PARAM_EMAIL = "email";
     public static String PARAM_JOIN = "join";
     public static String PARAM_FULL = "full";
+    public static String PARAM_ACCEPT = "accept";
 
     public static String PATH_API = "api";
     public static String PATH_PARTIES = "parties";
     public static String PATH_PARTY = "party";
     public static String PATH_PARTY_ID = "party/%s";
     public static String PATH_PEOPLE = "people";
+    public static String PATH_JOIN_ID = "join/%s";
     public static String PATH_SEARCH = "search";
     public static String PATH_MESSAGES = "messages";
     public static String PATH_UPTO = "upto";
@@ -31,4 +33,5 @@ public class Config {
 
     public static String JOIN_STATUS_REQUESTED = "requested";
     public static String JOIN_STATUS_IN = "in";
+    public static String JOIN_STATUS_OUT = "out";
 }

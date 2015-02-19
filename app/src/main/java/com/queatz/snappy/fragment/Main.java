@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.queatz.snappy.Config;
@@ -54,7 +53,7 @@ public class Main extends Fragment {
             }
         });
 
-        ImageView profile = ((ImageView) ((FrameLayout) mActionBar.findViewById(R.id.rightContent)).getChildAt(0));
+        ImageView profile = ((ImageView) mActionBar.getRightContent().getChildAt(0));
 
         if(profile != null) {
             String usr = team.auth.getUser();
@@ -63,7 +62,7 @@ public class Main extends Fragment {
                 Person person = team.things.get(Person.class, usr);
 
                 if(person != null) {
-                    Picasso.with(getActivity()).load(person.getImageUrlForSize((int) Util.px(getActivity(), 64))).placeholder(R.color.spacer).into(profile);
+                    Picasso.with(getActivity()).load(person.getImageUrlForSize((int) Util.px(64))).placeholder(R.color.spacer).into(profile);
                 }
             }
         }
