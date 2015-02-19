@@ -1,6 +1,5 @@
 package com.queatz.snappy.team;
 
-import android.content.ContentUris;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.CalendarContract;
@@ -16,8 +15,6 @@ import com.queatz.snappy.things.*;
 import com.queatz.snappy.ui.MiniMenu;
 
 import java.io.FileNotFoundException;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by jacob on 11/23/14.
@@ -28,6 +25,13 @@ public class Action {
 
     public Action(Team t) {
         team = t;
+    }
+
+    public void followPerson(@NonNull Person person) {
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_FOLLOW, true);
+
+        team.api.post(String.format(Config.PATH_PEOPLE_ID, person.getId()), params);
     }
 
     public void openDate(Party party) {

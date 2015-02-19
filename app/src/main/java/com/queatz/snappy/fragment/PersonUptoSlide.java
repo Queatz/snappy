@@ -18,6 +18,8 @@ import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.adapter.PersonUptoAdapter;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Follow;
+import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Update;
 import com.queatz.snappy.ui.TextView;
 import com.squareup.picasso.Picasso;
@@ -100,20 +102,24 @@ public class PersonUptoSlide extends Fragment {
 
             TextView actionButton = (TextView) personAbout.findViewById(R.id.action_button);
 
-            if(mPerson.getId().equals(team.auth.getUser())) {
+            Follow follow = team.realm.where(Follow.class)
+                    .equalTo("person.id", team.auth.getUser())
+                    .equalTo("following.id", mPerson.getId())
+                    .findFirst();
+
+            if(follow != null || mPerson.getId().equals(team.auth.getUser())) {
                 actionButton.setVisibility(View.GONE);
             }
             else {
                 actionButton.setVisibility(View.VISIBLE);
                 actionButton.setText(String.format(getActivity().getString(R.string.follow_person), mPerson.getFirstName()));
+                actionButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        team.action.followPerson(mPerson);
+                    }
+                });
             }
-
-            /*personAbout.findViewById(R.id.action_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    team.action.followPerson(mPerson);
-                }
-            });*/
         }
 
         updateList.addHeaderView(personAbout);
@@ -141,22 +147,14 @@ public class PersonUptoSlide extends Fragment {
     }
 
     public void refresh() {
-        if(getActivity() == null)
+        if(getActivity() == null || mPerson == null)
             return;
 
-        team.api.get(Config.PATH_PEOPLE + "/THE_ID", new Api.Callback() {
+        team.api.get(String.format(Config.PATH_PEOPLE_ID, mPerson.getId()), new Api.Callback() {
             @Override
             public void success(String response) {
-                try {
-                    JSONArray list = new JSONArray(response);
-                    List<JSONObject> l = new ArrayList<>();
-                    for (int i = 0; i < list.length(); i++) l.add(list.getJSONObject(i));
-
-                    //mList.setAdapter(new PartyAdapter(getActivity(), l));
-                }
-                catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                team.things.put(com.queatz.snappy.things.Person.class, response);
+                update();
 
                 mRefresh.setRefreshing(false);
             }
@@ -166,5 +164,9 @@ public class PersonUptoSlide extends Fragment {
                 mRefresh.setRefreshing(false);
             }
         });
+    }
+
+    public void update() {
+
     }
 }

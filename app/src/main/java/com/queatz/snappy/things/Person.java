@@ -19,6 +19,8 @@ public class Person extends RealmObject implements Thing {
     private long infoHosted;
     private RealmList<Update> updates;
     private RealmList<Message> messages;
+    private RealmList<Follow> followers;
+    private RealmList<Follow> following;
 
     public String getName() {
         return getFirstName() + " " + getLastName();
@@ -109,5 +111,21 @@ public class Person extends RealmObject implements Thing {
 
     public void setMessages(RealmList<Message> messages) {
         this.messages = messages;
+    }
+
+    public RealmList<Follow> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(RealmList<Follow> followers) {
+        this.followers = followers;
+    }
+
+    public RealmList<Follow> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(RealmList<Follow> following) {
+        this.following = following;
     }
 }
