@@ -58,7 +58,7 @@ public class NewUpto extends Fragment {
 
         Team team = ((MainActivity) getActivity()).team;
         team.view.pop();
-        team.view.push(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.IN_THE_VOID, team.view.mPersonView);
+        //team.view.push(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.IN_THE_VOID, team.view.mPersonView);
 
         if(!team.action.uploadUpto((Uri) mIntent.getParcelableExtra(Intent.EXTRA_STREAM), "example location")) {
             Toast.makeText(team.context, "Upload failed", Toast.LENGTH_SHORT).show();

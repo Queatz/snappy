@@ -38,7 +38,6 @@ public class Person extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.person, container, false);
 
-
         mActionBar = (ActionBar) view.findViewById(R.id.actionBar);
         mActionBar.setAdapter(new PeopleTabAdapter(getActivity()));
 

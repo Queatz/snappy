@@ -55,7 +55,7 @@ public class MessagesSlide extends Fragment {
         View.OnClickListener click = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.openProfile(null);
+                team.action.showFollowers(team.auth.me());
             }
         };
 

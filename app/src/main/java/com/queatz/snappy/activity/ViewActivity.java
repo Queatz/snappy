@@ -3,9 +3,13 @@ package com.queatz.snappy.activity;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.SharedElementCallback;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.transition.Slide;
+import android.view.View;
 
 import com.queatz.snappy.R;
 import com.queatz.snappy.transition.Examine;
@@ -15,6 +19,7 @@ import com.queatz.snappy.transition.Instant;
 import com.queatz.snappy.transition.SexyProfile;
 import com.queatz.snappy.transition.SpaceGame;
 
+import java.util.List;
 import java.util.Stack;
 
 /**

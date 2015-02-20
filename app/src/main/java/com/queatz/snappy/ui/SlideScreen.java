@@ -6,10 +6,13 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.queatz.snappy.Config;
 
 import java.util.Date;
 
@@ -186,7 +189,9 @@ public class SlideScreen extends ViewGroup {
     }
 
     private String getFragName(Object slide) {
-        return "slidescreen:" + getId() + ":" + slide;
+        String n = "slidescreen:" + getId() + ":" + slide;
+        Log.e(Config.LOG_TAG, n);
+        return n;
     }
 
     private void populate() {

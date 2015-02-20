@@ -20,7 +20,6 @@ public class MainActivity extends ViewActivity {
     public Fragment mSigninView;
     public Fragment mMainView;
     public Fragment mHostParty;
-    public Fragment mPersonView;
     public Fragment mNewUpto;
 
     @Override
@@ -32,7 +31,6 @@ public class MainActivity extends ViewActivity {
 
         mSigninView = new Welcome();
         mMainView = new Main();
-        mPersonView = new Person();
         mNewUpto= new NewUpto();
         mHostParty = new HostParty();
 

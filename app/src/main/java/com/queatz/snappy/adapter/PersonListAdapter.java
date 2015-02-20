@@ -27,6 +27,12 @@ public class PersonListAdapter extends RealmBaseAdapter<Follow> {
         this.showFollowing = showFollowing;
     }
 
+    public Person getPerson(int position) {
+        Follow follow = realmResults.get(position);
+
+        return showFollowing ? follow.getFollowing() : follow.getPerson();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view;
@@ -39,9 +45,7 @@ public class PersonListAdapter extends RealmBaseAdapter<Follow> {
             view = inflater.inflate(R.layout.person_list_person, parent, false);
         }
 
-        Follow follow = realmResults.get(position);
-
-        Person person = showFollowing ? follow.getFollowing() : follow.getPerson();
+        Person person = getPerson(position);
 
         if(person != null) {
             Picasso.with(context)

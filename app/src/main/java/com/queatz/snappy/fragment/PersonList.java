@@ -44,16 +44,25 @@ public class PersonList extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.person_list, container, false);
 
-        Team team = ((MainApplication) getActivity().getApplication()).team;
+        final Team team = ((MainApplication) getActivity().getApplication()).team;
 
         if(mPerson != null) {
             RealmResults<Follow> results = team.realm.where(Follow.class)
                     .equalTo(mShowFollowing ? "person.id" : "following.id", mPerson.getId())
                     .findAll();
 
-            PersonListAdapter adapter = new PersonListAdapter(getActivity(), results, mShowFollowing);
+            final PersonListAdapter adapter = new PersonListAdapter(getActivity(), results, mShowFollowing);
 
-            ((ListView) view.findViewById(R.id.personList)).setAdapter(adapter);
+            ListView personAdapter = (ListView) view.findViewById(R.id.personList);
+
+            personAdapter.setAdapter(adapter);
+
+            personAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    team.action.openProfile(adapter.getPerson(position));
+                }
+            });
         }
 
         return view;
