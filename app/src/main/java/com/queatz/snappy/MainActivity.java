@@ -1,15 +1,10 @@
 package com.queatz.snappy;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.queatz.snappy.activity.HostParty;
-import com.queatz.snappy.activity.Main;
-import com.queatz.snappy.activity.Welcome;
 import com.queatz.snappy.team.Team;
 
 public class MainActivity extends Activity {

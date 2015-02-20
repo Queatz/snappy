@@ -1,16 +1,12 @@
 package com.queatz.snappy.activity;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -19,7 +15,7 @@ import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.adapter.PersonListAdapter;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.*;
+import com.queatz.snappy.things.Follow;
 import com.queatz.snappy.things.Person;
 
 import io.realm.RealmResults;
@@ -27,7 +23,7 @@ import io.realm.RealmResults;
 /**
  * Created by jacob on 1/4/15.
  */
-public class PersonList extends Activity {
+public class PersonList extends BaseActivity {
     com.queatz.snappy.things.Person mPerson;
     boolean mShowFollowing;
 

@@ -2,8 +2,6 @@ package com.queatz.snappy.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.*;
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +12,6 @@ import android.widget.FrameLayout;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.HostParty;
-import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Person;
 
@@ -60,7 +57,7 @@ public class MiniMenu extends FrameLayout {
             public void onClick(View view) {
                 Team team = ((MainApplication) getContext().getApplicationContext()).team;
 
-                team.view.show(ViewActivity.Transition.EXAMINE, ViewActivity.Transition.INSTANT, (android.app.Activity) getContext(), HostParty.class, null);
+                team.view.show((android.app.Activity) getContext(), HostParty.class, null);
 
                 show(false);
             }

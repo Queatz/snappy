@@ -4,9 +4,7 @@ import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.util.Log;
 
-import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.luckycatlabs.sunrisesunset.Zenith;
 import com.luckycatlabs.sunrisesunset.calculator.SolarEventCalculator;
 
@@ -37,7 +35,7 @@ public class Util {
 
     public static Location getLatLong() {
         Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
 
         LocationManager locationManager = ((LocationManager) context.getSystemService(Context.LOCATION_SERVICE));
 
@@ -51,6 +49,9 @@ public class Util {
             return cachedDaytimes.get(date);
 
         Location location = getLatLong();
+
+        if(location == null)
+            return true;
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);

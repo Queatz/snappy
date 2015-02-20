@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.queatz.snappy.activity.Main;
-import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.activity.Welcome;
 
 /**
@@ -19,18 +18,18 @@ public class View {
         team = t;
     }
 
-    public void show(ViewActivity.Transition in, ViewActivity.Transition out, Activity from, Class<? extends Activity> activity, Bundle bundle) {
+    public void show(Activity from, Class<? extends Activity> activity, Bundle bundle) {
         Intent intent = new Intent(from, activity);
 
         if(bundle != null)
             intent.putExtras(bundle);
 
-        //Bundle options = ActivityOptions.makeCustomAnimation(from, 0, 0).toBundle();
+        //Bundle options = ActivityOptions.makeCustomAnimation(from, android.R.anim.slide_in_left, android.R.anim.fade_out).toBundle();
 
         from.startActivity(intent/*, options*/);
     }
 
     public void showStartView(Activity from) {
-        team.view.show(null, null, from, team.auth.isAuthenticated() ? Main.class : Welcome.class, null);
+        team.view.show(from, team.auth.isAuthenticated() ? Main.class : Welcome.class, null);
     }
 }

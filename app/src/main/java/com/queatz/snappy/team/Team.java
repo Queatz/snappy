@@ -3,8 +3,6 @@ package com.queatz.snappy.team;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.queatz.snappy.MainActivity;
-
 import java.io.Closeable;
 
 import io.realm.Realm;

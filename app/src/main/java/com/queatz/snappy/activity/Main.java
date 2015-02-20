@@ -1,12 +1,9 @@
 package com.queatz.snappy.activity;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.queatz.snappy.Config;
@@ -16,15 +13,15 @@ import com.queatz.snappy.Util;
 import com.queatz.snappy.adapter.MainAdapter;
 import com.queatz.snappy.adapter.MainTabAdapter;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Person;
 import com.queatz.snappy.ui.ActionBar;
 import com.queatz.snappy.ui.SlideScreen;
-import com.queatz.snappy.things.Person;
 import com.squareup.picasso.Picasso;
 
 /**
  * Created by jacob on 10/19/14.
  */
-public class Main extends Activity {
+public class Main extends BaseActivity {
     public Team team;
 
     private ActionBar mActionBar;

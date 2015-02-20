@@ -4,7 +4,6 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.gms.auth.GoogleAuthException;
@@ -13,11 +12,9 @@ import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
-import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.things.Person;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashSet;
 
 /**

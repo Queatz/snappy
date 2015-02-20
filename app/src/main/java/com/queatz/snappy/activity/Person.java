@@ -1,13 +1,10 @@
 package com.queatz.snappy.activity;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.queatz.snappy.Config;
@@ -24,7 +21,7 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by jacob on 10/19/14.
  */
-public class Person extends Activity {
+public class Person extends BaseActivity {
     private ActionBar mActionBar;
     private SlideScreen mSlideScreen;
     private com.queatz.snappy.things.Person mPerson;

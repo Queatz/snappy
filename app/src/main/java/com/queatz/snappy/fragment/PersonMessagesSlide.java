@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ScrollView;
 
 import com.queatz.snappy.R;
-import com.queatz.snappy.things.*;
 
 /**
  * Created by jacob on 10/26/14.

@@ -14,22 +14,13 @@ import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
-import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.adapter.PersonUptoAdapter;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Follow;
-import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Update;
 import com.queatz.snappy.ui.TextView;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.RealmResults;
 

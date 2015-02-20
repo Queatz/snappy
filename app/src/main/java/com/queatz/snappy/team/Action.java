@@ -12,9 +12,9 @@ import android.view.View;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
-import com.queatz.snappy.activity.*;
 import com.queatz.snappy.activity.PersonList;
-import com.queatz.snappy.things.*;
+import com.queatz.snappy.things.Join;
+import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.ui.MiniMenu;
 
@@ -36,7 +36,7 @@ public class Action {
         bundle.putString("person", person.getId());
         bundle.putBoolean("showFollowing", false);
 
-        team.view.show(ViewActivity.Transition.EXAMINE, ViewActivity.Transition.INSTANT, from, PersonList.class, bundle);
+        team.view.show(from, PersonList.class, bundle);
     }
 
     public void showFollowing(Activity from, @NonNull Person person) {
@@ -44,7 +44,7 @@ public class Action {
         bundle.putString("person", person.getId());
         bundle.putBoolean("showFollowing", true);
 
-        team.view.show(ViewActivity.Transition.EXAMINE, ViewActivity.Transition.INSTANT, from, PersonList.class, bundle);
+        team.view.show(from, PersonList.class, bundle);
     }
 
     public void followPerson(@NonNull Person person) {
@@ -80,7 +80,7 @@ public class Action {
     public void openProfile(Activity from, @NonNull Person person) {
         Bundle bundle = new Bundle();
         bundle.putString("person", person.getId());
-        team.view.show(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.IN_THE_VOID, from, com.queatz.snappy.activity.Person.class, bundle);
+        team.view.show(from, com.queatz.snappy.activity.Person.class, bundle);
     }
 
     public void openMinimenu(Activity in, View source) {

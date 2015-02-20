@@ -2,6 +2,7 @@ package com.queatz.snappy.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,18 +114,22 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
             whosin.removeAllViews();
 
             for (Join j : in) {
-                LinearLayout memoberProfile = (LinearLayout) View.inflate(context, R.layout.party_member, whosin);
-                Picasso.with(context).load(j.getPerson() == null ? "" : j.getPerson().getImageUrlForSize((int) Util.px(64))).placeholder(R.color.spacer).into((RoundedImageView) memoberProfile.findViewById(R.id.profile));
-
                 final Person member = j.getPerson();
+                LinearLayout memberProfile = (LinearLayout) View.inflate(context, R.layout.party_member, whosin);
 
-                memoberProfile.setOnClickListener(new View.OnClickListener() {
+                Picasso.with(context).load(member == null ? "" : j.getPerson().getImageUrlForSize((int) Util.px(64))).placeholder(R.color.spacer).into((RoundedImageView) memberProfile.findViewById(R.id.profile));
+
+
+                memberProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        team.action.openProfile((Activity) context, member);
+                        if (member != null)
+                            team.action.openProfile((Activity) context, member);
                     }
                 });
             }
+
+            Log.w(Config.LOG_TAG, whosin.getChildCount() + " children");
         }
 
         int randomBackground = Math.abs(new Random().nextInt() % 5);

@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.MainActivity;
 import com.queatz.snappy.R;
-import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.team.Team;
 
 /**
