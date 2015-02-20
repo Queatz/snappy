@@ -17,6 +17,8 @@ import com.queatz.snappy.activity.ViewActivity;
 import com.queatz.snappy.things.Person;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * Created by jacob on 10/19/14.
@@ -30,6 +32,7 @@ public class Auth {
     private String mUser;
     private GetAuthTokenTask mFetchTask;
     private Activity mActivity;
+    private HashSet<Runnable> mCallbacks;
 
     private static class GetAuthTokenTask extends AsyncTask<Void, Void, String> {
         Auth mAuth;
@@ -69,6 +72,8 @@ public class Auth {
 
     public Auth(Team t) {
         team = t;
+
+        mCallbacks = new HashSet<>();
 
         load();
     }
@@ -133,7 +138,7 @@ public class Auth {
         team.view.showStartView(mActivity);
     }
 
-    public void signin(final Runnable runnable) {
+    public void signin() {
         if(isAuthenticated()) {
             showMain();
         }
@@ -156,8 +161,7 @@ public class Auth {
                     @Override
                     public void success(String response) {
                         setUser(team.things.put(Person.class, response));
-                        if(runnable != null)
-                            runnable.run();
+                        callbacks();
                     }
 
                     @Override
@@ -166,6 +170,16 @@ public class Auth {
                     }
                 });
             }
+        }
+    }
+
+    public void callback(Runnable runnable) {
+        mCallbacks.add(runnable);
+    }
+
+    private void callbacks() {
+        for(Runnable runnable : mCallbacks) {
+            runnable.run();
         }
     }
 
@@ -180,13 +194,13 @@ public class Auth {
         mUser = user.getId();
 
         save();
-        signin(null);
+        signin();
     }
 
     private void setAuthToken(String auth) {
         mAuthToken = auth;
         save();
-        signin(null);
+        signin();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

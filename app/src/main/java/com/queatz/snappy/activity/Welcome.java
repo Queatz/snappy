@@ -29,12 +29,14 @@ public class Welcome extends Activity {
         findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                team.auth.signin(new Runnable() {
+                team.auth.callback(new Runnable() {
                     @Override
                     public void run() {
                         finish();
                     }
                 });
+
+                team.auth.signin();
             }
         });
     }
