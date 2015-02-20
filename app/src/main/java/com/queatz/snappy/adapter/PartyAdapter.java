@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -59,7 +60,8 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.openProfile((Activity) context, host);
+                if(host != null)
+                    team.action.openProfile((Activity) context, host);
             }
         });
 
@@ -115,10 +117,9 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
 
             for (Join j : in) {
                 final Person member = j.getPerson();
-                LinearLayout memberProfile = (LinearLayout) View.inflate(context, R.layout.party_member, whosin);
-
+                FrameLayout memberProfile = (FrameLayout) View.inflate(context, R.layout.party_member, null);
+                whosin.addView(memberProfile);
                 Picasso.with(context).load(member == null ? "" : j.getPerson().getImageUrlForSize((int) Util.px(64))).placeholder(R.color.spacer).into((RoundedImageView) memberProfile.findViewById(R.id.profile));
-
 
                 memberProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -128,8 +129,6 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
                     }
                 });
             }
-
-            Log.w(Config.LOG_TAG, whosin.getChildCount() + " children");
         }
 
         int randomBackground = Math.abs(new Random().nextInt() % 5);
