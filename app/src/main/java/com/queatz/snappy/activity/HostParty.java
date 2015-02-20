@@ -1,13 +1,11 @@
-package com.queatz.snappy.fragment;
+package com.queatz.snappy.activity;
 
-import android.app.Fragment;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -25,7 +23,7 @@ import io.realm.RealmResults;
 /**
  * Created by jacob on 1/3/15.
  */
-public class HostParty extends Fragment {
+public class HostParty extends Activity {
     public Team team;
     private String mGroup;
 
@@ -33,30 +31,27 @@ public class HostParty extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        team = ((MainApplication) getActivity().getApplication()).team;
+        team = ((MainApplication) getApplication()).team;
         mGroup = null;
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.host_party, container, false);
+        setContentView(R.layout.host_party);
 
-        final ListView partyList = ((ListView) view.findViewById(R.id.partyList));
+        final ListView partyList = ((ListView) findViewById(R.id.partyList));
 
         /* New Party */
 
-        final View newParty = View.inflate(getActivity(), R.layout.host_party_new, null);
+        final View newParty = View.inflate(this, R.layout.host_party_new, null);
 
         RealmResults<Party> recentParties = team.realm.where(Party.class)
                 .equalTo("host.id", team.auth.getUser())
                 .findAll();
         recentParties.sort("date", false);
-        partyList.setAdapter(new HostPartyAdapter(getActivity(), recentParties));
+        partyList.setAdapter(new HostPartyAdapter(this, recentParties));
 
         View.OnClickListener oclk = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Team team = ((MainApplication) getActivity().getApplication()).team;
+                Team team = ((MainApplication) getApplication()).team;
 
                 String name = ((EditText) newParty.findViewById(R.id.name)).getText().toString();
                 String date = ((EditText) newParty.findViewById(R.id.date)).getText().toString();
@@ -64,29 +59,29 @@ public class HostParty extends Fragment {
                 String details = ((EditText) newParty.findViewById(R.id.details)).getText().toString();
 
                 if(name.isEmpty()) {
-                    Toast.makeText(getActivity(), ((EditText) newParty.findViewById(R.id.name)).getHint().toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HostParty.this, ((EditText) newParty.findViewById(R.id.name)).getHint().toString(), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if(date.isEmpty()) {
-                    Toast.makeText(getActivity(), ((EditText) newParty.findViewById(R.id.date)).getHint().toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HostParty.this, ((EditText) newParty.findViewById(R.id.date)).getHint().toString(), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if(location.isEmpty()) {
-                    Toast.makeText(getActivity(), ((EditText) newParty.findViewById(R.id.location)).getHint().toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HostParty.this, ((EditText) newParty.findViewById(R.id.location)).getHint().toString(), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 team.action.hostParty(mGroup, name, date, location, details);
-                team.view.pop();
+                finish();
             }
         };
 
         newParty.findViewById(R.id.action_host).setOnClickListener(oclk);
 
         partyList.addHeaderView(newParty);
-        partyList.addFooterView(new View(getActivity()));
+        partyList.addFooterView(new View(this));
 
         partyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -94,44 +89,33 @@ public class HostParty extends Fragment {
                 setParty((Party) partyList.getAdapter().getItem(position));
             }
         });
-
-        return view;
     }
 
     public void setParty(Party party) {
         mGroup = party.getId();
 
-        if(getView() == null)
-            return;
-
-        View view = getView();
         EditText name;
 
-        name = ((EditText) view.findViewById(R.id.name));
+        name = ((EditText) findViewById(R.id.name));
         name.setText(party.getName());
         name.setEnabled(false);
 
-        name = ((EditText) view.findViewById(R.id.date));
+        name = ((EditText) findViewById(R.id.date));
         name.setText(Util.cuteDate(party.getDate()));
 
-        name = ((EditText) view.findViewById(R.id.location));
+        name = ((EditText) findViewById(R.id.location));
         name.setText(party.getLocation().getName());
 
-        name = ((EditText) view.findViewById(R.id.details));
+        name = ((EditText) findViewById(R.id.details));
         name.setText(party.getDetails());
 
-        ((ListView) view.findViewById(R.id.partyList)).smoothScrollToPosition(0);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-
+        ((ListView) findViewById(R.id.partyList)).smoothScrollToPosition(0);
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getActivity().getMenuInflater();
+        MenuInflater inflater = this.getMenuInflater();
     }
 
     @Override

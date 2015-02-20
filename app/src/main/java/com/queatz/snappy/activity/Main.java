@@ -1,5 +1,6 @@
-package com.queatz.snappy.fragment;
+package com.queatz.snappy.activity;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +24,7 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by jacob on 10/19/14.
  */
-public class Main extends Fragment {
+public class Main extends Activity {
     public Team team;
 
     private ActionBar mActionBar;
@@ -33,23 +34,20 @@ public class Main extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        team = ((MainApplication) getActivity().getApplication()).team;
+        team = ((MainApplication) getApplication()).team;
 
         Log.d(Config.LOG_TAG, "auth = " + team.auth.getAuthParam());
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.main, container, false);
+        setContentView(R.layout.main);
 
-        mActionBar = (ActionBar) view.findViewById(R.id.actionBar);
-        mActionBar.setAdapter(new MainTabAdapter(getActivity()));
+        mActionBar = (ActionBar) findViewById(R.id.actionBar);
+        mActionBar.setAdapter(new MainTabAdapter(this));
         mActionBar.setRightContent(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Team team = ((MainApplication) getActivity().getApplication()).team;
+                Team team = ((MainApplication) getApplication()).team;
 
-                team.action.openMinimenu(view);
+                team.action.openMinimenu(Main.this, view);
             }
         });
 
@@ -62,12 +60,12 @@ public class Main extends Fragment {
                 Person person = team.things.get(Person.class, usr);
 
                 if(person != null) {
-                    Picasso.with(getActivity()).load(person.getImageUrlForSize((int) Util.px(64))).placeholder(R.color.spacer).into(profile);
+                    Picasso.with(this).load(person.getImageUrlForSize((int) Util.px(64))).placeholder(R.color.spacer).into(profile);
                 }
             }
         }
 
-        mSlideScreen = (SlideScreen) view.findViewById(R.id.main_content);
+        mSlideScreen = (SlideScreen) findViewById(R.id.main_content);
         mSlideScreen.setAdapter(new MainAdapter(getFragmentManager()));
 
         mSlideScreen.setOnSlideCallback(new SlideScreen.OnSlideCallback() {
@@ -89,11 +87,6 @@ public class Main extends Fragment {
             }
         });
 
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
         mActionBar.setPage(0);
     }
 }

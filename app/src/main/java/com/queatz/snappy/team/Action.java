@@ -1,7 +1,9 @@
 package com.queatz.snappy.team;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -10,9 +12,10 @@ import android.view.View;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
-import com.queatz.snappy.activity.ViewActivity;
-import com.queatz.snappy.fragment.PersonList;
+import com.queatz.snappy.activity.*;
+import com.queatz.snappy.activity.PersonList;
 import com.queatz.snappy.things.*;
+import com.queatz.snappy.things.Person;
 import com.queatz.snappy.ui.MiniMenu;
 
 import java.io.FileNotFoundException;
@@ -28,18 +31,20 @@ public class Action {
         team = t;
     }
 
-    public void showFollowers(@NonNull Person person) {
-        PersonList list = new PersonList();
-        list.setPerson(person);
-        list.setShowFollowing(false);
-        team.view.push(ViewActivity.Transition.EXAMINE, ViewActivity.Transition.INSTANT, list);
+    public void showFollowers(Activity from, @NonNull Person person) {
+        Bundle bundle = new Bundle();
+        bundle.putString("person", person.getId());
+        bundle.putBoolean("showFollowing", false);
+
+        team.view.show(ViewActivity.Transition.EXAMINE, ViewActivity.Transition.INSTANT, from, PersonList.class, bundle);
     }
 
-    public void showFollowing(@NonNull Person person) {
-        PersonList list = new PersonList();
-        list.setPerson(person);
-        list.setShowFollowing(true);
-        team.view.push(ViewActivity.Transition.EXAMINE, ViewActivity.Transition.INSTANT, list);
+    public void showFollowing(Activity from, @NonNull Person person) {
+        Bundle bundle = new Bundle();
+        bundle.putString("person", person.getId());
+        bundle.putBoolean("showFollowing", true);
+
+        team.view.show(ViewActivity.Transition.EXAMINE, ViewActivity.Transition.INSTANT, from, PersonList.class, bundle);
     }
 
     public void followPerson(@NonNull Person person) {
@@ -49,7 +54,7 @@ public class Action {
         team.api.post(String.format(Config.PATH_PEOPLE_ID, person.getId()), params);
     }
 
-    public void openDate(Party party) {
+    public void openDate(Activity from, Party party) {
         if(party == null)
             return;
 
@@ -60,26 +65,26 @@ public class Action {
         intent.putExtra(CalendarContract.Events.DESCRIPTION, party.getDetails());
         intent.putExtra(CalendarContract.Events.EVENT_LOCATION, party.getLocation().getText());
 
-        team.view.startActivity(intent);
+        from.startActivity(intent);
     }
 
-    public void openLocation(com.queatz.snappy.things.Location location) {
+    public void openLocation(Activity from, com.queatz.snappy.things.Location location) {
         if(location == null)
             return;
 
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + location.getText()));
 
-        team.view.startActivity(intent);
+        from.startActivity(intent);
     }
 
-    public void openProfile(Person person) {
-        com.queatz.snappy.fragment.Person fragment = new com.queatz.snappy.fragment.Person();
-        fragment.setPerson(person);
-        team.view.push(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.IN_THE_VOID, fragment);
+    public void openProfile(Activity from, @NonNull Person person) {
+        Bundle bundle = new Bundle();
+        bundle.putString("person", person.getId());
+        team.view.show(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.IN_THE_VOID, from, com.queatz.snappy.activity.Person.class, bundle);
     }
 
-    public void openMinimenu(View source) {
-        ((MiniMenu) team.view.findViewById(R.id.miniMenu)).show();
+    public void openMinimenu(Activity in, View source) {
+        ((MiniMenu) in.findViewById(R.id.miniMenu)).show();
     }
 
     public void markPartyFull(@NonNull Party party) {

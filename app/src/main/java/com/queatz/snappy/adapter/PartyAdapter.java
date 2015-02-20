@@ -1,5 +1,6 @@
 package com.queatz.snappy.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,7 +58,7 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.openProfile(host);
+                team.action.openProfile((Activity) context, host);
             }
         });
 
@@ -75,14 +76,14 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
         view.findViewById(R.id.time_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.openDate(party);
+                team.action.openDate((Activity) context, party);
             }
         });
 
         view.findViewById(R.id.location_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.openLocation(party.getLocation());
+                team.action.openLocation((Activity) context, party.getLocation());
             }
         });
 
@@ -120,7 +121,7 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
                 memoberProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        team.action.openProfile(member);
+                        team.action.openProfile((Activity) context, member);
                     }
                 });
             }

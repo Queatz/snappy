@@ -16,7 +16,7 @@ public class Team implements Closeable {
     public Context context;
     public Realm realm;
     public SharedPreferences preferences;
-    public MainActivity view;
+    public View view;
     public Auth auth;
     public Api api;
     public Action action;
@@ -30,6 +30,7 @@ public class Team implements Closeable {
         api = new Api(this);
         action = new Action(this);
         things = new Things(this);
+        view = new View(this);
     }
 
     public void close() {

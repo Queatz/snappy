@@ -1,5 +1,6 @@
 package com.queatz.snappy.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -52,7 +53,7 @@ public class ActionAdapter extends RealmBaseAdapter<Join> {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.openProfile(person);
+                team.action.openProfile((Activity) context, person);
             }
         });
 

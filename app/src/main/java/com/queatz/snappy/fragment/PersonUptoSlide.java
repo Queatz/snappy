@@ -83,14 +83,14 @@ public class PersonUptoSlide extends Fragment {
             personAbout.findViewById(R.id.followers_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    team.action.showFollowers(mPerson);
+                    team.action.showFollowers(getActivity(), mPerson);
                 }
             });
 
             personAbout.findViewById(R.id.following_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    team.action.showFollowing(mPerson);
+                    team.action.showFollowing(getActivity(), mPerson);
                 }
             });
 

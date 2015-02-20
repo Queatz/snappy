@@ -24,12 +24,13 @@
         android:allowBackup="true"
         android:icon="@drawable/rocket"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustPan"
             android:launchMode="singleTask"
+            android:alwaysRetainTaskState="true"
             android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,6 +44,45 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activity.Welcome"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTask"
+            android:alwaysRetainTaskState="true"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <activity
+            android:name=".activity.Main"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTask"
+            android:alwaysRetainTaskState="true"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <activity
+            android:name=".activity.Person"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="standard"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <activity
+            android:name=".activity.PersonList"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="standard"
+            android:alwaysRetainTaskState="true"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <activity
+            android:name=".activity.HostParty"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan"
+            android:launchMode="singleTask"
+            android:alwaysRetainTaskState="true"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <service android:name=".GCMIntentService" />
 

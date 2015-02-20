@@ -1,4 +1,4 @@
-package com.queatz.snappy.fragment;
+package com.queatz.snappy.activity;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -57,7 +57,7 @@ public class NewUpto extends Fragment {
         }
 
         Team team = ((MainActivity) getActivity()).team;
-        team.view.pop();
+        //team.view.pop();
         //team.view.push(ViewActivity.Transition.SEXY_PROFILE, ViewActivity.Transition.IN_THE_VOID, team.view.mPersonView);
 
         if(!team.action.uploadUpto((Uri) mIntent.getParcelableExtra(Intent.EXTRA_STREAM), "example location")) {

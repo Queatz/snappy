@@ -29,6 +29,7 @@ public class Auth {
     private String mEmail;
     private String mUser;
     private GetAuthTokenTask mFetchTask;
+    private Activity mActivity;
 
     private static class GetAuthTokenTask extends AsyncTask<Void, Void, String> {
         Auth mAuth;
@@ -55,9 +56,9 @@ public class Auth {
 
         protected String fetchToken() throws IOException {
             try {
-                return GoogleAuthUtil.getToken(mAuth.team.view, mAuth.mEmail, SCOPE);
+                return GoogleAuthUtil.getToken(mAuth.mActivity, mAuth.mEmail, SCOPE);
             } catch (UserRecoverableAuthException e) {
-                mAuth.team.view.startActivityForResult(e.getIntent(), Config.REQUEST_CODE_AUTH_RESOLUTION);
+                mAuth.mActivity.startActivityForResult(e.getIntent(), Config.REQUEST_CODE_AUTH_RESOLUTION);
             } catch (GoogleAuthException e) {
                 e.printStackTrace();
             }
@@ -70,6 +71,10 @@ public class Auth {
         team = t;
 
         load();
+    }
+
+    public void setActivity(Activity activity) {
+        mActivity = activity;
     }
 
     public void save() {
@@ -112,22 +117,12 @@ public class Auth {
 //        team.view.pop();
 //        team.view.push(ViewActivity.Transition.SPACE_GAME, null, team.view.mMainView);
 //        team.view.front(team.view.mSigninView);
-        team.view.pop(new ViewActivity.OnCompleteCallback() {
-            @Override
-            public void onComplete() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        team.view.push(ViewActivity.Transition.SPACE_GAME, null, team.view.mMainView);
-                    }
-                }, 0);
-            }
-        });
+        team.view.showStartView(mActivity);
     }
 
     public void reauth() {
         if(mAuthToken != null) {
-            GoogleAuthUtil.invalidateToken(team.view, mAuthToken);
+            GoogleAuthUtil.invalidateToken(mActivity, mAuthToken);
         }
 
         mUser = null;
@@ -135,10 +130,10 @@ public class Auth {
         mAuthToken = null;
         save();
 
-        team.view.showStartView();
+        team.view.showStartView(mActivity);
     }
 
-    public void signin() {
+    public void signin(final Runnable runnable) {
         if(isAuthenticated()) {
             showMain();
         }
@@ -147,7 +142,7 @@ public class Auth {
                 Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[] {"com.google"},
                         false, null, null, null, null);
 
-                team.view.startActivityForResult(intent, Config.REQUEST_CODE_ACCOUNT_PICKER);
+                mActivity.startActivityForResult(intent, Config.REQUEST_CODE_ACCOUNT_PICKER);
             }
             else if(mAuthToken == null) {
                 fetchAuthToken();
@@ -161,6 +156,8 @@ public class Auth {
                     @Override
                     public void success(String response) {
                         setUser(team.things.put(Person.class, response));
+                        if(runnable != null)
+                            runnable.run();
                     }
 
                     @Override
@@ -183,13 +180,13 @@ public class Auth {
         mUser = user.getId();
 
         save();
-        signin();
+        signin(null);
     }
 
     private void setAuthToken(String auth) {
         mAuthToken = auth;
         save();
-        signin();
+        signin(null);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
