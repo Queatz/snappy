@@ -22,7 +22,6 @@ public class MainActivity extends ViewActivity {
     public Fragment mHostParty;
     public Fragment mPersonView;
     public Fragment mNewUpto;
-    public Fragment mPersonList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +35,6 @@ public class MainActivity extends ViewActivity {
         mPersonView = new Person();
         mNewUpto= new NewUpto();
         mHostParty = new HostParty();
-        mPersonList = new PersonList();
 
         showStartView();
         onNewIntent(getIntent());

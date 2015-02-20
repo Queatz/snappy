@@ -76,21 +76,23 @@ public class PersonUptoSlide extends Fragment {
                     .placeholder(R.color.spacer)
                     .into(profile);
 
-            View.OnClickListener oclk_list = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Team team = ((MainApplication) getActivity().getApplication()).team;
-
-                    team.view.push(ViewActivity.Transition.EXAMINE, ViewActivity.Transition.INSTANT, team.view.mPersonList);
-                }
-            };
-
             ((TextView) personAbout.findViewById(R.id.info_followers)).setText(Long.toString(mPerson.getInfoFollowers()));
             ((TextView) personAbout.findViewById(R.id.info_following)).setText(Long.toString(mPerson.getInfoFollowing()));
             ((TextView) personAbout.findViewById(R.id.info_hosted)).setText(Long.toString(mPerson.getInfoHosted()));
 
-            personAbout.findViewById(R.id.followers_button).setOnClickListener(oclk_list);
-            personAbout.findViewById(R.id.following_button).setOnClickListener(oclk_list);
+            personAbout.findViewById(R.id.followers_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    team.action.showFollowers(mPerson);
+                }
+            });
+
+            personAbout.findViewById(R.id.following_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    team.action.showFollowing(mPerson);
+                }
+            });
 
             if(mPerson.getAbout().isEmpty()) {
                 personAbout.findViewById(R.id.about).setVisibility(View.GONE);

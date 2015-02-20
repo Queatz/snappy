@@ -11,6 +11,7 @@ import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.ViewActivity;
+import com.queatz.snappy.fragment.PersonList;
 import com.queatz.snappy.things.*;
 import com.queatz.snappy.ui.MiniMenu;
 
@@ -25,6 +26,20 @@ public class Action {
 
     public Action(Team t) {
         team = t;
+    }
+
+    public void showFollowers(@NonNull Person person) {
+        PersonList list = new PersonList();
+        list.setPerson(person);
+        list.setShowFollowing(false);
+        team.view.push(ViewActivity.Transition.EXAMINE, ViewActivity.Transition.INSTANT, list);
+    }
+
+    public void showFollowing(@NonNull Person person) {
+        PersonList list = new PersonList();
+        list.setPerson(person);
+        list.setShowFollowing(true);
+        team.view.push(ViewActivity.Transition.EXAMINE, ViewActivity.Transition.INSTANT, list);
     }
 
     public void followPerson(@NonNull Person person) {
