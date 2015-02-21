@@ -19,6 +19,7 @@ public class Config {
     public static String PARAM_FULL = "full";
     public static String PARAM_ACCEPT = "accept";
     public static String PARAM_FOLLOW = "follow";
+    public static String PARAM_MESSAGE = "message";
 
     public static String PATH_API = "api";
     public static String PATH_PARTIES = "parties";

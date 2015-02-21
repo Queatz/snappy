@@ -39,19 +39,19 @@
                     <com.queatz.snappy.ui.TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Stacy"
+                        android:text="Connie"
                         android:textSize="18sp"
                         android:textColor="@color/black"
-                        android:layout_marginBottom="4dp"/>
+                        android:layout_marginBottom="4dp" />
 
 
 
                     <com.queatz.snappy.ui.TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Me: Hey Stacy, thanks for bringing the cake last night!"
+                        android:text="Me: Hey Connie, thanks for bringing the cake last night!"
                         android:textColor="@color/gray"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 

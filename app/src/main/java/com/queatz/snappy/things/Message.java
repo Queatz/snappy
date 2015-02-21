@@ -12,6 +12,7 @@ public class Message extends RealmObject implements Thing {
     @Index
     private String id;
     private Person from;
+    private Person to;
     private String message;
     private Date date;
 
@@ -29,6 +30,14 @@ public class Message extends RealmObject implements Thing {
 
     public void setFrom(Person from) {
         this.from = from;
+    }
+
+    public Person getTo() {
+        return to;
+    }
+
+    public void setTo(Person to) {
+        this.to = to;
     }
 
     public String getMessage() {

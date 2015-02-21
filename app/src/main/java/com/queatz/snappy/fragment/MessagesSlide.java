@@ -12,6 +12,7 @@ import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Message;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,15 +74,10 @@ public class MessagesSlide extends Fragment {
         team.api.get(Config.PATH_MESSAGES, new Api.Callback() {
             @Override
             public void success(String response) {
-                try {
-                    JSONArray list = new JSONArray(response);
-                    List<JSONObject> l = new ArrayList<>();
-                    for (int i = 0; i < list.length(); i++) l.add(list.getJSONObject(i));
+                team.things.putAll(Message.class, response);
 
-                    //mList.setAdapter(new MessagesAdapter(getActivity(), l));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                //mList.setAdapter(new MessagesAdapter(getActivity(), l));
+                //update();
 
                 mRefresh.setRefreshing(false);
             }

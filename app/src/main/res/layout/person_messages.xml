@@ -6,261 +6,25 @@
     android:orientation="vertical"
     android:background="@color/background">
 
-    <ScrollView
-        android:id="@+id/scroll"
+    <ListView
+        android:id="@+id/messagesList"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_gravity="bottom"
-        android:gravity="bottom">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp">
-
-                <ImageView
-                    android:layout_gravity="top"
-                    android:gravity="top"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:src="@drawable/profile" />
-
-                <com.queatz.snappy.ui.TextView
-                    android:textIsSelectable="true"
-                    android:layout_gravity="top"
-                    android:gravity="top"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:lineSpacingMultiplier="1.25"
-                    android:text="Let me know if I can be of help"
-                    android:padding="8dp"
-                    android:textSize="16sp"
-                    android:background="@drawable/white_rounded"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp">
-
-                <ImageView
-                    android:layout_gravity="top"
-                    android:gravity="top"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:src="@drawable/profile" />
-
-                <com.queatz.snappy.ui.TextView
-                    android:textIsSelectable="true"
-                    android:layout_gravity="top"
-                    android:gravity="top"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:lineSpacingMultiplier="1.25"
-                    android:text="We should get some pizza"
-                    android:padding="8dp"
-                    android:textSize="16sp"
-                    android:background="@drawable/white_rounded"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp">
-
-                <ImageView
-                    android:layout_gravity="top"
-                    android:gravity="top"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:src="@drawable/profile" />
-
-                <com.queatz.snappy.ui.TextView
-                    android:textIsSelectable="true"
-                    android:layout_gravity="top"
-                    android:gravity="top"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:lineSpacingMultiplier="1.25"
-                    android:text="Brandon is bringing 2 guests"
-                    android:padding="8dp"
-                    android:textSize="16sp"
-                    android:background="@drawable/white_rounded"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp">
-
-                <ImageView
-                    android:layout_gravity="top"
-                    android:gravity="top"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:src="@drawable/profile" />
-
-                <com.queatz.snappy.ui.TextView
-                    android:textIsSelectable="true"
-                    android:layout_gravity="top"
-                    android:gravity="top"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:lineSpacingMultiplier="1.25"
-                    android:text="So 5 people total"
-                    android:padding="8dp"
-                    android:textSize="16sp"
-                    android:background="@drawable/white_rounded"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:layout_gravity="right"
-                android:padding="8dp">
-
-                <com.queatz.snappy.ui.TextView
-                    android:textIsSelectable="true"
-                    android:layout_gravity="top"
-                    android:gravity="top"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:lineSpacingMultiplier="1.25"
-                    android:text="Ok all we need is pizza.  Going to order from the place on Lombard St.  Let me know if anyone has any special requests."
-                    android:padding="8dp"
-                    android:textSize="16sp"
-                    android:background="@drawable/white_rounded" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp">
-
-                <ImageView
-                    android:layout_gravity="top"
-                    android:gravity="top"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:src="@drawable/profile" />
-
-                <com.queatz.snappy.ui.TextView
-                    android:textIsSelectable="true"
-                    android:layout_gravity="top"
-                    android:gravity="top"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:lineSpacingMultiplier="1.25"
-                    android:text="Angelica wants pineapple"
-                    android:padding="8dp"
-                    android:textSize="16sp"
-                    android:background="@drawable/white_rounded"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp">
-
-                <ImageView
-                    android:layout_gravity="top"
-                    android:gravity="top"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:src="@drawable/profile" />
-
-                <com.queatz.snappy.ui.TextView
-                    android:textIsSelectable="true"
-                    android:layout_gravity="top"
-                    android:gravity="top"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:lineSpacingMultiplier="1.25"
-                    android:text="What kind of pizza did you order?"
-                    android:padding="8dp"
-                    android:textSize="16sp"
-                    android:background="@drawable/white_rounded"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:layout_gravity="right"
-                android:padding="8dp">
-
-                <com.queatz.snappy.ui.TextView
-                    android:textIsSelectable="true"
-                    android:layout_gravity="top"
-                    android:gravity="top"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:lineSpacingMultiplier="1.25"
-                    android:text="Pineapple"
-                    android:padding="8dp"
-                    android:textSize="16sp"
-                    android:background="@drawable/white_rounded"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </ScrollView>
+        android:gravity="bottom"
+        android:stackFromBottom="true"
+        android:divider="@null"
+        android:transcriptMode="normal" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white">
+
         <com.queatz.snappy.ui.EditText
+            android:id="@+id/writeMessage"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -280,6 +44,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:padding="8dp"
-            android:src="@android:drawable/ic_menu_send"/>
+            android:src="@android:drawable/ic_menu_send"
+            android:id="@+id/sendButton" />
     </LinearLayout>
 </LinearLayout>

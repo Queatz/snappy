@@ -31,6 +31,13 @@ public class Action {
         team = t;
     }
 
+    public void sendMessage(@NonNull Person to, final String message) {
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_MESSAGE, message);
+
+        team.api.post(String.format(Config.PATH_PEOPLE_ID, to.getId()), params);
+    }
+
     public void showFollowers(Activity from, @NonNull Person person) {
         Bundle bundle = new Bundle();
         bundle.putString("person", person.getId());
