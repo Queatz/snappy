@@ -31,6 +31,14 @@ public class Action {
         team = t;
     }
 
+    public void openMessages(Activity from, @NonNull Person person) {
+        Bundle bundle = new Bundle();
+        bundle.putString("person", person.getId());
+        bundle.putString("show", "messages");
+
+        team.view.show(from, com.queatz.snappy.activity.Person.class, bundle);
+    }
+
     public void sendMessage(@NonNull Person to, final String message) {
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_MESSAGE, message);

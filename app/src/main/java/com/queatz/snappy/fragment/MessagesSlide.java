@@ -6,20 +6,22 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
+import com.queatz.snappy.adapter.ContactAdapter;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Contact;
 import com.queatz.snappy.things.Message;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import io.realm.RealmResults;
 
 /**
  * Created by jacob on 10/26/14.
@@ -50,19 +52,17 @@ public class MessagesSlide extends Fragment {
         });
 
         mRefresh.setRefreshing(true);
-        refresh();
 
-        View.OnClickListener click = new View.OnClickListener() {
+        final ListView list = (ListView) view.findViewById(R.id.recentList);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                team.action.showFollowers(getActivity(), team.auth.me());
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                team.action.openMessages(getActivity(), ((Contact) list.getAdapter().getItem(position)).getContact());
             }
-        };
+        });
 
-        view.findViewById(R.id.m1).setOnClickListener(click);
-        view.findViewById(R.id.m2).setOnClickListener(click);
-        view.findViewById(R.id.m3).setOnClickListener(click);
-        view.findViewById(R.id.m4).setOnClickListener(click);
+        refresh();
 
         return view;
     }
@@ -74,10 +74,31 @@ public class MessagesSlide extends Fragment {
         team.api.get(Config.PATH_MESSAGES, new Api.Callback() {
             @Override
             public void success(String response) {
-                team.things.putAll(Message.class, response);
+                try {
+                    JSONObject o = new JSONObject(response);
 
-                //mList.setAdapter(new MessagesAdapter(getActivity(), l));
-                //update();
+                    if(o.has("messages"))
+                        team.things.putAll(Message.class, o.getJSONArray("messages"));
+
+                    if(o.has("contacts"))
+                        team.things.putAll(Contact.class, o.getJSONArray("contacts"));
+
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(getView() != null) {
+                    ListView list = (ListView) getView().findViewById(R.id.recentList);
+
+                    RealmResults<Contact> recents = team.realm.where(Contact.class)
+                            .equalTo("person.id", team.auth.getUser())
+                            .findAll();
+
+                    recents.sort("updated", false);
+
+                    list.setAdapter(new ContactAdapter(getActivity(), recents));
+                }
 
                 mRefresh.setRefreshing(false);
             }

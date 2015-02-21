@@ -35,4 +35,5 @@
     <string name="Following">Following</string>
     <string name="Followers">Followers</string>
     <string name="follow_person">Follow %1$s</string>
+    <string name="meMessage">Me: %1$s</string>
 </resources>

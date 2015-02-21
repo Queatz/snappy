@@ -92,6 +92,8 @@ public class Person extends BaseActivity {
             }
         });
 
-        mActionBar.setPage(0);
+        String show = intent.getStringExtra("show");
+
+        mActionBar.setPage(show == null || "upto".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
     }
 }
