@@ -67,6 +67,8 @@ public class HostParty extends BaseActivity {
 
         mDate = new Date();
 
+        timeSlider.setPercent(.25f);
+
         timeSlider.setTextCallback(new TimeSlider.TextCallback() {
             @Override
             public String getText(float percent) {
