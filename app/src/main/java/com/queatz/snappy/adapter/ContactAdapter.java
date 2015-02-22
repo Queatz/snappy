@@ -2,12 +2,10 @@ package com.queatz.snappy.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.queatz.snappy.MainApplication;
@@ -16,7 +14,6 @@ import com.queatz.snappy.Util;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Contact;
 import com.queatz.snappy.things.Message;
-import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
 import com.squareup.picasso.Picasso;
 
@@ -66,7 +63,7 @@ public class ContactAdapter extends RealmBaseAdapter<Contact> {
         if(message == null)
             lastMessage.setText("");
         else
-            lastMessage.setText(isOwn ? String.format(context.getString(R.string.meMessage), message.getMessage()) : message.getMessage());
+            lastMessage.setText(isOwn ? String.format(context.getString(R.string.me_message), message.getMessage()) : message.getMessage());
 
         return view;
     }

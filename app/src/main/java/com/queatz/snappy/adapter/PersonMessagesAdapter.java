@@ -49,7 +49,8 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<Message> {
 
         boolean isOwn = mToPerson.getId().equals(person.getId());
 
-        ((RelativeLayout) view.findViewById(R.id.wrapper)).setGravity(isOwn ? Gravity.RIGHT : Gravity.LEFT);
+        RelativeLayout wrapper = ((RelativeLayout) view.findViewById(R.id.wrapper));
+        wrapper.setGravity(isOwn ? Gravity.RIGHT : Gravity.LEFT);
 
         TextView textView = (TextView) view.findViewById(R.id.message);
         ImageView profile = (ImageView) view.findViewById(R.id.profile);
@@ -59,7 +60,7 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<Message> {
         if(isOwn)
             profile.bringToFront();
         else
-            textView.bringToFront();
+            wrapper.bringToFront();
 
         Picasso.with(context)
                 .load(person.getImageUrlForSize((int) Util.px(32)))

@@ -36,7 +36,7 @@ public class HostPartyAdapter extends RealmBaseAdapter<Party> {
         Party party = realmResults.get(position);
 
         ((TextView) view.findViewById(R.id.name)).setText(party.getName());
-        ((TextView) view.findViewById(R.id.ago)).setText(Util.cuteDate(party.getDate()));
+        ((TextView) view.findViewById(R.id.ago)).setText(Util.agoDate(party.getDate()));
 
         return view;
     }

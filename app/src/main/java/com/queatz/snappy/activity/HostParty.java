@@ -32,6 +32,7 @@ public class HostParty extends BaseActivity {
     public Team team;
     private String mGroup;
     private Date mDate;
+    private View mNewParty;
 
     private Date percentToDate(float percent) {
         return Util.quantizeDate(new Date(mDate.getTime() + (int) (percent * Config.maxHoursInFuture * 1000 * 60 * 60)));
@@ -54,7 +55,7 @@ public class HostParty extends BaseActivity {
 
         /* New Party */
 
-        final View newParty = View.inflate(this, R.layout.host_party_new, null);
+        mNewParty = View.inflate(this, R.layout.host_party_new, null);
 
         RealmResults<Party> recentParties = team.realm.where(Party.class)
                 .equalTo("host.id", team.auth.getUser())
@@ -62,7 +63,7 @@ public class HostParty extends BaseActivity {
         recentParties.sort("date", false);
         partyList.setAdapter(new HostPartyAdapter(this, recentParties));
 
-        TimeSlider timeSlider = (TimeSlider) newParty.findViewById(R.id.timeSlider);
+        TimeSlider timeSlider = (TimeSlider) mNewParty.findViewById(R.id.timeSlider);
 
         mDate = new Date();
 
@@ -78,18 +79,18 @@ public class HostParty extends BaseActivity {
             public void onClick(View v) {
                 Team team = ((MainApplication) getApplication()).team;
 
-                String name = ((EditText) newParty.findViewById(R.id.name)).getText().toString();
-                Date date = percentToDate(((TimeSlider) newParty.findViewById(R.id.timeSlider)).getPercent());
-                String location = ((EditText) newParty.findViewById(R.id.location)).getText().toString();
-                String details = ((EditText) newParty.findViewById(R.id.details)).getText().toString();
+                String name = ((EditText) mNewParty.findViewById(R.id.name)).getText().toString();
+                Date date = percentToDate(((TimeSlider) mNewParty.findViewById(R.id.timeSlider)).getPercent());
+                String location = ((EditText) mNewParty.findViewById(R.id.location)).getText().toString();
+                String details = ((EditText) mNewParty.findViewById(R.id.details)).getText().toString();
 
                 if(name.isEmpty()) {
-                    Toast.makeText(HostParty.this, ((EditText) newParty.findViewById(R.id.name)).getHint().toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HostParty.this, ((EditText) mNewParty.findViewById(R.id.name)).getHint().toString(), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if(location.isEmpty()) {
-                    Toast.makeText(HostParty.this, ((EditText) newParty.findViewById(R.id.location)).getHint().toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HostParty.this, ((EditText) mNewParty.findViewById(R.id.location)).getHint().toString(), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -98,9 +99,9 @@ public class HostParty extends BaseActivity {
             }
         };
 
-        newParty.findViewById(R.id.action_host).setOnClickListener(oclk);
+        mNewParty.findViewById(R.id.action_host).setOnClickListener(oclk);
 
-        partyList.addHeaderView(newParty);
+        partyList.addHeaderView(mNewParty);
         partyList.addFooterView(new View(this));
 
         partyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -116,11 +117,11 @@ public class HostParty extends BaseActivity {
 
         EditText name;
 
-        name = ((EditText) findViewById(R.id.name));
+        name = ((EditText) mNewParty.findViewById(R.id.name));
         name.setText(party.getName());
         name.setEnabled(false);
 
-        TimeSlider date = ((TimeSlider) findViewById(R.id.timeSlider));
+        TimeSlider date = ((TimeSlider) mNewParty.findViewById(R.id.timeSlider));
 
         Date newDate = Util.matchDateHour(party.getDate());
         float percent = dateToPercent(newDate);
@@ -129,10 +130,10 @@ public class HostParty extends BaseActivity {
 
         date.setPercent(percent);
 
-        name = ((EditText) findViewById(R.id.location));
+        name = ((EditText) mNewParty.findViewById(R.id.location));
         name.setText(party.getLocation().getName());
 
-        name = ((EditText) findViewById(R.id.details));
+        name = ((EditText) mNewParty.findViewById(R.id.details));
         name.setText(party.getDetails());
 
         ((ListView) findViewById(R.id.partyList)).smoothScrollToPosition(0);

@@ -212,7 +212,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
-                    android:hint="Write message"
+                    android:hint="@string/write_message"
                     android:inputType="text|textShortMessage|textCapSentences"
                     android:textColorHint="@color/gray"
                     android:textSize="18sp"
@@ -249,7 +249,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="@string/TEMP_party_update_3"
                     android:textColor="@color/event"
                     android:textSize="18sp"
                     android:layout_marginLeft="8dp" />
@@ -275,7 +274,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="@string/TEMP_party_update_2"
                     android:textColor="@color/text"
                     android:textSize="18sp"
                     android:layout_marginLeft="8dp" />
@@ -301,7 +299,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="@string/TEMP_party_update_1"
                     android:textColor="@color/event"
                     android:textSize="18sp"
                     android:layout_marginLeft="8dp" />

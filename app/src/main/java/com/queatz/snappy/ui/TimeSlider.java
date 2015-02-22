@@ -96,7 +96,7 @@ public class TimeSlider extends RelativeLayout {
             mHandle.setText(mTextCallback.getText(mPercent));
         }
         else {
-            mHandle.setText((int) (mPercent * 100) + "%");
+            mHandle.setText(Integer.toString((int) mPercent * 100));
         }
 
         if(getMeasuredWidth() > 0) {
@@ -108,8 +108,6 @@ public class TimeSlider extends RelativeLayout {
         LayoutParams params = (LayoutParams) mHandle.getLayoutParams();
         params.leftMargin = Math.min(getMeasuredWidth() - mHandle.getMeasuredWidth(), Math.max(0, (int) (getMeasuredWidth() * percent - mHandle.getMeasuredWidth() / 2)));
         mHandle.setLayoutParams(params);
-
-        updateTrack();
     }
 
     private void updateTrack() {
@@ -128,7 +126,18 @@ public class TimeSlider extends RelativeLayout {
 
     @Override
     public void onSizeChanged(int w, int h, int ow, int oh) {
+        setPercent(mPercent);
         updateTrack();
+    }
+
+    @Override
+    public void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+
+        if(changed) {
+            setPercent(mPercent);
+            updateTrack();
+        }
     }
 
     @Override

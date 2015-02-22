@@ -73,7 +73,7 @@ public class Util {
         calDate.setTime(date);
 
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR, calDate.get(Calendar.HOUR));
+        cal.set(Calendar.HOUR_OF_DAY, calDate.get(Calendar.HOUR_OF_DAY));
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
@@ -91,6 +91,56 @@ public class Util {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTime();
+    }
+
+    private static final long SECOND_MILLIS = 1000;
+    private static final long MINUTE_MILLIS = 60 * SECOND_MILLIS;
+    private static final long HOUR_MILLIS = 60 * MINUTE_MILLIS;
+    private static final long DAY_MILLIS = 24 * HOUR_MILLIS;
+    private static final long WEEK_MILLIS = 7 * DAY_MILLIS;
+    private static final long MONTH_MILLIS = 30 * DAY_MILLIS;
+    private static final long YEAR_MILLIS = 356 * DAY_MILLIS;
+
+    public static String agoDate(Date date) {
+        long timeDiff = new Date().getTime() - date.getTime();
+
+        boolean future = timeDiff < 0;
+
+        if(future)
+            timeDiff *= -1;
+
+        long c;
+        String s;
+
+        if(timeDiff > YEAR_MILLIS) {
+            c = timeDiff / YEAR_MILLIS;
+            s = String.format(context.getResources().getQuantityString(R.plurals.years, (int) c), c);
+        }
+        else if(timeDiff > MONTH_MILLIS) {
+            c = timeDiff / MONTH_MILLIS;
+            s = String.format(context.getResources().getQuantityString(R.plurals.months, (int) c), c);
+        }
+        else if(timeDiff > WEEK_MILLIS) {
+            c = timeDiff / WEEK_MILLIS;
+            s = String.format(context.getResources().getQuantityString(R.plurals.weeks, (int) c), c);
+        }
+        else if(timeDiff > DAY_MILLIS) {
+            c = timeDiff / DAY_MILLIS;
+            s = String.format(context.getResources().getQuantityString(R.plurals.days, (int) c), c);
+        }
+        else if(timeDiff > HOUR_MILLIS) {
+            c = timeDiff / HOUR_MILLIS;
+            s = String.format(context.getResources().getQuantityString(R.plurals.hours, (int) c), c);
+        }
+        else if(timeDiff > MINUTE_MILLIS) {
+            c = timeDiff / MINUTE_MILLIS;
+            s = String.format(context.getResources().getQuantityString(R.plurals.minutes, (int) c), c);
+        }
+        else {
+            return "just now";
+        }
+
+        return String.format(context.getString(future ? R.string.time_in : R.string.time_ago), s);
     }
 
     public static String cuteDate(Date date) {
