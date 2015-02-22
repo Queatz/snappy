@@ -19,6 +19,7 @@ import com.queatz.snappy.things.Person;
 import com.queatz.snappy.ui.MiniMenu;
 
 import java.io.FileNotFoundException;
+import java.util.Date;
 
 /**
  * Created by jacob on 11/23/14.
@@ -123,7 +124,7 @@ public class Action {
         team.api.post(String.format(Config.PATH_JOIN_ID, join.getId()), params);
     }
 
-    public void hostParty(String group, String name, String date, String location, String details) {
+    public void hostParty(String group, String name, Date date, String location, String details) {
         RequestParams params = new RequestParams();
 
         if(group != null && !group.isEmpty())

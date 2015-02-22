@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -27,17 +28,12 @@
             android:padding="16dp"
             android:textSize="26sp" />
 
-        <com.queatz.snappy.ui.EditText
-            android:id="@+id/date"
+        <com.queatz.snappy.ui.TimeSlider
+            android:id="@+id/timeSlider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:hint="@string/enter_time"
-            android:inputType="textCapWords"
-            android:lines="1"
-            android:background="@android:color/transparent"
-            android:textColorHint="@color/gray"
-            android:padding="16dp" />
+            app:textSize="22sp"
+            app:textColor="@color/clickable" />
 
         <com.queatz.snappy.ui.EditText
             android:id="@+id/location"

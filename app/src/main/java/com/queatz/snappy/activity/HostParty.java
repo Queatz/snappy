@@ -2,6 +2,7 @@ package com.queatz.snappy.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -11,12 +12,16 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.adapter.HostPartyAdapter;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Party;
+import com.queatz.snappy.ui.TimeSlider;
+
+import java.util.Date;
 
 import io.realm.RealmResults;
 
@@ -26,6 +31,15 @@ import io.realm.RealmResults;
 public class HostParty extends BaseActivity {
     public Team team;
     private String mGroup;
+    private Date mDate;
+
+    private Date percentToDate(float percent) {
+        return Util.quantizeDate(new Date(mDate.getTime() + (int) (percent * Config.maxHoursInFuture * 1000 * 60 * 60)));
+    }
+
+    private float dateToPercent(Date date) {
+        return (float) (date.getTime() - mDate.getTime()) / (float) (Config.maxHoursInFuture * 1000 * 60 * 60);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,23 +62,29 @@ public class HostParty extends BaseActivity {
         recentParties.sort("date", false);
         partyList.setAdapter(new HostPartyAdapter(this, recentParties));
 
+        TimeSlider timeSlider = (TimeSlider) newParty.findViewById(R.id.timeSlider);
+
+        mDate = new Date();
+
+        timeSlider.setTextCallback(new TimeSlider.TextCallback() {
+            @Override
+            public String getText(float percent) {
+                return Util.cuteDate(percentToDate(percent));
+            }
+        });
+
         View.OnClickListener oclk = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Team team = ((MainApplication) getApplication()).team;
 
                 String name = ((EditText) newParty.findViewById(R.id.name)).getText().toString();
-                String date = ((EditText) newParty.findViewById(R.id.date)).getText().toString();
+                Date date = percentToDate(((TimeSlider) newParty.findViewById(R.id.timeSlider)).getPercent());
                 String location = ((EditText) newParty.findViewById(R.id.location)).getText().toString();
                 String details = ((EditText) newParty.findViewById(R.id.details)).getText().toString();
 
                 if(name.isEmpty()) {
                     Toast.makeText(HostParty.this, ((EditText) newParty.findViewById(R.id.name)).getHint().toString(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if(date.isEmpty()) {
-                    Toast.makeText(HostParty.this, ((EditText) newParty.findViewById(R.id.date)).getHint().toString(), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -100,8 +120,14 @@ public class HostParty extends BaseActivity {
         name.setText(party.getName());
         name.setEnabled(false);
 
-        name = ((EditText) findViewById(R.id.date));
-        name.setText(Util.cuteDate(party.getDate()));
+        TimeSlider date = ((TimeSlider) findViewById(R.id.timeSlider));
+
+        Date newDate = Util.matchDateHour(party.getDate());
+        float percent = dateToPercent(newDate);
+
+        Log.e(Config.LOG_TAG, newDate + " • " + percent);
+
+        date.setPercent(percent);
 
         name = ((EditText) findViewById(R.id.location));
         name.setText(party.getLocation().getName());

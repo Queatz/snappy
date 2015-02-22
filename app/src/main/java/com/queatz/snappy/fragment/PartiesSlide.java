@@ -20,6 +20,8 @@ import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Party;
 
+import java.util.Date;
+
 import io.realm.RealmResults;
 
 /**
@@ -65,8 +67,10 @@ public class PartiesSlide extends Fragment {
         if(getActivity() == null)
             return;
 
-        RealmResults<Party> list = team.realm().allObjects(Party.class);
-        list.sort("date", false);
+        RealmResults<Party> list = team.realm().where(Party.class)
+                .greaterThan("date", new Date())
+                .findAll();
+        list.sort("date", true);
         mList.setAdapter(new PartyAdapter(getActivity(), list));
     }
 

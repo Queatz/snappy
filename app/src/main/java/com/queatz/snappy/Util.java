@@ -68,6 +68,31 @@ public class Util {
         return is;
     }
 
+    public static Date matchDateHour(Date date) {
+        Calendar calDate = Calendar.getInstance();
+        calDate.setTime(date);
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR, calDate.get(Calendar.HOUR));
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        if(cal.getTime().before(new Date()))
+            cal.set(Calendar.DAY_OF_YEAR, cal.get(Calendar.DAY_OF_YEAR) + 1);
+
+        return cal.getTime();
+    }
+
+    public static Date quantizeDate(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
     public static String cuteDate(Date date) {
         if(context == null || date == null)
             return "-";
