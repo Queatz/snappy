@@ -1,7 +1,6 @@
 package com.queatz.snappy.team;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 

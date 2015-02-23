@@ -42,7 +42,7 @@ public class PersonListAdapter extends RealmBaseAdapter<Follow> {
         }
         else {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.person_list_person, parent, false);
+            view = inflater.inflate(R.layout.person_list_item, parent, false);
         }
 
         Person person = getPerson(position);

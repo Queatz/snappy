@@ -19,8 +19,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_margin="8dp"
-            app:riv_corner_radius="64dp"
-            android:src="@drawable/profile" />
+            app:riv_corner_radius="64dp" />
 
         <com.queatz.snappy.ui.TextView
             android:id="@+id/text"

@@ -9,7 +9,6 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_margin="8dp"
-        app:riv_corner_radius="48dp"
-        android:src="@drawable/sherry" />
+        app:riv_corner_radius="48dp" />
 
 </FrameLayout>

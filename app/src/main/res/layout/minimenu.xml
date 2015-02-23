@@ -15,7 +15,6 @@
         android:textSize="22sp"
         android:padding="8dp"
         android:textColor="@color/black"
-        android:textStyle="bold"
         android:text="@string/host_a_party"
         android:id="@+id/action_host" />
 

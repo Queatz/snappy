@@ -12,7 +12,6 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/backdrop_location"
         app:riv_corner_radius="2dp" />
 
     <ImageView
@@ -242,8 +241,7 @@
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/profile" />
+                    android:layout_gravity="center_vertical" />
 
                 <com.queatz.snappy.ui.TextView
                     android:layout_width="wrap_content"
@@ -267,8 +265,7 @@
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/profile" />
+                    android:layout_gravity="center_vertical" />
 
                 <com.queatz.snappy.ui.TextView
                     android:layout_width="wrap_content"
@@ -292,8 +289,7 @@
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/profile" />
+                    android:layout_gravity="center_vertical" />
 
                 <com.queatz.snappy.ui.TextView
                     android:layout_width="wrap_content"

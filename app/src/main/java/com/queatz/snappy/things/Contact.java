@@ -1,9 +1,5 @@
 package com.queatz.snappy.things;
 
-import com.queatz.snappy.things.Message;
-import com.queatz.snappy.things.Person;
-import com.queatz.snappy.things.Thing;
-
 import java.util.Date;
 
 import io.realm.RealmObject;

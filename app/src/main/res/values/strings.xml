@@ -29,6 +29,8 @@
     <string name="me_message">Me: %1$s</string>
     <string name="time_in">in %1$s</string>
     <string name="time_ago">%1$s ago</string>
+    <string name="welcome_to">Welcome to</string>
+    <string name="SNAPPY">SNAPPY</string>
 
     <plurals name="years">
         <item quantity="one">%1$s year</item>

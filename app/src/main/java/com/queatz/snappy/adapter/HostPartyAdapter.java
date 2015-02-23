@@ -30,7 +30,7 @@ public class HostPartyAdapter extends RealmBaseAdapter<Party> {
         }
         else {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.host_party_again, parent, false);
+            view = inflater.inflate(R.layout.host_party_item, parent, false);
         }
 
         Party party = realmResults.get(position);

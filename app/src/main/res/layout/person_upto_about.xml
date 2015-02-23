@@ -22,7 +22,6 @@
                 android:layout_height="match_parent"
                 android:padding="8dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/upto_1"
                 app:riv_corner_radius="2dp"/>
 
         </com.queatz.snappy.ui.SquareLayout>

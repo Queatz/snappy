@@ -4,18 +4,14 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
-
-import org.w3c.dom.Attr;
 
 /**
  * Created by jacob on 2/21/15.

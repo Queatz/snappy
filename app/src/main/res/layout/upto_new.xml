@@ -23,8 +23,7 @@
             <com.queatz.snappy.ui.SqurePhoto
                 android:id="@+id/uptolink"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:src="@drawable/square" />
+                android:layout_height="0dp" />
 
             <com.queatz.snappy.ui.TextView
                 android:layout_width="match_parent"

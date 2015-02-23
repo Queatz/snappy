@@ -2,7 +2,6 @@ package com.queatz.snappy.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +22,6 @@ import com.queatz.snappy.things.Join;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
 import com.squareup.picasso.Picasso;
-
-import java.util.Random;
 
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;
@@ -131,15 +128,7 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
             }
         }
 
-        int randomBackground = Math.abs(new Random().nextInt() % 5);
-
-        ((ImageView) view.findViewById(R.id.backdrop)).setImageResource(new int[] {
-                R.drawable.backdrop_location,
-                R.drawable.backdrop_location_2,
-                R.drawable.backdrop_location_3,
-                R.drawable.backdrop_location_4,
-                R.drawable.backdrop_location_5
-        }[randomBackground]);
+        //((ImageView) view.findViewById(R.id.backdrop)).setImageResource();
 
         String userId = team.auth.getUser();
 
