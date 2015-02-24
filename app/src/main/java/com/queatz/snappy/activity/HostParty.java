@@ -66,7 +66,12 @@ public class HostParty extends BaseActivity {
 
         mDate = new Date();
 
-        timeSlider.setPercent(.25f);
+        float p = .25f;
+
+        if(Util.everybodyIsSleeping(percentToDate(p)))
+            p = .75f;
+
+        timeSlider.setPercent(p);
 
         timeSlider.setTextCallback(new TimeSlider.TextCallback() {
             @Override
