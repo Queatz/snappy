@@ -31,6 +31,7 @@ public class Main extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         team = ((MainApplication) getApplication()).team;
+        team.auth.setActivity(this);
 
         Log.d(Config.LOG_TAG, "auth = " + team.auth.getAuthParam());
 

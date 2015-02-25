@@ -123,7 +123,7 @@ public class Auth {
     }
 
     public void reauth() {
-        if(mAuthToken != null) {
+        if(mAuthToken != null && mActivity != null) {
             GoogleAuthUtil.invalidateToken(mActivity, mAuthToken);
         }
 

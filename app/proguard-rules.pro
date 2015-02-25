@@ -22,9 +22,11 @@
   @com.google.api.client.util.Key <fields>;
 }
 
--keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault
+-keepattributes Signature, RuntimeVisibleAnnotations, AnnotationDefault
 
 -keepnames public class * extends io.realm.RealmObject
 -keep class io.realm.** { *; }
 -dontwarn javax.**
 -dontwarn io.realm.**
+
+-dontwarn com.squareup.okhttp.**

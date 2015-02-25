@@ -48,6 +48,8 @@ public class HostParty extends BaseActivity {
         team = ((MainApplication) getApplication()).team;
         mGroup = null;
 
+        team.location.locate();
+
         setContentView(R.layout.host_party);
 
         final ListView partyList = ((ListView) findViewById(R.id.partyList));
@@ -116,6 +118,13 @@ public class HostParty extends BaseActivity {
                 setParty((Party) partyList.getAdapter().getItem(position));
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        team.location.stopLocating();
     }
 
     public void setParty(Party party) {

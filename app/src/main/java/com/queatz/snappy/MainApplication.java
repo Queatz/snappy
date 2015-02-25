@@ -17,6 +17,7 @@ public class MainApplication extends Application {
         Util.setupWithContext(this);
 
         team = new Team(this);
+        Util.team = team;
     }
 
     @Override

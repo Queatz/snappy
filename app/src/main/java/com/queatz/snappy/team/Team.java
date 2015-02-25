@@ -19,6 +19,7 @@ public class Team implements Closeable {
     public Api api;
     public Action action;
     public Things things;
+    public Location location;
 
     public Team(Context c) {
         context = c;
@@ -29,6 +30,7 @@ public class Team implements Closeable {
         action = new Action(this);
         things = new Things(this);
         view = new View(this);
+        location = new Location(this);
     }
 
     public void close() {

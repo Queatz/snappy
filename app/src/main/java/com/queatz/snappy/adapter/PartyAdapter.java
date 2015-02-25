@@ -128,7 +128,7 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
             }
         }
 
-        //((ImageView) view.findViewById(R.id.backdrop)).setImageResource();
+        ((ImageView) view.findViewById(R.id.backdrop)).setImageResource(R.drawable.location);
 
         String userId = team.auth.getUser();
 

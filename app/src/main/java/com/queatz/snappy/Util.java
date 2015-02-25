@@ -7,6 +7,7 @@ import android.location.LocationManager;
 
 import com.luckycatlabs.sunrisesunset.Zenith;
 import com.luckycatlabs.sunrisesunset.calculator.SolarEventCalculator;
+import com.queatz.snappy.team.Team;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -20,6 +21,7 @@ import java.util.TimeZone;
  */
 public class Util {
     public static Context context;
+    public static Team team;
 
     public static void setupWithContext(Context ctx) {
         context = ctx;
@@ -33,22 +35,16 @@ public class Util {
         return px / context.getResources().getDisplayMetrics().density;
     }
 
-    public static Location getLatLong() {
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-
-        LocationManager locationManager = ((LocationManager) context.getSystemService(Context.LOCATION_SERVICE));
-
-        return locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, true));
-    }
-
     private static HashMap<Date, Boolean> cachedDaytimes = new HashMap<>();
 
     public static boolean isDaytime(Date date) {
+        if(team == null)
+            return false;
+
         if(cachedDaytimes.containsKey(date))
             return cachedDaytimes.get(date);
 
-        Location location = getLatLong();
+        Location location = team.location.get();
 
         if(location == null)
             return true;
