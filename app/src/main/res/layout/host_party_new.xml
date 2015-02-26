@@ -35,17 +35,97 @@
             app:textSize="22sp"
             app:textColor="@color/clickable" />
 
-        <com.queatz.snappy.ui.EditText
-            android:id="@+id/location"
+        <LinearLayout
+            android:id="@+id/selectedLocation"
+            android:visibility="gone"
+            android:clickable="true"
+            android:background="@drawable/softclick_white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:hint="@string/enter_location"
-            android:inputType="textCapWords"
-            android:lines="1"
-            android:background="@android:color/transparent"
-            android:textColorHint="@color/gray"
-            android:padding="16dp" />
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:orientation="horizontal">
+
+            <com.makeramen.RoundedImageView
+                android:id="@+id/selectedLocationProfile"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="4dp"
+                app:riv_corner_radius="32dp"
+                android:src="@drawable/location" />
+
+            <com.queatz.snappy.ui.TextView
+                android:id="@+id/selectedLocationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="22sp"
+                android:textColor="@color/clickable"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:paddingRight="16dp"
+                android:paddingLeft="8dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/locationDetailsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.queatz.snappy.ui.EditText
+                android:id="@+id/location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:hint="@string/enter_location"
+                android:inputType="textCapWords"
+                android:imeOptions="actionSearch"
+                android:lines="1"
+                android:background="@android:color/transparent"
+                android:textColorHint="@color/gray"
+                android:padding="16dp" />
+
+            <com.queatz.snappy.ui.ExpandedListView
+                android:id="@+id/suggestedLocations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null" />
+
+            <com.queatz.snappy.ui.EditText
+                android:id="@+id/locationAddress"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:hint="@string/enter_address"
+                android:inputType="textCapWords"
+                android:lines="1"
+                android:background="@android:color/transparent"
+                android:textColorHint="@color/gray"
+                android:imeOptions="actionSearch"
+                android:padding="16dp" />
+
+            <com.queatz.snappy.ui.ScrollStopper
+                android:id="@+id/locationMapLayout"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="256dp">
+
+                <ImageView
+                    android:id="@+id/locationMapMarker"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/rocket" />
+
+            </com.queatz.snappy.ui.ScrollStopper>
+
+        </LinearLayout>
 
         <com.queatz.snappy.ui.EditText
             android:id="@+id/details"

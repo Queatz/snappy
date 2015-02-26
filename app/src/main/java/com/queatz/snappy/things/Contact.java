@@ -15,7 +15,7 @@ public class Contact extends RealmObject implements Thing {
     private Person contact;
     private Message last;
     private Date updated;
-    private boolean unread;
+    private boolean seen;
 
     public String getId() {
         return id;
@@ -57,11 +57,11 @@ public class Contact extends RealmObject implements Thing {
         this.updated = updated;
     }
 
-    public boolean isUnread() {
-        return unread;
+    public boolean isSeen() {
+        return seen;
     }
 
-    public void setUnread(boolean unread) {
-        this.unread = unread;
+    public void setSeen(boolean seen) {
+        this.seen = seen;
     }
 }

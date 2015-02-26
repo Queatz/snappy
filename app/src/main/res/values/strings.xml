@@ -31,6 +31,7 @@
     <string name="time_ago">%1$s ago</string>
     <string name="welcome_to">Welcome to</string>
     <string name="SNAPPY">SNAPPY</string>
+    <string name="enter_address">Find a location for \"%1$s\"…</string>
 
     <plurals name="years">
         <item quantity="one">%1$s year</item>

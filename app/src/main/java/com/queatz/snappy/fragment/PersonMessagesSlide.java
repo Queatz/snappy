@@ -52,9 +52,7 @@ public class PersonMessagesSlide extends Fragment {
                         .equalTo("from.id", mPerson.getId())
                         .equalTo("to.id", team.auth.getUser())
                     .endGroup()
-                    .findAll();
-
-            messages.sort("date", true);
+                    .findAllSorted("date", true);
 
             list.setAdapter(new PersonMessagesAdapter(getActivity(), messages, team.auth.me()));
 

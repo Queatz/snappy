@@ -5,9 +5,16 @@ import android.location.Criteria;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.queatz.snappy.Config;
+import com.queatz.snappy.R;
+
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by jacob on 10/19/14.
@@ -17,23 +24,27 @@ public class Location implements LocationListener {
     private android.location.Location mLocation;
     private LocationManager mLocationManager;
 
+    public static interface AutocompleteCallback {
+        public void onResult(JSONObject result);
+    }
+
     public Location(Team t) {
         team = t;
         mLocationManager = (LocationManager) team.context.getSystemService(Context.LOCATION_SERVICE);
     }
 
     public android.location.Location get() {
-        if(mLocation == null) {
-            Criteria criteria = new Criteria();
-            criteria.setAccuracy(Criteria.ACCURACY_FINE);
-            String provider = mLocationManager.getBestProvider(criteria, true);
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+        String provider = mLocationManager.getBestProvider(criteria, true);
 
+        mLocation = mLocationManager.getLastKnownLocation(provider);
 
-            mLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-            if(mLocation == null || mLocation.getAccuracy() > Config.locationAccuracy && !LocationManager.NETWORK_PROVIDER.equals(provider)) {
-                mLocation = mLocationManager.getLastKnownLocation(provider);
-            }
+        if(!LocationManager.NETWORK_PROVIDER.equals(provider)) {
+            android.location.Location networkLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if(mLocation == null || networkLocation.getAccuracy() < mLocation.getAccuracy())
+                mLocation = networkLocation;
         }
 
         return mLocation;
@@ -54,6 +65,58 @@ public class Location implements LocationListener {
 
     public void stopLocating() {
         mLocationManager.removeUpdates(this);
+    }
+
+    public void getTopGoogleLocationForInput(@NonNull final String input, @NonNull final AutocompleteCallback callback) {
+        android.location.Location location = get();
+
+        if(location == null)
+            return;
+
+        String url = String.format(Config.GOOGLE_PLACES_AUTOCOMPLETE_URL,
+                location.getLatitude(),
+                location.getLongitude(),
+                input,
+                team.context.getString(R.string.google_api_key));
+
+        team.api.getInternalClient().get(url, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                if(responseBody == null)
+                    return;
+
+                try {
+                    JSONObject o = new JSONObject(new String(responseBody));
+
+                    String url = String.format(Config.GOOGLE_PLACES_DETAILS_URL,
+                            o.getJSONArray("predictions").getJSONObject(0).getString("place_id"),
+                            team.context.getString(R.string.google_api_key));
+
+                    team.api.getInternalClient().get(url, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            if(responseBody == null)
+                                return;
+
+                            try {
+                                JSONObject o = new JSONObject(new String(responseBody));
+                                callback.onResult(o.getJSONObject("result"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {}
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {}
+        });
     }
 
     @Override

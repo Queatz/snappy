@@ -93,9 +93,7 @@ public class MessagesSlide extends Fragment {
 
                     RealmResults<Contact> recents = team.realm.where(Contact.class)
                             .equalTo("person.id", team.auth.getUser())
-                            .findAll();
-
-                    recents.sort("updated", false);
+                            .findAllSorted("updated", false);
 
                     list.setAdapter(new ContactAdapter(getActivity(), recents));
                 }

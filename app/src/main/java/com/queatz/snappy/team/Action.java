@@ -32,6 +32,13 @@ public class Action {
         team = t;
     }
 
+    public void setSeen(Person person) {
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_SEEN, true);
+
+        team.api.post(String.format(Config.PATH_PEOPLE_ID, person.getId()), params);
+    }
+
     public void openMessages(Activity from, @NonNull Person person) {
         Bundle bundle = new Bundle();
         bundle.putString("person", person.getId());
@@ -124,7 +131,7 @@ public class Action {
         team.api.post(String.format(Config.PATH_JOIN_ID, join.getId()), params);
     }
 
-    public void hostParty(String group, String name, Date date, String location, String details) {
+    public void hostParty(String group, String name, Date date, com.queatz.snappy.things.Location location, String details) {
         RequestParams params = new RequestParams();
 
         if(group != null && !group.isEmpty())
@@ -132,7 +139,7 @@ public class Action {
 
         params.put("name", name);
         params.put("date", date);
-        params.put("location", location);
+        params.put("location", location.getId() == null ? location.getJson() : location.getId());
         params.put("details", details);
 
         team.api.post(Config.PATH_PARTIES, params);

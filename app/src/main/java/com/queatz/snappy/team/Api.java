@@ -72,6 +72,10 @@ public class Api {
         return params;
     }
 
+    public AsyncHttpClient getInternalClient() {
+        return mClient;
+    }
+
     private String makeUrl(String url) {
         return makeUrl(url, null);
     }

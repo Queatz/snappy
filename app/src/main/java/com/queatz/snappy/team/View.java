@@ -1,8 +1,11 @@
 package com.queatz.snappy.team;
 
 import android.app.Activity;
+import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.activity.Welcome;
@@ -30,5 +33,18 @@ public class View {
 
     public void showStartView(Activity from) {
         team.view.show(from, team.auth.isAuthenticated() ? Main.class : Welcome.class, null);
+    }
+
+    public void keyboard(TextView view) {
+        keyboard(view, true);
+    }
+
+    public void keyboard(TextView view, boolean show) {
+        InputMethodManager inputMethodManager = (InputMethodManager) team.context.getSystemService(Service.INPUT_METHOD_SERVICE);
+
+        if(show)
+            inputMethodManager.showSoftInput(view, 0);
+        else
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

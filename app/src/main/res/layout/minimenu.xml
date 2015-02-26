@@ -57,6 +57,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:visibility="gone"
         android:orientation="horizontal"
         android:clickable="true"
         android:background="@drawable/softclick"

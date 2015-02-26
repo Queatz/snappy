@@ -1,6 +1,7 @@
 package com.queatz.snappy.fragment;
 
 import android.app.Fragment;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.ContextMenu;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
@@ -69,8 +71,7 @@ public class PartiesSlide extends Fragment {
 
         RealmResults<Party> list = team.realm().where(Party.class)
                 .greaterThan("date", new Date(new Date().getTime() - 1000 * 60 * 60))
-                .findAll();
-        list.sort("date", true);
+                .findAllSorted("date", true);
         mList.setAdapter(new PartyAdapter(getActivity(), list));
     }
 
@@ -78,7 +79,17 @@ public class PartiesSlide extends Fragment {
         if(getActivity() == null)
             return;
 
-        team.api.get(Config.PATH_PARTIES, new Api.Callback() {
+        Location location = team.location.get();
+
+        if(location == null)
+            return;
+
+        RequestParams params = new RequestParams();
+
+        params.put("latitude", location.getLatitude());
+        params.put("longitude", location.getLongitude());
+
+        team.api.get(Config.PATH_PARTIES + "?" + params, new Api.Callback() {
             @Override
             public void success(String response) {
                 team.things.putAll(Party.class, response);

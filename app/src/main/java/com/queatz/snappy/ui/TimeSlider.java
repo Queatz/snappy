@@ -137,11 +137,6 @@ public class TimeSlider extends RelativeLayout {
     }
 
     @Override
-    public boolean onInterceptTouchEvent(@NonNull MotionEvent event) {
-        return true;
-    }
-
-    @Override
     public boolean onTouchEvent(@NonNull MotionEvent event) {
         if (getParent() != null) {
             getParent().requestDisallowInterceptTouchEvent(true);
@@ -155,6 +150,5 @@ public class TimeSlider extends RelativeLayout {
             default:
                 return true;
         }
-
     }
 }

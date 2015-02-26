@@ -2,4 +2,5 @@
 <resources>
     <integer name="animation_speed">500</integer>
     <integer name="animation_speed_half">250</integer>
+    <string name="google_api_key">AIzaSyAbnJ1knRetIhAPX419x1_mAxu9r69pzAM</string>
 </resources>

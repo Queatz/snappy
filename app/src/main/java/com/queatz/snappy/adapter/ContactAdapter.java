@@ -58,7 +58,7 @@ public class ContactAdapter extends RealmBaseAdapter<Contact> {
                 .into(profile);
 
         name.setText(person.getName());
-        name.setTypeface(name.getTypeface(), contact.isUnread() ? Typeface.BOLD : Typeface.NORMAL);
+        name.setTypeface(name.getTypeface(), !contact.isSeen() ? Typeface.BOLD : Typeface.NORMAL);
 
         if(message == null)
             lastMessage.setText("");

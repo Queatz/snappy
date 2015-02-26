@@ -1,5 +1,6 @@
 package com.queatz.snappy.team;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.queatz.snappy.Config;
@@ -68,6 +69,9 @@ public class Things {
                     }
                     else if(boolean.class.isAssignableFrom(fieldType)) {
                         setter.invoke(thing, Boolean.valueOf(o.getString(fieldName)));
+                    }
+                    else if(String.class.isAssignableFrom(fieldType)) {
+                        setter.invoke(thing, Uri.decode(o.getString(fieldName)));
                     }
                     else {
                         setter.invoke(thing, o.get(fieldName));

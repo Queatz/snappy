@@ -58,8 +58,7 @@ public class PersonUptoSlide extends Fragment {
         if(mPerson != null) {
             RealmResults<Update> recentUpdates = team.realm.where(Update.class)
                     .equalTo("person.id", mPerson.getId())
-                    .findAll();
-            recentUpdates.sort("date", false);
+                    .findAllSorted("date", false);
             updateList.setAdapter(new PersonUptoAdapter(getActivity(), recentUpdates));
 
             Picasso.with(getActivity())

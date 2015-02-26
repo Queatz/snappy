@@ -6,8 +6,11 @@ package com.queatz.snappy;
 public class Config {
     public static String LOG_TAG = "SNAPPY_LOG";
     public static String API_URL = "http://queatz-snappy.appspot.com/api";
+    public static String GOOGLE_PLACES_AUTOCOMPLETE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?location=%f,%f&radius=1609&input=%s&key=%s";
+    public static String GOOGLE_PLACES_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?placeid=%s&key=%s";
     public static int maxHoursInFuture = 18;
-    public static float locationAccuracy = 50;
+    public static float locationAccuracy = 100;
+    public static float defaultMapZoom = 18;
 
     public static final String PREFERENCE_USER = "auth.user";
     public static final String PREFERENCE_AUTH_TOKEN = "auth.auth_token";
@@ -22,6 +25,7 @@ public class Config {
     public static String PARAM_ACCEPT = "accept";
     public static String PARAM_FOLLOW = "follow";
     public static String PARAM_MESSAGE = "message";
+    public static String PARAM_SEEN = "seen";
 
     public static String PATH_API = "api";
     public static String PATH_PARTIES = "parties";
