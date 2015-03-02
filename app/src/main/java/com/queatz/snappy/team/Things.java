@@ -10,10 +10,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.net.URLDecoder;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -71,7 +73,13 @@ public class Things {
                         setter.invoke(thing, Boolean.valueOf(o.getString(fieldName)));
                     }
                     else if(String.class.isAssignableFrom(fieldType)) {
-                        setter.invoke(thing, Uri.decode(o.getString(fieldName)));
+                        try {
+                            setter.invoke(thing, URLDecoder.decode(o.getString(fieldName), "UTF-8"));
+                        }
+                        catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                            setter.invoke(thing, o.get(fieldName));
+                        }
                     }
                     else {
                         setter.invoke(thing, o.get(fieldName));
