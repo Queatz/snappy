@@ -43,6 +43,10 @@ public class Location implements LocationListener {
 
         if(!LocationManager.NETWORK_PROVIDER.equals(provider)) {
             android.location.Location networkLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+            if(networkLocation == null)
+                return mLocation;
+
             if(mLocation == null || networkLocation.getAccuracy() < mLocation.getAccuracy())
                 mLocation = networkLocation;
         }
