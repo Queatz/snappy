@@ -29,6 +29,8 @@ import io.realm.RealmResults;
 public class MessagesSlide extends Fragment {
     Team team;
     SwipeRefreshLayout mRefresh;
+    View emptyView;
+    ListView mList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,9 +42,9 @@ public class MessagesSlide extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.messages, container, false);
+        emptyView = inflater.inflate(R.layout.messages_empty, null);
 
         mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
-
         mRefresh.setColorSchemeResources(R.color.red);
         mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -50,15 +52,16 @@ public class MessagesSlide extends Fragment {
                 refresh();
             }
         });
-
         mRefresh.setRefreshing(true);
 
-        final ListView list = (ListView) view.findViewById(R.id.recentList);
+        mList = (ListView) view.findViewById(R.id.recentList);
+        mList.addHeaderView(emptyView);
+        mList.setSelectionAfterHeaderView();
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                team.action.openMessages(getActivity(), ((Contact) list.getAdapter().getItem(position)).getContact());
+                team.action.openMessages(getActivity(), ((Contact) mList.getAdapter().getItem(position)).getContact());
             }
         });
 
@@ -74,6 +77,8 @@ public class MessagesSlide extends Fragment {
         team.api.get(Config.PATH_MESSAGES, new Api.Callback() {
             @Override
             public void success(String response) {
+                mRefresh.setRefreshing(false);
+
                 try {
                     JSONObject o = new JSONObject(response);
 
@@ -89,16 +94,14 @@ public class MessagesSlide extends Fragment {
                 }
 
                 if(getView() != null) {
-                    ListView list = (ListView) getView().findViewById(R.id.recentList);
-
                     RealmResults<Contact> recents = team.realm.where(Contact.class)
                             .equalTo("person.id", team.auth.getUser())
                             .findAllSorted("updated", false);
 
-                    list.setAdapter(new ContactAdapter(getActivity(), recents));
-                }
+                    mList.setAdapter(new ContactAdapter(getActivity(), recents));
 
-                mRefresh.setRefreshing(false);
+                    ((ViewGroup) emptyView).getChildAt(0).setVisibility(mList.getAdapter().getCount() < 1 ? View.VISIBLE : View.GONE);
+                }
             }
 
             @Override

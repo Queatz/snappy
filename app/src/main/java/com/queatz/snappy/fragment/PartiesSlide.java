@@ -34,6 +34,7 @@ public class PartiesSlide extends Fragment {
 
     SwipeRefreshLayout mRefresh;
     ListView mList;
+    View emptyView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,9 +46,11 @@ public class PartiesSlide extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.parties, container, false);
+        emptyView = inflater.inflate(R.layout.parties_empty, null);
 
         mList = (ListView) view.findViewById(R.id.list);
-        mList.addHeaderView(new View(getActivity()));
+        mList.addHeaderView(emptyView);
+        mList.setSelectionAfterHeaderView();
         mList.addFooterView(new View(getActivity()));
 
         mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
@@ -59,6 +62,7 @@ public class PartiesSlide extends Fragment {
             }
         });
         mRefresh.setRefreshing(true);
+
         update();
         refresh();
 
@@ -74,6 +78,8 @@ public class PartiesSlide extends Fragment {
                 .findAllSorted("date", true);
         
         mList.setAdapter(new PartyAdapter(getActivity(), list));
+
+        ((ViewGroup) emptyView).getChildAt(0).setVisibility(mList.getAdapter().getCount() < 1 ? View.VISIBLE : View.GONE);
     }
 
     public void refresh() {
@@ -93,10 +99,9 @@ public class PartiesSlide extends Fragment {
         team.api.get(Config.PATH_PARTIES + "?" + params, new Api.Callback() {
             @Override
             public void success(String response) {
+                mRefresh.setRefreshing(false);
                 team.things.putAll(Party.class, response);
                 update();
-
-                mRefresh.setRefreshing(false);
             }
 
             @Override

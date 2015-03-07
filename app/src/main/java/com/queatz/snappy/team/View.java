@@ -26,9 +26,7 @@ public class View {
         if(bundle != null)
             intent.putExtras(bundle);
 
-        //Bundle options = ActivityOptions.makeCustomAnimation(from, android.R.anim.slide_in_left, android.R.anim.fade_out).toBundle();
-
-        from.startActivity(intent/*, options*/);
+        from.startActivity(intent);
     }
 
     public void showStartView(Activity from) {

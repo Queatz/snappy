@@ -32,6 +32,8 @@
     <string name="welcome_to">Welcome to</string>
     <string name="SNAPPY">SNAPPY</string>
     <string name="enter_address">Find a location for \"%1$s\"…</string>
+    <string name="parties_empty">No parties nearby.\nHost one maybe?</string>
+    <string name="messages_empty">No messages.</string>
 
     <plurals name="years">
         <item quantity="one">%1$s year</item>
