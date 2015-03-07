@@ -131,6 +131,13 @@ public class Action {
         team.api.post(String.format(Config.PATH_JOIN_ID, join.getId()), params);
     }
 
+    public void hideJoin(@NonNull Join join) {
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_HIDE, true);
+
+        team.api.post(String.format(Config.PATH_JOIN_ID, join.getId()), params);
+    }
+
     public void hostParty(String group, String name, Date date, com.queatz.snappy.things.Location location, String details) {
         RequestParams params = new RequestParams();
 

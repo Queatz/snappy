@@ -23,6 +23,7 @@ public class Config {
     public static String PARAM_JOIN = "join";
     public static String PARAM_FULL = "full";
     public static String PARAM_ACCEPT = "accept";
+    public static String PARAM_HIDE = "hide";
     public static String PARAM_FOLLOW = "follow";
     public static String PARAM_MESSAGE = "message";
     public static String PARAM_SEEN = "seen";

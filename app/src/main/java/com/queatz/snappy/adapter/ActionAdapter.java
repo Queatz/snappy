@@ -1,7 +1,9 @@
 package com.queatz.snappy.adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +72,26 @@ public class ActionAdapter extends RealmBaseAdapter<Join> {
                 final Team team = ((MainApplication) context.getApplicationContext()).team;
 
                 team.action.acceptJoin(join);
+            }
+        });
+
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                final Team team = ((MainApplication) context.getApplicationContext()).team;
+
+                new AlertDialog.Builder(context).setItems(R.array.join_request_menu, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String items[] = context.getResources().getStringArray(R.array.join_request_menu);
+
+                        if(context.getString(R.string.hide).equals(items[which])) {
+                            team.action.hideJoin(join);
+                        }
+                    }
+                }).show();
+
+                return true;
             }
         });
 
