@@ -239,8 +239,6 @@ public class HostParty extends BaseActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        team.location.stopLocating();
     }
 
     private void recenterMapWithInput(String q) {

@@ -52,7 +52,6 @@ public class MessagesSlide extends Fragment {
                 refresh();
             }
         });
-        mRefresh.setRefreshing(true);
 
         mList = (ListView) view.findViewById(R.id.recentList);
         mList.addHeaderView(emptyView);

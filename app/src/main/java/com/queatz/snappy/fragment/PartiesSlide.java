@@ -61,12 +61,28 @@ public class PartiesSlide extends Fragment {
                 refresh();
             }
         });
-        mRefresh.setRefreshing(true);
 
         update();
         refresh();
 
+        locationIsEnabled(team.location.enabled());
+
         return view;
+    }
+
+    public void locationIsEnabled(boolean enabled) {
+        if(!enabled) {
+            emptyView.findViewById(R.id.enableLocation).setVisibility(View.VISIBLE);
+            emptyView.findViewById(R.id.enableLocation).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    team.location.turnOnLocationServices(getActivity());
+                }
+            });
+        }
+        else {
+            emptyView.findViewById(R.id.enableLocation).setVisibility(View.GONE);
+        }
     }
 
     public void update() {
@@ -79,34 +95,37 @@ public class PartiesSlide extends Fragment {
         
         mList.setAdapter(new PartyAdapter(getActivity(), list));
 
-        ((ViewGroup) emptyView).getChildAt(0).setVisibility(mList.getAdapter().getCount() < 1 ? View.VISIBLE : View.GONE);
+        emptyView.findViewById(R.id.noParties).setVisibility(mList.getAdapter().getCount() < 1 ? View.VISIBLE : View.GONE);
+        locationIsEnabled(team.location.enabled());
     }
 
     public void refresh() {
         if(getActivity() == null)
             return;
 
-        Location location = team.location.get();
+        locationIsEnabled(team.location.enabled());
 
-        if(location == null)
-            return;
-
-        RequestParams params = new RequestParams();
-
-        params.put("latitude", location.getLatitude());
-        params.put("longitude", location.getLongitude());
-
-        team.api.get(Config.PATH_PARTIES + "?" + params, new Api.Callback() {
+        team.location.get(new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
             @Override
-            public void success(String response) {
-                mRefresh.setRefreshing(false);
-                team.things.putAll(Party.class, response);
-                update();
-            }
+            public void onLocationFound(Location location) {
+                RequestParams params = new RequestParams();
 
-            @Override
-            public void fail(String response) {
-                mRefresh.setRefreshing(false);
+                params.put("latitude", location.getLatitude());
+                params.put("longitude", location.getLongitude());
+
+                team.api.get(Config.PATH_PARTIES + "?" + params, new Api.Callback() {
+                    @Override
+                    public void success(String response) {
+                        mRefresh.setRefreshing(false);
+                        team.things.putAll(Party.class, response);
+                        update();
+                    }
+
+                    @Override
+                    public void fail(String response) {
+                        mRefresh.setRefreshing(false);
+                    }
+                });
             }
         });
     }

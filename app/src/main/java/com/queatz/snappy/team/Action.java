@@ -14,6 +14,7 @@ import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.PersonList;
 import com.queatz.snappy.things.Join;
+import com.queatz.snappy.things.Message;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.ui.MiniMenu;
@@ -50,6 +51,11 @@ public class Action {
     public void sendMessage(@NonNull Person to, final String message) {
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_MESSAGE, message);
+
+//        team.realm.beginTransaction();
+//        Message m = team.realm.createObject(Message.class);
+//        m.setId("local:0527353702537089");
+//        team.realm.commitTransaction();
 
         team.api.post(String.format(Config.PATH_PEOPLE_ID, to.getId()), params);
     }
@@ -120,6 +126,13 @@ public class Action {
     public void joinParty(@NonNull Party party) {
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_JOIN, true);
+
+        team.api.post(String.format(Config.PATH_PARTY_ID, party.getId()), params);
+    }
+
+    public void cancelJoin(@NonNull Party party) {
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_CANCEL_JOIN, true);
 
         team.api.post(String.format(Config.PATH_PARTY_ID, party.getId()), params);
     }

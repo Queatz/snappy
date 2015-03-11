@@ -21,6 +21,7 @@ public class Config {
     public static String PARAM_AUTH = "auth";
     public static String PARAM_EMAIL = "email";
     public static String PARAM_JOIN = "join";
+    public static String PARAM_CANCEL_JOIN = "cancel_join";
     public static String PARAM_FULL = "full";
     public static String PARAM_ACCEPT = "accept";
     public static String PARAM_HIDE = "hide";

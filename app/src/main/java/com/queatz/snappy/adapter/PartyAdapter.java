@@ -1,7 +1,9 @@
 package com.queatz.snappy.adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -162,7 +164,16 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
                     action.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //team.action.cancelJoin(requested);
+                            new AlertDialog.Builder(context).setItems(R.array.requested_menu, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String items[] = context.getResources().getStringArray(R.array.requested_menu);
+
+                                    if(context.getString(R.string.cancel).equals(items[which])) {
+                                        team.action.cancelJoin(party);
+                                    }
+                                }
+                            }).show();
                         }
                     });
                 }

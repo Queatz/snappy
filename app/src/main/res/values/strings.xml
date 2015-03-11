@@ -35,6 +35,8 @@
     <string name="parties_empty">No parties nearby.\nHost one maybe?</string>
     <string name="messages_empty">No messages.</string>
     <string name="hide">Hide</string>
+    <string name="cancel">Cancel</string>
+    <string name="enable_location">Turn on location</string>
 
     <plurals name="years">
         <item quantity="one">%1$s year</item>

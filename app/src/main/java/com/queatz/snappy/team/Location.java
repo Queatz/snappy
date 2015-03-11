@@ -1,10 +1,13 @@
 package com.queatz.snappy.team;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Criteria;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -16,6 +19,12 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Stack;
+
 /**
  * Created by jacob on 10/19/14.
  */
@@ -23,6 +32,11 @@ public class Location implements LocationListener {
     public Team team;
     private android.location.Location mLocation;
     private LocationManager mLocationManager;
+    private final ArrayList<OnLocationFoundCallback> mCallbacks = new ArrayList<>();
+
+    public static interface OnLocationFoundCallback {
+        public void onLocationFound(android.location.Location location);
+    }
 
     public static interface AutocompleteCallback {
         public void onResult(JSONObject result);
@@ -31,6 +45,18 @@ public class Location implements LocationListener {
     public Location(Team t) {
         team = t;
         mLocationManager = (LocationManager) team.context.getSystemService(Context.LOCATION_SERVICE);
+    }
+
+    public void get(@NonNull OnLocationFoundCallback callback) {
+        android.location.Location location = get();
+
+        if(location != null) {
+            callback.onLocationFound(location);
+        }
+        else {
+            mCallbacks.add(callback);
+            locate();
+        }
     }
 
     public android.location.Location get() {
@@ -61,10 +87,25 @@ public class Location implements LocationListener {
 
         Log.w(Config.LOG_TAG, provider);
 
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+        if(provider != null && mLocationManager.isProviderEnabled(provider)) {
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
 
-        if(!LocationManager.NETWORK_PROVIDER.equals(provider))
-            mLocationManager.requestLocationUpdates(provider, 0, 0, this);
+            if(!LocationManager.NETWORK_PROVIDER.equals(provider))
+                mLocationManager.requestLocationUpdates(provider, 0, 0, this);
+        }
+    }
+
+    public boolean enabled() {
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        String provider = mLocationManager.getBestProvider(criteria, true);
+
+        return provider != null && mLocationManager.isProviderEnabled(provider) && !LocationManager.PASSIVE_PROVIDER.equals(provider);
+    }
+
+    public void turnOnLocationServices(Activity activity) {
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        activity.startActivity(intent);
     }
 
     public void stopLocating() {
@@ -127,8 +168,15 @@ public class Location implements LocationListener {
     public void onLocationChanged(android.location.Location location) {
         mLocation = location;
 
-        if(location.getAccuracy() < Config.locationAccuracy)
+        if(location.getAccuracy() < Config.locationAccuracy) {
+
+            synchronized (mCallbacks) {
+                while (!mCallbacks.isEmpty())
+                    mCallbacks.remove(0).onLocationFound(location);
+            }
+
             stopLocating();
+        }
 
         Log.d(Config.LOG_TAG, "Locating (" + location.getAccuracy() + ") : " + location.getLatitude() + ", " + location.getLongitude());
     }
