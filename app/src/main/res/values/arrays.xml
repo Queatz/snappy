@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="join_request_menu">
+        <item>@string/hide</item>
+    </string-array>
+
+    <string-array name="requested_menu">
+        <item>@string/cancel</item>
+    </string-array>
+</resources>
