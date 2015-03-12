@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -46,11 +47,10 @@ public class PartiesSlide extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.parties, container, false);
-        emptyView = inflater.inflate(R.layout.parties_empty, null);
+        emptyView = View.inflate(getActivity(), R.layout.parties_empty, null);
 
         mList = (ListView) view.findViewById(R.id.list);
         mList.addHeaderView(emptyView);
-        mList.setSelectionAfterHeaderView();
         mList.addFooterView(new View(getActivity()));
 
         mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
@@ -92,10 +92,12 @@ public class PartiesSlide extends Fragment {
         RealmResults<Party> list = team.realm().where(Party.class)
                 .greaterThan("date", new Date(new Date().getTime() - 1000 * 60 * 60))
                 .findAllSorted("date", true);
-        
+
         mList.setAdapter(new PartyAdapter(getActivity(), list));
 
-        emptyView.findViewById(R.id.noParties).setVisibility(mList.getAdapter().getCount() < 1 ? View.VISIBLE : View.GONE);
+        Log.w(Config.LOG_TAG, "parties count = " + mList.getAdapter().getCount());
+
+        emptyView.findViewById(R.id.noParties).setVisibility(mList.getAdapter().isEmpty() ? View.VISIBLE : View.GONE);
         locationIsEnabled(team.location.enabled());
     }
 

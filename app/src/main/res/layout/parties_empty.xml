@@ -18,15 +18,16 @@
 
     <TextView
         android:id="@+id/noParties"
+        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center_horizontal"
         android:textAlignment="center"
-        android:textColor="@color/gray"
+        android:textColor="@color/info"
         android:lineSpacingMultiplier="1.5"
         android:text="@string/parties_empty"
-        android:textSize="25sp"/>
+        android:textSize="18sp"/>
 
 </LinearLayout>
