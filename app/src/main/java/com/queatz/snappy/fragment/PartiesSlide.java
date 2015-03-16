@@ -89,7 +89,7 @@ public class PartiesSlide extends Fragment {
         if(getActivity() == null)
             return;
 
-        RealmResults<Party> list = team.realm().where(Party.class)
+        RealmResults<Party> list = team.realm.where(Party.class)
                 .greaterThan("date", new Date(new Date().getTime() - 1000 * 60 * 60))
                 .findAllSorted("date", true);
 

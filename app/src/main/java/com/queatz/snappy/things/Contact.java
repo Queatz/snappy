@@ -4,11 +4,14 @@ import java.util.Date;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
+import io.realm.annotations.RealmClass;
 
 /**
  * Created by jacob on 2/21/15.
  */
-public class Contact extends RealmObject implements Thing {
+
+@RealmClass
+public class Contact extends RealmObject {
     @Index
     private String id;
     private Person person;

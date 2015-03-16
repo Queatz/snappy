@@ -2,6 +2,8 @@ package com.queatz.snappy.team;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
 import java.io.Closeable;
 
@@ -39,5 +41,21 @@ public class Team implements Closeable {
 
     public Realm realm() {
         return Realm.getInstance(context);
+    }
+
+    public void db(@NonNull final Db.Call dbCall) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                dbCall.db(realm());
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                dbCall.post();
+            }
+        }.execute();
     }
 }

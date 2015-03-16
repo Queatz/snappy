@@ -2,11 +2,14 @@ package com.queatz.snappy.things;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
+import io.realm.annotations.RealmClass;
 
 /**
  * Created by jacob on 2/18/15.
  */
-public class Join extends RealmObject implements Thing {
+
+@RealmClass
+public class Join extends RealmObject {
     @Index
     private String id;
     private String status;

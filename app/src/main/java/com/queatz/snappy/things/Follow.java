@@ -2,11 +2,14 @@ package com.queatz.snappy.things;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
+import io.realm.annotations.RealmClass;
 
 /**
  * Created by jacob on 2/19/15.
  */
-public class Follow extends RealmObject implements Thing {
+
+@RealmClass
+public class Follow extends RealmObject {
     @Index
     private String id;
     private Person person;

@@ -1,10 +1,8 @@
 package com.queatz.snappy.team;
 
-import android.net.Uri;
 import android.util.Log;
 
 import com.queatz.snappy.Config;
-import com.queatz.snappy.things.Thing;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,12 +57,12 @@ public class Things {
 
                 if(setter != null) {
                     if(RealmObject.class.isAssignableFrom(fieldType)) {
-                        setter.invoke(thing, team.things.put(realm, fieldType, o.getJSONObject(fieldName)));
+                        setter.invoke(thing, put(realm, fieldType, o.getJSONObject(fieldName)));
                     }
                     else if(RealmList.class.isAssignableFrom(fieldType)) {
                         Class t = (Class) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
 
-                        setter.invoke(thing, team.things.putAll(realm, t, o.getJSONArray(fieldName)));
+                        setter.invoke(thing, putAll(realm, t, o.getJSONArray(fieldName)));
                     }
                     else if(Date.class.isAssignableFrom(fieldType)) {
                         setter.invoke(thing, new Date(o.getString(fieldName)));
@@ -95,18 +93,22 @@ public class Things {
         }
     }
 
-    public <T extends RealmObject & Thing> T get() {
+    public <T extends RealmObject> T get() {
         return null;
     }
 
-    public <T extends RealmObject & Thing> T get(Class<T> clazz, String id) {
+    public <T extends RealmObject> T get(Class<T> clazz, String id) {
         return team.realm.where(clazz).equalTo("id", id).findFirst();
     }
 
-    public <T extends RealmObject & Thing> T put(Realm realm, Class<T> clazz, JSONObject jsonObject) {
-        String id;
+    public <T extends RealmObject> T put(Realm realm, Class<T> clazz, JSONObject jsonObject) {
+        String localId = null, id;
 
         try {
+            if(jsonObject.has("localId")) {
+                localId = jsonObject.getString("localId");
+            }
+
             id = jsonObject.getString("id");
         }
         catch (JSONException e) {
@@ -115,7 +117,13 @@ public class Things {
             return null;
         }
 
-        T o = realm.where(clazz).equalTo("id", id).findFirst();
+        T o;
+
+        o = realm.where(clazz).equalTo("id", id).findFirst();
+
+        if(o == null && localId != null) {
+            o = realm.where(clazz).equalTo("id", localId).findFirst();
+        }
 
         if(o == null)
             o = realm.createObject(clazz);
@@ -125,7 +133,7 @@ public class Things {
         return o;
     }
 
-    public <T extends RealmObject & Thing> T put(Class<T> clazz, JSONObject jsonObject) {
+    public <T extends RealmObject> T put(Class<T> clazz, JSONObject jsonObject) {
         team.realm.beginTransaction();
         T o = put(team.realm, clazz, jsonObject);
         team.realm.commitTransaction();
@@ -133,17 +141,20 @@ public class Things {
         return o;
     }
 
-    public <T extends RealmObject & Thing> T put(Class<T> clazz, String jsonObject) {
-        try {
+    public <T extends RealmObject> T put(Class<T> clazz, String jsonObject) {
+        if(jsonObject != null) try {
             return put(clazz, new JSONObject(jsonObject));
         }
         catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
+        else {
+            return null;
+        }
     }
 
-    public <T extends RealmObject & Thing> RealmList<T> putAll(Class<T> clazz, JSONArray jsonArray) {
+    public <T extends RealmObject> RealmList<T> putAll(Class<T> clazz, JSONArray jsonArray) {
         team.realm.beginTransaction();
         RealmList<T> o = putAll(team.realm, clazz, jsonArray);
         team.realm.commitTransaction();
@@ -151,7 +162,7 @@ public class Things {
         return o;
     }
 
-    public <T extends RealmObject & Thing> RealmList<T> putAll(Realm realm, Class<T> clazz, JSONArray jsonArray) {
+    public <T extends RealmObject> RealmList<T> putAll(Realm realm, Class<T> clazz, JSONArray jsonArray) {
         try {
             RealmList<T> results = new RealmList<>();
 
@@ -168,11 +179,14 @@ public class Things {
         return null;
     }
 
-    public <T extends RealmObject & Thing> RealmList<T> putAll(Class<T> clazz, String jsonArray) {
-        try {
+    public <T extends RealmObject> RealmList<T> putAll(Class<T> clazz, String jsonArray) {
+        if(jsonArray != null) try {
             return putAll(clazz, new JSONArray(jsonArray));
         } catch (JSONException e) {
             e.printStackTrace();
+            return null;
+        }
+        else {
             return null;
         }
     }

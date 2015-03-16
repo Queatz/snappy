@@ -13,6 +13,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
+import java.util.UUID;
 
 /**
  * Created by jacob on 10/31/14.
@@ -23,6 +24,10 @@ public class Util {
 
     public static void setupWithContext(Context ctx) {
         context = ctx;
+    }
+
+    public static String createLocalId() {
+        return "local:" + UUID.randomUUID().toString();
     }
 
     public static float px(float dp) {

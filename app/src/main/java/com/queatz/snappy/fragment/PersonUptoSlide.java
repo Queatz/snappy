@@ -22,6 +22,7 @@ import com.queatz.snappy.things.Update;
 import com.queatz.snappy.ui.TextView;
 import com.squareup.picasso.Picasso;
 
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 /**
@@ -30,6 +31,8 @@ import io.realm.RealmResults;
 public class PersonUptoSlide extends Fragment {
     Team team;
     com.queatz.snappy.things.Person mPerson;
+    View personAbout;
+    RealmChangeListener mChangeListener = null;
 
     public void setPerson(com.queatz.snappy.things.Person person) {
         mPerson = person;
@@ -41,6 +44,24 @@ public class PersonUptoSlide extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         team = ((MainApplication) getActivity().getApplication()).team;
+
+        mChangeListener = new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                update();
+            }
+        };
+
+        team.realm.addChangeListener(mChangeListener);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if(mChangeListener != null) {
+            team.realm.removeChangeListener(mChangeListener);
+        }
     }
 
     @Override
@@ -49,18 +70,65 @@ public class PersonUptoSlide extends Fragment {
 
         final ListView updateList = ((ListView) view.findViewById(R.id.updateList));
 
-/* New Party */
-
-        final View personAbout = View.inflate(getActivity(), R.layout.person_upto_about, null);
-
-        ImageView profile = (ImageView) personAbout.findViewById(R.id.profile);
+        personAbout = View.inflate(getActivity(), R.layout.person_upto_about, null);
 
         if(mPerson != null) {
             RealmResults<Update> recentUpdates = team.realm.where(Update.class)
                     .equalTo("person.id", mPerson.getId())
                     .findAllSorted("date", false);
             updateList.setAdapter(new PersonUptoAdapter(getActivity(), recentUpdates));
+        }
 
+        update();
+
+        updateList.addHeaderView(personAbout);
+        updateList.addFooterView(new View(getActivity()));
+
+        updateList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //team.action.openUpdate((Update) updateList.getAdapter().getItem(position));
+            }
+        });
+
+        mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
+        mRefresh.setColorSchemeResources(R.color.red);
+        mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+        mRefresh.setRefreshing(true);
+        refresh();
+
+        return view;
+    }
+
+    public void refresh() {
+        if(getActivity() == null || mPerson == null)
+            return;
+
+        team.api.get(String.format(Config.PATH_PEOPLE_ID, mPerson.getId()), new Api.Callback() {
+            @Override
+            public void success(String response) {
+                team.things.put(com.queatz.snappy.things.Person.class, response);
+                update();
+
+                mRefresh.setRefreshing(false);
+            }
+
+            @Override
+            public void fail(String response) {
+                mRefresh.setRefreshing(false);
+            }
+        });
+    }
+
+    public void update() {
+        ImageView profile = (ImageView) personAbout.findViewById(R.id.profile);
+
+        if(mPerson != null) {
             Picasso.with(getActivity())
                     .load(mPerson.getImageUrlForSize((int) Util.px(512)))
                     .placeholder(R.color.spacer)
@@ -113,52 +181,5 @@ public class PersonUptoSlide extends Fragment {
                 });
             }
         }
-
-        updateList.addHeaderView(personAbout);
-        updateList.addFooterView(new View(getActivity()));
-
-        updateList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //team.action.openUpdate((Update) updateList.getAdapter().getItem(position));
-            }
-        });
-
-        mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
-        mRefresh.setColorSchemeResources(R.color.red);
-        mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh();
-            }
-        });
-        mRefresh.setRefreshing(true);
-        refresh();
-
-        return view;
-    }
-
-    public void refresh() {
-        if(getActivity() == null || mPerson == null)
-            return;
-
-        team.api.get(String.format(Config.PATH_PEOPLE_ID, mPerson.getId()), new Api.Callback() {
-            @Override
-            public void success(String response) {
-                team.things.put(com.queatz.snappy.things.Person.class, response);
-                update();
-
-                mRefresh.setRefreshing(false);
-            }
-
-            @Override
-            public void fail(String response) {
-                mRefresh.setRefreshing(false);
-            }
-        });
-    }
-
-    public void update() {
-
     }
 }

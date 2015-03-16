@@ -4,11 +4,14 @@ import java.util.Date;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
+import io.realm.annotations.RealmClass;
 
 /**
  * Created by jacob on 2/14/15.
  */
-public class Update extends RealmObject implements Thing {
+
+@RealmClass
+public class Update extends RealmObject {
     @Index
     private String id;
     private String action;

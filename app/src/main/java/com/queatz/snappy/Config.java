@@ -28,6 +28,7 @@ public class Config {
     public static String PARAM_FOLLOW = "follow";
     public static String PARAM_MESSAGE = "message";
     public static String PARAM_SEEN = "seen";
+    public static String PARAM_LOCAL_ID = "local_id";
 
     public static String PATH_API = "api";
     public static String PATH_PARTIES = "parties";

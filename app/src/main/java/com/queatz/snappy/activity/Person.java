@@ -82,6 +82,7 @@ public class Person extends BaseActivity {
             public void onSlideChange(int slide) {
                 if(mPerson != null)
                     team.action.setSeen(mPerson);
+
                 mActionBar.selectPage(slide);
             }
         });

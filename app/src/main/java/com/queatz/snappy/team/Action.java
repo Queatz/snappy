@@ -8,11 +8,15 @@ import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
+import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.PersonList;
+import com.queatz.snappy.things.Contact;
+import com.queatz.snappy.things.Follow;
 import com.queatz.snappy.things.Join;
 import com.queatz.snappy.things.Message;
 import com.queatz.snappy.things.Party;
@@ -21,6 +25,9 @@ import com.queatz.snappy.ui.MiniMenu;
 
 import java.io.FileNotFoundException;
 import java.util.Date;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by jacob on 11/23/14.
@@ -33,14 +40,28 @@ public class Action {
         team = t;
     }
 
-    public void setSeen(Person person) {
+    public void setSeen(@NonNull final Person person) {
+        RealmResults<Contact> contacts = team.realm.where(Contact.class)
+                .equalTo("person.id", team.auth.getUser())
+                .equalTo("contact.id", person.getId())
+                .findAll();
+
+        team.realm.beginTransaction();
+
+        for(int i = 0; i < contacts.size(); i++) {
+            Contact contact = contacts.get(i);
+            contact.setSeen(true);
+        }
+
+        team.realm.commitTransaction();
+
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_SEEN, true);
 
         team.api.post(String.format(Config.PATH_PEOPLE_ID, person.getId()), params);
     }
 
-    public void openMessages(Activity from, @NonNull Person person) {
+    public void openMessages(Activity from, @NonNull final Person person) {
         Bundle bundle = new Bundle();
         bundle.putString("person", person.getId());
         bundle.putString("show", "messages");
@@ -48,19 +69,37 @@ public class Action {
         team.view.show(from, com.queatz.snappy.activity.Person.class, bundle);
     }
 
-    public void sendMessage(@NonNull Person to, final String message) {
+    public void sendMessage(@NonNull final Person to, @NonNull final String message) {
+        final String localId = Util.createLocalId();
+
+        team.realm.beginTransaction();
+        Message o = team.realm.createObject(Message.class);
+        o.setId(localId);
+        o.setFrom(team.auth.me());
+        o.setTo(to);
+        o.setMessage(message);
+        o.setDate(new Date());
+        team.realm.commitTransaction();
+
         RequestParams params = new RequestParams();
+        params.put(Config.PARAM_LOCAL_ID, localId);
         params.put(Config.PARAM_MESSAGE, message);
 
-//        team.realm.beginTransaction();
-//        Message m = team.realm.createObject(Message.class);
-//        m.setId("local:0527353702537089");
-//        team.realm.commitTransaction();
+        team.api.post(String.format(Config.PATH_PEOPLE_ID, to.getId()), params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                team.things.put(Message.class, response);
+            }
 
-        team.api.post(String.format(Config.PATH_PEOPLE_ID, to.getId()), params);
+            @Override
+            public void fail(String response) {
+                // Reverse local modifications after retrying
+                Toast.makeText(team.context, "Message not sent", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    public void showFollowers(Activity from, @NonNull Person person) {
+    public void showFollowers(Activity from, @NonNull final Person person) {
         Bundle bundle = new Bundle();
         bundle.putString("person", person.getId());
         bundle.putBoolean("showFollowing", false);
@@ -68,7 +107,7 @@ public class Action {
         team.view.show(from, PersonList.class, bundle);
     }
 
-    public void showFollowing(Activity from, @NonNull Person person) {
+    public void showFollowing(Activity from, @NonNull final Person person) {
         Bundle bundle = new Bundle();
         bundle.putString("person", person.getId());
         bundle.putBoolean("showFollowing", true);
@@ -76,14 +115,35 @@ public class Action {
         team.view.show(from, PersonList.class, bundle);
     }
 
-    public void followPerson(@NonNull Person person) {
+    public void followPerson(@NonNull final Person person) {
+        final String localId = Util.createLocalId();
+
+        team.realm.beginTransaction();
+        Follow o = team.realm.createObject(Follow.class);
+        o.setId(localId);
+        o.setPerson(team.auth.me());
+        o.setFollowing(person);
+        team.realm.commitTransaction();
+
         RequestParams params = new RequestParams();
+        params.put(Config.PARAM_LOCAL_ID, localId);
         params.put(Config.PARAM_FOLLOW, true);
 
-        team.api.post(String.format(Config.PATH_PEOPLE_ID, person.getId()), params);
+        team.api.post(String.format(Config.PATH_PEOPLE_ID, person.getId()), params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                team.things.put(Follow.class, response);
+            }
+
+            @Override
+            public void fail(String response) {
+                // Reverse local modifications after retrying
+                Toast.makeText(team.context, "Follow failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    public void openDate(Activity from, Party party) {
+    public void openDate(Activity from, @NonNull final Party party) {
         if(party == null)
             return;
 
@@ -106,7 +166,7 @@ public class Action {
         from.startActivity(intent);
     }
 
-    public void openProfile(Activity from, @NonNull Person person) {
+    public void openProfile(Activity from, @NonNull final Person person) {
         Bundle bundle = new Bundle();
         bundle.putString("person", person.getId());
         team.view.show(from, com.queatz.snappy.activity.Person.class, bundle);
@@ -116,42 +176,132 @@ public class Action {
         ((MiniMenu) in.findViewById(R.id.miniMenu)).show();
     }
 
-    public void markPartyFull(@NonNull Party party) {
+    public void markPartyFull(@NonNull final Party party) {
+        team.realm.beginTransaction();
+        party.setFull(true);
+        team.realm.commitTransaction();
+
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_FULL, true);
 
-        team.api.post(String.format(Config.PATH_PARTY_ID, party.getId()), params);
+        team.api.post(String.format(Config.PATH_PARTY_ID, party.getId()), params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+            }
+
+            @Override
+            public void fail(String response) {
+                // Reverse local modifications after retrying
+                Toast.makeText(team.context, "Mark full failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    public void joinParty(@NonNull Party party) {
+    public void joinParty(@NonNull final Party party) {
+        final String localId = Util.createLocalId();
+
+        team.realm.beginTransaction();
+        Join o = team.realm.createObject(Join.class);
+        o.setId(localId);
+        o.setPerson(team.auth.me());
+        o.setParty(party);
+        o.setStatus(Config.JOIN_STATUS_REQUESTED);
+        team.realm.commitTransaction();
+
         RequestParams params = new RequestParams();
+        params.put(Config.PARAM_LOCAL_ID, localId);
         params.put(Config.PARAM_JOIN, true);
 
-        team.api.post(String.format(Config.PATH_PARTY_ID, party.getId()), params);
+        team.api.post(String.format(Config.PATH_PARTY_ID, party.getId()), params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                team.things.put(Join.class, response);
+            }
+
+            @Override
+            public void fail(String response) {
+                // Reverse local modifications after retrying
+                Toast.makeText(team.context, "Join failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    public void cancelJoin(@NonNull Party party) {
+    public void cancelJoin(@NonNull final Party party) {
+        RealmResults<Join> joins = team.realm.where(Join.class)
+                .equalTo("person.id", team.auth.getUser())
+                .equalTo("party.id", party.getId())
+                .findAll();
+
+        team.realm.beginTransaction();
+
+        for(int i = 0; i < joins.size(); i++) {
+            Join join = joins.get(i);
+            join.removeFromRealm();
+        }
+
+        team.realm.commitTransaction();
+
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_CANCEL_JOIN, true);
 
-        team.api.post(String.format(Config.PATH_PARTY_ID, party.getId()), params);
+        team.api.post(String.format(Config.PATH_PARTY_ID, party.getId()), params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+            }
+
+            @Override
+            public void fail(String response) {
+                // Reverse local modifications after retrying
+                Toast.makeText(team.context, "Join cancel failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    public void acceptJoin(@NonNull Join join) {
+    public void acceptJoin(@NonNull final Join join) {
+        team.realm.beginTransaction();
+        join.setStatus(Config.JOIN_STATUS_IN);
+        team.realm.commitTransaction();
+
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_ACCEPT, true);
 
-        team.api.post(String.format(Config.PATH_JOIN_ID, join.getId()), params);
+        team.api.post(String.format(Config.PATH_JOIN_ID, join.getId()), params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+            }
+
+            @Override
+            public void fail(String response) {
+                // Reverse local modifications after retrying
+                Toast.makeText(team.context, "Accept failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    public void hideJoin(@NonNull Join join) {
+    public void hideJoin(@NonNull final Join join) {
+        team.realm.beginTransaction();
+        join.setStatus(Config.JOIN_STATUS_OUT);
+        team.realm.commitTransaction();
+
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_HIDE, true);
 
-        team.api.post(String.format(Config.PATH_JOIN_ID, join.getId()), params);
+        team.api.post(String.format(Config.PATH_JOIN_ID, join.getId()), params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+            }
+
+            @Override
+            public void fail(String response) {
+                // Reverse local modifications after retrying
+                Toast.makeText(team.context, "Hide join failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void hostParty(String group, String name, Date date, com.queatz.snappy.things.Location location, String details) {
+        //local
+
         RequestParams params = new RequestParams();
 
         if(group != null && !group.isEmpty())
@@ -162,7 +312,18 @@ public class Action {
         params.put("location", location.getId() == null ? location.getJson() : location.getId());
         params.put("details", details);
 
-        team.api.post(Config.PATH_PARTIES, params);
+        team.api.post(Config.PATH_PARTIES, params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                team.things.put(Party.class, response);
+            }
+
+            @Override
+            public void fail(String response) {
+                // Reverse local modifications after retrying
+                Toast.makeText(team.context, "Host party failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public boolean uploadUpto(Uri image, String location) { // TODO this will turn into post photo to party
