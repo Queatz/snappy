@@ -7,10 +7,13 @@ import com.luckycatlabs.sunrisesunset.Zenith;
 import com.luckycatlabs.sunrisesunset.calculator.SolarEventCalculator;
 import com.queatz.snappy.team.Team;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -21,6 +24,25 @@ import java.util.UUID;
 public class Util {
     public static Context context;
     public static Team team;
+
+    static DateFormat formatter = DateFormat.getDateTimeInstance(
+            DateFormat.LONG,
+            DateFormat.LONG,
+            Locale.US);
+
+    public static Date stringToDate(String date) {
+        try {
+            return formatter.parse(date);
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String dateToString(Date date) {
+        return formatter.format(date);
+    }
 
     public static void setupWithContext(Context ctx) {
         context = ctx;

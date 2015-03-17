@@ -79,6 +79,29 @@ public class Action {
         o.setTo(to);
         o.setMessage(message);
         o.setDate(new Date());
+
+        RealmResults<Contact> contacts = team.realm.where(Contact.class)
+                .beginGroup()
+                    .equalTo("person.id", team.auth.getUser())
+                    .equalTo("contact.id", to.getId())
+                .endGroup()
+                .or()
+                .beginGroup()
+                    .equalTo("contact.id", team.auth.getUser())
+                    .equalTo("person.id", to.getId())
+                .endGroup()
+                .findAll();
+
+        for(int i = 0; i < contacts.size(); i++) {
+            Contact contact = contacts.get(i);
+            contact.setLast(o);
+
+            if(!team.auth.getUser().equals(contact.getPerson().getId())) {
+                contact.setSeen(false);
+            }
+        }
+
+
         team.realm.commitTransaction();
 
         RequestParams params = new RequestParams();
@@ -308,7 +331,7 @@ public class Action {
             params.put("id", group);
 
         params.put("name", name);
-        params.put("date", date);
+        params.put("date", Util.dateToString(date));
         params.put("location", location.getId() == null ? location.getJson() : location.getId());
         params.put("details", details);
 

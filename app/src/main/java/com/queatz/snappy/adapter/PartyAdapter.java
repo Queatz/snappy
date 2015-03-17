@@ -156,8 +156,9 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
                     .equalTo("party.id", party.getId())
                     .equalTo("person.id", team.auth.getUser()).findFirst();
 
-            if (requested != null) {
-                if(Config.JOIN_STATUS_REQUESTED.equals(requested.getStatus())) {
+            if (requested != null || party.isFull()) {
+                if(requested != null && (Config.JOIN_STATUS_REQUESTED.equals(requested.getStatus()) ||
+                        Config.JOIN_STATUS_OUT.equals(requested.getStatus()))) {
                     action.setVisibility(View.VISIBLE);
 
                     action.setText(context.getText(R.string.requested));
