@@ -5,6 +5,7 @@ import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Auth;
 import com.queatz.snappy.service.Config;
 import com.queatz.snappy.service.PrintingError;
+import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 
@@ -29,12 +30,14 @@ public class SnappyServlet extends HttpServlet {
     public Auth auth;
     public Api api;
     public Things things;
+    public Push push;
 
     public SnappyServlet() {
         search = new Search(this);
         auth = new Auth(this);
         api = new Api(this);
         things = new Things(this);
+        push = new Push(this);
     }
 
     @Override
