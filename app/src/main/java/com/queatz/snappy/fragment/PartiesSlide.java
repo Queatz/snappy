@@ -89,11 +89,13 @@ public class PartiesSlide extends Fragment {
         if(getActivity() == null)
             return;
 
-        RealmResults<Party> list = team.realm.where(Party.class)
-                .greaterThan("date", new Date(new Date().getTime() - 1000 * 60 * 60))
-                .findAllSorted("date", true);
+        if(mList.getAdapter() == null) {
+            RealmResults<Party> list = team.realm.where(Party.class)
+                    .greaterThan("date", new Date(new Date().getTime() - 1000 * 60 * 60))
+                    .findAllSorted("date", true);
 
-        mList.setAdapter(new PartyAdapter(getActivity(), list));
+            mList.setAdapter(new PartyAdapter(getActivity(), list));
+        }
 
         Log.w(Config.LOG_TAG, "parties count = " + mList.getAdapter().getCount());
 

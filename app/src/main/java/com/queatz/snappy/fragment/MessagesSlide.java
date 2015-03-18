@@ -93,11 +93,13 @@ public class MessagesSlide extends Fragment {
                 }
 
                 if(getView() != null && team.auth.getUser() != null) {
-                    RealmResults<Contact> recents = team.realm.where(Contact.class)
-                            .equalTo("person.id", team.auth.getUser())
-                            .findAllSorted("updated", false);
+                    if(mList.getAdapter() == null) {
+                        RealmResults<Contact> recents = team.realm.where(Contact.class)
+                                .equalTo("person.id", team.auth.getUser())
+                                .findAllSorted("updated", false);
 
-                    mList.setAdapter(new ContactAdapter(getActivity(), recents));
+                        mList.setAdapter(new ContactAdapter(getActivity(), recents));
+                    }
 
                     ((ViewGroup) emptyView).getChildAt(0).setVisibility(mList.getAdapter().getCount() < 1 ? View.VISIBLE : View.GONE);
                 }
