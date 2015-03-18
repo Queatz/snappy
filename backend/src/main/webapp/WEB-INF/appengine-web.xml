@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+    <application>queatz-snappy</application>
+    <version>${appengine.app.version}</version>
+    <threadsafe>true</threadsafe>
+
+    <system-properties>
+        <property name="java.util.logging.config.file" value="WEB-INF/logging.properties" />
+
+        <property name="gcm.api.key" value="AIzaSyAbnJ1knRetIhAPX419x1_mAxu9r69pzAM" />
+    </system-properties>
+</appengine-web-app>

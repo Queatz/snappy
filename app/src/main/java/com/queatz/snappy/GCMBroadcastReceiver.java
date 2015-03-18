@@ -11,15 +11,11 @@ import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
-public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
-
+public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("SNAPPY", "" + intent);
-        Log.d("SNAPPY", "" + intent.getExtras());
-
         ComponentName comp = new ComponentName(context.getPackageName(),
-                GCMIntentService.class.getName());
+                GcmIntentService.class.getName());
         startWakefulService(context, (intent.setComponent(comp)));
         setResultCode(Activity.RESULT_OK);
     }

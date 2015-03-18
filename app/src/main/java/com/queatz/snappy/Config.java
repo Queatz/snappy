@@ -5,7 +5,8 @@ package com.queatz.snappy;
  */
 public class Config {
     public static String LOG_TAG = "SNAPPY_LOG";
-    public static String API_URL = "http://queatz-snappy.appspot.com/api";
+    public static String API_URL = "http://queatz-snappy.appspot.com/api/";
+    public static String BACKEND_URL = "https://queatz-snappy.appspot.com/_ah/api/";
     public static String GOOGLE_PLACES_AUTOCOMPLETE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?location=%f,%f&radius=1609&input=%s&key=%s";
     public static String GOOGLE_PLACES_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?placeid=%s&key=%s";
     public static int maxHoursInFuture = 18;

@@ -81,7 +81,7 @@ public class Api {
     }
 
     private String makeUrl(String url, RequestParams params) {
-        return Config.API_URL + "/" + url + "?" + auth(params).toString();
+        return Config.API_URL + url + "?" + auth(params).toString();
     }
 
     public void get(String url) {
@@ -133,7 +133,7 @@ public class Api {
     }
 
     public void get(String url, RequestParams params, Callback callback) {
-        mClient.get(Config.API_URL + "/" + url, auth(params), new ApiCallback(this, callback));
+        mClient.get(Config.API_URL + url, auth(params), new ApiCallback(this, callback));
     }
 
     public void post(String url, RequestParams params, Callback callback) {

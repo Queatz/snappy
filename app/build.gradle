@@ -53,4 +53,5 @@ dependencies {
     compile 'io.realm:realm-android:0.79.1'
     compile 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
     compile 'com.squareup.picasso:picasso:2.5.0'
+    compile project(path: ':backend', configuration: 'android-endpoints')
 }
