@@ -2,6 +2,7 @@ package com.queatz.snappy.activity;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -10,16 +11,22 @@ import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -52,7 +59,7 @@ public class HostParty extends BaseActivity {
     private String mGroup;
     private Date mDate;
     private View mNewParty;
-    private MapFragment mLocationMap;
+    private MapView mLocationMap;
     private com.queatz.snappy.things.Location mLocation;
     private ListView mSuggestedLocationsList;
     private Marker mMapMarker;
@@ -69,6 +76,10 @@ public class HostParty extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(mLocationMap != null) {
+            mLocationMap.onCreate(savedInstanceState);
+        }
 
         team = ((MainApplication) getApplication()).team;
         mGroup = null;
@@ -152,7 +163,9 @@ public class HostParty extends BaseActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 lazyLoadMap();
-                locationMapLayout.setVisibility(hasFocus ? View.VISIBLE : View.GONE);
+
+                if(locationMapLayout.getVisibility() == View.GONE && hasFocus)
+                    locationMapLayout.setVisibility(View.VISIBLE);
             }
         });
 
@@ -238,7 +251,47 @@ public class HostParty extends BaseActivity {
 
     @Override
     public void onDestroy() {
+        if(mLocationMap != null) {
+            mLocationMap.onDestroy();
+        }
+
         super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(mLocationMap != null) {
+            mLocationMap.onResume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        if(mLocationMap != null) {
+            mLocationMap.onPause();
+        }
+
+        super.onPause();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if(mLocationMap != null) {
+            mLocationMap.onSaveInstanceState(outState);
+        }
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onLowMemory() {
+        if(mLocationMap != null) {
+            mLocationMap.onLowMemory();
+        }
+
+        super.onLowMemory();
     }
 
     private void recenterMapWithInput(String q) {
@@ -301,18 +354,24 @@ public class HostParty extends BaseActivity {
         if(mLocationMap != null)
             return;
 
-        mLocationMap = new MapFragment();
+        ViewGroup locationMapLayout = (ViewGroup) mNewParty.findViewById(R.id.locationMapLayout);
+        MapsInitializer.initialize(this);
 
-        getFragmentManager().beginTransaction()
-                .add(R.id.locationMapLayout, mLocationMap)
-                .commit();
+        GoogleMapOptions googleMapOptions = new GoogleMapOptions();
+        googleMapOptions.mapType(GoogleMap.MAP_TYPE_NORMAL);
 
-        mNewParty.post(new Runnable() {
-            @Override
-            public void run() {
-                mNewParty.findViewById(R.id.locationMapMarker).bringToFront();
-            }
-        });
+        Location l = team.location.get();
+
+        if(l != null) {
+            LatLng latLng = new LatLng(l.getLatitude(), l.getLongitude());
+
+            googleMapOptions.camera(new CameraPosition(latLng, Config.defaultMapZoom, 0, 0));
+        }
+
+        mLocationMap = new MapView(this, googleMapOptions);
+        mLocationMap.onCreate(null);
+        mLocationMap.onResume();
+        locationMapLayout.addView(mLocationMap, 0);
 
         mLocationMap.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -349,6 +408,7 @@ public class HostParty extends BaseActivity {
         final EditText locationAddress = (EditText) mNewParty.findViewById(R.id.locationAddress);
         locationAddress.setHint(String.format(getString(R.string.enter_address), q));
         locationAddress.setVisibility(q.trim().isEmpty() ? View.GONE : View.VISIBLE);
+        mNewParty.findViewById(R.id.locationMapLayout).setVisibility(View.GONE);
 
     }
 
