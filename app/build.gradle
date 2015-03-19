@@ -14,14 +14,14 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file("/Users/jacob/Documents/AndroidStudioProjects/android.jks")
+            storeFile file("android.jks")
             storePassword "skunks2cute"
             keyAlias "android"
             keyPassword "android"
         }
 
         release {
-            storeFile file("/Users/jacob/Documents/AndroidStudioProjects/android.jks")
+            storeFile file("android.jks")
             storePassword "skunks2cute"
             keyAlias "android"
             keyPassword "android"
