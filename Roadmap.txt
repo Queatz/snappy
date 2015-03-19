@@ -1,0 +1,27 @@
+Notifications
+
+•• Message (singleTop)
+Amanda
+Hey Jacob
+ -> Amanda's messages tab
+
+2 messages
+Amanda, James
+ -> Messages tab
+
+•• Join request (multiple)
+Amanda
+[Accept]
+ -> Main
+
+•• Join accepted (multiple)
+Party
+ -> Main
+
+•• Follow (singleTop)
+Amanda
+ -> Amanda's profile
+
+2 people followed you
+Amanda, James
+ -> Your followers
