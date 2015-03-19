@@ -65,6 +65,8 @@ public class Messages implements Api.Path {
 
                 resp.getWriter().write(r.toString());
 
+                api.snappy.push.send(user, user, "Amanda is awesome");
+
                 break;
 
             case POST:

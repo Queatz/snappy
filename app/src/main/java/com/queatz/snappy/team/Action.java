@@ -26,7 +26,6 @@ import com.queatz.snappy.ui.MiniMenu;
 import java.io.FileNotFoundException;
 import java.util.Date;
 
-import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**

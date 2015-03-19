@@ -16,8 +16,6 @@ public class MainApplication extends Application {
         Global.setupWithContext(this);
         Util.setupWithContext(this);
 
-        new GcmRegistrationAsyncTask(this).execute();
-
         team = new Team(this);
         Util.team = team;
     }

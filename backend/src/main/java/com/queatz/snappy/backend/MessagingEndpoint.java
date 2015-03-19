@@ -70,7 +70,7 @@ public class MessagingEndpoint {
                 }
             } else {
                 String error = result.getErrorCodeName();
-                if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
+                if (error.equals(Constants.ERROR_NOT_REGISTERED) || error.equals(Constants.ERROR_MISMATCH_SENDER_ID)) {
                     log.warning("Registration Id " + record.getRegId() + " no longer registered with GCM, removing from datastore");
                     // if the device is no longer registered with Gcm, remove it from the datastore
                     ofy().delete().entity(record).now();

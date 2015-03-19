@@ -122,9 +122,8 @@ public class Auth {
     }
 
     public String fetchUserFromAuth(String email, String token) throws PrintingError {
-
         if(token == null) {
-            throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null auth");
+            return null;
         }
 
         JSONObject userJson = new JSONObject();

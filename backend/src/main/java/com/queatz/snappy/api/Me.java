@@ -3,6 +3,7 @@ package com.queatz.snappy.api;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.service.Api;
+import com.queatz.snappy.service.Config;
 import com.queatz.snappy.service.PrintingError;
 import com.queatz.snappy.service.Search;
 
@@ -41,6 +42,27 @@ public class Me implements Api.Path {
 
                 break;
             case POST:
+                if(path.size() != 1)
+                    throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "me - bad path");
+
+                if(Config.PATH_REGISTER_DEVICE.equals(path.get(0))) {
+                    String deviceId = req.getParameter(Config.PARAM_DEVICE_ID);
+
+                    if(deviceId != null && deviceId.length() > 0) {
+                        api.snappy.push.register(user, deviceId);
+                    }
+                }
+                else if(Config.PATH_UNREGISTER_DEVICE.equals(path.get(0))) {
+                    String deviceId = req.getParameter(Config.PARAM_DEVICE_ID);
+
+                    if(deviceId != null && deviceId.length() > 0) {
+                        api.snappy.push.unregister(user, deviceId);
+                    }
+                }
+                else {
+                    throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "me - bad path");
+                }
+
                 /*if(path.size() == 1) {
                     if(Config.PATH_UPTO.equals(path.get(0))) {
                         //TODO create new upto in cloud storage
@@ -91,6 +113,7 @@ public class Me implements Api.Path {
                 else {
                     throw new Config.PrintingError(Config.Error.NOT_AUTHENTICATED, "me - bad method");
                 }*/
+                break;
             case DELETE:
 
 
