@@ -5,6 +5,12 @@ public class Config {
 
     public static final int SEARCH_DISTANCE = 1609;
 
+    public static final String PUSH_ACTION_JOIN_REQUEST = "join_requested";
+    public static final String PUSH_ACTION_JOIN_ACCEPTED = "join_accepted";
+    public static final String PUSH_ACTION_HOSTING_REMINDER = "hosting_reminder";
+    public static final String PUSH_ACTION_FOLLOW = "follow";
+    public static final String PUSH_ACTION_MESSAGE = "message";
+
     public static final String JOIN_STATUS_REQUESTED = "requested";
     public static final String JOIN_STATUS_IN = "in";
     public static final String JOIN_STATUS_OUT = "out";

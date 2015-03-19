@@ -6,6 +6,7 @@ import com.google.appengine.api.search.PutException;
 import com.google.appengine.api.search.PutResponse;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
+import com.queatz.snappy.service.Config;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 
@@ -22,6 +23,26 @@ public class Follow implements Thing {
 
     public Follow(Things t) {
         things = t;
+    }
+
+    public JSONObject makePush(Document follow) {
+        if(follow == null)
+            return null;
+
+        Document person = things.snappy.search.get(Search.Type.PERSON, follow.getOnlyField("person").getAtom());
+
+        JSONObject push = new JSONObject();
+
+        try {
+            push.put("action", Config.PUSH_ACTION_FOLLOW);
+            push.put("person", things.person.toPushJson(person));
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return push;
     }
 
     public JSONObject toJson(Document d, String user, boolean shallow) {

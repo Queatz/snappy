@@ -58,13 +58,17 @@ public class Join implements Api.Path {
 
                         if(party != null) {
                             if(user.equals(party.getOnlyField("host").getAtom())) {
-                                api.snappy.things.join.setStatus(join, Config.JOIN_STATUS_IN);
+                                join = api.snappy.things.join.setStatus(join, Config.JOIN_STATUS_IN);
                                 succeeded = true;
                             }
                         }
                     }
 
                     resp.getWriter().write(Boolean.toString(succeeded));
+
+                    if(succeeded) {
+                        api.snappy.push.send(join.getOnlyField("person").getAtom(), api.snappy.things.join.makePush(join));
+                    }
                 }
                 else {
                     throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "join - bad path");

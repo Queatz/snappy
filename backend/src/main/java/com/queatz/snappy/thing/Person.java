@@ -26,6 +26,25 @@ public class Person implements Thing {
         things = t;
     }
 
+    public JSONObject toPushJson(Document d) {
+        if(d == null)
+            return null;
+
+        JSONObject o = new JSONObject();
+
+        try {
+            o.put("id", d.getId());
+            o.put("firstName", d.getOnlyField("firstName").getAtom());
+
+            return o;
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
     public JSONObject toJson(Document d, String user, boolean shallow) {
         if(d == null)
             return null;

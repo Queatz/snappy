@@ -74,6 +74,8 @@ public class Party implements Api.Path {
                             Util.localId(response, localId);
 
                             resp.getWriter().write(response.toString());
+
+                            api.snappy.push.send(party.getOnlyField("host").getAtom(), api.snappy.things.join.makePush(join));
                         }
                     }
                 }

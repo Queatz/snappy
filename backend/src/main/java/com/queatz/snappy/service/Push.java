@@ -7,6 +7,8 @@ import com.google.android.gcm.server.Sender;
 import com.queatz.snappy.SnappyServlet;
 import com.queatz.snappy.backend.RegistrationRecord;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -48,9 +50,12 @@ public class Push {
         ofy().delete().entity(record).now();
     }
 
-    public void send(final String user, final String toUser, final String message) {
+    public void send(final String toUser, final JSONObject message) {
+        if(message == null)
+            return;
+
         try {
-            sendMessage(user, toUser, message);
+            sendMessage(toUser, message.toString());
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -63,7 +68,7 @@ public class Push {
         // Sends a push to all devices with this message to clear it (user has handled it)
     }
 
-    private void sendMessage(String user, String toUser, String message) throws IOException {
+    private void sendMessage(String toUser, String message) throws IOException {
         if (message == null || message.trim().length() == 0) {
             return;
         }

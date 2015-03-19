@@ -4,6 +4,7 @@ import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.PutException;
 import com.google.appengine.api.search.PutResponse;
+import com.queatz.snappy.service.Config;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 import com.queatz.snappy.service.Util;
@@ -23,6 +24,52 @@ public class Message implements Thing {
         things = t;
     }
 
+
+    public JSONObject makePush(Document message) {
+        if(message == null)
+            return null;
+
+        JSONObject push = new JSONObject();
+
+        try {
+            push.put("action", Config.PUSH_ACTION_MESSAGE);
+            push.put("message", toPushJson(message));
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return push;
+    }
+
+    public JSONObject toPushJson(Document d) {
+        if(d == null)
+            return null;
+
+        JSONObject o = new JSONObject();
+
+        try {
+            o.put("id", d.getId());
+            o.put("from", things.person.toPushJson(things.snappy.search.get(Search.Type.PERSON, d.getOnlyField("from").getAtom())));
+            o.put("to", d.getOnlyField("to").getAtom());
+
+            String msg = d.getOnlyField("message").getText();
+
+            if(msg.length() > 200)
+                msg = msg.substring(200) + "…";
+
+            o.put("message", msg);
+
+            return o;
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
     public JSONObject toJson(Document d, String user, boolean shallow) {
         if(d == null)
             return null;

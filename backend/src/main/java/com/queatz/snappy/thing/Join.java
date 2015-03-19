@@ -16,6 +16,8 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
+import javax.print.Doc;
+
 /**
  * Created by jacob on 2/16/15.
  */
@@ -24,6 +26,41 @@ public class Join implements Thing {
 
     public Join(Things t) {
         things = t;
+    }
+
+    public JSONObject makePush(Document join) {
+        if(join == null)
+            return null;
+
+        Document party = things.snappy.search.get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
+        Document person = things.snappy.search.get(Search.Type.PERSON, join.getOnlyField("person").getAtom());
+
+        JSONObject push = new JSONObject();
+
+        try {
+            String action;
+
+            if(Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
+                action = Config.PUSH_ACTION_JOIN_REQUEST;
+                push.put("join", join.getId());
+                push.put("person", things.person.toPushJson(person));
+            }
+            else if(Config.JOIN_STATUS_IN.equals(join.getOnlyField("status").getAtom())) {
+                action = Config.PUSH_ACTION_JOIN_ACCEPTED;
+            }
+            else
+                return null;
+
+            push.put("action", action);
+            push.put("party", things.party.toPushJson(party));
+
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return push;
     }
 
     public JSONObject toJson(Document d, String user, boolean shallow) {
@@ -113,7 +150,7 @@ public class Join implements Thing {
         return true;
     }
 
-    public void setStatus(Document join, String status) {
+    public Document setStatus(Document join, String status) {
         Document.Builder documentBuild = Document.newBuilder()
                 .setId(join.getId())
                 .addField(Field.newBuilder().setName("status").setAtom(status));
@@ -127,5 +164,7 @@ public class Join implements Thing {
         } catch (PutException e) {
             e.printStackTrace();
         }
+
+        return document;
     }
 }

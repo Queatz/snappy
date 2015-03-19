@@ -67,6 +67,8 @@ public class People implements Api.Path {
                             Util.localId(response, localId);
 
                             resp.getWriter().write(response.toString());
+
+                            api.snappy.push.send(follow.getOnlyField("following").getAtom(), api.snappy.things.follow.makePush(follow));
                         }
                     }
                 }
@@ -82,6 +84,8 @@ public class People implements Api.Path {
                             Util.localId(response, localId);
 
                             resp.getWriter().write(response.toString());
+
+                            api.snappy.push.send(sent.getOnlyField("to").getAtom(), api.snappy.things.message.makePush(sent));
                         }
                     }
                     else {
