@@ -55,14 +55,21 @@ public class Join implements Thing {
         if(iterator.hasNext())
             join = iterator.next();
 
-        if(join != null)
+        if(join != null && !Config.JOIN_STATUS_WITHDRAWN.equals(join.getOnlyField("status").getAtom()))
             return join;
 
         Document.Builder documentBuild = Document.newBuilder();
 
-        documentBuild.addField(Field.newBuilder().setName("person").setAtom(user));
-        documentBuild.addField(Field.newBuilder().setName("party").setAtom(party));
-        documentBuild.addField(Field.newBuilder().setName("status").setAtom(Config.JOIN_STATUS_REQUESTED));
+        if(join != null) {
+            documentBuild.setId(join.getId());
+            documentBuild.addField(Field.newBuilder().setName("status").setAtom(Config.JOIN_STATUS_REQUESTED));
+            Util.copyIn(documentBuild, join, "status");
+        }
+        else {
+            documentBuild.addField(Field.newBuilder().setName("person").setAtom(user));
+            documentBuild.addField(Field.newBuilder().setName("party").setAtom(party));
+            documentBuild.addField(Field.newBuilder().setName("status").setAtom(Config.JOIN_STATUS_REQUESTED));
+        }
 
         Document document = documentBuild.build();
 
@@ -88,8 +95,16 @@ public class Join implements Thing {
         if(join == null)
             return false;
 
+        Document.Builder documentBuild = Document.newBuilder();
+        documentBuild.setId(join.getId());
+        documentBuild.addField(Field.newBuilder().setName("status").setAtom(Config.JOIN_STATUS_WITHDRAWN));
+
+        Util.copyIn(documentBuild, join, "status");
+
+        Document document = documentBuild.build();
+
         try {
-            things.snappy.search.index.get(Search.Type.JOIN).delete(join.getId());
+            things.snappy.search.index.get(Search.Type.JOIN).put(document);
         } catch (PutException e) {
             e.printStackTrace();
             return false;

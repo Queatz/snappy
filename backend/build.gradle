@@ -23,8 +23,6 @@ targetCompatibility = JavaVersion.VERSION_1_7
 
 dependencies {
     appengineSdk 'com.google.appengine:appengine-java-sdk:1.9.14'
-    compile 'com.google.appengine:appengine-endpoints:1.9.14'
-    compile 'com.google.appengine:appengine-endpoints-deps:1.9.14'
     compile 'com.google.appengine.tools:appengine-gcs-client:0.4.4'
     compile 'javax.servlet:servlet-api:2.5'
     compile 'com.googlecode.objectify:objectify:4.0b3'
@@ -36,9 +34,5 @@ appengine {
     downloadSdk = true
     appcfg {
         oauth2 = true
-    }
-    endpoints {
-        getClientLibsOnBuild = true
-        getDiscoveryDocsOnBuild = true
     }
 }

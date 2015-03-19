@@ -156,9 +156,19 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
                     .equalTo("party.id", party.getId())
                     .equalTo("person.id", team.auth.getUser()).findFirst();
 
-            if (requested != null || party.isFull()) {
-                if(requested != null && (Config.JOIN_STATUS_REQUESTED.equals(requested.getStatus()) ||
-                        Config.JOIN_STATUS_OUT.equals(requested.getStatus()))) {
+            if(requested == null || (!party.isFull() && Config.JOIN_STATUS_WITHDRAWN.equals(requested.getStatus()))) {
+                action.setVisibility(View.VISIBLE);
+                action.setText(context.getText(R.string.request_to_join));
+                action.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        team.action.joinParty(party);
+                    }
+                });
+            }
+            else {
+                if(Config.JOIN_STATUS_REQUESTED.equals(requested.getStatus()) ||
+                        Config.JOIN_STATUS_OUT.equals(requested.getStatus())) {
                     action.setVisibility(View.VISIBLE);
 
                     action.setText(context.getText(R.string.requested));
@@ -181,16 +191,6 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
                 else {
                     action.setVisibility(View.GONE);
                 }
-            }
-            else  {
-                action.setVisibility(View.VISIBLE);
-                action.setText(context.getText(R.string.request_to_join));
-                action.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        team.action.joinParty(party);
-                    }
-                });
             }
         }
 

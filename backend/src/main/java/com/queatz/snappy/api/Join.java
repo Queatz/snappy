@@ -37,7 +37,7 @@ public class Join implements Api.Path {
                 if(Boolean.valueOf(req.getParameter(Config.PARAM_HIDE))) {
                     Document join = api.snappy.search.get(Search.Type.JOIN, joinId);
 
-                    if(join != null) {
+                    if(join != null && Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
                         Document party = api.snappy.search.get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
 
                         if(party != null) {
@@ -53,7 +53,7 @@ public class Join implements Api.Path {
                 else if(Boolean.valueOf(req.getParameter(Config.PARAM_ACCEPT))) {
                     Document join = api.snappy.search.get(Search.Type.JOIN, joinId);
 
-                    if(join != null) {
+                    if(join != null && Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
                         Document party = api.snappy.search.get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
 
                         if(party != null) {

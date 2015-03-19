@@ -258,7 +258,7 @@ public class Action {
 
         for(int i = 0; i < joins.size(); i++) {
             Join join = joins.get(i);
-            join.removeFromRealm();
+            join.setStatus(Config.JOIN_STATUS_WITHDRAWN);
         }
 
         team.realm.commitTransaction();

@@ -51,4 +51,5 @@ public class Config {
     public static final String JOIN_STATUS_REQUESTED = "requested";
     public static final String JOIN_STATUS_IN = "in";
     public static final String JOIN_STATUS_OUT = "out";
+    public static final String JOIN_STATUS_WITHDRAWN = "withdrawn";
 }
