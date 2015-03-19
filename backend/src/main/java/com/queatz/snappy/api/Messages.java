@@ -1,5 +1,6 @@
 package com.queatz.snappy.api;
 
+import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.urlfetch.HTTPMethod;
@@ -32,6 +33,24 @@ public class Messages implements Api.Path {
     public void call(ArrayList<String> path, String user, HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException, PrintingError {
         switch (method) {
             case GET:
+                if(path.size() == 1) {
+                    String messageId = path.get(0);
+                    Document message = api.snappy.search.get(Search.Type.MESSAGE, messageId);
+
+                    JSONObject r = null;
+
+                    if(user.equals(message.getOnlyField("from")) || user.equals(message.getOnlyField("to"))) {
+                        r = api.snappy.things.message.toJson(message, user, false);
+                    }
+
+                    if (r != null)
+                        resp.getWriter().write(r.toString());
+                    else
+                        throw new PrintingError(Api.Error.NOT_FOUND);
+
+                    break;
+                }
+
                 JSONObject r = new JSONObject();
 
                 Results<ScoredDocument> results = api.snappy.search.index.get(Search.Type.MESSAGE).search("from = \"" + user + "\" OR to = \"" + user + "\"");

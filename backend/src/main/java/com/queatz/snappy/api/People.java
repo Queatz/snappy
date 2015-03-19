@@ -43,7 +43,7 @@ public class People implements Api.Path {
                 if(r != null)
                     resp.getWriter().write(r.toString());
                 else
-                    resp.getWriter().write(Boolean.toString(false));
+                    throw new PrintingError(Api.Error.NOT_FOUND);
 
                 break;
             case POST:

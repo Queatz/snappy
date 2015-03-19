@@ -43,8 +43,7 @@ public class Parties implements Api.Path {
                 JSONArray r = new JSONArray();
 
                 if(longitudeParameter == null || latitudeParameter == null) {
-                    resp.getWriter().write(Boolean.toString(false));
-                    return;
+                    throw new PrintingError(Api.Error.NOT_IMPLEMENTED, "missing location");
                 }
 
                 double latitude = Double.parseDouble(latitudeParameter);

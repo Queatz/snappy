@@ -82,6 +82,12 @@ public class SnappyServlet extends HttpServlet {
             case NOT_AUTHENTICATED:
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 break;
+            case NOT_FOUND:
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                break;
+            case NOT_IMPLEMENTED:
+                resp.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
+                break;
             case SERVER_ERROR:
             default:
                 resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

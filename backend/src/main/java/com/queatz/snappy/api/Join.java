@@ -7,6 +7,8 @@ import com.queatz.snappy.service.Config;
 import com.queatz.snappy.service.PrintingError;
 import com.queatz.snappy.service.Search;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -25,17 +27,33 @@ public class Join implements Api.Path {
 
     @Override
     public void call(ArrayList<String> path, String user, HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException, PrintingError {
+        String joinId;
+        Document join;
+
         switch (method) {
+            case GET:
+                if(path.size() != 1)
+                    throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "people - bad path");
+
+                joinId = path.get(0);
+                join = api.snappy.search.get(Search.Type.JOIN, joinId);
+                JSONObject r = api.snappy.things.join.toJson(join, user, false);
+
+                if(r != null)
+                    resp.getWriter().write(r.toString());
+                else
+                    throw new PrintingError(Api.Error.NOT_FOUND);
+
             case POST:
                 if(path.size() != 1)
                     throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "join - bad path");
 
-                String joinId = path.get(0);
+                joinId = path.get(0);
 
                 boolean succeeded = false;
 
                 if(Boolean.valueOf(req.getParameter(Config.PARAM_HIDE))) {
-                    Document join = api.snappy.search.get(Search.Type.JOIN, joinId);
+                    join = api.snappy.search.get(Search.Type.JOIN, joinId);
 
                     if(join != null && Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
                         Document party = api.snappy.search.get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
@@ -51,7 +69,7 @@ public class Join implements Api.Path {
                     resp.getWriter().write(Boolean.toString(succeeded));
                 }
                 else if(Boolean.valueOf(req.getParameter(Config.PARAM_ACCEPT))) {
-                    Document join = api.snappy.search.get(Search.Type.JOIN, joinId);
+                    join = api.snappy.search.get(Search.Type.JOIN, joinId);
 
                     if(join != null && Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
                         Document party = api.snappy.search.get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
