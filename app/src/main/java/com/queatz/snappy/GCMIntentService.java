@@ -13,6 +13,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,26 +29,27 @@ public class GcmIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Bundle extras = intent.getExtras();
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
-        // The getMessageType() intent parameter must be the intent you received
-        // in your BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
 
-        if (extras != null && !extras.isEmpty()) {  // has effect of unparcelling Bundle
-            // Since we're not using two way messaging, this is all we really to check for
+        if (extras != null && !extras.isEmpty()) {
             if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                Logger.getLogger("GCM_RECEIVED").log(Level.INFO, extras.toString());
-
-                showToast(extras.getString("message"));
+                handle(extras.getString("message"));
             }
         }
+
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
-    protected void showToast(final String message) {
+    protected void handle(final String message) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                try {
+                    ((MainApplication) getApplication()).team.push.got(new JSONObject(message));
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

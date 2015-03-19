@@ -130,6 +130,10 @@ public class Util {
     private static final long MONTH_MILLIS = 30 * DAY_MILLIS;
     private static final long YEAR_MILLIS = 356 * DAY_MILLIS;
 
+    public static String relDate(Date date) {
+        return agoDate(date);
+    }
+
     public static String agoDate(Date date) {
         long timeDiff = new Date().getTime() - date.getTime();
 

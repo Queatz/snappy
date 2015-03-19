@@ -37,6 +37,7 @@ public class Party implements Thing {
         try {
             o.put("id", d.getId());
             o.put("name", d.getOnlyField("name").getAtom());
+            o.put("date", Util.dateToString(d.getOnlyField("date").getDate()));
 
             return o;
         }

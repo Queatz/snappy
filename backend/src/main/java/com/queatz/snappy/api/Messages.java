@@ -39,7 +39,7 @@ public class Messages implements Api.Path {
 
                     JSONObject r = null;
 
-                    if(user.equals(message.getOnlyField("from")) || user.equals(message.getOnlyField("to"))) {
+                    if(user.equals(message.getOnlyField("from").getAtom()) || user.equals(message.getOnlyField("to").getAtom())) {
                         r = api.snappy.things.message.toJson(message, user, false);
                     }
 

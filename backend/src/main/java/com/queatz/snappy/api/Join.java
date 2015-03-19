@@ -44,6 +44,7 @@ public class Join implements Api.Path {
                 else
                     throw new PrintingError(Api.Error.NOT_FOUND);
 
+                break;
             case POST:
                 if(path.size() != 1)
                     throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "join - bad path");

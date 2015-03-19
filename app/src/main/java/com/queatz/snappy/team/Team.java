@@ -22,6 +22,8 @@ public class Team implements Closeable {
     public Action action;
     public Things things;
     public Location location;
+    public Push push;
+    public Local local;
 
     public Team(Context c) {
         context = c;
@@ -33,6 +35,8 @@ public class Team implements Closeable {
         things = new Things(this);
         view = new View(this);
         location = new Location(this);
+        push = new Push(this);
+        local = new Local(this);
     }
 
     public void close() {

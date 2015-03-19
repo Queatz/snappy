@@ -42,7 +42,6 @@ public class Join implements Thing {
 
             if(Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
                 action = Config.PUSH_ACTION_JOIN_REQUEST;
-                push.put("join", join.getId());
                 push.put("person", things.person.toPushJson(person));
             }
             else if(Config.JOIN_STATUS_IN.equals(join.getOnlyField("status").getAtom())) {
@@ -52,6 +51,7 @@ public class Join implements Thing {
                 return null;
 
             push.put("action", action);
+            push.put("join", join.getId());
             push.put("party", things.party.toPushJson(party));
 
         }

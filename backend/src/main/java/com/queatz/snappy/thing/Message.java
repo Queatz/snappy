@@ -52,7 +52,6 @@ public class Message implements Thing {
         try {
             o.put("id", d.getId());
             o.put("from", things.person.toPushJson(things.snappy.search.get(Search.Type.PERSON, d.getOnlyField("from").getAtom())));
-            o.put("to", d.getOnlyField("to").getAtom());
 
             String msg = d.getOnlyField("message").getText();
 
