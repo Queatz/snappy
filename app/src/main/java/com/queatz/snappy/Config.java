@@ -16,6 +16,7 @@ public class Config {
     public static final String PREFERENCE_USER = "auth.user";
     public static final String PREFERENCE_AUTH_TOKEN = "auth.auth_token";
     public static final String PREFERENCE_GCM_REGISTRATION_ID = "auth.gcm_registration_id";
+    public static final String PREFERENCE_GCM_TOP_ACTIVITY = "auth.gcm_top_activity";
 
     public static final int REQUEST_CODE_AUTH_RESOLUTION = 1;
     public static final int REQUEST_CODE_ACCOUNT_PICKER = 2;

@@ -37,6 +37,10 @@
     <string name="hide">Hide</string>
     <string name="cancel">Cancel</string>
     <string name="enable_location">Turn on location</string>
+    <string name="new_messages">%1$s new messages</string>
+    <string name="requested_to_join_party">Requested to join %1$s</string>
+    <string name="request_accepted">Starts %1$s</string>
+    <string name="started_following_you">Started following you</string>
 
     <plurals name="years">
         <item quantity="one">%1$s year</item>

@@ -84,6 +84,14 @@ public class Main extends BaseActivity {
             }
         });
 
-        mActionBar.setPage(0);
+        if(getIntent() != null) {
+
+            String show = getIntent().getStringExtra("show");
+
+            mActionBar.setPage(show == null || "parties".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
+        }
+        else {
+            mActionBar.setPage(0);
+        }
     }
 }

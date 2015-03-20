@@ -162,10 +162,14 @@ public class PersonUptoSlide extends Fragment {
 
             TextView actionButton = (TextView) personAbout.findViewById(R.id.action_button);
 
-            Follow follow = team.realm.where(Follow.class)
-                    .equalTo("person.id", team.auth.getUser())
-                    .equalTo("following.id", mPerson.getId())
-                    .findFirst();
+            Follow follow = null;
+
+            if(team.auth.getUser() != null) {
+                follow = team.realm.where(Follow.class)
+                        .equalTo("person.id", team.auth.getUser())
+                        .equalTo("following.id", mPerson.getId())
+                        .findFirst();
+            }
 
             if(follow != null || mPerson.getId().equals(team.auth.getUser())) {
                 actionButton.setVisibility(View.GONE);

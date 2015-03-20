@@ -29,3 +29,5 @@ Amanda, James
 ∆ User handled ∆
 /me/handle_push/5
 push to all users devices -> {"handled": 5}
+
+Viewing messages / accepting invites in the app clears any assoc'd notifications

@@ -167,6 +167,10 @@ public class SlideScreen extends ViewGroup {
         smoothSlideTo(slide);
     }
 
+    public int getSlide() {
+        return mSlide;
+    }
+
     public void smoothSlideTo(int slide) {
         if(mAnimation != null) {
             mAnimation.stop();

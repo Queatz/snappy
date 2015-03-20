@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.queatz.snappy.Config;
 import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.activity.Welcome;
 
@@ -31,6 +32,19 @@ public class View {
 
     public void showStartView(Activity from) {
         team.view.show(from, team.auth.isAuthenticated() ? Main.class : Welcome.class, null);
+    }
+
+    public void setTop(String top) {
+        team.preferences.edit().putString(Config.PREFERENCE_GCM_TOP_ACTIVITY, top).apply();
+    }
+
+    public void clearTop(String top) {
+        if(top != null && top.equals(getTop()))
+            team.preferences.edit().putString(Config.PREFERENCE_GCM_TOP_ACTIVITY, null).apply();
+    }
+
+    public String getTop() {
+        return team.preferences.getString(Config.PREFERENCE_GCM_TOP_ACTIVITY, null);
     }
 
     public void keyboard(TextView view) {

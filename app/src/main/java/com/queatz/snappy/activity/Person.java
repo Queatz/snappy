@@ -24,11 +24,13 @@ public class Person extends BaseActivity {
     private ActionBar mActionBar;
     private SlideScreen mSlideScreen;
     private com.queatz.snappy.things.Person mPerson;
+    private boolean mIsActive = false;
+    public Team team;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Team team = ((MainApplication) getApplication()).team;
+        team = ((MainApplication) getApplication()).team;
 
         Intent intent = getIntent();
 
@@ -80,8 +82,13 @@ public class Person extends BaseActivity {
 
             @Override
             public void onSlideChange(int slide) {
-                if(mPerson != null)
+                if(mPerson != null && slide == 1 && mIsActive) {
                     team.action.setSeen(mPerson);
+                    team.view.setTop("person/" + mPerson.getId() + "/messages");
+                }
+                else {
+                    team.view.clearTop("person/" + mPerson.getId() + "/messages");
+                }
 
                 mActionBar.selectPage(slide);
             }
@@ -97,5 +104,25 @@ public class Person extends BaseActivity {
         String show = intent.getStringExtra("show");
 
         mActionBar.setPage(show == null || "upto".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mIsActive = true;
+
+        if(mPerson != null && mSlideScreen.getSlide() == 1) {
+            team.view.setTop("person/" + mPerson.getId() + "/messages");
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mIsActive = false;
+
+        team.view.clearTop("person/" + mPerson.getId() + "/messages");
     }
 }

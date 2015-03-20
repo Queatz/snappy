@@ -45,19 +45,30 @@ public class Action {
                 .equalTo("contact.id", person.getId())
                 .findAll();
 
+        boolean changed = false;
+
         team.realm.beginTransaction();
 
         for(int i = 0; i < contacts.size(); i++) {
             Contact contact = contacts.get(i);
-            contact.setSeen(true);
+
+            if(!contact.isSeen()) {
+                contact.setSeen(true);
+                changed = true;
+            }
         }
 
-        team.realm.commitTransaction();
+        if(changed) {
+            team.realm.commitTransaction();
 
-        RequestParams params = new RequestParams();
-        params.put(Config.PARAM_SEEN, true);
+            RequestParams params = new RequestParams();
+            params.put(Config.PARAM_SEEN, true);
 
-        team.api.post(String.format(Config.PATH_PEOPLE_ID, person.getId()), params);
+            team.api.post(String.format(Config.PATH_PEOPLE_ID, person.getId()), params);
+        }
+        else {
+            team.realm.cancelTransaction();
+        }
     }
 
     public void openMessages(Activity from, @NonNull final Person person) {
