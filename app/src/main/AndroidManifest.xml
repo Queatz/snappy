@@ -63,7 +63,8 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="standard"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:parentActivityName=".activity.Main"/>
         <activity
             android:name=".activity.PersonList"
             android:alwaysRetainTaskState="true"
@@ -77,7 +78,8 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:parentActivityName=".activity.Main" />
 
         <service android:name=".GcmIntentService" />
 

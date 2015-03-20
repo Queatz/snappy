@@ -2,14 +2,21 @@ package com.queatz.snappy.team;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.queatz.snappy.Config;
+import com.queatz.snappy.MainActivity;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.activity.Main;
+import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.things.Contact;
 import com.queatz.snappy.things.Join;
 import com.queatz.snappy.things.Message;
@@ -51,6 +58,11 @@ public class Push {
             String partyName;
             Notification.Builder builder;
 
+            Intent resultIntent;
+            TaskStackBuilder stackBuilder;
+            PendingIntent pendingIntent;
+
+
             switch (push.getString("action")) {
                 case Config.PUSH_ACTION_MESSAGE:
                     personId = push.getJSONObject("message").getJSONObject("from").getString("id");
@@ -60,7 +72,7 @@ public class Push {
 
                     personFirstName = URLDecoder.decode(push.getJSONObject("message").getJSONObject("from").getString("firstName"), "UTF-8");
                     String message = URLDecoder.decode(push.getJSONObject("message").getString("message"), "UTF-8");
-                    String messageId = URLDecoder.decode(push.getJSONObject("message").getString("id"), "UTF-8");
+                    String messageId = push.getJSONObject("message").getString("id");
 
                     RealmResults<Contact> contacts = team.realm.where(Contact.class).equalTo("seen", false).findAllSorted("updated");
 
@@ -94,6 +106,29 @@ public class Push {
                             .setPriority(Notification.PRIORITY_HIGH)
                             .setDefaults(Notification.DEFAULT_ALL);
 
+                    if(count > 1) {
+                        resultIntent = new Intent(team.context, Main.class);
+                        Bundle extras = new Bundle();
+                        extras.putString("show", "messages");
+                        resultIntent.putExtras(extras);
+                        pendingIntent = PendingIntent.getActivity(team.context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                        builder.setContentIntent(pendingIntent);
+                    }
+                    else {
+                        resultIntent = new Intent(team.context, Person.class);
+                        Bundle extras = new Bundle();
+                        extras.putString("person", personId);
+                        extras.putString("show", "messages");
+                        resultIntent.putExtras(extras);
+                        stackBuilder = TaskStackBuilder.create(team.context);
+                        stackBuilder.addParentStack(Person.class);
+                        stackBuilder.addNextIntent(resultIntent);
+                        pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                        builder.setContentIntent(pendingIntent);
+                    }
+
                     if(Build.VERSION.SDK_INT >= 21) {
                         builder
                                 .setColor(team.context.getResources().getColor(R.color.red))
@@ -105,7 +140,7 @@ public class Push {
                     break;
                 case Config.PUSH_ACTION_JOIN_REQUEST:
                     personFirstName = URLDecoder.decode(push.getJSONObject("person").getString("firstName"), "UTF-8");
-                    personId = URLDecoder.decode(push.getJSONObject("person").getString("id"), "UTF-8");
+                    personId = push.getJSONObject("person").getString("id");
                     partyName = URLDecoder.decode(push.getJSONObject("party").getString("name"), "UTF-8");
 
                     builder = new Notification.Builder(team.context)
@@ -115,6 +150,11 @@ public class Push {
                             .setSmallIcon(R.drawable.rocket)
                             .setPriority(Notification.PRIORITY_DEFAULT)
                             .setDefaults(Notification.DEFAULT_ALL);
+
+                    resultIntent = new Intent(team.context, Main.class);
+                    pendingIntent = PendingIntent.getActivity(team.context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    builder.setContentIntent(pendingIntent);
 
                     if(Build.VERSION.SDK_INT >= 20) {
                         builder.addAction(new Notification.Action(0, "Accept", null));
@@ -131,7 +171,7 @@ public class Push {
                     break;
                 case Config.PUSH_ACTION_JOIN_ACCEPTED:
                     partyName = URLDecoder.decode(push.getJSONObject("party").getString("name"), "UTF-8");
-                    String partyId = URLDecoder.decode(push.getJSONObject("party").getString("id"), "UTF-8");
+                    String partyId = push.getJSONObject("party").getString("id");
                     Date partyDate = Util.stringToDate(push.getJSONObject("party").getString("date"));
 
                     builder = new Notification.Builder(team.context)
@@ -142,9 +182,10 @@ public class Push {
                             .setPriority(Notification.PRIORITY_DEFAULT)
                             .setDefaults(Notification.DEFAULT_ALL);
 
-                    if(Build.VERSION.SDK_INT >= 20) {
-                        builder.addAction(new Notification.Action(0, "Accept", null));
-                    }
+                    resultIntent = new Intent(team.context, Main.class);
+                    pendingIntent = PendingIntent.getActivity(team.context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    builder.setContentIntent(pendingIntent);
 
                     if(Build.VERSION.SDK_INT >= 21) {
                         builder
@@ -157,6 +198,7 @@ public class Push {
                     break;
                 case Config.PUSH_ACTION_FOLLOW:
                     personFirstName = URLDecoder.decode(push.getJSONObject("person").getString("firstName"), "UTF-8");
+                    personId = push.getJSONObject("person").getString("id");
 
                     builder = new Notification.Builder(team.context)
                             .setAutoCancel(true)
@@ -165,6 +207,17 @@ public class Push {
                             .setSmallIcon(R.drawable.rocket)
                             .setPriority(Notification.PRIORITY_DEFAULT)
                             .setDefaults(Notification.DEFAULT_ALL);
+
+                    resultIntent = new Intent(team.context, Person.class);
+                    Bundle extras = new Bundle();
+                    extras.putString("person", personId);
+                    resultIntent.putExtras(extras);
+                    stackBuilder = TaskStackBuilder.create(team.context);
+                    stackBuilder.addParentStack(Main.class);
+                    stackBuilder.addNextIntent(resultIntent);
+                    pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    builder.setContentIntent(pendingIntent);
 
                     if(Build.VERSION.SDK_INT >= 21) {
                         builder
