@@ -57,7 +57,7 @@ public class Person extends BaseActivity {
         mActionBar.setLeftContent(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                onBackPressed();
             }
         });
 

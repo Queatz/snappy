@@ -65,8 +65,23 @@ public class MessagesSlide extends Fragment {
         });
 
         refresh();
+        update();
 
         return view;
+    }
+
+    private void update() {
+        if(getView() != null && team.auth.getUser() != null) {
+            if(mList.getAdapter() == null) {
+                RealmResults<Contact> contacts = team.realm.where(Contact.class)
+                        .equalTo("person.id", team.auth.getUser())
+                        .findAllSorted("updated", false);
+
+                mList.setAdapter(new ContactAdapter(getActivity(), contacts));
+            }
+
+            ((ViewGroup) emptyView).getChildAt(0).setVisibility(mList.getAdapter().getCount() < 1 ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void refresh() {
@@ -92,17 +107,7 @@ public class MessagesSlide extends Fragment {
                     e.printStackTrace();
                 }
 
-                if(getView() != null && team.auth.getUser() != null) {
-                    if(mList.getAdapter() == null) {
-                        RealmResults<Contact> recents = team.realm.where(Contact.class)
-                                .equalTo("person.id", team.auth.getUser())
-                                .findAllSorted("updated", false);
-
-                        mList.setAdapter(new ContactAdapter(getActivity(), recents));
-                    }
-
-                    ((ViewGroup) emptyView).getChildAt(0).setVisibility(mList.getAdapter().getCount() < 1 ? View.VISIBLE : View.GONE);
-                }
+                update();
             }
 
             @Override

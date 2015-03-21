@@ -81,7 +81,7 @@ public class Push {
 
                     if(contacts.size() > 1) {
                         for (int i = 0; i < contacts.size() && i < 3; i++) {
-                            if(contacts.get(i).getLast().getId().equals(messageId))
+                            if(contacts.get(i).getContact().getId().equals(personId))
                                 continue;
 
                             count++;
