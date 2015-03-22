@@ -443,6 +443,17 @@ public class HostParty extends BaseActivity {
             details.requestFocus();
             team.view.keyboard(details);
         }
+
+        setMapLocation(location);
+    }
+
+    protected void setMapLocation(com.queatz.snappy.things.Location l) {
+        if(mGoogleMap == null || l == null)
+            return;
+
+        LatLng latLng = new LatLng(l.getLatitude(), l.getLongitude());
+        CameraUpdate center = CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(latLng, Config.defaultMapZoom));
+        mGoogleMap.animateCamera(center);
     }
 
     public void setParty(Party party) {

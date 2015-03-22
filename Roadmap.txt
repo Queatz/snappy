@@ -1,33 +1,4 @@
-Notifications
-
-•• Message (singleTop)
-Amanda
-Hey Jacob
- -> Amanda's messages tab
-
-2 messages
-Amanda, James
- -> Messages tab
-
-•• Join request (multiple)
-Amanda
-[Accept]
- -> Main
-
-•• Join accepted (multiple)
-Party
- -> Main
-
-•• Follow (singleTop)
-Amanda
- -> Amanda's profile
-
-2 people followed you
-Amanda, James
- -> Your followers
-
-∆ User handled ∆
-/me/handle_push/5
-push to all users devices -> {"handled": 5}
-
-Viewing messages / accepting invites in the app clears any assoc'd notifications
+You need to add a high-res icon. [English (United States) – en-US]
+You need to add a feature graphic. [English (United States) – en-US]
+You need to add at least 2 non-Android TV screenshots. [English (United States) – en-US]
+You need to upload an APK for this application.
