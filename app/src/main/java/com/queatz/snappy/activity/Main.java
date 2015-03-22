@@ -1,5 +1,6 @@
 package com.queatz.snappy.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -85,13 +86,17 @@ public class Main extends BaseActivity {
         });
 
         if(getIntent() != null) {
-
-            String show = getIntent().getStringExtra("show");
-
-            mActionBar.setPage(show == null || "parties".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
+            onNewIntent(getIntent());
         }
         else {
             mActionBar.setPage(0);
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        String show = getIntent().getStringExtra("show");
+
+        mActionBar.setPage(show == null || "parties".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
     }
 }

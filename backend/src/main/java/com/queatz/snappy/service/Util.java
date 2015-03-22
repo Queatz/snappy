@@ -15,11 +15,18 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.UUID;
 
 /**
  * Created by jacob on 2/16/15.
  */
 public class Util {
+    public static String genToken() {
+        return UUID.randomUUID().toString() +
+                UUID.randomUUID().toString() +
+                UUID.randomUUID().toString();
+    }
+
     static DateFormat formatter = DateFormat.getDateTimeInstance(
             DateFormat.LONG,
             DateFormat.LONG,

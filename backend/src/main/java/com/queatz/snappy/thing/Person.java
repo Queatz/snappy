@@ -57,6 +57,9 @@ public class Person implements Thing {
             o.put("lastName", d.getOnlyField("lastName").getAtom());
             o.put("imageUrl", d.getOnlyField("imageUrl").getAtom());
 
+            if(d.getId().equals(user))
+                o.put("auth", d.getOnlyField("token").getAtom());
+
             if(shallow)
                 return o;
 
@@ -135,7 +138,12 @@ public class Person implements Thing {
 
         try {
             documentBuild.addField(Field.newBuilder().setName("email").setAtom(jsonObject.getString("email")));
-            documentBuild.addField(Field.newBuilder().setName("token").setAtom(jsonObject.getString("token")));
+
+            if(document == null)
+                documentBuild.addField(Field.newBuilder().setName("token").setAtom(Util.genToken()));
+            else
+                documentBuild.addField(Field.newBuilder().setName("token").setAtom(document.getOnlyField("token").getAtom()));
+
             documentBuild.addField(Field.newBuilder().setName("gender").setAtom(jsonObject.getString("gender")));
             documentBuild.addField(Field.newBuilder().setName("firstName").setAtom(Util.encode(jsonObject.getString("firstName"))));
             documentBuild.addField(Field.newBuilder().setName("lastName").setAtom(Util.encode(jsonObject.getString("lastName"))));

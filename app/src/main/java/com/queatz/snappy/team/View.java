@@ -17,6 +17,8 @@ import com.queatz.snappy.activity.Welcome;
 public class View {
     public Team team;
 
+    private String mTop = null;
+
     public View(Team t) {
         team = t;
     }
@@ -35,16 +37,16 @@ public class View {
     }
 
     public void setTop(String top) {
-        team.preferences.edit().putString(Config.PREFERENCE_GCM_TOP_ACTIVITY, top).apply();
+        mTop = top;
     }
 
     public void clearTop(String top) {
         if(top != null && top.equals(getTop()))
-            team.preferences.edit().putString(Config.PREFERENCE_GCM_TOP_ACTIVITY, null).apply();
+            mTop = null;
     }
 
     public String getTop() {
-        return team.preferences.getString(Config.PREFERENCE_GCM_TOP_ACTIVITY, null);
+        return mTop;
     }
 
     public void keyboard(TextView view) {

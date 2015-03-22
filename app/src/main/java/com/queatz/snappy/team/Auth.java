@@ -15,6 +15,9 @@ import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.things.Person;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.HashSet;
 
@@ -25,6 +28,7 @@ public class Auth {
     private static final String SCOPE = "oauth2: email profile";
 
     public Team team;
+    private String mGoogleAuthToken;
     private String mAuthToken;
     private String mEmail;
     private String mUser;
@@ -102,7 +106,7 @@ public class Auth {
 
         @Override
         protected void onPostExecute(String token) {
-            mAuth.setAuthToken(token);
+            mAuth.setGoogleAuthToken(token);
         }
 
         protected String fetchToken() throws IOException {
@@ -175,8 +179,8 @@ public class Auth {
     }
 
     public void reauth() {
-        if(mAuthToken != null && mActivity != null) {
-            GoogleAuthUtil.invalidateToken(mActivity, mAuthToken);
+        if(mGoogleAuthToken != null && mActivity != null) {
+            GoogleAuthUtil.invalidateToken(mActivity, mGoogleAuthToken);
         }
 
         boolean isLogout = (mUser != null);
@@ -186,6 +190,7 @@ public class Auth {
         mUser = null;
         mEmail = null;
         mAuthToken = null;
+        mGoogleAuthToken = null;
         save();
 
         if(isLogout)
@@ -203,19 +208,29 @@ public class Auth {
 
                 mActivity.startActivityForResult(intent, Config.REQUEST_CODE_ACCOUNT_PICKER);
             }
-            else if(mAuthToken == null) {
+            else if(mGoogleAuthToken == null) {
                 fetchAuthToken();
             }
             else if(mUser == null) {
                 RequestParams params = new RequestParams();
                 params.put(Config.PARAM_EMAIL, mEmail);
-                params.put(Config.PARAM_AUTH, mAuthToken);
+                params.put(Config.PARAM_AUTH, mGoogleAuthToken);
 
                 team.api.get(Config.PATH_ME, params, new Api.Callback() {
                     @Override
                     public void success(String response) {
-                        setUser(team.things.put(Person.class, response));
-                        callbacks();
+                        try {
+                            JSONObject o = new JSONObject(response);
+
+                            if(o.has("auth"))
+                                setAuthToken(o.getString("auth"));
+
+                            setUser(team.things.put(Person.class, response));
+                            callbacks();
+                        }
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
@@ -257,10 +272,14 @@ public class Auth {
         signin();
     }
 
+    private void setGoogleAuthToken(String auth) {
+        mGoogleAuthToken = auth;
+        signin();
+    }
+
     private void setAuthToken(String auth) {
         mAuthToken = auth;
         save();
-        signin();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -273,7 +292,7 @@ public class Auth {
                 break;
             case Config.REQUEST_CODE_AUTH_RESOLUTION:
                 if(resultCode == Activity.RESULT_OK && data != null) {
-                    setAuthToken(data.getStringExtra("authtoken"));
+                    setGoogleAuthToken(data.getStringExtra("authtoken"));
                 }
 
                 break;

@@ -132,9 +132,9 @@ public class Auth {
 
         Results<ScoredDocument> results;
 
-        if(email != null)
-            results = snappy.search.index.get(Search.Type.PERSON).search("email = \"" + email + "\" OR token = \"" + token + "\"");
-        else
+        if(email != null) // Google login
+            results = snappy.search.index.get(Search.Type.PERSON).search("email = \"" + email + "\"");
+        else // Auth token login
             results = snappy.search.index.get(Search.Type.PERSON).search("token = \"" + token + "\"");
 
         Iterator<ScoredDocument> resultsIterator = results.iterator();
@@ -143,7 +143,7 @@ public class Auth {
             document = resultsIterator.next();
         }
 
-        if(document != null) {
+        if(document != null && email == null) {
             String tok = document.getOnlyField("token").getAtom();
 
             if (tok == null) {

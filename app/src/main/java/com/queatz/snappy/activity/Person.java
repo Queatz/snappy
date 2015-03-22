@@ -24,7 +24,7 @@ public class Person extends BaseActivity {
     private ActionBar mActionBar;
     private SlideScreen mSlideScreen;
     private com.queatz.snappy.things.Person mPerson;
-    private boolean mIsActive = false;
+    private boolean mIsActive = true;
     public Team team;
 
     @Override
@@ -101,6 +101,11 @@ public class Person extends BaseActivity {
             }
         });
 
+        onNewIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
         String show = intent.getStringExtra("show");
 
         mActionBar.setPage(show == null || "upto".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
