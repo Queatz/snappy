@@ -24,13 +24,15 @@ public class Person extends BaseActivity {
     private ActionBar mActionBar;
     private SlideScreen mSlideScreen;
     private com.queatz.snappy.things.Person mPerson;
-    private boolean mIsActive = true;
+    private boolean mIsActive;
     public Team team;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         team = ((MainApplication) getApplication()).team;
+
+        mIsActive = true;
 
         Intent intent = getIntent();
 

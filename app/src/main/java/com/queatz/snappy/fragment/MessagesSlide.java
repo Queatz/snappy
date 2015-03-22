@@ -71,7 +71,7 @@ public class MessagesSlide extends Fragment {
     }
 
     private void update() {
-        if(getView() != null && team.auth.getUser() != null) {
+        if(team.auth.getUser() != null) {
             if(mList.getAdapter() == null) {
                 RealmResults<Contact> contacts = team.realm.where(Contact.class)
                         .equalTo("person.id", team.auth.getUser())
