@@ -116,12 +116,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="256dp">
 
-                <ImageView
+                <RelativeLayout
                     android:id="@+id/locationMapMarker"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/rocket" />
+                    android:clickable="true"
+                    android:background="@drawable/here">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:elevation="8dp"
+                        android:textSize="12sp"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_done_white_24dp"/>
+
+                </RelativeLayout>
 
             </com.queatz.snappy.ui.ScrollStopper>
 

@@ -41,6 +41,7 @@
     <string name="requested_to_join_party">Requested to join %1$s</string>
     <string name="request_accepted">Starts %1$s</string>
     <string name="started_following_you">Started following you</string>
+    <string name="here">Here</string>
 
     <plurals name="years">
         <item quantity="one">%1$s year</item>
