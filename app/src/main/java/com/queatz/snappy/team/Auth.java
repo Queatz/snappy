@@ -13,6 +13,8 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
+import com.queatz.snappy.activity.Buy;
+import com.queatz.snappy.activity.Welcome;
 import com.queatz.snappy.things.Person;
 
 import org.json.JSONException;
@@ -25,6 +27,16 @@ import java.util.HashSet;
  * Created by jacob on 10/19/14.
  */
 public class Auth {
+    public enum Step {
+        AUTHENTICATED,
+        PAID,
+        COMPLETE
+    }
+
+    public static interface Callback {
+        void onStep(Step step);
+    }
+
     private static final String SCOPE = "oauth2: email profile";
 
     public Team team;
@@ -32,10 +44,11 @@ public class Auth {
     private String mAuthToken;
     private String mEmail;
     private String mUser;
+    private String mGooglePurchaseToken;
     private String mGcmRegistrationId;
     private GetAuthTokenTask mFetchTask;
     private Activity mActivity;
-    private HashSet<Runnable> mCallbacks;
+    private HashSet<Callback> mCallbacks;
 
     private static class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
         private GoogleCloudMessaging gcm;
@@ -191,6 +204,7 @@ public class Auth {
         mEmail = null;
         mAuthToken = null;
         mGoogleAuthToken = null;
+        mGooglePurchaseToken = null;
         save();
 
         if(isLogout)
@@ -211,6 +225,9 @@ public class Auth {
             else if(mGoogleAuthToken == null) {
                 fetchAuthToken();
             }
+            else if(mGooglePurchaseToken == null) {
+                setGooglePurchaseToken("");
+            }
             else if(mUser == null) {
                 RequestParams params = new RequestParams();
                 params.put(Config.PARAM_EMAIL, mEmail);
@@ -226,7 +243,7 @@ public class Auth {
                                 setAuthToken(o.getString("auth"));
 
                             setUser(team.things.put(Person.class, response));
-                            callbacks();
+                            callbacks(Step.COMPLETE);
                         }
                         catch (JSONException e) {
                             e.printStackTrace();
@@ -242,13 +259,13 @@ public class Auth {
         }
     }
 
-    public void callback(Runnable runnable) {
-        mCallbacks.add(runnable);
+    public void callback(Callback callback) {
+        mCallbacks.add(callback);
     }
 
-    private void callbacks() {
-        for(Runnable runnable : mCallbacks) {
-            runnable.run();
+    private void callbacks(Step step) {
+        for(Callback callback : mCallbacks) {
+            callback.onStep(step);
         }
     }
 
@@ -272,8 +289,16 @@ public class Auth {
         signin();
     }
 
+    private void setGooglePurchaseToken(String token) {
+        mGooglePurchaseToken = "";
+        callbacks(Step.PAID);
+        signin();
+    }
+
     private void setGoogleAuthToken(String auth) {
         mGoogleAuthToken = auth;
+        callbacks(Step.AUTHENTICATED);
+        team.view.show(mActivity, Buy.class, null);
         signin();
     }
 

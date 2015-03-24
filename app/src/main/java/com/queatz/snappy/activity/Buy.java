@@ -11,9 +11,9 @@ import com.queatz.snappy.team.Auth;
 import com.queatz.snappy.team.Team;
 
 /**
- * Created by jacob on 10/19/14.
+ * Created by jacob on 3/23/15.
  */
-public class Welcome extends Activity {
+public class Buy extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,17 +22,16 @@ public class Welcome extends Activity {
 
         team.auth.setActivity(this);
 
-        setContentView(R.layout.welcome);
+        setContentView(R.layout.buy);
 
-        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.buy_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 team.auth.callback(new Auth.Callback() {
                     @Override
                     public void onStep(Auth.Step step) {
-                        if(step == Auth.Step.AUTHENTICATED) {
+                        if(step == Auth.Step.PAID)
                             finish();
-                        }
                     }
                 });
 

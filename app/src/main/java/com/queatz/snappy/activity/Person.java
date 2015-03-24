@@ -1,5 +1,6 @@
 package com.queatz.snappy.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +21,7 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by jacob on 10/19/14.
  */
-public class Person extends BaseActivity {
+public class Person extends Activity {
     private ActionBar mActionBar;
     private SlideScreen mSlideScreen;
     private com.queatz.snappy.things.Person mPerson;

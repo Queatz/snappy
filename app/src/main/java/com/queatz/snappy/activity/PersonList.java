@@ -1,5 +1,6 @@
 package com.queatz.snappy.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,7 +23,7 @@ import io.realm.RealmResults;
 /**
  * Created by jacob on 1/4/15.
  */
-public class PersonList extends BaseActivity {
+public class PersonList extends Activity {
     com.queatz.snappy.things.Person mPerson;
     boolean mShowFollowing;
 

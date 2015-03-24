@@ -1,5 +1,6 @@
 package com.queatz.snappy.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,7 +22,7 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by jacob on 10/19/14.
  */
-public class Main extends BaseActivity {
+public class Main extends Activity {
     public Team team;
 
     private ActionBar mActionBar;

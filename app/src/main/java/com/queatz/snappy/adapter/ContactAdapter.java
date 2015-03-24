@@ -46,7 +46,7 @@ public class ContactAdapter extends RealmBaseAdapter<Contact> {
         Person person = contact.getContact();
         Message message = contact.getLast();
 
-        boolean isOwn = message != null && team.auth.getUser().equals(message.getFrom().getId());
+        boolean isOwn = message != null && team.auth.getUser() != null && team.auth.getUser().equals(message.getFrom().getId());
 
         TextView name = (TextView) view.findViewById(R.id.name);
         TextView lastMessage = (TextView) view.findViewById(R.id.lastMessage);

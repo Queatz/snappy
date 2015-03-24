@@ -1,5 +1,6 @@
 package com.queatz.snappy.activity;
 
+import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -54,7 +55,7 @@ import io.realm.RealmResults;
 /**
  * Created by jacob on 1/3/15.
  */
-public class HostParty extends BaseActivity {
+public class HostParty extends Activity {
     public Team team;
     private String mGroup;
     private Date mDate;
