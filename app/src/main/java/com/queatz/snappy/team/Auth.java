@@ -297,9 +297,8 @@ public class Auth {
 
     private void setGoogleAuthToken(String auth) {
         mGoogleAuthToken = auth;
-        callbacks(Step.AUTHENTICATED);
         team.view.show(mActivity, Buy.class, null);
-        signin();
+        callbacks(Step.AUTHENTICATED);
     }
 
     private void setAuthToken(String auth) {
