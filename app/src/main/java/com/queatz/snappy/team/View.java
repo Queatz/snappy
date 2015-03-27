@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
-import com.queatz.snappy.Config;
 import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.activity.Welcome;
 

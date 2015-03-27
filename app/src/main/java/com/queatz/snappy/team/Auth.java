@@ -14,7 +14,6 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.activity.Buy;
-import com.queatz.snappy.activity.Welcome;
 import com.queatz.snappy.things.Person;
 
 import org.json.JSONException;
@@ -320,12 +319,6 @@ public class Auth {
                 }
 
                 break;
-        }
-
-        Log.d(Config.LOG_TAG, "Auth.onActRes " + requestCode + " " + resultCode + " " + data);
-
-        if(data != null && data.getExtras() != null) for (String key : data.getExtras().keySet()) {
-            Log.d(Config.LOG_TAG, key + ": " + data.getExtras().get(key));
         }
     }
 

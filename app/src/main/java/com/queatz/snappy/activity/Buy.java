@@ -46,5 +46,6 @@ public class Buy extends Activity {
 
         final Team team = ((MainApplication) getApplication()).team;
         team.auth.onActivityResult(requestCode, resultCode, data);
+        team.buy.onActivityResult(requestCode, resultCode, data);
     }
 }

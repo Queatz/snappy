@@ -9,15 +9,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class GcmIntentService extends IntentService {
 
