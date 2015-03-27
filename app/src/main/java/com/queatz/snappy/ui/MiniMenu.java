@@ -76,13 +76,6 @@ public class MiniMenu extends FrameLayout {
             }
         });
 
-        findViewById(R.id.action_invite).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                show(false);
-            }
-        });
-
         findViewById(R.id.action_socialmode).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
