@@ -139,7 +139,7 @@ public class Auth {
             }
             catch (JSONException e) {
                 e.printStackTrace();
-                throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "invalid server token info: " + s);
+                throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "invalid server token info");
             }
         }
         catch (IOException e) {
@@ -240,7 +240,7 @@ public class Auth {
             Document subscription = snappy.things.buy.makeOrUpdate(purchaseData, p);
 
             if (subscription == null)
-                throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "not bought 3 (" + purchaseData + "; " + p + ")");
+                throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "not bought 3");
 
             try {
                 userJson.put("subscription", subscription.getId());

@@ -93,7 +93,7 @@ public class SnappyServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 
-        try {
+        if(false) try {
             JSONObject json = new JSONObject();
             json.put("error", error.toString());
             json.put("reason", error.getReason());
