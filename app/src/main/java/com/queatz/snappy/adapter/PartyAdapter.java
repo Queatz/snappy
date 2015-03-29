@@ -152,9 +152,13 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
             }
         }
         else {
-            Join requested = team.realm.where(Join.class)
-                    .equalTo("party.id", party.getId())
-                    .equalTo("person.id", team.auth.getUser()).findFirst();
+            Join requested = null;
+
+            if(team.auth.getUser() != null) {
+                requested = team.realm.where(Join.class)
+                        .equalTo("party.id", party.getId())
+                        .equalTo("person.id", team.auth.getUser()).findFirst();
+            }
 
             if(requested == null || (!party.isFull() && Config.JOIN_STATUS_WITHDRAWN.equals(requested.getStatus()))) {
                 action.setVisibility(View.VISIBLE);
