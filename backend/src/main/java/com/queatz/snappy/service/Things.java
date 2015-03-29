@@ -1,6 +1,7 @@
 package com.queatz.snappy.service;
 
 import com.queatz.snappy.SnappyServlet;
+import com.queatz.snappy.thing.Buy;
 import com.queatz.snappy.thing.Contact;
 import com.queatz.snappy.thing.Follow;
 import com.queatz.snappy.thing.Join;
@@ -23,6 +24,7 @@ public class Things {
     public Join join;
     public Follow follow;
     public Contact contact;
+    public Buy buy;
 
     public Things(SnappyServlet s) {
         snappy = s;
@@ -33,5 +35,6 @@ public class Things {
         join = new Join(this);
         follow = new Follow(this);
         contact = new Contact(this);
+        buy = new Buy(this);
     }
 }

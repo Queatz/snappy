@@ -98,7 +98,7 @@ public class Push {
                             .setAutoCancel(true)
                             .setContentTitle(personFirstName)
                             .setContentText(message)
-                            .setSmallIcon(R.drawable.rocket)
+                            .setSmallIcon(R.drawable.pistachio)
                             .setPriority(Notification.PRIORITY_HIGH)
                             .setDefaults(Notification.DEFAULT_ALL);
 
@@ -143,7 +143,7 @@ public class Push {
                             .setAutoCancel(true)
                             .setContentTitle(personFirstName)
                             .setContentText(String.format(team.context.getString(R.string.requested_to_join_party), partyName))
-                            .setSmallIcon(R.drawable.rocket)
+                            .setSmallIcon(R.drawable.pistachio)
                             .setPriority(Notification.PRIORITY_DEFAULT)
                             .setDefaults(Notification.DEFAULT_ALL);
 
@@ -174,7 +174,7 @@ public class Push {
                             .setAutoCancel(true)
                             .setContentTitle(partyName)
                             .setContentText(String.format(team.context.getString(R.string.request_accepted), Util.relDate(partyDate)))
-                            .setSmallIcon(R.drawable.rocket)
+                            .setSmallIcon(R.drawable.pistachio)
                             .setPriority(Notification.PRIORITY_DEFAULT)
                             .setDefaults(Notification.DEFAULT_ALL);
 
@@ -200,7 +200,7 @@ public class Push {
                             .setAutoCancel(true)
                             .setContentTitle(personFirstName)
                             .setContentText(team.context.getString(R.string.started_following_you))
-                            .setSmallIcon(R.drawable.rocket)
+                            .setSmallIcon(R.drawable.pistachio)
                             .setPriority(Notification.PRIORITY_DEFAULT)
                             .setDefaults(Notification.DEFAULT_ALL);
 

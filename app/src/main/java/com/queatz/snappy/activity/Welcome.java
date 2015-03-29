@@ -34,12 +34,13 @@ public class Welcome extends Activity {
         team.auth.callback(new Auth.Callback() {
             @Override
             public void onStep(Auth.Step step) {
-                if(step == Auth.Step.AUTHENTICATED) {
-                    team.view.show(Welcome.this, Buy.class, null);
+                if(step == Auth.Step.COMPLETE) {
                     finish();
                 }
             }
         });
+
+        team.buy.pull(this);
     }
 
     @Override
@@ -48,5 +49,6 @@ public class Welcome extends Activity {
 
         final Team team = ((MainApplication) getApplication()).team;
         team.auth.onActivityResult(requestCode, resultCode, data);
+        team.buy.onActivityResult(requestCode, resultCode, data);
     }
 }

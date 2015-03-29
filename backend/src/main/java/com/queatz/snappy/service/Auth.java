@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Iterator;
 
 /**
@@ -59,8 +60,6 @@ public class Auth {
     }
 
     public JSONObject getPersonData(JSONObject result, String token) throws PrintingError {
-        String s;
-
         try {
             URL url = new URL(Config.GOOGLE_PLUS_PROFILE_URL + "?access_token=" + token);
 
@@ -68,7 +67,7 @@ public class Auth {
             HTTPRequest httpRequest = new HTTPRequest(url, HTTPMethod.GET);
             httpRequest.getFetchOptions().allowTruncate().doNotFollowRedirects();
             HTTPResponse resp = urlFetchService.fetch(httpRequest);
-            s = new String(resp.getContent());
+            String s = new String(resp.getContent());
             JSONObject response = new JSONObject(s);
 
             String gender = "";
@@ -121,7 +120,53 @@ public class Auth {
         }
     }
 
-    public String fetchUserFromAuth(String email, String token) throws PrintingError {
+    public String getServerAuthToken() throws PrintingError {
+        try {
+            URL url = new URL(Config.GOOGLE_AUTH_URL);
+
+            String payload = String.format(Config.GOOGLE_AUTH_URL_POST_PARAMS, Config.authCode, Config.clientId, Config.redirectUri);
+
+            URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
+            HTTPRequest httpRequest = new HTTPRequest(url, HTTPMethod.POST);
+            httpRequest.getFetchOptions().allowTruncate().doNotFollowRedirects();
+            httpRequest.setPayload(payload.getBytes());
+            HTTPResponse resp = urlFetchService.fetch(httpRequest);
+            String s = new String(resp.getContent());
+
+            return s;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            throw new PrintingError(Api.Error.SERVER_ERROR, "verify purchase server fail");
+        }
+    }
+
+    public String verifyPurchase(String purchaseData) throws PrintingError {
+        try {
+            String purchaseToken = new JSONObject(purchaseData).getString("purchaseToken");
+
+            String authToken = getServerAuthToken();
+
+            URL url = new URL(String.format(Config.GOOGLE_BILLING_URL, Config.PACKAGE, Config.subscriptionProductId, purchaseToken) + "?access_token=" + authToken);
+
+            URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
+            HTTPRequest httpRequest = new HTTPRequest(url, HTTPMethod.GET);
+            httpRequest.getFetchOptions().allowTruncate().doNotFollowRedirects();
+            HTTPResponse resp = urlFetchService.fetch(httpRequest);
+            String s = new String(resp.getContent());
+
+            return s;
+        }
+        catch (JSONException e) {
+            return null;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            throw new PrintingError(Api.Error.SERVER_ERROR, "user purchase server fail");
+        }
+    }
+
+    public String fetchUserFromAuth(String email, String token, String purchaseData) throws PrintingError {
         if(token == null) {
             return null;
         }
@@ -171,6 +216,28 @@ public class Auth {
         if(o == null)
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "no data or google changed");
 
+        if(purchaseData == null) {
+            throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "not bought");
+        }
+
+        String p = verifyPurchase(purchaseData);
+
+        if(p == null) {
+            throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "not bought 2");
+        }
+
+        Document subscription = snappy.things.buy.makeOrUpdate(purchaseData, p);
+
+        if(subscription == null)
+            throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "not bought 3");
+
+        try {
+            userJson.put("subscription", subscription.getId());
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+            throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "not bought 4");
+        }
         Document user = snappy.things.person.createOrUpdateWithJson(document, userJson);
 
         return user.getId();

@@ -15,7 +15,6 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
-import com.queatz.snappy.activity.Buy;
 import com.queatz.snappy.things.Person;
 
 import org.json.JSONException;

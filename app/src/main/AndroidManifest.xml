@@ -22,7 +22,7 @@
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
-        android:icon="@drawable/rocket"
+        android:icon="@drawable/pistachio"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity

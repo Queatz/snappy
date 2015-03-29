@@ -95,7 +95,6 @@ public class Buy {
 
         if(billingService != null) {
             onAttachedCallback.onAttached();
-            return;
         }
 
         if(serviceConnection == null) {
@@ -162,6 +161,7 @@ public class Buy {
             return false;
         }
 
+        mPlayServicesAvailable = true;
         return true;
     }
 
@@ -210,6 +210,8 @@ public class Buy {
                     purchaseCallback.onSuccess(purchaseData);
                 }
             }
+
+            mPurchaseCallbacks.clear();
         }
     }
 }

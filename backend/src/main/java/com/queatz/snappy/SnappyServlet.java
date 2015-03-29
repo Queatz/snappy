@@ -63,7 +63,7 @@ public class SnappyServlet extends HttpServlet {
         resp.setContentType("text/javascript");
 
         try {
-            user = auth.fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH));
+            user = auth.fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH), req.getParameter(Config.PARAM_PURCHASE_DATA));
 
             if(user == null)
                 throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null auth");

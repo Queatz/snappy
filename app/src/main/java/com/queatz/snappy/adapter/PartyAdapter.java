@@ -68,6 +68,7 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
 
         if(host != null) {
             String name = String.format(context.getString(R.string.by), host.getFirstName() + " " + host.getLastName());
+            name = "by Julia Gründel";
             ((TextView) view.findViewById(R.id.by_text)).setText(name);
         }
 

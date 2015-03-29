@@ -2,6 +2,9 @@ package com.queatz.snappy.service;
 
 public class Config {
     public static final String NAME = "snappy";
+    public static final String PACKAGE = "com.queatz.snappy";
+    public static final String clientId = "1098230558363-qe1do9mi41ptg644bd12m90sbba767e2.apps.googleusercontent.com";
+    public static final String redirectUri = "urn:ietf:wg:oauth:2.0:oob";
 
     public static final int SEARCH_DISTANCE = 1609;
 
@@ -37,9 +40,15 @@ public class Config {
     public static final String PARAM_SEEN = "seen";
     public static final String PARAM_LOCAL_ID = "local_id";
     public static final String PARAM_DEVICE_ID = "device_id";
+    public static final String PARAM_PURCHASE_DATA = "purchase_data";
 
     public static final String GOOGLE_PLUS_PROFILE_URL = "https://www.googleapis.com/plus/v1/people/me";
     public static final String GOOGLE_PLUS_TOKENINFO_URL = "https://www.googleapis.com/oauth2/v1/tokeninfo";
+    public static final String GOOGLE_BILLING_URL = "https://www.googleapis.com/androidpublisher/v2/applications/%s/purchases/subscriptions/%s/tokens/%s";
+    public static final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/token";
+    public static final String GOOGLE_AUTH_URL_POST_PARAMS = "grant_type=authorization_code&code=%s&client_id=%s&redirect_uri=%s";
+    public static final String subscriptionProductId = "com.queatz.snappy.monthly";
+    public static final String authCode = "4/7R9mPii0HCrzfMZnwWzR0vPQwLMGbq3snNu8f84Tqzs.spluFgbcfaMXEnp6UAPFm0E8ZnHGmAI";
 
     public static final String PATH_API = "api";
     public static final String PATH_PARTY = "party";

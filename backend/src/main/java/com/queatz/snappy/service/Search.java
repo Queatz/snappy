@@ -20,7 +20,8 @@ public class Search {
         UPDATE,
         JOIN,
         FOLLOW,
-        CONTACT
+        CONTACT,
+        BUY
     }
 
     public SnappyServlet snappy;

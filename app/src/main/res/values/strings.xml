@@ -41,6 +41,7 @@
     <string name="request_accepted">starts %1$s</string>
     <string name="started_following_you">started following you</string>
     <string name="buy_didnt_work">Buy didn\'t work</string>
+    <string name="price_string">Snappy is $5/month.</string>
 
     <plurals name="years">
         <item quantity="one">%1$s year</item>

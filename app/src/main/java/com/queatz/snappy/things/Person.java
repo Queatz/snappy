@@ -33,7 +33,8 @@ public class Person extends RealmObject {
         if(getImageUrl() == null || getImageUrl().isEmpty() || !getImageUrl().contains("="))
             return null;
 
-        return getImageUrl().split("=")[0] + "=" + size;
+        return "http://www.pasteall.org/pic/show.php?id=85961";
+//        return getImageUrl().split("=")[0] + "=" + size;
     }
 
     public String getId() {

@@ -27,4 +27,7 @@
     <color name="shadow">#64000000</color>
     <color name="action_required">#FFECB3</color>
     <color name="action_required_pressed">#FFE082</color>
+
+    <color name="snappyGreen">#a9ff13</color>
+    <color name="snappyTan">#ffeea6</color>
 </resources>
