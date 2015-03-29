@@ -27,17 +27,19 @@ public class Buy extends Activity {
         findViewById(R.id.buy_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                team.auth.callback(new Auth.Callback() {
-                    @Override
-                    public void onStep(Auth.Step step) {
-                        if(step == Auth.Step.PAID)
-                            finish();
-                    }
-                });
-
                 team.auth.signin();
             }
         });
+
+        team.auth.callback(new Auth.Callback() {
+            @Override
+            public void onStep(Auth.Step step) {
+                if(step == Auth.Step.PAID)
+                    finish();
+            }
+        });
+
+        team.buy.pull(this);
     }
 
     @Override

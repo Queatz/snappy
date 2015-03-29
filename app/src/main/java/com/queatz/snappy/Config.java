@@ -12,6 +12,7 @@ public class Config {
     public static final int maxHoursInFuture = 18;
     public static final float locationAccuracy = 100;
     public static final float defaultMapZoom = 18;
+    public static final String subscriptionProductId = "com.queatz.snappy.monthly";
 
     public static final String PREFERENCE_USER = "auth.user";
     public static final String PREFERENCE_AUTH_TOKEN = "auth.auth_token";
@@ -20,6 +21,7 @@ public class Config {
     public static final int REQUEST_CODE_AUTH_RESOLUTION = 1;
     public static final int REQUEST_CODE_ACCOUNT_PICKER = 2;
     public static final int REQUEST_CODE_BUY_INTENT = 3;
+    public static final int REQUEST_CODE_PLAY_SERVICES = 4;
 
     public static final String PUSH_ACTION_JOIN_REQUEST = "join_requested";
     public static final String PUSH_ACTION_JOIN_ACCEPTED = "join_accepted";
@@ -39,6 +41,7 @@ public class Config {
     public static final String PARAM_SEEN = "seen";
     public static final String PARAM_LOCAL_ID = "local_id";
     public static final String PARAM_DEVICE_ID = "device_id";
+    public static final String PARAM_PURCHASE_DATA = "purchase_data";
 
     public static final String PATH_API = "api";
     public static final String PATH_PARTIES = "parties";
@@ -60,4 +63,24 @@ public class Config {
     public static final String JOIN_STATUS_IN = "in";
     public static final String JOIN_STATUS_OUT = "out";
     public static final String JOIN_STATUS_WITHDRAWN = "withdrawn";
+
+    public static final int BILLING_RESPONSE_RESULT_OK                  = 0;
+    public static final int BILLING_RESPONSE_RESULT_USER_CANCELED       = 1;
+    public static final int BILLING_RESPONSE_RESULT_SERVICE_UNAVAILABLE = 2;
+    public static final int BILLING_RESPONSE_RESULT_BILLING_UNAVAILABLE = 3;
+    public static final int BILLING_RESPONSE_RESULT_ITEM_UNAVAILABLE    = 4;
+    public static final int BILLING_RESPONSE_RESULT_DEVELOPER_ERROR     = 5;
+    public static final int BILLING_RESPONSE_RESULT_ERROR               = 6;
+    public static final int BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED  = 7;
+    public static final int BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED      = 8;
+    public static final String BILLING_RESPONSE_CODE                    = "RESPONSE_CODE";
+    public static final String BILLING_DETAILS_LIST                     = "DETAILS_LIST";
+    public static final String BILLING_BUY_INTENT                       = "BUY_INTENT";
+    public static final String BILLING_INAPP_PURCHASE_DATA              = "INAPP_PURCHASE_DATA";
+    public static final String BILLING_INAPP_DATA_SIGNATURE             = "INAPP_DATA_SIGNATURE";
+    public static final String BILLING_INAPP_PURCHASE_ITEM_LIST         = "INAPP_PURCHASE_ITEM_LIST";
+    public static final String BILLING_INAPP_PURCHASE_DATA_LIST         = "INAPP_PURCHASE_DATA_LIST";
+    public static final String BILLING_INAPP_DATA_SIGNATURE_LIST        = "INAPP_DATA_SIGNATURE_LIST";
+    public static final String BILLING_INAPP_CONTINUATION_TOKEN         = "INAPP_CONTINUATION_TOKEN";
+    public static final String BILLING_ITEM_ID_LIST                     = "ITEM_ID_LIST";
 }

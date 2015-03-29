@@ -27,16 +27,17 @@ public class Welcome extends Activity {
         findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                team.auth.callback(new Auth.Callback() {
-                    @Override
-                    public void onStep(Auth.Step step) {
-                        if(step == Auth.Step.AUTHENTICATED) {
-                            finish();
-                        }
-                    }
-                });
-
                 team.auth.signin();
+            }
+        });
+
+        team.auth.callback(new Auth.Callback() {
+            @Override
+            public void onStep(Auth.Step step) {
+                if(step == Auth.Step.AUTHENTICATED) {
+                    team.view.show(Welcome.this, Buy.class, null);
+                    finish();
+                }
             }
         });
     }

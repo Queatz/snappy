@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -13,6 +14,7 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
+import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Buy;
 import com.queatz.snappy.things.Person;
 
@@ -43,7 +45,7 @@ public class Auth {
     private String mAuthToken;
     private String mEmail;
     private String mUser;
-    private String mGooglePurchaseToken;
+    private JSONObject mGooglePurchaseData;
     private String mGcmRegistrationId;
     private GetAuthTokenTask mFetchTask;
     private Activity mActivity;
@@ -203,7 +205,7 @@ public class Auth {
         mEmail = null;
         mAuthToken = null;
         mGoogleAuthToken = null;
-        mGooglePurchaseToken = null;
+        mGooglePurchaseData = null;
         save();
 
         if(isLogout)
@@ -224,13 +226,24 @@ public class Auth {
             else if(mGoogleAuthToken == null) {
                 fetchAuthToken();
             }
-            else if(mGooglePurchaseToken == null) {
-                setGooglePurchaseToken("");
+            else if(mGooglePurchaseData == null) {
+                team.buy.buy(mActivity, new com.queatz.snappy.team.Buy.PurchaseCallback() {
+                    @Override
+                    public void onSuccess(JSONObject purchaseData) {
+                        setGooglePurchaseData(purchaseData);
+                    }
+
+                    @Override
+                    public void onError() {
+                        Toast.makeText(team.context, team.context.getString(R.string.buy_didnt_work), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
             else if(mUser == null) {
                 RequestParams params = new RequestParams();
                 params.put(Config.PARAM_EMAIL, mEmail);
                 params.put(Config.PARAM_AUTH, mGoogleAuthToken);
+                params.put(Config.PARAM_PURCHASE_DATA, mGooglePurchaseData);
 
                 team.api.get(Config.PATH_ME, params, new Api.Callback() {
                     @Override
@@ -259,6 +272,18 @@ public class Auth {
     }
 
     public void callback(Callback callback) {
+        if(mGoogleAuthToken != null) {
+            callback.onStep(Step.AUTHENTICATED);
+        }
+
+        if(mGooglePurchaseData != null) {
+            callback.onStep(Step.PAID);
+        }
+
+        if(mUser != null) {
+            callback.onStep(Step.COMPLETE);
+        }
+
         mCallbacks.add(callback);
     }
 
@@ -288,16 +313,16 @@ public class Auth {
         signin();
     }
 
-    private void setGooglePurchaseToken(String token) {
-        mGooglePurchaseToken = "";
+    private void setGooglePurchaseData(JSONObject purchaseData) {
+        mGooglePurchaseData = purchaseData;
         callbacks(Step.PAID);
         signin();
     }
 
     private void setGoogleAuthToken(String auth) {
         mGoogleAuthToken = auth;
-        team.view.show(mActivity, Buy.class, null);
         callbacks(Step.AUTHENTICATED);
+        signin();
     }
 
     private void setAuthToken(String auth) {
