@@ -55,14 +55,14 @@ public class Buy implements Thing {
                 documentBuild.addField(Field.newBuilder().setName("orderId").setAtom(data.getString("orderId")));
                 documentBuild.addField(Field.newBuilder().setName("packageName").setAtom(data.getString("packageName")));
                 documentBuild.addField(Field.newBuilder().setName("productId").setAtom(data.getString("productId")));
-                documentBuild.addField(Field.newBuilder().setName("purchaseTime").setNumber(data.getLong("purchaseTime")));
+                documentBuild.addField(Field.newBuilder().setName("purchaseTime").setDate(Util.longToDate(data.getLong("purchaseTime"))));
                 documentBuild.addField(Field.newBuilder().setName("purchaseState").setNumber(data.getLong("purchaseState")));
                 documentBuild.addField(Field.newBuilder().setName("developerPayload").setAtom(data.getString("developerPayload")));
                 documentBuild.addField(Field.newBuilder().setName("purchaseToken").setAtom(data.getString("purchaseToken")));
             }
 
-            documentBuild.addField(Field.newBuilder().setName("startTimeMillis").setAtom(subscription.getString("startTimeMillis")));
-            documentBuild.addField(Field.newBuilder().setName("expiryTimeMillis").setNumber(subscription.getLong("expiryTimeMillis")));
+            documentBuild.addField(Field.newBuilder().setName("startTimeMillis").setDate(Util.longToDate(subscription.getLong("startTimeMillis"))));
+            documentBuild.addField(Field.newBuilder().setName("expiryTimeMillis").setDate(Util.longToDate(subscription.getLong("expiryTimeMillis"))));
             documentBuild.addField(Field.newBuilder().setName("autoRenewing").setAtom(Boolean.toString(subscription.getBoolean("autoRenewing"))));
 
             Document document = documentBuild.build();

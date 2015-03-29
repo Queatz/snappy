@@ -27,6 +27,10 @@ public class Util {
                 UUID.randomUUID().toString();
     }
 
+   static public Date longToDate(long millis) {
+        return new Date(millis);
+    }
+
     static DateFormat formatter = DateFormat.getDateTimeInstance(
             DateFormat.LONG,
             DateFormat.LONG,

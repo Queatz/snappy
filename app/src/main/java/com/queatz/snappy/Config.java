@@ -13,6 +13,7 @@ public class Config {
     public static final float locationAccuracy = 100;
     public static final float defaultMapZoom = 18;
     public static final String subscriptionProductId = "com.queatz.snappy.monthly";
+    public static final String publisherAccount = "jacobaferrero@gmail.com";
 
     public static final String PREFERENCE_USER = "auth.user";
     public static final String PREFERENCE_AUTH_TOKEN = "auth.auth_token";

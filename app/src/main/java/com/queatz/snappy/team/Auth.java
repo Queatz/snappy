@@ -140,6 +140,18 @@ public class Auth {
 
         mCallbacks = new HashSet<>();
 
+        team.buy.callback(new com.queatz.snappy.team.Buy.PurchaseCallback() {
+            @Override
+            public void onSuccess(JSONObject purchaseData) {
+                setGooglePurchaseData(purchaseData);
+            }
+
+            @Override
+            public void onError() {
+                Toast.makeText(team.context, team.context.getString(R.string.buy_didnt_work), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         load();
     }
 
@@ -226,17 +238,13 @@ public class Auth {
                 fetchAuthToken();
             }
             else if(mGooglePurchaseData == null) {
-                team.buy.buy(mActivity, new com.queatz.snappy.team.Buy.PurchaseCallback() {
-                    @Override
-                    public void onSuccess(JSONObject purchaseData) {
-                        setGooglePurchaseData(purchaseData);
-                    }
-
-                    @Override
-                    public void onError() {
-                        Toast.makeText(team.context, team.context.getString(R.string.buy_didnt_work), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                if(Config.publisherAccount.equals(mEmail)) {
+                    // pass
+                    setGooglePurchaseData(new JSONObject());
+                }
+                else {
+                    team.buy.buy(mActivity);
+                }
             }
             else if(mUser == null) {
                 RequestParams params = new RequestParams();

@@ -150,7 +150,9 @@ public class Person implements Thing {
             documentBuild.addField(Field.newBuilder().setName("imageUrl").setAtom(jsonObject.getString("imageUrl")));
             documentBuild.addField(Field.newBuilder().setName("about").setAtom(Util.encode(jsonObject.getString("about"))));
             documentBuild.addField(Field.newBuilder().setName("googleId").setAtom(jsonObject.getString("googleId")));
-            documentBuild.addField(Field.newBuilder().setName("subscription").setAtom(jsonObject.getString("subscription")));
+
+            if(jsonObject.has("subscription"))
+                documentBuild.addField(Field.newBuilder().setName("subscription").setAtom(jsonObject.getString("subscription")));
         }
         catch (JSONException e) {
             e.printStackTrace();

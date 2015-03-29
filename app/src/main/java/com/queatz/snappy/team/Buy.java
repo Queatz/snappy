@@ -47,6 +47,10 @@ public class Buy {
         team = t;
     }
 
+    public void callback(PurchaseCallback callback) {
+        mPurchaseCallbacks.add(callback);
+    }
+
     public void pull(final Activity activity) {
         attach(activity, new OnAttachedCallback() {
             @Override
@@ -66,8 +70,7 @@ public class Buy {
 
                                 for (int i = 0; i < purchases.size(); i++) {
                                     String purchase = purchases.get(i);
-                                    if (purchase.contains(Config.subscriptionProductId)) {
-
+                                    if (Config.subscriptionProductId.equals(purchase)) {
                                         try {
                                             callbacks(new JSONObject(data.get(i)));
                                         }
@@ -119,12 +122,10 @@ public class Buy {
         activity.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    public void buy(final Activity activity, final PurchaseCallback purchaseCallback) {
+    public void buy(final Activity activity) {
         attach(activity, new OnAttachedCallback() {
             @Override
             public void onAttached() {
-                mPurchaseCallbacks.add(purchaseCallback);
-
                 Bundle buyIntentBundle;
 
                 try {
@@ -165,7 +166,7 @@ public class Buy {
         return true;
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final Activity activity, int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case Config.REQUEST_CODE_BUY_INTENT:
                 if(resultCode == Activity.RESULT_OK) {
@@ -181,6 +182,9 @@ public class Buy {
                             e.printStackTrace();
                             callbacks(null);
                         }
+                    }
+                    else if(responseCode == Config.BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED) {
+                        pull(activity);
                     }
                     else {
                         callbacks(null);

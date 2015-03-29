@@ -30,6 +30,7 @@ public class Team implements Closeable {
         context = c;
         realm = realm();
         preferences = c.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
+        buy = new Buy(this);
         auth = new Auth(this);
         api = new Api(this);
         action = new Action(this);
@@ -38,7 +39,6 @@ public class Team implements Closeable {
         location = new Location(this);
         push = new Push(this);
         local = new Local(this);
-        buy = new Buy(this);
     }
 
     public void close() {
