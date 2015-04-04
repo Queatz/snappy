@@ -65,6 +65,9 @@ public class Parties implements Api.Path {
                 break;
 
             case POST:
+                if(!api.snappy.buy.valid(user))
+                    throw new PrintingError(Api.Error.NOT_FOUND, "parties - not bought");
+
                 String localId = req.getParameter(Config.PARAM_LOCAL_ID);
 
                 Document document = api.snappy.things.party.createFromRequest(req, user);

@@ -86,7 +86,7 @@ public class Buy {
 
             @Override
             public void fail(String response) {
-
+                callbacks(false);
             }
         });
     }
@@ -113,7 +113,7 @@ public class Buy {
                                     if (Config.subscriptionProductId.equals(purchase)) {
                                         mGooglePurchaseData = data.get(i);
                                         send(mGooglePurchaseData);
-                                        callbacks(mGooglePurchaseData == null);
+                                        callbacks(mGooglePurchaseData != null);
                                     }
                                 }
                             }
@@ -215,7 +215,7 @@ public class Buy {
 
                         mGooglePurchaseData = purchaseData;
                         send(mGooglePurchaseData);
-                        callbacks(mGooglePurchaseData == null);
+                        callbacks(mGooglePurchaseData != null);
                     }
                     else if(responseCode == Config.BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED) {
                         pullGoogle(activity);
@@ -242,16 +242,16 @@ public class Buy {
         team.api.post(Config.PATH_ME_BUY, params);
     }
 
-    private void callbacks(boolean error) {
+    private void callbacks(boolean succeeded) {
         synchronized (mPurchaseCallbacks) {
-            if(error) {
+            if(succeeded) {
                 for (PurchaseCallback purchaseCallback : mPurchaseCallbacks) {
-                    purchaseCallback.onError();
+                    purchaseCallback.onSuccess();
                 }
             }
             else {
                 for (PurchaseCallback purchaseCallback : mPurchaseCallbacks) {
-                    purchaseCallback.onSuccess();
+                    purchaseCallback.onError();
                 }
             }
 

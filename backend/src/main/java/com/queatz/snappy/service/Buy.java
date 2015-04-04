@@ -78,6 +78,27 @@ public class Buy {
         }
     }
 
+    public boolean valid(String user) {
+        Document me = snappy.search.get(Search.Type.PERSON, user);
+
+        if(me == null)
+            return false;
+
+        if(Config.publisherAccount.equals(me.getOnlyField("email").getAtom())) {
+            return true;
+        }
+
+        try {
+            String s = me.getOnlyField("subscription").getAtom();
+
+            return s != null && !s.isEmpty();
+        }
+        catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean validate(String user, String purchaseData) throws PrintingError {
 
         Document me = snappy.search.get(Search.Type.PERSON, user);
