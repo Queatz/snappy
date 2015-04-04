@@ -11,10 +11,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 
 import org.json.JSONException;
@@ -28,7 +30,7 @@ import java.util.HashSet;
  */
 public class Buy {
     public static interface PurchaseCallback {
-        void onSuccess(JSONObject purchaseData);
+        void onSuccess();
         void onError();
     }
 
@@ -40,6 +42,7 @@ public class Buy {
     private ServiceConnection serviceConnection = null;
     private IInAppBillingService billingService = null;
     private boolean mPlayServicesAvailable = false;
+    private String mGooglePurchaseData = null;
 
     final private HashSet<PurchaseCallback> mPurchaseCallbacks = new HashSet<>();
 
@@ -47,11 +50,48 @@ public class Buy {
         team = t;
     }
 
+    public boolean bought() {
+        Log.e(Config.LOG_TAG, "bought " + mGooglePurchaseData);
+        return mGooglePurchaseData != null;
+    }
+
+
+    public JSONObject getPurchaseData() {
+        if(mGooglePurchaseData == null)
+            return null;
+
+        try {
+            return new JSONObject(mGooglePurchaseData);
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public void callback(PurchaseCallback callback) {
         mPurchaseCallbacks.add(callback);
     }
 
-    public void pull(final Activity activity) {
+    public void pullPerson() {
+        team.api.get(Config.PATH_ME_BUY, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                if(Boolean.valueOf(response)) {
+                    mGooglePurchaseData = response;
+                }
+
+                callbacks(Boolean.valueOf(response));
+            }
+
+            @Override
+            public void fail(String response) {
+
+            }
+        });
+    }
+
+    public void pullGoogle(final Activity activity) {
         attach(activity, new OnAttachedCallback() {
             @Override
             public void onAttached() {
@@ -64,19 +104,16 @@ public class Buy {
                         try {
                             Bundle activeSubs = billingService.getPurchases(3, team.context.getPackageName(), "subs", Config.BILLING_INAPP_CONTINUATION_TOKEN);
 
-                            if (activeSubs.getInt(Config.BILLING_RESPONSE_CODE) == 0) {
+                            if (activeSubs.getInt(Config.BILLING_RESPONSE_CODE) == Config.BILLING_RESPONSE_RESULT_OK) {
                                 ArrayList<String> purchases = activeSubs.getStringArrayList(Config.BILLING_INAPP_PURCHASE_ITEM_LIST);
                                 ArrayList<String> data = activeSubs.getStringArrayList(Config.BILLING_INAPP_PURCHASE_DATA_LIST);
 
                                 for (int i = 0; i < purchases.size(); i++) {
                                     String purchase = purchases.get(i);
                                     if (Config.subscriptionProductId.equals(purchase)) {
-                                        try {
-                                            callbacks(new JSONObject(data.get(i)));
-                                        }
-                                        catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
+                                        mGooglePurchaseData = data.get(i);
+                                        send(mGooglePurchaseData);
+                                        callbacks(mGooglePurchaseData == null);
                                     }
                                 }
                             }
@@ -133,7 +170,7 @@ public class Buy {
                 }
                 catch (RemoteException e) {
                     e.printStackTrace();
-                    callbacks(null);
+                    callbacks(false);
                     return;
                 }
 
@@ -146,7 +183,7 @@ public class Buy {
                         activity.startIntentSenderForResult(pendingIntent.getIntentSender(), Config.REQUEST_CODE_BUY_INTENT, new Intent(), 0, 0, 0);
                     } catch (IntentSender.SendIntentException e) {
                         e.printStackTrace();
-                        callbacks(null);
+                        callbacks(false);
                     }
                 }
             }
@@ -176,22 +213,19 @@ public class Buy {
                         final String purchaseData = data.getStringExtra(Config.BILLING_INAPP_PURCHASE_DATA);
                         final String dataSignature = data.getStringExtra(Config.BILLING_INAPP_DATA_SIGNATURE);
 
-                        try {
-                            callbacks(new JSONObject(purchaseData));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            callbacks(null);
-                        }
+                        mGooglePurchaseData = purchaseData;
+                        send(mGooglePurchaseData);
+                        callbacks(mGooglePurchaseData == null);
                     }
                     else if(responseCode == Config.BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED) {
-                        pull(activity);
+                        pullGoogle(activity);
                     }
                     else {
-                        callbacks(null);
+                        callbacks(false);
                     }
                 }
                 else {
-                    callbacks(null);
+                    callbacks(false);
                 }
                 break;
             case Config.REQUEST_CODE_PLAY_SERVICES:
@@ -202,16 +236,22 @@ public class Buy {
         }
     }
 
-    private void callbacks(JSONObject purchaseData) {
+    private void send(String purchaseData) {
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_PURCHASE_DATA, purchaseData);
+        team.api.post(Config.PATH_ME_BUY, params);
+    }
+
+    private void callbacks(boolean error) {
         synchronized (mPurchaseCallbacks) {
-            if(purchaseData == null) {
+            if(error) {
                 for (PurchaseCallback purchaseCallback : mPurchaseCallbacks) {
                     purchaseCallback.onError();
                 }
             }
             else {
                 for (PurchaseCallback purchaseCallback : mPurchaseCallbacks) {
-                    purchaseCallback.onSuccess(purchaseData);
+                    purchaseCallback.onSuccess();
                 }
             }
 

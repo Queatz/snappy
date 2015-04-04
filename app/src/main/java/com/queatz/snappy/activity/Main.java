@@ -50,6 +50,10 @@ public class Main extends Activity {
             }
         });
 
+        if(!team.buy.bought()) {
+            team.buy.pullPerson();
+        }
+
         ImageView profile = ((ImageView) mActionBar.getRightContent().getChildAt(0));
 
         if(profile != null) {
@@ -99,5 +103,12 @@ public class Main extends Activity {
         String show = getIntent().getStringExtra("show");
 
         mActionBar.setPage(show == null || "parties".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        team.buy.onActivityResult(this, requestCode, resultCode, data);
     }
 }

@@ -59,6 +59,7 @@ public class Config {
     public static final String PATH_PEOPLE = "people";
     public static final String PATH_FOLLOW = "follow";
     public static final String PATH_ME = "me";
+    public static final String PATH_BUY = "buy";
     public static final String PATH_REGISTER_DEVICE = "register_device";
     public static final String PATH_UNREGISTER_DEVICE = "unregister_device";
     public static final String PATH_PHOTO = "photo";

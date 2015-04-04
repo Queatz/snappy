@@ -2,16 +2,19 @@ package com.queatz.snappy.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnticipateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.HostParty;
+import com.queatz.snappy.team.Buy;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Person;
 
@@ -55,10 +58,26 @@ public class MiniMenu extends FrameLayout {
         findViewById(R.id.action_host).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Team team = ((MainApplication) getContext().getApplicationContext()).team;
+                final Team team = ((MainApplication) getContext().getApplicationContext()).team;
 
-                team.view.show((android.app.Activity) getContext(), HostParty.class, null);
+                if(team.buy.bought()) {
+                    team.view.show((android.app.Activity) getContext(), HostParty.class, null);
+                }
+                else {
+                    team.buy.callback(new Buy.PurchaseCallback() {
+                        @Override
+                        public void onSuccess() {
+                            team.view.show((android.app.Activity) getContext(), HostParty.class, null);
+                        }
 
+                        @Override
+                        public void onError() {
+                            Toast.makeText(team.context, team.context.getString(R.string.buy_didnt_work), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    team.buy.buy((Activity) getContext());
+                }
                 show(false);
             }
         });

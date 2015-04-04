@@ -28,13 +28,44 @@ public class Me implements Api.Path {
     public void call(ArrayList<String> path, String user, HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException, PrintingError {
         switch (method) {
             case GET:
-                Document me = api.snappy.search.get(Search.Type.PERSON, user);
+                if(path.size() == 0) {
+                    Document me = api.snappy.search.get(Search.Type.PERSON, user);
 
-                if(me == null) {
-                    throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "me - inexistent");
+                    if (me == null) {
+                        throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "me - inexistent");
+                    }
+
+                    resp.getWriter().write(api.snappy.things.person.toJson(me, user, false).toString());
                 }
+                else if(path.size() == 1) {
+                    if(Config.PATH_BUY.equals(path.get(0))) {
+                        Document me = api.snappy.search.get(Search.Type.PERSON, user);
 
-                resp.getWriter().write(api.snappy.things.person.toJson(me, user, false).toString());
+                        if (me == null) {
+                            throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "me - inexistent");
+                        }
+
+                        try {
+                            if(Config.publisherAccount.equals(me.getOnlyField("email").getAtom())) {
+                                resp.getWriter().write(Boolean.toString(true));
+                            }
+                            else {
+                                String subscription = me.getOnlyField("subscription").getAtom();
+                                resp.getWriter().write(Boolean.toString(subscription != null && !subscription.isEmpty()));
+                            }
+                        }
+                        catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                            resp.getWriter().write(Boolean.toString(false));
+                        }
+                    }
+                    else {
+                        throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "me - bad path");
+                    }
+                }
+                else {
+                    throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "me - bad path");
+                }
 
                 break;
             case PUT:
@@ -45,7 +76,10 @@ public class Me implements Api.Path {
                 if(path.size() != 1)
                     throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "me - bad path");
 
-                if(Config.PATH_REGISTER_DEVICE.equals(path.get(0))) {
+                if(Config.PATH_BUY.equals(path.get(0))) {
+                    resp.getWriter().write(Boolean.toString(api.snappy.buy.validate(user, req.getParameter(Config.PARAM_PURCHASE_DATA))));
+                }
+                else if(Config.PATH_REGISTER_DEVICE.equals(path.get(0))) {
                     String deviceId = req.getParameter(Config.PARAM_DEVICE_ID);
 
                     if(deviceId != null && deviceId.length() > 0) {

@@ -29,7 +29,6 @@ import java.util.HashSet;
 public class Auth {
     public enum Step {
         AUTHENTICATED,
-        PAID,
         COMPLETE
     }
 
@@ -44,7 +43,6 @@ public class Auth {
     private String mAuthToken;
     private String mEmail;
     private String mUser;
-    private JSONObject mGooglePurchaseData;
     private String mGcmRegistrationId;
     private GetAuthTokenTask mFetchTask;
     private Activity mActivity;
@@ -140,18 +138,6 @@ public class Auth {
 
         mCallbacks = new HashSet<>();
 
-        team.buy.callback(new com.queatz.snappy.team.Buy.PurchaseCallback() {
-            @Override
-            public void onSuccess(JSONObject purchaseData) {
-                setGooglePurchaseData(purchaseData);
-            }
-
-            @Override
-            public void onError() {
-                Toast.makeText(team.context, team.context.getString(R.string.buy_didnt_work), Toast.LENGTH_SHORT).show();
-            }
-        });
-
         load();
     }
 
@@ -216,7 +202,6 @@ public class Auth {
         mEmail = null;
         mAuthToken = null;
         mGoogleAuthToken = null;
-        mGooglePurchaseData = null;
         save();
 
         if(isLogout)
@@ -237,20 +222,10 @@ public class Auth {
             else if(mGoogleAuthToken == null) {
                 fetchAuthToken();
             }
-            else if(mGooglePurchaseData == null) {
-                if(Config.publisherAccount.equals(mEmail)) {
-                    // pass
-                    setGooglePurchaseData(new JSONObject());
-                }
-                else {
-                    team.buy.buy(mActivity);
-                }
-            }
             else if(mUser == null) {
                 RequestParams params = new RequestParams();
                 params.put(Config.PARAM_EMAIL, mEmail);
                 params.put(Config.PARAM_AUTH, mGoogleAuthToken);
-                params.put(Config.PARAM_PURCHASE_DATA, mGooglePurchaseData);
 
                 team.api.get(Config.PATH_ME, params, new Api.Callback() {
                     @Override
@@ -283,10 +258,6 @@ public class Auth {
             callback.onStep(Step.AUTHENTICATED);
         }
 
-        if(mGooglePurchaseData != null) {
-            callback.onStep(Step.PAID);
-        }
-
         if(mUser != null) {
             callback.onStep(Step.COMPLETE);
         }
@@ -317,12 +288,6 @@ public class Auth {
 
         registerDevice();
         save();
-        signin();
-    }
-
-    private void setGooglePurchaseData(JSONObject purchaseData) {
-        mGooglePurchaseData = purchaseData;
-        callbacks(Step.PAID);
         signin();
     }
 

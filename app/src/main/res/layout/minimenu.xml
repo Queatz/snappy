@@ -15,7 +15,7 @@
         android:textSize="22sp"
         android:padding="8dp"
         android:textColor="@color/black"
-        android:text="@string/host_a_party"
+        android:text="@string/buy_and_host"
         android:id="@+id/action_host" />
 
     <com.queatz.snappy.ui.TextView

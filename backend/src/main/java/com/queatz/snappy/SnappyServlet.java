@@ -3,6 +3,7 @@ package com.queatz.snappy;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Auth;
+import com.queatz.snappy.service.Buy;
 import com.queatz.snappy.service.Config;
 import com.queatz.snappy.service.PrintingError;
 import com.queatz.snappy.service.Push;
@@ -31,6 +32,7 @@ public class SnappyServlet extends HttpServlet {
     public Api api;
     public Things things;
     public Push push;
+    public Buy buy;
 
     public SnappyServlet() {
         search = new Search(this);
@@ -38,6 +40,7 @@ public class SnappyServlet extends HttpServlet {
         api = new Api(this);
         things = new Things(this);
         push = new Push(this);
+        buy = new Buy(this);
     }
 
     @Override
@@ -63,7 +66,7 @@ public class SnappyServlet extends HttpServlet {
         resp.setContentType("text/javascript");
 
         try {
-            user = auth.fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH), req.getParameter(Config.PARAM_PURCHASE_DATA));
+            user = auth.fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH));
 
             if(user == null)
                 throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null auth");

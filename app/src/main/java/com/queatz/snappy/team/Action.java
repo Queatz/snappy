@@ -22,6 +22,7 @@ import com.queatz.snappy.things.Message;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.ui.MiniMenu;
+import com.queatz.snappy.ui.TextView;
 
 import java.io.FileNotFoundException;
 import java.util.Date;
@@ -186,6 +187,14 @@ public class Action {
     }
 
     public void openMinimenu(Activity in, View source) {
+        TextView host = (TextView) in.findViewById(R.id.miniMenu).findViewById(R.id.action_host);
+
+        if (host != null) {
+            if(team.buy.bought()) {
+                host.setText(R.string.host_a_party);
+            }
+        }
+
         ((MiniMenu) in.findViewById(R.id.miniMenu)).show();
     }
 

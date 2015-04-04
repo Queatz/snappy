@@ -48,6 +48,11 @@ public class Api {
 
             Log.d(Config.LOG_TAG, "api - fail - " + (responseBody == null ? null : new String(responseBody)));
         }
+
+        @Override
+        public boolean getUseSynchronousMode() {
+            return false;
+        }
     }
 
     public Team team;

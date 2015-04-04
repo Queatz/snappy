@@ -40,7 +40,7 @@ public class Welcome extends Activity {
             }
         });
 
-        team.buy.pull(this);
+        team.buy.pullGoogle(this);
     }
 
     @Override

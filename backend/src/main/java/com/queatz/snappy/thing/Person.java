@@ -108,6 +108,29 @@ public class Person implements Thing {
         }
     }
 
+    public boolean updateSubscription(Document person, String subscriptionId) {
+        if(person == null) {
+            return false;
+        }
+
+        Document.Builder documentBuild = Document.newBuilder();
+        documentBuild.setId(person.getId());
+        documentBuild.addField(Field.newBuilder().setName("subscription").setAtom(subscriptionId));
+
+        Util.copyIn(documentBuild, person, "subscription");
+
+        Document result = documentBuild.build();
+
+        try {
+            things.snappy.search.index.get(Search.Type.PERSON).put(result);
+        } catch (PutException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
     public boolean updateLocation(String user, double latitude, double longitude) {
         Document person = things.snappy.search.get(Search.Type.PERSON, user);
 
