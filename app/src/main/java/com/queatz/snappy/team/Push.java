@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 
 import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
@@ -52,7 +53,7 @@ public class Push {
             String personFirstName;
             String personId;
             String partyName;
-            Notification.Builder builder;
+            NotificationCompat.Builder builder;
 
             Intent resultIntent;
             TaskStackBuilder stackBuilder;
@@ -94,7 +95,7 @@ public class Push {
                         message = summary;
                     }
 
-                    builder = new Notification.Builder(team.context)
+                    builder = new NotificationCompat.Builder(team.context)
                             .setAutoCancel(true)
                             .setContentTitle(personFirstName)
                             .setContentText(message)
@@ -139,7 +140,7 @@ public class Push {
                     personId = push.getJSONObject("person").getString("id");
                     partyName = URLDecoder.decode(push.getJSONObject("party").getString("name"), "UTF-8");
 
-                    builder = new Notification.Builder(team.context)
+                    builder = new NotificationCompat.Builder(team.context)
                             .setAutoCancel(true)
                             .setContentTitle(personFirstName)
                             .setContentText(String.format(team.context.getString(R.string.requested_to_join_party), partyName))
@@ -153,7 +154,7 @@ public class Push {
                     builder.setContentIntent(pendingIntent);
 
                     if(Build.VERSION.SDK_INT >= 20) {
-                        builder.addAction(new Notification.Action(0, "Accept", null));
+                        builder.addAction(new NotificationCompat.Action(0, "Accept", null));
                     }
 
                     if(Build.VERSION.SDK_INT >= 21) {
@@ -170,7 +171,7 @@ public class Push {
                     String partyId = push.getJSONObject("party").getString("id");
                     Date partyDate = Util.stringToDate(push.getJSONObject("party").getString("date"));
 
-                    builder = new Notification.Builder(team.context)
+                    builder = new NotificationCompat.Builder(team.context)
                             .setAutoCancel(true)
                             .setContentTitle(partyName)
                             .setContentText(String.format(team.context.getString(R.string.request_accepted), Util.relDate(partyDate)))
@@ -196,7 +197,7 @@ public class Push {
                     personFirstName = URLDecoder.decode(push.getJSONObject("person").getString("firstName"), "UTF-8");
                     personId = push.getJSONObject("person").getString("id");
 
-                    builder = new Notification.Builder(team.context)
+                    builder = new NotificationCompat.Builder(team.context)
                             .setAutoCancel(true)
                             .setContentTitle(personFirstName)
                             .setContentText(team.context.getString(R.string.started_following_you))
