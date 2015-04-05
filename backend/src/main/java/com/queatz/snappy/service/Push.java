@@ -90,7 +90,6 @@ public class Push {
             } else {
                 String error = result.getErrorCodeName();
                 if (error.equals(Constants.ERROR_NOT_REGISTERED) || error.equals(Constants.ERROR_MISMATCH_SENDER_ID)) {
-                    // if the device is no longer registered with Gcm, remove it from the datastore
                     ofy().delete().entity(record).now();
                 }
             }

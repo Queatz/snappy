@@ -52,6 +52,7 @@ public class Main extends Activity {
 
         if(!team.buy.bought()) {
             team.buy.pullPerson();
+            team.buy.pullGoogle(this);
         }
 
         ImageView profile = ((ImageView) mActionBar.getRightContent().getChildAt(0));
