@@ -27,7 +27,7 @@ public class Push {
     }
 
     public void register(String user, String device) {
-        RegistrationRecord record = findRecord(device);
+        RegistrationRecord record = findRecord(user, device);
 
         if (record != null) {
             if(user.equals(record.getUserId()))
@@ -43,7 +43,7 @@ public class Push {
     }
 
     public void unregister(String user, String device) {
-        RegistrationRecord record = findRecord(device);
+        RegistrationRecord record = findRecord(user, device);
         if (record == null) {
             return;
         }
@@ -97,7 +97,7 @@ public class Push {
         }
     }
 
-    private RegistrationRecord findRecord(String regId) {
-        return ofy().load().type(RegistrationRecord.class).filter("regId", regId).first().now();
+    private RegistrationRecord findRecord(String userId, String regId) {
+        return ofy().load().type(RegistrationRecord.class).filter("regId", regId).filter("userId", userId).first().now();
     }
 }

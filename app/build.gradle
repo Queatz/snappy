@@ -8,8 +8,8 @@ android {
         applicationId "com.queatz.snappy"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 3
-        versionName "0.12"
+        versionCode 4
+        versionName "0.13"
     }
 
     signingConfigs {
