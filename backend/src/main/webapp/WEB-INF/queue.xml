@@ -2,5 +2,9 @@
     <queue>
         <name>pushes</name>
         <rate>100/s</rate>
+        <retry-parameters>
+            <task-retry-limit>5</task-retry-limit>
+            <task-age-limit>2d</task-age-limit>
+        </retry-parameters>
     </queue>
 </queue-entries>
