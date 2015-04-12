@@ -166,7 +166,7 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
                 action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        team.action.joinParty(party);
+                        team.action.joinParty((Activity) context, party);
                     }
                 });
             }

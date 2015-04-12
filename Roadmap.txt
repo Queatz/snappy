@@ -1,4 +1,3 @@
-You need to add a high-res icon. [English (United States) – en-US]
-You need to add a feature graphic. [English (United States) – en-US]
-You need to add at least 2 non-Android TV screenshots. [English (United States) – en-US]
-You need to upload an APK for this application.
+Release notes:
+
+* Get notified when someone you follow is hosting a party or joins one

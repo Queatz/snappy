@@ -47,6 +47,14 @@
     <string name="buy_didnt_work">Buy didn\'t work</string>
     <string name="buy_and_host">Buy and Host</string>
     <string name="accept">Accept</string>
+    <string name="about">About</string>
+    <string name="messages">Messages</string>
+    <string name="parties">Parties</string>
+    <string name="message_host_party">Your party will show up to people nearby.  You can mark the party as full when you have accepted enough people to stop getting more requests.</string>
+    <string name="ok">OK</string>
+    <string name="message_join_party">Would you like to write a message to %1$s, the party\'s host?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <plurals name="years">
         <item quantity="one">%1$s year</item>

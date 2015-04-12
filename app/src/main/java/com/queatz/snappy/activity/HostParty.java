@@ -108,7 +108,7 @@ public class HostParty extends Activity {
                     return;
                 }
 
-                team.action.hostParty(mGroup, name, date, mLocation, details);
+                team.action.hostParty(HostParty.this, mGroup, name, date, mLocation, details);
                 finish();
             }
         };

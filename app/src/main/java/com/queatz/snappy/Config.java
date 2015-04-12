@@ -17,6 +17,7 @@ public class Config {
     public static final String PREFERENCE_USER = "auth.user";
     public static final String PREFERENCE_AUTH_TOKEN = "auth.auth_token";
     public static final String PREFERENCE_GCM_REGISTRATION_ID = "auth.gcm_registration_id";
+    public static final String PREFERENCE_HOST_PARTY_SCREEN_SHOWN = "other.party_screen_shown";
 
     public static final int REQUEST_CODE_AUTH_RESOLUTION = 1;
     public static final int REQUEST_CODE_ACCOUNT_PICKER = 2;
@@ -29,6 +30,7 @@ public class Config {
     public static final String PUSH_ACTION_FOLLOW = "follow";
     public static final String PUSH_ACTION_MESSAGE = "message";
     public static final String PUSH_ACTION_NEW_PARTY = "new_party";
+    public static final String PUSH_ACTION_JOIN_PARTY = "join_party";
 
     public static final String PARAM_AUTH = "auth";
     public static final String PARAM_EMAIL = "email";

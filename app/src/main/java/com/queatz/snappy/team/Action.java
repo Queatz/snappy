@@ -1,6 +1,9 @@
 package com.queatz.snappy.team;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +17,7 @@ import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.activity.PersonList;
 import com.queatz.snappy.things.Contact;
 import com.queatz.snappy.things.Follow;
@@ -219,7 +223,7 @@ public class Action {
         });
     }
 
-    public void joinParty(@NonNull final Party party) {
+    public void joinParty(final Activity activity, @NonNull final Party party) {
         final String localId = Util.createLocalId();
 
         team.realm.beginTransaction();
@@ -246,6 +250,21 @@ public class Action {
                 Toast.makeText(team.context, "Join failed", Toast.LENGTH_SHORT).show();
             }
         });
+
+        new AlertDialog.Builder(activity)
+                .setMessage(String.format(team.context.getString(R.string.message_join_party), party.getHost().getFirstName()))
+                .setPositiveButton(team.context.getString(R.string.yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        openMessages(activity, party.getHost());
+                    }
+                })
+                .setNegativeButton(team.context.getString(R.string.no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).show();
     }
 
     public void cancelJoin(@NonNull final Party party) {
@@ -321,9 +340,7 @@ public class Action {
         });
     }
 
-    public void hostParty(String group, String name, Date date, com.queatz.snappy.things.Location location, String details) {
-        //local
-
+    public void hostParty(final Activity activity, final String group, final String name, final Date date, final com.queatz.snappy.things.Location location, final String details) {
         RequestParams params = new RequestParams();
 
         if(group != null && !group.isEmpty())
@@ -346,6 +363,15 @@ public class Action {
                 Toast.makeText(team.context, "Host party failed", Toast.LENGTH_SHORT).show();
             }
         });
+
+        showPartiesPostHost(activity);
+    }
+
+    public void showPartiesPostHost(final Activity activity) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("show_post_host_message", true);
+
+        team.view.show(activity, Main.class, bundle);
     }
 
     public boolean uploadUpto(Uri image, String location) { // TODO this will turn into post photo to party

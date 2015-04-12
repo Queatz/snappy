@@ -2,6 +2,7 @@ package com.queatz.snappy.adapter;
 
 import android.content.Context;
 
+import com.queatz.snappy.R;
 import com.queatz.snappy.ui.ActionBar;
 
 /**
@@ -19,6 +20,6 @@ public class MainTabAdapter extends ActionBar.TabAdapter {
     }
 
     public String getTabName(int i) {
-        return new String[]{"Parties", "Messages"}[i];
+        return new String[]{mContext.getString(R.string.parties), mContext.getString(R.string.messages)}[i];
     }
 }

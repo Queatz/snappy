@@ -65,11 +65,16 @@ public class Push {
             String action = push.getString("action");
 
             if(action == null) {
-                Log.w(Config.LOG_TAG, "Push recieved with no action: " + push);
+                Log.w(Config.LOG_TAG, "Push received with no action: " + push);
                 return;
             }
 
             switch (action) {
+                case Config.PUSH_ACTION_JOIN_PARTY:
+                    // Do: notify followers that you are joining a party (once accepted by the host)
+                    // Don't: notify the host that you are going to their party if you are their follower
+
+                    break;
                 case Config.PUSH_ACTION_NEW_PARTY:
                     personFirstName = URLDecoder.decode(push.getJSONObject("host").getString("firstName"), "UTF-8");
                     partyId = push.getJSONObject("party").getString("id");
@@ -82,7 +87,7 @@ public class Push {
                             .setContentText(String.format(team.context.getString(R.string.is_hosting_party), partyName, Util.cuteDate(partyDate, true)))
                             .setSmallIcon(R.drawable.icon_system)
                             .setPriority(Notification.PRIORITY_LOW)
-                            .setDefaults(Notification.DEFAULT_ALL);
+                            .setDefaults(Notification.DEFAULT_LIGHTS);
 
                     resultIntent = new Intent(team.context, Main.class);
                     pendingIntent = PendingIntent.getActivity(team.context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);

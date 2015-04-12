@@ -1,6 +1,8 @@
 package com.queatz.snappy.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -101,9 +103,23 @@ public class Main extends Activity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        String show = getIntent().getStringExtra("show");
+        Boolean showPostHostMessage = intent.getBooleanExtra("show_post_host_message", false);
+        String show = intent.getStringExtra("show");
 
         mActionBar.setPage(show == null || "parties".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
+
+        if(showPostHostMessage) {
+            if(!team.preferences.getBoolean(Config.PREFERENCE_HOST_PARTY_SCREEN_SHOWN, false)) {
+                new AlertDialog.Builder(this)
+                        .setMessage(team.context.getString(R.string.message_host_party))
+                        .setPositiveButton(team.context.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                team.preferences.edit().putBoolean(Config.PREFERENCE_HOST_PARTY_SCREEN_SHOWN, true).apply();
+                            }
+                        }).show();
+            }
+        }
     }
 
     @Override

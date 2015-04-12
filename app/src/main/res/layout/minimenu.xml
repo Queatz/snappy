@@ -7,30 +7,7 @@
     android:paddingBottom="1dp"
     android:paddingLeft="1dp">
 
-    <com.queatz.snappy.ui.TextView
-        android:clickable="true"
-        android:background="@drawable/softclick"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="22sp"
-        android:padding="8dp"
-        android:textColor="@color/black"
-        android:text="@string/buy_and_host"
-        android:id="@+id/action_host" />
-
-    <com.queatz.snappy.ui.TextView
-        android:clickable="true"
-        android:background="@drawable/softclick"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="22sp"
-        android:padding="8dp"
-        android:textColor="@color/black"
-        android:text="@string/my_profile"
-        android:id="@+id/action_profile" />
-
     <LinearLayout
-        android:visibility="gone"
         android:orientation="horizontal"
         android:clickable="true"
         android:background="@drawable/softclick"
@@ -56,6 +33,28 @@
             android:text="@string/on" />
 
     </LinearLayout>
+
+    <com.queatz.snappy.ui.TextView
+        android:clickable="true"
+        android:background="@drawable/softclick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:padding="8dp"
+        android:textColor="@color/black"
+        android:text="@string/buy_and_host"
+        android:id="@+id/action_host" />
+
+    <com.queatz.snappy.ui.TextView
+        android:clickable="true"
+        android:background="@drawable/softclick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:padding="8dp"
+        android:textColor="@color/black"
+        android:text="@string/my_profile"
+        android:id="@+id/action_profile" />
 
     <com.queatz.snappy.ui.TextView
         android:clickable="true"
