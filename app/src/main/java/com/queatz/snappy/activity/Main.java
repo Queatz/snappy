@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.adapter.MainAdapter;
 import com.queatz.snappy.adapter.MainTabAdapter;
+import com.queatz.snappy.team.Buy;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.ui.ActionBar;
@@ -29,6 +31,7 @@ public class Main extends Activity {
 
     private ActionBar mActionBar;
     private SlideScreen mSlideScreen;
+    private boolean mDestroyed = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,10 +55,25 @@ public class Main extends Activity {
             }
         });
 
-        if(!team.buy.bought()) {
-            team.buy.pullPerson();
-            team.buy.pullGoogle(this);
-        }
+        team.buy.callback(new Buy.PurchaseCallback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError() {
+                if(Build.VERSION.SDK_INT >= 17 && Main.this.isDestroyed())
+                    return;
+
+                if(Main.this.mDestroyed)
+                    return;
+
+                team.buy.pullGoogle(Main.this);
+            }
+        });
+
+        team.buy.pullPerson();
 
         ImageView profile = ((ImageView) mActionBar.getRightContent().getChildAt(0));
 
@@ -102,6 +120,12 @@ public class Main extends Activity {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDestroyed = true;
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
         Boolean showPostHostMessage = intent.getBooleanExtra("show_post_host_message", false);
         String show = intent.getStringExtra("show");
@@ -109,13 +133,15 @@ public class Main extends Activity {
         mActionBar.setPage(show == null || "parties".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
 
         if(showPostHostMessage) {
-            if(!team.preferences.getBoolean(Config.PREFERENCE_HOST_PARTY_SCREEN_SHOWN, false)) {
+            final String pref = Config.PREFERENCE_HOST_PARTY_SCREEN_SHOWN + "." + team.auth.getUser();
+
+            if(!team.preferences.getBoolean(pref, false)) {
                 new AlertDialog.Builder(this)
                         .setMessage(team.context.getString(R.string.message_host_party))
                         .setPositiveButton(team.context.getString(R.string.ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                team.preferences.edit().putBoolean(Config.PREFERENCE_HOST_PARTY_SCREEN_SHOWN, true).apply();
+                                team.preferences.edit().putBoolean(pref, true).apply();
                             }
                         }).show();
             }

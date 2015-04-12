@@ -19,6 +19,10 @@ public class Config {
     public static final String PREFERENCE_GCM_REGISTRATION_ID = "auth.gcm_registration_id";
     public static final String PREFERENCE_HOST_PARTY_SCREEN_SHOWN = "other.party_screen_shown";
 
+    public static final String HOSTING_ENABLED_FALSE = Boolean.toString(false);
+    public static final String HOSTING_ENABLED_AVAILABLE = "available";
+    public static final String HOSTING_ENABLED_TRUE = Boolean.toString(true);
+
     public static final int REQUEST_CODE_AUTH_RESOLUTION = 1;
     public static final int REQUEST_CODE_ACCOUNT_PICKER = 2;
     public static final int REQUEST_CODE_BUY_INTENT = 3;

@@ -50,7 +50,19 @@ public class Me implements Api.Path {
 
                         try {
                             String subscription = me.getOnlyField("subscription").getAtom();
-                            resp.getWriter().write(Boolean.toString(subscription != null && !subscription.isEmpty()));
+                            String r;
+
+                            if(subscription == null || subscription.isEmpty()) {
+                                r = Config.HOSTING_ENABLED_FALSE;
+                            }
+                            else if(Config.HOSTING_ENABLED_AVAILABLE.equals(subscription)) {
+                                r = Config.HOSTING_ENABLED_AVAILABLE;
+                            }
+                            else {
+                                r = Config.HOSTING_ENABLED_TRUE;
+                            }
+
+                            resp.getWriter().write(r);
                         }
                         catch (IllegalArgumentException e) {
                             e.printStackTrace();

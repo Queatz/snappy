@@ -194,8 +194,18 @@ public class Action {
         TextView host = (TextView) in.findViewById(R.id.miniMenu).findViewById(R.id.action_host);
 
         if (host != null) {
-            if(team.buy.bought()) {
+            String hostingEnabled = team.buy.hostingEnabled();
+
+            if(Config.HOSTING_ENABLED_TRUE.equals(hostingEnabled)) {
                 host.setText(R.string.host_a_party);
+                host.setVisibility(View.VISIBLE);
+            }
+            else if(Config.HOSTING_ENABLED_AVAILABLE.equals(hostingEnabled)) {
+                host.setText(R.string.buy_and_host);
+                host.setVisibility(View.VISIBLE);
+            }
+            else {
+                host.setVisibility(View.GONE);
             }
         }
 

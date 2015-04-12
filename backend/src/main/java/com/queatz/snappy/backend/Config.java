@@ -8,7 +8,15 @@ public class Config {
     public static final String QUEUE_WORKER_URL = "/worker";
     public static final String QUEUE_WORKER_NAME = "pushes";
 
+    public static boolean IN_BETA = true;
+
     public static final int SEARCH_DISTANCE = 1609 * 7;
+
+    public static final String HOSTING_ENABLED_FALSE = Boolean.toString(false);
+    public static final String HOSTING_ENABLED_AVAILABLE = "available";
+    public static final String HOSTING_ENABLED_TRUE = Boolean.toString(true);
+
+    public static final String HOSTING_SUBSCRIPTION_PENDING = "available";
 
     public static final String PUSH_ACTION_JOIN_REQUEST = "join_requested";
     public static final String PUSH_ACTION_JOIN_ACCEPTED = "join_accepted";

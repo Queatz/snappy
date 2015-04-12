@@ -83,8 +83,8 @@ public class Push {
 
                     builder = new NotificationCompat.Builder(team.context)
                             .setAutoCancel(true)
-                            .setContentTitle(personFirstName)
-                            .setContentText(String.format(team.context.getString(R.string.is_hosting_party), partyName, Util.cuteDate(partyDate, true)))
+                            .setContentTitle(partyName)
+                            .setContentText(String.format(team.context.getString(R.string.party_starts_at), Util.cuteDate(partyDate, true)))
                             .setSmallIcon(R.drawable.icon_system)
                             .setPriority(Notification.PRIORITY_LOW)
                             .setDefaults(Notification.DEFAULT_LIGHTS);

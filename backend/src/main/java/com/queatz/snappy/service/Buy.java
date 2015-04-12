@@ -94,7 +94,7 @@ public class Buy {
         try {
             String s = me.getOnlyField("subscription").getAtom();
 
-            return s != null && !s.isEmpty();
+            return s != null && !s.isEmpty() && !Config.HOSTING_ENABLED_AVAILABLE.equals(s);
         }
         catch (IllegalArgumentException e) {
             e.printStackTrace();

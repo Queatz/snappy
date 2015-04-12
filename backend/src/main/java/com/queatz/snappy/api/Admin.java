@@ -4,6 +4,7 @@ import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.urlfetch.HTTPMethod;
+import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Search;
@@ -60,6 +61,62 @@ public class Admin implements Api.Path {
                             }
                             else {
                                 resp.getWriter().write(person.getOnlyField("email").getAtom() + " is already upgraded");
+                            }
+                        }
+                    }
+                    else if ("enable_hosting".equals(action)) {
+                        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PERSON).search("email = \"" + personEmail + "\"");
+
+                        Iterator<ScoredDocument> resultsIterator = results.iterator();
+
+                        if (resultsIterator.hasNext()) {
+                            person = resultsIterator.next();
+                        }
+
+                        if (person != null) {
+                            String subs = null;
+
+                            try {
+                                subs = person.getOnlyField("subscription").getAtom();
+                            }
+                            catch (IllegalArgumentException e) {
+                                e.printStackTrace();
+                            }
+
+                            if(subs == null || subs.isEmpty()) {
+                                Things.getService().person.updateSubscription(person, Config.HOSTING_ENABLED_AVAILABLE);
+                                resp.getWriter().write(person.getOnlyField("email").getAtom() + " can now host");
+                            }
+                            else {
+                                resp.getWriter().write(person.getOnlyField("email").getAtom() + " can already host");
+                            }
+                        }
+                    }
+                    else if ("disable_hosting".equals(action)) {
+                        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PERSON).search("email = \"" + personEmail + "\"");
+
+                        Iterator<ScoredDocument> resultsIterator = results.iterator();
+
+                        if (resultsIterator.hasNext()) {
+                            person = resultsIterator.next();
+                        }
+
+                        if (person != null) {
+                            String subs = null;
+
+                            try {
+                                subs = person.getOnlyField("subscription").getAtom();
+                            }
+                            catch (IllegalArgumentException e) {
+                                e.printStackTrace();
+                            }
+
+                            if(subs == null || subs.isEmpty()) {
+                                resp.getWriter().write(person.getOnlyField("email").getAtom() + " already can't host");
+                            }
+                            else {
+                                Things.getService().person.updateSubscription(person, "");
+                                resp.getWriter().write(person.getOnlyField("email").getAtom() + " can no longer host");
                             }
                         }
                     }

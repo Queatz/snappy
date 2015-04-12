@@ -8,6 +8,7 @@ import com.google.appengine.api.search.PutException;
 import com.google.appengine.api.search.PutResponse;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
+import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 import com.queatz.snappy.backend.Util;
@@ -174,16 +175,24 @@ public class Person implements Thing {
             documentBuild.addField(Field.newBuilder().setName("about").setAtom(Util.encode(jsonObject.getString("about"))));
             documentBuild.addField(Field.newBuilder().setName("googleId").setAtom(jsonObject.getString("googleId")));
 
+            boolean subscribed = false;
+
             if(jsonObject.has("subscription")) {
                 documentBuild.addField(Field.newBuilder().setName("subscription").setAtom(jsonObject.getString("subscription")));
+                subscribed = true;
             }
             else {
                 if(document != null) {
                     try {
                         documentBuild.addField(Field.newBuilder().setName("subscription").setAtom(document.getOnlyField("subscription").getAtom()));
+                        subscribed = true;
                     } catch (IllegalArgumentException ignored) {
                     }
                 }
+            }
+
+            if(!subscribed && Config.IN_BETA) {
+                documentBuild.addField(Field.newBuilder().setName("subscription").setAtom("betatester"));
             }
         }
         catch (JSONException e) {

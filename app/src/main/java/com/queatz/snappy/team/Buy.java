@@ -43,6 +43,7 @@ public class Buy {
     private IInAppBillingService billingService = null;
     private boolean mPlayServicesAvailable = false;
     private String mGooglePurchaseData = null;
+    private String mHostingEnabled = null;
 
     final private HashSet<PurchaseCallback> mPurchaseCallbacks = new HashSet<>();
 
@@ -50,11 +51,14 @@ public class Buy {
         team = t;
     }
 
+    public String hostingEnabled() {
+        return mHostingEnabled;
+    }
+
     public boolean bought() {
         Log.e(Config.LOG_TAG, "bought " + mGooglePurchaseData);
         return mGooglePurchaseData != null;
     }
-
 
     public JSONObject getPurchaseData() {
         if(mGooglePurchaseData == null)
@@ -77,11 +81,25 @@ public class Buy {
         team.api.get(Config.PATH_ME_BUY, new Api.Callback() {
             @Override
             public void success(String response) {
-                if(Boolean.valueOf(response)) {
+                if(response == null)
+                    return;
+
+                boolean purchased = false;
+
+                if(Config.HOSTING_ENABLED_FALSE.equals(response)) {
+
+                }
+                else if(Config.HOSTING_ENABLED_AVAILABLE.equals(response)) {
+
+                }
+                else if(Config.HOSTING_ENABLED_TRUE.equals(response)) {
+                    purchased = true;
                     mGooglePurchaseData = response;
                 }
 
-                callbacks(Boolean.valueOf(response));
+                mHostingEnabled = response;
+
+                callbacks(purchased);
             }
 
             @Override
