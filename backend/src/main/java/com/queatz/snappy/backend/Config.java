@@ -8,7 +8,7 @@ public class Config {
     public static final String QUEUE_WORKER_URL = "/worker";
     public static final String QUEUE_WORKER_NAME = "pushes";
 
-    public static boolean IN_BETA = true;
+    public static final boolean IN_BETA = false;
 
     public static final int SEARCH_DISTANCE = 1609 * 7;
 
