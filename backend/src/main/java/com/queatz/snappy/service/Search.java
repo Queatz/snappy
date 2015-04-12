@@ -12,6 +12,15 @@ import java.util.HashMap;
  * Created by jacob on 11/17/14.
  */
 public class Search {
+    private static Search _service;
+
+    public static Search getService() {
+        if(_service == null)
+            _service = new Search();
+
+        return _service;
+    }
+
     public static enum Type {
         PERSON,
         PARTY,
@@ -24,13 +33,9 @@ public class Search {
         BUY
     }
 
-    public SnappyServlet snappy;
-
     public HashMap<Type, Index> index;
 
-    public Search(SnappyServlet s) {
-        snappy = s;
-
+    public Search() {
         index = new HashMap<>();
 
         String name;

@@ -177,6 +177,10 @@ public class Util {
     }
 
     public static String cuteDate(Date date) {
+        return cuteDate(date, false);
+    }
+
+    public static String cuteDate(Date date, boolean inSentence) {
         if(context == null || date == null)
             return "-";
 
@@ -189,12 +193,12 @@ public class Util {
 
         if(now.get(Calendar.DAY_OF_YEAR) == party.get(Calendar.DAY_OF_YEAR)) {
             if (isDaytime(date))
-                day = R.string.today;
+                day = inSentence ? R.string.sentence_today : R.string.today;
             else
-                day = R.string.tonight;
+                day = inSentence ? R.string.sentence_tonight : R.string.tonight;
         }
         else if(now.get(Calendar.DAY_OF_YEAR) + 1 == party.get(Calendar.DAY_OF_YEAR)) {
-            day = R.string.tomorrow;
+            day = inSentence ? R.string.sentence_tomorrow : R.string.tomorrow;
         }
         else {
             return "-";

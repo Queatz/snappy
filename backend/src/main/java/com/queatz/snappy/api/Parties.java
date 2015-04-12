@@ -5,10 +5,13 @@ import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.service.Api;
-import com.queatz.snappy.service.Config;
-import com.queatz.snappy.service.PrintingError;
+import com.queatz.snappy.service.Buy;
+import com.queatz.snappy.backend.Config;
+import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Util;
+import com.queatz.snappy.service.Things;
+import com.queatz.snappy.backend.Util;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -49,15 +52,15 @@ public class Parties implements Api.Path {
                 double latitude = Double.parseDouble(latitudeParameter);
                 double longitude = Double.parseDouble(longitudeParameter);
 
-                api.snappy.things.person.updateLocation(user, latitude, longitude);
+                Things.getService().person.updateLocation(user, latitude, longitude);
 
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-                Results<ScoredDocument> results = api.snappy.search.index.get(Search.Type.PARTY).search("(host = \"" + user + "\" OR distance(loc_cache, geopoint(" + latitude + ", " + longitude + ")) < " + Config.SEARCH_DISTANCE + ") AND date >= \"" + format.format(new Date(new Date().getTime() - 1000 * 60 * 60)) + "\"");
+                Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PARTY).search("(host = \"" + user + "\" OR distance(loc_cache, geopoint(" + latitude + ", " + longitude + ")) < " + Config.SEARCH_DISTANCE + ") AND date >= \"" + format.format(new Date(new Date().getTime() - 1000 * 60 * 60)) + "\"");
                 Iterator<ScoredDocument> iterator = results.iterator();
 
                 while (iterator.hasNext()) {
-                    r.put(api.snappy.things.party.toJson(iterator.next(), user, false));
+                    r.put(Things.getService().party.toJson(iterator.next(), user, false));
                 }
 
                 resp.getWriter().write(r.toString());
@@ -65,17 +68,18 @@ public class Parties implements Api.Path {
                 break;
 
             case POST:
-                if(!api.snappy.buy.valid(user))
+                if(!Buy.getService().valid(user))
                     throw new PrintingError(Api.Error.NOT_FOUND, "parties - not bought");
 
                 String localId = req.getParameter(Config.PARAM_LOCAL_ID);
 
-                Document document = api.snappy.things.party.createFromRequest(req, user);
+                Document document = Things.getService().party.createFromRequest(req, user);
 
                 if(document != null) {
-                    JSONObject response = api.snappy.things.party.toJson(document, user, false);
+                    JSONObject response = Things.getService().party.toJson(document, user, false);
                     Util.localId(response, localId);
 
+                    Push.getService().sendToFollowers(user, Things.getService().party.makePush(document));
                     resp.getWriter().write(response.toString());
                 }
 

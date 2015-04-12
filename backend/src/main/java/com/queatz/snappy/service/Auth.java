@@ -3,13 +3,13 @@ package com.queatz.snappy.service;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
-import com.google.appengine.api.urlfetch.HTTPHeader;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
-import com.queatz.snappy.SnappyServlet;
+import com.queatz.snappy.backend.Config;
+import com.queatz.snappy.backend.PrintingError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,10 +22,16 @@ import java.util.Iterator;
  * Created by jacob on 11/17/14.
  */
 public class Auth {
-    public SnappyServlet snappy;
+    private static Auth _service;
 
-    public Auth(SnappyServlet s) {
-        snappy = s;
+    public static Auth getService() {
+        if(_service == null)
+            _service = new Auth();
+
+        return _service;
+    }
+
+    public Auth() {
     }
 
     public boolean isRealGoogleAuth(String email, String token) throws PrintingError {
@@ -132,9 +138,9 @@ public class Auth {
         Results<ScoredDocument> results;
 
         if(email != null) // Google login
-            results = snappy.search.index.get(Search.Type.PERSON).search("email = \"" + email + "\"");
+            results = Search.getService().index.get(Search.Type.PERSON).search("email = \"" + email + "\"");
         else // Auth token login
-            results = snappy.search.index.get(Search.Type.PERSON).search("token = \"" + token + "\"");
+            results = Search.getService().index.get(Search.Type.PERSON).search("token = \"" + token + "\"");
 
         Iterator<ScoredDocument> resultsIterator = results.iterator();
 
@@ -170,7 +176,7 @@ public class Auth {
         if(o == null)
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "no data or google changed");
 
-        Document user = snappy.things.person.createOrUpdateWithJson(document, userJson);
+        Document user = Things.getService().person.createOrUpdateWithJson(document, userJson);
 
         return user.getId();
     }

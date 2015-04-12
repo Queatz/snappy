@@ -1,4 +1,6 @@
-package com.queatz.snappy.service;
+package com.queatz.snappy.backend;
+
+import com.queatz.snappy.service.Api;
 
 /**
  * Created by jacob on 2/8/15.

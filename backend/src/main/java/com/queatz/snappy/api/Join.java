@@ -3,9 +3,11 @@ package com.queatz.snappy.api;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.service.Api;
-import com.queatz.snappy.service.Config;
-import com.queatz.snappy.service.PrintingError;
+import com.queatz.snappy.backend.Config;
+import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
+import com.queatz.snappy.service.Things;
 
 import org.json.JSONObject;
 
@@ -36,8 +38,8 @@ public class Join implements Api.Path {
                     throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "people - bad path");
 
                 joinId = path.get(0);
-                join = api.snappy.search.get(Search.Type.JOIN, joinId);
-                JSONObject r = api.snappy.things.join.toJson(join, user, false);
+                join = Search.getService().get(Search.Type.JOIN, joinId);
+                JSONObject r = Things.getService().join.toJson(join, user, false);
 
                 if(r != null)
                     resp.getWriter().write(r.toString());
@@ -54,14 +56,14 @@ public class Join implements Api.Path {
                 boolean succeeded = false;
 
                 if(Boolean.valueOf(req.getParameter(Config.PARAM_HIDE))) {
-                    join = api.snappy.search.get(Search.Type.JOIN, joinId);
+                    join = Search.getService().get(Search.Type.JOIN, joinId);
 
                     if(join != null && Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
-                        Document party = api.snappy.search.get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
+                        Document party = Search.getService().get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
 
                         if(party != null) {
                             if(user.equals(party.getOnlyField("host").getAtom())) {
-                                api.snappy.things.join.setStatus(join, Config.JOIN_STATUS_OUT);
+                                Things.getService().join.setStatus(join, Config.JOIN_STATUS_OUT);
                                 succeeded = true;
                             }
                         }
@@ -70,14 +72,14 @@ public class Join implements Api.Path {
                     resp.getWriter().write(Boolean.toString(succeeded));
                 }
                 else if(Boolean.valueOf(req.getParameter(Config.PARAM_ACCEPT))) {
-                    join = api.snappy.search.get(Search.Type.JOIN, joinId);
+                    join = Search.getService().get(Search.Type.JOIN, joinId);
 
                     if(join != null && Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
-                        Document party = api.snappy.search.get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
+                        Document party = Search.getService().get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
 
                         if(party != null) {
                             if(user.equals(party.getOnlyField("host").getAtom())) {
-                                join = api.snappy.things.join.setStatus(join, Config.JOIN_STATUS_IN);
+                                join = Things.getService().join.setStatus(join, Config.JOIN_STATUS_IN);
                                 succeeded = true;
                             }
                         }
@@ -86,7 +88,7 @@ public class Join implements Api.Path {
                     resp.getWriter().write(Boolean.toString(succeeded));
 
                     if(succeeded) {
-                        api.snappy.push.send(join.getOnlyField("person").getAtom(), api.snappy.things.join.makePush(join));
+                        Push.getService().send(join.getOnlyField("person").getAtom(), Things.getService().join.makePush(join));
                     }
                 }
                 else {

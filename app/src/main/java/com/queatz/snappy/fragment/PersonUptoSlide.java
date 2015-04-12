@@ -72,6 +72,9 @@ public class PersonUptoSlide extends Fragment {
 
         personAbout = View.inflate(getActivity(), R.layout.person_upto_about, null);
 
+        updateList.addHeaderView(personAbout);
+        updateList.addFooterView(new View(getActivity()));
+
         if(mPerson != null) {
             RealmResults<Update> recentUpdates = team.realm.where(Update.class)
                     .equalTo("person.id", mPerson.getId())
@@ -80,9 +83,6 @@ public class PersonUptoSlide extends Fragment {
         }
 
         update();
-
-        updateList.addHeaderView(personAbout);
-        updateList.addFooterView(new View(getActivity()));
 
         updateList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

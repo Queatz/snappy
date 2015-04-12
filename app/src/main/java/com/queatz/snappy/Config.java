@@ -13,7 +13,6 @@ public class Config {
     public static final float locationAccuracy = 100;
     public static final float defaultMapZoom = 18;
     public static final String subscriptionProductId = "com.queatz.snappy.monthly";
-    public static final String publisherAccount = "jacobaferrero@gmail.com";
 
     public static final String PREFERENCE_USER = "auth.user";
     public static final String PREFERENCE_AUTH_TOKEN = "auth.auth_token";
@@ -29,6 +28,7 @@ public class Config {
     public static final String PUSH_ACTION_HOSTING_REMINDER = "hosting_reminder";
     public static final String PUSH_ACTION_FOLLOW = "follow";
     public static final String PUSH_ACTION_MESSAGE = "message";
+    public static final String PUSH_ACTION_NEW_PARTY = "new_party";
 
     public static final String PARAM_AUTH = "auth";
     public static final String PARAM_EMAIL = "email";

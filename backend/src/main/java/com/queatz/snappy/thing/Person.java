@@ -10,7 +10,7 @@ import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
-import com.queatz.snappy.service.Util;
+import com.queatz.snappy.backend.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,8 +65,8 @@ public class Person implements Thing {
 
             long infoFollowers, infoFollowing, infoHosted;
 
-            Index follow = things.snappy.search.index.get(Search.Type.FOLLOW);
-            Index party = things.snappy.search.index.get(Search.Type.PARTY);
+            Index follow = Search.getService().index.get(Search.Type.FOLLOW);
+            Index party = Search.getService().index.get(Search.Type.PARTY);
 
             infoFollowers = follow.search("following = \"" + d.getId() + "\"").getNumberFound();
             infoFollowing = follow.search("person = \"" + d.getId() + "\"").getNumberFound();
@@ -76,19 +76,19 @@ public class Person implements Thing {
             o.put("infoFollowing", infoFollowing);
             o.put("infoHosted", infoHosted);
 
-            Results<ScoredDocument> results = things.snappy.search.index.get(Search.Type.FOLLOW).search("following = \"" + d.getId() + "\"");
+            Results<ScoredDocument> results = Search.getService().index.get(Search.Type.FOLLOW).search("following = \"" + d.getId() + "\"");
 
             JSONArray r = new JSONArray();
 
             for(ScoredDocument doc : results) {
-                r.put(things.snappy.things.follow.toJson(doc, user, true));
+                r.put(Things.getService().follow.toJson(doc, user, true));
             }
 
             if(r.length() > 0) {
                 o.put("followers", r);
             }
 
-            /*results = things.snappy.search.index.get(Search.Type.MESSAGE).search("from = \"" + d.getId() + "\" OR to = \"" + d.getId() + "\"");
+            /*results = Search.getService().index.get(Search.Type.MESSAGE).search("from = \"" + d.getId() + "\" OR to = \"" + d.getId() + "\"");
 
             r = new JSONArray();
 
@@ -122,7 +122,7 @@ public class Person implements Thing {
         Document result = documentBuild.build();
 
         try {
-            things.snappy.search.index.get(Search.Type.PERSON).put(result);
+            Search.getService().index.get(Search.Type.PERSON).put(result);
         } catch (PutException e) {
             e.printStackTrace();
             return false;
@@ -132,7 +132,7 @@ public class Person implements Thing {
     }
 
     public boolean updateLocation(String user, double latitude, double longitude) {
-        Document person = things.snappy.search.get(Search.Type.PERSON, user);
+        Document person = Search.getService().get(Search.Type.PERSON, user);
 
         if(person == null) {
             return false;
@@ -147,7 +147,7 @@ public class Person implements Thing {
         Document result = documentBuild.build();
 
         try {
-            things.snappy.search.index.get(Search.Type.PERSON).put(result);
+            Search.getService().index.get(Search.Type.PERSON).put(result);
         } catch (PutException e) {
             e.printStackTrace();
             return false;
@@ -174,21 +174,33 @@ public class Person implements Thing {
             documentBuild.addField(Field.newBuilder().setName("about").setAtom(Util.encode(jsonObject.getString("about"))));
             documentBuild.addField(Field.newBuilder().setName("googleId").setAtom(jsonObject.getString("googleId")));
 
-            if(jsonObject.has("subscription"))
+            if(jsonObject.has("subscription")) {
                 documentBuild.addField(Field.newBuilder().setName("subscription").setAtom(jsonObject.getString("subscription")));
+            }
+            else {
+                if(document != null) {
+                    try {
+                        documentBuild.addField(Field.newBuilder().setName("subscription").setAtom(document.getOnlyField("subscription").getAtom()));
+                    } catch (IllegalArgumentException ignored) {
+                    }
+                }
+            }
         }
         catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
 
-        if(document != null)
+        if(document != null) {
             documentBuild.setId(document.getId());
+
+            Util.copyIn(documentBuild, document, "email", "token", "gender", "firstName", "lastName", "imageUrl", "about", "googleId", "subscription");
+        }
 
         Document result = documentBuild.build();
 
         try {
-            PutResponse put = things.snappy.search.index.get(Search.Type.PERSON).put(result);
+            PutResponse put = Search.getService().index.get(Search.Type.PERSON).put(result);
 
             if(document == null) {
                 documentBuild.setId(put.getIds().get(0));

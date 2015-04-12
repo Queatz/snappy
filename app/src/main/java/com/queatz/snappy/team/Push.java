@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
@@ -52,15 +53,55 @@ public class Push {
         try {
             String personFirstName;
             String personId;
+            String partyId;
             String partyName;
+            Date partyDate;
             NotificationCompat.Builder builder;
 
             Intent resultIntent;
             TaskStackBuilder stackBuilder;
             PendingIntent pendingIntent;
 
+            String action = push.getString("action");
 
-            switch (push.getString("action")) {
+            if(action == null) {
+                Log.w(Config.LOG_TAG, "Push recieved with no action: " + push);
+                return;
+            }
+
+            switch (action) {
+                case Config.PUSH_ACTION_NEW_PARTY:
+                    personFirstName = URLDecoder.decode(push.getJSONObject("host").getString("firstName"), "UTF-8");
+                    partyId = push.getJSONObject("party").getString("id");
+                    partyName = URLDecoder.decode(push.getJSONObject("party").getString("name"), "UTF-8");
+                    partyDate = Util.stringToDate(push.getJSONObject("party").getString("date"));
+
+                    builder = new NotificationCompat.Builder(team.context)
+                            .setAutoCancel(true)
+                            .setContentTitle(personFirstName)
+                            .setContentText(String.format(team.context.getString(R.string.is_hosting_party), partyName, Util.cuteDate(partyDate, true)))
+                            .setSmallIcon(R.drawable.icon_system)
+                            .setPriority(Notification.PRIORITY_LOW)
+                            .setDefaults(Notification.DEFAULT_ALL);
+
+                    resultIntent = new Intent(team.context, Main.class);
+                    pendingIntent = PendingIntent.getActivity(team.context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    builder.setContentIntent(pendingIntent);
+
+                    if(Build.VERSION.SDK_INT >= 20) {
+                        builder.addAction(new NotificationCompat.Action(0, team.context.getString(R.string.request_to_join), null));
+                    }
+
+                    if(Build.VERSION.SDK_INT >= 21) {
+                        builder
+                                .setColor(team.context.getResources().getColor(R.color.red))
+                                .setCategory(Notification.CATEGORY_EVENT);
+                    }
+
+                    show("party/" + partyId, builder.build());
+
+                    break;
                 case Config.PUSH_ACTION_MESSAGE:
                     personId = push.getJSONObject("message").getJSONObject("from").getString("id");
 
@@ -99,7 +140,7 @@ public class Push {
                             .setAutoCancel(true)
                             .setContentTitle(personFirstName)
                             .setContentText(message)
-                            .setSmallIcon(R.drawable.pistachio)
+                            .setSmallIcon(R.drawable.icon_system)
                             .setPriority(Notification.PRIORITY_HIGH)
                             .setDefaults(Notification.DEFAULT_ALL);
 
@@ -144,7 +185,7 @@ public class Push {
                             .setAutoCancel(true)
                             .setContentTitle(personFirstName)
                             .setContentText(String.format(team.context.getString(R.string.requested_to_join_party), partyName))
-                            .setSmallIcon(R.drawable.pistachio)
+                            .setSmallIcon(R.drawable.icon_system)
                             .setPriority(Notification.PRIORITY_DEFAULT)
                             .setDefaults(Notification.DEFAULT_ALL);
 
@@ -154,7 +195,7 @@ public class Push {
                     builder.setContentIntent(pendingIntent);
 
                     if(Build.VERSION.SDK_INT >= 20) {
-                        builder.addAction(new NotificationCompat.Action(0, "Accept", null));
+                        builder.addAction(new NotificationCompat.Action(0, team.context.getString(R.string.accept), null));
                     }
 
                     if(Build.VERSION.SDK_INT >= 21) {
@@ -168,14 +209,14 @@ public class Push {
                     break;
                 case Config.PUSH_ACTION_JOIN_ACCEPTED:
                     partyName = URLDecoder.decode(push.getJSONObject("party").getString("name"), "UTF-8");
-                    String partyId = push.getJSONObject("party").getString("id");
-                    Date partyDate = Util.stringToDate(push.getJSONObject("party").getString("date"));
+                    partyId = push.getJSONObject("party").getString("id");
+                    partyDate = Util.stringToDate(push.getJSONObject("party").getString("date"));
 
                     builder = new NotificationCompat.Builder(team.context)
                             .setAutoCancel(true)
                             .setContentTitle(partyName)
                             .setContentText(String.format(team.context.getString(R.string.request_accepted), Util.relDate(partyDate)))
-                            .setSmallIcon(R.drawable.pistachio)
+                            .setSmallIcon(R.drawable.icon_system)
                             .setPriority(Notification.PRIORITY_DEFAULT)
                             .setDefaults(Notification.DEFAULT_ALL);
 
@@ -201,7 +242,7 @@ public class Push {
                             .setAutoCancel(true)
                             .setContentTitle(personFirstName)
                             .setContentText(team.context.getString(R.string.started_following_you))
-                            .setSmallIcon(R.drawable.pistachio)
+                            .setSmallIcon(R.drawable.icon_system)
                             .setPriority(Notification.PRIORITY_DEFAULT)
                             .setDefaults(Notification.DEFAULT_ALL);
 

@@ -4,10 +4,10 @@ import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.PutException;
 import com.google.appengine.api.search.PutResponse;
-import com.queatz.snappy.service.Config;
+import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
-import com.queatz.snappy.service.Util;
+import com.queatz.snappy.backend.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +51,7 @@ public class Message implements Thing {
 
         try {
             o.put("id", d.getId());
-            o.put("from", things.person.toPushJson(things.snappy.search.get(Search.Type.PERSON, d.getOnlyField("from").getAtom())));
+            o.put("from", things.person.toPushJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("from").getAtom())));
 
             String msg = d.getOnlyField("message").getText();
 
@@ -77,8 +77,8 @@ public class Message implements Thing {
 
         try {
             o.put("id", d.getId());
-            o.put("from", things.person.toJson(things.snappy.search.get(Search.Type.PERSON, d.getOnlyField("from").getAtom()), user, true));
-            o.put("to", things.person.toJson(things.snappy.search.get(Search.Type.PERSON, d.getOnlyField("to").getAtom()), user, true));
+            o.put("from", things.person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("from").getAtom()), user, true));
+            o.put("to", things.person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("to").getAtom()), user, true));
             o.put("message", d.getOnlyField("message").getText());
             o.put("date", Util.dateToString(d.getOnlyField("date").getDate()));
 
@@ -101,7 +101,7 @@ public class Message implements Thing {
         Document document = documentBuild.build();
 
         try {
-            PutResponse put = things.snappy.search.index.get(Search.Type.MESSAGE).put(document);
+            PutResponse put = Search.getService().index.get(Search.Type.MESSAGE).put(document);
             documentBuild.setId(put.getIds().get(0));
             document = documentBuild.build();
         } catch (PutException e) {
@@ -109,7 +109,7 @@ public class Message implements Thing {
             return null;
         }
 
-        things.snappy.things.contact.updateWithMessage(document);
+        Things.getService().contact.updateWithMessage(document);
 
         return document;
     }

@@ -1,0 +1,6 @@
+<queue-entries>
+    <queue>
+        <name>pushes</name>
+        <rate>100/s</rate>
+    </queue>
+</queue-entries>

@@ -5,8 +5,9 @@ import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.service.Api;
-import com.queatz.snappy.service.PrintingError;
+import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Search;
+import com.queatz.snappy.service.Things;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,12 +36,12 @@ public class Messages implements Api.Path {
             case GET:
                 if(path.size() == 1) {
                     String messageId = path.get(0);
-                    Document message = api.snappy.search.get(Search.Type.MESSAGE, messageId);
+                    Document message = Search.getService().get(Search.Type.MESSAGE, messageId);
 
                     JSONObject r = null;
 
                     if(user.equals(message.getOnlyField("from").getAtom()) || user.equals(message.getOnlyField("to").getAtom())) {
-                        r = api.snappy.things.message.toJson(message, user, false);
+                        r = Things.getService().message.toJson(message, user, false);
                     }
 
                     if (r != null)
@@ -53,20 +54,20 @@ public class Messages implements Api.Path {
 
                 JSONObject r = new JSONObject();
 
-                Results<ScoredDocument> results = api.snappy.search.index.get(Search.Type.MESSAGE).search("from = \"" + user + "\" OR to = \"" + user + "\"");
+                Results<ScoredDocument> results = Search.getService().index.get(Search.Type.MESSAGE).search("from = \"" + user + "\" OR to = \"" + user + "\"");
 
                 JSONArray a = new JSONArray();
 
                 for(ScoredDocument doc : results) {
-                    a.put(api.snappy.things.message.toJson(doc, user, true));
+                    a.put(Things.getService().message.toJson(doc, user, true));
                 }
 
-                results = api.snappy.search.index.get(Search.Type.CONTACT).search("person = \"" + user + "\"");
+                results = Search.getService().index.get(Search.Type.CONTACT).search("person = \"" + user + "\"");
 
                 JSONArray c = new JSONArray();
 
                 for(ScoredDocument doc : results) {
-                    c.put(api.snappy.things.contact.toJson(doc, user, true));
+                    c.put(Things.getService().contact.toJson(doc, user, true));
                 }
 
                 try {

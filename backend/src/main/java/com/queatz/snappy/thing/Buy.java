@@ -8,7 +8,7 @@ import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
-import com.queatz.snappy.service.Util;
+import com.queatz.snappy.backend.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +39,7 @@ public class Buy implements Thing {
 
             Document purchase = null;
             Results<ScoredDocument> results;
-            results = things.snappy.search.index.get(Search.Type.BUY).search("orderId = \"" + data.getString("orderId") + "\"");
+            results = Search.getService().index.get(Search.Type.BUY).search("orderId = \"" + data.getString("orderId") + "\"");
 
             Iterator<ScoredDocument> iterator = results.iterator();
             if(iterator.hasNext())
@@ -68,7 +68,7 @@ public class Buy implements Thing {
             Document document = documentBuild.build();
 
             try {
-                PutResponse put = things.snappy.search.index.get(Search.Type.BUY).put(document);
+                PutResponse put = Search.getService().index.get(Search.Type.BUY).put(document);
                 if(purchase == null) {
                     documentBuild.setId(put.getIds().get(0));
                     return documentBuild.build();
@@ -106,7 +106,7 @@ public class Buy implements Thing {
 
             Document contact = null;
             Results<ScoredDocument> results;
-            results = things.snappy.search.index.get(Search.Type.CONTACT).search("person = \"" + p1 + "\" AND contact = \"" + p2 + "\"");
+            results = Search.getService().index.get(Search.Type.CONTACT).search("person = \"" + p1 + "\" AND contact = \"" + p2 + "\"");
 
             Iterator<ScoredDocument> iterator = results.iterator();
             if(iterator.hasNext())
@@ -124,7 +124,7 @@ public class Buy implements Thing {
             Document document = documentBuild.build();
 
             try {
-                things.snappy.search.index.get(Search.Type.CONTACT).put(document);
+                Search.getService().index.get(Search.Type.CONTACT).put(document);
             } catch (PutException e) {
                 e.printStackTrace();
             }

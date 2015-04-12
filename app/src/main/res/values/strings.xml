@@ -10,6 +10,9 @@
     <string name="today">Today, %1$s</string>
     <string name="tomorrow">Tomorrow, %1$s</string>
     <string name="tonight">Tonight, %1$s</string>
+    <string name="sentence_today">%1$s today</string>
+    <string name="sentence_tomorrow">%1$s tomorrow</string>
+    <string name="sentence_tonight">%1$s tonight</string>
     <string name="hidden">Hidden</string>
     <string name="by">by %1$s</string>
     <string name="enter_party_name">Enter party name</string>
@@ -38,10 +41,12 @@
     <string name="enable_location">Turn on location</string>
     <string name="new_messages">%1$s new messages</string>
     <string name="requested_to_join_party">requested to join %1$s</string>
+    <string name="is_hosting_party">is hosting %1$s at %2$s</string>
     <string name="request_accepted">starts %1$s</string>
     <string name="started_following_you">started following you</string>
     <string name="buy_didnt_work">Buy didn\'t work</string>
     <string name="buy_and_host">Buy and Host</string>
+    <string name="accept">Accept</string>
 
     <plurals name="years">
         <item quantity="one">%1$s year</item>

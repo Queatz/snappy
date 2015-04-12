@@ -7,7 +7,8 @@ import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
-import com.queatz.snappy.SnappyServlet;
+import com.queatz.snappy.backend.Config;
+import com.queatz.snappy.backend.PrintingError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,17 +20,23 @@ import java.net.URL;
  * Created by jacob on 4/4/15.
  */
 public class Buy {
-    public SnappyServlet snappy;
+    private static Buy _service;
 
-    public Buy(SnappyServlet s) {
-        snappy = s;
+    public static Buy getService() {
+        if(_service == null)
+            _service = new Buy();
+
+        return _service;
+    }
+
+    public Buy() {
     }
 
     public String getServerAuthToken() throws PrintingError {
         try {
             URL url = new URL(Config.GOOGLE_AUTH_URL);
 
-            String payload = String.format(Config.GOOGLE_AUTH_URL_POST_PARAMS, Config.refreshToken, Config.clientId);
+            String payload = String.format(Config.GOOGLE_AUTH_URL_POST_PARAMS, Config.refreshToken, Config.CLIENT_ID);
 
             URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
             HTTPRequest httpRequest = new HTTPRequest(url, HTTPMethod.POST);
@@ -79,14 +86,10 @@ public class Buy {
     }
 
     public boolean valid(String user) {
-        Document me = snappy.search.get(Search.Type.PERSON, user);
+        Document me = Search.getService().get(Search.Type.PERSON, user);
 
         if(me == null)
             return false;
-
-        if(Config.publisherAccount.equals(me.getOnlyField("email").getAtom())) {
-            return true;
-        }
 
         try {
             String s = me.getOnlyField("subscription").getAtom();
@@ -100,15 +103,10 @@ public class Buy {
     }
 
     public boolean validate(String user, String purchaseData) throws PrintingError {
-
-        Document me = snappy.search.get(Search.Type.PERSON, user);
+        Document me = Search.getService().get(Search.Type.PERSON, user);
 
         if(me == null)
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "not bought no user");
-
-        if(Config.publisherAccount.equals(me.getOnlyField("email").getAtom())){
-            return true;
-        }
 
         if (purchaseData == null) {
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "not bought");
@@ -120,12 +118,12 @@ public class Buy {
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "not bought 2");
         }
 
-        Document subscription = snappy.things.buy.makeOrUpdate(purchaseData, p);
+        Document subscription = Things.getService().buy.makeOrUpdate(purchaseData, p);
 
         if (subscription == null)
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "not bought 3");
 
-        snappy.things.person.updateSubscription(me, subscription.getId());
+        Things.getService().person.updateSubscription(me, subscription.getId());
 
         return true;
     }

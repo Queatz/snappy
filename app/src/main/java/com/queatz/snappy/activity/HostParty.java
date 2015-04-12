@@ -87,14 +87,43 @@ public class HostParty extends Activity {
 
         final ListView partyList = ((ListView) findViewById(R.id.partyList));
 
+        /* New Party */
+
+        View.OnClickListener oclk = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Team team = ((MainApplication) getApplication()).team;
+
+                String name = ((EditText) mNewParty.findViewById(R.id.name)).getText().toString();
+                Date date = percentToDate(((TimeSlider) mNewParty.findViewById(R.id.timeSlider)).getPercent());
+                String details = ((EditText) mNewParty.findViewById(R.id.details)).getText().toString();
+
+                if(name.isEmpty()) {
+                    Toast.makeText(HostParty.this, ((EditText) mNewParty.findViewById(R.id.name)).getHint().toString(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(mLocation == null) {
+                    Toast.makeText(HostParty.this, getString(R.string.enter_location), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                team.action.hostParty(mGroup, name, date, mLocation, details);
+                finish();
+            }
+        };
+
+        mNewParty = View.inflate(this, R.layout.host_party_new, null);
+
+        mNewParty.findViewById(R.id.action_host).setOnClickListener(oclk);
+
+        partyList.addHeaderView(mNewParty);
+        partyList.addFooterView(new View(this));
+
         RealmResults<Party> recentParties = team.realm.where(Party.class)
                 .equalTo("host.id", team.auth.getUser())
                 .findAllSorted("date", false);
         partyList.setAdapter(new HostPartyAdapter(this, recentParties));
-
-        /* New Party */
-
-        mNewParty = View.inflate(this, R.layout.host_party_new, null);
 
         TimeSlider timeSlider = (TimeSlider) mNewParty.findViewById(R.id.timeSlider);
 
@@ -208,35 +237,6 @@ public class HostParty extends Activity {
                 setLocation(location);
             }
         });
-
-        View.OnClickListener oclk = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Team team = ((MainApplication) getApplication()).team;
-
-                String name = ((EditText) mNewParty.findViewById(R.id.name)).getText().toString();
-                Date date = percentToDate(((TimeSlider) mNewParty.findViewById(R.id.timeSlider)).getPercent());
-                String details = ((EditText) mNewParty.findViewById(R.id.details)).getText().toString();
-
-                if(name.isEmpty()) {
-                    Toast.makeText(HostParty.this, ((EditText) mNewParty.findViewById(R.id.name)).getHint().toString(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if(mLocation == null) {
-                    Toast.makeText(HostParty.this, getString(R.string.enter_location), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                team.action.hostParty(mGroup, name, date, mLocation, details);
-                finish();
-            }
-        };
-
-        mNewParty.findViewById(R.id.action_host).setOnClickListener(oclk);
-
-        partyList.addHeaderView(mNewParty);
-        partyList.addFooterView(new View(this));
 
         partyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

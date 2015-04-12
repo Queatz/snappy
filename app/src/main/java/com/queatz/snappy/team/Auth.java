@@ -190,13 +190,14 @@ public class Auth {
     }
 
     public void reauth() {
+        unregisterDevice();
+
         if(mGoogleAuthToken != null && mActivity != null) {
             GoogleAuthUtil.invalidateToken(mActivity, mGoogleAuthToken);
         }
 
         boolean isLogout = (mUser != null);
 
-        unregisterDevice();
 
         mUser = null;
         mEmail = null;

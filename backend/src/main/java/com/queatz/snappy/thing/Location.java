@@ -7,7 +7,7 @@ import com.google.appengine.api.search.PutException;
 import com.google.appengine.api.search.PutResponse;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
-import com.queatz.snappy.service.Util;
+import com.queatz.snappy.backend.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,7 +72,7 @@ public class Location implements Thing {
         Document document = documentBuild.build();
 
         try {
-            PutResponse put = things.snappy.search.index.get(Search.Type.LOCATION).put(document);
+            PutResponse put = Search.getService().index.get(Search.Type.LOCATION).put(document);
             documentBuild.setId(put.getIds().get(0));
             return documentBuild.build();
         } catch (PutException e) {
@@ -95,7 +95,7 @@ public class Location implements Thing {
         Document document = documentBuild.build();
 
         try {
-            PutResponse put = things.snappy.search.index.get(Search.Type.LOCATION).put(document);
+            PutResponse put = Search.getService().index.get(Search.Type.LOCATION).put(document);
             documentBuild.setId(put.getIds().get(0));
             return documentBuild.build();
         } catch (PutException e) {

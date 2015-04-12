@@ -3,10 +3,12 @@ package com.queatz.snappy.api;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.service.Api;
-import com.queatz.snappy.service.Config;
-import com.queatz.snappy.service.PrintingError;
+import com.queatz.snappy.backend.Config;
+import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Util;
+import com.queatz.snappy.service.Things;
+import com.queatz.snappy.backend.Util;
 
 import org.json.JSONObject;
 
@@ -33,17 +35,19 @@ public class People implements Api.Path {
 
         switch (method) {
             case GET:
-                if(path.size() != 1)
+                if(path.size() == 1) {
+                    personId = path.get(0);
+                    person = Search.getService().get(Search.Type.PERSON, personId);
+                    JSONObject r = Things.getService().person.toJson(person, user, false);
+
+                    if (r != null)
+                        resp.getWriter().write(r.toString());
+                    else
+                        throw new PrintingError(Api.Error.NOT_FOUND);
+                }
+                else {
                     throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "people - bad path");
-
-                personId = path.get(0);
-                person = api.snappy.search.get(Search.Type.PERSON, personId);
-                JSONObject r = api.snappy.things.person.toJson(person, user, false);
-
-                if(r != null)
-                    resp.getWriter().write(r.toString());
-                else
-                    throw new PrintingError(Api.Error.NOT_FOUND);
+                }
 
                 break;
             case POST:
@@ -51,24 +55,24 @@ public class People implements Api.Path {
                     throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "people - bad path");
 
                 personId = path.get(0);
-                person = api.snappy.search.get(Search.Type.PERSON, personId);
+                person = Search.getService().get(Search.Type.PERSON, personId);
 
                 if(Boolean.valueOf(req.getParameter(Config.PARAM_SEEN))) {
-                    resp.getWriter().write(Boolean.toString(api.snappy.things.contact.markSeen(user, personId)));
+                    resp.getWriter().write(Boolean.toString(Things.getService().contact.markSeen(user, personId)));
                 }
                 else if(Boolean.valueOf(req.getParameter(Config.PARAM_FOLLOW))) {
                     String localId = req.getParameter(Config.PARAM_LOCAL_ID);
 
                     if(person != null) {
-                        Document follow = api.snappy.things.follow.createOrUpdate(user, person.getId());
+                        Document follow = Things.getService().follow.createOrUpdate(user, person.getId());
 
                         if(follow != null) {
-                            JSONObject response = api.snappy.things.follow.toJson(follow, user, false);
+                            JSONObject response = Things.getService().follow.toJson(follow, user, false);
                             Util.localId(response, localId);
 
                             resp.getWriter().write(response.toString());
 
-                            api.snappy.push.send(follow.getOnlyField("following").getAtom(), api.snappy.things.follow.makePush(follow));
+                            Push.getService().send(follow.getOnlyField("following").getAtom(), Things.getService().follow.makePush(follow));
                         }
                     }
                 }
@@ -77,15 +81,15 @@ public class People implements Api.Path {
                     String localId = req.getParameter(Config.PARAM_LOCAL_ID);
 
                     if(message != null) {
-                        Document sent = api.snappy.things.message.newMessage(user, person.getId(), message);
+                        Document sent = Things.getService().message.newMessage(user, person.getId(), message);
 
                         if(sent != null) {
-                            JSONObject response = api.snappy.things.message.toJson(sent, user, false);
+                            JSONObject response = Things.getService().message.toJson(sent, user, false);
                             Util.localId(response, localId);
 
                             resp.getWriter().write(response.toString());
 
-                            api.snappy.push.send(sent.getOnlyField("to").getAtom(), api.snappy.things.message.makePush(sent));
+                            Push.getService().send(sent.getOnlyField("to").getAtom(), Things.getService().message.makePush(sent));
                         }
                     }
                     else {

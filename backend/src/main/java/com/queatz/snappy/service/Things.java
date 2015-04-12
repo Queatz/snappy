@@ -15,7 +15,15 @@ import com.queatz.snappy.thing.Update;
  * Created by jacob on 2/15/15.
  */
 public class Things {
-    public SnappyServlet snappy;
+    private static Things _service;
+
+    public static Things getService() {
+        if(_service == null)
+            _service = new Things();
+
+        return _service;
+    }
+
     public Party party;
     public Location location;
     public Message message;
@@ -26,8 +34,7 @@ public class Things {
     public Contact contact;
     public Buy buy;
 
-    public Things(SnappyServlet s) {
-        snappy = s;
+    public Things() {
         party = new Party(this);
         location = new Location(this);
         message = new Message(this);

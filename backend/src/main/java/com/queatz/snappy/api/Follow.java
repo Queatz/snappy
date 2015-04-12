@@ -3,8 +3,9 @@ package com.queatz.snappy.api;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.service.Api;
-import com.queatz.snappy.service.PrintingError;
+import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Search;
+import com.queatz.snappy.service.Things;
 
 import org.json.JSONObject;
 
@@ -35,8 +36,8 @@ public class Follow implements Api.Path {
                     throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "people - bad path");
 
                 followId = path.get(0);
-                follow = api.snappy.search.get(Search.Type.FOLLOW, followId);
-                JSONObject r = api.snappy.things.follow.toJson(follow, user, false);
+                follow = Search.getService().get(Search.Type.FOLLOW, followId);
+                JSONObject r = Things.getService().follow.toJson(follow, user, false);
 
                 if(r != null)
                     resp.getWriter().write(r.toString());

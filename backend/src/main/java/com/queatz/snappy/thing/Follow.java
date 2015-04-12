@@ -6,7 +6,7 @@ import com.google.appengine.api.search.PutException;
 import com.google.appengine.api.search.PutResponse;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
-import com.queatz.snappy.service.Config;
+import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 
@@ -29,7 +29,7 @@ public class Follow implements Thing {
         if(follow == null)
             return null;
 
-        Document person = things.snappy.search.get(Search.Type.PERSON, follow.getOnlyField("person").getAtom());
+        Document person = Search.getService().get(Search.Type.PERSON, follow.getOnlyField("person").getAtom());
 
         JSONObject push = new JSONObject();
 
@@ -53,8 +53,8 @@ public class Follow implements Thing {
 
         try {
             o.put("id", d.getId());
-            o.put("person", things.person.toJson(things.snappy.search.get(Search.Type.PERSON, d.getOnlyField("person").getAtom()), user, true));
-            o.put("following", things.person.toJson(things.snappy.search.get(Search.Type.PERSON, d.getOnlyField("following").getAtom()), user, true));
+            o.put("person", things.person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("person").getAtom()), user, true));
+            o.put("following", things.person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("following").getAtom()), user, true));
 
             return o;
         }
@@ -71,7 +71,7 @@ public class Follow implements Thing {
     public Document createOrUpdate(String user, String following) {
         Document follow = null;
         Results<ScoredDocument> results;
-        results = things.snappy.search.index.get(Search.Type.FOLLOW).search("person = \"" + user + "\" AND following = \"" + following + "\"");
+        results = Search.getService().index.get(Search.Type.FOLLOW).search("person = \"" + user + "\" AND following = \"" + following + "\"");
 
         Iterator<ScoredDocument> iterator = results.iterator();
         if(iterator.hasNext())
@@ -88,7 +88,7 @@ public class Follow implements Thing {
         Document document = documentBuild.build();
 
         try {
-            PutResponse put = things.snappy.search.index.get(Search.Type.FOLLOW).put(document);
+            PutResponse put = Search.getService().index.get(Search.Type.FOLLOW).put(document);
             documentBuild.setId(put.getIds().get(0));
             return documentBuild.build();
         } catch (PutException e) {

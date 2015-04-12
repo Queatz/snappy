@@ -7,10 +7,10 @@ import com.google.appengine.api.search.PutException;
 import com.google.appengine.api.search.PutResponse;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
-import com.queatz.snappy.service.Config;
+import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
-import com.queatz.snappy.service.Util;
+import com.queatz.snappy.backend.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,6 +26,28 @@ public class Party implements Thing {
 
     public Party(Things t) {
         things = t;
+    }
+
+    public JSONObject makePush(Document party) {
+        if(party == null)
+            return null;
+
+        Document person = Search.getService().get(Search.Type.PERSON, party.getOnlyField("host").getAtom());
+
+        JSONObject push = new JSONObject();
+
+        try {
+            push.put("action", Config.PUSH_ACTION_NEW_PARTY);
+            push.put("host", things.person.toPushJson(person));
+            push.put("party", toPushJson(party));
+
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return push;
     }
 
     public JSONObject toPushJson(Document d) {
@@ -61,8 +83,8 @@ public class Party implements Thing {
 
             o.put("id", party);
             o.put("details", d.getOnlyField("details").getText());
-            o.put("location", things.location.toJson(things.snappy.search.get(Search.Type.LOCATION, d.getOnlyField("location").getAtom()), user, true));
-            o.put("host", things.person.toJson(things.snappy.search.get(Search.Type.PERSON, host), user, true));
+            o.put("location", things.location.toJson(Search.getService().get(Search.Type.LOCATION, d.getOnlyField("location").getAtom()), user, true));
+            o.put("host", things.person.toJson(Search.getService().get(Search.Type.PERSON, host), user, true));
             o.put("date", Util.dateToString(d.getOnlyField("date").getDate()));
             o.put("name", d.getOnlyField("name").getAtom());
 
@@ -76,7 +98,7 @@ public class Party implements Thing {
                 catch (IllegalArgumentException ignored) {}
             }
 
-            Results<ScoredDocument> results = things.snappy.search.index.get(Search.Type.JOIN).search("party = " + party);
+            Results<ScoredDocument> results = Search.getService().index.get(Search.Type.JOIN).search("party = " + party);
 
             if(results.getNumberReturned() > 0) {
                 JSONArray people = new JSONArray();
@@ -119,7 +141,7 @@ public class Party implements Thing {
         }
 
         if(locationDocument == null) {
-            locationDocument = things.snappy.search.get(Search.Type.LOCATION, location);
+            locationDocument = Search.getService().get(Search.Type.LOCATION, location);
         }
 
         GeoPoint loc = locationDocument.getOnlyField("location").getGeoPoint();
@@ -140,7 +162,7 @@ public class Party implements Thing {
         Document document = documentBuild.build();
 
         try {
-            PutResponse put = things.snappy.search.index.get(Search.Type.PARTY).put(document);
+            PutResponse put = Search.getService().index.get(Search.Type.PARTY).put(document);
             documentBuild.setId(put.getIds().get(0));
             return documentBuild.build();
         } catch (PutException e) {
@@ -159,7 +181,7 @@ public class Party implements Thing {
         Document document = documentBuild.build();
 
         try {
-            things.snappy.search.index.get(Search.Type.PARTY).put(document);
+            Search.getService().index.get(Search.Type.PARTY).put(document);
         } catch (PutException e) {
             e.printStackTrace();
         }

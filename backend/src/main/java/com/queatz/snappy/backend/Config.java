@@ -1,19 +1,21 @@
-package com.queatz.snappy.service;
+package com.queatz.snappy.backend;
 
 public class Config {
     public static final String NAME = "snappy";
     public static final String PACKAGE = "com.queatz.snappy";
-    public static final String clientId = "1098230558363-qe1do9mi41ptg644bd12m90sbba767e2.apps.googleusercontent.com";
-    public static final String redirectUri = "urn:ietf:wg:oauth:2.0:oob";
-    public static final String publisherAccount = "jacobaferrero@gmail.com";
+    public static final String CLIENT_ID = "1098230558363-qe1do9mi41ptg644bd12m90sbba767e2.apps.googleusercontent.com";
+    public static final String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
+    public static final String QUEUE_WORKER_URL = "/worker";
+    public static final String QUEUE_WORKER_NAME = "pushes";
 
-    public static final int SEARCH_DISTANCE = 1609;
+    public static final int SEARCH_DISTANCE = 1609 * 7;
 
     public static final String PUSH_ACTION_JOIN_REQUEST = "join_requested";
     public static final String PUSH_ACTION_JOIN_ACCEPTED = "join_accepted";
     public static final String PUSH_ACTION_HOSTING_REMINDER = "hosting_reminder";
     public static final String PUSH_ACTION_FOLLOW = "follow";
     public static final String PUSH_ACTION_MESSAGE = "message";
+    public static final String PUSH_ACTION_NEW_PARTY = "new_party";
 
     public static final String JOIN_STATUS_REQUESTED = "requested";
     public static final String JOIN_STATUS_IN = "in";
@@ -64,4 +66,5 @@ public class Config {
     public static final String PATH_UNREGISTER_DEVICE = "unregister_device";
     public static final String PATH_PHOTO = "photo";
     public static final String PATH_PIRATE = "yarr";
+    public static final String PATH_ADMIN = "admin";
 }

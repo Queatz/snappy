@@ -3,9 +3,12 @@ package com.queatz.snappy.api;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.service.Api;
-import com.queatz.snappy.service.Config;
-import com.queatz.snappy.service.PrintingError;
+import com.queatz.snappy.service.Buy;
+import com.queatz.snappy.backend.Config;
+import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
+import com.queatz.snappy.service.Things;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,30 +32,25 @@ public class Me implements Api.Path {
         switch (method) {
             case GET:
                 if(path.size() == 0) {
-                    Document me = api.snappy.search.get(Search.Type.PERSON, user);
+                    Document me = Search.getService().get(Search.Type.PERSON, user);
 
                     if (me == null) {
                         throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "me - inexistent");
                     }
 
-                    resp.getWriter().write(api.snappy.things.person.toJson(me, user, false).toString());
+                    resp.getWriter().write(Things.getService().person.toJson(me, user, false).toString());
                 }
                 else if(path.size() == 1) {
                     if(Config.PATH_BUY.equals(path.get(0))) {
-                        Document me = api.snappy.search.get(Search.Type.PERSON, user);
+                        Document me = Search.getService().get(Search.Type.PERSON, user);
 
                         if (me == null) {
                             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "me - inexistent");
                         }
 
                         try {
-                            if(Config.publisherAccount.equals(me.getOnlyField("email").getAtom())) {
-                                resp.getWriter().write(Boolean.toString(true));
-                            }
-                            else {
-                                String subscription = me.getOnlyField("subscription").getAtom();
-                                resp.getWriter().write(Boolean.toString(subscription != null && !subscription.isEmpty()));
-                            }
+                            String subscription = me.getOnlyField("subscription").getAtom();
+                            resp.getWriter().write(Boolean.toString(subscription != null && !subscription.isEmpty()));
                         }
                         catch (IllegalArgumentException e) {
                             e.printStackTrace();
@@ -77,20 +75,20 @@ public class Me implements Api.Path {
                     throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "me - bad path");
 
                 if(Config.PATH_BUY.equals(path.get(0))) {
-                    resp.getWriter().write(Boolean.toString(api.snappy.buy.validate(user, req.getParameter(Config.PARAM_PURCHASE_DATA))));
+                    resp.getWriter().write(Boolean.toString(Buy.getService().validate(user, req.getParameter(Config.PARAM_PURCHASE_DATA))));
                 }
                 else if(Config.PATH_REGISTER_DEVICE.equals(path.get(0))) {
                     String deviceId = req.getParameter(Config.PARAM_DEVICE_ID);
 
                     if(deviceId != null && deviceId.length() > 0) {
-                        api.snappy.push.register(user, deviceId);
+                        Push.getService().register(user, deviceId);
                     }
                 }
                 else if(Config.PATH_UNREGISTER_DEVICE.equals(path.get(0))) {
                     String deviceId = req.getParameter(Config.PARAM_DEVICE_ID);
 
                     if(deviceId != null && deviceId.length() > 0) {
-                        api.snappy.push.unregister(user, deviceId);
+                        Push.getService().unregister(user, deviceId);
                     }
                 }
                 else {

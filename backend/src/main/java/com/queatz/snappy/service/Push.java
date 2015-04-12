@@ -1,16 +1,9 @@
 package com.queatz.snappy.service;
 
-import com.google.android.gcm.server.Constants;
-import com.google.android.gcm.server.Message;
-import com.google.android.gcm.server.Result;
-import com.google.android.gcm.server.Sender;
 import com.queatz.snappy.SnappyServlet;
 import com.queatz.snappy.backend.RegistrationRecord;
 
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.List;
 
 import static com.queatz.snappy.backend.OfyService.ofy;
 
@@ -18,12 +11,16 @@ import static com.queatz.snappy.backend.OfyService.ofy;
  * Created by jacob on 3/18/15.
  */
 public class Push {
-    public SnappyServlet snappy;
+    private static Push _service;
 
-    private static final String API_KEY = System.getProperty("gcm.api.key");
+    public static Push getService() {
+        if(_service == null)
+            _service = new Push();
 
-    public Push(SnappyServlet s) {
-        snappy = s;
+        return _service;
+    }
+
+    public Push() {
     }
 
     public void register(String user, String device) {
@@ -54,46 +51,18 @@ public class Push {
         if(message == null)
             return;
 
-        try {
-            sendMessage(toUser, message.toString());
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            // Yikes, user will never get the push notification
-            // Use a redis queue
-        }
+        Queue.getService().enqueuePushMessageToUser(toUser, message.toString());
+    }
+
+    public void sendToFollowers(final String fromUser, final JSONObject message) {
+        if(message == null)
+            return;
+
+        Queue.getService().enqueuePushMessageFromUser(fromUser, message.toString());
     }
 
     public void clear(String messageId) {
         // Sends a push to all devices with this message to clear it (user has handled it)
-    }
-
-    private void sendMessage(String toUser, String message) throws IOException {
-        if (message == null || message.trim().length() == 0) {
-            return;
-        }
-        // crop longer messages
-        if (message.length() > 1000) {
-            message = message.substring(0, 1000) + "...";
-        }
-        Sender sender = new Sender(API_KEY);
-        Message msg = new Message.Builder().addData("message", message).build();
-        List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).filter("userId", toUser).list();
-        for (RegistrationRecord record : records) {
-            Result result = sender.send(msg, record.getRegId(), 5);
-            if (result.getMessageId() != null) {
-                String canonicalRegId = result.getCanonicalRegistrationId();
-                if (canonicalRegId != null) {
-                    record.setRegId(canonicalRegId);
-                    ofy().save().entity(record).now();
-                }
-            } else {
-                String error = result.getErrorCodeName();
-                if (error.equals(Constants.ERROR_NOT_REGISTERED) || error.equals(Constants.ERROR_MISMATCH_SENDER_ID)) {
-                    ofy().delete().entity(record).now();
-                }
-            }
-        }
     }
 
     private RegistrationRecord findRecord(String userId, String regId) {

@@ -7,7 +7,7 @@ import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
-import com.queatz.snappy.service.Util;
+import com.queatz.snappy.backend.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,9 +33,9 @@ public class Contact implements Thing {
 
         try {
             o.put("id", d.getId());
-            o.put("person", things.person.toJson(things.snappy.search.get(Search.Type.PERSON, d.getOnlyField("person").getAtom()), user, true));
-            o.put("contact", things.person.toJson(things.snappy.search.get(Search.Type.PERSON, d.getOnlyField("contact").getAtom()), user, true));
-            o.put("last", things.message.toJson(things.snappy.search.get(Search.Type.MESSAGE, d.getOnlyField("last").getAtom()), user, true));
+            o.put("person", things.person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("person").getAtom()), user, true));
+            o.put("contact", things.person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("contact").getAtom()), user, true));
+            o.put("last", things.message.toJson(Search.getService().get(Search.Type.MESSAGE, d.getOnlyField("last").getAtom()), user, true));
             o.put("updated", Util.dateToString(d.getOnlyField("updated").getDate()));
             o.put("seen", d.getOnlyField("seen").getAtom());
 
@@ -50,7 +50,7 @@ public class Contact implements Thing {
     public boolean markSeen(String user, String personId) {
         Document contact = null;
         Results<ScoredDocument> results;
-        results = things.snappy.search.index.get(Search.Type.CONTACT).search("person = \"" + user + "\" AND contact = \"" + personId + "\"");
+        results = Search.getService().index.get(Search.Type.CONTACT).search("person = \"" + user + "\" AND contact = \"" + personId + "\"");
 
         Iterator<ScoredDocument> iterator = results.iterator();
         if(iterator.hasNext())
@@ -68,7 +68,7 @@ public class Contact implements Thing {
         Document document = documentBuild.build();
 
         try {
-            things.snappy.search.index.get(Search.Type.CONTACT).put(document);
+            Search.getService().index.get(Search.Type.CONTACT).put(document);
         } catch (PutException e) {
             e.printStackTrace();
             return false;
@@ -95,7 +95,7 @@ public class Contact implements Thing {
 
             Document contact = null;
             Results<ScoredDocument> results;
-            results = things.snappy.search.index.get(Search.Type.CONTACT).search("person = \"" + p1 + "\" AND contact = \"" + p2 + "\"");
+            results = Search.getService().index.get(Search.Type.CONTACT).search("person = \"" + p1 + "\" AND contact = \"" + p2 + "\"");
 
             Iterator<ScoredDocument> iterator = results.iterator();
             if(iterator.hasNext())
@@ -113,7 +113,7 @@ public class Contact implements Thing {
             Document document = documentBuild.build();
 
             try {
-                things.snappy.search.index.get(Search.Type.CONTACT).put(document);
+                Search.getService().index.get(Search.Type.CONTACT).put(document);
             } catch (PutException e) {
                 e.printStackTrace();
             }

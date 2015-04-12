@@ -9,6 +9,7 @@ import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.appengine.tools.cloudstorage.RetryParams;
 import com.queatz.snappy.SnappyServlet;
+import com.queatz.snappy.api.Admin;
 import com.queatz.snappy.api.Example;
 import com.queatz.snappy.api.Follow;
 import com.queatz.snappy.api.Join;
@@ -18,6 +19,8 @@ import com.queatz.snappy.api.Parties;
 import com.queatz.snappy.api.Party;
 import com.queatz.snappy.api.People;
 import com.queatz.snappy.api.Pirate;
+import com.queatz.snappy.backend.Config;
+import com.queatz.snappy.backend.PrintingError;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,6 +34,15 @@ import javax.servlet.http.HttpServletResponse;
  * Created by jacob on 11/17/14.
  */
 public class Api {
+    private static Api _service;
+
+    public static Api getService() {
+        if(_service == null)
+            _service = new Api();
+
+        return _service;
+    }
+
     public enum Error {
         NOT_FOUND,
         NOT_IMPLEMENTED,
@@ -50,9 +62,7 @@ public class Api {
 
     private HashMap<String, Path> paths;
 
-    public Api(SnappyServlet s) {
-        snappy = s;
-
+    public Api() {
         paths = new HashMap<>();
         paths.put("example", new Example(this));
         paths.put(Config.PATH_PARTIES, new Parties(this));
@@ -63,6 +73,7 @@ public class Api {
         paths.put(Config.PATH_ME, new Me(this));
         paths.put(Config.PATH_PIRATE, new Pirate(this));
         paths.put(Config.PATH_JOIN, new Join(this));
+        paths.put(Config.PATH_ADMIN, new Admin(this));
 
         mGCS = GcsServiceFactory.createGcsService(RetryParams.getDefaultInstance());
         mAppIdentityService = AppIdentityServiceFactory.getAppIdentityService();

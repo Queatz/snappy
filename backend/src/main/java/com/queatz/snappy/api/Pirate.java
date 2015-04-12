@@ -8,7 +8,7 @@ import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.SearchServiceFactory;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.service.Api;
-import com.queatz.snappy.service.PrintingError;
+import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Search;
 
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class Pirate implements Api.Path {
         }
         catch (RuntimeException ignored) { }
 
-        api.snappy.search.index.get(Search.Type.PERSON).delete();
+        Search.getService().index.get(Search.Type.PERSON).delete();
         resp.getWriter().write("yarr!");
     }
 }

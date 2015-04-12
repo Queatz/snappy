@@ -1,4 +1,4 @@
-package com.queatz.snappy.service;
+package com.queatz.snappy.backend;
 
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
