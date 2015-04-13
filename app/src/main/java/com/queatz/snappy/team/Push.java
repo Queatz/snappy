@@ -54,6 +54,7 @@ public class Push {
             String personFirstName;
             String personId;
             String partyId;
+            String joinId;
             String partyName;
             Date partyDate;
             NotificationCompat.Builder builder;
@@ -185,6 +186,7 @@ public class Push {
                     personFirstName = URLDecoder.decode(push.getJSONObject("person").getString("firstName"), "UTF-8");
                     personId = push.getJSONObject("person").getString("id");
                     partyName = URLDecoder.decode(push.getJSONObject("party").getString("name"), "UTF-8");
+                    joinId = push.getString("join");
 
                     builder = new NotificationCompat.Builder(team.context)
                             .setAutoCancel(true)
@@ -209,13 +211,14 @@ public class Push {
                                 .setCategory(Notification.CATEGORY_EVENT);
                     }
 
-                    show("join/" + personId, builder.build());
+                    show("join_request/" + joinId, builder.build());
 
                     break;
                 case Config.PUSH_ACTION_JOIN_ACCEPTED:
                     partyName = URLDecoder.decode(push.getJSONObject("party").getString("name"), "UTF-8");
                     partyId = push.getJSONObject("party").getString("id");
                     partyDate = Util.stringToDate(push.getJSONObject("party").getString("date"));
+                    joinId = push.getString("join");
 
                     builder = new NotificationCompat.Builder(team.context)
                             .setAutoCancel(true)
@@ -236,7 +239,7 @@ public class Push {
                                 .setCategory(Notification.CATEGORY_EVENT);
                     }
 
-                    show("accept/" + partyId, builder.build());
+                    show("join_accept/" + joinId, builder.build());
 
                     break;
                 case Config.PUSH_ACTION_FOLLOW:
@@ -272,6 +275,8 @@ public class Push {
 
                     break;
             }
+
+            // Grab more data from server
 
             switch (push.getString("action")) {
                 case Config.PUSH_ACTION_MESSAGE:

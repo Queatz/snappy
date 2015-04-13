@@ -5,8 +5,10 @@ import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.backend.Config;
+import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 
@@ -57,6 +59,7 @@ public class Admin implements Api.Path {
 
                             if(subs == null || subs.isEmpty()) {
                                 Things.getService().person.updateSubscription(person, "betatester");
+                                Push.getService().send(person.getId(), Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
                                 resp.getWriter().write(person.getOnlyField("email").getAtom() + " has been upgraded");
                             }
                             else {
@@ -85,6 +88,7 @@ public class Admin implements Api.Path {
 
                             if(subs == null || subs.isEmpty()) {
                                 Things.getService().person.updateSubscription(person, Config.HOSTING_ENABLED_AVAILABLE);
+                                Push.getService().send(person.getId(), Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
                                 resp.getWriter().write(person.getOnlyField("email").getAtom() + " can now host");
                             }
                             else {
@@ -116,6 +120,7 @@ public class Admin implements Api.Path {
                             }
                             else {
                                 Things.getService().person.updateSubscription(person, "");
+                                Push.getService().send(person.getId(), Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
                                 resp.getWriter().write(person.getOnlyField("email").getAtom() + " can no longer host");
                             }
                         }

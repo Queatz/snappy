@@ -87,6 +87,7 @@ public class Person extends Activity {
             public void onSlideChange(int slide) {
                 if(mPerson != null && slide == 1 && mIsActive) {
                     team.action.setSeen(mPerson);
+                    team.push.clear("person/" + mPerson.getId() + "/messages");
                     team.view.setTop("person/" + mPerson.getId() + "/messages");
                 }
                 else {

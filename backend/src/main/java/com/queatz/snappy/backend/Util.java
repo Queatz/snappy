@@ -2,6 +2,7 @@ package com.queatz.snappy.backend;
 
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
+import com.queatz.snappy.service.Search;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +22,20 @@ import java.util.UUID;
  * Created by jacob on 2/16/15.
  */
 public class Util {
+    public static JSONObject makeSimplePush(String action) {
+        JSONObject push = new JSONObject();
+
+        try {
+            push.put("action", action);
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return push;
+    }
+
     public static String genToken() {
         return UUID.randomUUID().toString() +
                 UUID.randomUUID().toString() +

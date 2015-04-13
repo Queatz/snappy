@@ -35,6 +35,7 @@ public class Config {
     public static final String PUSH_ACTION_MESSAGE = "message";
     public static final String PUSH_ACTION_NEW_PARTY = "new_party";
     public static final String PUSH_ACTION_JOIN_PARTY = "join_party";
+    public static final String PUSH_ACTION_REFRESH_ME = "refresh_me";
 
     public static final String PARAM_AUTH = "auth";
     public static final String PARAM_EMAIL = "email";
