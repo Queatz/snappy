@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,6 +100,7 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
         else {
             view.findViewById(R.id.details).setVisibility(View.VISIBLE);
             ((TextView) view.findViewById(R.id.details)).setText(details);
+            ((TextView) view.findViewById(R.id.details)).setGravity(details.length() < 64 ? Gravity.CENTER_HORIZONTAL : Gravity.START);
         }
 
         RealmResults<Join> in = team.realm.where(Join.class)

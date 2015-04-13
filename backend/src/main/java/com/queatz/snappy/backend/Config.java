@@ -16,8 +16,6 @@ public class Config {
     public static final String HOSTING_ENABLED_AVAILABLE = "available";
     public static final String HOSTING_ENABLED_TRUE = Boolean.toString(true);
 
-    public static final String HOSTING_SUBSCRIPTION_PENDING = "available";
-
     public static final String PUSH_ACTION_JOIN_REQUEST = "join_requested";
     public static final String PUSH_ACTION_JOIN_ACCEPTED = "join_accepted";
     public static final String PUSH_ACTION_HOSTING_REMINDER = "hosting_reminder";
