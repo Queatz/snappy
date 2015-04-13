@@ -2,6 +2,7 @@ package com.queatz.snappy.api;
 
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.urlfetch.HTTPMethod;
+import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Buy;
 import com.queatz.snappy.backend.Config;
@@ -9,6 +10,9 @@ import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -101,6 +105,18 @@ public class Me implements Api.Path {
 
                     if(deviceId != null && deviceId.length() > 0) {
                         Push.getService().unregister(user, deviceId);
+                    }
+                }
+                else if(Config.PATH_CLEAR_NOTIFICATION.equals(path.get(0))) {
+                    String notification = req.getParameter(Config.PARAM_NOTIFICATION);
+
+                    try {
+                        JSONObject push = Util.makeSimplePush(Config.PUSH_ACTION_CLEAR_NOTIFICATION);
+                        push.put("notification", notification);
+                        Push.getService().send(user, push);
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
                 else {

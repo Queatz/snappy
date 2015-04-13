@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
@@ -46,7 +47,17 @@ public class Push {
     }
 
     public void clear(String push) {
+        clear(push, true);
+    }
+
+    public void clear(String push, boolean clearEverywhere) {
         mNotificationManager.cancel(push, 0);
+
+        if(clearEverywhere) {
+            RequestParams params = new RequestParams();
+            params.put("notification", push);
+            team.api.post(Config.PATH_ME_CLEAR_NOTIFICATION, params);
+        }
     }
 
     public void got(JSONObject push) {
@@ -71,6 +82,15 @@ public class Push {
             }
 
             switch (action) {
+                case Config.PUSH_ACTION_CLEAR_NOTIFICATION:
+                    String n = push.getString("notification");
+                    clear(n, false);
+
+                    break;
+                case Config.PUSH_ACTION_REFRESH_ME:
+                    team.buy.pullPerson();
+
+                    break;
                 case Config.PUSH_ACTION_JOIN_PARTY:
                     // Do: notify followers that you are joining a party (once accepted by the host)
                     // Don't: notify the host that you are going to their party if you are their follower

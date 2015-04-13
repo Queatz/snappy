@@ -24,6 +24,7 @@ public class Config {
     public static final String PUSH_ACTION_NEW_PARTY = "new_party";
     public static final String PUSH_ACTION_JOIN_PARTY = "join_party";
     public static final String PUSH_ACTION_REFRESH_ME = "refresh_me";
+    public static final String PUSH_ACTION_CLEAR_NOTIFICATION = "clear_notification";
 
     public static final String JOIN_STATUS_REQUESTED = "requested";
     public static final String JOIN_STATUS_IN = "in";
@@ -52,6 +53,7 @@ public class Config {
     public static final String PARAM_LOCAL_ID = "local_id";
     public static final String PARAM_DEVICE_ID = "device_id";
     public static final String PARAM_PURCHASE_DATA = "purchase_data";
+    public static final String PARAM_NOTIFICATION = "notification";
 
     public static final String GOOGLE_PLUS_PROFILE_URL = "https://www.googleapis.com/plus/v1/people/me";
     public static final String GOOGLE_PLUS_TOKENINFO_URL = "https://www.googleapis.com/oauth2/v1/tokeninfo";
@@ -72,6 +74,7 @@ public class Config {
     public static final String PATH_BUY = "buy";
     public static final String PATH_REGISTER_DEVICE = "register_device";
     public static final String PATH_UNREGISTER_DEVICE = "unregister_device";
+    public static final String PATH_CLEAR_NOTIFICATION = "clear_notification";
     public static final String PATH_PHOTO = "photo";
     public static final String PATH_PIRATE = "yarr";
     public static final String PATH_ADMIN = "admin";

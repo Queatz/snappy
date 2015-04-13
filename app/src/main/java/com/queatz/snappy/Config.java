@@ -36,6 +36,7 @@ public class Config {
     public static final String PUSH_ACTION_NEW_PARTY = "new_party";
     public static final String PUSH_ACTION_JOIN_PARTY = "join_party";
     public static final String PUSH_ACTION_REFRESH_ME = "refresh_me";
+    public static final String PUSH_ACTION_CLEAR_NOTIFICATION = "clear_notification";
 
     public static final String PARAM_AUTH = "auth";
     public static final String PARAM_EMAIL = "email";
@@ -67,6 +68,7 @@ public class Config {
     public static final String PATH_ME_BUY= "me/buy";
     public static final String PATH_ME_REGISTER_DEVICE = "me/register_device";
     public static final String PATH_ME_UNREGISTER_DEVICE = "me/unregister_device";
+    public static final String PATH_ME_CLEAR_NOTIFICATION = "me/clear_notification";
 
     public static final String JOIN_STATUS_REQUESTED = "requested";
     public static final String JOIN_STATUS_IN = "in";
