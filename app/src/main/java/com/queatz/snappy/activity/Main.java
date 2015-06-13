@@ -153,5 +153,6 @@ public class Main extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
 
         team.buy.onActivityResult(this, requestCode, resultCode, data);
+        team.location.onActivityResult(requestCode, resultCode, data);
     }
 }

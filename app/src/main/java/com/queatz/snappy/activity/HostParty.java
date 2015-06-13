@@ -81,7 +81,7 @@ public class HostParty extends Activity {
         team = ((MainApplication) getApplication()).team;
         mGroup = null;
 
-        team.location.locate();
+        team.location.locate(this);
 
         setContentView(R.layout.host_party);
 

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
@@ -76,7 +77,7 @@ public class PartiesSlide extends Fragment {
             emptyView.findViewById(R.id.enableLocation).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    team.location.turnOnLocationServices(getActivity());
+                    team.location.locate(getActivity());
                 }
             });
         }
@@ -109,7 +110,7 @@ public class PartiesSlide extends Fragment {
 
         locationIsEnabled(team.location.enabled());
 
-        team.location.get(new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
+        team.location.get(getActivity(), new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
             @Override
             public void onLocationFound(Location location) {
                 RequestParams params = new RequestParams();
@@ -130,6 +131,11 @@ public class PartiesSlide extends Fragment {
                         mRefresh.setRefreshing(false);
                     }
                 });
+            }
+
+            @Override
+            public void onLocationUnavailable() {
+                mRefresh.setRefreshing(false);
             }
         });
     }

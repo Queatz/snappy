@@ -27,6 +27,7 @@ public class Config {
     public static final int REQUEST_CODE_ACCOUNT_PICKER = 2;
     public static final int REQUEST_CODE_BUY_INTENT = 3;
     public static final int REQUEST_CODE_PLAY_SERVICES = 4;
+    public static final int REQUEST_CODE_CHECK_SETTINGS = 5;
 
     public static final String PUSH_ACTION_JOIN_REQUEST = "join_requested";
     public static final String PUSH_ACTION_JOIN_ACCEPTED = "join_accepted";

@@ -1,18 +1,34 @@
 package com.queatz.snappy.team;
 
+import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.location.Criteria;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.queatz.snappy.Config;
+import com.queatz.snappy.MainActivity;
 import com.queatz.snappy.R;
 
 import org.apache.http.Header;
@@ -24,26 +40,70 @@ import java.util.ArrayList;
 /**
  * Created by jacob on 10/19/14.
  */
-public class Location implements LocationListener {
+public class Location implements
+        LocationListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        ResultCallback<LocationSettingsResult> {
     public Team team;
     private android.location.Location mLocation;
     private LocationManager mLocationManager;
     private final ArrayList<OnLocationFoundCallback> mCallbacks = new ArrayList<>();
+    private GoogleApiClient mGoogleApiClient;
+    private Activity mActivity;
+    private LocationRequest mLocationRequest = LocationRequest.create()
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+            .setInterval(3000)
+            .setFastestInterval(1000);
+    private boolean mLocationIsAvailable = false;
+    private ArrayList<Runnable> mRunWhenConnected = new ArrayList<>();
 
-    public static interface OnLocationFoundCallback {
-        public void onLocationFound(android.location.Location location);
+    public interface OnLocationFoundCallback {
+        void onLocationFound(android.location.Location location);
+        void onLocationUnavailable();
     }
 
-    public static interface AutocompleteCallback {
-        public void onResult(JSONObject result);
+    public interface AutocompleteCallback {
+        void onResult(JSONObject result);
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        synchronized (mRunWhenConnected) {
+            while (!mRunWhenConnected.isEmpty()) {
+                mRunWhenConnected.remove(0).run();
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
     }
 
     public Location(Team t) {
         team = t;
         mLocationManager = (LocationManager) team.context.getSystemService(Context.LOCATION_SERVICE);
+        mGoogleApiClient = new GoogleApiClient.Builder(team.context)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
+        mGoogleApiClient.connect();
     }
 
-    public void get(@NonNull OnLocationFoundCallback callback) {
+    private void ensureConnected(Runnable runnable) {
+        if(mGoogleApiClient.isConnected())
+            runnable.run();
+        else
+            mRunWhenConnected.add(runnable);
+    }
+
+    public void get(Activity activity, @NonNull OnLocationFoundCallback callback) {
         android.location.Location location = get();
 
         if(location != null) {
@@ -51,61 +111,91 @@ public class Location implements LocationListener {
         }
         else {
             mCallbacks.add(callback);
-            locate();
+            locate(activity);
         }
     }
 
     public android.location.Location get() {
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setPowerRequirement(Criteria.POWER_LOW);
-        String provider = mLocationManager.getBestProvider(criteria, true);
-
-        mLocation = mLocationManager.getLastKnownLocation(provider);
-
-        if(!LocationManager.NETWORK_PROVIDER.equals(provider)) {
-            android.location.Location networkLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-            if(networkLocation == null)
-                return mLocation;
-
-            if(mLocation == null || networkLocation.getAccuracy() < mLocation.getAccuracy())
-                mLocation = networkLocation;
-        }
+        if(mGoogleApiClient.isConnected())
+            mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         return mLocation;
     }
 
-    public void locate() {
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        String provider = mLocationManager.getBestProvider(criteria, true);
+    public void locate(Activity activity) {
+        mActivity = activity;
 
-        Log.w(Config.LOG_TAG, provider);
+        ensureConnected(new Runnable() {
+            @Override
+            public void run() {
+                turnOnLocationServices();
 
-        if(provider != null && mLocationManager.isProviderEnabled(provider)) {
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, Location.this);
+            }
+        });
+    }
 
-            if(!LocationManager.NETWORK_PROVIDER.equals(provider))
-                mLocationManager.requestLocationUpdates(provider, 0, 0, this);
+    private void locationNotAvailable() {
+        synchronized (mCallbacks) {
+            for(OnLocationFoundCallback callback : mCallbacks)
+                callback.onLocationUnavailable();
         }
     }
 
     public boolean enabled() {
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        String provider = mLocationManager.getBestProvider(criteria, true);
-
-        return provider != null && mLocationManager.isProviderEnabled(provider) && !LocationManager.PASSIVE_PROVIDER.equals(provider);
+        return mLocationIsAvailable;
     }
 
-    public void turnOnLocationServices(Activity activity) {
-        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        activity.startActivity(intent);
+    private void turnOnLocationServices() {
+        LocationSettingsRequest locationSettingsRequest = new LocationSettingsRequest.Builder().addLocationRequest(mLocationRequest).setAlwaysShow(true).build();
+
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(
+                        mGoogleApiClient,
+                        locationSettingsRequest
+                );
+
+        result.setResultCallback(Location.this);
+    }
+
+    @Override
+    public void onResult(LocationSettingsResult locationSettingsResult) {
+        switch (locationSettingsResult.getStatus().getStatusCode()) {
+            case LocationSettingsStatusCodes.SUCCESS:
+                mLocationIsAvailable = true;
+                break;
+            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                mLocationIsAvailable = false;
+                locationNotAvailable();
+
+                try {
+                    locationSettingsResult.getStatus().startResolutionForResult(mActivity, Config.REQUEST_CODE_CHECK_SETTINGS);
+                }
+                catch (IntentSender.SendIntentException e) {
+                }
+            default:
+                mLocationIsAvailable = false;
+                break;
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case Config.REQUEST_CODE_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        mLocationIsAvailable = true;
+                        break;
+                    default:
+                        break;
+                }
+
+                break;
+        }
     }
 
     public void stopLocating() {
-        mLocationManager.removeUpdates(this);
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
 
     public void getTopGoogleLocationForInput(@NonNull final String input, @NonNull final AutocompleteCallback callback) {
@@ -165,7 +255,6 @@ public class Location implements LocationListener {
         mLocation = location;
 
         if(location.getAccuracy() < Config.locationAccuracy) {
-
             synchronized (mCallbacks) {
                 while (!mCallbacks.isEmpty())
                     mCallbacks.remove(0).onLocationFound(location);
@@ -175,19 +264,5 @@ public class Location implements LocationListener {
         }
 
         Log.d(Config.LOG_TAG, "Locating (" + location.getAccuracy() + ") : " + location.getLatitude() + ", " + location.getLongitude());
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
     }
 }
