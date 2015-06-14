@@ -31,7 +31,7 @@ import io.realm.RealmResults;
 /**
  * Created by jacob on 10/19/14.
  */
-public class PartiesSlide extends Fragment {
+public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Location.LocationAvailabilityCallback {
     Team team;
 
     SwipeRefreshLayout mRefresh;
@@ -66,13 +66,13 @@ public class PartiesSlide extends Fragment {
         update();
         refresh();
 
-        locationIsEnabled(team.location.enabled());
+        team.location.addLocationAvailabilityCallback(this);
 
         team.realm.addChangeListener(new RealmChangeListener() {
             @Override
             public void onChange() {
-                if(getActivity() != null) {
-                    emptyView.post(new Runnable() {
+                if(getView() != null) {
+                    getView().post(new Runnable() {
                         @Override
                         public void run() {
                             updateNullState();
@@ -85,7 +85,8 @@ public class PartiesSlide extends Fragment {
         return view;
     }
 
-    public void locationIsEnabled(boolean enabled) {
+    @Override
+    public void onLocationAvailabilityChanged(boolean enabled) {
         if(!enabled) {
             emptyView.findViewById(R.id.enableLocation).setVisibility(View.VISIBLE);
             emptyView.findViewById(R.id.enableLocation).setOnClickListener(new View.OnClickListener() {
@@ -115,7 +116,6 @@ public class PartiesSlide extends Fragment {
         Log.w(Config.LOG_TAG, "parties count = " + mList.getAdapter().getCount());
 
         updateNullState();
-        locationIsEnabled(team.location.enabled());
     }
 
     private void updateNullState() {
@@ -125,8 +125,6 @@ public class PartiesSlide extends Fragment {
     public void refresh() {
         if(getActivity() == null)
             return;
-
-        locationIsEnabled(team.location.enabled());
 
         team.location.get(getActivity(), new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
             @Override

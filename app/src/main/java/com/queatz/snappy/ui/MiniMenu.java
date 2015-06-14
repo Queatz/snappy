@@ -11,6 +11,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.HostParty;
@@ -60,7 +61,7 @@ public class MiniMenu extends FrameLayout {
             public void onClick(View view) {
                 final Team team = ((MainApplication) getContext().getApplicationContext()).team;
 
-                if(team.buy.bought()) {
+                if(Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
                     team.view.show((android.app.Activity) getContext(), HostParty.class, null);
                 }
                 else {

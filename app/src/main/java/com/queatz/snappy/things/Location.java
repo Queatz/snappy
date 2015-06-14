@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.Index;
 import io.realm.annotations.RealmClass;
 
@@ -21,6 +22,11 @@ public class Location extends RealmObject {
     private String address;
     private double latitude;
     private double longitude;
+
+    @Ignore
+    private JSONObject json;
+    @Ignore
+    private String text;
 
     public JSONObject getJson() {
         JSONObject o = new JSONObject();

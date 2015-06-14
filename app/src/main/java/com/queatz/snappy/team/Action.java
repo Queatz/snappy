@@ -45,6 +45,9 @@ public class Action {
     }
 
     public void setSeen(@NonNull final Person person) {
+        if(team.auth.getUser() == null)
+            return;
+
         RealmResults<Contact> contacts = team.realm.where(Contact.class)
                 .equalTo("person.id", team.auth.getUser())
                 .equalTo("contact.id", person.getId())

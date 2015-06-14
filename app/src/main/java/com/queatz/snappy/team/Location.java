@@ -48,6 +48,7 @@ public class Location implements
     public Team team;
     private android.location.Location mLocation;
     private final ArrayList<OnLocationFoundCallback> mCallbacks = new ArrayList<>();
+    private final ArrayList<LocationAvailabilityCallback> mLocationAvailabilityCallbacks = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private Activity mActivity;
     private LocationRequest mLocationRequest = LocationRequest.create()
@@ -56,6 +57,10 @@ public class Location implements
             .setFastestInterval(1000);
     private boolean mLocationIsAvailable = true;
     private ArrayList<Runnable> mRunWhenConnected = new ArrayList<>();
+
+    public interface LocationAvailabilityCallback {
+        void onLocationAvailabilityChanged(boolean enabled);
+    }
 
     public interface OnLocationFoundCallback {
         void onLocationFound(android.location.Location location);
@@ -140,8 +145,26 @@ public class Location implements
         }
     }
 
+    public void addLocationAvailabilityCallback(LocationAvailabilityCallback callback) {
+        mLocationAvailabilityCallbacks.add(callback);
+        callback.onLocationAvailabilityChanged(mLocationIsAvailable);
+    }
+
     public boolean enabled() {
         return mLocationIsAvailable;
+    }
+
+    private void locationAvailable(boolean enabled) {
+        if(mLocationIsAvailable == enabled)
+            return;
+
+        mLocationIsAvailable = enabled;
+
+        synchronized (mLocationAvailabilityCallbacks) {
+            for(LocationAvailabilityCallback callback : mLocationAvailabilityCallbacks) {
+                callback.onLocationAvailabilityChanged(enabled);
+            }
+        }
     }
 
     private void turnOnLocationServices() {
@@ -160,10 +183,10 @@ public class Location implements
     public void onResult(LocationSettingsResult locationSettingsResult) {
         switch (locationSettingsResult.getStatus().getStatusCode()) {
             case LocationSettingsStatusCodes.SUCCESS:
-                mLocationIsAvailable = true;
+                locationAvailable(true);
                 break;
             case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                mLocationIsAvailable = false;
+                locationAvailable(false);
                 locationNotAvailable();
 
                 try {
@@ -172,7 +195,7 @@ public class Location implements
                 catch (IntentSender.SendIntentException e) {
                 }
             default:
-                mLocationIsAvailable = false;
+                locationAvailable(false);
                 break;
         }
     }
@@ -182,7 +205,7 @@ public class Location implements
             case Config.REQUEST_CODE_CHECK_SETTINGS:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        mLocationIsAvailable = true;
+                        locationAvailable(true);
                         break;
                     default:
                         break;
