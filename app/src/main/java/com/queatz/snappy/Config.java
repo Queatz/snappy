@@ -18,6 +18,7 @@ public class Config {
     public static final String PREFERENCE_AUTH_TOKEN = "auth.auth_token";
     public static final String PREFERENCE_GCM_REGISTRATION_ID = "auth.gcm_registration_id";
     public static final String PREFERENCE_HOST_PARTY_SCREEN_SHOWN = "other.party_screen_shown";
+    public static final String PREFERENCE_HOSTING_ENABLED = "other.hosting_enabled";
 
     public static final String HOSTING_ENABLED_FALSE = Boolean.toString(false);
     public static final String HOSTING_ENABLED_AVAILABLE = "available";

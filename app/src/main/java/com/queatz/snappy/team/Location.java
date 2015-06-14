@@ -47,7 +47,6 @@ public class Location implements
         ResultCallback<LocationSettingsResult> {
     public Team team;
     private android.location.Location mLocation;
-    private LocationManager mLocationManager;
     private final ArrayList<OnLocationFoundCallback> mCallbacks = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private Activity mActivity;
@@ -55,7 +54,7 @@ public class Location implements
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
             .setInterval(3000)
             .setFastestInterval(1000);
-    private boolean mLocationIsAvailable = false;
+    private boolean mLocationIsAvailable = true;
     private ArrayList<Runnable> mRunWhenConnected = new ArrayList<>();
 
     public interface OnLocationFoundCallback {
@@ -86,7 +85,6 @@ public class Location implements
 
     public Location(Team t) {
         team = t;
-        mLocationManager = (LocationManager) team.context.getSystemService(Context.LOCATION_SERVICE);
         mGoogleApiClient = new GoogleApiClient.Builder(team.context)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)

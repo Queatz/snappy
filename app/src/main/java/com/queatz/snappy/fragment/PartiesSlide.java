@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
@@ -26,6 +25,7 @@ import com.queatz.snappy.things.Party;
 
 import java.util.Date;
 
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 /**
@@ -68,6 +68,20 @@ public class PartiesSlide extends Fragment {
 
         locationIsEnabled(team.location.enabled());
 
+        team.realm.addChangeListener(new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                if(getActivity() != null) {
+                    emptyView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateNullState();
+                        }
+                    });
+                }
+            }
+        });
+
         return view;
     }
 
@@ -100,8 +114,12 @@ public class PartiesSlide extends Fragment {
 
         Log.w(Config.LOG_TAG, "parties count = " + mList.getAdapter().getCount());
 
-        emptyView.findViewById(R.id.noParties).setVisibility(mList.getAdapter().isEmpty() ? View.VISIBLE : View.GONE);
+        updateNullState();
         locationIsEnabled(team.location.enabled());
+    }
+
+    private void updateNullState() {
+        emptyView.findViewById(R.id.noParties).setVisibility(mList.getAdapter().isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     public void refresh() {

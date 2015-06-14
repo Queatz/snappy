@@ -29,12 +29,12 @@ import java.util.HashSet;
  * Created by jacob on 3/27/15.
  */
 public class Buy {
-    public static interface PurchaseCallback {
+    public interface PurchaseCallback {
         void onSuccess();
         void onError();
     }
 
-    public static interface OnAttachedCallback {
+    public interface OnAttachedCallback {
         void onAttached();
     }
 
@@ -52,6 +52,10 @@ public class Buy {
     }
 
     public String hostingEnabled() {
+        if(mHostingEnabled == null) {
+            mHostingEnabled = team.preferences.getString(Config.PREFERENCE_HOSTING_ENABLED, null);
+        }
+
         return mHostingEnabled;
     }
 
@@ -98,6 +102,7 @@ public class Buy {
                 }
 
                 mHostingEnabled = response;
+                team.preferences.edit().putString(Config.PREFERENCE_HOSTING_ENABLED, mHostingEnabled).apply();
 
                 callbacks(purchased);
             }
