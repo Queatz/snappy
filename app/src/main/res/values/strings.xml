@@ -2,9 +2,9 @@
     <string name="app_name">Snappy</string>
     <string name="whos_in">Who\'s in?</string>
     <string name="request_to_join">Request to Join</string>
-    <string name="mark_party_full">Mark Party Full</string>
+    <string name="mark_party_full">Mark Snap Full</string>
     <string name="requested">Requested</string>
-    <string name="host_party">Host Party</string>
+    <string name="host_party">Host Snap</string>
     <string name="host_again">Host again</string>
     <string name="write_message">Write message</string>
     <string name="today">Today, %1$s</string>
@@ -15,7 +15,7 @@
     <string name="sentence_tonight">%1$s tonight</string>
     <string name="hidden">Hidden</string>
     <string name="by">by %1$s</string>
-    <string name="enter_party_name">Enter party name</string>
+    <string name="enter_party_name">Enter name</string>
     <string name="enter_time">Enter time</string>
     <string name="enter_location">Enter location</string>
     <string name="enter_details">Enter details</string>
@@ -50,9 +50,9 @@
     <string name="about">About</string>
     <string name="messages">Messages</string>
     <string name="parties">Snaps</string>
-    <string name="message_host_party">Your party will show up to people nearby.  You can mark the party as full when you have accepted enough people to stop getting more requests.</string>
+    <string name="message_host_party">Your snap will show up to people nearby.  You can mark the snap as full when you have accepted enough people to stop getting more requests.</string>
     <string name="ok">OK</string>
-    <string name="message_join_party">Would you like to write a message to %1$s, the party\'s host?</string>
+    <string name="message_join_party">Would you like to write a message to %1$s, the snap\'s host?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
