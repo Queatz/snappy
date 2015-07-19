@@ -22,7 +22,7 @@
     <string name="social_mode">Social Mode</string>
     <string name="on">On</string>
     <string name="my_profile">My Profile</string>
-    <string name="host_a_party">Host a Snap</string>
+    <string name="host_a_party">Host a Party</string>
     <string name="accept_person"><![CDATA[Accept <b>%1$s</b>]]></string>
     <string name="hosted">Hosted</string>
     <string name="Following">Following</string>
@@ -49,7 +49,7 @@
     <string name="accept">Accept</string>
     <string name="about">About</string>
     <string name="messages">Messages</string>
-    <string name="parties">Snaps</string>
+    <string name="parties">Parties</string>
     <string name="message_host_party">Your party will show up to people nearby.  You can mark the party as full when you have accepted enough people to stop getting more requests.</string>
     <string name="ok">OK</string>
     <string name="message_join_party">Would you like to write a message to %1$s, the party\'s host?</string>
