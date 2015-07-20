@@ -15,9 +15,9 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class GcmIntentService extends IntentService {
+public class GCMIntentService extends IntentService {
 
-    public GcmIntentService() {
+    public GCMIntentService() {
         super("GCMIntentService");
     }
 
@@ -33,7 +33,7 @@ public class GcmIntentService extends IntentService {
             }
         }
 
-        GcmBroadcastReceiver.completeWakefulIntent(intent);
+        GCMBroadcastReceiver.completeWakefulIntent(intent);
     }
 
     protected void handle(final String message) {
