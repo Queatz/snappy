@@ -8,10 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.loopj.android.http.RequestParams;
+import com.queatz.snappy.Background;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
@@ -116,7 +119,15 @@ public class Push {
                     builder.setContentIntent(pendingIntent);
 
                     if(Build.VERSION.SDK_INT >= 20) {
-                        builder.addAction(new NotificationCompat.Action(0, team.context.getString(R.string.request_to_join), null));
+                        resultIntent = new Intent(team.context, Background.class);
+                        Bundle extras = new Bundle();
+                        extras.putString(Config.EXTRA_ACTION, Config.EXTRA_ACTION_JOIN_REQUEST);
+                        extras.putString(Config.EXTRA_PARTY, partyId);
+                        resultIntent.putExtras(extras);
+
+                        pendingIntent = PendingIntent.getService(team.context, 0, resultIntent, 0);
+
+                        builder.addAction(new NotificationCompat.Action(0, team.context.getString(R.string.request_to_join), pendingIntent));
                     }
 
                     if(Build.VERSION.SDK_INT >= 21) {
@@ -222,7 +233,15 @@ public class Push {
                     builder.setContentIntent(pendingIntent);
 
                     if(Build.VERSION.SDK_INT >= 20) {
-                        builder.addAction(new NotificationCompat.Action(0, team.context.getString(R.string.accept), null));
+                        resultIntent = new Intent(team.context, Background.class);
+                        Bundle extras = new Bundle();
+                        extras.putString(Config.EXTRA_ACTION, Config.EXTRA_ACTION_JOIN_ACCEPT);
+                        extras.putString(Config.EXTRA_JOIN, joinId);
+                        resultIntent.putExtras(extras);
+
+                        pendingIntent = PendingIntent.getService(team.context, 0, resultIntent, 0);
+
+                        builder.addAction(new NotificationCompat.Action(0, team.context.getString(R.string.accept), pendingIntent));
                     }
 
                     if(Build.VERSION.SDK_INT >= 21) {

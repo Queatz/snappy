@@ -44,8 +44,8 @@ public class Things {
                 field = thing.getClass().getSuperclass().getDeclaredField(key);
             }
             catch (NoSuchFieldException e) {
-                e.printStackTrace();
-                Log.w(Config.LOG_TAG, "JSON unknown field supplied: " + key);
+                //e.printStackTrace();
+                //Log.w(Config.LOG_TAG, "JSON unknown field supplied: " + key);
                 continue;
             }
 

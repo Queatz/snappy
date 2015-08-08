@@ -40,6 +40,12 @@ public class Config {
     public static final String PUSH_ACTION_REFRESH_ME = "refresh_me";
     public static final String PUSH_ACTION_CLEAR_NOTIFICATION = "clear_notification";
 
+    public static final String EXTRA_ACTION = "action";
+    public static final String EXTRA_PARTY = "party";
+    public static final String EXTRA_JOIN = "join";
+    public static final String EXTRA_ACTION_JOIN_ACCEPT = "join.accept";
+    public static final String EXTRA_ACTION_JOIN_REQUEST = "join.request";
+
     public static final String PARAM_AUTH = "auth";
     public static final String PARAM_EMAIL = "email";
     public static final String PARAM_JOIN = "join";

@@ -236,6 +236,17 @@ public class Action {
         });
     }
 
+    public void joinParty(final Activity activity, @NonNull final String partyId) {
+        Party party = team.realm.where(Party.class).equalTo("id", partyId).findFirst();
+
+        if(party == null) {
+            party = new Party();
+            party.setId(partyId);
+        }
+
+        joinParty(activity, party);
+    }
+
     public void joinParty(final Activity activity, @NonNull final Party party) {
         final String localId = Util.createLocalId();
 
@@ -264,20 +275,22 @@ public class Action {
             }
         });
 
-        new AlertDialog.Builder(activity)
-                .setMessage(String.format(team.context.getString(R.string.message_join_party), party.getHost().getFirstName()))
-                .setPositiveButton(team.context.getString(R.string.yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        openMessages(activity, party.getHost());
-                    }
-                })
-                .setNegativeButton(team.context.getString(R.string.no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+        if(activity != null) {
+            new AlertDialog.Builder(activity)
+                    .setMessage(String.format(team.context.getString(R.string.message_join_party), party.getHost().getFirstName()))
+                    .setPositiveButton(team.context.getString(R.string.yes), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            openMessages(activity, party.getHost());
+                        }
+                    })
+                    .setNegativeButton(team.context.getString(R.string.no), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                }).show();
+                        }
+                    }).show();
+        }
     }
 
     public void cancelJoin(@NonNull final Party party) {
@@ -309,6 +322,18 @@ public class Action {
                 Toast.makeText(team.context, "Join cancel failed", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void acceptJoin(@NonNull final String joinId) {
+        Join join = team.realm.where(Join.class).equalTo("id", joinId).findFirst();
+
+        if(join == null) {
+            join = new Join();
+            join.setId(joinId);
+            join.setStatus(Config.JOIN_STATUS_REQUESTED);
+        }
+
+        acceptJoin(join);
     }
 
     public void acceptJoin(@NonNull final Join join) {
