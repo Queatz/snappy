@@ -1,6 +1,7 @@
 package com.queatz.snappy.api;
 
 import com.google.appengine.api.search.Document;
+import com.google.appengine.api.search.GeoPoint;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.urlfetch.HTTPMethod;
@@ -12,6 +13,7 @@ import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 import com.queatz.snappy.backend.Util;
+import com.queatz.snappy.thing.Location;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -56,11 +58,17 @@ public class Parties implements Api.Path {
 
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-                Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PARTY).search("(host = \"" + user + "\" OR distance(loc_cache, geopoint(" + latitude + ", " + longitude + ")) < " + Config.SEARCH_DISTANCE + ") AND date >= \"" + format.format(new Date(new Date().getTime() - 1000 * 60 * 60)) + "\"");
-                Iterator<ScoredDocument> iterator = results.iterator();
+                Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PARTY).search("(host = \"" + user + "\" OR full=\"" + Boolean.toString(false) + "\") AND date >= \"" + format.format(new Date(new Date().getTime() - 1000 * 60 * 60)) + "\"");
 
-                while (iterator.hasNext()) {
-                    r.put(Things.getService().party.toJson(iterator.next(), user, false));
+                for (ScoredDocument result : results) {
+                    r.put(Things.getService().party.toJson(result, user, false));
+
+                    if (r.length() >= Config.SEARCH_MINIMUM) {
+                        GeoPoint point = Things.getService().location.getGeoPoint(result);
+
+                        if (Util.distance(latitude, longitude, point.getLatitude(), point.getLongitude()) > Config.SEARCH_DISTANCE)
+                            break;
+                    }
                 }
 
                 resp.getWriter().write(r.toString());

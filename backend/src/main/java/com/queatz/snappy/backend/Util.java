@@ -22,6 +22,10 @@ import java.util.UUID;
  * Created by jacob on 2/16/15.
  */
 public class Util {
+    public static double distance(double x1, double y1, double x2, double y2) {
+        return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+    }
+
     public static JSONObject makeSimplePush(String action) {
         JSONObject push = new JSONObject();
 
