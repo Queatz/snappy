@@ -9,9 +9,11 @@ public class Config {
     public static final String QUEUE_WORKER_NAME = "pushes";
 
     public static final boolean IN_BETA = false;
+    public static final int TEMPORARY_API_LIMIT = 100;
 
     public static final int SEARCH_DISTANCE = 1609 * 7;
-    public static final int SEARCH_MINIMUM = 19;
+    public static final int SEARCH_MINIMUM = 10;
+    public static final int SEARCH_MAXIMUM = 30;
 
     public static final String HOSTING_ENABLED_FALSE = Boolean.toString(false);
     public static final String HOSTING_ENABLED_AVAILABLE = "available";

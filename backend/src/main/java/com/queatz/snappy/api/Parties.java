@@ -2,8 +2,12 @@ package com.queatz.snappy.api;
 
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.GeoPoint;
+import com.google.appengine.api.search.Query;
+import com.google.appengine.api.search.QueryOptions;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
+import com.google.appengine.api.search.SortExpression;
+import com.google.appengine.api.search.SortOptions;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Buy;
@@ -58,7 +62,17 @@ public class Parties implements Api.Path {
 
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-                Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PARTY).search("(host = \"" + user + "\" OR full=\"" + Boolean.toString(false) + "\") AND date >= \"" + format.format(new Date(new Date().getTime() - 1000 * 60 * 60)) + "\"");
+                String queryString = "(host = \"" + user + "\" OR full=\"" + Boolean.toString(false) + "\") AND date >= \"" + format.format(new Date(new Date().getTime() - 1000 * 60 * 60)) + "\"";
+
+                SortOptions sortOptions = SortOptions.newBuilder().addSortExpression(
+                        SortExpression.newBuilder().setExpression("distance(loc_cache, geopoint(" + latitude + ", " + longitude + "))").setDirection(SortExpression.SortDirection.ASCENDING).build()
+                ).setLimit(Config.SEARCH_MAXIMUM).build();
+
+                QueryOptions queryOptions = QueryOptions.newBuilder().setSortOptions(sortOptions).build();
+
+                Query query = Query.newBuilder().setOptions(queryOptions).build(queryString);
+
+                Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PARTY).search(query);
 
                 for (ScoredDocument result : results) {
                     r.put(Things.getService().party.toJson(result, user, false));

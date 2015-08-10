@@ -30,8 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp">
+            android:padding="8dp">
 
             <LinearLayout
                 android:id="@+id/followers_button"
@@ -41,7 +40,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
 
                 <com.queatz.snappy.ui.TextView
                     android:id="@+id/info_followers"
@@ -72,7 +72,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
 
                 <com.queatz.snappy.ui.TextView
                     android:id="@+id/info_following"
@@ -103,7 +104,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
 
                 <com.queatz.snappy.ui.TextView
                     android:id="@+id/info_hosted"

@@ -17,6 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+
 /**
  * Created by jacob on 2/15/15.
  */
@@ -142,8 +144,9 @@ public class Person implements Thing {
         Document.Builder documentBuild = Document.newBuilder();
         documentBuild.setId(person.getId());
         documentBuild.addField(Field.newBuilder().setName("latlng").setGeoPoint(new GeoPoint(latitude, longitude)));
+        documentBuild.addField(Field.newBuilder().setName("around").setDate(new Date()));
 
-        Util.copyIn(documentBuild, person, "latlng");
+        Util.copyIn(documentBuild, person, "latlng", "around");
 
         Document result = documentBuild.build();
 

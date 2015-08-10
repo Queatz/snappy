@@ -1,9 +1,12 @@
 package com.queatz.snappy.api;
 
 import com.google.appengine.api.search.Document;
+import com.google.appengine.api.search.Query;
+import com.google.appengine.api.search.QueryOptions;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.urlfetch.HTTPMethod;
+import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Search;
@@ -54,7 +57,13 @@ public class Messages implements Api.Path {
 
                 JSONObject r = new JSONObject();
 
-                Results<ScoredDocument> results = Search.getService().index.get(Search.Type.MESSAGE).search("from = \"" + user + "\" OR to = \"" + user + "\"");
+                QueryOptions queryOptions = QueryOptions.newBuilder()
+                        .setLimit(Config.TEMPORARY_API_LIMIT)
+                        .build();
+
+                Query query = Query.newBuilder().setOptions(queryOptions).build("from = \"" + user + "\" OR to = \"" + user + "\"");
+
+                Results<ScoredDocument> results = Search.getService().index.get(Search.Type.MESSAGE).search(query);
 
                 JSONArray a = new JSONArray();
 
