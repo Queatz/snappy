@@ -123,6 +123,13 @@ public class Buy {
         if (subscription == null)
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "not bought 3");
 
+
+        long subscribers = Search.getService().index.get(Search.Type.PERSON).search("subscription = \"" + subscription.getId() + "\"").getNumberFound();
+
+        if(subscribers > 0) {
+            throw new PrintingError(Api.Error.NOT_IMPLEMENTED, "not bought already owned by someone else");
+        }
+        
         Things.getService().person.updateSubscription(me, subscription.getId());
 
         return true;
