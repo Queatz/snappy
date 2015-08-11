@@ -84,7 +84,6 @@ public class Me implements Api.Path {
                 break;
             case PUT:
 
-
                 break;
             case POST:
                 if(path.size() != 1)

@@ -62,13 +62,14 @@ public class Parties implements Api.Path {
 
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-                String queryString = "(host = \"" + user + "\" OR full=\"" + Boolean.toString(false) + "\") AND date >= \"" + format.format(new Date(new Date().getTime() - 1000 * 60 * 60)) + "\"";
+                // TODO: Audit that this is actually sorting and then matching, not matching and then sorting
+                String queryString = "(host = \"" + user + "\" OR (distance(loc_cache, geopoint(" + latitude + ", " + longitude + ")) < " + Config.SEARCH_MAX_VISIBILITY + " AND full=\"" + Boolean.toString(false) + "\")) AND date >= \"" + format.format(new Date(new Date().getTime() - 1000 * 60 * 60)) + "\"";
 
                 SortOptions sortOptions = SortOptions.newBuilder().addSortExpression(
                         SortExpression.newBuilder().setExpression("distance(loc_cache, geopoint(" + latitude + ", " + longitude + "))").setDirection(SortExpression.SortDirection.ASCENDING).build()
-                ).setLimit(Config.SEARCH_MAXIMUM).build();
+                ).build();
 
-                QueryOptions queryOptions = QueryOptions.newBuilder().setSortOptions(sortOptions).build();
+                QueryOptions queryOptions = QueryOptions.newBuilder().setSortOptions(sortOptions).setLimit(Config.SEARCH_MAXIMUM).build();
 
                 Query query = Query.newBuilder().setOptions(queryOptions).build(queryString);
 

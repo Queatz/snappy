@@ -14,6 +14,9 @@ public class Config {
     public static final int SEARCH_DISTANCE = 1609 * 7;
     public static final int SEARCH_MINIMUM = 10;
     public static final int SEARCH_MAXIMUM = 30;
+    public static final int SEARCH_MAX_VISIBILITY = 1609 * 300;
+    public static final int SUGGESTION_LIMIT = 5;
+    public static final int SUGGESTION_MAX_DISTANCE = 1609;
 
     public static final String HOSTING_ENABLED_FALSE = Boolean.toString(false);
     public static final String HOSTING_ENABLED_AVAILABLE = "available";
@@ -73,6 +76,7 @@ public class Config {
     public static final String PATH_MESSAGES = "messages";
     public static final String PATH_PEOPLE = "people";
     public static final String PATH_FOLLOW = "follow";
+    public static final String PATH_LOCATIONS = "locations";
     public static final String PATH_ME = "me";
     public static final String PATH_BUY = "buy";
     public static final String PATH_REGISTER_DEVICE = "register_device";

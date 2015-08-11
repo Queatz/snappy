@@ -34,10 +34,10 @@ public class Location implements Thing {
 
         try {
             o.put("id", d.getId());
-            o.put("name", d.getOnlyField("name").getAtom());
+            o.put("name", d.getOnlyField("name").getText());
 
             if(d.getFieldCount("address") == 1)
-                o.put("address", d.getOnlyField("address").getNumber());
+                o.put("address", d.getOnlyField("address").getText());
 
             o.put("latitude", d.getOnlyField("location").getGeoPoint().getLatitude());
             o.put("longitude", d.getOnlyField("location").getGeoPoint().getLongitude());
@@ -58,7 +58,7 @@ public class Location implements Thing {
         Document.Builder documentBuild = Document.newBuilder();
 
         try {
-            documentBuild.addField(Field.newBuilder().setName("name").setAtom(Util.encode(jsonObject.getString("name"))));
+            documentBuild.addField(Field.newBuilder().setName("name").setText(Util.encode(jsonObject.getString("name"))));
             documentBuild.addField(Field.newBuilder().setName("location").setGeoPoint(
                     new GeoPoint(
                             jsonObject.getDouble("latitude"),
@@ -92,8 +92,8 @@ public class Location implements Thing {
 
         Document.Builder documentBuild = Document.newBuilder();
 
-        documentBuild.addField(Field.newBuilder().setName("name").setAtom(location));
-        documentBuild.addField(Field.newBuilder().setName("address").setAtom(address));
+        documentBuild.addField(Field.newBuilder().setName("name").setText(location));
+        documentBuild.addField(Field.newBuilder().setName("address").setText(address));
         documentBuild.addField(Field.newBuilder().setName("latitude").setNumber(0));
         documentBuild.addField(Field.newBuilder().setName("longitude").setNumber(0));
 

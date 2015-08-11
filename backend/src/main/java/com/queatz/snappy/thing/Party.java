@@ -58,7 +58,7 @@ public class Party implements Thing {
 
         try {
             o.put("id", d.getId());
-            o.put("name", d.getOnlyField("name").getAtom());
+            o.put("name", d.getOnlyField("name").getText());
             o.put("date", Util.dateToString(d.getOnlyField("date").getDate()));
 
             return o;
@@ -86,7 +86,7 @@ public class Party implements Thing {
             o.put("location", things.location.toJson(Search.getService().get(Search.Type.LOCATION, d.getOnlyField("location").getAtom()), user, true));
             o.put("host", things.person.toJson(Search.getService().get(Search.Type.PERSON, host), user, true));
             o.put("date", Util.dateToString(d.getOnlyField("date").getDate()));
-            o.put("name", d.getOnlyField("name").getAtom());
+            o.put("name", d.getOnlyField("name").getText());
 
             if(shallow)
                 return o;
@@ -151,7 +151,7 @@ public class Party implements Thing {
         if(group != null)
             documentBuild.addField(Field.newBuilder().setName("group").setAtom(group));
 
-        documentBuild.addField(Field.newBuilder().setName("name").setAtom(Util.encode(name)));
+        documentBuild.addField(Field.newBuilder().setName("name").setText(Util.encode(name)));
         documentBuild.addField(Field.newBuilder().setName("date").setDate(Util.stringToDate(date)));
         documentBuild.addField(Field.newBuilder().setName("location").setAtom(location));
         documentBuild.addField(Field.newBuilder().setName("loc_cache").setGeoPoint(loc));

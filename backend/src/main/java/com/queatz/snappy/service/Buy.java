@@ -129,7 +129,7 @@ public class Buy {
         if(subscribers > 0) {
             throw new PrintingError(Api.Error.NOT_IMPLEMENTED, "not bought already owned by someone else");
         }
-        
+
         Things.getService().person.updateSubscription(me, subscription.getId());
 
         return true;
