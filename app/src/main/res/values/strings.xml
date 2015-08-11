@@ -42,6 +42,7 @@
     <string name="new_messages">%1$s new messages</string>
     <string name="requested_to_join_party">requested to join %1$s</string>
     <string name="party_starts_at">starts at %1$s</string>
+    <string name="party_by_person">%1$s by %2$s</string>
     <string name="request_accepted">starts %1$s</string>
     <string name="started_following_you">started following you</string>
     <string name="buy_didnt_work">Buy didn\'t work</string>
