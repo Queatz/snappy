@@ -154,6 +154,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:gravity="center_horizontal"
+            android:autoLink="web"
             android:textSize="19sp"
             android:paddingBottom="8dp" />
 
