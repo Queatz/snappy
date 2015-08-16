@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background">
+    android:background="@color/white">
 
     <ListView
         android:id="@+id/messagesList"
@@ -21,7 +21,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:elevation="8dp">
 
         <com.queatz.snappy.ui.EditText
             android:id="@+id/writeMessage"
@@ -30,7 +31,7 @@
             android:layout_height="wrap_content"
             android:minHeight="48dp"
             android:padding="8dp"
-            android:background="@drawable/softclick"
+            android:background="@color/white"
             android:hint="@string/write_message"
             android:textSize="18sp"
             android:textColorHint="@color/gray"

@@ -1,6 +1,7 @@
 package com.queatz.snappy.ui;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.queatz.snappy.R;
+import com.queatz.snappy.Util;
 
 /**
  * Created by jacob on 10/19/14.
@@ -66,6 +68,11 @@ public class ActionBar extends FrameLayout {
         mRightContent = (FrameLayout) findViewById(R.id.rightContent);
         mUnderline = findViewById(R.id.underline);
         mSlider = findViewById(R.id.slider);
+
+        if(Build.VERSION.SDK_INT >= 21) {
+            setBackgroundResource(R.color.white);
+            setElevation(Util.px(2));
+        }
 
         makeTabs();
     }

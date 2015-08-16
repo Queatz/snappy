@@ -121,12 +121,6 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
                     .findAllSorted("date", true);
 
             mList.setAdapter(new PartyAdapter(getActivity(), discoveryList));
-
-//            mList.setAdapter(new PartyAdapter(getActivity(), new RealmResults[] {
-//                    hostedList,
-//                    joinedList,
-//                    discoveryList
-//            }));
         }
 
         Log.w(Config.LOG_TAG, "parties count = " + mList.getAdapter().getCount());

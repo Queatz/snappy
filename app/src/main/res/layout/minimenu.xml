@@ -3,9 +3,8 @@
     android:orientation="vertical"
     android:layout_width="256dp"
     android:layout_height="wrap_content"
-    android:background="@drawable/white_rounded_bordered"
-    android:paddingBottom="1dp"
-    android:paddingLeft="1dp">
+    android:background="@color/white"
+    android:elevation="2dp">
 
     <LinearLayout
         android:orientation="horizontal"

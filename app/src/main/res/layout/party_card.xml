@@ -3,29 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="true"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:elevation="2dp">
 
-    <com.makeramen.RoundedImageView
+    <ImageView
         android:id="@+id/backdrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:scaleType="centerCrop"
-        app:riv_corner_radius="2dp" />
+        android:scaleType="centerCrop" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:src="@drawable/whiteout" />
 
     <LinearLayout
+        android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:padding="8dp"
         android:orientation="vertical">
 

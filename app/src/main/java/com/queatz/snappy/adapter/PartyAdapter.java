@@ -138,6 +138,8 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
 
         TextView action = ((TextView) view.findViewById(R.id.action_join));
 
+        view.findViewById(R.id.layout).setBackground(null);
+
         if(userId != null && party.getHost() != null && userId.equals(party.getHost().getId())) {
             if(party.isFull()) {
                 action.setVisibility(View.GONE);
@@ -152,6 +154,8 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
                     }
                 });
             }
+
+            view.findViewById(R.id.layout).setBackgroundResource(R.drawable.youre_in);
         }
         else {
             Join requested = null;
@@ -197,6 +201,10 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
                 else {
                     action.setVisibility(View.GONE);
                 }
+            }
+
+            if(requested != null && Config.JOIN_STATUS_IN.equals(requested.getStatus())) {
+                view.findViewById(R.id.layout).setBackgroundResource(R.drawable.youre_in);
             }
         }
 
