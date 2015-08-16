@@ -21,11 +21,14 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.adapter.PartyAdapter;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Join;
 import com.queatz.snappy.things.Party;
 
 import java.util.Date;
+import java.util.List;
 
 import io.realm.RealmChangeListener;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 /**
@@ -106,11 +109,24 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
             return;
 
         if(mList.getAdapter() == null) {
-            RealmResults<Party> list = team.realm.where(Party.class)
-                    .greaterThan("date", new Date(new Date().getTime() - 1000 * 60 * 60))
+            String me = team.auth.getUser();
+
+            RealmResults<Party> discoveryList = team.realm.where(Party.class)
+                        .greaterThan("date", new Date(new Date().getTime() - 1000 * 60 * 60))
+                    .beginGroup()
+                        .equalTo("full", false).or()
+                        .equalTo("people.person.id", me).or()
+                        .equalTo("host.id", me)
+                    .endGroup()
                     .findAllSorted("date", true);
 
-            mList.setAdapter(new PartyAdapter(getActivity(), list));
+            mList.setAdapter(new PartyAdapter(getActivity(), discoveryList));
+
+//            mList.setAdapter(new PartyAdapter(getActivity(), new RealmResults[] {
+//                    hostedList,
+//                    joinedList,
+//                    discoveryList
+//            }));
         }
 
         Log.w(Config.LOG_TAG, "parties count = " + mList.getAdapter().getCount());

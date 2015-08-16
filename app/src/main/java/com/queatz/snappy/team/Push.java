@@ -8,8 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -127,7 +125,7 @@ public class Push {
 
                         pendingIntent = PendingIntent.getService(team.context, 0, resultIntent, 0);
 
-                        builder.addAction(new NotificationCompat.Action(0, team.context.getString(R.string.request_to_join), pendingIntent));
+                        builder.addAction(new NotificationCompat.Action(0, team.context.getString(R.string.interested), pendingIntent));
                     }
 
                     if(Build.VERSION.SDK_INT >= 21) {

@@ -155,6 +155,7 @@
             android:layout_marginRight="8dp"
             android:gravity="center_horizontal"
             android:autoLink="web"
+            android:textIsSelectable="true"
             android:textSize="19sp"
             android:paddingBottom="8dp" />
 
@@ -173,7 +174,7 @@
             android:layout_marginTop="8dp"
             android:padding="8dp"
             android:textSize="18sp"
-            android:text="@string/request_to_join"
+            android:text="@string/interested"
             android:clickable="true"
             android:background="@drawable/button"
             android:textColor="@color/white"

@@ -164,7 +164,7 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
 
             if(requested == null || (!party.isFull() && Config.JOIN_STATUS_WITHDRAWN.equals(requested.getStatus()))) {
                 action.setVisibility(View.VISIBLE);
-                action.setText(context.getText(R.string.request_to_join));
+                action.setText(context.getText(R.string.interested));
                 action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
