@@ -120,7 +120,7 @@ public class Push {
                         resultIntent = new Intent(team.context, Background.class);
                         Bundle extras = new Bundle();
                         extras.putString(Config.EXTRA_ACTION, Config.EXTRA_ACTION_JOIN_REQUEST);
-                        extras.putString(Config.EXTRA_PARTY, partyId);
+                        extras.putString(Config.EXTRA_PARTY_ID, partyId);
                         resultIntent.putExtras(extras);
 
                         pendingIntent = PendingIntent.getService(team.context, 0, resultIntent, 0);
@@ -234,7 +234,7 @@ public class Push {
                         resultIntent = new Intent(team.context, Background.class);
                         Bundle extras = new Bundle();
                         extras.putString(Config.EXTRA_ACTION, Config.EXTRA_ACTION_JOIN_ACCEPT);
-                        extras.putString(Config.EXTRA_JOIN, joinId);
+                        extras.putString(Config.EXTRA_JOIN_ID, joinId);
                         resultIntent.putExtras(extras);
 
                         pendingIntent = PendingIntent.getService(team.context, 0, resultIntent, 0);

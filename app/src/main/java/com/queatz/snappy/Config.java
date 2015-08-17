@@ -41,8 +41,8 @@ public class Config {
     public static final String PUSH_ACTION_CLEAR_NOTIFICATION = "clear_notification";
 
     public static final String EXTRA_ACTION = "action";
-    public static final String EXTRA_PARTY = "party";
-    public static final String EXTRA_JOIN = "join";
+    public static final String EXTRA_PARTY_ID = "party";
+    public static final String EXTRA_JOIN_ID = "join";
     public static final String EXTRA_ACTION_JOIN_ACCEPT = "join.accept";
     public static final String EXTRA_ACTION_JOIN_REQUEST = "join.request";
 

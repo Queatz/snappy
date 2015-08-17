@@ -240,8 +240,10 @@ public class Action {
         Party party = team.realm.where(Party.class).equalTo("id", partyId).findFirst();
 
         if(party == null) {
-            party = new Party();
+            team.realm.beginTransaction();
+            party = team.realm.createObject(Party.class);
             party.setId(partyId);
+            team.realm.commitTransaction();
         }
 
         joinParty(activity, party);
@@ -328,9 +330,11 @@ public class Action {
         Join join = team.realm.where(Join.class).equalTo("id", joinId).findFirst();
 
         if(join == null) {
-            join = new Join();
+            team.realm.beginTransaction();
+            join = team.realm.createObject(Join.class);
             join.setId(joinId);
             join.setStatus(Config.JOIN_STATUS_REQUESTED);
+            team.realm.commitTransaction();
         }
 
         acceptJoin(join);

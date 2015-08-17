@@ -28,10 +28,10 @@ public class Background extends Service {
 
         switch (action) {
             case Config.EXTRA_ACTION_JOIN_ACCEPT:
-                team.action.acceptJoin(intent.getStringExtra(Config.EXTRA_JOIN));
+                team.action.acceptJoin(intent.getStringExtra(Config.EXTRA_JOIN_ID));
                 break;
             case Config.EXTRA_ACTION_JOIN_REQUEST:
-                team.action.joinParty(null, intent.getStringExtra(Config.EXTRA_PARTY));
+                team.action.joinParty(null, intent.getStringExtra(Config.EXTRA_PARTY_ID));
                 break;
         }
 
