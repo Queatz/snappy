@@ -5,7 +5,6 @@ import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.GeoPoint;
 import com.google.appengine.api.search.PutException;
 import com.google.appengine.api.search.PutResponse;
-import com.google.appengine.repackaged.com.google.type.LatLng;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 import com.queatz.snappy.backend.Util;

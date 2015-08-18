@@ -9,6 +9,7 @@ public class Config {
     public static final String BACKEND_URL = "https://queatz-snappy.appspot.com/_ah/api/";
     public static final String GOOGLE_PLACES_AUTOCOMPLETE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?location=%f,%f&radius=1609&input=%s&key=%s";
     public static final String GOOGLE_PLACES_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?placeid=%s&key=%s";
+    public static final int maxRequestRetries = 4;
     public static final int maxHoursInFuture = 18;
     public static final float locationAccuracy = 100;
     public static final float defaultMapZoom = 18;
@@ -59,6 +60,9 @@ public class Config {
     public static final String PARAM_LOCAL_ID = "local_id";
     public static final String PARAM_DEVICE_ID = "device_id";
     public static final String PARAM_PURCHASE_DATA = "purchase_data";
+    public static final String PARAM_LATITUDE = "latitude";
+    public static final String PARAM_LONGITUDE = "longitude";
+    public static final String PARAM_NAME = "name";
 
     public static final String PATH_API = "api";
     public static final String PATH_PARTIES = "parties";

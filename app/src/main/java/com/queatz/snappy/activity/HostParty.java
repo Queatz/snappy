@@ -29,12 +29,14 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.adapter.HostPartyAdapter;
 import com.queatz.snappy.adapter.LocationAdapter;
+import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.ui.TextView;
@@ -309,10 +311,9 @@ public class HostParty extends Activity {
                             CameraUpdate center = CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(latLng, Config.defaultMapZoom));
                             googleMap.animateCamera(center);
 
-                            if(mMapMarker == null) {
+                            if (mMapMarker == null) {
                                 mMapMarker = googleMap.addMarker(new MarkerOptions().position(latLng));
-                            }
-                            else {
+                            } else {
                                 mMapMarker.setPosition(latLng);
                             }
 
@@ -337,8 +338,7 @@ public class HostParty extends Activity {
                                     setLocation(location);
                                 }
                             });
-                        }
-                        catch (JSONException e) {
+                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
@@ -381,7 +381,7 @@ public class HostParty extends Activity {
 
                 Location l = team.location.get();
 
-                if(l != null) {
+                if (l != null) {
                     LatLng latLng = new LatLng(l.getLatitude(), l.getLongitude());
                     CameraUpdate center = CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(latLng, Config.defaultMapZoom));
                     googleMap.moveCamera(center);
@@ -391,22 +391,53 @@ public class HostParty extends Activity {
     }
 
     public void searchLocation(String q) {
-        if(q.isEmpty()) {
-            mSuggestedLocationsList.setAdapter(null);
-        }
-        else {
-            RealmResults<com.queatz.snappy.things.Location> results = team.realm.where(com.queatz.snappy.things.Location.class)
-                    .beginsWith("name", q, RealmQuery.CASE_INSENSITIVE)
-                    .findAllSorted("name", true);
-
-            mSuggestedLocationsList.setAdapter(new LocationAdapter(this, results, 3));
-        }
+        updateLocationSuggestions(q);
+        fetchLocations(q);
 
         final EditText locationAddress = (EditText) mNewParty.findViewById(R.id.locationAddress);
         locationAddress.setHint(String.format(getString(R.string.enter_address), q));
         locationAddress.setVisibility(q.trim().isEmpty() ? View.GONE : View.VISIBLE);
         mNewParty.findViewById(R.id.locationMapLayout).setVisibility(View.GONE);
 
+    }
+
+    public void updateLocationSuggestions(String q) {
+        if(q.isEmpty()) {
+            mSuggestedLocationsList.setAdapter(null);
+            return;
+        }
+
+        RealmResults<com.queatz.snappy.things.Location> results = team.realm.where(com.queatz.snappy.things.Location.class)
+                .beginsWith("name", q, RealmQuery.CASE_INSENSITIVE)
+                .findAllSorted("name", true);
+
+        mSuggestedLocationsList.setAdapter(new LocationAdapter(this, results, 3));
+    }
+
+    public void fetchLocations(String q) {
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_LATITUDE, team.location.get().getLatitude());
+        params.put(Config.PARAM_LONGITUDE, team.location.get().getLongitude());
+        params.put(Config.PARAM_NAME, q);
+
+        team.api.get(Config.PATH_LOCATIONS, params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                team.things.putAll(com.queatz.snappy.things.Location.class, response);
+
+                EditText location = ((EditText) mNewParty.findViewById(R.id.location));
+
+                if(location != null) {
+                    String q = location.getText().toString();
+                    updateLocationSuggestions(q);
+                }
+            }
+
+            @Override
+            public void fail(String response) {
+                Log.w(Config.LOG_TAG, "Couldn't fetch locations for \"" + response + "\"");
+            }
+        });
     }
 
     public void editLocation() {
