@@ -21,20 +21,17 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.adapter.PartyAdapter;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Join;
 import com.queatz.snappy.things.Party;
 
 import java.util.Date;
-import java.util.List;
 
 import io.realm.RealmChangeListener;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 /**
  * Created by jacob on 10/19/14.
  */
-public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Location.LocationAvailabilityCallback {
+public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Location.LocationAvailabilityCallback, RealmChangeListener {
     Team team;
 
     SwipeRefreshLayout mRefresh;
@@ -70,22 +67,21 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         refresh();
 
         team.location.addLocationAvailabilityCallback(this);
-
-        team.realm.addChangeListener(new RealmChangeListener() {
-            @Override
-            public void onChange() {
-                if(getView() != null) {
-                    getView().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateNullState();
-                        }
-                    });
-                }
-            }
-        });
+        team.realm.addChangeListener(this);
 
         return view;
+    }
+
+    @Override
+    public void onChange() {
+        if(getView() != null) {
+            getView().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    updateNullState();
+                }
+            }, 50);
+        }
     }
 
     @Override
