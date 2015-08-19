@@ -249,18 +249,30 @@ public class Action {
     }
 
     public void joinParty(final Activity activity, @NonNull final Party party) {
-        final String localId = Util.createLocalId();
+        String localId = null;
 
-        team.realm.beginTransaction();
-        Join o = team.realm.createObject(Join.class);
-        o.setId(localId);
-        o.setPerson(team.auth.me());
-        o.setParty(party);
-        o.setStatus(Config.JOIN_STATUS_REQUESTED);
-        team.realm.commitTransaction();
+        Join o = team.realm.where(Join.class)
+                .equalTo("party.id", party.getId())
+                .equalTo("person.id", team.auth.getUser())
+                .findFirst();
+
+        if(o == null) {
+            localId = Util.createLocalId();
+
+            team.realm.beginTransaction();
+            o = team.realm.createObject(Join.class);
+            o.setId(localId);
+            o.setPerson(team.auth.me());
+            o.setParty(party);
+            o.setStatus(Config.JOIN_STATUS_REQUESTED);
+            team.realm.commitTransaction();
+        }
 
         RequestParams params = new RequestParams();
-        params.put(Config.PARAM_LOCAL_ID, localId);
+
+        if(localId != null)
+            params.put(Config.PARAM_LOCAL_ID, localId);
+
         params.put(Config.PARAM_JOIN, true);
 
         team.api.post(String.format(Config.PATH_PARTY_ID, party.getId()), params, new Api.Callback() {
