@@ -69,8 +69,10 @@ public class Config {
     public static final String PATH_PARTY = "party";
     public static final String PATH_PARTY_ID = "party/%s";
     public static final String PATH_JOIN_ID = "join/%s";
-    public static final String PATH_PEOPLE_ID = "people/%s";
     public static final String PATH_PEOPLE = "people";
+    public static final String PATH_PEOPLE_ID = "people/%s";
+    public static final String PATH_PEOPLE_FOLLOWING = "people/%s/following";
+    public static final String PATH_PEOPLE_FOLLOWERS = "people/%s/followers";
     public static final String PATH_SEARCH = "search";
     public static final String PATH_LOCATIONS = "locations";
     public static final String PATH_MESSAGES = "messages";

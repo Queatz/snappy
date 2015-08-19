@@ -85,4 +85,6 @@ public class Config {
     public static final String PATH_PHOTO = "photo";
     public static final String PATH_PIRATE = "yarr";
     public static final String PATH_ADMIN = "admin";
+    public static final String PATH_FOLLOWERS = "followers";
+    public static final String PATH_FOLLOWING = "following";
 }

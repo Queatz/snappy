@@ -43,6 +43,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         super.onCreate(savedInstanceState);
 
         team = ((MainApplication) getActivity().getApplication()).team;
+        team.realm.addChangeListener(this);
     }
 
     @Override
@@ -67,9 +68,14 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         refresh();
 
         team.location.addLocationAvailabilityCallback(this);
-        team.realm.addChangeListener(this);
 
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        team.realm.removeChangeListener(this);
+        super.onDestroy();
     }
 
     @Override

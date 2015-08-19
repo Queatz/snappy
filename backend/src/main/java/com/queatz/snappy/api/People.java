@@ -1,6 +1,8 @@
 package com.queatz.snappy.api;
 
 import com.google.appengine.api.search.Document;
+import com.google.appengine.api.search.Results;
+import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.backend.Config;
@@ -9,7 +11,9 @@ import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 import com.queatz.snappy.backend.Util;
+import com.queatz.snappy.thing.*;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -44,6 +48,42 @@ public class People implements Api.Path {
                         resp.getWriter().write(r.toString());
                     else
                         throw new PrintingError(Api.Error.NOT_FOUND);
+                }
+                else if(path.size() == 2) {
+                    personId = path.get(0);
+
+                    boolean followers = false;
+
+                    switch (path.get(1)) {
+                        case Config.PATH_FOLLOWERS:
+                            followers = true;
+                        case Config.PATH_FOLLOWING:
+                            person = Search.getService().get(Search.Type.PERSON, personId);
+
+                            if (person == null) {
+                                throw new PrintingError(Api.Error.NOT_FOUND);
+                            }
+
+                            JSONArray r = new JSONArray();
+
+                            Results<ScoredDocument> results = Search.getService().index.get(Search.Type.FOLLOW).search(
+                                    (followers ? "person" : "following") + " = \"" + personId + "\""
+                            );
+
+                            for (ScoredDocument result : results) {
+                                JSONObject follower = Things.getService().follow.toJson(
+                                        result, user, false
+                                );
+
+                                r.put(follower);
+                            }
+
+                            resp.getWriter().write(r.toString());
+
+                            break;
+                        default:
+                            throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "people - bad path");
+                    }
                 }
                 else {
                     throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "people - bad path");
