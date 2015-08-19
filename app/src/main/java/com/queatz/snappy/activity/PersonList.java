@@ -54,14 +54,7 @@ public class PersonList extends Activity implements RealmChangeListener {
         mPerson = team.realm.where(Person.class).equalTo("id", id).findFirst();
 
         setContentView(R.layout.person_list);
-        onChange();
-        fetchList();
 
-        team.realm.addChangeListener(this);
-    }
-
-    @Override
-    public void onChange() {
         ListView personAdapter = (ListView) findViewById(R.id.personList);
 
         if(mPerson != null && personAdapter != null) {
@@ -80,10 +73,19 @@ public class PersonList extends Activity implements RealmChangeListener {
                 }
             });
         }
+
+        fetchList();
+
+        team.realm.addChangeListener(this);
+    }
+
+    @Override
+    public void onChange() {
+
     }
 
     private void fetchList() {
-        team.api.get(mShowFollowing ? Config.PATH_PEOPLE_FOLLOWING : Config.PATH_PEOPLE_FOLLOWERS, null, new Api.Callback() {
+        team.api.get(String.format(mShowFollowing ? Config.PATH_PEOPLE_FOLLOWING : Config.PATH_PEOPLE_FOLLOWERS, team.auth.getUser()), null, new Api.Callback() {
             @Override
             public void success(String response) {
                 team.things.putAll(Join.class, response);

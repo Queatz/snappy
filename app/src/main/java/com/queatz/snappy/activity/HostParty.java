@@ -47,6 +47,7 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
+import io.realm.RealmChangeListener;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
@@ -246,6 +247,8 @@ public class HostParty extends Activity {
                 setParty((Party) partyList.getAdapter().getItem(position));
             }
         });
+
+        fetchParties();
     }
 
     @Override
@@ -386,6 +389,20 @@ public class HostParty extends Activity {
                     CameraUpdate center = CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(latLng, Config.defaultMapZoom));
                     googleMap.moveCamera(center);
                 }
+            }
+        });
+    }
+
+    private void fetchParties() {
+        team.api.get(String.format(Config.PATH_PEOPLE_PARTIES, team.auth.getUser()), null, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                team.things.putAll(Party.class, response);
+            }
+
+            @Override
+            public void fail(String response) {
+
             }
         });
     }

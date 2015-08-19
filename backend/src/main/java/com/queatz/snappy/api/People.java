@@ -11,7 +11,6 @@ import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 import com.queatz.snappy.backend.Util;
-import com.queatz.snappy.thing.*;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,6 +35,8 @@ public class People implements Api.Path {
     public void call(ArrayList<String> path, String user, HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException, PrintingError {
         String personId;
         Document person;
+        Results<ScoredDocument> results;
+        JSONArray jsonArray;
 
         switch (method) {
             case GET:
@@ -64,9 +65,9 @@ public class People implements Api.Path {
                                 throw new PrintingError(Api.Error.NOT_FOUND);
                             }
 
-                            JSONArray r = new JSONArray();
+                            jsonArray = new JSONArray();
 
-                            Results<ScoredDocument> results = Search.getService().index.get(Search.Type.FOLLOW).search(
+                            results = Search.getService().index.get(Search.Type.FOLLOW).search(
                                     (followers ? "person" : "following") + " = \"" + personId + "\""
                             );
 
@@ -75,10 +76,34 @@ public class People implements Api.Path {
                                         result, user, false
                                 );
 
-                                r.put(follower);
+                                jsonArray.put(follower);
                             }
 
-                            resp.getWriter().write(r.toString());
+                            resp.getWriter().write(jsonArray.toString());
+
+                            break;
+                        case Config.PATH_PARTIES:
+                            person = Search.getService().get(Search.Type.PERSON, personId);
+
+                            if (person == null) {
+                                throw new PrintingError(Api.Error.NOT_FOUND);
+                            }
+
+                            jsonArray = new JSONArray();
+
+                            results = Search.getService().index.get(Search.Type.PARTY).search(
+                                    "host = \"" + personId + "\""
+                            );
+
+                            for (ScoredDocument result : results) {
+                                JSONObject party = Things.getService().party.toJson(
+                                        result, user, true
+                                );
+
+                                jsonArray.put(party);
+                            }
+
+                            resp.getWriter().write(jsonArray.toString());
 
                             break;
                         default:
