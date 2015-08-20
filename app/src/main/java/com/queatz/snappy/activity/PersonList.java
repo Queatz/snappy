@@ -85,7 +85,7 @@ public class PersonList extends Activity implements RealmChangeListener {
     }
 
     private void fetchList() {
-        team.api.get(String.format(mShowFollowing ? Config.PATH_PEOPLE_FOLLOWING : Config.PATH_PEOPLE_FOLLOWERS, team.auth.getUser()), null, new Api.Callback() {
+        team.api.get(String.format(mShowFollowing ? Config.PATH_PEOPLE_FOLLOWING : Config.PATH_PEOPLE_FOLLOWERS, mPerson.getId()), null, new Api.Callback() {
             @Override
             public void success(String response) {
                 team.things.putAll(Follow.class, response);
