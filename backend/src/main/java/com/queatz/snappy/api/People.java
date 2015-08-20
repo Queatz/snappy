@@ -68,7 +68,7 @@ public class People implements Api.Path {
                             jsonArray = new JSONArray();
 
                             results = Search.getService().index.get(Search.Type.FOLLOW).search(
-                                    (followers ? "person" : "following") + " = \"" + personId + "\""
+                                    (followers ? "following" : "person") + " = \"" + personId + "\""
                             );
 
                             for (ScoredDocument result : results) {
