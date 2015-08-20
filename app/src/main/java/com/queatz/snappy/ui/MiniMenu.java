@@ -102,19 +102,6 @@ public class MiniMenu extends FrameLayout {
 
             }
         });
-
-        findViewById(R.id.action_logout).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Team team = ((MainApplication) getContext().getApplicationContext()).team;
-
-                team.auth.setActivity((android.app.Activity) getContext());
-                team.auth.reauth();
-                ((android.app.Activity) getContext()).finish();
-
-                show(false);
-            }
-        });
     }
 
     public void show() {

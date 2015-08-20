@@ -78,7 +78,7 @@ public class Action {
         }
     }
 
-    public void openMessages(Activity from, @NonNull final Person person) {
+    public void openMessages(@NonNull Activity from, @NonNull final Person person) {
         Bundle bundle = new Bundle();
         bundle.putString("person", person.getId());
         bundle.putString("show", "messages");
@@ -119,7 +119,7 @@ public class Action {
         });
     }
 
-    public void showFollowers(Activity from, @NonNull final Person person) {
+    public void showFollowers(@NonNull Activity from, @NonNull final Person person) {
         Bundle bundle = new Bundle();
         bundle.putString("person", person.getId());
         bundle.putBoolean("showFollowing", false);
@@ -127,7 +127,7 @@ public class Action {
         team.view.show(from, PersonList.class, bundle);
     }
 
-    public void showFollowing(Activity from, @NonNull final Person person) {
+    public void showFollowing(@NonNull Activity from, @NonNull final Person person) {
         Bundle bundle = new Bundle();
         bundle.putString("person", person.getId());
         bundle.putBoolean("showFollowing", true);
@@ -163,10 +163,7 @@ public class Action {
         });
     }
 
-    public void openDate(Activity from, @NonNull final Party party) {
-        if(party == null)
-            return;
-
+    public void openDate(@NonNull Activity from, @NonNull final Party party) {
         Intent intent = new Intent(Intent.ACTION_INSERT, CalendarContract.Events.CONTENT_URI);
         intent.setType("vnd.android.cursor.dir/event");
         intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, party.getDate().getTime());
@@ -177,7 +174,7 @@ public class Action {
         from.startActivity(intent);
     }
 
-    public void openLocation(Activity from, com.queatz.snappy.things.Location location) {
+    public void openLocation(@NonNull Activity from, com.queatz.snappy.things.Location location) {
         if(location == null)
             return;
 
@@ -186,7 +183,7 @@ public class Action {
         from.startActivity(intent);
     }
 
-    public void openProfile(Activity from, @NonNull final Person person) {
+    public void openProfile(@NonNull Activity from, @NonNull final Person person) {
         Bundle bundle = new Bundle();
         bundle.putString("person", person.getId());
         team.view.show(from, com.queatz.snappy.activity.Person.class, bundle);
@@ -394,7 +391,7 @@ public class Action {
         });
     }
 
-    public void hostParty(final Activity activity, final String group, final String name, final Date date, final com.queatz.snappy.things.Location location, final String details) {
+    public void hostParty(@NonNull final Activity activity, final String group, final String name, final Date date, final com.queatz.snappy.things.Location location, final String details) {
         RequestParams params = new RequestParams();
 
         if(group != null && !group.isEmpty())
@@ -421,7 +418,7 @@ public class Action {
         showPartiesPostHost(activity);
     }
 
-    public void showPartiesPostHost(final Activity activity) {
+    public void showPartiesPostHost(@NonNull final Activity activity) {
         Bundle bundle = new Bundle();
         bundle.putBoolean("show_post_host_message", true);
 

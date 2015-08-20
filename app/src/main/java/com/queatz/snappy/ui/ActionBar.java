@@ -107,9 +107,19 @@ public class ActionBar extends FrameLayout {
         mUpButton.setOnClickListener(action);
     }
 
+    public void setLeftContent(View.OnLongClickListener action) {
+        mUpButton.setVisibility(View.VISIBLE);
+        mUpButton.setOnLongClickListener(action);
+    }
+
     public void setRightContent(View.OnClickListener action) {
         mRightContent.setVisibility(View.VISIBLE);
         mRightContent.setOnClickListener(action);
+    }
+
+    public void setRightContent(View.OnLongClickListener action) {
+        mRightContent.setVisibility(View.VISIBLE);
+        mRightContent.setOnLongClickListener(action);
     }
 
     public void setAdapter(TabAdapter tabAdapter) {

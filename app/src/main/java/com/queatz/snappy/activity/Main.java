@@ -55,6 +55,16 @@ public class Main extends Activity {
             }
         });
 
+        final Activity activity = this;
+
+        mActionBar.setRightContent(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                team.auth.logout(activity);
+                return true;
+            }
+        });
+
         team.buy.callback(new Buy.PurchaseCallback() {
             @Override
             public void onSuccess() {
@@ -63,10 +73,10 @@ public class Main extends Activity {
 
             @Override
             public void onError() {
-                if(Build.VERSION.SDK_INT >= 17 && Main.this.isDestroyed())
+                if (Build.VERSION.SDK_INT >= 17 && Main.this.isDestroyed())
                     return;
 
-                if(Main.this.mDestroyed)
+                if (Main.this.mDestroyed)
                     return;
 
                 team.buy.pullGoogle(Main.this);

@@ -226,10 +226,6 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
             actions.setVisibility(View.GONE);
         }
 
-        view.findViewById(R.id.updates).setVisibility(View.GONE);
-
-        ((EditText) view.findViewById(R.id.write_message)).setText("");
-
         return view;
     }
 }

@@ -96,8 +96,7 @@
 
             <LinearLayout
                 android:id="@+id/hosted_button"
-                android:clickable="true"
-                android:background="@drawable/floating_click"
+                android:clickable="false"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

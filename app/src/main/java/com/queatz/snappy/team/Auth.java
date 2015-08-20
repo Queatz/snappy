@@ -2,8 +2,11 @@ package com.queatz.snappy.team;
 
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.auth.GoogleAuthException;
@@ -13,6 +16,8 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
+import com.queatz.snappy.MainApplication;
+import com.queatz.snappy.R;
 import com.queatz.snappy.things.Person;
 
 import org.json.JSONException;
@@ -250,6 +255,21 @@ public class Auth {
                 });
             }
         }
+    }
+
+    public void logout(@NonNull final Activity activity) {
+        new AlertDialog.Builder(activity)
+                .setTitle(R.string.logout)
+                .setPositiveButton(R.string.logout, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        setActivity(activity);
+                        reauth();
+                        activity.finish();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     public void callback(Callback callback) {

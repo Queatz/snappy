@@ -1,5 +1,6 @@
 package com.queatz.snappy.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -24,7 +25,7 @@ import io.realm.RealmResults;
  * Created by jacob on 2/21/15.
  */
 public class ContactAdapter extends RealmBaseAdapter<Contact> {
-    public ContactAdapter(Context context, RealmResults<Contact> realmResults) {
+    public ContactAdapter(Activity context, RealmResults<Contact> realmResults) {
         super(context, realmResults, true);
     }
 
@@ -43,7 +44,7 @@ public class ContactAdapter extends RealmBaseAdapter<Contact> {
         }
 
         Contact contact = realmResults.get(position);
-        Person person = contact.getContact();
+        final Person person = contact.getContact();
         Message message = contact.getLast();
 
         boolean isOwn = message != null && team.auth.getUser() != null && team.auth.getUser().equals(message.getFrom().getId());
@@ -56,6 +57,13 @@ public class ContactAdapter extends RealmBaseAdapter<Contact> {
                 .load(person.getImageUrlForSize((int) Util.px(64)))
                 .placeholder(R.color.spacer)
                 .into(profile);
+
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.action.openProfile((Activity) context, person);
+            }
+        });
 
         name.setText(person.getName());
         name.setTypeface(name.getTypeface(), !contact.isSeen() ? Typeface.BOLD : Typeface.NORMAL);
