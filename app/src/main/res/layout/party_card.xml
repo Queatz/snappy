@@ -124,10 +124,12 @@
                 android:padding="4dp">
 
 
-                <ImageView
+                <com.makeramen.RoundedImageView
                     android:id="@+id/location_icon"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
+                    app:riv_corner_radius="48dp"
+                    android:scaleType="centerCrop"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/location"
                     android:layout_marginBottom="8dp" />

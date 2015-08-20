@@ -60,6 +60,7 @@ public class Config {
     public static final String PARAM_DEVICE_ID = "device_id";
     public static final String PARAM_PURCHASE_DATA = "purchase_data";
     public static final String PARAM_NOTIFICATION = "notification";
+    public static final String PARAM_SIZE = "s";
 
     public static final String GOOGLE_PLUS_PROFILE_URL = "https://www.googleapis.com/plus/v1/people/me";
     public static final String GOOGLE_PLUS_TOKENINFO_URL = "https://www.googleapis.com/oauth2/v1/tokeninfo";
@@ -77,6 +78,7 @@ public class Config {
     public static final String PATH_PEOPLE = "people";
     public static final String PATH_FOLLOW = "follow";
     public static final String PATH_LOCATIONS = "locations";
+    public static final String PATH_LOCATION = "location";
     public static final String PATH_ME = "me";
     public static final String PATH_BUY = "buy";
     public static final String PATH_REGISTER_DEVICE = "register_device";

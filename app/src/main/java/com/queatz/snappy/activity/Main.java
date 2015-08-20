@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -18,6 +21,7 @@ import com.queatz.snappy.adapter.MainAdapter;
 import com.queatz.snappy.adapter.MainTabAdapter;
 import com.queatz.snappy.team.Buy;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Location;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.ui.ActionBar;
 import com.queatz.snappy.ui.SlideScreen;
@@ -32,6 +36,8 @@ public class Main extends Activity {
     private ActionBar mActionBar;
     private SlideScreen mSlideScreen;
     private boolean mDestroyed = false;
+
+    private Object mContextObject;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -164,5 +170,22 @@ public class Main extends Activity {
 
         team.buy.onActivityResult(this, requestCode, resultCode, data);
         team.location.onActivityResult(requestCode, resultCode, data);
+        team.action.onActionResult(this, requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+        mContextObject = view.getTag();
+        team.menu.make(mContextObject, menu, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        return team.menu.choose(this, mContextObject, item);
+    }
+
+    @Override
+    public void onContextMenuClosed(Menu menu) {
+        super.onContextMenuClosed(menu);
     }
 }

@@ -30,6 +30,7 @@ public class Config {
     public static final int REQUEST_CODE_BUY_INTENT = 3;
     public static final int REQUEST_CODE_PLAY_SERVICES = 4;
     public static final int REQUEST_CODE_CHECK_SETTINGS = 5;
+    public static final int REQUEST_CODE_CHOOSER = 6;
 
     public static final String PUSH_ACTION_JOIN_REQUEST = "join_requested";
     public static final String PUSH_ACTION_JOIN_ACCEPTED = "join_accepted";
@@ -63,6 +64,7 @@ public class Config {
     public static final String PARAM_LATITUDE = "latitude";
     public static final String PARAM_LONGITUDE = "longitude";
     public static final String PARAM_NAME = "name";
+    public static final String PARAM_PHOTO = "photo";
 
     public static final String PATH_API = "api";
     public static final String PATH_PARTIES = "parties";
@@ -76,6 +78,7 @@ public class Config {
     public static final String PATH_PEOPLE_PARTIES = "people/%s/parties";
     public static final String PATH_SEARCH = "search";
     public static final String PATH_LOCATIONS = "locations";
+    public static final String PATH_LOCATION_PHOTO = "location/%s/photo";
     public static final String PATH_MESSAGES = "messages";
     public static final String PATH_MESSAGES_ID = "messages/%s";
     public static final String PATH_UPTO = "upto";

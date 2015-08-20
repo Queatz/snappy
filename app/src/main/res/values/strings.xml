@@ -57,6 +57,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="logout">Log Out</string>
+    <string name="change_photo">Change photo</string>
 
     <plurals name="years">
         <item quantity="one">%1$s year</item>

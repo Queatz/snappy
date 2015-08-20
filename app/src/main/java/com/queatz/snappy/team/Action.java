@@ -18,14 +18,11 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.activity.PersonList;
-import com.queatz.snappy.things.Contact;
-import com.queatz.snappy.things.Follow;
-import com.queatz.snappy.things.Join;
-import com.queatz.snappy.things.Message;
-import com.queatz.snappy.things.Party;
-import com.queatz.snappy.things.Person;
+import com.queatz.snappy.things.*;
+import com.queatz.snappy.things.Location;
 import com.queatz.snappy.ui.MiniMenu;
 import com.queatz.snappy.ui.TextView;
+import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
 import java.util.Date;
@@ -450,5 +447,58 @@ public class Action {
         });
 
         return true;
+    }
+
+
+    Location nPendingLocationPhotoChange;
+
+    public void changeLocationPhoto(Activity activity, Location location) {
+        nPendingLocationPhotoChange = location;
+
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        activity.startActivityForResult(intent, Config.REQUEST_CODE_CHOOSER);
+    }
+
+    public void onActionResult(Activity activity, int requestCode, int resultCode, Intent intent) {
+        switch (requestCode) {
+            case Config.REQUEST_CODE_CHOOSER:
+                if(resultCode == Activity.RESULT_OK) {
+                    final Uri photo = intent.getData();
+
+                    if(nPendingLocationPhotoChange == null || photo == null) {
+                        return;
+                    }
+
+                    RequestParams params = new RequestParams();
+
+                    try {
+                        params.put("photo", team.context.getContentResolver().openInputStream(photo));
+                    }
+                    catch (FileNotFoundException e) {
+                        Toast.makeText(team.context, "Couldn't set photo", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                        return;
+                    }
+
+                    team.api.put(String.format(Config.PATH_LOCATION_PHOTO, nPendingLocationPhotoChange.getId()), params, new Api.Callback() {
+                        @Override
+                        public void success(String response) {
+                            if(nPendingLocationPhotoChange != null) {
+                                String photoUrl = Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=64&auth=" + team.auth.getAuthParam(), nPendingLocationPhotoChange.getId());
+                                Picasso.with(team.context).invalidate(photoUrl);
+                            }
+                            Toast.makeText(team.context, "Photo changed", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void fail(String response) {
+                            Toast.makeText(team.context, "Couldn't set photo", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                break;
+        }
     }
 }
