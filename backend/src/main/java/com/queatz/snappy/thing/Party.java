@@ -164,7 +164,11 @@ public class Party implements Thing {
         try {
             PutResponse put = Search.getService().index.get(Search.Type.PARTY).put(document);
             documentBuild.setId(put.getIds().get(0));
-            return documentBuild.build();
+            document = documentBuild.build();
+
+            Things.getService().update.create(Config.UPDATE_ACTION_HOST_PARTY, user, document.getId());
+
+            return document;
         } catch (PutException e) {
             e.printStackTrace();
             return null;

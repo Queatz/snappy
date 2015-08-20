@@ -2,12 +2,17 @@ package com.queatz.snappy.team;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+
+import com.queatz.snappy.Config;
 
 import java.io.Closeable;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * Created by jacob on 10/19/14.
@@ -29,8 +34,8 @@ public class Team implements Closeable {
 
     public Team(Context c) {
         context = c;
-        realm = realm();
         preferences = c.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
+        realm = realm();
         buy = new Buy(this);
         auth = new Auth(this);
         api = new Api(this);
@@ -47,7 +52,28 @@ public class Team implements Closeable {
         realm.close();
     }
 
+    public void wipe() {
+        Realm.deleteRealm(new RealmConfiguration.Builder(context).build());
+    }
+
     public Realm realm() {
+        try {
+            PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            int prefAppVersion = preferences.getInt(Config.PREFERENCE_APP_VERSION, -1);
+            int realAppVersion = pInfo.versionCode;
+
+            if (prefAppVersion < 9) {
+                wipe();
+            }
+
+            if (realAppVersion != prefAppVersion) {
+                preferences.edit().putInt(Config.PREFERENCE_APP_VERSION, realAppVersion).apply();
+            }
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
         return Realm.getInstance(context);
     }
 

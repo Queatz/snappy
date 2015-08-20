@@ -29,7 +29,7 @@
             android:textSize="22sp"
             android:padding="8dp"
             android:textColor="@color/green"
-            android:text="@string/on" />
+            android:text="@string/friends" />
 
     </LinearLayout>
 

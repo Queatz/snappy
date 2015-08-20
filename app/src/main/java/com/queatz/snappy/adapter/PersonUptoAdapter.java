@@ -41,14 +41,15 @@ public class PersonUptoAdapter extends RealmBaseAdapter<Update> {
         Person person = update.getPerson();
 
         if(person != null) {
-
             Picasso.with(context)
                     .load(person.getImageUrlForSize((int) Util.px(64)))
                     .placeholder(R.color.spacer)
                     .into((ImageView) view.findViewById(R.id.profile));
         }
 
-        ((TextView) view.findViewById(R.id.text)).setText(Util.cuteDate(update.getDate()));
+        ((TextView) view.findViewById(R.id.text)).setText(
+                Util.getUpdateText(update)
+        );
 
         return view;
     }

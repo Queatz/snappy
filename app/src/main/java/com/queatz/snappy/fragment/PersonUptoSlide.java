@@ -129,6 +129,12 @@ public class PersonUptoSlide extends Fragment {
         ImageView profile = (ImageView) personAbout.findViewById(R.id.profile);
 
         if(mPerson != null) {
+            profile.setTag(mPerson);
+
+            if(getActivity() != null) {
+                getActivity().registerForContextMenu(profile);
+            }
+            
             Picasso.with(getActivity())
                     .load(mPerson.getImageUrlForSize((int) Util.px(512)))
                     .placeholder(R.color.spacer)

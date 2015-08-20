@@ -32,6 +32,9 @@ public class Config {
     public static final String PUSH_ACTION_REFRESH_ME = "refresh_me";
     public static final String PUSH_ACTION_CLEAR_NOTIFICATION = "clear_notification";
 
+    public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";
+    public static final String UPDATE_ACTION_HOST_PARTY = "host_party";
+
     public static final String JOIN_STATUS_REQUESTED = "requested";
     public static final String JOIN_STATUS_IN = "in";
     public static final String JOIN_STATUS_OUT = "out";

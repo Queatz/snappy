@@ -122,56 +122,6 @@ public class Me implements Api.Path {
                     throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "me - bad path");
                 }
 
-                /*if(path.size() == 1) {
-                    if(Config.PATH_UPTO.equals(path.get(0))) {
-                        //TODO create new upto in cloud storage
-
-                        Object photo = req.getAttribute(Config.PARAM_PHOTO);
-                        Object location = req.getAttribute(Config.PARAM_LOCATION);
-
-                        GcsFilename uptoId = new GcsFilename(mAppIdentityService.getDefaultGcsBucketName(), "testing");
-
-                        boolean allGood = false;
-
-                        try {
-                            ServletFileUpload upload = new ServletFileUpload();
-                            FileItemIterator iterator = upload.getItemIterator(req);
-                            while (iterator.hasNext()) {
-                                FileItemStream item = iterator.next();
-                                InputStream stream = item.openStream();
-
-                                if (!item.isFormField()) {
-                                    int len;
-                                    byte[] buffer = new byte[8192];
-
-                                    GcsOutputChannel outputChannel = mGCS.createOrReplace(uptoId, GcsFileOptions.getDefaultInstance());
-
-                                    while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
-                                        outputChannel.write(ByteBuffer.wrap(buffer, 0, len));
-                                    }
-
-                                    outputChannel.close();
-
-                                    allGood = true;
-
-                                    break;
-                                }
-                            }
-                        }
-                        catch (FileUploadException e) {
-                            Logger.getLogger(Config.NAME).severe(e.toString());
-                            throw new Config.PrintingError(Config.Error.SERVER_ERROR, "couldn't upload because " + e);
-                        }
-
-                        if(!allGood)
-                            throw new Config.PrintingError(Config.Error.NOT_AUTHENTICATED, "me - not all good");
-
-                        resp.getWriter().write("{\"result\": \"success\"}");
-                    }
-                }
-                else {
-                    throw new Config.PrintingError(Config.Error.NOT_AUTHENTICATED, "me - bad method");
-                }*/
                 break;
             case DELETE:
 

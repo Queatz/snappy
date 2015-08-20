@@ -58,6 +58,13 @@
     <string name="no">No</string>
     <string name="logout">Log Out</string>
     <string name="change_photo">Change photo</string>
+    <string name="stop_following">Stop following</string>
+    <string name="follow">Follow</string>
+    <string name="update_text_is_hosting"><![CDATA[%1$s is hosting <b>%2$s</b> %3$s]]></string>
+    <string name="update_text_hosted"><![CDATA[%1$s hosted <b>%2$s</b> %3$s]]></string>
+    <string name="update_text_is_going_to"><![CDATA[%1$s is going to <b>%2$s</b> %3$s]]></string>
+    <string name="update_text_went_to"><![CDATA[%1$s went to <b>%2$s</b> %3$s]]></string>
+    <string name="friends">Friends</string>
 
     <plurals name="years">
         <item quantity="one">%1$s year</item>

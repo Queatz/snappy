@@ -64,8 +64,8 @@ public class Follow implements Thing {
         }
     }
 
-    public void obliterate(String id) {
-
+    public void stopFollowing(Document follow) {
+        Search.getService().index.get(Search.Type.FOLLOW).delete(follow.getId());
     }
 
     public Document createOrUpdate(String user, String following) {

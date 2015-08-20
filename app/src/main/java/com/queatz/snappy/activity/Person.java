@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -27,6 +29,7 @@ public class Person extends Activity {
     private com.queatz.snappy.things.Person mPerson;
     private boolean mIsActive;
     public Team team;
+    private Object mContextObject;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,5 +136,23 @@ public class Person extends Activity {
         mIsActive = false;
 
         team.view.clearTop("person/" + mPerson.getId() + "/messages");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        team.action.onActionResult(this, requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+        mContextObject = view.getTag();
+        team.menu.make(mContextObject, menu, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        return team.menu.choose(this, mContextObject, item);
     }
 }

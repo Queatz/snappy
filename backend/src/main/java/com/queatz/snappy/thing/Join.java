@@ -163,6 +163,10 @@ public class Join implements Thing {
             e.printStackTrace();
         }
 
+        if(Config.JOIN_STATUS_IN.equals(status)) {
+            Things.getService().update.create(Config.UPDATE_ACTION_JOIN_PARTY, join.getOnlyField("person").getAtom(), join.getOnlyField("party").getAtom());
+        }
+
         return document;
     }
 }

@@ -37,6 +37,9 @@ public class GCMIntentService extends IntentService {
     }
 
     protected void handle(final String message) {
+        if(message == null)
+            return;
+
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {

@@ -160,6 +160,34 @@ public class Action {
         });
     }
 
+    public void stopFollowingPerson(@NonNull Person person) {
+        Follow follow = team.realm.where(Follow.class)
+                .equalTo("person.id", team.auth.getUser())
+                .equalTo("following.id", person.getId())
+                .findFirst();
+
+        if(follow != null) {
+            team.realm.beginTransaction();
+            follow.removeFromRealm();
+            team.realm.commitTransaction();
+        }
+
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_FOLLOW, false);
+
+        team.api.post(String.format(Config.PATH_PEOPLE_ID, person.getId()), params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+            }
+
+            @Override
+            public void fail(String response) {
+                // Tollback local deletion
+                Toast.makeText(team.context, "Stop following failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public void openDate(@NonNull Activity from, @NonNull final Party party) {
         Intent intent = new Intent(Intent.ACTION_INSERT, CalendarContract.Events.CONTENT_URI);
         intent.setType("vnd.android.cursor.dir/event");
@@ -485,7 +513,7 @@ public class Action {
                     team.api.put(String.format(Config.PATH_LOCATION_PHOTO, nPendingLocationPhotoChange.getId()), params, new Api.Callback() {
                         @Override
                         public void success(String response) {
-                            if(nPendingLocationPhotoChange != null) {
+                            if (nPendingLocationPhotoChange != null) {
                                 String photoUrl = Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=64&auth=" + team.auth.getAuthParam(), nPendingLocationPhotoChange.getId());
                                 Picasso.with(team.context).invalidate(photoUrl);
                             }

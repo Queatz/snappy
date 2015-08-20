@@ -11,6 +11,7 @@ import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 import com.queatz.snappy.backend.Util;
+import com.queatz.snappy.thing.Thing;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -125,7 +126,7 @@ public class People implements Api.Path {
                 if(Boolean.valueOf(req.getParameter(Config.PARAM_SEEN))) {
                     resp.getWriter().write(Boolean.toString(Things.getService().contact.markSeen(user, personId)));
                 }
-                else if(Boolean.valueOf(req.getParameter(Config.PARAM_FOLLOW))) {
+                else if(Boolean.toString(true).equals(req.getParameter(Config.PARAM_FOLLOW))) {
                     String localId = req.getParameter(Config.PARAM_LOCAL_ID);
 
                     if(person != null) {
@@ -138,6 +139,15 @@ public class People implements Api.Path {
                             resp.getWriter().write(response.toString());
 
                             Push.getService().send(follow.getOnlyField("following").getAtom(), Things.getService().follow.makePush(follow));
+                        }
+                    }
+                }
+                else if(Boolean.toString(false).equals(req.getParameter(Config.PARAM_FOLLOW))) {
+                    if(person != null) {
+                        Document follow = Things.getService().follow.createOrUpdate(user, person.getId());
+
+                        if(follow != null) {
+                            Things.getService().follow.stopFollowing(follow);
                         }
                     }
                 }

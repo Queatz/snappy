@@ -1,8 +1,13 @@
 package com.queatz.snappy.things;
 
+import com.queatz.snappy.Config;
+
+import org.json.JSONObject;
+
 import java.util.Date;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.Index;
 import io.realm.annotations.RealmClass;
 
@@ -17,6 +22,7 @@ public class Update extends RealmObject {
     private String action;
     private Person person;
     private Party party;
+    private Location location;
     private Date date;
 
     public String getId() {
@@ -57,5 +63,13 @@ public class Update extends RealmObject {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

@@ -43,5 +43,6 @@ public class Things {
         follow = new Follow(this);
         contact = new Contact(this);
         buy = new Buy(this);
+        update = new Update(this);
     }
 }

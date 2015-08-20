@@ -91,17 +91,17 @@ public class Person implements Thing {
                 o.put("followers", r);
             }
 
-            /*results = Search.getService().index.get(Search.Type.MESSAGE).search("from = \"" + d.getId() + "\" OR to = \"" + d.getId() + "\"");
+            results = Search.getService().index.get(Search.Type.UPDATE).search("person = \"" + d.getId() + "\"");
 
             r = new JSONArray();
 
             for(ScoredDocument doc : results) {
-                r.put(things.snappy.things.follow.toJson(doc, user, true));
+                r.put(Things.getService().update.toJson(doc, user, true));
             }
 
             if(r.length() > 0) {
-                o.put("messages", r);
-            }*/
+                o.put("updates", r);
+            }
 
             return o;
         }

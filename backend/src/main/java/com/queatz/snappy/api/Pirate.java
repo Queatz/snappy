@@ -5,6 +5,8 @@ import com.google.appengine.api.search.GetIndexesRequest;
 import com.google.appengine.api.search.GetRequest;
 import com.google.appengine.api.search.GetResponse;
 import com.google.appengine.api.search.Index;
+import com.google.appengine.api.search.Results;
+import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.search.SearchServiceFactory;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.service.Api;
@@ -31,29 +33,11 @@ public class Pirate implements Api.Path {
 
     @Override
     public void call(ArrayList<String> path, String user, HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException, PrintingError {
-        try {
-            for (Index idx : SearchServiceFactory.getSearchService().getIndexes(GetIndexesRequest.newBuilder().build())) {
-                while (true) {
-                    List<String> docIds = new ArrayList<>();
-                    GetRequest request = GetRequest.newBuilder().setReturningIdsOnly(true).build();
-                    GetResponse<Document> response = idx.getRange(request);
-                    if (response.getResults().isEmpty()) {
-                        break;
-                    }
-                    for (Document doc : response) {
-                        docIds.add(doc.getId());
-                    }
-                    idx.delete(docIds);
-                }
+        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.UPDATE).search("party: \"test\"");
 
-                idx.deleteSchema();
+        for(ScoredDocument doc : results)
+            Search.getService().index.get(Search.Type.UPDATE).delete(doc.getId());
 
-                resp.getWriter().println(idx.getName() + " cleared");
-            }
-        }
-        catch (RuntimeException ignored) { }
-
-        Search.getService().index.get(Search.Type.PERSON).delete();
         resp.getWriter().write("yarr!");
     }
 }

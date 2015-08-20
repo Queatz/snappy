@@ -2,10 +2,14 @@ package com.queatz.snappy;
 
 import android.content.Context;
 import android.location.Location;
+import android.text.Html;
+import android.text.Spanned;
 
 import com.luckycatlabs.sunrisesunset.Zenith;
 import com.luckycatlabs.sunrisesunset.calculator.SolarEventCalculator;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Party;
+import com.queatz.snappy.things.Update;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -210,5 +214,36 @@ public class Util {
         String time = hour + (party.get(Calendar.AM_PM) == Calendar.AM ? "am" : "pm");
 
         return String.format(context.getResources().getString(day), time);
+    }
+
+    public static boolean isPartyPast(Party party) {
+        return party.getDate().before(new Date(new Date().getTime() - 1000 * 60 * 60));
+    }
+
+    public static Spanned getUpdateText(Update update) {
+        boolean past;
+        String string = null;
+
+        switch (update.getAction()) {
+            case Config.UPDATE_ACTION_HOST_PARTY:
+                if(update.getParty() == null || update.getPerson() == null)
+                    return null;
+
+                past = isPartyPast(update.getParty());
+
+                string = String.format(context.getString(past ? R.string.update_text_hosted : R.string.update_text_is_hosting), update.getPerson().getFirstName(), update.getParty().getName(), agoDate(update.getParty().getDate()));
+                break;
+            case Config.UPDATE_ACTION_JOIN_PARTY:
+                past = isPartyPast(update.getParty());
+
+                string = String.format(context.getString(past ? R.string.update_text_went_to: R.string.update_text_is_going_to), update.getPerson().getFirstName(), update.getParty().getName(), agoDate(update.getParty().getDate()));
+                break;
+        }
+
+        if(string != null) {
+            return Html.fromHtml(string);
+        }
+
+        return null;
     }
 }

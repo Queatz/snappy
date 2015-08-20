@@ -20,6 +20,7 @@ public class Config {
     public static final String PREFERENCE_GCM_REGISTRATION_ID = "auth.gcm_registration_id";
     public static final String PREFERENCE_HOST_PARTY_SCREEN_SHOWN = "other.party_screen_shown";
     public static final String PREFERENCE_HOSTING_ENABLED = "other.hosting_enabled";
+    public static final String PREFERENCE_APP_VERSION = "app.version";
 
     public static final String HOSTING_ENABLED_FALSE = Boolean.toString(false);
     public static final String HOSTING_ENABLED_AVAILABLE = "available";
@@ -41,6 +42,9 @@ public class Config {
     public static final String PUSH_ACTION_JOIN_PARTY = "join_party";
     public static final String PUSH_ACTION_REFRESH_ME = "refresh_me";
     public static final String PUSH_ACTION_CLEAR_NOTIFICATION = "clear_notification";
+
+    public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";
+    public static final String UPDATE_ACTION_HOST_PARTY = "host_party";
 
     public static final String EXTRA_ACTION = "action";
     public static final String EXTRA_PARTY_ID = "party";
