@@ -15,6 +15,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="center_vertical"
+        android:scaleType="centerCrop"
         android:layout_margin="4dp"
         app:riv_corner_radius="24dp"
         android:src="@drawable/location" />

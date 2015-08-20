@@ -55,6 +55,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="4dp"
                 app:riv_corner_radius="32dp"
+                android:scaleType="centerCrop"
                 android:src="@drawable/location" />
 
             <com.queatz.snappy.ui.TextView

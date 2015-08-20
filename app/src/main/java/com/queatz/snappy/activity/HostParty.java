@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.ui.TextView;
 import com.queatz.snappy.ui.TimeSlider;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -477,6 +479,13 @@ public class HostParty extends Activity {
         mLocation = location;
         mNewParty.findViewById(R.id.selectedLocation).setVisibility(View.VISIBLE);
         ((TextView) mNewParty.findViewById(R.id.selectedLocationName)).setText(mLocation.getName());
+
+        ImageView locationProfile = ((ImageView) mNewParty.findViewById(R.id.selectedLocationProfile));
+
+        int s = (int) Util.px(128);
+        String photoUrl = Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getId());
+
+        Picasso.with(team.context).load(photoUrl).placeholder(R.drawable.location).into(locationProfile);
 
         mNewParty.findViewById(R.id.locationDetailsLayout).setVisibility(View.GONE);
 

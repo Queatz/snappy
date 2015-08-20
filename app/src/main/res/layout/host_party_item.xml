@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:id="@+id/click_glam"
@@ -19,10 +20,12 @@
             android:layout_margin="4dp"
             android:orientation="horizontal">
 
-            <ImageView
+            <com.makeramen.RoundedImageView
                 android:id="@+id/location_icon"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
+                app:riv_corner_radius="64dp"
+                android:scaleType="centerCrop"
                 android:src="@drawable/location"
                 android:layout_margin="4dp" />
 
