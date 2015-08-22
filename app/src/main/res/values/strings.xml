@@ -65,6 +65,12 @@
     <string name="update_text_is_going_to"><![CDATA[%1$s is going to <b>%2$s</b> %3$s]]></string>
     <string name="update_text_went_to"><![CDATA[%1$s went to <b>%2$s</b> %3$s]]></string>
     <string name="friends">Friends</string>
+    <string name="here">here</string>
+
+    <plurals name="people_near_place">
+        <item quantity="one">%1$s person near %2$s</item>
+        <item quantity="other">%1$s people near %2$s</item>
+    </plurals>
 
     <plurals name="years">
         <item quantity="one">%1$s year</item>

@@ -86,6 +86,7 @@ public class Config {
     public static final String PATH_MESSAGES = "messages";
     public static final String PATH_MESSAGES_ID = "messages/%s";
     public static final String PATH_UPTO = "upto";
+    public static final String PATH_HERE = "here";
     public static final String PATH_ME= "me";
     public static final String PATH_ME_UPTO= "me/upto";
     public static final String PATH_ME_BUY= "me/buy";

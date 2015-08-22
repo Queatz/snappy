@@ -1,9 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/peopleNearby"
+        android:visibility="gone"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/lightblue"
+        android:isScrollContainer="true">
+
+        <com.queatz.snappy.ui.TextView
+            android:id="@+id/peopleNearbyText"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:paddingTop="8dp"
+            android:gravity="center_horizontal"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="18sp"/>
+
+        <FrameLayout
+            android:id="@+id/peopleNearbyListHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <com.queatz.snappy.ui.ExpandedGridView
+                android:id="@+id/peopleNearbyList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:numColumns="3"
+                android:padding="8dp"
+                android:scrollbars="none" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <com.queatz.snappy.ui.TextView
         android:id="@+id/enableLocation"
         android:clickable="true"
         android:layout_width="match_parent"
@@ -16,7 +56,7 @@
         android:text="@string/enable_location"
         android:textSize="18sp"/>
 
-    <TextView
+    <com.queatz.snappy.ui.TextView
         android:id="@+id/noParties"
         android:clickable="true"
         android:layout_width="match_parent"

@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ListView;
 
 import com.loopj.android.http.RequestParams;
@@ -19,13 +20,22 @@ import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.adapter.PartyAdapter;
+import com.queatz.snappy.adapter.PeopleNearHereAdapter;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Party;
+import com.queatz.snappy.things.Person;
+import com.queatz.snappy.ui.RevealAnimation;
+import com.queatz.snappy.ui.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Date;
 
+import io.realm.RealmBaseAdapter;
 import io.realm.RealmChangeListener;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 
 /**
@@ -50,6 +60,19 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.parties, container, false);
         emptyView = View.inflate(getActivity(), R.layout.parties_empty, null);
+
+        emptyView.findViewById(R.id.peopleNearby).setVisibility(View.GONE);
+        emptyView.findViewById(R.id.peopleNearby).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View view = emptyView.findViewById(R.id.peopleNearbyListHolder);
+
+                if(view.getVisibility() == View.GONE)
+                    RevealAnimation.expand(view);
+                else
+                    RevealAnimation.collapse(view);
+            }
+        });
 
         mList = (ListView) view.findViewById(R.id.list);
         mList.addHeaderView(emptyView);
@@ -106,6 +129,55 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         }
     }
 
+    private void updateBanner(RealmList<Person> people, RealmList<com.queatz.snappy.things.Location> locations) {
+        View peopleNearby = emptyView.findViewById(R.id.peopleNearby);
+
+        if(people.size() < 1) {
+            if(peopleNearby.getVisibility() != View.GONE) {
+                RevealAnimation.collapse(peopleNearby);
+            }
+
+            return;
+        }
+
+        String locationName = null;
+
+        if(locations.size() > 0) {
+            locationName = locations.get(0).getName();
+        }
+        else {
+            locationName = getString(R.string.here);
+        }
+
+        View peopleNearbyListHolder = peopleNearby.findViewById(R.id.peopleNearbyListHolder);
+        GridView peopleNearbyList = (GridView) peopleNearby.findViewById(R.id.peopleNearbyList);
+
+        PeopleNearHereAdapter peopleNearHereAdapter = new PeopleNearHereAdapter(getActivity(), people);
+
+        peopleNearbyList.setAdapter(peopleNearHereAdapter);
+
+        peopleNearbyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Person person = ((PeopleNearHereAdapter) parent.getAdapter()).getItem(position);
+
+                if(person != null) {
+                    team.action.openProfile(getActivity(), person);
+                }
+            }
+        });
+
+        if(peopleNearby.getVisibility() == View.GONE) {
+            peopleNearbyListHolder.setVisibility(View.GONE);
+            RevealAnimation.expand(peopleNearby, 500);
+        }
+
+        ((TextView) peopleNearby.findViewById(R.id.peopleNearbyText)).setText(
+                getResources().getQuantityString(R.plurals.people_near_place, people.size(), people.size(), locationName)
+        );
+
+    }
+
     public void update() {
         if(getActivity() == null)
             return;
@@ -140,18 +212,40 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
 
         team.location.get(getActivity(), new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
             @Override
-            public void onLocationFound(Location location) {
+            public void onLocationFound(final Location location) {
                 RequestParams params = new RequestParams();
-
                 params.put("latitude", location.getLatitude());
                 params.put("longitude", location.getLongitude());
 
-                team.api.get(Config.PATH_PARTIES + "?" + params, new Api.Callback() {
+                team.api.get(Config.PATH_HERE, params, new Api.Callback() {
                     @Override
                     public void success(String response) {
                         mRefresh.setRefreshing(false);
-                        team.things.putAll(Party.class, response);
-                        update();
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+
+                            RealmList<com.queatz.snappy.things.Location> locations = null;
+                            RealmList<Person> people = null;
+
+                            if(jsonObject.has("locations")) {
+                                locations = team.things.putAll(com.queatz.snappy.things.Location.class, jsonObject.getJSONArray("locations"));
+                            }
+
+                            if(jsonObject.has("people")) {
+                                people = team.things.putAll(Person.class, jsonObject.getJSONArray("people"));
+                            }
+
+                            updateBanner(people, locations);
+
+                            if(jsonObject.has("parties")) {
+                                team.things.putAll(Party.class, jsonObject.getJSONArray("parties"));
+                                update();
+                            }
+                        }
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override

@@ -1,17 +1,24 @@
 package com.queatz.snappy.api;
 
 import com.google.appengine.api.search.Document;
+import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.GetIndexesRequest;
 import com.google.appengine.api.search.GetRequest;
 import com.google.appengine.api.search.GetResponse;
 import com.google.appengine.api.search.Index;
+import com.google.appengine.api.search.PutException;
+import com.google.appengine.api.search.Query;
+import com.google.appengine.api.search.QueryOptions;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.search.SearchServiceFactory;
 import com.google.appengine.api.urlfetch.HTTPMethod;
+import com.queatz.snappy.backend.Config;
+import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Search;
+import com.queatz.snappy.service.Things;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,10 +40,28 @@ public class Pirate implements Api.Path {
 
     @Override
     public void call(ArrayList<String> path, String user, HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException, PrintingError {
-        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.UPDATE).search("party: \"test\"");
+        Query query = Query.newBuilder().setOptions(QueryOptions.newBuilder().setLimit(1000).build()).build("distance(loc_cache, geopoint(0, 0)) > 0");
+        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PARTY).search(query);
 
-        for(ScoredDocument doc : results)
-            Search.getService().index.get(Search.Type.UPDATE).delete(doc.getId());
+        for(ScoredDocument doc : results) {
+            resp.getWriter().write(doc.getOnlyField("name").getText() + " | ");
+            if(doc.getOnlyField("name").getText() == null) {
+                Document.Builder documentBuild = Document.newBuilder()
+                        .setId(doc.getId())
+                        .addField(Field.newBuilder().setName("name").setText(doc.getOnlyField("name").getAtom()));
+
+                Util.copyIn(documentBuild, doc, "name");
+
+                Document document = documentBuild.build();
+
+                try {
+                    Search.getService().index.get(Search.Type.PARTY).put(document);
+                } catch (PutException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
 
         resp.getWriter().write("yarr!");
     }
