@@ -67,7 +67,9 @@ public class Here implements Api.Path {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-        String queryString = "distance(latlng, geopoint(" + latitude + ", " + longitude + ")) < " + Config.SEARCH_PEOPLE_MAX_DISTANCE + " AND around >= \"" + format.format(new Date(new Date().getTime() - 1000 * 60 * 60)) + "\"";
+        Date oneHourAgo = new Date(new Date().getTime() - 1000 * 60 * 60);
+
+        String queryString = "distance(latlng, geopoint(" + latitude + ", " + longitude + ")) < " + Config.SEARCH_PEOPLE_MAX_DISTANCE + " AND around >= \"" + format.format(oneHourAgo) + "\"";
 
         SortOptions sortOptions = SortOptions.newBuilder().addSortExpression(
                 SortExpression.newBuilder().setExpression("distance(latlng, geopoint(" + latitude + ", " + longitude + "))").setDirection(SortExpression.SortDirection.ASCENDING).build()
@@ -80,7 +82,7 @@ public class Here implements Api.Path {
         Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PERSON).search(query);
 
         for (ScoredDocument result : results) {
-            if(user.equals(result.getId()))
+            if(user.equals(result.getId()) || result.getOnlyField("around").getDate().before(oneHourAgo))
                 continue;
 
             r.put(Things.getService().person.toJson(result, user, true));

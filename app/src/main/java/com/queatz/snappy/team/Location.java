@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -17,11 +19,12 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.koushikdutta.async.http.AsyncHttpClient;
+import com.koushikdutta.async.http.AsyncHttpGet;
+import com.koushikdutta.async.http.AsyncHttpResponse;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
 
-import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -212,52 +215,54 @@ public class Location implements
     public void getTopGoogleLocationForInput(@NonNull final String input, @NonNull final AutocompleteCallback callback) {
         android.location.Location location = get();
 
-        if(location == null)
+        if (location == null)
             return;
 
-        String url = String.format(Config.GOOGLE_PLACES_AUTOCOMPLETE_URL,
+        final String url = String.format(Config.GOOGLE_PLACES_AUTOCOMPLETE_URL,
                 location.getLatitude(),
                 location.getLongitude(),
                 input,
                 team.context.getString(R.string.google_api_key));
 
-        team.api.getInternalClient().get(url, new AsyncHttpResponseHandler() {
+        AsyncHttpClient.getDefaultInstance().executeJSONObject(new AsyncHttpGet(url), new AsyncHttpClient.JSONObjectCallback() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                if(responseBody == null)
+            public void onCompleted(Exception e, AsyncHttpResponse response, JSONObject jsonObject) {
+                if (e != null) {
+                    e.printStackTrace();
                     return;
+                }
 
                 try {
-                    JSONObject o = new JSONObject(new String(responseBody));
-
                     String url = String.format(Config.GOOGLE_PLACES_DETAILS_URL,
-                            o.getJSONArray("predictions").getJSONObject(0).getString("place_id"),
+                            jsonObject.getJSONArray("predictions").getJSONObject(0).getString("place_id"),
                             team.context.getString(R.string.google_api_key));
 
-                    team.api.getInternalClient().get(url, new AsyncHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                            if(responseBody == null)
-                                return;
+                    AsyncHttpClient.getDefaultInstance().executeJSONObject(new AsyncHttpGet(url), new AsyncHttpClient.JSONObjectCallback() {
+                                @Override
+                                public void onCompleted(Exception e, AsyncHttpResponse response, final JSONObject jsonObject) {
+                                    if (e != null) {
+                                        e.printStackTrace();
+                                        return;
+                                    }
 
-                            try {
-                                JSONObject o = new JSONObject(new String(responseBody));
-                                callback.onResult(o.getJSONObject("result"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                callback.onResult(jsonObject.getJSONObject("result"));
+                                            } catch (JSONException e2) {
+                                                e2.printStackTrace();
+                                            }
+                                        }
+                                    });
+                                }
                             }
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {}
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    );
+                }
+                catch (JSONException e2) {
+                    e2.printStackTrace();
                 }
             }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {}
         });
     }
 
