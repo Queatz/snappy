@@ -166,7 +166,7 @@ public class PersonUptoSlide extends Fragment {
 
             TextView about = (TextView) personAbout.findViewById(R.id.about);
 
-            if(team.auth.getUser().equals(mPerson.getId())) {
+            if(team.auth.getUser() != null && team.auth.getUser().equals(mPerson.getId())) {
                 about.setTextIsSelectable(false);
 
                 about.setOnClickListener(new View.OnClickListener() {
@@ -180,7 +180,7 @@ public class PersonUptoSlide extends Fragment {
                 about.setTextIsSelectable(true);
             }
 
-            if(mPerson.getAbout().isEmpty()) {
+            if(mPerson.getAbout() == null || mPerson.getAbout().isEmpty()) {
                 if(team.auth.getUser().equals(mPerson.getId())) {
                     about.setVisibility(View.VISIBLE);
                     about.setTextColor(getResources().getColor(R.color.clickable));
