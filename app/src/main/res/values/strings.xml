@@ -66,6 +66,7 @@
     <string name="update_text_went_to"><![CDATA[%1$s went to <b>%2$s</b> %3$s]]></string>
     <string name="friends">Friends</string>
     <string name="here">here</string>
+    <string name="what_are_you_into">What are you into?</string>
 
     <plurals name="people_near_place">
         <item quantity="one">%1$s person near %2$s</item>

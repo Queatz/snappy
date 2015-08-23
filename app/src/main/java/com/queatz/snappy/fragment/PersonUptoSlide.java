@@ -9,11 +9,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.adapter.PersonUptoAdapter;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
@@ -162,12 +164,36 @@ public class PersonUptoSlide extends Fragment {
                 }
             });
 
-            if(mPerson.getAbout().isEmpty()) {
-                personAbout.findViewById(R.id.about).setVisibility(View.GONE);
+            TextView about = (TextView) personAbout.findViewById(R.id.about);
+
+            if(team.auth.getUser().equals(mPerson.getId())) {
+                about.setTextIsSelectable(false);
+
+                about.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        team.action.changeAbout(getActivity());
+                    }
+                });
             }
             else {
-                personAbout.findViewById(R.id.about).setVisibility(View.VISIBLE);
-                ((TextView) personAbout.findViewById(R.id.about)).setText(mPerson.getAbout());
+                about.setTextIsSelectable(true);
+            }
+
+            if(mPerson.getAbout().isEmpty()) {
+                if(team.auth.getUser().equals(mPerson.getId())) {
+                    about.setVisibility(View.VISIBLE);
+                    about.setTextColor(getResources().getColor(R.color.clickable));
+                    about.setText(R.string.what_are_you_into);
+                }
+                else {
+                    about.setVisibility(View.GONE);
+                }
+            }
+            else {
+                about.setVisibility(View.VISIBLE);
+                about.setTextColor(getResources().getColor(R.color.text));
+                about.setText(mPerson.getAbout());
             }
 
             TextView actionButton = (TextView) personAbout.findViewById(R.id.action_button);

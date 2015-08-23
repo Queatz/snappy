@@ -22,6 +22,7 @@
             android:paddingTop="8dp"
             android:gravity="center_horizontal"
             android:textAlignment="center"
+            android:maxLines="1"
             android:textColor="@color/white"
             android:textSize="18sp"/>
 

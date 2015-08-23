@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.activity.PersonList;
 import com.queatz.snappy.things.*;
 import com.queatz.snappy.things.Location;
+import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.ui.MiniMenu;
 import com.queatz.snappy.ui.TextView;
 import com.squareup.picasso.Picasso;
@@ -477,6 +479,58 @@ public class Action {
         return true;
     }
 
+    public void changeAbout(@NonNull Activity activity) {
+        final EditText editText = new EditText(activity);
+        int p = (int) Util.px(16);
+        editText.setPadding(p, p, p, p);
+        editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        editText.setHint(R.string.what_are_you_into);
+
+        String about = team.auth.me().getAbout();
+
+        if(about == null || about.isEmpty()) {
+            about = "";
+        }
+
+        editText.setText(about);
+
+        new AlertDialog.Builder(activity).setView(editText)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String about = editText.getText().toString();
+
+                        team.realm.beginTransaction();
+                        team.auth.me().setAbout(about);
+                        team.realm.commitTransaction();
+
+                        RequestParams params = new RequestParams();
+                        params.put(Config.PARAM_ABOUT, about);
+
+                        team.api.post(Config.PATH_ME, params, new Api.Callback() {
+                            @Override
+                            public void success(String response) {
+
+                            }
+
+                            @Override
+                            public void fail(String response) {
+                                Toast.makeText(team.context, "Couldn't change what you're into", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                })
+                .show();
+
+            editText.post(new Runnable() {
+                @Override
+                public void run() {
+                    team.view.keyboard(editText);
+                }
+            });
+    }
+
 
     Location nPendingLocationPhotoChange;
 
@@ -510,6 +564,7 @@ public class Action {
                         return;
                     }
 
+                    Toast.makeText(team.context, "Changing photo", Toast.LENGTH_SHORT).show();
                     team.api.put(String.format(Config.PATH_LOCATION_PHOTO, nPendingLocationPhotoChange.getId()), params, new Api.Callback() {
                         @Override
                         public void success(String response) {
@@ -517,7 +572,6 @@ public class Action {
                                 String photoUrl = Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=64&auth=" + team.auth.getAuthParam(), nPendingLocationPhotoChange.getId());
                                 Picasso.with(team.context).invalidate(photoUrl);
                             }
-                            Toast.makeText(team.context, "Photo changed", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override

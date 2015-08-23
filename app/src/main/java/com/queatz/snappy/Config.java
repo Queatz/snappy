@@ -52,6 +52,7 @@ public class Config {
     public static final String EXTRA_ACTION_JOIN_ACCEPT = "join.accept";
     public static final String EXTRA_ACTION_JOIN_REQUEST = "join.request";
 
+    public static final String PARAM_ABOUT = "about";
     public static final String PARAM_AUTH = "auth";
     public static final String PARAM_EMAIL = "email";
     public static final String PARAM_JOIN = "join";

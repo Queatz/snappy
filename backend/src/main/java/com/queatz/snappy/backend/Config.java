@@ -43,6 +43,7 @@ public class Config {
     public static final String JOIN_STATUS_OUT = "out";
     public static final String JOIN_STATUS_WITHDRAWN = "withdrawn";
 
+    public static final String PARAM_ABOUT = "about";
     public static final String PARAM_EMAIL = "email";
     public static final String PARAM_AUTH = "auth";
     public static final String PARAM_LOCATION = "location";
@@ -76,6 +77,7 @@ public class Config {
     public static final String subscriptionProductId = "com.queatz.snappy.monthly";
     public static final String refreshToken = "1/GBpu5P7H3RGjlaNnVgoKMqE-GrEBbLAJHjEPpFzK5I4";
 
+    public static final String PATH_ABOUT = "about";
     public static final String PATH_API = "api";
     public static final String PATH_PARTY = "party";
     public static final String PATH_PARTIES = "parties";

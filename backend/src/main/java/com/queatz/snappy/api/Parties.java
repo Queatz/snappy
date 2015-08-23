@@ -43,6 +43,7 @@ public class Parties implements Api.Path {
     }
 
     @Override
+    @Deprecated
     public void call(ArrayList<String> path, String user, HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException, PrintingError {
         switch (method) {
             case GET:

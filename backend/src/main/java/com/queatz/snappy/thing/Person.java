@@ -78,6 +78,7 @@ public class Person implements Thing {
             o.put("infoFollowers", infoFollowers);
             o.put("infoFollowing", infoFollowing);
             o.put("infoHosted", infoHosted);
+            o.put("about", d.getOnlyField("about").getText());
 
             Results<ScoredDocument> results = Search.getService().index.get(Search.Type.FOLLOW).search("following = \"" + d.getId() + "\"");
 
@@ -134,6 +135,26 @@ public class Person implements Thing {
         return true;
     }
 
+    public boolean updateAbout(Document person, String about) {
+
+        Document.Builder documentBuild = Document.newBuilder();
+        documentBuild.setId(person.getId());
+        documentBuild.addField(Field.newBuilder().setName("about").setText(about));
+
+        Util.copyIn(documentBuild, person, "about");
+
+        Document result = documentBuild.build();
+
+        try {
+            Search.getService().index.get(Search.Type.PERSON).put(result);
+        } catch (PutException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
     public boolean updateLocation(String user, double latitude, double longitude) {
         Document person = Search.getService().get(Search.Type.PERSON, user);
 
@@ -175,7 +196,7 @@ public class Person implements Thing {
             documentBuild.addField(Field.newBuilder().setName("firstName").setAtom(Util.encode(jsonObject.getString("firstName"))));
             documentBuild.addField(Field.newBuilder().setName("lastName").setAtom(Util.encode(jsonObject.getString("lastName"))));
             documentBuild.addField(Field.newBuilder().setName("imageUrl").setAtom(jsonObject.getString("imageUrl")));
-            documentBuild.addField(Field.newBuilder().setName("about").setAtom(Util.encode(jsonObject.getString("about"))));
+            documentBuild.addField(Field.newBuilder().setName("about").setText(Util.encode(jsonObject.getString("about"))));
             documentBuild.addField(Field.newBuilder().setName("googleId").setAtom(jsonObject.getString("googleId")));
 
             boolean subscribed = false;

@@ -86,36 +86,48 @@ public class Me implements Api.Path {
 
                 break;
             case POST:
-                if(path.size() != 1)
-                    throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "me - bad path");
+                if(path.size() == 0) {
+                    Document me = Search.getService().get(Search.Type.PERSON, user);
 
-                if(Config.PATH_BUY.equals(path.get(0))) {
-                    resp.getWriter().write(Boolean.toString(Buy.getService().validate(user, req.getParameter(Config.PARAM_PURCHASE_DATA))));
-                }
-                else if(Config.PATH_REGISTER_DEVICE.equals(path.get(0))) {
-                    String deviceId = req.getParameter(Config.PARAM_DEVICE_ID);
-
-                    if(deviceId != null && deviceId.length() > 0) {
-                        Push.getService().register(user, deviceId);
+                    if (me == null) {
+                        throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "me - inexistent");
                     }
-                }
-                else if(Config.PATH_UNREGISTER_DEVICE.equals(path.get(0))) {
-                    String deviceId = req.getParameter(Config.PARAM_DEVICE_ID);
 
-                    if(deviceId != null && deviceId.length() > 0) {
-                        Push.getService().unregister(user, deviceId);
-                    }
-                }
-                else if(Config.PATH_CLEAR_NOTIFICATION.equals(path.get(0))) {
-                    String notification = req.getParameter(Config.PARAM_NOTIFICATION);
+                    String about = req.getParameter(Config.PARAM_ABOUT);
 
-                    try {
-                        JSONObject push = Util.makeSimplePush(Config.PUSH_ACTION_CLEAR_NOTIFICATION);
-                        push.put("notification", notification);
-                        Push.getService().send(user, push);
+                    if(about != null) {
+                        Things.getService().person.updateAbout(me, about);
                     }
-                    catch (JSONException e) {
-                        e.printStackTrace();
+
+                    break;
+                }
+                else if(path.size() == 1) {
+                    if (Config.PATH_BUY.equals(path.get(0))) {
+                        resp.getWriter().write(Boolean.toString(Buy.getService().validate(user, req.getParameter(Config.PARAM_PURCHASE_DATA))));
+                    } else if (Config.PATH_REGISTER_DEVICE.equals(path.get(0))) {
+                        String deviceId = req.getParameter(Config.PARAM_DEVICE_ID);
+
+                        if (deviceId != null && deviceId.length() > 0) {
+                            Push.getService().register(user, deviceId);
+                        }
+                    } else if (Config.PATH_UNREGISTER_DEVICE.equals(path.get(0))) {
+                        String deviceId = req.getParameter(Config.PARAM_DEVICE_ID);
+
+                        if (deviceId != null && deviceId.length() > 0) {
+                            Push.getService().unregister(user, deviceId);
+                        }
+                    } else if (Config.PATH_CLEAR_NOTIFICATION.equals(path.get(0))) {
+                        String notification = req.getParameter(Config.PARAM_NOTIFICATION);
+
+                        try {
+                            JSONObject push = Util.makeSimplePush(Config.PUSH_ACTION_CLEAR_NOTIFICATION);
+                            push.put("notification", notification);
+                            Push.getService().send(user, push);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "me - bad path");
                     }
                 }
                 else {
