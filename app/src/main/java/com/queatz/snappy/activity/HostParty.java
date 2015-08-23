@@ -434,9 +434,14 @@ public class HostParty extends Activity {
     }
 
     public void fetchLocations(String q) {
+        Location location = team.location.get();
+
+        if(location == null)
+            return;
+
         RequestParams params = new RequestParams();
-        params.put(Config.PARAM_LATITUDE, team.location.get().getLatitude());
-        params.put(Config.PARAM_LONGITUDE, team.location.get().getLongitude());
+        params.put(Config.PARAM_LATITUDE, location.getLatitude());
+        params.put(Config.PARAM_LONGITUDE, location.getLongitude());
         params.put(Config.PARAM_NAME, q);
 
         team.api.get(Config.PATH_LOCATIONS, params, new Api.Callback() {
