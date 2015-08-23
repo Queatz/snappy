@@ -18,7 +18,7 @@
         <com.queatz.snappy.ui.TextView
             android:id="@+id/peopleNearbyText"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="38dp"
             android:paddingTop="8dp"
             android:gravity="center_horizontal"
             android:textAlignment="center"
