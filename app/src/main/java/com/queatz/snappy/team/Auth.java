@@ -6,6 +6,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -52,6 +54,8 @@ public class Auth {
     private Activity mActivity;
     private HashSet<Callback> mCallbacks;
     private GcmRegistrationAsyncTask gcmRegistrationAsyncTask = null;
+    private Handler mHandler;
+    private Runnable mRegisterDeviceRunnable = null;
 
     private static class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
         private GoogleCloudMessaging gcm;
@@ -381,8 +385,25 @@ public class Auth {
     private void registerDevice() {
         if(mUser != null) {
             if(gcmRegistrationAsyncTask != null)gcmRegistrationAsyncTask.cancel();
-            gcmRegistrationAsyncTask = new GcmRegistrationAsyncTask(this);
-            gcmRegistrationAsyncTask.execute();
+
+            if(mRegisterDeviceRunnable == null) {
+                final Auth auth = this;
+
+                mRegisterDeviceRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        gcmRegistrationAsyncTask = new GcmRegistrationAsyncTask(auth);
+                        gcmRegistrationAsyncTask.execute();
+                    }
+                };
+            }
+
+            if(mHandler == null) {
+                mHandler = new Handler(Looper.getMainLooper());
+            }
+
+            mHandler.removeCallbacks(mRegisterDeviceRunnable);
+            mHandler.postDelayed(mRegisterDeviceRunnable, 1500);
         }
     }
 
