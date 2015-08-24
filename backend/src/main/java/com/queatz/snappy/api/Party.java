@@ -3,12 +3,17 @@ package com.queatz.snappy.api;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.service.Api;
-import com.queatz.snappy.backend.Config;
-import com.queatz.snappy.backend.PrintingError;
-import com.queatz.snappy.service.Push;
-import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Things;
-import com.queatz.snappy.backend.Util;
+im
+ort co .queatz.snappy.backend.Config;
+import co
+.queat .snappy.backend.PrintingError;
+
+mport  om.queatz.snappy.service.Push;
+import com.queatz.snappy.service.Searc
+;
+impo t com.queatz.snappy.service.Thing
+;
+impo t com.queatz.snappy.backend.Util;
 
 import org.json.JSONObject;
 

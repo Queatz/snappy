@@ -23,20 +23,22 @@ public class Push {
     public Push() {
     }
 
-    public void register(String user, String device) {
+    public void register(String user, String device, String socialMode) {
         RegistrationRecord record = findRecord(user, device);
 
         if (record != null) {
-            if(user.equals(record.getUserId()))
-                return;
+            if(socialMode != null && !socialMode.equals(record.getSocialMode())) {
+                record.setSocialMode(socialMode);
+                ofy().save().entity(record).now();
+            }
         }
         else {
             record = new RegistrationRecord();
+            record.setRegId(device);
+            record.setUserId(user);
+            record.setSocialMode(socialMode);
+            ofy().save().entity(record).now();
         }
-
-        record.setRegId(device);
-        record.setUserId(user);
-        ofy().save().entity(record).now();
     }
 
     public void unregister(String user, String device) {

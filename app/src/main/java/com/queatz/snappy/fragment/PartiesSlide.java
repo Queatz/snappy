@@ -33,7 +33,6 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-import io.realm.RealmBaseAdapter;
 import io.realm.RealmChangeListener;
 import io.realm.RealmList;
 import io.realm.RealmResults;

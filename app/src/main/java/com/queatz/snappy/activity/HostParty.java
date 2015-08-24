@@ -49,7 +49,6 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-import io.realm.RealmChangeListener;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 

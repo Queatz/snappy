@@ -16,7 +16,6 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
-import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.things.Person;
 
@@ -47,6 +46,7 @@ public class Auth {
     private String mEmail;
     private String mUser;
     private String mGcmRegistrationId;
+    private String mSocialMode;
     private GetAuthTokenTask mFetchTask;
     private Activity mActivity;
     private HashSet<Callback> mCallbacks;
@@ -84,11 +84,12 @@ public class Auth {
             if(regId != null) {
                 RequestParams params = new RequestParams();
                 params.put(Config.PARAM_DEVICE_ID, regId);
+                params.put(Config.PARAM_SOCIAL_MODE, auth.mSocialMode);
 
                 auth.team.api.post(Config.PATH_ME_REGISTER_DEVICE, params, new Api.Callback() {
                     @Override
                     public void success(String response) {
-                        Log.w(Config.LOG_TAG, "Device successfully registered");
+                        Log.w(Config.LOG_TAG, "Device successfully registered, social mode = " + auth.mSocialMode);
                     }
 
                     @Override
@@ -153,6 +154,7 @@ public class Auth {
                 .putString(Config.PREFERENCE_USER, mUser)
                 .putString(Config.PREFERENCE_AUTH_TOKEN, mAuthToken)
                 .putString(Config.PREFERENCE_GCM_REGISTRATION_ID, mGcmRegistrationId)
+                .putString(Config.PREFERENCE_SOCIAL_MODE, mSocialMode)
                 .apply();
     }
 
@@ -160,6 +162,7 @@ public class Auth {
         mUser = team.preferences.getString(Config.PREFERENCE_USER, null);
         mAuthToken = team.preferences.getString(Config.PREFERENCE_AUTH_TOKEN, null);
         mGcmRegistrationId = team.preferences.getString(Config.PREFERENCE_GCM_REGISTRATION_ID, null);
+        mSocialMode = team.preferences.getString(Config.PREFERENCE_SOCIAL_MODE, Config.SOCIAL_MODE_FRIENDS);
 
         Log.d(Config.LOG_TAG, "user = " + mUser);
 
@@ -206,6 +209,7 @@ public class Auth {
         mEmail = null;
         mAuthToken = null;
         mGoogleAuthToken = null;
+        mSocialMode = Config.SOCIAL_MODE_OFF;
         save();
 
         if(isLogout)
@@ -239,6 +243,9 @@ public class Auth {
 
                             if(o.has("auth"))
                                 setAuthToken(o.getString("auth"));
+
+                            if(o.has("social_mode"))
+                                setSocialMode(o.getString("social_mode"));
 
                             setUser(team.things.put(Person.class, response));
                             callbacks(Step.COMPLETE);
@@ -319,6 +326,20 @@ public class Auth {
     private void setAuthToken(String auth) {
         mAuthToken = auth;
         save();
+    }
+
+    public void updateSocialMode(String socialMode) {
+        setSocialMode(socialMode);
+        registerDevice();
+    }
+
+    private void setSocialMode(String socialMode) {
+        mSocialMode = socialMode;
+        save();
+    }
+
+    public String getSocialMode() {
+        return mSocialMode;
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

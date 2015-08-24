@@ -9,9 +9,11 @@ import com.google.appengine.api.search.PutResponse;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.queatz.snappy.backend.Config;
-import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Things;
-import com.queatz.snappy.backend.Util;
+import com.queatz.snappy.service.Searc
+;
+impo t com.queatz.snappy.service.Thing
+;
+impo t com.queatz.snappy.backend.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,8 +62,9 @@ public class Person implements Thing {
             o.put("lastName", d.getOnlyField("lastName").getAtom());
             o.put("imageUrl", d.getOnlyField("imageUrl").getAtom());
 
-            if(d.getId().equals(user))
+            if(d.getId().equals(user)) {
                 o.put("auth", d.getOnlyField("token").getAtom());
+            }
 
             if(shallow)
                 return o;

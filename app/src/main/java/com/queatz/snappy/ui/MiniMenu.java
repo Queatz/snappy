@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
+import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.HostParty;
 import com.queatz.snappy.team.Buy;
 import com.queatz.snappy.team.Team;
@@ -56,11 +57,13 @@ public class MiniMenu extends FrameLayout {
     }
 
     private void setupActions() {
+        final Team team = ((MainApplication) getContext().getApplicationContext()).team;
+
+        updateSocialModeText(team.auth.getSocialMode());
+
         findViewById(R.id.action_host).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Team team = ((MainApplication) getContext().getApplicationContext()).team;
-
                 if(Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
                     team.view.show((android.app.Activity) getContext(), HostParty.class, null);
                 }
@@ -86,8 +89,6 @@ public class MiniMenu extends FrameLayout {
         findViewById(R.id.action_profile).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Team team = ((MainApplication) getContext().getApplicationContext()).team;
-
                 Person person = team.things.get(Person.class, team.auth.getUser());
 
                 team.action.openProfile((android.app.Activity) getContext(), person);
@@ -99,9 +100,19 @@ public class MiniMenu extends FrameLayout {
         findViewById(R.id.action_socialmode).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                String socialMode = Util.nextSocialMode(team.auth.getSocialMode());
 
+                team.auth.updateSocialMode(socialMode);
+                updateSocialModeText(socialMode);
             }
         });
+    }
+
+    private void updateSocialModeText(String socialMode) {
+        TextView socialModeTextView = (TextView) findViewById(R.id.social_mode);
+
+        socialModeTextView.setText(socialMode.substring(0, 1).toUpperCase() + socialMode.substring(1));
+        socialModeTextView.setTextColor(getResources().getColor(Config.SOCIAL_MODE_OFF.equals(socialMode) ? R.color.gray : R.color.green));
     }
 
     public void show() {

@@ -2,11 +2,11 @@ package com.queatz.snappy.api;
 
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.urlfetch.HTTPMethod;
+import com.queatz.snappy.backend.Config;
+import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Buy;
-import com.queatz.snappy.backend.Config;
-import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
@@ -106,9 +106,10 @@ public class Me implements Api.Path {
                         resp.getWriter().write(Boolean.toString(Buy.getService().validate(user, req.getParameter(Config.PARAM_PURCHASE_DATA))));
                     } else if (Config.PATH_REGISTER_DEVICE.equals(path.get(0))) {
                         String deviceId = req.getParameter(Config.PARAM_DEVICE_ID);
+                        String socialMode = req.getParameter(Config.PARAM_SOCIAL_MODE);
 
                         if (deviceId != null && deviceId.length() > 0) {
-                            Push.getService().register(user, deviceId);
+                            Push.getService().register(user, deviceId, socialMode);
                         }
                     } else if (Config.PATH_UNREGISTER_DEVICE.equals(path.get(0))) {
                         String deviceId = req.getParameter(Config.PARAM_DEVICE_ID);

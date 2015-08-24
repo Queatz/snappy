@@ -18,6 +18,9 @@ public class RegistrationRecord {
     @Index
     private String userId;
 
+    @Index
+    private String socialMode;
+
     public RegistrationRecord() {
     }
 
@@ -35,5 +38,13 @@ public class RegistrationRecord {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getSocialMode() {
+        return socialMode;
+    }
+
+    public void setSocialMode(String socialMode) {
+        this.socialMode = socialMode;
     }
 }

@@ -9,13 +9,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
-import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.adapter.PersonUptoAdapter;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;

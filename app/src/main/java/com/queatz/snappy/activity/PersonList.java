@@ -17,7 +17,6 @@ import com.queatz.snappy.adapter.PersonListAdapter;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Follow;
-import com.queatz.snappy.things.Join;
 import com.queatz.snappy.things.Person;
 
 import io.realm.RealmChangeListener;

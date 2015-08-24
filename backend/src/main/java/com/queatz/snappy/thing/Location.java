@@ -5,9 +5,11 @@ import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.GeoPoint;
 import com.google.appengine.api.search.PutException;
 import com.google.appengine.api.search.PutResponse;
-import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Things;
-import com.queatz.snappy.backend.Util;
+import com.queatz.snappy.service.Searc
+;
+impo t com.queatz.snappy.service.Thing
+;
+impo t com.queatz.snappy.backend.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;

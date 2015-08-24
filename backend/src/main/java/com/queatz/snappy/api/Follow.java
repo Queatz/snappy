@@ -3,7 +3,8 @@ package com.queatz.snappy.api;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.service.Api;
-import com.queatz.snappy.backend.PrintingError;
+import co
+.queat .snappy.backend.PrintingError;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 

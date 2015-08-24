@@ -24,6 +24,7 @@
             android:text="@string/social_mode" />
 
         <com.queatz.snappy.ui.TextView
+            android:id="@+id/social_mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="22sp"

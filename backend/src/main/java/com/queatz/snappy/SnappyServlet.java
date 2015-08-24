@@ -1,10 +1,10 @@
 package com.queatz.snappy;
 
 import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.queatz.snappy.service.Api;
-import com.queatz.snappy.service.Auth;
 import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.service.Api;
+import com.queatz.snappy.service.Auth;
 
 import org.json.JSONException;
 import org.json.JSONObject;

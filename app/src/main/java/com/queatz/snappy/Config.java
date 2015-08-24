@@ -20,6 +20,7 @@ public class Config {
     public static final String PREFERENCE_GCM_REGISTRATION_ID = "auth.gcm_registration_id";
     public static final String PREFERENCE_HOST_PARTY_SCREEN_SHOWN = "other.party_screen_shown";
     public static final String PREFERENCE_HOSTING_ENABLED = "other.hosting_enabled";
+    public static final String PREFERENCE_SOCIAL_MODE = "other.social_mode";
     public static final String PREFERENCE_APP_VERSION = "app.version";
 
     public static final String HOSTING_ENABLED_FALSE = Boolean.toString(false);
@@ -63,6 +64,7 @@ public class Config {
     public static final String PARAM_FOLLOW = "follow";
     public static final String PARAM_MESSAGE = "message";
     public static final String PARAM_SEEN = "seen";
+    public static final String PARAM_SOCIAL_MODE = "social_mode";
     public static final String PARAM_LOCAL_ID = "local_id";
     public static final String PARAM_DEVICE_ID = "device_id";
     public static final String PARAM_PURCHASE_DATA = "purchase_data";
@@ -99,6 +101,10 @@ public class Config {
     public static final String JOIN_STATUS_IN = "in";
     public static final String JOIN_STATUS_OUT = "out";
     public static final String JOIN_STATUS_WITHDRAWN = "withdrawn";
+
+    public static final String SOCIAL_MODE_OFF = "off";
+    public static final String SOCIAL_MODE_FRIENDS = "friends";
+    public static final String SOCIAL_MODE_ON = "on";
 
     public static final int BILLING_RESPONSE_RESULT_OK                  = 0;
     public static final int BILLING_RESPONSE_RESULT_USER_CANCELED       = 1;

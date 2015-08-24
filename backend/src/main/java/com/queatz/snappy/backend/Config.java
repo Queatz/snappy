@@ -25,6 +25,10 @@ public class Config {
     public static final String HOSTING_ENABLED_AVAILABLE = "available";
     public static final String HOSTING_ENABLED_TRUE = Boolean.toString(true);
 
+    public static final String SOCIAL_MODE_OFF = "off";
+    public static final String SOCIAL_MODE_FRIENDS = "friends";
+    public static final String SOCIAL_MODE_ON = "on";
+
     public static final String PUSH_ACTION_JOIN_REQUEST = "join_requested";
     public static final String PUSH_ACTION_JOIN_ACCEPTED = "join_accepted";
     public static final String PUSH_ACTION_HOSTING_REMINDER = "hosting_reminder";
@@ -63,6 +67,7 @@ public class Config {
     public static final String PARAM_LATITUDE = "latitude";
     public static final String PARAM_LONGITUDE = "longitude";
     public static final String PARAM_SEEN = "seen";
+    public static final String PARAM_SOCIAL_MODE = "social_mode";
     public static final String PARAM_LOCAL_ID = "local_id";
     public static final String PARAM_DEVICE_ID = "device_id";
     public static final String PARAM_PURCHASE_DATA = "purchase_data";

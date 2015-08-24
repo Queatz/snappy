@@ -246,4 +246,20 @@ public class Util {
 
         return null;
     }
+
+    public static String nextSocialMode(String socialMode) {
+        if(socialMode == null) {
+            return Config.SOCIAL_MODE_OFF;
+        }
+
+        switch (socialMode) {
+            case Config.SOCIAL_MODE_OFF:
+                return Config.SOCIAL_MODE_FRIENDS;
+            case Config.SOCIAL_MODE_FRIENDS:
+                return Config.SOCIAL_MODE_ON;
+            case Config.SOCIAL_MODE_ON:
+            default:
+                return Config.SOCIAL_MODE_OFF;
+        }
+    }
 }

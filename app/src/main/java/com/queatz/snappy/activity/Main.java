@@ -21,7 +21,6 @@ import com.queatz.snappy.adapter.MainAdapter;
 import com.queatz.snappy.adapter.MainTabAdapter;
 import com.queatz.snappy.team.Buy;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Location;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.ui.ActionBar;
 import com.queatz.snappy.ui.SlideScreen;
