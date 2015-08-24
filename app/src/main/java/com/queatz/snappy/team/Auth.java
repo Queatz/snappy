@@ -14,6 +14,7 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
@@ -50,15 +51,25 @@ public class Auth {
     private GetAuthTokenTask mFetchTask;
     private Activity mActivity;
     private HashSet<Callback> mCallbacks;
+    private GcmRegistrationAsyncTask gcmRegistrationAsyncTask = null;
 
     private static class GcmRegistrationAsyncTask extends AsyncTask<Void, Void, String> {
         private GoogleCloudMessaging gcm;
         private Auth auth;
+        private RequestHandle requestHandle = null;
 
         private static final String SENDER_ID = "1098230558363";
 
         public GcmRegistrationAsyncTask(Auth auth) {
             this.auth = auth;
+        }
+
+        public void cancel() {
+            if(requestHandle != null) {
+                requestHandle.cancel(true);
+            }
+
+            super.cancel(true);
         }
 
         @Override
@@ -86,7 +97,7 @@ public class Auth {
                 params.put(Config.PARAM_DEVICE_ID, regId);
                 params.put(Config.PARAM_SOCIAL_MODE, auth.mSocialMode);
 
-                auth.team.api.post(Config.PATH_ME_REGISTER_DEVICE, params, new Api.Callback() {
+                requestHandle = auth.team.api.post(Config.PATH_ME_REGISTER_DEVICE, params, new Api.Callback() {
                     @Override
                     public void success(String response) {
                         Log.w(Config.LOG_TAG, "Device successfully registered, social mode = " + auth.mSocialMode);
@@ -369,7 +380,9 @@ public class Auth {
 
     private void registerDevice() {
         if(mUser != null) {
-            new GcmRegistrationAsyncTask(this).execute();
+            if(gcmRegistrationAsyncTask != null)gcmRegistrationAsyncTask.cancel();
+            gcmRegistrationAsyncTask = new GcmRegistrationAsyncTask(this);
+            gcmRegistrationAsyncTask.execute();
         }
     }
 

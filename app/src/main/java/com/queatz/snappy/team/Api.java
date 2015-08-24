@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 
@@ -174,71 +175,71 @@ public class Api {
         return Config.API_URL + url + "?" + auth(params).toString();
     }
 
-    public void get(String url) {
-        get(url, null, null);
+    public RequestHandle get(String url) {
+        return get(url, null, null);
     }
 
-    public void put(String url) {
-        put(url, null, null);
+    public RequestHandle put(String url) {
+        return put(url, null, null);
     }
 
-    public void post(String url) {
-        post(url, null, null);
+    public RequestHandle post(String url) {
+        return post(url, null, null);
     }
 
-    public void delete(String url) {
-        delete(url, null, null);
+    public RequestHandle delete(String url) {
+        return delete(url, null, null);
     }
 
-    public void get(String url, Callback callback) {
-        get(url, null, callback);
+    public RequestHandle get(String url, Callback callback) {
+        return get(url, null, callback);
     }
 
-    public void put(String url, Callback callback) {
-        put(url, null, callback);
+    public RequestHandle put(String url, Callback callback) {
+        return put(url, null, callback);
     }
 
-    public void post(String url, Callback callback) {
-        post(url, null, callback);
+    public RequestHandle post(String url, Callback callback) {
+        return post(url, null, callback);
     }
 
-    public void delete(String url, Callback callback) {
-        delete(url, null, callback);
+    public RequestHandle delete(String url, Callback callback) {
+        return delete(url, null, callback);
     }
 
-    public void get(String url, RequestParams params) {
-        get(url, params, null);
+    public RequestHandle get(String url, RequestParams params) {
+        return get(url, params, null);
     }
 
-    public void put(String url, RequestParams params) {
-        put(url, params, null);
+    public RequestHandle put(String url, RequestParams params) {
+        return put(url, params, null);
     }
 
-    public void post(String url, RequestParams params) {
-        post(url, params, null);
+    public RequestHandle post(String url, RequestParams params) {
+        return post(url, params, null);
     }
 
-    public void delete(String url, RequestParams params) {
-        delete(url, params, null);
+    public RequestHandle delete(String url, RequestParams params) {
+        return delete(url, params, null);
     }
 
-    public void get(String url, RequestParams params, Callback callback) {
+    public RequestHandle get(String url, RequestParams params, Callback callback) {
         RequestObject request = new RequestObject(HTTPMethod.GET, Config.API_URL + url, auth(params));
-        mClient.get(request.url, request.params, new ApiCallback(this, request, callback));
+        return mClient.get(request.url, request.params, new ApiCallback(this, request, callback));
     }
 
-    public void post(String url, RequestParams params, Callback callback) {
+    public RequestHandle post(String url, RequestParams params, Callback callback) {
         RequestObject request = new RequestObject(HTTPMethod.POST, makeUrl(url), params);
-        mClient.post(request.url, request.params, new ApiCallback(this, request, callback));
+        return mClient.post(request.url, request.params, new ApiCallback(this, request, callback));
     }
 
-    public void put(String url, RequestParams params, Callback callback) {
+    public RequestHandle put(String url, RequestParams params, Callback callback) {
         RequestObject request = new RequestObject(HTTPMethod.PUT, makeUrl(url), params);
-        mClient.put(request.url, request.params, new ApiCallback(this, request, callback));
+        return mClient.put(request.url, request.params, new ApiCallback(this, request, callback));
     }
 
-    public void delete(String url, RequestParams params, Callback callback) {
+    public RequestHandle delete(String url, RequestParams params, Callback callback) {
         RequestObject request = new RequestObject(HTTPMethod.DELETE, makeUrl(url, params), null);
-        mClient.delete(request.url, new ApiCallback(this, request, callback));
+       return  mClient.delete(request.url, new ApiCallback(this, request, callback));
     }
 }
