@@ -11,6 +11,8 @@ import android.support.annotation.NonNull;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
@@ -488,7 +490,9 @@ public class Action {
         final EditText editText = new EditText(activity);
         int p = (int) Util.px(16);
         editText.setPadding(p, p, p, p);
-        editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS | InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        editText.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+        editText.setSingleLine(false);
         editText.setHint(R.string.what_are_you_into);
 
         String about = team.auth.me().getAbout();
