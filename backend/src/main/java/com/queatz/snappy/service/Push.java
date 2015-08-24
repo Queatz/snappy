@@ -27,10 +27,8 @@ public class Push {
         RegistrationRecord record = findRecord(user, device);
 
         if (record != null) {
-            if(socialMode != null && !socialMode.equals(record.getSocialMode())) {
-                record.setSocialMode(socialMode);
-                ofy().save().entity(record).now();
-            }
+            record.setSocialMode(socialMode);
+            ofy().save().entity(record).now();
         }
         else {
             record = new RegistrationRecord();

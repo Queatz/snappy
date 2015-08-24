@@ -384,16 +384,13 @@ public class Auth {
 
     private void registerDevice() {
         if(mUser != null) {
-            if(gcmRegistrationAsyncTask != null)gcmRegistrationAsyncTask.cancel();
-
             if(mRegisterDeviceRunnable == null) {
                 final Auth auth = this;
 
                 mRegisterDeviceRunnable = new Runnable() {
                     @Override
                     public void run() {
-                        gcmRegistrationAsyncTask = new GcmRegistrationAsyncTask(auth);
-                        gcmRegistrationAsyncTask.execute();
+                        new GcmRegistrationAsyncTask(auth).execute();
                     }
                 };
             }

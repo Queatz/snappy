@@ -2,8 +2,7 @@ package com.queatz.snappy.api;
 
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.service.Api;
-import co
-.queat .snappy.backend.PrintingError;
+import com.queatz.snappy.backend.PrintingError;
 
 import java.io.IOException;
 import java.util.ArrayList;

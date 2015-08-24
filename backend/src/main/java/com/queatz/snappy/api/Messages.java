@@ -8,8 +8,7 @@ import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.service.Api;
-import co
-.queat .snappy.backend.PrintingError;
+import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 
