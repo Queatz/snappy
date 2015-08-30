@@ -209,8 +209,14 @@ public class Person implements Thing {
             documentBuild.addField(Field.newBuilder().setName("firstName").setAtom(Util.encode(jsonObject.getString("firstName"))));
             documentBuild.addField(Field.newBuilder().setName("lastName").setAtom(Util.encode(jsonObject.getString("lastName"))));
             documentBuild.addField(Field.newBuilder().setName("imageUrl").setAtom(jsonObject.getString("imageUrl")));
-            documentBuild.addField(Field.newBuilder().setName("about").setText(Util.encode(jsonObject.getString("about"))));
             documentBuild.addField(Field.newBuilder().setName("googleId").setAtom(jsonObject.getString("googleId")));
+
+            if(document == null || document.getOnlyField("about").getText() == null || document.getOnlyField("about").getText().trim().length() < 1) {
+                documentBuild.addField(Field.newBuilder().setName("about").setText(Util.encode(jsonObject.getString("about"))));
+            }
+            else {
+                documentBuild.addField(Field.newBuilder().setName("about").setText(document.getOnlyField("about").getText()));
+            }
 
             boolean subscribed = false;
 

@@ -68,6 +68,6 @@
         android:textColor="@color/info"
         android:lineSpacingMultiplier="1.5"
         android:text="@string/parties_empty"
-        android:textSize="18sp"/>
+        android:textSize="18sp" />
 
 </LinearLayout>

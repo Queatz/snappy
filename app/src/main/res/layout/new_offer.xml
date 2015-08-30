@@ -14,7 +14,7 @@
         android:textColor="@color/white"
         android:background="@null"
         android:hint="@string/describe_the_experience"
-        android:inputType="text|textShortMessage|textCapSentences"
+        android:inputType="text|textShortMessage|textCapSentences|textMultiLine"
         android:textColorHint="@color/whiteout"
         android:textSize="18sp" />
 
