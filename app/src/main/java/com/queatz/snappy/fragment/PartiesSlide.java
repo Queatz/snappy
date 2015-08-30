@@ -66,7 +66,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
             public void onClick(View v) {
                 View view = emptyView.findViewById(R.id.peopleNearbyListHolder);
 
-                if(view.getVisibility() == View.GONE)
+                if (view.getVisibility() == View.GONE)
                     RevealAnimation.expand(view);
                 else
                     RevealAnimation.collapse(view);
@@ -87,6 +87,14 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         });
 
         update();
+
+        mRefresh.post(new Runnable() {
+            @Override
+            public void run() {
+                mRefresh.setRefreshing(true);
+            }
+        });
+
         refresh();
 
         team.location.addLocationAvailabilityCallback(this);
@@ -129,6 +137,9 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
     }
 
     private void updateBanner(RealmList<Person> people, RealmList<com.queatz.snappy.things.Location> locations) {
+        if(getActivity() == null)
+            return;
+
         View peopleNearby = emptyView.findViewById(R.id.peopleNearby);
 
         if(people.size() < 1) {
@@ -174,7 +185,6 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         ((TextView) peopleNearby.findViewById(R.id.peopleNearbyText)).setText(
                 getResources().getQuantityString(R.plurals.people_near_place, people.size(), people.size(), locationName)
         );
-
     }
 
     public void update() {

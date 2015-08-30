@@ -13,6 +13,7 @@ public class MainApplication extends Application {
 
     @Override
     public void onCreate() {
+        super.onCreate();
         Global.setupWithContext(this);
         Util.setupWithContext(this);
 

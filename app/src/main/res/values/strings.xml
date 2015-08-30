@@ -67,6 +67,13 @@
     <string name="friends">Friends</string>
     <string name="here">here</string>
     <string name="what_are_you_into">What are you into?</string>
+    <string name="offer_an_experience">Offer an experience</string>
+    <string name="free">Free</string>
+    <string name="price">Price</string>
+    <string name="describe_the_experience">Describe the experience</string>
+    <string name="add_experience">Add Experience</string>
+    <string name="stop_offering">Stop offering</string>
+    <string name="describe_another_experience">Describe another experience</string>
 
     <plurals name="people_near_place">
         <item quantity="one">%1$s person near %2$s</item>
@@ -106,6 +113,11 @@
     <plurals name="seconds">
         <item quantity="one">%1$s second</item>
         <item quantity="other">%1$s seconds</item>
+    </plurals>
+
+    <plurals name="offers">
+        <item quantity="one">%1$s offer</item>
+        <item quantity="other">%1$s offers</item>
     </plurals>
 
 </resources>

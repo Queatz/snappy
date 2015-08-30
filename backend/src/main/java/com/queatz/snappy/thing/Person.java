@@ -105,6 +105,18 @@ public class Person implements Thing {
                 o.put("updates", r);
             }
 
+            results = Search.getService().index.get(Search.Type.OFFER).search("person = \"" + d.getId() + "\"");
+
+            r = new JSONArray();
+
+            for(ScoredDocument doc : results) {
+                r.put(Things.getService().offer.toJson(doc, user, true));
+            }
+
+            if(r.length() > 0) {
+                o.put("offers", r);
+            }
+
             return o;
         }
         catch (JSONException e) {

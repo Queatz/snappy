@@ -20,6 +20,7 @@ public class Config {
     public static final int SEARCH_PEOPLE_MAX_NEAR_HERE = 500;
     public static final int SEARCH_PEOPLE_MAX_DISTANCE = 804;
     public static final int SEARCH_LOCATIONS_MAX_HERE = 10;
+    public static final int OFFER_MAX_PRICE = 200;
 
     public static final String HOSTING_ENABLED_FALSE = Boolean.toString(false);
     public static final String HOSTING_ENABLED_AVAILABLE = "available";
@@ -73,6 +74,7 @@ public class Config {
     public static final String PARAM_PURCHASE_DATA = "purchase_data";
     public static final String PARAM_NOTIFICATION = "notification";
     public static final String PARAM_SIZE = "s";
+    public static final String PARAM_PRICE = "price";
 
     public static final String GOOGLE_PLUS_PROFILE_URL = "https://www.googleapis.com/plus/v1/people/me";
     public static final String GOOGLE_PLUS_TOKENINFO_URL = "https://www.googleapis.com/oauth2/v1/tokeninfo";
@@ -93,6 +95,7 @@ public class Config {
     public static final String PATH_LOCATIONS = "locations";
     public static final String PATH_LOCATION = "location";
     public static final String PATH_ME = "me";
+    public static final String PATH_OFFERS = "offers";
     public static final String PATH_HERE = "here";
     public static final String PATH_BUY = "buy";
     public static final String PATH_REGISTER_DEVICE = "register_device";

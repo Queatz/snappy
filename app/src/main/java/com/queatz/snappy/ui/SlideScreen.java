@@ -132,6 +132,7 @@ public class SlideScreen extends ViewGroup {
     private float mXFlingDelta;
     private float mDownX, mDownY;
     private boolean mSnatched;
+    private boolean mChildIsUsingMotion;
 
     public SlideScreen(Context context) {
         super(context);
@@ -312,6 +313,15 @@ public class SlideScreen extends ViewGroup {
     }
 
     @Override
+    public void requestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+        mChildIsUsingMotion = disallowIntercept;
+
+        if(getParent() != null) {
+            getParent().requestDisallowInterceptTouchEvent(disallowIntercept);
+        }
+    }
+
+    @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -322,12 +332,14 @@ public class SlideScreen extends ViewGroup {
 
                 break;
             case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                mChildIsUsingMotion = false;
                 mSnatched = false;
 
                 break;
             case MotionEvent.ACTION_MOVE:
-                if(mSnatched)
-                    return true;
+                if(mSnatched || mChildIsUsingMotion)
+                    return mSnatched;
 
                 mSnatched = shouldSnatch(event);
 

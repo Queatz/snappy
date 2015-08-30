@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import com.queatz.snappy.R;
 import com.queatz.snappy.things.Follow;
 import com.queatz.snappy.things.Location;
+import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.things.Person;
 
 /**
@@ -37,6 +38,9 @@ public class Menu {
                 menu.add(follow == null ? R.string.follow : R.string.stop_following);
             }
         }
+        else if(object instanceof Offer) {
+            menu.add(R.string.stop_offering);
+        }
     }
 
     public boolean choose(Activity activity, Object object, MenuItem item) {
@@ -51,6 +55,11 @@ public class Menu {
             }
             else if(team.context.getString(R.string.stop_following).equals(item.getTitle())) {
                 team.action.stopFollowingPerson((Person) object);
+            }
+        }
+        else if(object instanceof Offer) {
+            if(team.context.getString(R.string.stop_offering).equals(item.getTitle())) {
+                team.action.deleteExperience((Offer) object);
             }
         }
 

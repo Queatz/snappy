@@ -1,12 +1,12 @@
 package com.queatz.snappy.service;
 
-import com.queatz.snappy.SnappyServlet;
 import com.queatz.snappy.thing.Buy;
 import com.queatz.snappy.thing.Contact;
 import com.queatz.snappy.thing.Follow;
 import com.queatz.snappy.thing.Join;
 import com.queatz.snappy.thing.Location;
 import com.queatz.snappy.thing.Message;
+import com.queatz.snappy.thing.Offer;
 import com.queatz.snappy.thing.Party;
 import com.queatz.snappy.thing.Person;
 import com.queatz.snappy.thing.Update;
@@ -33,6 +33,7 @@ public class Things {
     public Follow follow;
     public Contact contact;
     public Buy buy;
+    public Offer offer;
 
     public Things() {
         party = new Party(this);
@@ -44,5 +45,6 @@ public class Things {
         contact = new Contact(this);
         buy = new Buy(this);
         update = new Update(this);
+        offer = new Offer(this);
     }
 }

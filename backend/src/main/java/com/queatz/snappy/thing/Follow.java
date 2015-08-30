@@ -15,6 +15,8 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
+import javax.print.Doc;
+
 /**
  * Created by jacob on 2/19/15.
  */
@@ -66,6 +68,20 @@ public class Follow implements Thing {
 
     public void stopFollowing(Document follow) {
         Search.getService().index.get(Search.Type.FOLLOW).delete(follow.getId());
+    }
+
+    public Document get(String user, String following) {
+        Document follow = null;
+
+        Results<ScoredDocument> results;
+        results = Search.getService().index.get(Search.Type.FOLLOW).search("person = \"" + user + "\" AND following = \"" + following + "\"");
+
+        Iterator<ScoredDocument> iterator = results.iterator();
+
+        if(iterator.hasNext())
+            follow = iterator.next();
+
+        return follow;
     }
 
     public Document createOrUpdate(String user, String following) {

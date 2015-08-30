@@ -30,7 +30,8 @@ public class Search {
         JOIN,
         FOLLOW,
         CONTACT,
-        BUY
+        BUY,
+        OFFER
     }
 
     public HashMap<Type, Index> index;

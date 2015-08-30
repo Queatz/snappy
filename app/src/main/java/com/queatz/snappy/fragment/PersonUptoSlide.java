@@ -2,11 +2,14 @@ package com.queatz.snappy.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -14,12 +17,17 @@ import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.adapter.OfferAdapter;
 import com.queatz.snappy.adapter.PersonUptoAdapter;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Follow;
+import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.things.Update;
+import com.queatz.snappy.ui.RevealAnimation;
+import com.queatz.snappy.ui.SlideScreen;
 import com.queatz.snappy.ui.TextView;
+import com.queatz.snappy.ui.TimeSlider;
 import com.squareup.picasso.Picasso;
 
 import io.realm.RealmChangeListener;
@@ -32,6 +40,7 @@ public class PersonUptoSlide extends Fragment {
     Team team;
     com.queatz.snappy.things.Person mPerson;
     View personAbout;
+    EditText describeExperience;
     RealmChangeListener mChangeListener = null;
 
     public void setPerson(com.queatz.snappy.things.Person person) {
@@ -72,17 +81,68 @@ public class PersonUptoSlide extends Fragment {
 
         personAbout = View.inflate(getActivity(), R.layout.person_upto_about, null);
 
+        personAbout.findViewById(R.id.offers).setVisibility(View.GONE);
+        personAbout.findViewById(R.id.offers).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View view = personAbout.findViewById(R.id.offersListHolder);
+
+                if (view.getVisibility() == View.GONE)
+                    RevealAnimation.expand(view);
+                else
+                    RevealAnimation.collapse(view);
+            }
+        });
+
         updateList.addHeaderView(personAbout);
         updateList.addFooterView(new View(getActivity()));
 
         if(mPerson != null) {
+            if(team.auth.getUser().equals(mPerson.getId())) {
+                ListView offersList = (ListView) personAbout.findViewById(R.id.offers).findViewById(R.id.offersList);
+
+                View newOffer = View.inflate(getActivity(), R.layout.new_offer, null);
+
+                offersList.addFooterView(newOffer);
+
+                final EditText experienceDetails = (EditText) newOffer.findViewById(R.id.details);
+                final TimeSlider priceSlider = (TimeSlider) newOffer.findViewById(R.id.price);
+                final Button addExperience = (Button) newOffer.findViewById(R.id.addExperience);
+
+                describeExperience = experienceDetails;
+
+                priceSlider.setPercent(0);
+
+                priceSlider.setTextCallback(new TimeSlider.TextCallback() {
+                    @Override
+                    public String getText(float percent) {
+                        int price = getPrice(percent);
+
+                        if (price == 0) {
+                            return getString(R.string.free);
+                        }
+
+                        return "$" + Integer.toString(price);
+                    }
+                });
+
+                addExperience.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        team.action.addExperience(experienceDetails.getText().toString(), getPrice(priceSlider.getPercent()));
+                        priceSlider.setPercent(0);
+                        experienceDetails.setText("");
+                    }
+                });
+            }
+
             RealmResults<Update> recentUpdates = team.realm.where(Update.class)
                     .equalTo("person.id", mPerson.getId())
                     .findAllSorted("date", false);
             updateList.setAdapter(new PersonUptoAdapter(getActivity(), recentUpdates));
         }
 
-        update();
+        update(true);
 
         updateList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -105,6 +165,61 @@ public class PersonUptoSlide extends Fragment {
         return view;
     }
 
+    private int getPrice(float percent) {
+        return ((int) (percent * 20) * 10);
+    }
+
+    private void updateBanner() {
+        if(mPerson == null || getActivity() == null)
+            return;
+
+        RealmResults<Offer> offers = team.realm.where(Offer.class).equalTo("person.id", mPerson.getId()).findAllSorted("price", true);
+
+        View offersView = personAbout.findViewById(R.id.offers);
+
+        boolean itsMe = team.auth.getUser().equals(mPerson.getId());
+
+        if(offers.size() < 1 && !itsMe) {
+            if(offersView.getVisibility() != View.GONE) {
+                RevealAnimation.collapse(offersView);
+            }
+
+            return;
+        }
+
+        if(describeExperience != null) {
+            describeExperience.setHint(offers.size() < 1 ? R.string.describe_the_experience : R.string.describe_another_experience);
+        }
+
+        View offersListHolder = offersView.findViewById(R.id.offersListHolder);
+        ListView offersList = (ListView) offersView.findViewById(R.id.offersList);
+
+        OfferAdapter offersAdapter = new OfferAdapter(getActivity(), offers);
+
+        offersList.setAdapter(offersAdapter);
+
+        offersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((SlideScreen) getActivity().findViewById(R.id.person_content)).setSlide(1);
+            }
+        });
+
+        if(offersView.getVisibility() == View.GONE) {
+            offersListHolder.setVisibility(View.GONE);
+            RevealAnimation.expand(offersView, 500);
+        }
+
+        if(offers.size() < 1 && itsMe) {
+            ((TextView) offersView.findViewById(R.id.offersText)).setText(R.string.offer_an_experience);
+        }
+        else {
+            ((TextView) offersView.findViewById(R.id.offersText)).setText(
+                    getResources().getQuantityString(R.plurals.offers, offers.size(), offers.size())
+            );
+        }
+    }
+
     public void refresh() {
         if(getActivity() == null || mPerson == null)
             return;
@@ -112,6 +227,17 @@ public class PersonUptoSlide extends Fragment {
         team.api.get(String.format(Config.PATH_PEOPLE_ID, mPerson.getId()), new Api.Callback() {
             @Override
             public void success(String response) {
+                //TODO temp for delete arch (send my id list, server says which are gone)
+                if(mPerson != null) {
+                    team.realm.beginTransaction();
+
+                    while(mPerson.getOffers().size() > 0) {
+                        mPerson.getOffers().get(0).removeFromRealm();
+                    }
+
+                    team.realm.commitTransaction();
+                }
+
                 team.things.put(com.queatz.snappy.things.Person.class, response);
                 update();
 
@@ -126,6 +252,21 @@ public class PersonUptoSlide extends Fragment {
     }
 
     public void update() {
+        update(false);
+    }
+
+    private void update(boolean initial) {
+        if(getActivity() == null) {
+            return;
+        }
+
+        personAbout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateBanner();
+            }
+        }, initial ? 500 : 0);
+
         ImageView profile = (ImageView) personAbout.findViewById(R.id.profile);
 
         if(mPerson != null) {

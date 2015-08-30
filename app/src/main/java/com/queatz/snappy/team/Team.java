@@ -62,7 +62,7 @@ public class Team implements Closeable {
             int prefAppVersion = preferences.getInt(Config.PREFERENCE_APP_VERSION, -1);
             int realAppVersion = pInfo.versionCode;
 
-            if (prefAppVersion < 9) {
+            if (prefAppVersion < 14) {
                 wipe();
             }
 

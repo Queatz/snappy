@@ -144,7 +144,7 @@ public class People implements Api.Path {
                 }
                 else if(Boolean.toString(false).equals(req.getParameter(Config.PARAM_FOLLOW))) {
                     if(person != null) {
-                        Document follow = Things.getService().follow.createOrUpdate(user, person.getId());
+                        Document follow = Things.getService().follow.get(user, person.getId());
 
                         if(follow != null) {
                             Things.getService().follow.stopFollowing(follow);

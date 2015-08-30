@@ -10,6 +10,8 @@ import com.queatz.snappy.service.Buy;
 import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
+import com.queatz.snappy.thing.Offer;
+import com.queatz.snappy.thing.Thing;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -102,7 +104,33 @@ public class Me implements Api.Path {
                     break;
                 }
                 else if(path.size() == 1) {
-                    if (Config.PATH_BUY.equals(path.get(0))) {
+                    if (Config.PATH_OFFERS.equals(path.get(0))) {
+                        String localId = req.getParameter(Config.PARAM_LOCAL_ID);
+                        String details = req.getParameter(Config.PARAM_DETAILS);
+                        int price = 0;
+
+                        try {
+                            price = Integer.parseInt(req.getParameter(Config.PARAM_PRICE));
+                        }
+                        catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (details != null && details.length() > 0) {
+                            Document offer = Things.getService().offer.create(user, details, price);
+
+                            if(offer != null) {
+                                JSONObject response = Things.getService().offer.toJson(offer, user, false);
+                                Util.localId(response, localId);
+
+                                resp.getWriter().write(response.toString());
+                            }
+                            else {
+                                throw new PrintingError(Api.Error.SERVER_ERROR, "offers - error");
+                            }
+                        }
+                    }
+                    else if (Config.PATH_BUY.equals(path.get(0))) {
                         resp.getWriter().write(Boolean.toString(Buy.getService().validate(user, req.getParameter(Config.PARAM_PURCHASE_DATA))));
                     } else if (Config.PATH_REGISTER_DEVICE.equals(path.get(0))) {
                         String deviceId = req.getParameter(Config.PARAM_DEVICE_ID);
@@ -137,7 +165,17 @@ public class Me implements Api.Path {
 
                 break;
             case DELETE:
+                if(path.size() == 2) {
+                    if (path.get(0).equals(Config.PATH_OFFERS)) {
+                        String offerId = path.get(1);
 
+                        Document offer = Search.getService().get(Search.Type.OFFER, offerId);
+
+                        if(offer != null && user.equals(offer.getOnlyField("person").getAtom())) {
+                            Things.getService().offer.delete(offer);
+                        }
+                    }
+                }
 
                 break;
             default:

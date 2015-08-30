@@ -21,6 +21,7 @@ public class Person extends RealmObject {
     private long infoFollowers;
     private long infoFollowing;
     private long infoHosted;
+    private RealmList<Offer> offers;
     private RealmList<Update> updates;
     private RealmList<Message> messages;
     private RealmList<Follow> followers;
@@ -104,6 +105,14 @@ public class Person extends RealmObject {
 
     public void setInfoHosted(long infoHosted) {
         this.infoHosted = infoHosted;
+    }
+
+    public RealmList<Offer> getOffers() {
+        return offers;
+    }
+
+    public void setOffers(RealmList<Offer> offers) {
+        this.offers = offers;
     }
 
     public RealmList<Update> getUpdates() {

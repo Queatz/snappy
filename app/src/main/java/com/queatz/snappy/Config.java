@@ -72,6 +72,10 @@ public class Config {
     public static final String PARAM_LONGITUDE = "longitude";
     public static final String PARAM_NAME = "name";
     public static final String PARAM_PHOTO = "photo";
+    public static final String PARAM_DETAILS = "details";
+    public static final String PARAM_PRICE = "price";
+    public static final String PARAM_DATE = "date";
+    public static final String PARAM_LOCATION = "location";
 
     public static final String PATH_API = "api";
     public static final String PATH_PARTIES = "parties";
@@ -91,6 +95,8 @@ public class Config {
     public static final String PATH_UPTO = "upto";
     public static final String PATH_HERE = "here";
     public static final String PATH_ME= "me";
+    public static final String PATH_ME_OFFERS= "me/offers";
+    public static final String PATH_ME_OFFERS_ID= "me/offers/%s";
     public static final String PATH_ME_UPTO= "me/upto";
     public static final String PATH_ME_BUY= "me/buy";
     public static final String PATH_ME_REGISTER_DEVICE = "me/register_device";

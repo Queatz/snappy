@@ -26,6 +26,7 @@ import com.queatz.snappy.things.Follow;
 import com.queatz.snappy.things.Join;
 import com.queatz.snappy.things.Location;
 import com.queatz.snappy.things.Message;
+import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.ui.EditText;
@@ -431,10 +432,10 @@ public class Action {
         if(group != null && !group.isEmpty())
             params.put("id", group);
 
-        params.put("name", name);
-        params.put("date", Util.dateToString(date));
-        params.put("location", location.getId() == null ? location.getJson() : location.getId());
-        params.put("details", details);
+        params.put(Config.PARAM_NAME, name);
+        params.put(Config.PARAM_DATE, Util.dateToString(date));
+        params.put(Config.PARAM_LOCATION, location.getId() == null ? location.getJson() : location.getId());
+        params.put(Config.PARAM_DETAILS, details);
 
         team.api.post(Config.PATH_PARTIES, params, new Api.Callback() {
             @Override
@@ -484,6 +485,51 @@ public class Action {
         });
 
         return true;
+    }
+
+    public void deleteExperience(@NonNull Offer offer) {
+        // TODO keep until delete is in place
+        try {
+            team.api.delete(String.format(Config.PATH_ME_OFFERS_ID, offer.getId()));
+
+            team.realm.beginTransaction();
+            offer.removeFromRealm();
+            team.realm.commitTransaction();
+        }
+        catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addExperience(@NonNull String details, int price) {
+        if(details.isEmpty()) {
+            return;
+        }
+
+        team.realm.beginTransaction();
+        Offer offer = team.realm.createObject(Offer.class);
+        offer.setId(Util.createLocalId());
+        offer.setDetails(details);
+        offer.setPrice(price);
+        offer.setPerson(team.auth.me());
+        team.realm.commitTransaction();
+
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_LOCAL_ID, offer.getId());
+        params.put(Config.PARAM_DETAILS, details);
+        params.put(Config.PARAM_PRICE, price);
+
+        team.api.post(Config.PATH_ME_OFFERS, params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                team.things.put(Offer.class, response);
+            }
+
+            @Override
+            public void fail(String response) {
+                Toast.makeText(team.context, "Couldn't add experience", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void changeAbout(@NonNull Activity activity) {
