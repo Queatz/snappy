@@ -154,7 +154,7 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
             }
             else {
                 action.setVisibility(View.VISIBLE);
-                action.setText(context.getText(R.string.mark_party_full));
+                action.setText(context.getText(party.getPeople().size() > 1 ? R.string.mark_party_full : R.string.close_party));
                 action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

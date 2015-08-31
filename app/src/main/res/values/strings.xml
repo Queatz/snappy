@@ -3,6 +3,7 @@
     <string name="whos_in">Who\'s in?</string>
     <string name="interested">I\'m Interested</string>
     <string name="mark_party_full">Mark Party Full</string>
+    <string name="close_party">Close Party</string>
     <string name="requested">Requested</string>
     <string name="host_party">Host Party</string>
     <string name="host_again">Host again</string>
