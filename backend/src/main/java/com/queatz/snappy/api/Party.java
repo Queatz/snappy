@@ -75,7 +75,7 @@ public class Party implements Api.Path {
 
                     if(party != null) {
                         String localId = req.getParameter(Config.PARAM_LOCAL_ID);
-                        Document join = Things.getService().join.createOrUpdate(user, partyId);
+                        Document join = Things.getService().join.create(user, partyId);
 
                         if(join != null) {
                             JSONObject response = Things.getService().join.toJson(join, user, false);

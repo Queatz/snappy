@@ -81,7 +81,7 @@ public class Join implements Thing {
         }
     }
 
-    public Document createOrUpdate(String user, String party) {
+    public Document create(String user, String party) {
         Document join = null;
         Results<ScoredDocument> results;
         results = Search.getService().index.get(Search.Type.JOIN).search("person = \"" + user + "\" AND party = \"" + party + "\"");
@@ -91,7 +91,7 @@ public class Join implements Thing {
             join = iterator.next();
 
         if(join != null && !Config.JOIN_STATUS_WITHDRAWN.equals(join.getOnlyField("status").getAtom()))
-            return join;
+            return null;
 
         Document.Builder documentBuild = Document.newBuilder();
 
