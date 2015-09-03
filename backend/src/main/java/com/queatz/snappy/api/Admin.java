@@ -38,7 +38,7 @@ public class Admin implements Api.Path {
                     String action = path.get(0);
                     String personEmail = path.get(1);
 
-                    if ("betatester".equals(action)) {
+                    if (Config.HOSTING_BETATESTER.equals(action)) {
                         Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PERSON).search("email = \"" + personEmail + "\"");
 
                         Iterator<ScoredDocument> resultsIterator = results.iterator();
@@ -58,7 +58,7 @@ public class Admin implements Api.Path {
                             }
 
                             if(subs == null || subs.isEmpty()) {
-                                Things.getService().person.updateSubscription(person, "betatester");
+                                Things.getService().person.updateSubscription(person, Config.HOSTING_BETATESTER);
                                 Push.getService().send(person.getId(), Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
                                 resp.getWriter().write(person.getOnlyField("email").getAtom() + " has been upgraded");
                             }

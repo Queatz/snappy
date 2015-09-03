@@ -9,6 +9,7 @@ public class Config {
     public static final String QUEUE_WORKER_NAME = "pushes";
 
     public static final boolean IN_BETA = false;
+    public static final boolean PUBLIC_BUY = true;
     public static final int TEMPORARY_API_LIMIT = 100;
 
     public static final int SEARCH_DISTANCE = 1609 * 7;
@@ -21,6 +22,8 @@ public class Config {
     public static final int SEARCH_PEOPLE_MAX_DISTANCE = 804;
     public static final int SEARCH_LOCATIONS_MAX_HERE = 10;
     public static final int OFFER_MAX_PRICE = 200;
+
+    public static final String HOSTING_BETATESTER = "betatester";
 
     public static final String HOSTING_ENABLED_FALSE = Boolean.toString(false);
     public static final String HOSTING_ENABLED_AVAILABLE = "available";

@@ -1,5 +1,6 @@
 package com.queatz.snappy.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -107,9 +108,10 @@ public class ActionBar extends FrameLayout {
         mUpButton.setOnClickListener(action);
     }
 
-    public void setLeftContent(View.OnLongClickListener action) {
+    public void setLeftContent(String action) {
         mUpButton.setVisibility(View.VISIBLE);
-        mUpButton.setOnLongClickListener(action);
+        mUpButton.setTag(action);
+        ((Activity) getContext()).registerForContextMenu(mRightContent);
     }
 
     public void setRightContent(View.OnClickListener action) {
@@ -117,9 +119,10 @@ public class ActionBar extends FrameLayout {
         mRightContent.setOnClickListener(action);
     }
 
-    public void setRightContent(View.OnLongClickListener action) {
+    public void setRightContent(String action) {
         mRightContent.setVisibility(View.VISIBLE);
-        mRightContent.setOnLongClickListener(action);
+        mRightContent.setTag(action);
+        ((Activity) getContext()).registerForContextMenu(mRightContent);
     }
 
     public void setAdapter(TabAdapter tabAdapter) {

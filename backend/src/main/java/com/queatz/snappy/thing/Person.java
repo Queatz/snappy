@@ -234,8 +234,13 @@ public class Person implements Thing {
                 }
             }
 
-            if(!subscribed && Config.IN_BETA) {
-                documentBuild.addField(Field.newBuilder().setName("subscription").setAtom("betatester"));
+            if(!subscribed) {
+                if(Config.IN_BETA) {
+                    documentBuild.addField(Field.newBuilder().setName("subscription").setAtom(Config.HOSTING_BETATESTER));
+                }
+                else if(Config.PUBLIC_BUY) {
+                    documentBuild.addField(Field.newBuilder().setName("subscription").setAtom(Config.HOSTING_ENABLED_AVAILABLE));
+                }
             }
         }
         catch (JSONException e) {

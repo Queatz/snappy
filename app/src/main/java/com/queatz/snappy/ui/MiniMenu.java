@@ -64,24 +64,7 @@ public class MiniMenu extends FrameLayout {
         findViewById(R.id.action_host).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
-                    team.view.show((android.app.Activity) getContext(), HostParty.class, null);
-                }
-                else {
-                    team.buy.callback(new Buy.PurchaseCallback() {
-                        @Override
-                        public void onSuccess() {
-                            team.view.show((android.app.Activity) getContext(), HostParty.class, null);
-                        }
-
-                        @Override
-                        public void onError() {
-                            Toast.makeText(team.context, team.context.getString(R.string.buy_didnt_work), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                    team.buy.buy((Activity) getContext());
-                }
+                team.view.show((android.app.Activity) getContext(), HostParty.class, null);
                 show(false);
             }
         });
@@ -116,6 +99,8 @@ public class MiniMenu extends FrameLayout {
     }
 
     public void show() {
+        final Team team = ((MainApplication) getContext().getApplicationContext()).team;
+        findViewById(R.id.action_host).setVisibility(Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled()) ? View.VISIBLE : View.GONE);
         show(getVisibility() == View.GONE);
     }
 

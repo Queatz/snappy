@@ -280,18 +280,9 @@ public class Auth {
     }
 
     public void logout(@NonNull final Activity activity) {
-        new AlertDialog.Builder(activity)
-                .setTitle(R.string.logout)
-                .setPositiveButton(R.string.logout, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        setActivity(activity);
-                        reauth();
-                        activity.finish();
-                    }
-                })
-                .setNegativeButton(R.string.cancel, null)
-                .show();
+        setActivity(activity);
+        reauth();
+        activity.finish();
     }
 
     public void callback(Callback callback) {

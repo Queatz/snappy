@@ -62,13 +62,7 @@ public class Main extends Activity {
 
         final Activity activity = this;
 
-        mActionBar.setRightContent(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                team.auth.logout(activity);
-                return true;
-            }
-        });
+        mActionBar.setRightContent("profile menu");
 
         team.buy.callback(new Buy.PurchaseCallback() {
             @Override
