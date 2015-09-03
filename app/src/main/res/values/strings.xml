@@ -75,6 +75,7 @@
     <string name="add_experience">Add Experience</string>
     <string name="stop_offering">Stop offering</string>
     <string name="describe_another_experience">Describe another experience</string>
+    <string name="information">\?</string>
 
     <plurals name="people_near_place">
         <item quantity="one">%1$s person near %2$s</item>

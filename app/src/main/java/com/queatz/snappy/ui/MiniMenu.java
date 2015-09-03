@@ -3,6 +3,7 @@ package com.queatz.snappy.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +78,18 @@ public class MiniMenu extends FrameLayout {
                 team.action.openProfile((android.app.Activity) getContext(), person);
 
                 show(false);
+            }
+        });
+
+        findViewById(R.id.action_information).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View view = View.inflate(getContext(), R.layout.information, null);
+
+                new AlertDialog.Builder(getContext())
+                        .setView(view)
+                        .setPositiveButton(R.string.ok, null)
+                        .show();
             }
         });
 
