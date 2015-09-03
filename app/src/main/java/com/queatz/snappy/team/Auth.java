@@ -224,7 +224,7 @@ public class Auth {
         mEmail = null;
         mAuthToken = null;
         mGoogleAuthToken = null;
-        mSocialMode = Config.SOCIAL_MODE_OFF;
+        mSocialMode = Config.SOCIAL_MODE_FRIENDS;
         save();
 
         if(isLogout)
