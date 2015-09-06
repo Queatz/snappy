@@ -79,4 +79,17 @@
 
     </LinearLayout>
 
+    <com.queatz.snappy.ui.TextView
+        android:id="@+id/action_bounties"
+        android:clickable="true"
+        android:background="@color/orange"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:padding="8dp"
+        android:textAlignment="center"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:text="@string/post_a_bounty" />
+
 </LinearLayout>

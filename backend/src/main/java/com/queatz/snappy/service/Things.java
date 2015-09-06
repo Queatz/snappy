@@ -10,6 +10,7 @@ import com.queatz.snappy.thing.Offer;
 import com.queatz.snappy.thing.Party;
 import com.queatz.snappy.thing.Person;
 import com.queatz.snappy.thing.Update;
+import com.queatz.snappy.thing.Bounty;
 
 /**
  * Created by jacob on 2/15/15.
@@ -34,6 +35,7 @@ public class Things {
     public Contact contact;
     public Buy buy;
     public Offer offer;
+    public Bounty bounty;
 
     public Things() {
         party = new Party(this);
@@ -46,5 +48,6 @@ public class Things {
         buy = new Buy(this);
         update = new Update(this);
         offer = new Offer(this);
+        bounty = new Bounty(this);
     }
 }

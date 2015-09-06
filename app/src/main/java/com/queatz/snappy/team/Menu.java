@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.HostParty;
+import com.queatz.snappy.things.Bounty;
 import com.queatz.snappy.things.Follow;
 import com.queatz.snappy.things.Location;
 import com.queatz.snappy.things.Offer;
@@ -55,6 +56,9 @@ public class Menu {
         else if(object instanceof Offer) {
             menu.add(R.string.stop_offering);
         }
+        else if(object instanceof Bounty) {
+            menu.add(R.string.cancel);
+        }
     }
 
     public boolean choose(final Activity activity, Object object, final MenuItem item) {
@@ -99,6 +103,11 @@ public class Menu {
         else if(object instanceof Offer) {
             if(team.context.getString(R.string.stop_offering).equals(item.getTitle())) {
                 team.action.deleteExperience((Offer) object);
+            }
+        }
+        else if(object instanceof Bounty) {
+            if(team.context.getString(R.string.cancel).equals(item.getTitle())) {
+                team.action.deleteBounty((Bounty) object);
             }
         }
 

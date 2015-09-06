@@ -16,12 +16,17 @@ public class Config {
     public static final int SEARCH_MINIMUM = 10;
     public static final int SEARCH_MAXIMUM = 30;
     public static final int SEARCH_MAX_VISIBILITY = 1609 * 300;
+    public static final int BOUNTIES_MAX_VISIBILITY = 1609 * 2;
+    public static final int BOUNTIES_MAX_AGE = 1000 * 60 * 60 * 24 * 7;
+    public static final int BOUNTIES_MAXIMUM = 100;
     public static final int SUGGESTION_LIMIT = 5;
     public static final int SUGGESTION_MAX_DISTANCE = 1609 * 7;
     public static final int SEARCH_PEOPLE_MAX_NEAR_HERE = 500;
     public static final int SEARCH_PEOPLE_MAX_DISTANCE = 804;
     public static final int SEARCH_LOCATIONS_MAX_HERE = 10;
     public static final int OFFER_MAX_PRICE = 200;
+    public static final int BOUNTY_MIN_PRICE = 10;
+    public static final int BOUNTY_MAX_PRICE = 200;
 
     public static final String HOSTING_BETATESTER = "betatester";
 
@@ -51,11 +56,15 @@ public class Config {
     public static final String JOIN_STATUS_OUT = "out";
     public static final String JOIN_STATUS_WITHDRAWN = "withdrawn";
 
+    public static final String BOUNTY_STATUS_OPEN = "open";
+    public static final String BOUNTY_STATUS_CLAIMED = "claimed";
+
     public static final String PARAM_ABOUT = "about";
     public static final String PARAM_EMAIL = "email";
     public static final String PARAM_AUTH = "auth";
     public static final String PARAM_LOCATION = "location";
     public static final String PARAM_ADDRESS = "address";
+    public static final String PARAM_CLAIM = "claim";
     public static final String PARAM_PHOTO = "photo";
     public static final String PARAM_NAME = "name";
     public static final String PARAM_DETAILS = "details";
@@ -88,6 +97,8 @@ public class Config {
     public static final String refreshToken = "1/GBpu5P7H3RGjlaNnVgoKMqE-GrEBbLAJHjEPpFzK5I4";
 
     public static final String PATH_ABOUT = "about";
+    public static final String PATH_BOUNTIES = "bounties";
+    public static final String PATH_BOUNTY = "bounty";
     public static final String PATH_API = "api";
     public static final String PATH_PARTY = "party";
     public static final String PATH_PARTIES = "parties";

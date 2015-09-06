@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.queatz.snappy.Config;
@@ -88,13 +90,16 @@ public class Person extends Activity {
 
             @Override
             public void onSlideChange(int slide) {
-                if(mPerson != null && slide == 1 && mIsActive) {
-                    team.action.setSeen(mPerson);
-                    team.push.clear("person/" + mPerson.getId() + "/messages");
-                    team.view.setTop("person/" + mPerson.getId() + "/messages");
-                }
-                else {
-                    team.view.clearTop("person/" + mPerson.getId() + "/messages");
+                getWindow().setSoftInputMode(slide == 1 ? WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE : WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+                if(mPerson != null) {
+                    if (slide == 1 && mIsActive) {
+                        team.action.setSeen(mPerson);
+                        team.push.clear("person/" + mPerson.getId() + "/messages");
+                        team.view.setTop("person/" + mPerson.getId() + "/messages");
+                    } else {
+                        team.view.clearTop("person/" + mPerson.getId() + "/messages");
+                    }
                 }
 
                 mActionBar.selectPage(slide);
@@ -108,14 +113,24 @@ public class Person extends Activity {
             }
         });
 
-        onNewIntent(getIntent());
+        if(getIntent() != null) {
+            onNewIntent(getIntent());
+        }
+        else {
+            mActionBar.reslove();
+        }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         String show = intent.getStringExtra("show");
 
-        mActionBar.setPage(show == null || "upto".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
+        if(show == null) {
+            mActionBar.reslove();
+            return;
+        }
+
+        mActionBar.setPage("upto".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
     }
 
     @Override
@@ -142,7 +157,7 @@ public class Person extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        team.action.onActionResult(this, requestCode, resultCode, data);
+        team.onActivityResult(this, requestCode, resultCode, data);
     }
 
     @Override

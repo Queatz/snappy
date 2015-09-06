@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:dividerHeight="8dp"
-        android:divider="@android:color/transparent"
+        android:divider="@null"
         android:footerDividersEnabled="true"/>
 
 </LinearLayout>

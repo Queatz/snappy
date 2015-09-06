@@ -12,7 +12,6 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
@@ -21,6 +20,7 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.activity.PersonList;
+import com.queatz.snappy.things.Bounty;
 import com.queatz.snappy.things.Contact;
 import com.queatz.snappy.things.Follow;
 import com.queatz.snappy.things.Join;
@@ -31,7 +31,6 @@ import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.ui.MiniMenu;
-import com.queatz.snappy.ui.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
@@ -83,6 +82,10 @@ public class Action {
         else {
             team.realm.cancelTransaction();
         }
+    }
+
+    public void openBounties(@NonNull Activity from) {
+        team.view.show(from, com.queatz.snappy.activity.Bounties.class, null);
     }
 
     public void openMessages(@NonNull Activity from, @NonNull final Person person) {
@@ -514,6 +517,119 @@ public class Action {
         });
     }
 
+    public void deleteBounty(@NonNull Bounty bounty) {
+        try {
+            team.api.delete(String.format(Config.PATH_BOUNTY_ID, bounty.getId()));
+
+            team.realm.beginTransaction();
+            bounty.removeFromRealm();
+            team.realm.commitTransaction();
+        }
+        catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void postBounty(@NonNull String details, int price) {
+        if(details.isEmpty()) {
+            return;
+        }
+
+        team.realm.beginTransaction();
+        Bounty bounty = team.realm.createObject(Bounty.class);
+        bounty.setId(Util.createLocalId());
+        bounty.setDetails(details);
+        bounty.setPrice(price);
+        bounty.setStatus(Config.BOUNTY_STATUS_OPEN);
+        bounty.setPosted(new Date());
+        bounty.setPoster(team.auth.me());
+        team.realm.commitTransaction();
+
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_LOCAL_ID, bounty.getId());
+        params.put(Config.PARAM_DETAILS, details);
+        params.put(Config.PARAM_PRICE, price);
+
+        team.api.post(Config.PATH_BOUNTIES, params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                team.things.put(Bounty.class, response);
+            }
+
+            @Override
+            public void fail(String response) {
+                Toast.makeText(team.context, "Couldn't post bounty", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void claimBounty(@NonNull final Activity activity, @NonNull final Bounty bounty) {
+        boolean isMine = false;
+
+        for (Person person : bounty.getPeople()) {
+            if(team.auth.me().getId().equals(person.getId())) {
+                isMine = true;
+                break;
+            }
+        }
+
+        if(isMine) {
+            new AlertDialog.Builder(activity)
+                    .setMessage(R.string.you_claimed_this_bounty)
+                    .setPositiveButton(R.string.message, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            openMessages(activity, bounty.getPoster());
+                        }
+                    })
+                    .show();
+
+            return;
+        }
+
+        new AlertDialog.Builder(activity)
+                .setMessage(R.string.claim_this_bounty)
+                .setNeutralButton(R.string.message, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        openMessages(activity, bounty.getPoster());
+                    }
+                })
+                .setPositiveButton(R.string.claim, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        team.realm.beginTransaction();
+                        bounty.setPosted(new Date());
+                        bounty.setStatus(Config.BOUNTY_STATUS_CLAIMED);
+                        bounty.getPeople().add(team.auth.me());
+                        team.realm.commitTransaction();
+                        
+                        RequestParams params = new RequestParams();
+                        params.put(Config.PARAM_CLAIM, true);
+
+                        team.api.post(String.format(Config.PATH_BOUNTY_ID, bounty.getId()), params, new Api.Callback() {
+                            @Override
+                            public void success(String response) {
+                                if (response != null && Boolean.valueOf(response)) {
+                                    Toast.makeText(team.context, "Bounty claimed", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(team.context, "Bounty couldn't be claimed", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void fail(String response) {
+                                // TODO revert claimed state
+                                Toast.makeText(team.context, "Bounty couldn't be claimed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        openMessages(activity, bounty.getPoster());
+                    }
+                })
+                .show();
+    }
+
     public void changeAbout(@NonNull Activity activity) {
         final EditText editText = new EditText(activity);
         int p = (int) Util.px(16);
@@ -580,7 +696,7 @@ public class Action {
         activity.startActivityForResult(intent, Config.REQUEST_CODE_CHOOSER);
     }
 
-    public void onActionResult(Activity activity, int requestCode, int resultCode, Intent intent) {
+    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
         switch (requestCode) {
             case Config.REQUEST_CODE_CHOOSER:
                 if(resultCode == Activity.RESULT_OK) {

@@ -10,6 +10,8 @@ import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.appengine.tools.cloudstorage.RetryParams;
 import com.queatz.snappy.SnappyServlet;
 import com.queatz.snappy.api.Admin;
+import com.queatz.snappy.api.Bounties;
+import com.queatz.snappy.api.Bounty;
 import com.queatz.snappy.api.Example;
 import com.queatz.snappy.api.Follow;
 import com.queatz.snappy.api.Here;
@@ -80,6 +82,8 @@ public class Api {
         paths.put(Config.PATH_LOCATIONS, new Locations(this));
         paths.put(Config.PATH_LOCATION, new Location(this));
         paths.put(Config.PATH_HERE, new Here(this));
+        paths.put(Config.PATH_BOUNTIES, new Bounties(this));
+        paths.put(Config.PATH_BOUNTY, new Bounty(this));
 
         mGCS = GcsServiceFactory.createGcsService(RetryParams.getDefaultInstance());
         mAppIdentityService = AppIdentityServiceFactory.getAppIdentityService();

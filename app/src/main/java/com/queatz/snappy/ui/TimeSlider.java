@@ -42,6 +42,9 @@ public class TimeSlider extends RelativeLayout {
     }
 
     private void init(AttributeSet attrs, int defStyle) {
+        if(isInEditMode())
+            return;
+
         mHandle = new TextView(getContext());
         mTrack = new View(getContext());
 

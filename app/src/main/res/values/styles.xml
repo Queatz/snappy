@@ -5,4 +5,8 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="colorPrimaryDark">@color/red</item>
     </style>
+
+    <style name="BountiesTheme" parent="AppTheme">
+        <item name="colorPrimaryDark">@color/darkorange</item>
+    </style>
 </resources>

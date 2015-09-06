@@ -104,9 +104,7 @@ public class Here implements Api.Path {
         ).build();
 
         QueryOptions queryOptions = QueryOptions.newBuilder().setSortOptions(sortOptions).setLimit(Config.SEARCH_MAXIMUM).build();
-
         Query query = Query.newBuilder().setOptions(queryOptions).build(queryString);
-
         Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PARTY).search(query);
 
         for (ScoredDocument result : results) {
@@ -118,6 +116,24 @@ public class Here implements Api.Path {
                 if (Util.distance(latitude, longitude, point.getLatitude(), point.getLongitude()) > Config.SEARCH_DISTANCE)
                     break;
             }
+        }
+
+        return r;
+    }
+
+    private JSONArray fetchBounties(String user, double latitude, double longitude) {
+        JSONArray r = new JSONArray();
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        String queryString = "distance(latlng, geopoint(" + latitude + ", " + longitude + ")) < " + Config.BOUNTIES_MAX_VISIBILITY + " AND posted >= \"" + format.format(new Date(new Date().getTime() - Config.BOUNTIES_MAX_AGE)) + "\"";
+
+        QueryOptions queryOptions = QueryOptions.newBuilder().setLimit(Config.BOUNTIES_MAXIMUM).build();
+        Query query = Query.newBuilder().setOptions(queryOptions).build(queryString);
+        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.BOUNTY).search(query);
+
+        for (ScoredDocument result : results) {
+            r.put(Things.getService().bounty.toJson(result, user, false));
         }
 
         return r;
@@ -145,6 +161,7 @@ public class Here implements Api.Path {
                     jsonObject.put("parties", fetchParties(user, latitude, longitude));
                     jsonObject.put("people", fetchPeople(user, latitude, longitude));
                     jsonObject.put("locations", fetchLocations(user, latitude, longitude));
+                    jsonObject.put("bounties", fetchBounties(user, latitude, longitude));
                 }
                 catch (JSONException e) {
                     e.printStackTrace();

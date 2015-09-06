@@ -4,7 +4,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:background="@color/darkorange">
 
     <com.queatz.snappy.ui.EditText
         android:id="@+id/details"
@@ -13,7 +14,7 @@
         android:padding="8dp"
         android:textColor="@color/white"
         android:background="@null"
-        android:hint="@string/describe_the_experience"
+        android:hint="@string/describe_the_bounty"
         android:inputType="textShortMessage|textCapSentences|textMultiLine"
         android:textColorHint="@color/whiteout"
         android:textSize="18sp" />
@@ -40,11 +41,11 @@
         android:gravity="right">
 
         <Button style="?android:attr/borderlessButtonStyle"
-            android:id="@+id/addExperience"
+            android:id="@+id/postBounty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:text="@string/add_experience"/>
+            android:text="@string/post_bounty"/>
 
     </LinearLayout>
 

@@ -1,6 +1,8 @@
 package com.queatz.snappy.team;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -31,6 +33,7 @@ public class Team implements Closeable {
     public Local local;
     public Buy buy;
     public Menu menu;
+    public Here here;
 
     public Team(Context c) {
         context = c;
@@ -46,6 +49,7 @@ public class Team implements Closeable {
         push = new Push(this);
         local = new Local(this);
         menu = new Menu(this);
+        here = new Here(this);
     }
 
     public void close() {
@@ -62,7 +66,7 @@ public class Team implements Closeable {
             int prefAppVersion = preferences.getInt(Config.PREFERENCE_APP_VERSION, -1);
             int realAppVersion = pInfo.versionCode;
 
-            if (prefAppVersion < 14) {
+            if (prefAppVersion < 16) {
                 wipe();
             }
 
@@ -91,5 +95,11 @@ public class Team implements Closeable {
                 dbCall.post();
             }
         }.execute();
+    }
+
+    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
+        buy.onActivityResult(activity, requestCode, resultCode, data);
+        location.onActivityResult(requestCode, resultCode, data);
+        action.onActivityResult(activity, requestCode, resultCode, data);
     }
 }

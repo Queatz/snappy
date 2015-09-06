@@ -58,6 +58,7 @@ public class Config {
     public static final String PARAM_EMAIL = "email";
     public static final String PARAM_JOIN = "join";
     public static final String PARAM_CANCEL_JOIN = "cancel_join";
+    public static final String PARAM_CLAIM = "claim";
     public static final String PARAM_FULL = "full";
     public static final String PARAM_ACCEPT = "accept";
     public static final String PARAM_HIDE = "hide";
@@ -78,6 +79,8 @@ public class Config {
     public static final String PARAM_LOCATION = "location";
 
     public static final String PATH_API = "api";
+    public static final String PATH_BOUNTIES = "bounties";
+    public static final String PATH_BOUNTY_ID = "bounty/%s";
     public static final String PATH_PARTIES = "parties";
     public static final String PATH_PARTY = "party";
     public static final String PATH_PARTY_ID = "party/%s";
@@ -107,6 +110,9 @@ public class Config {
     public static final String JOIN_STATUS_IN = "in";
     public static final String JOIN_STATUS_OUT = "out";
     public static final String JOIN_STATUS_WITHDRAWN = "withdrawn";
+
+    public static final String BOUNTY_STATUS_OPEN = "open";
+    public static final String BOUNTY_STATUS_CLAIMED = "claimed";
 
     public static final String SOCIAL_MODE_OFF = "off";
     public static final String SOCIAL_MODE_FRIENDS = "friends";

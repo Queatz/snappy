@@ -10,16 +10,19 @@ import android.view.View;
 import android.view.animation.AnticipateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.HostParty;
-import com.queatz.snappy.team.Buy;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Bounty;
 import com.queatz.snappy.things.Person;
+
+import java.util.Date;
+
+import io.realm.RealmQuery;
 
 /**
  * Created by jacob on 1/3/15.
@@ -61,6 +64,7 @@ public class MiniMenu extends FrameLayout {
         final Team team = ((MainApplication) getContext().getApplicationContext()).team;
 
         updateSocialModeText(team.auth.getSocialMode());
+        updateBountiesText();
 
         findViewById(R.id.action_host).setOnClickListener(new OnClickListener() {
             @Override
@@ -75,7 +79,7 @@ public class MiniMenu extends FrameLayout {
             public void onClick(View view) {
                 Person person = team.things.get(Person.class, team.auth.getUser());
 
-                team.action.openProfile((android.app.Activity) getContext(), person);
+                team.action.openProfile((Activity) getContext(), person);
 
                 show(false);
             }
@@ -102,6 +106,43 @@ public class MiniMenu extends FrameLayout {
                 updateSocialModeText(socialMode);
             }
         });
+
+        findViewById(R.id.action_bounties).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.action.openBounties((Activity) getContext());
+                show(false);
+            }
+        });
+    }
+
+    private void updateBountiesText() {
+        final Team team = ((MainApplication) getContext().getApplicationContext()).team;
+
+        RealmQuery<Bounty> query = team.realm.where(Bounty.class).greaterThan("posted", new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7))
+                .beginGroup()
+                    .notEqualTo("status", Config.BOUNTY_STATUS_CLAIMED)
+                    .or()
+                    .equalTo("poster.id", team.auth.getUser())
+                    .or()
+                    .equalTo("people.id", team.auth.getUser())
+                .endGroup();
+
+        long bounties = query.count();
+
+        findViewById(R.id.action_bounties).setVisibility(View.VISIBLE);
+
+        if(0 == bounties) {
+            if(Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
+                ((TextView) findViewById(R.id.action_bounties)).setText(getResources().getString(R.string.post_a_bounty));
+            }
+            else {
+                findViewById(R.id.action_bounties).setVisibility(View.GONE);
+            }
+        }
+        else {
+            ((TextView) findViewById(R.id.action_bounties)).setText(getResources().getQuantityString(R.plurals.bounties, (int) bounties, bounties));
+        }
     }
 
     private void updateSocialModeText(String socialMode) {
@@ -122,6 +163,8 @@ public class MiniMenu extends FrameLayout {
         setPivotY(0);
 
         if(show) {
+            updateBountiesText();
+
             setVisibility(View.VISIBLE);
             setScaleY(0);
             animate()

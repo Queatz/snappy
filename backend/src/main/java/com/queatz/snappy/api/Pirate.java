@@ -41,26 +41,10 @@ public class Pirate implements Api.Path {
     @Override
     public void call(ArrayList<String> path, String user, HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException, PrintingError {
         Query query = Query.newBuilder().setOptions(QueryOptions.newBuilder().setLimit(1000).build()).build("distance(latlng, geopoint(0, 0)) > 0");
-        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PERSON).search(query);
+        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.BOUNTY).search(query);
 
         for(ScoredDocument doc : results) {
-            resp.getWriter().write(doc.getOnlyField("about").getText() + " | ");
-            if(doc.getOnlyField("about").getText() == null) {
-                Document.Builder documentBuild = Document.newBuilder()
-                        .setId(doc.getId())
-                        .addField(Field.newBuilder().setName("about").setText(doc.getOnlyField("about").getAtom()));
-
-                Util.copyIn(documentBuild, doc, "about");
-
-                Document document = documentBuild.build();
-
-                try {
-                    Search.getService().index.get(Search.Type.PERSON).put(document);
-                } catch (PutException e) {
-                    e.printStackTrace();
-                }
-
-            }
+            Search.getService().index.get(Search.Type.BOUNTY).delete(doc.getId());
         }
 
         resp.getWriter().write("yarr!");

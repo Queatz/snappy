@@ -3,11 +3,14 @@ package com.queatz.snappy.fragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
@@ -60,6 +63,18 @@ public class PersonMessagesSlide extends Fragment {
 
             final EditText writeMessage = (EditText) view.findViewById(R.id.writeMessage);
             final View sendButton = view.findViewById(R.id.sendButton);
+
+            writeMessage.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    switch (actionId) {
+                        case EditorInfo.IME_ACTION_SEND:
+                            sendButton.callOnClick();
+                    }
+
+                    return true;
+                }
+            });
 
             sendButton.setOnClickListener(new View.OnClickListener() {
                 @Override

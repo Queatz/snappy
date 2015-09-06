@@ -207,4 +207,8 @@ public class ActionBar extends FrameLayout {
         lp.leftMargin = ((View) mTabBar.getParent()).getLeft() + (int) (x1 * (1.0f - offset) + x2 * offset);
         mSlider.setLayoutParams(lp);
     }
+
+    public void reslove() {
+        setPage((int) mSlidePosition);
+    }
 }

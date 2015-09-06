@@ -31,4 +31,6 @@
 
     <color name="snappyGreen">#a9ff13</color>
     <color name="snappyTan">#ffeea6</color>
+    <color name="orange">#FF9800</color>
+    <color name="darkorange">#EF6C00</color>
 </resources>

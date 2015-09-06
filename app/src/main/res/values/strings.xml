@@ -76,6 +76,14 @@
     <string name="stop_offering">Stop offering</string>
     <string name="describe_another_experience">Describe another experience</string>
     <string name="information">\?</string>
+    <string name="bounties">%1$s bounties</string>
+    <string name="post_a_bounty">Post a bounty</string>
+    <string name="post_bounty">Post bounty</string>
+    <string name="describe_the_bounty">Describe bounty</string>
+    <string name="claim">Claim</string>
+    <string name="claim_this_bounty">Claim this bounty?</string>
+    <string name="message">Message</string>
+    <string name="you_claimed_this_bounty">You already claimed this bounty</string>
 
     <plurals name="people_near_place">
         <item quantity="one">%1$s person near %2$s</item>
@@ -120,6 +128,11 @@
     <plurals name="offers">
         <item quantity="one">%1$s offer</item>
         <item quantity="other">%1$s offers</item>
+    </plurals>
+
+    <plurals name="bounties">
+        <item quantity="one">%1$s bounty</item>
+        <item quantity="other">%1$s bounties</item>
     </plurals>
 
 </resources>

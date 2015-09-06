@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.queatz.snappy.ui.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/orange">
+
+    <ListView
+        android:id="@+id/bounties"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:dividerHeight="0dp"
+        android:divider="@null" />
+
+</com.queatz.snappy.ui.SwipeRefreshLayout>

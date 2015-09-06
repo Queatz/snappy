@@ -60,8 +60,6 @@ public class Main extends Activity {
             }
         });
 
-        final Activity activity = this;
-
         mActionBar.setRightContent("profile menu");
 
         team.buy.callback(new Buy.PurchaseCallback() {
@@ -124,7 +122,7 @@ public class Main extends Activity {
             onNewIntent(getIntent());
         }
         else {
-            mActionBar.setPage(0);
+            mActionBar.reslove();
         }
     }
 
@@ -139,7 +137,12 @@ public class Main extends Activity {
         Boolean showPostHostMessage = intent.getBooleanExtra("show_post_host_message", false);
         String show = intent.getStringExtra("show");
 
-        mActionBar.setPage(show == null || "parties".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
+        if(show != null) {
+            mActionBar.setPage("parties".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
+        }
+        else  {
+            mActionBar.reslove();
+        }
 
         if(showPostHostMessage) {
             final String pref = Config.PREFERENCE_HOST_PARTY_SCREEN_SHOWN + "." + team.auth.getUser();
@@ -161,9 +164,7 @@ public class Main extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        team.buy.onActivityResult(this, requestCode, resultCode, data);
-        team.location.onActivityResult(requestCode, resultCode, data);
-        team.action.onActionResult(this, requestCode, resultCode, data);
+        team.onActivityResult(this, requestCode, resultCode, data);
     }
 
     @Override

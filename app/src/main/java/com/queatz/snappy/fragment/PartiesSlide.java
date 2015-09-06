@@ -22,7 +22,9 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.adapter.PartyAdapter;
 import com.queatz.snappy.adapter.PeopleNearHereAdapter;
 import com.queatz.snappy.team.Api;
+import com.queatz.snappy.team.Here;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Bounty;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.ui.RevealAnimation;
@@ -219,54 +221,16 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         if(getActivity() == null)
             return;
 
-        team.location.get(getActivity(), new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
+        team.here.update(getActivity(), mRefresh, new Here.Callback() {
             @Override
-            public void onLocationFound(final Location location) {
-                RequestParams params = new RequestParams();
-                params.put("latitude", location.getLatitude());
-                params.put("longitude", location.getLongitude());
+            public void onSuccess(RealmList<Person> people, RealmList<com.queatz.snappy.things.Location> locations, RealmList<Party> parties, RealmList<Bounty> bounties) {
+                if(locations != null && people != null) {
+                    updateBanner(people, locations);
+                }
 
-                team.api.get(Config.PATH_HERE, params, new Api.Callback() {
-                    @Override
-                    public void success(String response) {
-                        mRefresh.setRefreshing(false);
-
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-
-                            RealmList<com.queatz.snappy.things.Location> locations = null;
-                            RealmList<Person> people = null;
-
-                            if(jsonObject.has("locations")) {
-                                locations = team.things.putAll(com.queatz.snappy.things.Location.class, jsonObject.getJSONArray("locations"));
-                            }
-
-                            if(jsonObject.has("people")) {
-                                people = team.things.putAll(Person.class, jsonObject.getJSONArray("people"));
-                            }
-
-                            updateBanner(people, locations);
-
-                            if(jsonObject.has("parties")) {
-                                team.things.putAll(Party.class, jsonObject.getJSONArray("parties"));
-                                update();
-                            }
-                        }
-                        catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void fail(String response) {
-                        mRefresh.setRefreshing(false);
-                    }
-                });
-            }
-
-            @Override
-            public void onLocationUnavailable() {
-                mRefresh.setRefreshing(false);
+                if(parties != null) {
+                    update();
+                }
             }
         });
     }
