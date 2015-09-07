@@ -57,7 +57,7 @@ public class Menu {
             menu.add(R.string.stop_offering);
         }
         else if(object instanceof Bounty) {
-            menu.add(R.string.cancel);
+            menu.add(R.string.cancel_bounty);
         }
     }
 

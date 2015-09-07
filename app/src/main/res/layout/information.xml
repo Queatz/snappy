@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text"
-            android:text="Bounties are small projects.  They don't necessarily have a specified location or time, and you may not need to meet the requester.  Bounties expire after one week." />
+            android:text="Bounties are small things to do that take 1 day or less.  They don't necessarily have a specified location or time, and you may not need to meet the requester.  Bounties expire after one week." />
 
         <com.queatz.snappy.ui.TextView
             android:layout_width="match_parent"
@@ -82,7 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text"
-            android:text="Social Mode determines who you want to get updates from." />
+            android:text="Social Mode determines who you want to get notifications from." />
 
         <com.queatz.snappy.ui.TextView
             android:layout_width="match_parent"
@@ -97,7 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text"
-            android:text="People who follow you will get notified when you host a party." />
+            android:text="People who follow you will get notified when you host a party. Accordingly, you will get notified when people you follow throw a party." />
 
     </LinearLayout>
 

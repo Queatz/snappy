@@ -519,7 +519,19 @@ public class Action {
 
     public void deleteBounty(@NonNull Bounty bounty) {
         try {
-            team.api.delete(String.format(Config.PATH_BOUNTY_ID, bounty.getId()));
+            team.api.delete(String.format(Config.PATH_BOUNTY_ID, bounty.getId()), new Api.Callback() {
+                @Override
+                public void success(String response) {
+                    if(response != null && !Boolean.valueOf(response)) {
+                        Toast.makeText(team.context, "Couldn't cancel bounty", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void fail(String response) {
+                    Toast.makeText(team.context, "Couldn't cancel bounty", Toast.LENGTH_SHORT).show();
+                }
+            });
 
             team.realm.beginTransaction();
             bounty.removeFromRealm();
@@ -603,7 +615,7 @@ public class Action {
                         bounty.setStatus(Config.BOUNTY_STATUS_CLAIMED);
                         bounty.getPeople().add(team.auth.me());
                         team.realm.commitTransaction();
-                        
+
                         RequestParams params = new RequestParams();
                         params.put(Config.PARAM_CLAIM, true);
 

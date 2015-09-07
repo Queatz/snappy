@@ -53,7 +53,9 @@ public class Bounty implements Api.Path {
                 Document bounty = Search.getService().get(Search.Type.BOUNTY, bountyId);
 
                 if(bounty != null && user.equals(bounty.getOnlyField("poster").getAtom())) {
-                    Things.getService().bounty.delete(bounty);
+                    boolean success = Things.getService().bounty.delete(bounty);
+
+                    resp.getWriter().write(Boolean.toString(success));
                 }
 
                 break;

@@ -114,7 +114,13 @@ public class Bounty implements Thing {
         }
     }
 
-    public void delete(Document bounty) {
+    public boolean delete(Document bounty) {
+        if(bounty == null || Config.BOUNTY_STATUS_CLAIMED.equals(bounty.getOnlyField("status").getAtom())) {
+            return false;
+        }
+
         Search.getService().index.get(Search.Type.BOUNTY).delete(bounty.getId());
+
+        return true;
     }
 }

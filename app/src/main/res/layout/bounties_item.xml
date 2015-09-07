@@ -41,31 +41,15 @@
             android:textColor="@color/white"
             android:textSize="18sp" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:layout_centerInParent="true"
-        android:gravity="right"
-        android:background="@color/darkorange">
-
-        <Button style="@style/Widget.AppCompat.Button.Borderless"
-            android:id="@+id/action_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/message"/>
-
-        <Button style="@style/Widget.AppCompat.Button.Borderless"
-            android:id="@+id/action_claim"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/claim"/>
+        <com.makeramen.RoundedImageView
+            android:id="@+id/people"
+            android:visibility="gone"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_vertical|top"
+            app:riv_corner_radius="32dp"
+            android:layout_marginTop="4dp"
+            android:padding="4dp" />
 
     </LinearLayout>
 

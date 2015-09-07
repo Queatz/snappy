@@ -42,6 +42,7 @@ public class BountyAdapter extends RealmBaseAdapter<Bounty> {
 
         final Bounty bounty = realmResults.get(position);
 
+        ImageView people = (ImageView) view.findViewById(R.id.people);
         ImageView profile = (ImageView) view.findViewById(R.id.profile);
         TextView details = (TextView) view.findViewById(R.id.details);
         TextView price = (TextView) view.findViewById(R.id.price);
@@ -63,6 +64,24 @@ public class BountyAdapter extends RealmBaseAdapter<Bounty> {
         if(team.auth.getUser() != null && team.auth.getUser().equals(bounty.getPoster().getId())) {
             view.setTag(bounty);
             ((Activity) context).registerForContextMenu(view);
+        }
+
+        if(bounty.getPeople().size() > 0) {
+            Picasso.with(context)
+                    .load(bounty.getPeople().first().getImageUrlForSize(people.getMeasuredWidth()))
+                    .into(people);
+
+            people.setVisibility(View.VISIBLE);
+
+            people.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    team.action.openProfile((Activity) context, bounty.getPeople().first());
+                }
+            });
+        }
+        else {
+            people.setVisibility(View.GONE);
         }
 
         return view;

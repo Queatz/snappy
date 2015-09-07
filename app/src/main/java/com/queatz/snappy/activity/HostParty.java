@@ -245,7 +245,7 @@ public class HostParty extends Activity {
         partyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                setParty((Party) partyList.getAdapter().getItem(position));
+                setParty((Party) partyList.getItemAtPosition(position));
             }
         });
 

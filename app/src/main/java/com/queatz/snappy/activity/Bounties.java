@@ -42,7 +42,7 @@ public class Bounties extends Activity {
 
         setContentView(R.layout.bounties);
 
-        ListView bountyList = (ListView) findViewById(R.id.bounties);
+        final ListView bountyList = (ListView) findViewById(R.id.bounties);
 
         if(Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
             View postBounty = View.inflate(this, R.layout.bounties_new, null);
@@ -95,7 +95,7 @@ public class Bounties extends Activity {
         bountyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bounty bounty = bountyAdapter.getItem(position);
+                Bounty bounty = (Bounty) bountyList.getItemAtPosition(position);
 
                 team.action.claimBounty(Bounties.this, bounty);
             }
