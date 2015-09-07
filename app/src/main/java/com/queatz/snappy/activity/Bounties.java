@@ -80,6 +80,7 @@ public class Bounties extends Activity {
 
         final RealmResults<Bounty> bounties = team.realm.where(Bounty.class)
                 .greaterThan("posted", new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7))
+                .notEqualTo("status", Config.BOUNTY_STATUS_FINISHED)
                 .beginGroup()
                     .equalTo("status", Config.BOUNTY_STATUS_OPEN)
                     .or()

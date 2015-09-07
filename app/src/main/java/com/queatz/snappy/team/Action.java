@@ -612,21 +612,34 @@ public class Action {
         }
 
         if(isMine) {
-            new AlertDialog.Builder(activity)
-                    .setMessage(R.string.you_claimed_this_bounty)
-                    .setNegativeButton(R.string.message, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            openMessages(activity, bounty.getPoster());
-                        }
-                    })
-                    .setPositiveButton(R.string.finish, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finishBounty(activity, bounty);
-                        }
-                    })
-                    .show();
+            if(Config.BOUNTY_STATUS_FINISHED.equals(bounty.getStatus())) {
+                new AlertDialog.Builder(activity)
+                        .setMessage(R.string.you_finished_this_bounty)
+                        .setPositiveButton(R.string.message, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                openMessages(activity, bounty.getPoster());
+                            }
+                        })
+                        .show();
+            }
+            else {
+                new AlertDialog.Builder(activity)
+                        .setMessage(R.string.you_claimed_this_bounty)
+                        .setNegativeButton(R.string.message, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                openMessages(activity, bounty.getPoster());
+                            }
+                        })
+                        .setPositiveButton(R.string.finish, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finishBounty(activity, bounty);
+                            }
+                        })
+                        .show();
+            }
 
             return;
         }
