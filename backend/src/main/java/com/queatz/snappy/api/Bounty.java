@@ -5,6 +5,7 @@ import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Api;
+import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 
@@ -41,6 +42,18 @@ public class Bounty implements Api.Path {
                     boolean claimed = Things.getService().bounty.claim(user, bountyId);
 
                     resp.getWriter().write(Boolean.toString(claimed));
+                }
+
+                if(Boolean.valueOf(req.getParameter(Config.PARAM_FINISH))) {
+                    Document bounty = Search.getService().get(Search.Type.BOUNTY, bountyId);
+
+                    boolean finished = Things.getService().bounty.finish(user, bountyId);
+
+                    resp.getWriter().write(Boolean.toString(finished));
+
+                    if(finished) {
+                        Push.getService().send(bounty.getOnlyField("poster").getAtom(), Things.getService().bounty.makePush(bounty));
+                    }
                 }
 
                 break;

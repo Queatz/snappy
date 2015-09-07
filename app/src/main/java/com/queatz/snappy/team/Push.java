@@ -74,6 +74,7 @@ public class Push {
             Intent resultIntent;
             TaskStackBuilder stackBuilder;
             PendingIntent pendingIntent;
+            Bundle extras;
 
             String action = push.getString("action");
 
@@ -118,7 +119,7 @@ public class Push {
 
                     if(Build.VERSION.SDK_INT >= 20) {
                         resultIntent = new Intent(team.context, Background.class);
-                        Bundle extras = new Bundle();
+                        extras = new Bundle();
                         extras.putString(Config.EXTRA_ACTION, Config.EXTRA_ACTION_JOIN_REQUEST);
                         extras.putString(Config.EXTRA_PARTY_ID, partyId);
                         resultIntent.putExtras(extras);
@@ -181,7 +182,7 @@ public class Push {
 
                     if(count > 1) {
                         resultIntent = new Intent(team.context, Main.class);
-                        Bundle extras = new Bundle();
+                        extras = new Bundle();
                         extras.putString("show", "messages");
                         resultIntent.putExtras(extras);
                         pendingIntent = PendingIntent.getActivity(team.context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -190,7 +191,7 @@ public class Push {
                     }
                     else {
                         resultIntent = new Intent(team.context, Person.class);
-                        Bundle extras = new Bundle();
+                        extras = new Bundle();
                         extras.putString("person", personId);
                         extras.putString("show", "messages");
                         resultIntent.putExtras(extras);
@@ -232,7 +233,7 @@ public class Push {
 
                     if(Build.VERSION.SDK_INT >= 20) {
                         resultIntent = new Intent(team.context, Background.class);
-                        Bundle extras = new Bundle();
+                        extras = new Bundle();
                         extras.putString(Config.EXTRA_ACTION, Config.EXTRA_ACTION_JOIN_ACCEPT);
                         extras.putString(Config.EXTRA_JOIN_ID, joinId);
                         resultIntent.putExtras(extras);
@@ -292,7 +293,7 @@ public class Push {
                             .setDefaults(Notification.DEFAULT_ALL);
 
                     resultIntent = new Intent(team.context, Person.class);
-                    Bundle extras = new Bundle();
+                    extras = new Bundle();
                     extras.putString("person", personId);
                     resultIntent.putExtras(extras);
                     stackBuilder = TaskStackBuilder.create(team.context);
@@ -309,6 +310,41 @@ public class Push {
                     }
 
                     show("follow", builder.build());
+
+                    break;
+
+                case Config.PUSH_ACTION_BOUNTY_FINISHED:
+                    personFirstName = URLDecoder.decode(push.getJSONObject("people").getString("firstName"), "UTF-8");
+                    personId = push.getJSONObject("people").getString("id");
+                    String bountyId = push.getString("bounty");
+
+                    builder = new NotificationCompat.Builder(team.context)
+                            .setAutoCancel(true)
+                            .setContentTitle(team.context.getString(R.string.your_bounty_was_finished))
+                            .setContentText(team.context.getString(R.string.by, personFirstName))
+                            .setSmallIcon(R.drawable.icon_system)
+                            .setPriority(Notification.PRIORITY_DEFAULT)
+                            .setDefaults(Notification.DEFAULT_ALL);
+
+                    resultIntent = new Intent(team.context, Person.class);
+                    extras = new Bundle();
+                    extras.putString("person", personId);
+                    extras.putString("show", "messages");
+                    resultIntent.putExtras(extras);
+                    stackBuilder = TaskStackBuilder.create(team.context);
+                    stackBuilder.addParentStack(Main.class);
+                    stackBuilder.addNextIntent(resultIntent);
+                    pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    builder.setContentIntent(pendingIntent);
+
+                    if(Build.VERSION.SDK_INT >= 21) {
+                        builder
+                                .setColor(team.context.getResources().getColor(R.color.red))
+                                .setCategory(Notification.CATEGORY_SOCIAL);
+                    }
+
+                    show("bounty/" + bountyId + "/finished", builder.build());
 
                     break;
             }

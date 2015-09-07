@@ -28,6 +28,36 @@ public class Bounty implements Thing {
         things = t;
     }
 
+    public JSONObject makePush(Document bounty) {
+        if(bounty == null)
+            return null;
+
+        Document people = Search.getService().get(Search.Type.PERSON, bounty.getOnlyField("people").getAtom());
+
+        JSONObject push = new JSONObject();
+
+        try {
+            String action;
+
+            if(Config.BOUNTY_STATUS_FINISHED.equals(bounty.getOnlyField("status").getAtom())) {
+                action = Config.PUSH_ACTION_BOUNTY_FINISHED;
+                push.put("people", things.person.toPushJson(people));
+            }
+            else
+                return null;
+
+            push.put("action", action);
+            push.put("bounty", bounty.getId());
+
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return push;
+    }
+
     @Override
     public JSONObject toJson(Document d, String user, boolean shallow) {
         if(d == null)
@@ -64,7 +94,7 @@ public class Bounty implements Thing {
     public boolean claim(String user, String bountyId) {
         Document bounty = Search.getService().get(Search.Type.BOUNTY, bountyId);
 
-        if(bounty == null || Config.BOUNTY_STATUS_CLAIMED.equals(bounty.getOnlyField("status").getAtom())) {
+        if(bounty == null || !Config.BOUNTY_STATUS_OPEN.equals(bounty.getOnlyField("status").getAtom())) {
             return false;
         }
 
@@ -74,6 +104,35 @@ public class Bounty implements Thing {
         documentBuild.addField(Field.newBuilder().setName("people").setText(user));
 
         Util.copyIn(documentBuild, bounty, "status", "people");
+
+        Document result = documentBuild.build();
+
+        try {
+            Search.getService().index.get(Search.Type.BOUNTY).put(result);
+        } catch (PutException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean finish(String user, String bountyId) {
+        Document bounty = Search.getService().get(Search.Type.BOUNTY, bountyId);
+
+        if(bounty == null || Config.BOUNTY_STATUS_CLAIMED.equals(bounty.getOnlyField("status").getAtom())) {
+            return false;
+        }
+
+        if(!user.equals(bounty.getOnlyField("people").getText())) {
+            return false;
+        }
+
+        Document.Builder documentBuild = Document.newBuilder();
+        documentBuild.setId(bounty.getId());
+        documentBuild.addField(Field.newBuilder().setName("status").setAtom(Config.BOUNTY_STATUS_FINISHED));
+
+        Util.copyIn(documentBuild, bounty, "status");
 
         Document result = documentBuild.build();
 
@@ -115,7 +174,7 @@ public class Bounty implements Thing {
     }
 
     public boolean delete(Document bounty) {
-        if(bounty == null || Config.BOUNTY_STATUS_CLAIMED.equals(bounty.getOnlyField("status").getAtom())) {
+        if(bounty == null || !Config.BOUNTY_STATUS_OPEN.equals(bounty.getOnlyField("status").getAtom())) {
             return false;
         }
 

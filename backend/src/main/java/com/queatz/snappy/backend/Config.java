@@ -47,6 +47,7 @@ public class Config {
     public static final String PUSH_ACTION_JOIN_PARTY = "join_party";
     public static final String PUSH_ACTION_REFRESH_ME = "refresh_me";
     public static final String PUSH_ACTION_CLEAR_NOTIFICATION = "clear_notification";
+    public static final String PUSH_ACTION_BOUNTY_FINISHED = "bounty_finished";
 
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";
     public static final String UPDATE_ACTION_HOST_PARTY = "host_party";
@@ -58,6 +59,7 @@ public class Config {
 
     public static final String BOUNTY_STATUS_OPEN = "open";
     public static final String BOUNTY_STATUS_CLAIMED = "claimed";
+    public static final String BOUNTY_STATUS_FINISHED = "finished";
 
     public static final String PARAM_ABOUT = "about";
     public static final String PARAM_EMAIL = "email";
@@ -65,6 +67,7 @@ public class Config {
     public static final String PARAM_LOCATION = "location";
     public static final String PARAM_ADDRESS = "address";
     public static final String PARAM_CLAIM = "claim";
+    public static final String PARAM_FINISH = "finish";
     public static final String PARAM_PHOTO = "photo";
     public static final String PARAM_NAME = "name";
     public static final String PARAM_DETAILS = "details";

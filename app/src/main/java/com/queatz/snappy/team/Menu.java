@@ -106,7 +106,7 @@ public class Menu {
             }
         }
         else if(object instanceof Bounty) {
-            if(team.context.getString(R.string.cancel).equals(item.getTitle())) {
+            if(team.context.getString(R.string.cancel_bounty).equals(item.getTitle())) {
                 team.action.deleteBounty((Bounty) object);
             }
         }
