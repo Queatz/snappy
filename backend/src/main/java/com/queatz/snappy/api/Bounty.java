@@ -43,8 +43,7 @@ public class Bounty implements Api.Path {
 
                     resp.getWriter().write(Boolean.toString(claimed));
                 }
-
-                if(Boolean.valueOf(req.getParameter(Config.PARAM_FINISH))) {
+                else if(Boolean.valueOf(req.getParameter(Config.PARAM_FINISH))) {
                     Document bounty = Search.getService().get(Search.Type.BOUNTY, bountyId);
 
                     boolean finished = Things.getService().bounty.finish(user, bountyId);

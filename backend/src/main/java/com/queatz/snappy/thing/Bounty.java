@@ -120,7 +120,7 @@ public class Bounty implements Thing {
     public boolean finish(String user, String bountyId) {
         Document bounty = Search.getService().get(Search.Type.BOUNTY, bountyId);
 
-        if(bounty == null || Config.BOUNTY_STATUS_CLAIMED.equals(bounty.getOnlyField("status").getAtom())) {
+        if(bounty == null || !Config.BOUNTY_STATUS_CLAIMED.equals(bounty.getOnlyField("status").getAtom())) {
             return false;
         }
 

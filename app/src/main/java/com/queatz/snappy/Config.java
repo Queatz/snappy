@@ -60,6 +60,7 @@ public class Config {
     public static final String PARAM_JOIN = "join";
     public static final String PARAM_CANCEL_JOIN = "cancel_join";
     public static final String PARAM_CLAIM = "claim";
+    public static final String PARAM_FINISH = "finish";
     public static final String PARAM_FULL = "full";
     public static final String PARAM_ACCEPT = "accept";
     public static final String PARAM_HIDE = "hide";
@@ -114,6 +115,7 @@ public class Config {
 
     public static final String BOUNTY_STATUS_OPEN = "open";
     public static final String BOUNTY_STATUS_CLAIMED = "claimed";
+    public static final String BOUNTY_STATUS_FINISHED = "finished";
 
     public static final String SOCIAL_MODE_OFF = "off";
     public static final String SOCIAL_MODE_FRIENDS = "friends";

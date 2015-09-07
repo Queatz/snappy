@@ -575,6 +575,32 @@ public class Action {
         });
     }
 
+    public void finishBounty(@NonNull final Activity activity, @NonNull final Bounty bounty) {
+        team.realm.beginTransaction();
+        bounty.setStatus(Config.BOUNTY_STATUS_FINISHED);
+        team.realm.commitTransaction();
+
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_FINISH, true);
+
+        team.api.post(String.format(Config.PATH_BOUNTY_ID, bounty.getId()), params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                if (response != null && Boolean.valueOf(response)) {
+                    Toast.makeText(team.context, "Bounty finished", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(team.context, "Bounty couldn't be finished", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void fail(String response) {
+                // TODO revert claimed state
+                Toast.makeText(team.context, "Bounty couldn't be finished", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public void claimBounty(@NonNull final Activity activity, @NonNull final Bounty bounty) {
         boolean isMine = false;
 
@@ -588,10 +614,16 @@ public class Action {
         if(isMine) {
             new AlertDialog.Builder(activity)
                     .setMessage(R.string.you_claimed_this_bounty)
-                    .setPositiveButton(R.string.message, new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.message, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             openMessages(activity, bounty.getPoster());
+                        }
+                    })
+                    .setPositiveButton(R.string.finish, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finishBounty(activity, bounty);
                         }
                     })
                     .show();

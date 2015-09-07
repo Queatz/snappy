@@ -86,6 +86,7 @@
     <string name="you_claimed_this_bounty">You already claimed this bounty</string>
     <string name="cancel_bounty">Cancel bounty</string>
     <string name="your_bounty_was_finished">Your bounty was finished</string>
+    <string name="finish">Finish</string>
 
     <plurals name="people_near_place">
         <item quantity="one">%1$s person near %2$s</item>
