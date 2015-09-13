@@ -29,6 +29,7 @@ import com.queatz.snappy.things.Message;
 import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
+import com.queatz.snappy.things.Update;
 import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.ui.MiniMenu;
 import com.squareup.picasso.Picasso;
@@ -221,7 +222,7 @@ public class Action {
         from.startActivity(intent);
     }
 
-    public void openProfile(@NonNull Activity from, @NonNull final Person person) {
+    public void openProfile(Activity from, @NonNull final Person person) {
         Bundle bundle = new Bundle();
         bundle.putString("person", person.getId());
         team.view.show(from, com.queatz.snappy.activity.Person.class, bundle);
@@ -445,12 +446,12 @@ public class Action {
         team.view.show(activity, Main.class, bundle);
     }
 
-    public boolean uploadUpto(Uri image, String location) { // TODO this will turn into post photo to party
+    public boolean postUpto(final Uri photo, final String message) {
         RequestParams params = new RequestParams();
 
         try {
-            params.put("photo", team.context.getContentResolver().openInputStream(image));
-            params.put("location", location);
+            params.put(Config.PARAM_PHOTO, team.context.getContentResolver().openInputStream(photo));
+            params.put(Config.PARAM_MESSAGE, message);
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -460,12 +461,13 @@ public class Action {
         team.api.post(Config.PATH_ME_UPTO, params, new Api.Callback() {
             @Override
             public void success(String response) {
-                Log.d(Config.LOG_TAG, "yay new upto posted");
+                team.things.put(Update.class, response);
+                openProfile(null, team.auth.me());
             }
 
             @Override
             public void fail(String response) {
-                Log.e(Config.LOG_TAG, "error uploading new upto: " + response);
+                Toast.makeText(team.context, "Couldn't upload photo", Toast.LENGTH_SHORT).show();
             }
         });
 

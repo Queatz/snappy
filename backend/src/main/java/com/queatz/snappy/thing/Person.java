@@ -152,7 +152,7 @@ public class Person implements Thing {
 
         Document.Builder documentBuild = Document.newBuilder();
         documentBuild.setId(person.getId());
-        documentBuild.addField(Field.newBuilder().setName("about").setText(about));
+        documentBuild.addField(Field.newBuilder().setName("about").setText(Util.encode(about)));
 
         Util.copyIn(documentBuild, person, "about");
 

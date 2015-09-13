@@ -73,7 +73,7 @@ public class Location implements Api.Path {
                             FileItemStream item = iterator.next();
                             InputStream stream = item.openStream();
 
-                            if (!item.isFormField() && Config.PATH_PHOTO.equals(item.getFieldName())) {
+                            if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
                                 int len;
                                 byte[] buffer = new byte[8192];
 

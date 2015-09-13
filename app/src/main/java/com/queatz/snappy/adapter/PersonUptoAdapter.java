@@ -7,8 +7,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.queatz.snappy.Config;
+import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Location;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.things.Update;
 import com.squareup.picasso.Picasso;
@@ -36,15 +40,43 @@ public class PersonUptoAdapter extends RealmBaseAdapter<Update> {
             view = inflater.inflate(R.layout.person_upto_item, parent, false);
         }
 
-        Update update = realmResults.get(position);
+        Team team = ((MainApplication) context.getApplicationContext()).team;
 
+        Update update = realmResults.get(position);
         Person person = update.getPerson();
+        Location location = update.getParty() != null ? update.getParty().getLocation() : null;
 
         if(person != null) {
+            int s = (int) Util.px(64);
+
             Picasso.with(context)
-                    .load(person.getImageUrlForSize((int) Util.px(64)))
+                    .load(location == null ? person.getImageUrlForSize(s) : Util.locationPhoto(location, s))
                     .placeholder(R.color.spacer)
                     .into((ImageView) view.findViewById(R.id.profile));
+        }
+
+        ImageView photo = (ImageView) view.findViewById(R.id.photo);
+
+        if (Config.UPDATE_ACTION_UPTO.equals(update.getAction())) {
+            String photoUrl = Config.API_URL + String.format(Config.PATH_UPDATE_PHOTO + "?s=" + (parent.getMeasuredWidth() / 2) + "&auth=" + team.auth.getAuthParam(), update.getId());
+
+            Picasso.with(context)
+                    .load(photoUrl)
+                    .placeholder(R.color.spacer)
+                    .into(photo);
+
+            photo.setVisibility(View.VISIBLE);
+
+            if(update.getMessage() == null || update.getMessage().isEmpty()) {
+                view.findViewById(R.id.details).setVisibility(View.GONE);
+            }
+            else {
+                view.findViewById(R.id.details).setVisibility(View.VISIBLE);
+            }
+        }
+        else {
+            view.findViewById(R.id.details).setVisibility(View.VISIBLE);
+            photo.setVisibility(View.GONE);
         }
 
         ((TextView) view.findViewById(R.id.text)).setText(

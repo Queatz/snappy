@@ -91,6 +91,24 @@
             android:windowSoftInputMode="adjustPan"
             android:parentActivityName=".activity.Main" />
 
+        <activity android:theme="@style/DialogTheme"
+            android:name=".activity.NewUpto"
+            android:alwaysRetainTaskState="true"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:launchMode="standard"
+            android:excludeFromRecents="true"
+            android:windowSoftInputMode="adjustPan">
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="audio/*" />
+            </intent-filter>
+
+        </activity>
+
         <service android:name=".GCMIntentService" />
 
         <service android:name=".Background" />

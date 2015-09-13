@@ -36,7 +36,15 @@ public class Update implements Thing {
         try {
             o.put("id", d.getId());
             o.put("person", things.person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("person").getAtom()), user, true));
-            o.put("party", things.party.toJson(Search.getService().get(Search.Type.PARTY, d.getOnlyField("party").getAtom()), user, true));
+
+            if(d.getFieldCount("party") == 1) {
+                o.put("party", things.party.toJson(Search.getService().get(Search.Type.PARTY, d.getOnlyField("party").getAtom()), user, true));
+            }
+
+            if(d.getFieldCount("message") == 1) {
+                o.put("message",d.getOnlyField("message").getText());
+            }
+
             o.put("action", d.getOnlyField("action").getAtom());
             o.put("date", Util.dateToString(d.getOnlyField("date").getDate()));
 
@@ -65,5 +73,45 @@ public class Update implements Thing {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Document createUpto(String user) {
+        Document.Builder documentBuild = Document.newBuilder();
+        documentBuild.addField(Field.newBuilder().setName("action").setAtom(Config.UPDATE_ACTION_UPTO));
+        documentBuild.addField(Field.newBuilder().setName("person").setAtom(user));
+        documentBuild.addField(Field.newBuilder().setName("date").setDate(new Date()));
+
+        Document document = documentBuild.build();
+
+        try {
+            PutResponse put = Search.getService().index.get(Search.Type.UPDATE).put(document);
+            documentBuild.setId(put.getIds().get(0));
+            return documentBuild.build();
+        } catch (PutException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Document setMessage(Document update, String message) {
+        if(message == null) {
+            message = "";
+        }
+
+        Document.Builder documentBuild = Document.newBuilder();
+        documentBuild.setId(update.getId());
+        documentBuild.addField(Field.newBuilder().setName("message").setText(Util.encode(message)));
+
+        Util.copyIn(documentBuild, update, "message");
+
+        Document result = documentBuild.build();
+
+        try {
+            Search.getService().index.get(Search.Type.PERSON).put(result);
+        } catch (PutException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 }

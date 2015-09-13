@@ -51,6 +51,7 @@ public class Config {
 
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";
     public static final String UPDATE_ACTION_HOST_PARTY = "host_party";
+    public static final String UPDATE_ACTION_UPTO = "upto";
 
     public static final String JOIN_STATUS_REQUESTED = "requested";
     public static final String JOIN_STATUS_IN = "in";
@@ -113,6 +114,7 @@ public class Config {
     public static final String PATH_LOCATION = "location";
     public static final String PATH_ME = "me";
     public static final String PATH_OFFERS = "offers";
+    public static final String PATH_UPTO = "upto";
     public static final String PATH_HERE = "here";
     public static final String PATH_BUY = "buy";
     public static final String PATH_REGISTER_DEVICE = "register_device";
@@ -123,4 +125,5 @@ public class Config {
     public static final String PATH_ADMIN = "admin";
     public static final String PATH_FOLLOWERS = "followers";
     public static final String PATH_FOLLOWING = "following";
+    public static final String PATH_UPDATE = "update";
 }

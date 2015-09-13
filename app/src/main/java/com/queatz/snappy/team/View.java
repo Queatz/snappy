@@ -23,12 +23,18 @@ public class View {
     }
 
     public void show(Activity from, Class<? extends Activity> activity, Bundle bundle) {
-        Intent intent = new Intent(from, activity);
+        Intent intent = new Intent(team.context, activity);
 
         if(bundle != null)
             intent.putExtras(bundle);
 
-        from.startActivity(intent);
+        if(from == null) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            team.context.startActivity(intent);
+        }
+        else {
+            from.startActivity(intent);
+        }
     }
 
     public void showStartView(Activity from) {

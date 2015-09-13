@@ -2,6 +2,9 @@ package com.queatz.snappy.api;
 
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.urlfetch.HTTPMethod;
+import com.google.appengine.tools.cloudstorage.GcsFileOptions;
+import com.google.appengine.tools.cloudstorage.GcsFilename;
+import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.backend.Util;
@@ -13,11 +16,24 @@ import com.queatz.snappy.service.Things;
 import com.queatz.snappy.thing.Offer;
 import com.queatz.snappy.thing.Thing;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
+import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -104,59 +120,118 @@ public class Me implements Api.Path {
                     break;
                 }
                 else if(path.size() == 1) {
-                    if (Config.PATH_OFFERS.equals(path.get(0))) {
-                        String localId = req.getParameter(Config.PARAM_LOCAL_ID);
-                        String details = req.getParameter(Config.PARAM_DETAILS);
-                        int price = 0;
+                    String deviceId;
 
-                        try {
-                            price = Integer.parseInt(req.getParameter(Config.PARAM_PRICE));
-                        }
-                        catch (NumberFormatException e) {
-                            e.printStackTrace();
-                        }
+                    switch (path.get(0)) {
+                        case Config.PATH_UPTO:
+                            Document update = Things.getService().update.createUpto(user);
+                            GcsFilename photoName = new GcsFilename(api.mAppIdentityService.getDefaultGcsBucketName(), "upto/photo/" + update.getId() + "/" + new Date().getTime());
 
-                        if (details != null && details.length() > 0) {
-                            Document offer = Things.getService().offer.create(user, details, price);
+                            String message = null;
+                            boolean allGood = false;
 
-                            if(offer != null) {
-                                JSONObject response = Things.getService().offer.toJson(offer, user, false);
-                                Util.localId(response, localId);
+                            try {
+                                ServletFileUpload upload = new ServletFileUpload();
+                                FileItemIterator iterator = upload.getItemIterator(req);
+                                while (iterator.hasNext()) {
+                                    FileItemStream item = iterator.next();
+                                    InputStream stream = item.openStream();
 
-                                resp.getWriter().write(response.toString());
+                                    if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
+                                        int len;
+                                        byte[] buffer = new byte[8192];
+
+                                        GcsOutputChannel outputChannel = api.mGCS.createOrReplace(photoName, GcsFileOptions.getDefaultInstance());
+
+                                        while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
+                                            outputChannel.write(ByteBuffer.wrap(buffer, 0, len));
+                                        }
+
+                                        outputChannel.close();
+
+                                        allGood = true;
+
+                                        break;
+                                    }
+                                    else if(Config.PARAM_MESSAGE.equals(item.getFieldName())) {
+                                        message = Streams.asString(stream, "UTF-8");
+                                    }
+                                }
                             }
-                            else {
-                                throw new PrintingError(Api.Error.SERVER_ERROR, "offers - error");
+                            catch (FileUploadException e) {
+                                Logger.getLogger(Config.NAME).severe(e.toString());
+                                throw new PrintingError(Api.Error.SERVER_ERROR, "upto photo - couldn't upload because " + e);
                             }
-                        }
-                    }
-                    else if (Config.PATH_BUY.equals(path.get(0))) {
-                        resp.getWriter().write(Boolean.toString(Buy.getService().validate(user, req.getParameter(Config.PARAM_PURCHASE_DATA))));
-                    } else if (Config.PATH_REGISTER_DEVICE.equals(path.get(0))) {
-                        String deviceId = req.getParameter(Config.PARAM_DEVICE_ID);
-                        String socialMode = req.getParameter(Config.PARAM_SOCIAL_MODE);
 
-                        if (deviceId != null && deviceId.length() > 0) {
-                            Push.getService().register(user, deviceId, socialMode);
-                        }
-                    } else if (Config.PATH_UNREGISTER_DEVICE.equals(path.get(0))) {
-                        String deviceId = req.getParameter(Config.PARAM_DEVICE_ID);
+                            if(message != null) {
+                                update = Things.getService().update.setMessage(update, message);
+                            }
 
-                        if (deviceId != null && deviceId.length() > 0) {
-                            Push.getService().unregister(user, deviceId);
-                        }
-                    } else if (Config.PATH_CLEAR_NOTIFICATION.equals(path.get(0))) {
-                        String notification = req.getParameter(Config.PARAM_NOTIFICATION);
+                            if(!allGood)
+                                throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "upto photo - not all good");
 
-                        try {
-                            JSONObject push = Util.makeSimplePush(Config.PUSH_ACTION_CLEAR_NOTIFICATION);
-                            push.put("notification", notification);
-                            Push.getService().send(user, push);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "me - bad path");
+                            resp.getWriter().write(Things.getService().update.toJson(update, user, false).toString());
+
+                            break;
+                        case Config.PATH_OFFERS:
+                            String localId = req.getParameter(Config.PARAM_LOCAL_ID);
+                            String details = req.getParameter(Config.PARAM_DETAILS);
+                            int price = 0;
+
+                            try {
+                                price = Integer.parseInt(req.getParameter(Config.PARAM_PRICE));
+                            }
+                            catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (details != null && details.length() > 0) {
+                                Document offer = Things.getService().offer.create(user, details, price);
+
+                                if(offer != null) {
+                                    JSONObject response = Things.getService().offer.toJson(offer, user, false);
+                                    Util.localId(response, localId);
+
+                                    resp.getWriter().write(response.toString());
+                                }
+                                else {
+                                    throw new PrintingError(Api.Error.SERVER_ERROR, "offers - error");
+                                }
+                            }
+                            break;
+                        case Config.PATH_BUY:
+                            resp.getWriter().write(Boolean.toString(Buy.getService().validate(user, req.getParameter(Config.PARAM_PURCHASE_DATA))));
+                            break;
+                        case Config.PATH_REGISTER_DEVICE:
+                            deviceId = req.getParameter(Config.PARAM_DEVICE_ID);
+                            String socialMode = req.getParameter(Config.PARAM_SOCIAL_MODE);
+
+                            if (deviceId != null && deviceId.length() > 0) {
+                                Push.getService().register(user, deviceId, socialMode);
+                            }
+
+                            break;
+                        case Config.PATH_UNREGISTER_DEVICE:
+                            deviceId = req.getParameter(Config.PARAM_DEVICE_ID);
+
+                            if (deviceId != null && deviceId.length() > 0) {
+                                Push.getService().unregister(user, deviceId);
+                            }
+                            break;
+                        case Config.PATH_CLEAR_NOTIFICATION:
+                            String notification = req.getParameter(Config.PARAM_NOTIFICATION);
+
+                            try {
+                                JSONObject push = Util.makeSimplePush(Config.PUSH_ACTION_CLEAR_NOTIFICATION);
+                                push.put("notification", notification);
+                                Push.getService().send(user, push);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            break;
+                        default:
+                            throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "me - bad path");
                     }
                 }
                 else {

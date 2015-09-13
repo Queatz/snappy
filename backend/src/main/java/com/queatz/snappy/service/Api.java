@@ -24,6 +24,7 @@ import com.queatz.snappy.api.Parties;
 import com.queatz.snappy.api.Party;
 import com.queatz.snappy.api.People;
 import com.queatz.snappy.api.Pirate;
+import com.queatz.snappy.api.Update;
 import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.backend.PrintingError;
 
@@ -84,6 +85,7 @@ public class Api {
         paths.put(Config.PATH_HERE, new Here(this));
         paths.put(Config.PATH_BOUNTIES, new Bounties(this));
         paths.put(Config.PATH_BOUNTY, new Bounty(this));
+        paths.put(Config.PATH_UPDATE, new Update(this));
 
         mGCS = GcsServiceFactory.createGcsService(RetryParams.getDefaultInstance());
         mAppIdentityService = AppIdentityServiceFactory.getAppIdentityService();

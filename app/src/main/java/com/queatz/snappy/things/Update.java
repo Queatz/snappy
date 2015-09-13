@@ -15,6 +15,7 @@ public class Update extends RealmObject {
     @Index
     private String id;
     private String action;
+    private String message;
     private Person person;
     private Party party;
     private Location location;
@@ -66,5 +67,13 @@ public class Update extends RealmObject {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

@@ -12,4 +12,7 @@
 
     <style name="WelcomeTheme" parent="AppTheme">
     </style>
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+    </style>
 </resources>

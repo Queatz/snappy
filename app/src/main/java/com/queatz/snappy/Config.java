@@ -47,6 +47,7 @@ public class Config {
 
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";
     public static final String UPDATE_ACTION_HOST_PARTY = "host_party";
+    public static final String UPDATE_ACTION_UPTO = "upto";
 
     public static final String EXTRA_ACTION = "action";
     public static final String EXTRA_PARTY_ID = "party";
@@ -94,6 +95,7 @@ public class Config {
     public static final String PATH_PEOPLE_PARTIES = "people/%s/parties";
     public static final String PATH_SEARCH = "search";
     public static final String PATH_LOCATIONS = "locations";
+    public static final String PATH_UPDATE_PHOTO = "update/%s/photo";
     public static final String PATH_LOCATION_PHOTO = "location/%s/photo";
     public static final String PATH_MESSAGES = "messages";
     public static final String PATH_MESSAGES_ID = "messages/%s";

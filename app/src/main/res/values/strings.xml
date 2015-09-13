@@ -89,6 +89,7 @@
     <string name="your_bounty_was_finished">Your bounty was finished</string>
     <string name="finish">Finish</string>
     <string name="you_finished_this_bounty">You already finished this bounty</string>
+    <string name="post">Post</string>
 
     <plurals name="people_near_place">
         <item quantity="one">%1$s person near %2$s</item>
