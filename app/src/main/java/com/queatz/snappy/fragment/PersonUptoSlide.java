@@ -278,7 +278,7 @@ public class PersonUptoSlide extends Fragment {
             
             Picasso.with(getActivity())
                     .load(mPerson.getImageUrlForSize((int) Util.px(512)))
-                    .placeholder(R.color.spacer)
+                    .placeholder(R.color.deepdarkred)
                     .into(profile);
 
             ((TextView) personAbout.findViewById(R.id.info_followers)).setText(Long.toString(mPerson.getInfoFollowers()));

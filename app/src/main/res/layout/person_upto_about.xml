@@ -75,7 +75,7 @@
             <LinearLayout
                 android:id="@+id/followers_button"
                 android:clickable="true"
-                android:background="@drawable/floating_click"
+                android:background="?android:attr/selectableItemBackground"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -107,7 +107,7 @@
             <LinearLayout
                 android:id="@+id/following_button"
                 android:clickable="true"
-                android:background="@drawable/floating_click"
+                android:background="?android:attr/selectableItemBackground"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -173,7 +173,7 @@
             android:id="@+id/about"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/softclick"
+            android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:gravity="center_horizontal"
             android:lineSpacingMultiplier="1.25"

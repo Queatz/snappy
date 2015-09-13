@@ -46,6 +46,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:theme="@style/WelcomeTheme"
             android:name=".activity.Welcome"
             android:alwaysRetainTaskState="true"
             android:configChanges="keyboardHidden|orientation|screenSize"

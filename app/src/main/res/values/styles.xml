@@ -9,4 +9,7 @@
     <style name="BountiesTheme" parent="AppTheme">
         <item name="colorPrimaryDark">@color/darkorange</item>
     </style>
+
+    <style name="WelcomeTheme" parent="AppTheme">
+    </style>
 </resources>

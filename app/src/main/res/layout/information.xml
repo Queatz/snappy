@@ -7,97 +7,133 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:layout_height="wrap_content">
 
-        <com.queatz.snappy.ui.TextView
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:textStyle="bold"
-            android:textColor="@color/text"
-            android:text="What is a party?" />
+            android:background="@color/red"
+            android:padding="16dp">
 
-        <com.queatz.snappy.ui.TextView
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:gravity="center_horizontal"
+                android:textSize="14sp"
+                android:textAlignment="center"
+                android:text="Welcome to the VILLAGE" />
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/whiteout"
+                android:gravity="center_horizontal"
+                android:textSize="11sp"
+                android:textAlignment="center"
+                android:text="village dynamics + city vivace" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/text"
-            android:text="Parties are ways to socialize around ideas, projects, or similar goals.  All parties have a point of contact, or host, displayed on the card." />
+            android:padding="16dp">
 
-        <com.queatz.snappy.ui.TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
-            android:textStyle="bold"
-            android:textColor="@color/text"
-            android:text="What is an offer?" />
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textStyle="bold"
+                android:textColor="@color/text"
+                android:text="What is a party?" />
 
-        <com.queatz.snappy.ui.TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text"
-            android:text="Offers are interesting experiences put together by the person offering them, such as cooking dinner, a neighborhood who's who tour, or sharing a unique skill." />
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text"
+                android:text="Parties are ways to socialize around ideas, projects, or similar goals.  All parties have a point of contact, or host, displayed on the card." />
 
-        <com.queatz.snappy.ui.TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
-            android:textStyle="bold"
-            android:textColor="@color/text"
-            android:text="What is a bounty?" />
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:textStyle="bold"
+                android:textColor="@color/text"
+                android:text="What is an offer?" />
 
-        <com.queatz.snappy.ui.TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text"
-            android:text="Bounties are small things to do that take 1 day or less.  They don't necessarily have a specified location or time, and you may not need to meet the requester.  Bounties expire after one week." />
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text"
+                android:text="Offers are interesting experiences put together by the person offering them, such as cooking dinner, a neighborhood who's who tour, or sharing a unique skill." />
 
-        <com.queatz.snappy.ui.TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
-            android:textStyle="bold"
-            android:textColor="@color/text"
-            android:text="What are check-ins?" />
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:textStyle="bold"
+                android:textColor="@color/text"
+                android:text="What is a bounty?" />
 
-        <com.queatz.snappy.ui.TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text"
-            android:text="Check-ins let you keep in touch with places or things you want to remember. You'll be able to see who else has visited, and later, who visits after you." />
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text"
+                android:text="Bounties are small things to do that take 1 day or less.  They don't necessarily have a specified location or time, and you may not need to meet the requester.  Bounties expire after one week." />
 
-        <com.queatz.snappy.ui.TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
-            android:textStyle="bold"
-            android:textColor="@color/text"
-            android:text="What is Social Mode?" />
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:textStyle="bold"
+                android:textColor="@color/text"
+                android:text="What are check-ins?" />
 
-        <com.queatz.snappy.ui.TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text"
-            android:text="Social Mode determines who you want to get notifications from." />
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text"
+                android:text="Check-ins let you keep in touch with places or things you want to remember. You'll be able to see who else has visited, and later, who visits after you." />
 
-        <com.queatz.snappy.ui.TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
-            android:textStyle="bold"
-            android:textColor="@color/text"
-            android:text="What are followers?" />
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:textStyle="bold"
+                android:textColor="@color/text"
+                android:text="What is Social Mode?" />
 
-        <com.queatz.snappy.ui.TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text"
-            android:text="People who follow you will get notified when you host a party. Accordingly, you will get notified when people you follow throw a party." />
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text"
+                android:text="Social Mode determines who you want to get notifications from." />
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:textStyle="bold"
+                android:textColor="@color/text"
+                android:text="What are followers?" />
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text"
+                android:text="People who follow you will get notified when you host a party. Accordingly, you will get notified when people you follow throw a party." />
+
+        </LinearLayout>
 
     </LinearLayout>
 

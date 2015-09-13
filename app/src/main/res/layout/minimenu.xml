@@ -3,14 +3,15 @@
     android:orientation="vertical"
     android:layout_width="256dp"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/red"
+    android:isScrollContainer="true"
     android:elevation="2dp">
 
     <LinearLayout
         android:id="@+id/action_socialmode"
         android:orientation="horizontal"
         android:clickable="true"
-        android:background="@drawable/softclick"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -20,7 +21,7 @@
             android:layout_weight="1"
             android:textSize="22sp"
             android:padding="8dp"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:text="@string/social_mode" />
 
         <com.queatz.snappy.ui.TextView
@@ -29,7 +30,7 @@
             android:layout_height="wrap_content"
             android:textSize="22sp"
             android:padding="8dp"
-            android:textColor="@color/green"
+            android:textColor="@color/lightblue"
             android:text="@string/friends" />
 
     </LinearLayout>
@@ -37,12 +38,12 @@
     <com.queatz.snappy.ui.TextView
         android:id="@+id/action_host"
         android:clickable="true"
-        android:background="@drawable/softclick"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="22sp"
         android:padding="8dp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:text="@string/host_a_party" />
 
     <LinearLayout
@@ -53,19 +54,19 @@
         <com.queatz.snappy.ui.TextView
             android:id="@+id/action_profile"
             android:clickable="true"
-            android:background="@drawable/softclick"
+            android:background="?android:attr/selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="22sp"
             android:padding="8dp"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:text="@string/my_profile" />
 
         <com.queatz.snappy.ui.TextView
             android:id="@+id/action_information"
             android:clickable="true"
-            android:background="@drawable/softclick"
+            android:background="?android:attr/selectableItemBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
@@ -74,7 +75,7 @@
             android:paddingBottom="8dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:textColor="@color/gray"
+            android:textColor="@color/whiteout"
             android:text="@string/information" />
 
     </LinearLayout>
@@ -82,7 +83,7 @@
     <com.queatz.snappy.ui.TextView
         android:id="@+id/action_bounties"
         android:clickable="true"
-        android:background="@color/orange"
+        android:background="@color/deepdarkred"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"

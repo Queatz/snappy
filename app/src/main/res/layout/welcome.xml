@@ -12,7 +12,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
         <com.queatz.snappy.ui.TextView
             android:layout_width="match_parent"
@@ -20,11 +21,11 @@
             android:id="@+id/textView"
             android:layout_gravity="center_horizontal"
             android:text="@string/welcome_to"
-            android:textColor="#fff8f8f8"
+            android:textColor="@color/whiteout"
             android:gravity="center_horizontal"
             android:textSize="32sp"
             android:textIsSelectable="false"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="64dp"
             android:layout_weight="0"
             android:textStyle="bold" />
 
@@ -34,18 +35,17 @@
             android:id="@+id/textView2"
             android:layout_gravity="center_horizontal"
             android:text="@string/SNAPPY"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:gravity="center_horizontal"
-            android:textSize="48sp"
+            android:textSize="64sp"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="32dp"
             android:layout_weight="0" />
 
-        <ImageView
+        <View
             android:layout_width="196dp"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/pistachio"
             android:layout_weight="1" />
 
         <com.google.android.gms.common.SignInButton

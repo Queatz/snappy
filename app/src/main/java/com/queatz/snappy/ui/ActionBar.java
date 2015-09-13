@@ -160,7 +160,7 @@ public class ActionBar extends FrameLayout {
     public void selectPage(int page) {
         page = Math.max(0, Math.min(mTabAdapter.getCount() - 1, page));
         for(int x = 0; x < mTabBar.getChildCount(); x++) {
-            ((TextView) mTabBar.getChildAt(x)).setTextColor(getResources().getColor(page == x ? R.color.red : R.color.info));
+            ((TextView) mTabBar.getChildAt(x)).setTextColor(getResources().getColor(page == x ? R.color.white : R.color.whiteout));
         }
     }
 

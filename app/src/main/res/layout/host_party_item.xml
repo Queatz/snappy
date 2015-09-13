@@ -2,16 +2,14 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:elevation="2dp">
 
     <LinearLayout
         android:id="@+id/click_glam"
-        android:background="@drawable/clickable_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:padding="8dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -58,7 +56,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/host_again"
                         android:textSize="18sp"
-                        android:textColor="@color/blue" />
+                        android:textColor="@color/clickable" />
 
                     <com.queatz.snappy.ui.TextView
                         android:id="@+id/ago"

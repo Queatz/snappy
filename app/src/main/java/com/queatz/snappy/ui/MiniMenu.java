@@ -120,6 +120,7 @@ public class MiniMenu extends FrameLayout {
         final Team team = ((MainApplication) getContext().getApplicationContext()).team;
 
         RealmQuery<Bounty> query = team.realm.where(Bounty.class).greaterThan("posted", new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7))
+                .notEqualTo("status", Config.BOUNTY_STATUS_FINISHED)
                 .beginGroup()
                     .notEqualTo("status", Config.BOUNTY_STATUS_CLAIMED)
                     .or()
@@ -149,7 +150,7 @@ public class MiniMenu extends FrameLayout {
         TextView socialModeTextView = (TextView) findViewById(R.id.social_mode);
 
         socialModeTextView.setText(socialMode.substring(0, 1).toUpperCase() + socialMode.substring(1));
-        socialModeTextView.setTextColor(getResources().getColor(Config.SOCIAL_MODE_OFF.equals(socialMode) ? R.color.gray : R.color.green));
+        socialModeTextView.setTextColor(getResources().getColor(Config.SOCIAL_MODE_OFF.equals(socialMode) ? R.color.whiteout : R.color.lightblue));
     }
 
     public void show() {
@@ -164,26 +165,10 @@ public class MiniMenu extends FrameLayout {
 
         if(show) {
             updateBountiesText();
-
-            setVisibility(View.VISIBLE);
-            setScaleY(0);
-            animate()
-                    .scaleY(1)
-                    .setDuration(150)
-                    .setInterpolator(new OvershootInterpolator())
-                    .setListener(null);
+            RevealAnimation.expand(this);
         }
         else {
-            animate()
-                    .setDuration(150)
-                    .scaleY(0)
-                    .setInterpolator(new AnticipateInterpolator())
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            setVisibility(View.GONE);
-                        }
-                    });
+            RevealAnimation.collapse(this);
         }
     }
 }
