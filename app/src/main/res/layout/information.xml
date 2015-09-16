@@ -80,7 +80,7 @@
                 android:layout_marginBottom="8dp"
                 android:textStyle="bold"
                 android:textColor="@color/text"
-                android:text="What is a bounty?" />
+                android:text="What are quests?" />
 
             <com.queatz.snappy.ui.TextView
                 android:layout_width="match_parent"
@@ -88,7 +88,24 @@
                 android:textColor="@color/text"
                 android:text="Bounties are small things to do that take 1 day or less.  They don't necessarily have a specified location or time, and you may not need to meet the requester.  Bounties expire after one week." />
 
+
             <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:textStyle="bold"
+                android:textColor="@color/text"
+                android:text="What are skills and endorsements?" />
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text"
+                android:text="Skills are things you are good at.  People can endorse you for skills, usually after a simple vetting process or presentation from you.  You can collect endorsements by going to parties or by doing quests." />
+
+            <com.queatz.snappy.ui.TextView
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -98,6 +115,7 @@
                 android:text="What are check-ins?" />
 
             <com.queatz.snappy.ui.TextView
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text"
@@ -132,6 +150,21 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text"
                 android:text="People who follow you will get notified when you host a party. Accordingly, you will get notified when people you follow throw a party." />
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:textStyle="bold"
+                android:textColor="@color/text"
+                android:text="What happens when I pay for Village?" />
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text"
+                android:text="You gain the ability to host parties, make quests, and give endorsements." />
 
         </LinearLayout>
 

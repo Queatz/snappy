@@ -1,14 +1,10 @@
 package com.queatz.snappy.ui;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.AnticipateInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 
 import com.queatz.snappy.Config;
@@ -135,7 +131,7 @@ public class MiniMenu extends FrameLayout {
 
         if(0 == bounties) {
             if(Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
-                ((TextView) findViewById(R.id.action_bounties)).setText(getResources().getString(R.string.post_a_bounty));
+                ((TextView) findViewById(R.id.action_bounties)).setText(getResources().getString(R.string.start_a_quest));
             }
             else {
                 findViewById(R.id.action_bounties).setVisibility(View.GONE);

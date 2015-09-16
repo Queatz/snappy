@@ -77,10 +77,10 @@
     <string name="stop_offering">Stop offering</string>
     <string name="describe_another_experience">Describe another experience</string>
     <string name="information">\?</string>
-    <string name="bounties">%1$s bounties</string>
-    <string name="post_a_bounty">Post a bounty</string>
-    <string name="post_bounty">Post bounty</string>
-    <string name="describe_the_bounty">Describe a bounty</string>
+    <string name="quests">%1$s quests</string>
+    <string name="start_a_quest">Start a quest</string>
+    <string name="start_quest">Start quest</string>
+    <string name="describe_the_quest">Describe the quest</string>
     <string name="claim">Claim</string>
     <string name="claim_this_bounty">Claim this bounty?</string>
     <string name="message">Message</string>

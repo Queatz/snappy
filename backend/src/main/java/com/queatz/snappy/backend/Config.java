@@ -25,8 +25,8 @@ public class Config {
     public static final int SEARCH_PEOPLE_MAX_DISTANCE = 804;
     public static final int SEARCH_LOCATIONS_MAX_HERE = 10;
     public static final int OFFER_MAX_PRICE = 200;
-    public static final int BOUNTY_MIN_PRICE = 10;
-    public static final int BOUNTY_MAX_PRICE = 200;
+    public static final int BOUNTY_MIN_PRICE = 500;
+    public static final int BOUNTY_MAX_PRICE = 15000;
 
     public static final String HOSTING_BETATESTER = "betatester";
 

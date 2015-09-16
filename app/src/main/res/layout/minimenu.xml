@@ -91,6 +91,6 @@
         android:textAlignment="center"
         android:gravity="center_horizontal"
         android:textColor="@color/white"
-        android:text="@string/post_a_bounty" />
+        android:text="@string/start_a_quest" />
 
 </LinearLayout>
