@@ -94,6 +94,7 @@
     <string name="start_this_quest">Do you want to start this quest?</string>
     <string name="specify_reward">Specify a reward</string>
     <string name="this_quest_is_full">This quest is full</string>
+    <string name="reward_text"><![CDATA[<b>Reward:</b> %1$s]]></string>
 
     <plurals name="people_near_place">
         <item quantity="one">%1$s person near %2$s</item>

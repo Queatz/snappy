@@ -23,7 +23,6 @@ import com.queatz.snappy.ui.TimeSlider;
 
 import java.util.Date;
 
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 /**
@@ -50,6 +49,7 @@ public class Quests extends Activity {
             View newQuest = View.inflate(this, R.layout.quests_new, null);
 
             questList.addHeaderView(newQuest);
+            questList.addFooterView(new View(this));
 
             questDetails = (EditText) newQuest.findViewById(R.id.details);
             questReward = (EditText) newQuest.findViewById(R.id.reward);
@@ -94,10 +94,9 @@ public class Quests extends Activity {
         }
 
         RealmResults<Quest> query = team.realm.where(Quest.class).greaterThan("opened", new Date(new Date().getTime() - 1000L * 60 * 60 * 24 * 30))
-                .equalTo("status", Config.QUEST_STATUS_OPEN)
-                .or()
+                .notEqualTo("status", Config.QUEST_STATUS_COMPLETE)
                 .beginGroup()
-                    .notEqualTo("status", Config.QUEST_STATUS_STARTED)
+                    .equalTo("status", Config.QUEST_STATUS_OPEN)
                     .or()
                     .equalTo("team.id", team.auth.getUser())
                     .or()
@@ -143,7 +142,7 @@ public class Quests extends Activity {
     };
 
     private String getTimeOfDay(float percent) {
-        return timesOfDay[(int) (percent * (timesOfDay.length - 1))];
+        return timesOfDay[Math.min(timesOfDay.length - 1, (int) (percent * timesOfDay.length))];
     }
 
     private int getTeamSize(float percent) {

@@ -2,6 +2,7 @@ package com.queatz.snappy.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,9 +45,11 @@ public class QuestAdapter extends RealmBaseAdapter<Quest> {
         ImageView people = (ImageView) view.findViewById(R.id.people);
         TextView details = (TextView) view.findViewById(R.id.details);
         TextView reward = (TextView) view.findViewById(R.id.reward);
+        TextView time = (TextView) view.findViewById(R.id.time);
 
         details.setText(quest.getDetails());
-        reward.setText(quest.getReward());
+        time.setText(quest.getTime());
+        reward.setText(Html.fromHtml(context.getString(R.string.reward_text, quest.getReward())));
 
         if(team.auth.getUser() != null && team.auth.getUser().equals(quest.getHost().getId())) {
             view.setTag(quest);

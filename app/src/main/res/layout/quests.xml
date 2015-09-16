@@ -3,13 +3,14 @@
     android:id="@+id/refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple">
+    android:background="@color/darkpurple">
 
     <ListView
         android:id="@+id/quests"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="0dp"
+        android:dividerHeight="8dp"
+        android:footerDividersEnabled="true"
         android:divider="@null" />
 
 </com.queatz.snappy.ui.SwipeRefreshLayout>

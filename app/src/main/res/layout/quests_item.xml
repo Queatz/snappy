@@ -3,44 +3,67 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/purple"
+    android:elevation="2dp">
 
     <LinearLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:orientation="horizontal"
+        android:gravity="top">
 
-        <com.queatz.snappy.ui.TextView
-            android:id="@+id/details"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
             android:layout_weight="1"
-            android:padding="8dp"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:padding="8dp">
 
-        <com.queatz.snappy.ui.TextView
-            android:id="@+id/reward"
+            <com.queatz.snappy.ui.TextView
+                android:id="@+id/details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <com.queatz.snappy.ui.TextView
+                android:id="@+id/reward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_weight="0"
-            android:layout_marginLeft="8dp"
-            android:padding="8dp"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:orientation="vertical"
+            android:gravity="right">
 
-        <com.makeramen.RoundedImageView
-            android:id="@+id/people"
-            android:visibility="gone"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center_vertical|top"
-            app:riv_corner_radius="32dp"
-            android:layout_marginTop="4dp"
-            android:padding="4dp" />
+            <com.queatz.snappy.ui.TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:textColor="@color/whiteout"
+                android:textSize="18sp" />
+
+            <com.makeramen.RoundedImageView
+                android:id="@+id/people"
+                android:visibility="gone"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                app:riv_corner_radius="32dp"
+                android:layout_margin="4dp"
+                android:padding="4dp" />
+
+            </LinearLayout>
 
     </LinearLayout>
 
