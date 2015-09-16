@@ -19,12 +19,6 @@ import java.util.Iterator;
  * Created by jacob on 2/19/15.
  */
 public class Follow implements Thing {
-    public Things things;
-
-    public Follow(Things t) {
-        things = t;
-    }
-
     public JSONObject makePush(Document follow) {
         if(follow == null)
             return null;
@@ -35,7 +29,7 @@ public class Follow implements Thing {
 
         try {
             push.put("action", Config.PUSH_ACTION_FOLLOW);
-            push.put("person", things.person.toPushJson(person));
+            push.put("person", Things.getService().person.toPushJson(person));
         }
         catch (JSONException e) {
             e.printStackTrace();
@@ -53,8 +47,8 @@ public class Follow implements Thing {
 
         try {
             o.put("id", d.getId());
-            o.put("person", things.person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("person").getAtom()), user, true));
-            o.put("following", things.person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("following").getAtom()), user, true));
+            o.put("person", Things.getService().person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("person").getAtom()), user, true));
+            o.put("following", Things.getService().person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("following").getAtom()), user, true));
 
             return o;
         }

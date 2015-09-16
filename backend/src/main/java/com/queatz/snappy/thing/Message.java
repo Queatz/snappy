@@ -18,13 +18,6 @@ import java.util.Date;
  * Created by jacob on 2/15/15.
  */
 public class Message implements Thing {
-    public Things things;
-
-    public Message(Things t) {
-        things = t;
-    }
-
-
     public JSONObject makePush(Document message) {
         if(message == null)
             return null;
@@ -51,7 +44,7 @@ public class Message implements Thing {
 
         try {
             o.put("id", d.getId());
-            o.put("from", things.person.toPushJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("from").getAtom())));
+            o.put("from", Things.getService().person.toPushJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("from").getAtom())));
 
             String msg = d.getOnlyField("message").getText();
 
@@ -77,8 +70,8 @@ public class Message implements Thing {
 
         try {
             o.put("id", d.getId());
-            o.put("from", things.person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("from").getAtom()), user, true));
-            o.put("to", things.person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("to").getAtom()), user, true));
+            o.put("from", Things.getService().person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("from").getAtom()), user, true));
+            o.put("to", Things.getService().person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("to").getAtom()), user, true));
             o.put("message", d.getOnlyField("message").getText());
             o.put("date", Util.dateToString(d.getOnlyField("date").getDate()));
 

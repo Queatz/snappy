@@ -18,12 +18,6 @@ import javax.servlet.http.HttpServletRequest;
  * Created by jacob on 2/15/15.
  */
 public class Location implements Thing {
-    public Things things;
-
-    public Location(Things t) {
-        things = t;
-    }
-
     @Override
     public JSONObject toJson(Document d, String user, boolean shallow) {
         if(d == null)

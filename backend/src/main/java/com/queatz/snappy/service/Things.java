@@ -10,6 +10,7 @@ import com.queatz.snappy.thing.Message;
 import com.queatz.snappy.thing.Offer;
 import com.queatz.snappy.thing.Party;
 import com.queatz.snappy.thing.Person;
+import com.queatz.snappy.thing.Quest;
 import com.queatz.snappy.thing.Update;
 
 /**
@@ -36,18 +37,20 @@ public class Things {
     public Buy buy;
     public Offer offer;
     public Bounty bounty;
+    public Quest quest;
 
     public Things() {
-        party = new Party(this);
-        location = new Location(this);
-        message = new Message(this);
-        person = new Person(this);
-        join = new Join(this);
-        follow = new Follow(this);
-        contact = new Contact(this);
-        buy = new Buy(this);
-        update = new Update(this);
-        offer = new Offer(this);
-        bounty = new Bounty(this);
+        party = new Party();
+        location = new Location();
+        message = new Message();
+        person = new Person();
+        join = new Join();
+        follow = new Follow();
+        contact = new Contact();
+        buy = new Buy();
+        update = new Update();
+        offer = new Offer();
+        bounty = new Bounty();
+        quest = new Quest();
     }
 }

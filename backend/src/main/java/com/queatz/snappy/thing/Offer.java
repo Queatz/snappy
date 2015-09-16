@@ -17,12 +17,6 @@ import java.util.Date;
  * Created by jacob on 8/29/15.
  */
 public class Offer implements Thing {
-    public Things things;
-
-    public Offer(Things t) {
-        things = t;
-    }
-
     @Override
     public JSONObject toJson(Document d, String user, boolean shallow) {
         if(d == null)
@@ -32,7 +26,7 @@ public class Offer implements Thing {
 
         try {
             o.put("id", d.getId());
-            o.put("person", things.person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("person").getAtom()), user, true));
+            o.put("person", Things.getService().person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("person").getAtom()), user, true));
             o.put("details", d.getOnlyField("details").getText());
             o.put("price", d.getOnlyField("price").getNumber().intValue());
 

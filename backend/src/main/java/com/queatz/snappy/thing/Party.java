@@ -22,12 +22,6 @@ import javax.servlet.http.HttpServletRequest;
  * Created by jacob on 2/15/15.
  */
 public class Party implements Thing {
-    public Things things;
-
-    public Party(Things t) {
-        things = t;
-    }
-
     public JSONObject makePush(Document party) {
         if(party == null)
             return null;
@@ -38,7 +32,7 @@ public class Party implements Thing {
 
         try {
             push.put("action", Config.PUSH_ACTION_NEW_PARTY);
-            push.put("host", things.person.toPushJson(person));
+            push.put("host", Things.getService().person.toPushJson(person));
             push.put("party", toPushJson(party));
 
         }
@@ -83,8 +77,8 @@ public class Party implements Thing {
 
             o.put("id", party);
             o.put("details", d.getOnlyField("details").getText());
-            o.put("location", things.location.toJson(Search.getService().get(Search.Type.LOCATION, d.getOnlyField("location").getAtom()), user, true));
-            o.put("host", things.person.toJson(Search.getService().get(Search.Type.PERSON, host), user, true));
+            o.put("location", Things.getService().location.toJson(Search.getService().get(Search.Type.LOCATION, d.getOnlyField("location").getAtom()), user, true));
+            o.put("host", Things.getService().person.toJson(Search.getService().get(Search.Type.PERSON, host), user, true));
             o.put("date", Util.dateToString(d.getOnlyField("date").getDate()));
             o.put("name", d.getOnlyField("name").getText());
 
@@ -105,7 +99,7 @@ public class Party implements Thing {
 
                 for (ScoredDocument document : results) {
                     if(isHost || (user != null && user.equals(document.getOnlyField("person").getAtom())) || Config.JOIN_STATUS_IN.equals(document.getOnlyField("status").getAtom()))
-                        people.put(things.join.toJson(document, user, false));
+                        people.put(Things.getService().join.toJson(document, user, false));
                 }
 
                 if(people.length() > 0)
@@ -131,7 +125,7 @@ public class Party implements Thing {
 
         if(location.startsWith("{")) {
             try {
-                locationDocument = things.location.createFromJson(req, user, new JSONObject(location));
+                locationDocument = Things.getService().location.createFromJson(req, user, new JSONObject(location));
                 location = locationDocument.getId();
             }
             catch (JSONException e) {

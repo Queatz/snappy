@@ -116,7 +116,7 @@ public class Here extends Api.Path {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-        String queryString = "distance(latlng, geopoint(" + latitude + ", " + longitude + ")) < " + Config.BOUNTIES_MAX_VISIBILITY + " AND posted >= \"" + format.format(new Date(new Date().getTime() - Config.BOUNTIES_MAX_AGE)) + "\"";
+        String queryString = "distance(latlng, geopoint(" + latitude + ", " + longitude + ")) < " + Config.NEARBY_MAX_VISIBILITY + " AND posted >= \"" + format.format(new Date(new Date().getTime() - Config.BOUNTIES_MAX_AGE)) + "\"";
 
         QueryOptions queryOptions = QueryOptions.newBuilder().setLimit(Config.BOUNTIES_MAXIMUM).build();
         Query query = Query.newBuilder().setOptions(queryOptions).build(queryString);
@@ -124,6 +124,24 @@ public class Here extends Api.Path {
 
         for (ScoredDocument result : results) {
             r.put(Things.getService().bounty.toJson(result, user, false));
+        }
+
+        return r;
+    }
+
+    private JSONArray fetchQuests(String user, double latitude, double longitude) {
+        JSONArray r = new JSONArray();
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        String queryString = "distance(latlng, geopoint(" + latitude + ", " + longitude + ")) < " + Config.NEARBY_MAX_VISIBILITY + " AND posted >= \"" + format.format(new Date(new Date().getTime() - Config.QUESTS_MAX_AGE)) + "\"";
+
+        QueryOptions queryOptions = QueryOptions.newBuilder().setLimit(Config.QUESTS_MAXIMUM).build();
+        Query query = Query.newBuilder().setOptions(queryOptions).build(queryString);
+        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.QUEST).search(query);
+
+        for (ScoredDocument result : results) {
+            r.put(Things.getService().quest.toJson(result, user, false));
         }
 
         return r;
@@ -157,7 +175,8 @@ public class Here extends Api.Path {
             jsonObject.put("parties", fetchParties(user, latitude, longitude));
             jsonObject.put("people", fetchPeople(user, latitude, longitude));
             jsonObject.put("locations", fetchLocations(user, latitude, longitude));
-            jsonObject.put("bounties", fetchBounties(user, latitude, longitude));
+            //jsonObject.put("bounties", fetchBounties(user, latitude, longitude));
+            jsonObject.put("quests", fetchQuests(user, latitude, longitude));
         } catch (JSONException e) {
             e.printStackTrace();
         }

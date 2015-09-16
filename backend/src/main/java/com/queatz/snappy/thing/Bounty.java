@@ -19,12 +19,6 @@ import java.util.Date;
  * Created by jacob on 9/5/15.
  */
 public class Bounty implements Thing {
-    public Things things;
-
-    public Bounty(Things t) {
-        things = t;
-    }
-
     public JSONObject makePush(Document bounty) {
         if(bounty == null)
             return null;
@@ -38,7 +32,7 @@ public class Bounty implements Thing {
 
             if(Config.BOUNTY_STATUS_FINISHED.equals(bounty.getOnlyField("status").getAtom())) {
                 action = Config.PUSH_ACTION_BOUNTY_FINISHED;
-                push.put("people", things.person.toPushJson(people));
+                push.put("people", Things.getService().person.toPushJson(people));
             }
             else
                 return null;
@@ -64,7 +58,7 @@ public class Bounty implements Thing {
 
         try {
             o.put("id", d.getId());
-            o.put("poster", things.person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("poster").getAtom()), user, true));
+            o.put("poster", Things.getService().person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("poster").getAtom()), user, true));
             o.put("details", d.getOnlyField("details").getText());
             o.put("price", d.getOnlyField("price").getNumber().intValue());
             o.put("status", d.getOnlyField("status").getAtom());

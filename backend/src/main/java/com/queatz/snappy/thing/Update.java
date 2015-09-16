@@ -18,12 +18,6 @@ import java.util.Date;
  * Created by jacob on 2/15/15.
  */
 public class Update implements Thing {
-    public Things things;
-
-    public Update(Things t) {
-        things = t;
-    }
-
     public JSONObject toJson(Document d, String user, boolean shallow) {
         if(d == null)
             return null;
@@ -32,10 +26,10 @@ public class Update implements Thing {
 
         try {
             o.put("id", d.getId());
-            o.put("person", things.person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("person").getAtom()), user, true));
+            o.put("person", Things.getService().person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("person").getAtom()), user, true));
 
             if(d.getFieldCount("party") == 1) {
-                o.put("party", things.party.toJson(Search.getService().get(Search.Type.PARTY, d.getOnlyField("party").getAtom()), user, true));
+                o.put("party", Things.getService().party.toJson(Search.getService().get(Search.Type.PARTY, d.getOnlyField("party").getAtom()), user, true));
             }
 
             if(d.getFieldCount("message") == 1) {

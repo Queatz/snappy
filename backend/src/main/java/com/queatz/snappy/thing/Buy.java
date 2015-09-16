@@ -20,12 +20,6 @@ import java.util.Iterator;
  * Created by jacob on 3/28/15.
  */
 public class Buy implements Thing {
-    public Things things;
-
-    public Buy(Things t) {
-        things = t;
-    }
-
     public JSONObject toJson(Document d, String user, boolean shallow) {
         return null;
     }

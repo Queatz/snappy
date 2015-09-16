@@ -20,12 +20,6 @@ import java.util.Iterator;
  * Created by jacob on 2/16/15.
  */
 public class Join implements Thing {
-    public Things things;
-
-    public Join(Things t) {
-        things = t;
-    }
-
     public JSONObject makePush(Document join) {
         if(join == null)
             return null;
@@ -40,7 +34,7 @@ public class Join implements Thing {
 
             if(Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
                 action = Config.PUSH_ACTION_JOIN_REQUEST;
-                push.put("person", things.person.toPushJson(person));
+                push.put("person", Things.getService().person.toPushJson(person));
             }
             else if(Config.JOIN_STATUS_IN.equals(join.getOnlyField("status").getAtom())) {
                 action = Config.PUSH_ACTION_JOIN_ACCEPTED;
@@ -50,7 +44,7 @@ public class Join implements Thing {
 
             push.put("action", action);
             push.put("join", join.getId());
-            push.put("party", things.party.toPushJson(party));
+            push.put("party", Things.getService().party.toPushJson(party));
 
         }
         catch (JSONException e) {
@@ -69,8 +63,8 @@ public class Join implements Thing {
 
         try {
             o.put("id", d.getId());
-            o.put("person", things.person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("person").getAtom()), user, true));
-            o.put("party", things.party.toJson(Search.getService().get(Search.Type.PARTY, d.getOnlyField("party").getAtom()), user, true));
+            o.put("person", Things.getService().person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("person").getAtom()), user, true));
+            o.put("party", Things.getService().party.toJson(Search.getService().get(Search.Type.PARTY, d.getOnlyField("party").getAtom()), user, true));
             o.put("status", d.getOnlyField("status").getAtom());
 
             return o;

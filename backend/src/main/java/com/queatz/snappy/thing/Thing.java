@@ -8,5 +8,5 @@ import org.json.JSONObject;
  * Created by jacob on 2/15/15.
  */
 public interface Thing {
-    public JSONObject toJson(Document doc, String user, boolean shallow);
+    JSONObject toJson(Document doc, String user, boolean shallow);
 }

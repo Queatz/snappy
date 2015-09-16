@@ -19,12 +19,6 @@ import java.util.Iterator;
  * Created by jacob on 2/21/15.
  */
 public class Contact implements Thing {
-    public Things things;
-
-    public Contact(Things t) {
-        things = t;
-    }
-
     public JSONObject toJson(Document d, String user, boolean shallow) {
         if(d == null)
             return null;
@@ -33,9 +27,9 @@ public class Contact implements Thing {
 
         try {
             o.put("id", d.getId());
-            o.put("person", things.person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("person").getAtom()), user, true));
-            o.put("contact", things.person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("contact").getAtom()), user, true));
-            o.put("last", things.message.toJson(Search.getService().get(Search.Type.MESSAGE, d.getOnlyField("last").getAtom()), user, true));
+            o.put("person", Things.getService().person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("person").getAtom()), user, true));
+            o.put("contact", Things.getService().person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("contact").getAtom()), user, true));
+            o.put("last", Things.getService().message.toJson(Search.getService().get(Search.Type.MESSAGE, d.getOnlyField("last").getAtom()), user, true));
             o.put("updated", Util.dateToString(d.getOnlyField("updated").getDate()));
             o.put("seen", d.getOnlyField("seen").getAtom());
 

@@ -9,22 +9,7 @@ import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.appengine.tools.cloudstorage.RetryParams;
 import com.queatz.snappy.SnappyServlet;
-import com.queatz.snappy.api.Admin;
-import com.queatz.snappy.api.Bounties;
-import com.queatz.snappy.api.Bounty;
-import com.queatz.snappy.api.Example;
-import com.queatz.snappy.api.Follow;
-import com.queatz.snappy.api.Here;
-import com.queatz.snappy.api.Join;
-import com.queatz.snappy.api.Location;
-import com.queatz.snappy.api.Locations;
-import com.queatz.snappy.api.Me;
-import com.queatz.snappy.api.Messages;
-import com.queatz.snappy.api.Parties;
-import com.queatz.snappy.api.Party;
-import com.queatz.snappy.api.People;
-import com.queatz.snappy.api.Pirate;
-import com.queatz.snappy.api.Update;
+import com.queatz.snappy.api.*;
 import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.backend.PrintingError;
 
@@ -92,6 +77,16 @@ public class Api {
         final public void notFound() throws PrintingError {
             throw new PrintingError(Error.NOT_FOUND);
         }
+
+        final public void handOff(Api.Path to) throws IOException, PrintingError {
+            if (path.isEmpty()) {
+                error("cannot hand off");
+            }
+
+            path.remove(0);
+
+            to._call(path, user, method, request, response);
+        }
     }
 
     public SnappyServlet snappy;
@@ -120,6 +115,7 @@ public class Api {
         paths.put(Config.PATH_BOUNTY, new Bounty(this));
         paths.put(Config.PATH_UPDATE, new Update(this));
         paths.put(Config.PATH_PARTIES, new Parties(this));
+        paths.put(Config.PATH_QUEST, new Quest(this));
 
         mGCS = GcsServiceFactory.createGcsService(RetryParams.getDefaultInstance());
         mAppIdentityService = AppIdentityServiceFactory.getAppIdentityService();

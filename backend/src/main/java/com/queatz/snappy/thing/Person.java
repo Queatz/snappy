@@ -23,12 +23,6 @@ import java.util.Date;
  * Created by jacob on 2/15/15.
  */
 public class Person implements Thing {
-    public Things things;
-
-    public Person(Things t) {
-        things = t;
-    }
-
     public JSONObject toPushJson(Document d) {
         if(d == null)
             return null;

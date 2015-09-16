@@ -31,7 +31,8 @@ public class Search {
         CONTACT,
         BUY,
         OFFER,
-        BOUNTY
+        BOUNTY,
+        QUEST
     }
 
     public HashMap<Type, Index> index;

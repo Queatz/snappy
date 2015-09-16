@@ -16,9 +16,11 @@ public class Config {
     public static final int SEARCH_MINIMUM = 10;
     public static final int SEARCH_MAXIMUM = 30;
     public static final int SEARCH_MAX_VISIBILITY = 1609 * 300;
-    public static final int BOUNTIES_MAX_VISIBILITY = 1609 * 2;
+    public static final int NEARBY_MAX_VISIBILITY = 1609 * 2;
     public static final int BOUNTIES_MAX_AGE = 1000 * 60 * 60 * 24 * 7;
+    public static final int QUESTS_MAX_AGE = 1000 * 60 * 60 * 24 * 30;
     public static final int BOUNTIES_MAXIMUM = 100;
+    public static final int QUESTS_MAXIMUM = 100;
     public static final int SUGGESTION_LIMIT = 5;
     public static final int SUGGESTION_MAX_DISTANCE = 1609 * 7;
     public static final int SEARCH_PEOPLE_MAX_NEAR_HERE = 500;
@@ -106,6 +108,7 @@ public class Config {
     public static final String PATH_API = "api";
     public static final String PATH_PARTY = "party";
     public static final String PATH_PARTIES = "parties";
+    public static final String PATH_QUEST = "quest";
     public static final String PATH_JOIN = "join";
     public static final String PATH_MESSAGES = "messages";
     public static final String PATH_PEOPLE = "people";
