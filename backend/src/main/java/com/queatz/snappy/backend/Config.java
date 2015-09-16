@@ -18,7 +18,8 @@ public class Config {
     public static final int SEARCH_MAX_VISIBILITY = 1609 * 300;
     public static final int NEARBY_MAX_VISIBILITY = 1609 * 2;
     public static final int BOUNTIES_MAX_AGE = 1000 * 60 * 60 * 24 * 7;
-    public static final int QUESTS_MAX_AGE = 1000 * 60 * 60 * 24 * 30;
+    public static final long QUESTS_MAX_AGE = 1000L * 60L * 60L * 24L * 30L;
+    public static final int QUEST_MAX_TEAM_SIZE = 10;
     public static final int BOUNTIES_MAXIMUM = 100;
     public static final int QUESTS_MAXIMUM = 100;
     public static final int SUGGESTION_LIMIT = 5;
@@ -50,6 +51,8 @@ public class Config {
     public static final String PUSH_ACTION_REFRESH_ME = "refresh_me";
     public static final String PUSH_ACTION_CLEAR_NOTIFICATION = "clear_notification";
     public static final String PUSH_ACTION_BOUNTY_FINISHED = "bounty_finished";
+    public static final String PUSH_ACTION_QUEST_JOIN = "quest_join";
+    public static final String PUSH_ACTION_QUEST_STARTED = "quest_started";
 
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";
     public static final String UPDATE_ACTION_HOST_PARTY = "host_party";
@@ -63,6 +66,10 @@ public class Config {
     public static final String BOUNTY_STATUS_OPEN = "open";
     public static final String BOUNTY_STATUS_CLAIMED = "claimed";
     public static final String BOUNTY_STATUS_FINISHED = "finished";
+
+    public static final String QUEST_STATUS_OPEN = "open";
+    public static final String QUEST_STATUS_STARTED = "started";
+    public static final String QUEST_STATUS_COMPLETE = "complete";
 
     public static final String PARAM_ABOUT = "about";
     public static final String PARAM_EMAIL = "email";
@@ -93,6 +100,10 @@ public class Config {
     public static final String PARAM_NOTIFICATION = "notification";
     public static final String PARAM_SIZE = "s";
     public static final String PARAM_PRICE = "price";
+    public static final String PARAM_TIME = "time";
+    public static final String PARAM_TEAM_SIZE = "teamSize";
+    public static final String PARAM_REWARD = "reward";
+    public static final String PARAM_START = "start";
 
     public static final String GOOGLE_PLUS_PROFILE_URL = "https://www.googleapis.com/plus/v1/people/me";
     public static final String GOOGLE_PLUS_TOKENINFO_URL = "https://www.googleapis.com/oauth2/v1/tokeninfo";

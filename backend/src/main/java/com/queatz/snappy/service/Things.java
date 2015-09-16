@@ -11,6 +11,7 @@ import com.queatz.snappy.thing.Offer;
 import com.queatz.snappy.thing.Party;
 import com.queatz.snappy.thing.Person;
 import com.queatz.snappy.thing.Quest;
+import com.queatz.snappy.thing.QuestPerson;
 import com.queatz.snappy.thing.Update;
 
 /**
@@ -38,6 +39,7 @@ public class Things {
     public Offer offer;
     public Bounty bounty;
     public Quest quest;
+    public QuestPerson questPerson;
 
     public Things() {
         party = new Party();
@@ -52,5 +54,6 @@ public class Things {
         offer = new Offer();
         bounty = new Bounty();
         quest = new Quest();
+        questPerson = new QuestPerson();
     }
 }
