@@ -1,7 +1,6 @@
 package com.queatz.snappy.api;
 
 import com.google.appengine.api.search.Document;
-import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Api;
@@ -9,70 +8,72 @@ import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by jacob on 9/5/15.
  */
-public class Bounty implements Api.Path {
-    Api api;
-
-    public Bounty(Api a) {
-        api = a;
+public class Bounty extends Api.Path {
+    public Bounty(Api api) {
+        super(api);
     }
 
     @Override
-    public void call(ArrayList<String> path, String user, HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException, PrintingError {
-        String bountyId;
-
+    public void call() throws IOException, PrintingError {
         switch (method) {
             case POST:
-                if(path.size() != 1)
-                    throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "bounty - bad path");
-
-                bountyId = path.get(0);
-
-                if(Boolean.valueOf(req.getParameter(Config.PARAM_CLAIM))) {
-                    boolean claimed = Things.getService().bounty.claim(user, bountyId);
-
-                    resp.getWriter().write(Boolean.toString(claimed));
+                if(path.size() != 1) {
+                    die("bounty - bad path");
                 }
-                else if(Boolean.valueOf(req.getParameter(Config.PARAM_FINISH))) {
-                    Document bounty = Search.getService().get(Search.Type.BOUNTY, bountyId);
 
-                    boolean finished = Things.getService().bounty.finish(user, bountyId);
-
-                    resp.getWriter().write(Boolean.toString(finished));
-
-                    if(finished) {
-                        Push.getService().send(bounty.getOnlyField("poster").getAtom(), Things.getService().bounty.makePush(bounty));
-                    }
+                if(Boolean.valueOf(request.getParameter(Config.PARAM_CLAIM))) {
+                    postClaim(path.get(0));
+                } else if(Boolean.valueOf(request.getParameter(Config.PARAM_FINISH))) {
+                    postFinish(path.get(0));
+                }
+                else {
+                    die("bounty - bad path");
                 }
 
                 break;
             case DELETE:
-                if(path.size() != 1)
-                    throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "bounty - bad path");
-
-                bountyId = path.get(0);
-
-                Document bounty = Search.getService().get(Search.Type.BOUNTY, bountyId);
-
-                if(bounty != null && user.equals(bounty.getOnlyField("poster").getAtom())) {
-                    boolean success = Things.getService().bounty.delete(bounty);
-
-                    resp.getWriter().write(Boolean.toString(success));
+                if(path.size() != 1) {
+                    die("bounty - bad path");
                 }
+
+                delete(path.get(0));
 
                 break;
             default:
-                throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "bounty - bad method");
+                die("bounty - bad method");
+        }
+    }
+
+    private void postClaim(String bountyId) throws IOException {
+        boolean claimed = Things.getService().bounty.claim(user, bountyId);
+
+        response.getWriter().write(Boolean.toString(claimed));
+    }
+
+    private void postFinish(String bountyId) throws IOException {
+        Document bounty = Search.getService().get(Search.Type.BOUNTY, bountyId);
+
+        boolean finished = Things.getService().bounty.finish(user, bountyId);
+
+        response.getWriter().write(Boolean.toString(finished));
+
+        if(finished) {
+            Push.getService().send(bounty.getOnlyField("poster").getAtom(), Things.getService().bounty.makePush(bounty));
+        }
+    }
+
+    private void delete(String bountyId) throws IOException {
+        Document bounty = Search.getService().get(Search.Type.BOUNTY, bountyId);
+
+        if(bounty != null && user.equals(bounty.getOnlyField("poster").getAtom())) {
+            boolean success = Things.getService().bounty.delete(bounty);
+
+            response.getWriter().write(Boolean.toString(success));
         }
     }
 }

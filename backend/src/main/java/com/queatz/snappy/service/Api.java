@@ -56,8 +56,42 @@ public class Api {
         SERVER_ERROR
     }
 
-    public static interface Path {
-        public void call(ArrayList<String> path, String user, HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException, PrintingError;
+    public abstract static class Path {
+        protected ArrayList<String> path;
+        protected String user;
+        protected HTTPMethod method;
+        protected HttpServletRequest request;
+        protected HttpServletResponse response;
+
+        public Api api;
+
+        public Path(Api api) {
+            this.api = api;
+        }
+
+        private void _call(ArrayList<String> path, String user, HTTPMethod method, HttpServletRequest request, HttpServletResponse response) throws IOException, PrintingError {
+            this.path = path;
+            this.user = user;
+            this.method = method;
+            this.request = request;
+            this.response = response;
+
+            call();
+        }
+
+        public abstract void call() throws IOException, PrintingError;
+
+        final public void die(String reason) throws PrintingError {
+            throw new PrintingError(Api.Error.NOT_AUTHENTICATED, reason);
+        }
+
+        final public void error(String reason) throws PrintingError {
+            throw new PrintingError(Error.SERVER_ERROR, reason);
+        }
+
+        final public void notFound() throws PrintingError {
+            throw new PrintingError(Error.NOT_FOUND);
+        }
     }
 
     public SnappyServlet snappy;
@@ -71,7 +105,6 @@ public class Api {
     public Api() {
         paths = new HashMap<>();
         paths.put("example", new Example(this));
-        paths.put(Config.PATH_PARTIES, new Parties(this));
         paths.put(Config.PATH_PARTY, new Party(this));
         paths.put(Config.PATH_MESSAGES, new Messages(this));
         paths.put(Config.PATH_PEOPLE, new People(this));
@@ -86,14 +119,15 @@ public class Api {
         paths.put(Config.PATH_BOUNTIES, new Bounties(this));
         paths.put(Config.PATH_BOUNTY, new Bounty(this));
         paths.put(Config.PATH_UPDATE, new Update(this));
+        paths.put(Config.PATH_PARTIES, new Parties(this));
 
         mGCS = GcsServiceFactory.createGcsService(RetryParams.getDefaultInstance());
         mAppIdentityService = AppIdentityServiceFactory.getAppIdentityService();
         mImagesService = ImagesServiceFactory.getImagesService();
     }
 
-    public void call(String user, HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws PrintingError {
-        String[] path = req.getRequestURI().split("/");
+    public void call(String user, HTTPMethod method, HttpServletRequest request, HttpServletResponse response) throws PrintingError {
+        String[] path = request.getRequestURI().split("/");
 
         if(path.length < 3) {
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "bad request length");
@@ -113,7 +147,7 @@ public class Api {
             Path p = paths.get(basePath);
 
             if(p != null)
-                p.call(pathParts, user, method, req, resp);
+                p._call(pathParts, user, method, request, response);
             else
                 throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "bad request path");
         }

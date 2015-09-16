@@ -1,6 +1,5 @@
 package com.queatz.snappy.service;
 
-import com.queatz.snappy.SnappyServlet;
 import com.queatz.snappy.backend.RegistrationRecord;
 
 import org.json.JSONObject;

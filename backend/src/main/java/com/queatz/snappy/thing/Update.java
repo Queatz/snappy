@@ -4,8 +4,6 @@ import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.PutException;
 import com.google.appengine.api.search.PutResponse;
-import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.ScoredDocument;
 import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.service.Search;
@@ -15,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
-import java.util.Iterator;
 
 /**
  * Created by jacob on 2/15/15.

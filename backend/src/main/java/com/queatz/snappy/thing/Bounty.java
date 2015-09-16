@@ -2,11 +2,8 @@ package com.queatz.snappy.thing;
 
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
-import com.google.appengine.api.search.GeoPoint;
 import com.google.appengine.api.search.PutException;
 import com.google.appengine.api.search.PutResponse;
-import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.ScoredDocument;
 import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.service.Search;

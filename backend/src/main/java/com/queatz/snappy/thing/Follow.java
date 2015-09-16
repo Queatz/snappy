@@ -15,8 +15,6 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
-import javax.print.Doc;
-
 /**
  * Created by jacob on 2/19/15.
  */

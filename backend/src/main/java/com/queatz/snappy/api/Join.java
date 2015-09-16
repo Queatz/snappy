@@ -1,10 +1,9 @@
 package com.queatz.snappy.api;
 
 import com.google.appengine.api.search.Document;
-import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.queatz.snappy.service.Api;
 import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
@@ -12,92 +11,95 @@ import com.queatz.snappy.service.Things;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by jacob on 2/18/15.
  */
-public class Join implements Api.Path {
-    Api api;
-
-    public Join(Api a) {
-        api = a;
+public class Join extends Api.Path {
+    public Join(Api api) {
+        super(api);
     }
 
     @Override
-    public void call(ArrayList<String> path, String user, HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException, PrintingError {
-        String joinId;
-        Document join;
-
+    public void call() throws IOException, PrintingError {
         switch (method) {
             case GET:
-                if(path.size() != 1)
-                    throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "people - bad path");
+                if(path.size() != 1) {
+                    die("people - bad path");
+                }
 
-                joinId = path.get(0);
-                join = Search.getService().get(Search.Type.JOIN, joinId);
-                JSONObject r = Things.getService().join.toJson(join, user, false);
-
-                if(r != null)
-                    resp.getWriter().write(r.toString());
-                else
-                    throw new PrintingError(Api.Error.NOT_FOUND);
+                get(path.get(0));
 
                 break;
             case POST:
-                if(path.size() != 1)
-                    throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "join - bad path");
-
-                joinId = path.get(0);
-
-                boolean succeeded = false;
-
-                if(Boolean.valueOf(req.getParameter(Config.PARAM_HIDE))) {
-                    join = Search.getService().get(Search.Type.JOIN, joinId);
-
-                    if(join != null && Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
-                        Document party = Search.getService().get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
-
-                        if(party != null) {
-                            if(user.equals(party.getOnlyField("host").getAtom())) {
-                                Things.getService().join.setStatus(join, Config.JOIN_STATUS_OUT);
-                                succeeded = true;
-                            }
-                        }
-                    }
-
-                    resp.getWriter().write(Boolean.toString(succeeded));
+                if(path.size() != 1) {
+                    die("join - bad path");
                 }
-                else if(Boolean.valueOf(req.getParameter(Config.PARAM_ACCEPT))) {
-                    join = Search.getService().get(Search.Type.JOIN, joinId);
 
-                    if(join != null && Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
-                        Document party = Search.getService().get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
-
-                        if(party != null) {
-                            if(user.equals(party.getOnlyField("host").getAtom())) {
-                                join = Things.getService().join.setStatus(join, Config.JOIN_STATUS_IN);
-                                succeeded = true;
-                            }
-                        }
-                    }
-
-                    resp.getWriter().write(Boolean.toString(succeeded));
-
-                    if(succeeded) {
-                        Push.getService().send(join.getOnlyField("person").getAtom(), Things.getService().join.makePush(join));
-                    }
+                if(Boolean.valueOf(request.getParameter(Config.PARAM_HIDE))) {
+                    postHide(path.get(0));
+                }
+                else if(Boolean.valueOf(request.getParameter(Config.PARAM_ACCEPT))) {
+                    postAccept(path.get(0));
                 }
                 else {
-                    throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "join - bad path");
+                    die("join - bad path");
                 }
 
                 break;
             default:
-                throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "join - bad method");
+                die("join - bad method");
+        }
+    }
+
+    private void get(String joinId) throws IOException, PrintingError {
+        Document join = Search.getService().get(Search.Type.JOIN, joinId);
+        JSONObject r = Things.getService().join.toJson(join, user, false);
+
+        if (r != null) {
+            response.getWriter().write(r.toString());
+        } else {
+            notFound();
+        }
+    }
+
+    private void postHide(String joinId) throws IOException {
+        boolean succeeded = false;
+        Document join = Search.getService().get(Search.Type.JOIN, joinId);
+
+        if(join != null && Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
+            Document party = Search.getService().get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
+
+            if(party != null) {
+                if(user.equals(party.getOnlyField("host").getAtom())) {
+                    Things.getService().join.setStatus(join, Config.JOIN_STATUS_OUT);
+                    succeeded = true;
+                }
+            }
+        }
+
+        response.getWriter().write(Boolean.toString(succeeded));
+    }
+
+    private void postAccept(String joinId) throws IOException {
+        boolean succeeded = false;
+        Document join = Search.getService().get(Search.Type.JOIN, joinId);
+
+        if(join != null && Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
+            Document party = Search.getService().get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
+
+            if(party != null) {
+                if(user.equals(party.getOnlyField("host").getAtom())) {
+                    join = Things.getService().join.setStatus(join, Config.JOIN_STATUS_IN);
+                    succeeded = true;
+                }
+            }
+        }
+
+        response.getWriter().write(Boolean.toString(succeeded));
+
+        if(succeeded) {
+            Push.getService().send(join.getOnlyField("person").getAtom(), Things.getService().join.makePush(join));
         }
     }
 }

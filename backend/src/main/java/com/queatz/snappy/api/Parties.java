@@ -1,116 +1,56 @@
 package com.queatz.snappy.api;
 
 import com.google.appengine.api.search.Document;
-import com.google.appengine.api.search.GeoPoint;
-import com.google.appengine.api.search.Query;
-import com.google.appengine.api.search.QueryOptions;
-import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.ScoredDocument;
-import com.google.appengine.api.search.SortExpression;
-import com.google.appengine.api.search.SortOptions;
-import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.queatz.snappy.service.Api;
-import com.queatz.snappy.service.Buy;
 import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.backend.PrintingError;
-import com.queatz.snappy.service.Push;
-import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Things;
 import com.queatz.snappy.backend.Util;
-import com.queatz.snappy.thing.Location;
+import com.queatz.snappy.service.Api;
+import com.queatz.snappy.service.Buy;
+import com.queatz.snappy.service.Push;
+import com.queatz.snappy.service.Things;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by jacob on 2/8/15.
+ * Created by jacob on 9/15/15.
  */
-
-public class Parties implements Api.Path {
-    Api api;
-
-    public Parties(Api a) {
-        api = a;
+public class Parties extends Api.Path {
+    public Parties(Api api) {
+        super(api);
     }
 
     @Override
-    @Deprecated
-    public void call(ArrayList<String> path, String user, HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException, PrintingError {
+    public void call() throws IOException, PrintingError {
         switch (method) {
-            case GET:
-                String latitudeParameter = req.getParameter(Config.PARAM_LATITUDE);
-                String longitudeParameter = req.getParameter(Config.PARAM_LONGITUDE);
-
-                JSONArray r = new JSONArray();
-
-                if(longitudeParameter == null || latitudeParameter == null) {
-                    throw new PrintingError(Api.Error.NOT_IMPLEMENTED, "missing location");
-                }
-
-                double latitude = Double.parseDouble(latitudeParameter);
-                double longitude = Double.parseDouble(longitudeParameter);
-
-                Things.getService().person.updateLocation(user, latitude, longitude);
-
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-                // TODO: Audit that this is actually sorting and then matching, not matching and then sorting
-                String queryString = "(host = \"" + user + "\" OR (distance(loc_cache, geopoint(" + latitude + ", " + longitude + ")) < " + Config.SEARCH_MAX_VISIBILITY + " AND full=\"" + Boolean.toString(false) + "\")) AND date >= \"" + format.format(new Date(new Date().getTime() - 1000 * 60 * 60)) + "\"";
-
-                SortOptions sortOptions = SortOptions.newBuilder().addSortExpression(
-                        SortExpression.newBuilder().setExpression("distance(loc_cache, geopoint(" + latitude + ", " + longitude + "))").setDirection(SortExpression.SortDirection.ASCENDING).build()
-                ).build();
-
-                QueryOptions queryOptions = QueryOptions.newBuilder().setSortOptions(sortOptions).setLimit(Config.SEARCH_MAXIMUM).build();
-
-                Query query = Query.newBuilder().setOptions(queryOptions).build(queryString);
-
-                Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PARTY).search(query);
-
-                for (ScoredDocument result : results) {
-                    r.put(Things.getService().party.toJson(result, user, false));
-
-                    if (r.length() >= Config.SEARCH_MINIMUM) {
-                        GeoPoint point = Things.getService().location.getGeoPoint(result);
-
-                        if (Util.distance(latitude, longitude, point.getLatitude(), point.getLongitude()) > Config.SEARCH_DISTANCE)
-                            break;
-                    }
-                }
-
-                resp.getWriter().write(r.toString());
-
-                break;
-
             case POST:
-                if(!Buy.getService().valid(user))
-                    throw new PrintingError(Api.Error.NOT_FOUND, "parties - not bought");
-
-                String localId = req.getParameter(Config.PARAM_LOCAL_ID);
-
-                Document document = Things.getService().party.createFromRequest(req, user);
-
-                if(document != null) {
-                    JSONObject response = Things.getService().party.toJson(document, user, false);
-                    Util.localId(response, localId);
-
-                    Push.getService().sendToFollowers(user, Things.getService().party.makePush(document));
-                    resp.getWriter().write(response.toString());
+                if(path.size() != 0) {
+                    die("parties - bad path");
                 }
+
+                post();
 
                 break;
             default:
-                throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "parties - bad method");
+                die("parties - bad method");
+        }
+    }
+
+    private void post() throws IOException, PrintingError {
+        if(!Buy.getService().valid(user))
+            throw new PrintingError(Api.Error.NOT_FOUND, "parties - not bought");
+
+        String localId = request.getParameter(Config.PARAM_LOCAL_ID);
+
+        Document document = Things.getService().party.createFromRequest(request, user);
+
+        if(document != null) {
+            JSONObject json = Things.getService().party.toJson(document, user, false);
+            Util.localId(json, localId);
+
+            Push.getService().sendToFollowers(user, Things.getService().party.makePush(document));
+            response.getWriter().write(json.toString());
         }
     }
 }
-

@@ -2,7 +2,6 @@ package com.queatz.snappy.backend;
 
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
-import com.queatz.snappy.service.Search;
 
 import org.json.JSONException;
 import org.json.JSONObject;

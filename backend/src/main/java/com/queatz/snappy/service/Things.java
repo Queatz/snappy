@@ -1,5 +1,6 @@
 package com.queatz.snappy.service;
 
+import com.queatz.snappy.thing.Bounty;
 import com.queatz.snappy.thing.Buy;
 import com.queatz.snappy.thing.Contact;
 import com.queatz.snappy.thing.Follow;
@@ -10,7 +11,6 @@ import com.queatz.snappy.thing.Offer;
 import com.queatz.snappy.thing.Party;
 import com.queatz.snappy.thing.Person;
 import com.queatz.snappy.thing.Update;
-import com.queatz.snappy.thing.Bounty;
 
 /**
  * Created by jacob on 2/15/15.

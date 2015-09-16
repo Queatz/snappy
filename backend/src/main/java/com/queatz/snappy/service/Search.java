@@ -4,7 +4,6 @@ import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.IndexSpec;
 import com.google.appengine.api.search.SearchServiceFactory;
-import com.queatz.snappy.SnappyServlet;
 
 import java.util.HashMap;
 

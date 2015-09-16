@@ -1,115 +1,109 @@
 package com.queatz.snappy.api;
 
 import com.google.appengine.api.search.Document;
-import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.queatz.snappy.service.Api;
 import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.backend.Util;
+import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
-import com.queatz.snappy.backend.Util;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by jacob on 2/8/15.
  */
 
-public class Party implements Api.Path {
-    Api api;
-
-    public Party(Api a) {
-        api = a;
+public class Party extends Api.Path {
+    public Party(Api api) {
+        super(api);
     }
 
     @Override
-    public void call(ArrayList<String> path, String user, HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException, PrintingError {
+    public void call() throws IOException, PrintingError {
         String partyId;
         Document party;
 
         switch (method) {
             case GET:
-                if(path.size() < 1)
-                    throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "party - bad path");
-
                 if(path.size() == 1) {
-                    partyId = path.get(0);
-                    party = Search.getService().get(Search.Type.PARTY, partyId);
-                    JSONObject r = Things.getService().party.toJson(party, user, false);
-
-                    if(r != null)
-                        resp.getWriter().write(r.toString());
-                    else
-                        throw new PrintingError(Api.Error.NOT_FOUND);
+                    get(path.get(0));
+                } else {
+                    die("party - bad path");
                 }
-//                else if(path.size() == 2) {
-//                    if(Config.PATH_PHOTO.equals(path.get(1))) {
-//                        GcsFilename uptoId = new GcsFilename(api.mAppIdentityService.getDefaultGcsBucketName(), path.get(0));
-//
-//                        GcsInputChannel input = api.mGCS.openReadChannel(uptoId, 0);
-//                        InputStream stream = Channels.newInputStream(input);
-//
-//                        while (stream.available() > 0)
-//                            resp.getWriter().write(stream.read());
-//
-//                        input.close();
-//                    }
-//                }
 
                 break;
             case POST:
-                if(path.size() != 1)
-                    throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "party - bad path");
+                if(path.size() != 1) {
+                    die("party - bad path");
+                }
 
                 partyId = path.get(0);
 
-                if(Boolean.valueOf(req.getParameter(Config.PARAM_JOIN))) {
-                    party = Search.getService().get(Search.Type.PARTY, partyId);
-
-                    if(party != null) {
-                        String localId = req.getParameter(Config.PARAM_LOCAL_ID);
-                        Document join = Things.getService().join.create(user, partyId);
-
-                        if(join != null) {
-                            JSONObject response = Things.getService().join.toJson(join, user, false);
-                            Util.localId(response, localId);
-
-                            resp.getWriter().write(response.toString());
-
-                            Push.getService().send(party.getOnlyField("host").getAtom(), Things.getService().join.makePush(join));
-                        }
-                    }
+                if(Boolean.valueOf(request.getParameter(Config.PARAM_JOIN))) {
+                    postJoin(partyId);
                 }
-                else if(Boolean.valueOf(req.getParameter(Config.PARAM_CANCEL_JOIN))) {
-                    resp.getWriter().write(Boolean.toString(Things.getService().join.delete(user, partyId)));
+                else if(Boolean.valueOf(request.getParameter(Config.PARAM_CANCEL_JOIN))) {
+                    postCancelJoin(partyId);
                 }
-                else if(Boolean.valueOf(req.getParameter(Config.PARAM_FULL))) {
-                    party = Search.getService().get(Search.Type.PARTY, partyId);
-                    if(party == null || user == null || !user.equals(party.getOnlyField("host").getAtom())) {
-                        resp.getWriter().write(Boolean.toString(false));
-                    }
-
-                    Things.getService().party.setFull(party);
-                    resp.getWriter().write(Boolean.toString(true));
+                else if(Boolean.valueOf(request.getParameter(Config.PARAM_FULL))) {
+                    postFull(partyId);
                 }
                 else {
-                    throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "party - bad path");
+                    die("party - bad path");
                 }
-
-                break;
-            case DELETE:
-
 
                 break;
             default:
-                throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "party - bad method");
+                die("party - bad method");
         }
+    }
+
+    private void get(String partyId) throws IOException, PrintingError {
+        Document party = Search.getService().get(Search.Type.PARTY, partyId);
+        JSONObject r = Things.getService().party.toJson(party, user, false);
+
+        if (r == null) {
+            notFound();
+        }
+
+        response.getWriter().write(r.toString());
+    }
+
+    private void postJoin(String partyId) throws IOException {
+        Document party = Search.getService().get(Search.Type.PARTY, partyId);
+
+        if(party != null) {
+            String localId = request.getParameter(Config.PARAM_LOCAL_ID);
+            Document join = Things.getService().join.create(user, partyId);
+
+            if(join != null) {
+                JSONObject json = Things.getService().join.toJson(join, user, false);
+                Util.localId(json, localId);
+
+                response.getWriter().write(json.toString());
+
+                Push.getService().send(party.getOnlyField("host").getAtom(), Things.getService().join.makePush(join));
+            }
+        }
+    }
+
+    private void postCancelJoin(String partyId) throws IOException {
+        response.getWriter().write(Boolean.toString(Things.getService().join.delete(user, partyId)));
+    }
+
+    private void postFull(String partyId) throws IOException {
+        Document party = Search.getService().get(Search.Type.PARTY, partyId);
+
+        if(party == null || user == null || !user.equals(party.getOnlyField("host").getAtom())) {
+            response.getWriter().write(Boolean.toString(false));
+        }
+
+        Things.getService().party.setFull(party);
+
+        response.getWriter().write(Boolean.toString(true));
     }
 }

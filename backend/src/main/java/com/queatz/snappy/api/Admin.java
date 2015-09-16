@@ -3,130 +3,141 @@ package com.queatz.snappy.api;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
-import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.backend.Config;
+import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.service.Api;
-import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by jacob on 4/11/15.
  */
-public class Admin implements Api.Path {
-    Api api;
-
-    public Admin(Api a) {
-        api = a;
+public class Admin extends Api.Path {
+    public Admin(Api api) {
+        super(api);
     }
 
     @Override
-    public void call(ArrayList<String> path, String user, HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException, PrintingError {
+    public void call() throws IOException, PrintingError {
         switch (method) {
             case GET:
                 if (path.size() == 2) {
-                    Document person = null;
-                    String action = path.get(0);
                     String personEmail = path.get(1);
 
-                    if (Config.HOSTING_BETATESTER.equals(action)) {
-                        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PERSON).search("email = \"" + personEmail + "\"");
-
-                        Iterator<ScoredDocument> resultsIterator = results.iterator();
-
-                        if (resultsIterator.hasNext()) {
-                            person = resultsIterator.next();
-                        }
-
-                        if (person != null) {
-                            String subs = null;
-
-                            try {
-                                subs = person.getOnlyField("subscription").getAtom();
-                            }
-                            catch (IllegalArgumentException e) {
-                                e.printStackTrace();
-                            }
-
-                            if(subs == null || subs.isEmpty()) {
-                                Things.getService().person.updateSubscription(person, Config.HOSTING_BETATESTER);
-                                Push.getService().send(person.getId(), Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
-                                resp.getWriter().write(person.getOnlyField("email").getAtom() + " has been upgraded");
-                            }
-                            else {
-                                resp.getWriter().write(person.getOnlyField("email").getAtom() + " is already upgraded");
-                            }
-                        }
-                    }
-                    else if ("enable_hosting".equals(action)) {
-                        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PERSON).search("email = \"" + personEmail + "\"");
-
-                        Iterator<ScoredDocument> resultsIterator = results.iterator();
-
-                        if (resultsIterator.hasNext()) {
-                            person = resultsIterator.next();
-                        }
-
-                        if (person != null) {
-                            String subs = null;
-
-                            try {
-                                subs = person.getOnlyField("subscription").getAtom();
-                            }
-                            catch (IllegalArgumentException e) {
-                                e.printStackTrace();
-                            }
-
-                            if(subs == null || subs.isEmpty()) {
-                                Things.getService().person.updateSubscription(person, Config.HOSTING_ENABLED_AVAILABLE);
-                                Push.getService().send(person.getId(), Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
-                                resp.getWriter().write(person.getOnlyField("email").getAtom() + " can now host");
-                            }
-                            else {
-                                resp.getWriter().write(person.getOnlyField("email").getAtom() + " can already host");
-                            }
-                        }
-                    }
-                    else if ("disable_hosting".equals(action)) {
-                        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PERSON).search("email = \"" + personEmail + "\"");
-
-                        Iterator<ScoredDocument> resultsIterator = results.iterator();
-
-                        if (resultsIterator.hasNext()) {
-                            person = resultsIterator.next();
-                        }
-
-                        if (person != null) {
-                            String subs = null;
-
-                            try {
-                                subs = person.getOnlyField("subscription").getAtom();
-                            }
-                            catch (IllegalArgumentException e) {
-                                e.printStackTrace();
-                            }
-
-                            if(subs == null || subs.isEmpty()) {
-                                resp.getWriter().write(person.getOnlyField("email").getAtom() + " already can't host");
-                            }
-                            else {
-                                Things.getService().person.updateSubscription(person, "");
-                                Push.getService().send(person.getId(), Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
-                                resp.getWriter().write(person.getOnlyField("email").getAtom() + " can no longer host");
-                            }
-                        }
+                    switch (path.get(0)) {
+                        case Config.HOSTING_BETATESTER:
+                            getBetatester(personEmail);
+                            break;
+                        case "enable_hosting":
+                            getEnableHosting(personEmail);
+                            break;
+                        case "disable_hosting":
+                            getDisableHosting(personEmail);
+                            break;
                     }
                 }
                 break;
+        }
+    }
+
+    private void getBetatester(String personEmail) throws IOException {
+        Document person = null;
+
+        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PERSON).search("email = \"" + personEmail + "\"");
+
+        Iterator<ScoredDocument> resultsIterator = results.iterator();
+
+        if (resultsIterator.hasNext()) {
+            person = resultsIterator.next();
+        }
+
+        if (person != null) {
+            String subs = null;
+
+            try {
+                subs = person.getOnlyField("subscription").getAtom();
+            }
+            catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+
+            if(subs == null || subs.isEmpty()) {
+                Things.getService().person.updateSubscription(person, Config.HOSTING_BETATESTER);
+                Push.getService().send(person.getId(), Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
+                response.getWriter().write(person.getOnlyField("email").getAtom() + " has been upgraded");
+            }
+            else {
+                response.getWriter().write(person.getOnlyField("email").getAtom() + " is already upgraded");
+            }
+        }
+    }
+
+    private void getEnableHosting(String personEmail) throws IOException {
+        Document person = null;
+
+        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PERSON).search("email = \"" + personEmail + "\"");
+
+        Iterator<ScoredDocument> resultsIterator = results.iterator();
+
+        if (resultsIterator.hasNext()) {
+            person = resultsIterator.next();
+        }
+
+        if (person != null) {
+            String subs = null;
+
+            try {
+                subs = person.getOnlyField("subscription").getAtom();
+            }
+            catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+
+            if(subs == null || subs.isEmpty()) {
+                Things.getService().person.updateSubscription(person, Config.HOSTING_ENABLED_AVAILABLE);
+                Push.getService().send(person.getId(), Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
+                response.getWriter().write(person.getOnlyField("email").getAtom() + " can now host");
+            }
+            else {
+                response.getWriter().write(person.getOnlyField("email").getAtom() + " can already host");
+            }
+        }
+    }
+
+    private void getDisableHosting(String personEmail) throws IOException {
+        Document person = null;
+
+        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PERSON).search("email = \"" + personEmail + "\"");
+
+        Iterator<ScoredDocument> resultsIterator = results.iterator();
+
+        if (resultsIterator.hasNext()) {
+            person = resultsIterator.next();
+        }
+
+        if (person != null) {
+            String subs = null;
+
+            try {
+                subs = person.getOnlyField("subscription").getAtom();
+            }
+            catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+
+            if(subs == null || subs.isEmpty()) {
+                response.getWriter().write(person.getOnlyField("email").getAtom() + " already can't host");
+            }
+            else {
+                Things.getService().person.updateSubscription(person, "");
+                Push.getService().send(person.getId(), Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
+                response.getWriter().write(person.getOnlyField("email").getAtom() + " can no longer host");
+            }
         }
     }
 }
