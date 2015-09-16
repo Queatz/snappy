@@ -61,17 +61,15 @@ public class Admin extends Api.Path {
 
             try {
                 subs = person.getOnlyField("subscription").getAtom();
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
 
-            if(subs == null || subs.isEmpty()) {
+            if (subs == null || subs.isEmpty()) {
                 Things.getService().person.updateSubscription(person, Config.HOSTING_BETATESTER);
                 Push.getService().send(person.getId(), Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
                 response.getWriter().write(person.getOnlyField("email").getAtom() + " has been upgraded");
-            }
-            else {
+            } else {
                 response.getWriter().write(person.getOnlyField("email").getAtom() + " is already upgraded");
             }
         }
@@ -93,17 +91,15 @@ public class Admin extends Api.Path {
 
             try {
                 subs = person.getOnlyField("subscription").getAtom();
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
 
-            if(subs == null || subs.isEmpty()) {
+            if (subs == null || subs.isEmpty()) {
                 Things.getService().person.updateSubscription(person, Config.HOSTING_ENABLED_AVAILABLE);
                 Push.getService().send(person.getId(), Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
                 response.getWriter().write(person.getOnlyField("email").getAtom() + " can now host");
-            }
-            else {
+            } else {
                 response.getWriter().write(person.getOnlyField("email").getAtom() + " can already host");
             }
         }
@@ -125,15 +121,13 @@ public class Admin extends Api.Path {
 
             try {
                 subs = person.getOnlyField("subscription").getAtom();
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
 
-            if(subs == null || subs.isEmpty()) {
+            if (subs == null || subs.isEmpty()) {
                 response.getWriter().write(person.getOnlyField("email").getAtom() + " already can't host");
-            }
-            else {
+            } else {
                 Things.getService().person.updateSubscription(person, "");
                 Push.getService().send(person.getId(), Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
                 response.getWriter().write(person.getOnlyField("email").getAtom() + " can no longer host");

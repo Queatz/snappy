@@ -22,13 +22,13 @@ public class Bounty extends Api.Path {
     public void call() throws IOException, PrintingError {
         switch (method) {
             case POST:
-                if(path.size() != 1) {
+                if (path.size() != 1) {
                     die("bounty - bad path");
                 }
 
-                if(Boolean.valueOf(request.getParameter(Config.PARAM_CLAIM))) {
+                if (Boolean.valueOf(request.getParameter(Config.PARAM_CLAIM))) {
                     postClaim(path.get(0));
-                } else if(Boolean.valueOf(request.getParameter(Config.PARAM_FINISH))) {
+                } else if (Boolean.valueOf(request.getParameter(Config.PARAM_FINISH))) {
                     postFinish(path.get(0));
                 }
                 else {
@@ -37,7 +37,7 @@ public class Bounty extends Api.Path {
 
                 break;
             case DELETE:
-                if(path.size() != 1) {
+                if (path.size() != 1) {
                     die("bounty - bad path");
                 }
 
@@ -62,7 +62,7 @@ public class Bounty extends Api.Path {
 
         response.getWriter().write(Boolean.toString(finished));
 
-        if(finished) {
+        if (finished) {
             Push.getService().send(bounty.getOnlyField("poster").getAtom(), Things.getService().bounty.makePush(bounty));
         }
     }
@@ -70,7 +70,7 @@ public class Bounty extends Api.Path {
     private void delete(String bountyId) throws IOException {
         Document bounty = Search.getService().get(Search.Type.BOUNTY, bountyId);
 
-        if(bounty != null && user.equals(bounty.getOnlyField("poster").getAtom())) {
+        if (bounty != null && user.equals(bounty.getOnlyField("poster").getAtom())) {
             boolean success = Things.getService().bounty.delete(bounty);
 
             response.getWriter().write(Boolean.toString(success));

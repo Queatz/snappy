@@ -40,9 +40,9 @@ public class Me extends Api.Path {
     public void call() throws IOException, PrintingError {
         switch (method) {
             case GET:
-                if(path.size() == 0) {
+                if (path.size() == 0) {
                     get();
-                } else if(path.size() == 1) {
+                } else if (path.size() == 1) {
                     switch (path.get(0)) {
                         case Config.PATH_BUY:
                             getBuy();
@@ -57,11 +57,11 @@ public class Me extends Api.Path {
 
                 break;
             case POST:
-                if(path.size() == 0) {
+                if (path.size() == 0) {
                     post();
 
                     break;
-                } else if(path.size() == 1) {
+                } else if (path.size() == 1) {
                     switch (path.get(0)) {
                         case Config.PATH_UPTO:
                             postUpto();
@@ -99,7 +99,7 @@ public class Me extends Api.Path {
 
                 break;
             case DELETE:
-                if(path.size() == 2) {
+                if (path.size() == 2) {
                     if (path.get(0).equals(Config.PATH_OFFERS)) {
                         deleteOffer(path.get(1));
                     } else {
@@ -136,9 +136,9 @@ public class Me extends Api.Path {
             String subscription = me.getOnlyField("subscription").getAtom();
             String r;
 
-            if(subscription == null || subscription.isEmpty()) {
+            if (subscription == null || subscription.isEmpty()) {
                 r = Config.HOSTING_ENABLED_FALSE;
-            } else if(Config.HOSTING_ENABLED_AVAILABLE.equals(subscription)) {
+            } else if (Config.HOSTING_ENABLED_AVAILABLE.equals(subscription)) {
                 r = Config.HOSTING_ENABLED_AVAILABLE;
             } else {
                 r = Config.HOSTING_ENABLED_TRUE;
@@ -161,7 +161,7 @@ public class Me extends Api.Path {
 
         String about = request.getParameter(Config.PARAM_ABOUT);
 
-        if(about != null) {
+        if (about != null) {
             Things.getService().person.updateAbout(me, about);
         }
     }
@@ -196,7 +196,7 @@ public class Me extends Api.Path {
 
                     break;
                 }
-                else if(Config.PARAM_MESSAGE.equals(item.getFieldName())) {
+                else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {
                     message = Streams.asString(stream, "UTF-8");
                 }
             }
@@ -206,11 +206,11 @@ public class Me extends Api.Path {
             error("upto photo - couldn't upload because " + e);
         }
 
-        if(message != null) {
+        if (message != null) {
             update = Things.getService().update.setMessage(update, message);
         }
 
-        if(!allGood) {
+        if (!allGood) {
             die("upto photo - not all good");
         }
 
@@ -225,21 +225,19 @@ public class Me extends Api.Path {
 
         try {
             price = Integer.parseInt(request.getParameter(Config.PARAM_PRICE));
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             e.printStackTrace();
         }
 
         if (details != null && details.length() > 0) {
             Document offer = Things.getService().offer.create(user, details, price);
 
-            if(offer != null) {
+            if (offer != null) {
                 JSONObject json = Things.getService().offer.toJson(offer, user, false);
                 Util.localId(json, localId);
 
                 response.getWriter().write(json.toString());
-            }
-            else {
+            } else {
                 error("offers - error");
             }
         }
@@ -275,7 +273,7 @@ public class Me extends Api.Path {
     private void deleteOffer(String offerId) {
         Document offer = Search.getService().get(Search.Type.OFFER, offerId);
 
-        if(offer != null && user.equals(offer.getOnlyField("person").getAtom())) {
+        if (offer != null && user.equals(offer.getOnlyField("person").getAtom())) {
             Things.getService().offer.delete(offer);
         }
     }

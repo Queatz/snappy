@@ -25,7 +25,7 @@ public class Update extends Api.Path {
     public void call() throws IOException, PrintingError {
         switch (method) {
             case GET:
-                if(path.size() != 2) {
+                if (path.size() != 2) {
                     die("update - bad path");
                 }
 
@@ -50,8 +50,7 @@ public class Update extends Api.Path {
 
         try {
             size = Integer.parseInt(request.getParameter(Config.PARAM_SIZE));
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             size = 200;
         }
 
@@ -62,13 +61,13 @@ public class Update extends Api.Path {
         String fileName = null;
         while (list.hasNext()) {
             ListItem item = list.next();
-            if(!item.isDirectory() && lastModified.before(item.getLastModified())) {
+            if (!item.isDirectory() && lastModified.before(item.getLastModified())) {
                 lastModified = item.getLastModified();
                 fileName = item.getName();
             }
         }
 
-        if(fileName == null) {
+        if (fileName == null) {
             notFound();
         }
 

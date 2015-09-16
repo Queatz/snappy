@@ -25,11 +25,10 @@ public class Party extends Api.Path {
     @Override
     public void call() throws IOException, PrintingError {
         String partyId;
-        Document party;
 
         switch (method) {
             case GET:
-                if(path.size() == 1) {
+                if (path.size() == 1) {
                     get(path.get(0));
                 } else {
                     die("party - bad path");
@@ -37,22 +36,19 @@ public class Party extends Api.Path {
 
                 break;
             case POST:
-                if(path.size() != 1) {
+                if (path.size() != 1) {
                     die("party - bad path");
                 }
 
                 partyId = path.get(0);
 
-                if(Boolean.valueOf(request.getParameter(Config.PARAM_JOIN))) {
+                if (Boolean.valueOf(request.getParameter(Config.PARAM_JOIN))) {
                     postJoin(partyId);
-                }
-                else if(Boolean.valueOf(request.getParameter(Config.PARAM_CANCEL_JOIN))) {
+                } else if (Boolean.valueOf(request.getParameter(Config.PARAM_CANCEL_JOIN))) {
                     postCancelJoin(partyId);
-                }
-                else if(Boolean.valueOf(request.getParameter(Config.PARAM_FULL))) {
+                } else if (Boolean.valueOf(request.getParameter(Config.PARAM_FULL))) {
                     postFull(partyId);
-                }
-                else {
+                } else {
                     die("party - bad path");
                 }
 
@@ -76,11 +72,11 @@ public class Party extends Api.Path {
     private void postJoin(String partyId) throws IOException {
         Document party = Search.getService().get(Search.Type.PARTY, partyId);
 
-        if(party != null) {
+        if (party != null) {
             String localId = request.getParameter(Config.PARAM_LOCAL_ID);
             Document join = Things.getService().join.create(user, partyId);
 
-            if(join != null) {
+            if (join != null) {
                 JSONObject json = Things.getService().join.toJson(join, user, false);
                 Util.localId(json, localId);
 
@@ -98,7 +94,7 @@ public class Party extends Api.Path {
     private void postFull(String partyId) throws IOException {
         Document party = Search.getService().get(Search.Type.PARTY, partyId);
 
-        if(party == null || user == null || !user.equals(party.getOnlyField("host").getAtom())) {
+        if (party == null || user == null || !user.equals(party.getOnlyField("host").getAtom())) {
             response.getWriter().write(Boolean.toString(false));
         }
 

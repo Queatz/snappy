@@ -25,7 +25,7 @@ public class Parties extends Api.Path {
     public void call() throws IOException, PrintingError {
         switch (method) {
             case POST:
-                if(path.size() != 0) {
+                if (path.size() != 0) {
                     die("parties - bad path");
                 }
 
@@ -38,14 +38,15 @@ public class Parties extends Api.Path {
     }
 
     private void post() throws IOException, PrintingError {
-        if(!Buy.getService().valid(user))
-            throw new PrintingError(Api.Error.NOT_FOUND, "parties - not bought");
+        if (!Buy.getService().valid(user)) {
+            die("parties - not bought");
+        }
 
         String localId = request.getParameter(Config.PARAM_LOCAL_ID);
 
         Document document = Things.getService().party.createFromRequest(request, user);
 
-        if(document != null) {
+        if (document != null) {
             JSONObject json = Things.getService().party.toJson(document, user, false);
             Util.localId(json, localId);
 

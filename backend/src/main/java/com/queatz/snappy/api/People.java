@@ -30,10 +30,9 @@ public class People extends Api.Path {
 
         switch (method) {
             case GET:
-                if(path.size() == 1) {
+                if (path.size() == 1) {
                     getPerson(path.get(0));
-                }
-                else if(path.size() == 2) {
+                } else if (path.size() == 2) {
                     personId = path.get(0);
 
                     boolean followers = false;
@@ -57,28 +56,24 @@ public class People extends Api.Path {
 
                 break;
             case POST:
-                if(path.size() != 1) {
+                if (path.size() != 1) {
                     die("people - bad path");
                 }
 
                 personId = path.get(0);
 
-                if(Boolean.valueOf(request.getParameter(Config.PARAM_SEEN))) {
+                if (Boolean.valueOf(request.getParameter(Config.PARAM_SEEN))) {
                     postSeen(personId);
-                }
-                else if(Boolean.toString(true).equals(request.getParameter(Config.PARAM_FOLLOW))) {
+                } else if (Boolean.toString(true).equals(request.getParameter(Config.PARAM_FOLLOW))) {
                     postFollow(personId);
-                }
-                else if(Boolean.toString(false).equals(request.getParameter(Config.PARAM_FOLLOW))) {
+                } else if (Boolean.toString(false).equals(request.getParameter(Config.PARAM_FOLLOW))) {
                     postUnfollow(personId);
-                }
-                else {
+                } else {
                     String message = request.getParameter(Config.PARAM_MESSAGE);
 
-                    if(message != null) {
+                    if (message != null) {
                         postMessage(personId, message);
-                    }
-                    else {
+                    } else {
                         die("people - bad path");
                     }
                 }
@@ -104,7 +99,7 @@ public class People extends Api.Path {
         Document person = Search.getService().get(Search.Type.PERSON, personId);
 
         if (person == null) {
-            throw new PrintingError(Api.Error.NOT_FOUND);
+            notFound();
         }
 
         JSONArray jsonArray = new JSONArray();
@@ -157,10 +152,10 @@ public class People extends Api.Path {
 
         String localId = request.getParameter(Config.PARAM_LOCAL_ID);
 
-        if(person != null) {
+        if (person != null) {
             Document follow = Things.getService().follow.createOrUpdate(user, person.getId());
 
-            if(follow != null) {
+            if (follow != null) {
                 JSONObject json = Things.getService().follow.toJson(follow, user, false);
                 Util.localId(json, localId);
 
@@ -174,10 +169,10 @@ public class People extends Api.Path {
     private void postUnfollow(String personId) {
         Document person = Search.getService().get(Search.Type.PERSON, personId);
 
-        if(person != null) {
+        if (person != null) {
             Document follow = Things.getService().follow.get(user, person.getId());
 
-            if(follow != null) {
+            if (follow != null) {
                 Things.getService().follow.stopFollowing(follow);
             }
         }
@@ -188,7 +183,7 @@ public class People extends Api.Path {
         String localId = request.getParameter(Config.PARAM_LOCAL_ID);
         Document sent = Things.getService().message.newMessage(user, person.getId(), message);
 
-        if(sent != null) {
+        if (sent != null) {
             JSONObject json = Things.getService().message.toJson(sent, user, false);
             Util.localId(json, localId);
 

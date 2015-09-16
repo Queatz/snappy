@@ -23,7 +23,7 @@ public class Bounties extends Api.Path {
     public void call() throws IOException, PrintingError {
         switch (method) {
             case POST:
-                if(path.size() != 0) {
+                if (path.size() != 0) {
                     die("bounties - bad path");
                 }
 
@@ -42,8 +42,7 @@ public class Bounties extends Api.Path {
 
         try {
             price = Integer.parseInt(request.getParameter(Config.PARAM_PRICE));
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             e.printStackTrace();
         }
 
@@ -51,10 +50,11 @@ public class Bounties extends Api.Path {
         JSONObject r = Things.getService().bounty.toJson(bounty, user, false);
         Util.localId(r, localId);
 
-        if(r != null)
+        if (r != null) {
             response.getWriter().write(r.toString());
-        else
-            throw new PrintingError(Api.Error.NOT_FOUND);
+        } else {
+            notFound();
+        }
     }
 }
 

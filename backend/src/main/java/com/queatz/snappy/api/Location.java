@@ -38,7 +38,7 @@ public class Location extends Api.Path {
     public void call() throws IOException, PrintingError {
         switch (method) {
             case GET:
-                if(path.size() != 2) {
+                if (path.size() != 2) {
                     die("location - bad path");
                 }
 
@@ -52,7 +52,7 @@ public class Location extends Api.Path {
 
                 break;
             case PUT:
-                if(path.size() != 2) {
+                if (path.size() != 2) {
                     die("location - bad path");
                 }
 
@@ -76,8 +76,7 @@ public class Location extends Api.Path {
 
         try {
             size = Integer.parseInt(request.getParameter(Config.PARAM_SIZE));
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             size = 200;
         }
 
@@ -88,13 +87,13 @@ public class Location extends Api.Path {
         String fileName = null;
         while (list.hasNext()) {
             ListItem item = list.next();
-            if(!item.isDirectory() && lastModified.before(item.getLastModified())) {
+            if (!item.isDirectory() && lastModified.before(item.getLastModified())) {
                 lastModified = item.getLastModified();
                 fileName = item.getName();
             }
         }
 
-        if(fileName == null) {
+        if (fileName == null) {
             notFound();
         }
 
@@ -110,7 +109,7 @@ public class Location extends Api.Path {
     private void putPhoto(String locationId) throws IOException, PrintingError {
         Document location = Search.getService().get(Search.Type.LOCATION, locationId);
 
-        if(location == null) {
+        if (location == null) {
             notFound();
         }
 
@@ -142,14 +141,14 @@ public class Location extends Api.Path {
                     break;
                 }
             }
-        }
-        catch (FileUploadException e) {
+        } catch (FileUploadException e) {
             Logger.getLogger(Config.NAME).severe(e.toString());
             error("location photo - couldn't upload because " + e);
         }
 
-        if(!allGood)
+        if (!allGood) {
             die("location photo - not all good");
+        }
 
         response.getWriter().write(Boolean.toString(true));
     }

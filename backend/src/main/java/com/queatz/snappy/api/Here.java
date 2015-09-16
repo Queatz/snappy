@@ -45,7 +45,7 @@ public class Here extends Api.Path {
 
         Results<ScoredDocument> results = Search.getService().index.get(Search.Type.LOCATION).search(query);
 
-        if(results.getNumberReturned() > 0) {
+        if (results.getNumberReturned() > 0) {
             r.put(Things.getService().location.toJson(results.iterator().next(), user, false));
         }
 
@@ -72,7 +72,7 @@ public class Here extends Api.Path {
         Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PERSON).search(query);
 
         for (ScoredDocument result : results) {
-            if(user.equals(result.getId()) || result.getOnlyField("around").getDate().before(oneHourAgo))
+            if (user.equals(result.getId()) || result.getOnlyField("around").getDate().before(oneHourAgo))
                 continue;
 
             r.put(Things.getService().person.toJson(result, user, true));
@@ -142,7 +142,7 @@ public class Here extends Api.Path {
     }
 
     private void get(String latitudeParameter, String longitudeParameter) throws IOException, PrintingError {
-        if(longitudeParameter == null || latitudeParameter == null) {
+        if (longitudeParameter == null || latitudeParameter == null) {
             die("here - missing location parameter(s)");
         }
 
@@ -158,8 +158,7 @@ public class Here extends Api.Path {
             jsonObject.put("people", fetchPeople(user, latitude, longitude));
             jsonObject.put("locations", fetchLocations(user, latitude, longitude));
             jsonObject.put("bounties", fetchBounties(user, latitude, longitude));
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 

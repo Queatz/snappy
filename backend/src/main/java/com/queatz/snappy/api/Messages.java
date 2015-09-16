@@ -30,9 +30,9 @@ public class Messages extends Api.Path {
     public void call() throws IOException, PrintingError {
         switch (method) {
             case GET:
-                if(path.size() == 0) {
+                if (path.size() == 0) {
                     get();
-                } else if(path.size() == 1) {
+                } else if (path.size() == 1) {
                     get(path.get(0));
                 } else {
                     die("messages - bad path");
@@ -57,7 +57,7 @@ public class Messages extends Api.Path {
 
         JSONArray a = new JSONArray();
 
-        for(ScoredDocument doc : results) {
+        for (ScoredDocument doc : results) {
             a.put(Things.getService().message.toJson(doc, user, true));
         }
 
@@ -65,7 +65,7 @@ public class Messages extends Api.Path {
 
         JSONArray c = new JSONArray();
 
-        for(ScoredDocument doc : results) {
+        for (ScoredDocument doc : results) {
             c.put(Things.getService().contact.toJson(doc, user, true));
         }
 
@@ -77,8 +77,7 @@ public class Messages extends Api.Path {
             if (c.length() > 0) {
                 r.put("contacts", c);
             }
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
@@ -90,7 +89,7 @@ public class Messages extends Api.Path {
 
         JSONObject r = null;
 
-        if(user.equals(message.getOnlyField("from").getAtom()) || user.equals(message.getOnlyField("to").getAtom())) {
+        if (user.equals(message.getOnlyField("from").getAtom()) || user.equals(message.getOnlyField("to").getAtom())) {
             r = Things.getService().message.toJson(message, user, false);
         }
 

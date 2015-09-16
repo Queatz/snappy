@@ -24,7 +24,7 @@ public class Pirate extends Api.Path {
         Query query = Query.newBuilder().setOptions(QueryOptions.newBuilder().setLimit(1000).build()).build("distance(latlng, geopoint(0, 0)) > 0");
         Results<ScoredDocument> results = Search.getService().index.get(Search.Type.BOUNTY).search(query);
 
-        for(ScoredDocument doc : results) {
+        for (ScoredDocument doc : results) {
             Search.getService().index.get(Search.Type.BOUNTY).delete(doc.getId());
         }
 

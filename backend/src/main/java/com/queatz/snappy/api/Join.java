@@ -24,7 +24,7 @@ public class Join extends Api.Path {
     public void call() throws IOException, PrintingError {
         switch (method) {
             case GET:
-                if(path.size() != 1) {
+                if (path.size() != 1) {
                     die("people - bad path");
                 }
 
@@ -32,17 +32,15 @@ public class Join extends Api.Path {
 
                 break;
             case POST:
-                if(path.size() != 1) {
+                if (path.size() != 1) {
                     die("join - bad path");
                 }
 
-                if(Boolean.valueOf(request.getParameter(Config.PARAM_HIDE))) {
+                if (Boolean.valueOf(request.getParameter(Config.PARAM_HIDE))) {
                     postHide(path.get(0));
-                }
-                else if(Boolean.valueOf(request.getParameter(Config.PARAM_ACCEPT))) {
+                } else if (Boolean.valueOf(request.getParameter(Config.PARAM_ACCEPT))) {
                     postAccept(path.get(0));
-                }
-                else {
+                } else {
                     die("join - bad path");
                 }
 
@@ -67,11 +65,11 @@ public class Join extends Api.Path {
         boolean succeeded = false;
         Document join = Search.getService().get(Search.Type.JOIN, joinId);
 
-        if(join != null && Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
+        if (join != null && Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
             Document party = Search.getService().get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
 
-            if(party != null) {
-                if(user.equals(party.getOnlyField("host").getAtom())) {
+            if (party != null) {
+                if (user.equals(party.getOnlyField("host").getAtom())) {
                     Things.getService().join.setStatus(join, Config.JOIN_STATUS_OUT);
                     succeeded = true;
                 }
@@ -85,11 +83,11 @@ public class Join extends Api.Path {
         boolean succeeded = false;
         Document join = Search.getService().get(Search.Type.JOIN, joinId);
 
-        if(join != null && Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
+        if (join != null && Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
             Document party = Search.getService().get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
 
-            if(party != null) {
-                if(user.equals(party.getOnlyField("host").getAtom())) {
+            if (party != null) {
+                if (user.equals(party.getOnlyField("host").getAtom())) {
                     join = Things.getService().join.setStatus(join, Config.JOIN_STATUS_IN);
                     succeeded = true;
                 }
@@ -98,7 +96,7 @@ public class Join extends Api.Path {
 
         response.getWriter().write(Boolean.toString(succeeded));
 
-        if(succeeded) {
+        if (succeeded) {
             Push.getService().send(join.getOnlyField("person").getAtom(), Things.getService().join.makePush(join));
         }
     }

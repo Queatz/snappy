@@ -22,7 +22,7 @@ public class Follow extends Api.Path {
     public void call() throws IOException, PrintingError {
         switch (method) {
             case GET:
-                if(path.size() != 1) {
+                if (path.size() != 1) {
                     die("follow - bad path");
                 }
 
@@ -38,9 +38,10 @@ public class Follow extends Api.Path {
         Document follow = Search.getService().get(Search.Type.FOLLOW, followId);
         JSONObject r = Things.getService().follow.toJson(follow, user, false);
 
-        if(r != null)
+        if (r != null) {
             response.getWriter().write(r.toString());
-        else
+        } else {
             notFound();
+        }
     }
 }

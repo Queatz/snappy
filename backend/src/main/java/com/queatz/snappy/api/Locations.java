@@ -28,7 +28,7 @@ public class Locations extends Api.Path {
     public void call() throws IOException, PrintingError {
         switch (method) {
             case GET:
-                if(path.size() > 0) {
+                if (path.size() > 0) {
                     die("locations - bad path");
                 }
 
@@ -45,7 +45,7 @@ public class Locations extends Api.Path {
     }
 
     private void get(String paramLatitude, String paramLongitude, String name) throws IOException, PrintingError {
-        if(paramLatitude == null || paramLongitude == null || name == null) {
+        if (paramLatitude == null || paramLongitude == null || name == null) {
             die("locations - bad parameters");
         }
 
