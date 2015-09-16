@@ -29,6 +29,7 @@ import com.queatz.snappy.things.Message;
 import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
+import com.queatz.snappy.things.Quest;
 import com.queatz.snappy.things.Update;
 import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.ui.MiniMenu;
@@ -87,6 +88,10 @@ public class Action {
 
     public void openBounties(@NonNull Activity from) {
         team.view.show(from, com.queatz.snappy.activity.Bounties.class, null);
+    }
+
+    public void openQuests(@NonNull Activity from) {
+        team.view.show(from, com.queatz.snappy.activity.Quests.class, null);
     }
 
     public void openMessages(@NonNull Activity from, @NonNull final Person person) {
@@ -658,7 +663,6 @@ public class Action {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         team.realm.beginTransaction();
-                        bounty.setPosted(new Date());
                         bounty.setStatus(Config.BOUNTY_STATUS_CLAIMED);
                         bounty.getPeople().add(team.auth.me());
                         team.realm.commitTransaction();
@@ -684,6 +688,117 @@ public class Action {
                         });
 
                         openMessages(activity, bounty.getPoster());
+                    }
+                })
+                .show();
+    }
+
+    public void newQuest(@NonNull String details, String reward, String time, int teamSize) {
+        if(details.trim().isEmpty() || reward.trim().isEmpty()) {
+            return;
+        }
+
+        team.realm.beginTransaction();
+        Quest quest = team.realm.createObject(Quest.class);
+        quest.setId(Util.createLocalId());
+        quest.setDetails(details);
+        quest.setReward(reward);
+        quest.setStatus(Config.QUEST_STATUS_OPEN);
+        quest.setOpened(new Date());
+        quest.setHost(team.auth.me());
+        quest.setTeamSize(teamSize);
+        quest.setTime(time);
+        team.realm.commitTransaction();
+
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_LOCAL_ID, quest.getId());
+        params.put(Config.PARAM_DETAILS, details);
+        params.put(Config.PARAM_REWARD, reward);
+        params.put(Config.PARAM_TEAM_SIZE, teamSize);
+        params.put(Config.PARAM_TIME, time);
+
+        team.api.post(Config.PATH_QUEST, params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                team.things.put(Quest.class, response);
+            }
+
+            @Override
+            public void fail(String response) {
+                Toast.makeText(team.context, "Couldn't open new quest", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void startQuest(@NonNull final Activity activity, @NonNull final Quest quest) {
+        boolean alreadyStarted = false;
+
+        for (Person person : quest.getTeam()) {
+            if(team.auth.getUser().equals(person.getId())) {
+                alreadyStarted = true;
+                break;
+            }
+        }
+
+        if (alreadyStarted) {
+            new AlertDialog.Builder(activity)
+                    .setMessage(R.string.you_started_this_quest)
+                    .setPositiveButton(R.string.message, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            openMessages(activity, quest.getHost());
+                        }
+                    })
+                    .show();
+            return;
+        }
+
+        if (quest.getTeam().size() >= quest.getTeamSize()) {
+            new AlertDialog.Builder(activity)
+                    .setMessage(R.string.this_quest_is_full)
+                    .setPositiveButton(R.string.ok, null)
+                    .show();
+
+            return;
+        }
+
+        new AlertDialog.Builder(activity)
+                .setMessage(R.string.start_this_quest)
+                .setNeutralButton(R.string.message, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        openMessages(activity, quest.getHost());
+                    }
+                })
+                .setPositiveButton(R.string.start_quest, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        team.realm.beginTransaction();
+                        quest.setStatus(Config.QUEST_STATUS_STARTED);
+                        quest.getTeam().add(team.auth.me());
+                        team.realm.commitTransaction();
+
+                        RequestParams params = new RequestParams();
+                        params.put(Config.PARAM_START, true);
+
+                        team.api.post(String.format(Config.PATH_QUEST_ID, quest.getId()), params, new Api.Callback() {
+                            @Override
+                            public void success(String response) {
+                                if (response != null && Boolean.valueOf(response)) {
+                                    Toast.makeText(team.context, "Quest started", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(team.context, "Quest couldn't be started", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void fail(String response) {
+                                // TODO revert started state
+                                Toast.makeText(team.context, "Quest couldn't be started", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        openMessages(activity, quest.getHost());
                     }
                 })
                 .show();

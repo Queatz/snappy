@@ -10,6 +10,10 @@
         <item name="colorPrimaryDark">@color/darkorange</item>
     </style>
 
+    <style name="QuestsTheme" parent="AppTheme">
+        <item name="colorPrimaryDark">@color/darkpurple</item>
+    </style>
+
     <style name="WelcomeTheme" parent="AppTheme">
     </style>
 

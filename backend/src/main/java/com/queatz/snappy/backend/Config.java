@@ -101,7 +101,7 @@ public class Config {
     public static final String PARAM_SIZE = "s";
     public static final String PARAM_PRICE = "price";
     public static final String PARAM_TIME = "time";
-    public static final String PARAM_TEAM_SIZE = "teamSize";
+    public static final String PARAM_TEAM_SIZE = "team_size";
     public static final String PARAM_REWARD = "reward";
     public static final String PARAM_START = "start";
 

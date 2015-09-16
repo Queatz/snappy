@@ -80,10 +80,16 @@ public class Config {
     public static final String PARAM_PRICE = "price";
     public static final String PARAM_DATE = "date";
     public static final String PARAM_LOCATION = "location";
+    public static final String PARAM_TIME = "time";
+    public static final String PARAM_TEAM_SIZE = "team_size";
+    public static final String PARAM_REWARD = "reward";
+    public static final String PARAM_START = "start";
 
     public static final String PATH_API = "api";
     public static final String PATH_BOUNTIES = "bounties";
     public static final String PATH_BOUNTY_ID = "bounty/%s";
+    public static final String PATH_QUEST = "quest";
+    public static final String PATH_QUEST_ID = "quest/%s";
     public static final String PATH_PARTIES = "parties";
     public static final String PATH_PARTY = "party";
     public static final String PATH_PARTY_ID = "party/%s";
@@ -118,6 +124,10 @@ public class Config {
     public static final String BOUNTY_STATUS_OPEN = "open";
     public static final String BOUNTY_STATUS_CLAIMED = "claimed";
     public static final String BOUNTY_STATUS_FINISHED = "finished";
+
+    public static final String QUEST_STATUS_OPEN = "open";
+    public static final String QUEST_STATUS_STARTED = "started";
+    public static final String QUEST_STATUS_COMPLETE = "complete";
 
     public static final String SOCIAL_MODE_OFF = "off";
     public static final String SOCIAL_MODE_FRIENDS = "friends";

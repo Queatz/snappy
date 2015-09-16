@@ -134,7 +134,7 @@ public class Here extends Api.Path {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-        String queryString = "distance(latlng, geopoint(" + latitude + ", " + longitude + ")) < " + Config.NEARBY_MAX_VISIBILITY + " AND posted >= \"" + format.format(new Date(new Date().getTime() - Config.QUESTS_MAX_AGE)) + "\"";
+        String queryString = "distance(latlng, geopoint(" + latitude + ", " + longitude + ")) < " + Config.NEARBY_MAX_VISIBILITY + " AND opened >= \"" + format.format(new Date(new Date().getTime() - Config.QUESTS_MAX_AGE)) + "\"";
 
         QueryOptions queryOptions = QueryOptions.newBuilder().setLimit(Config.QUESTS_MAXIMUM).build();
         Query query = Query.newBuilder().setOptions(queryOptions).build(queryString);

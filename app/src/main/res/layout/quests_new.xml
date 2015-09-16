@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:background="@color/darkpurple">
+
+    <com.queatz.snappy.ui.EditText
+        android:id="@+id/details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:textColor="@color/white"
+        android:background="@null"
+        android:hint="@string/describe_the_quest"
+        android:inputType="textShortMessage|textCapSentences|textMultiLine"
+        android:textColorHint="@color/whiteout"
+        android:textSize="18sp" />
+
+    <com.queatz.snappy.ui.EditText
+        android:id="@+id/reward"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:textColor="@color/white"
+        android:background="@null"
+        android:hint="@string/specify_reward"
+        android:inputType="textShortMessage|textCapWords"
+        android:textColorHint="@color/whiteout"
+        android:textSize="18sp" />
+
+    <com.queatz.snappy.ui.ScrollStopper
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <com.queatz.snappy.ui.TimeSlider
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:textSize="18sp"
+            app:textColor="@color/white" />
+
+    </com.queatz.snappy.ui.ScrollStopper>
+
+    <com.queatz.snappy.ui.ScrollStopper
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <com.queatz.snappy.ui.TimeSlider
+            android:id="@+id/teamSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:textSize="18sp"
+            app:textColor="@color/white" />
+
+    </com.queatz.snappy.ui.ScrollStopper>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+
+        <Button style="?android:attr/borderlessButtonStyle"
+            android:id="@+id/start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="@string/start_a_quest"/>
+
+    </LinearLayout>
+
+</LinearLayout>

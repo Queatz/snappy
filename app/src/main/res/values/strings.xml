@@ -78,7 +78,7 @@
     <string name="describe_another_experience">Describe another experience</string>
     <string name="information">\?</string>
     <string name="quests">%1$s quests</string>
-    <string name="start_a_quest">Start a quest</string>
+    <string name="start_a_quest">New quest</string>
     <string name="start_quest">Start quest</string>
     <string name="describe_the_quest">Describe the quest</string>
     <string name="claim">Claim</string>
@@ -90,10 +90,19 @@
     <string name="finish">Finish</string>
     <string name="you_finished_this_bounty">You already finished this bounty</string>
     <string name="post">Post</string>
+    <string name="you_started_this_quest">You already started this quest</string>
+    <string name="start_this_quest">Do you want to start this quest?</string>
+    <string name="specify_reward">Specify a reward</string>
+    <string name="this_quest_is_full">This quest is full</string>
 
     <plurals name="people_near_place">
         <item quantity="one">%1$s person near %2$s</item>
         <item quantity="other">%1$s people near %2$s</item>
+    </plurals>
+
+    <plurals name="people">
+        <item quantity="one">%1$s person</item>
+        <item quantity="other">%1$s people</item>
     </plurals>
 
     <plurals name="years">
@@ -136,9 +145,9 @@
         <item quantity="other">%1$s offers</item>
     </plurals>
 
-    <plurals name="bounties">
-        <item quantity="one">%1$s bounty</item>
-        <item quantity="other">%1$s bounties</item>
+    <plurals name="quests">
+        <item quantity="one">%1$s quest</item>
+        <item quantity="other">%1$s quests</item>
     </plurals>
 
 </resources>

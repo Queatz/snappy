@@ -68,7 +68,7 @@ public class Quest extends Api.Path {
     private void postStart(String questId) throws IOException {
         Document questPerson = Things.getService().quest.start(user, questId);
 
-        response.getWriter().write(Things.getService().questPerson.toJson(questPerson, user, false).toString());
+        response.getWriter().write(Boolean.toString(questPerson != null));
     }
 
     private void delete(String questId) throws IOException {

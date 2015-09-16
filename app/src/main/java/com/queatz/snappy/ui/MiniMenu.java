@@ -13,8 +13,8 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.HostParty;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Bounty;
 import com.queatz.snappy.things.Person;
+import com.queatz.snappy.things.Quest;
 
 import java.util.Date;
 
@@ -60,7 +60,7 @@ public class MiniMenu extends FrameLayout {
         final Team team = ((MainApplication) getContext().getApplicationContext()).team;
 
         updateSocialModeText(team.auth.getSocialMode());
-        updateBountiesText();
+        updateQuestsText();
 
         findViewById(R.id.action_host).setOnClickListener(new OnClickListener() {
             @Override
@@ -103,42 +103,43 @@ public class MiniMenu extends FrameLayout {
             }
         });
 
-        findViewById(R.id.action_bounties).setOnClickListener(new OnClickListener() {
+        findViewById(R.id.action_quests).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.openBounties((Activity) getContext());
+                team.action.openQuests((Activity) getContext());
                 show(false);
             }
         });
     }
 
-    private void updateBountiesText() {
+    private void updateQuestsText() {
         final Team team = ((MainApplication) getContext().getApplicationContext()).team;
 
-        RealmQuery<Bounty> query = team.realm.where(Bounty.class).greaterThan("posted", new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7))
-                .notEqualTo("status", Config.BOUNTY_STATUS_FINISHED)
+        RealmQuery<Quest> query = team.realm.where(Quest.class).greaterThan("opened", new Date(new Date().getTime() - 1000L * 60 * 60 * 24 * 30))
+                .equalTo("status", Config.QUEST_STATUS_OPEN)
+                .or()
                 .beginGroup()
-                    .notEqualTo("status", Config.BOUNTY_STATUS_CLAIMED)
+                    .notEqualTo("status", Config.QUEST_STATUS_STARTED)
                     .or()
-                    .equalTo("poster.id", team.auth.getUser())
+                    .equalTo("team.id", team.auth.getUser())
                     .or()
-                    .equalTo("people.id", team.auth.getUser())
+                    .equalTo("host.id", team.auth.getUser())
                 .endGroup();
 
         long bounties = query.count();
 
-        findViewById(R.id.action_bounties).setVisibility(View.VISIBLE);
+        findViewById(R.id.action_quests).setVisibility(View.VISIBLE);
 
         if(0 == bounties) {
             if(Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
-                ((TextView) findViewById(R.id.action_bounties)).setText(getResources().getString(R.string.start_a_quest));
+                ((TextView) findViewById(R.id.action_quests)).setText(getResources().getString(R.string.start_a_quest));
             }
             else {
-                findViewById(R.id.action_bounties).setVisibility(View.GONE);
+                findViewById(R.id.action_quests).setVisibility(View.GONE);
             }
         }
         else {
-            ((TextView) findViewById(R.id.action_bounties)).setText(getResources().getQuantityString(R.plurals.bounties, (int) bounties, bounties));
+            ((TextView) findViewById(R.id.action_quests)).setText(getResources().getQuantityString(R.plurals.quests, (int) bounties, bounties));
         }
     }
 
@@ -160,7 +161,7 @@ public class MiniMenu extends FrameLayout {
         setPivotY(0);
 
         if(show) {
-            updateBountiesText();
+            updateQuestsText();
             RevealAnimation.expand(this);
         }
         else {

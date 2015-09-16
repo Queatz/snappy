@@ -8,6 +8,7 @@ import com.queatz.snappy.Config;
 import com.queatz.snappy.things.Bounty;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
+import com.queatz.snappy.things.Quest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +26,7 @@ public class Here {
     }
 
     public interface Callback {
-        void onSuccess(RealmList<Person> people, RealmList<com.queatz.snappy.things.Location> locations, RealmList<Party> parties, RealmList<Bounty> bounties);
+        void onSuccess(RealmList<Person> people, RealmList<com.queatz.snappy.things.Location> locations, RealmList<Party> parties, RealmList<Bounty> bounties, RealmList<Quest> quests);
     }
 
     public void update(final Activity activity, final SwipeRefreshLayout refresher, final Callback callback) {
@@ -50,6 +51,7 @@ public class Here {
                             RealmList<Person> people = null;
                             RealmList<Bounty> bounties = null;
                             RealmList<Party> parties = null;
+                            RealmList<Quest> quests = null;
 
                             if(jsonObject.has("locations")) {
                                 locations = team.things.putAll(com.queatz.snappy.things.Location.class, jsonObject.getJSONArray("locations"));
@@ -72,8 +74,17 @@ public class Here {
                                 bounties = team.things.putAll(Bounty.class, jsonObject.getJSONArray("bounties"));
                             }
 
+                            if(jsonObject.has("quests")) {
+                                //TODO temp for delete arch (send my id list, server says which are gone)
+                                team.realm.beginTransaction();
+                                team.realm.clear(Quest.class);
+                                team.realm.commitTransaction();
+
+                                quests = team.things.putAll(Quest.class, jsonObject.getJSONArray("quests"));
+                            }
+
                             if(callback != null) {
-                                callback.onSuccess(people, locations, parties, bounties);
+                                callback.onSuccess(people, locations, parties, bounties, quests);
                             }
                         }
                         catch (JSONException e) {

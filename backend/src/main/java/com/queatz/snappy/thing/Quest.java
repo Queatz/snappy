@@ -30,6 +30,12 @@ public class Quest implements Thing {
         Document person = Search.getService().get(Search.Type.PERSON, d.getOnlyField("host").getAtom());
 
         try {
+            jsonObject.put("id", d.getId());
+
+            if (shallow) {
+                return jsonObject;
+            }
+
             jsonObject.put("host", Things.getService().person.toJson(person, user, true));
             jsonObject.put("status", d.getOnlyField("status").getAtom());
             jsonObject.put("details", d.getOnlyField("details").getText());
@@ -38,17 +44,14 @@ public class Quest implements Thing {
             jsonObject.put("time", d.getOnlyField("time").getAtom());
             jsonObject.put("teamSize", d.getOnlyField("teamSize").getNumber().intValue());
 
-            if (shallow) {
-                return jsonObject;
-            }
-
             Results<ScoredDocument> results = Search.getService().index.get(Search.Type.QUEST_PERSON).search("quest = " + d.getId());
 
             if (results.getNumberReturned() > 0) {
                 JSONArray team = new JSONArray();
 
                 for (ScoredDocument document : results) {
-                    team.put(Things.getService().person.toJson(document, user, true));
+                    Document questPerson = Search.getService().get(Search.Type.PERSON, document.getOnlyField("person").getAtom());
+                    team.put(Things.getService().person.toJson(questPerson, user, true));
                 }
 
                 if(team.length() > 0)
@@ -66,7 +69,7 @@ public class Quest implements Thing {
         int teamSize = 1;
 
         try {
-            teamSize = Integer.getInteger(request.getParameter(Config.PARAM_TEAM_SIZE));
+            teamSize = Integer.parseInt(request.getParameter(Config.PARAM_TEAM_SIZE));
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -77,14 +80,17 @@ public class Quest implements Thing {
             teamSize = Config.QUEST_MAX_TEAM_SIZE;
         }
 
+        Document person = Search.getService().get(Search.Type.PERSON, user);
+
         Document.Builder documentBuilder = Document.newBuilder();
         documentBuilder.addField(Field.newBuilder().setName("host").setAtom(user));
         documentBuilder.addField(Field.newBuilder().setName("time").setAtom(request.getParameter(Config.PARAM_TIME)));
-        documentBuilder.addField(Field.newBuilder().setName("status").setAtom(request.getParameter(Config.QUEST_STATUS_OPEN)));
-        documentBuilder.addField(Field.newBuilder().setName("reward").setText(request.getParameter(Config.PARAM_REWARD)));
-        documentBuilder.addField(Field.newBuilder().setName("details").setText(request.getParameter(Config.PARAM_DETAILS)));
+        documentBuilder.addField(Field.newBuilder().setName("status").setAtom(Config.QUEST_STATUS_OPEN));
+        documentBuilder.addField(Field.newBuilder().setName("reward").setText(Util.encode(request.getParameter(Config.PARAM_REWARD))));
+        documentBuilder.addField(Field.newBuilder().setName("details").setText(Util.encode(request.getParameter(Config.PARAM_DETAILS))));
         documentBuilder.addField(Field.newBuilder().setName("teamSize").setNumber(teamSize));
         documentBuilder.addField(Field.newBuilder().setName("opened").setDate(new Date()));
+        documentBuilder.addField(Field.newBuilder().setName("latlng").setGeoPoint(person.getOnlyField("latlng").getGeoPoint()));
 
         Document document = documentBuilder.build();
 
@@ -157,7 +163,7 @@ public class Quest implements Thing {
         long teamSize = quest.getOnlyField("teamSize").getNumber().longValue();
         long soFar = teamSizeSoFar(quest);
 
-        if (teamSize == soFar && Config.QUEST_STATUS_OPEN.equals(quest.getOnlyField("status").getAtom())) {
+        if (soFar >= teamSize && Config.QUEST_STATUS_OPEN.equals(quest.getOnlyField("status").getAtom())) {
             Document.Builder documentBulder = Document.newBuilder().setId(quest.getId()).addField(
                     Field.newBuilder().setName("status").setAtom(Config.QUEST_STATUS_STARTED)
             );
@@ -165,7 +171,7 @@ public class Quest implements Thing {
             Util.copyIn(documentBulder, quest, "status");
 
             try {
-                Search.getService().index.get(Search.Type.QUEST_PERSON).put(documentBulder.build());
+                Search.getService().index.get(Search.Type.QUEST).put(documentBulder.build());
                 return true;
             } catch (PutException e) {
                 e.printStackTrace();

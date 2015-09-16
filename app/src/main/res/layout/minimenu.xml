@@ -81,7 +81,7 @@
     </LinearLayout>
 
     <com.queatz.snappy.ui.TextView
-        android:id="@+id/action_bounties"
+        android:id="@+id/action_quests"
         android:clickable="true"
         android:background="@color/deepdarkred"
         android:layout_width="match_parent"

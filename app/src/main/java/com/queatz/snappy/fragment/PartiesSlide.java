@@ -1,7 +1,6 @@
 package com.queatz.snappy.fragment;
 
 import android.app.Fragment;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -15,23 +14,19 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
 
-import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.adapter.PartyAdapter;
 import com.queatz.snappy.adapter.PeopleNearHereAdapter;
-import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Here;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Bounty;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
+import com.queatz.snappy.things.Quest;
 import com.queatz.snappy.ui.RevealAnimation;
 import com.queatz.snappy.ui.TextView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Date;
 
@@ -223,7 +218,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
 
         team.here.update(getActivity(), mRefresh, new Here.Callback() {
             @Override
-            public void onSuccess(RealmList<Person> people, RealmList<com.queatz.snappy.things.Location> locations, RealmList<Party> parties, RealmList<Bounty> bounties) {
+            public void onSuccess(RealmList<Person> people, RealmList<com.queatz.snappy.things.Location> locations, RealmList<Party> parties, RealmList<Bounty> bounties, RealmList<Quest> quests) {
                 if(locations != null && people != null) {
                     updateBanner(people, locations);
                 }
