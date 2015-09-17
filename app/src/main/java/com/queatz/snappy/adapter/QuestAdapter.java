@@ -6,13 +6,16 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Person;
 import com.queatz.snappy.things.Quest;
+import com.queatz.snappy.ui.RevealAnimation;
 import com.squareup.picasso.Picasso;
 
 import io.realm.RealmBaseAdapter;
@@ -42,38 +45,95 @@ public class QuestAdapter extends RealmBaseAdapter<Quest> {
 
         final Quest quest = realmResults.get(position);
 
-        ImageView people = (ImageView) view.findViewById(R.id.people);
-        TextView details = (TextView) view.findViewById(R.id.details);
-        TextView reward = (TextView) view.findViewById(R.id.reward);
-        TextView time = (TextView) view.findViewById(R.id.time);
+        final ViewGroup people = (ViewGroup) view.findViewById(R.id.people);
+        final TextView name = (TextView) view.findViewById(R.id.name);
+        final TextView details = (TextView) view.findViewById(R.id.details);
+        final TextView reward = (TextView) view.findViewById(R.id.reward);
+        final TextView time = (TextView) view.findViewById(R.id.time);
+        final View actions = view.findViewById(R.id.actions);
+        final Button action = (Button) view.findViewById(R.id.action_start);
 
-        details.setText(quest.getDetails());
+        name.setText(quest.getName());
         time.setText(quest.getTime());
         reward.setText(Html.fromHtml(context.getString(R.string.reward_text, quest.getReward())));
 
-        if(team.auth.getUser() != null && team.auth.getUser().equals(quest.getHost().getId())) {
+        if(team.auth.getUser() != null && !team.auth.getUser().equals(quest.getHost().getId())) {
             view.setTag(quest);
             ((Activity) context).registerForContextMenu(view);
         }
 
-        // CHeck if you are in it and don't show start
+        // Details
+        details.setText(Html.fromHtml(context.getString(R.string.details_text, quest.getDetails())));
 
-        if(quest.getTeam().size() > 0) {
-            Picasso.with(context)
-                    .load(quest.getTeam().first().getImageUrlForSize(people.getMeasuredWidth()))
-                    .into(people);
+        // Action
 
-            people.setVisibility(View.VISIBLE);
+        boolean alreadyStarted = false;
 
-            people.setOnClickListener(new View.OnClickListener() {
+        for (Person person : quest.getTeam()) {
+            if (team.auth.getUser().equals(person.getId())) {
+                alreadyStarted = true;
+                break;
+            }
+        }
+
+        if (team.auth.getUser().equals(quest.getHost().getId())) {
+            alreadyStarted = true;
+            action.setText(context.getString(quest.getTeam().isEmpty() ? R.string.close_quest : R.string.mark_complete));
+            action.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    team.action.openProfile((Activity) context, quest.getTeam().first());
+                    team.action.markQuestComplete(quest);
+                }
+            });
+        } else if (alreadyStarted) {
+            action.setText(context.getString(R.string.message));
+            action.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    team.action.openMessages((Activity) context, quest.getHost());
+                }
+            });
+        } else {
+            action.setText(context.getString(R.string.start_quest));
+            action.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    team.action.startQuest((Activity) context, quest);
                 }
             });
         }
-        else {
-            people.setVisibility(View.GONE);
+
+        if (alreadyStarted) {
+            view.findViewById(R.id.content).setBackgroundResource(R.drawable.youre_in_quest);
+        } else {
+            view.findViewById(R.id.content).setBackground(null);
+        }
+
+        // Team
+
+        people.removeAllViews();
+
+        for (final Person person : quest.getTeam()) {
+            View.inflate(context, R.layout.quests_item_person, people);
+            ImageView imageView = (ImageView) people.getChildAt(people.getChildCount() - 1);
+
+            Picasso.with(context)
+                    .load(person.getImageUrlForSize(imageView.getMeasuredWidth()))
+                    .into(imageView);
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    team.action.openProfile((Activity) context, person);
+                }
+            });
+        }
+
+        for (int i = quest.getTeam().size(); i < quest.getTeamSize(); i++) {
+            View.inflate(context, R.layout.quests_item_person, people);
+            ImageView imageView = (ImageView) people.getChildAt(people.getChildCount() - 1);
+
+            imageView.setImageResource(R.color.darkpurple);
         }
 
         return view;

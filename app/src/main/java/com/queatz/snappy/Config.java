@@ -84,6 +84,7 @@ public class Config {
     public static final String PARAM_TEAM_SIZE = "team_size";
     public static final String PARAM_REWARD = "reward";
     public static final String PARAM_START = "start";
+    public static final String PARAM_COMPLETE = "complete";
 
     public static final String PATH_API = "api";
     public static final String PATH_BOUNTIES = "bounties";

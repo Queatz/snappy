@@ -86,8 +86,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text"
-                android:text="Bounties are small things to do that take 1 day or less.  They don't necessarily have a specified location or time, and you may not need to meet the requester.  Bounties expire after one week." />
-
+                android:text="Quests are small excursions, occasionally requiring multiple people to complete.  You get a reward upon completion." />
 
             <com.queatz.snappy.ui.TextView
                 android:layout_width="match_parent"
@@ -102,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text"
-                android:text="Skills are things you are good at.  People can endorse you for skills, usually after a simple vetting process or presentation from you.  You can collect endorsements by going to parties or by doing quests." />
+                android:text="Skills are things you are good at.  People can endorse you for skills, usually after a simple vetting process or presentation from you.  You can collect endorsements by going to parties and doing quests." />
 
             <com.queatz.snappy.ui.TextView
                 android:visibility="gone"
@@ -134,7 +133,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text"
-                android:text="Social Mode determines who you want to get notifications from." />
+                android:text="Social Mode lets you choose how often you want to be interrupted today." />
 
             <com.queatz.snappy.ui.TextView
                 android:layout_width="match_parent"
@@ -158,7 +157,7 @@
                 android:layout_marginBottom="8dp"
                 android:textStyle="bold"
                 android:textColor="@color/text"
-                android:text="What happens when I pay for Village?" />
+                android:text="What do I get if I pay for Village?" />
 
             <com.queatz.snappy.ui.TextView
                 android:layout_width="match_parent"

@@ -21,11 +21,13 @@ public class Pirate extends Api.Path {
 
     @Override
     public void call() throws IOException, PrintingError {
-        Query query = Query.newBuilder().setOptions(QueryOptions.newBuilder().setLimit(1000).build()).build("distance(latlng, geopoint(0, 0)) > 0");
-        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.BOUNTY).search(query);
+        for (Search.Type type : new Search.Type[] {Search.Type.QUEST_PERSON, Search.Type.QUEST}) {
+            Query query = Query.newBuilder().setOptions(QueryOptions.newBuilder().setLimit(1000).build()).build("");
+            Results<ScoredDocument> results = Search.getService().index.get(type).search(query);
 
-        for (ScoredDocument doc : results) {
-            Search.getService().index.get(Search.Type.BOUNTY).delete(doc.getId());
+            for (ScoredDocument doc : results) {
+                Search.getService().index.get(type).delete(doc.getId());
+            }
         }
 
         response.getWriter().write("yarr!");

@@ -32,6 +32,7 @@ public class Quests extends Activity {
     Team team;
     Object mContextObject;
     EditText questDetails;
+    EditText questName;
     EditText questReward;
     SwipeRefreshLayout mRefresh;
 
@@ -52,6 +53,7 @@ public class Quests extends Activity {
             questList.addFooterView(new View(this));
 
             questDetails = (EditText) newQuest.findViewById(R.id.details);
+            questName = (EditText) newQuest.findViewById(R.id.name);
             questReward = (EditText) newQuest.findViewById(R.id.reward);
             final TimeSlider timeOfDaySlider = (TimeSlider) newQuest.findViewById(R.id.time);
             final TimeSlider teamSizeSlider = (TimeSlider) newQuest.findViewById(R.id.teamSize);
@@ -80,6 +82,7 @@ public class Quests extends Activity {
                 @Override
                 public void onClick(View v) {
                     team.action.newQuest(
+                            questName.getText().toString(),
                             questDetails.getText().toString(),
                             questReward.getText().toString(),
                             getTimeOfDay(timeOfDaySlider.getPercent()),
@@ -87,8 +90,10 @@ public class Quests extends Activity {
                     );
 
                     timeOfDaySlider.setPercent(0);
+                    teamSizeSlider.setPercent(0);
                     questDetails.setText("");
                     questReward.setText("");
+                    questName.setText("");
                 }
             });
         }
@@ -107,18 +112,8 @@ public class Quests extends Activity {
         final QuestAdapter adapter = new QuestAdapter(this, query);
         questList.setAdapter(adapter);
 
-        questList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Quest quest = (Quest) questList.getItemAtPosition(position);
-
-                team.action.startQuest(Quests.this, quest);
-            }
-        });
-
-
         mRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh);
-        mRefresh.setColorSchemeResources(R.color.orange);
+        mRefresh.setColorSchemeResources(R.color.purple);
         mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -135,7 +130,7 @@ public class Quests extends Activity {
             "Anytime",
             "Early Morning",
             "Morning",
-            "Daytime",
+            "Day",
             "Evening",
             "Late Evening",
             "Night"
@@ -146,7 +141,7 @@ public class Quests extends Activity {
     }
 
     private int getTeamSize(float percent) {
-        return (int) (1 + percent * 9);
+        return (int) Math.min(6, 1 + percent * 6);
     }
 
     @Override

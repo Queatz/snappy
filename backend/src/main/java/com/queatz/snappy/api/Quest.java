@@ -5,11 +5,14 @@ import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.service.Api;
+import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
+
+import javax.print.Doc;
 
 /**
  * Created by jacob on 9/15/15.
@@ -31,6 +34,8 @@ public class Quest extends Api.Path {
                     case 1:
                         if (Boolean.valueOf(request.getParameter(Config.PARAM_START))) {
                             postStart(path.get(0));
+                        } else if (Boolean.valueOf(request.getParameter(Config.PARAM_COMPLETE))) {
+                            postComplete(path.get(0));
                         }
 
                         break;
@@ -69,6 +74,18 @@ public class Quest extends Api.Path {
         Document questPerson = Things.getService().quest.start(user, questId);
 
         response.getWriter().write(Boolean.toString(questPerson != null));
+    }
+
+    private void postComplete(String questId) throws IOException, PrintingError {
+        Document quest = Search.getService().get(Search.Type.QUEST, questId);
+
+        if (!user.equals(quest.getOnlyField("host").getAtom())) {
+            die("quest - not authenticated");
+        }
+
+        boolean success = Things.getService().quest.setQuestStatus(quest, Config.QUEST_STATUS_COMPLETE);
+
+        response.getWriter().write(Boolean.toString(success));
     }
 
     private void delete(String questId) throws IOException {

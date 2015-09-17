@@ -693,7 +693,7 @@ public class Action {
                 .show();
     }
 
-    public void newQuest(@NonNull String details, String reward, String time, int teamSize) {
+    public void newQuest(@NonNull String name, @NonNull String details, @NonNull String reward, String time, int teamSize) {
         if(details.trim().isEmpty() || reward.trim().isEmpty()) {
             return;
         }
@@ -701,6 +701,7 @@ public class Action {
         team.realm.beginTransaction();
         Quest quest = team.realm.createObject(Quest.class);
         quest.setId(Util.createLocalId());
+        quest.setName(name);
         quest.setDetails(details);
         quest.setReward(reward);
         quest.setStatus(Config.QUEST_STATUS_OPEN);
@@ -712,6 +713,7 @@ public class Action {
 
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_LOCAL_ID, quest.getId());
+        params.put(Config.PARAM_NAME, name);
         params.put(Config.PARAM_DETAILS, details);
         params.put(Config.PARAM_REWARD, reward);
         params.put(Config.PARAM_TEAM_SIZE, teamSize);
@@ -731,77 +733,54 @@ public class Action {
     }
 
     public void startQuest(@NonNull final Activity activity, @NonNull final Quest quest) {
-        boolean alreadyStarted = false;
+        team.realm.beginTransaction();
+        quest.setStatus(Config.QUEST_STATUS_STARTED);
+        quest.getTeam().add(team.auth.me());
+        team.realm.commitTransaction();
 
-        for (Person person : quest.getTeam()) {
-            if(team.auth.getUser().equals(person.getId())) {
-                alreadyStarted = true;
-                break;
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_START, true);
+
+        team.api.post(String.format(Config.PATH_QUEST_ID, quest.getId()), params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                if (response == null || !Boolean.valueOf(response)) {
+                    Toast.makeText(team.context, "Quest couldn't be started", Toast.LENGTH_SHORT).show();
+                }
             }
-        }
 
-        if (alreadyStarted) {
-            new AlertDialog.Builder(activity)
-                    .setMessage(R.string.you_started_this_quest)
-                    .setPositiveButton(R.string.message, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            openMessages(activity, quest.getHost());
-                        }
-                    })
-                    .show();
-            return;
-        }
+            @Override
+            public void fail(String response) {
+                // TODO revert started state
+                Toast.makeText(team.context, "Quest couldn't be started", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
-        if (quest.getTeam().size() >= quest.getTeamSize()) {
-            new AlertDialog.Builder(activity)
-                    .setMessage(R.string.this_quest_is_full)
-                    .setPositiveButton(R.string.ok, null)
-                    .show();
+    public void markQuestComplete(@NonNull Quest quest) {
+        team.realm.beginTransaction();
+        quest.setStatus(Config.QUEST_STATUS_COMPLETE);
+        team.realm.commitTransaction();
 
-            return;
-        }
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_COMPLETE, true);
 
-        new AlertDialog.Builder(activity)
-                .setMessage(R.string.start_this_quest)
-                .setNeutralButton(R.string.message, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        openMessages(activity, quest.getHost());
-                    }
-                })
-                .setPositiveButton(R.string.start_quest, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        team.realm.beginTransaction();
-                        quest.setStatus(Config.QUEST_STATUS_STARTED);
-                        quest.getTeam().add(team.auth.me());
-                        team.realm.commitTransaction();
+        team.api.post(String.format(Config.PATH_QUEST_ID, quest.getId()), params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                if (response != null && Boolean.valueOf(response)) {
+                    Toast.makeText(team.context, "Quest completed", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(team.context, "Quest couldn't be completed", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-                        RequestParams params = new RequestParams();
-                        params.put(Config.PARAM_START, true);
-
-                        team.api.post(String.format(Config.PATH_QUEST_ID, quest.getId()), params, new Api.Callback() {
-                            @Override
-                            public void success(String response) {
-                                if (response != null && Boolean.valueOf(response)) {
-                                    Toast.makeText(team.context, "Quest started", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(team.context, "Quest couldn't be started", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            @Override
-                            public void fail(String response) {
-                                // TODO revert started state
-                                Toast.makeText(team.context, "Quest couldn't be started", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                        openMessages(activity, quest.getHost());
-                    }
-                })
-                .show();
+            @Override
+            public void fail(String response) {
+                // TODO revert started state
+                Toast.makeText(team.context, "Quest couldn't be completed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void changeAbout(@NonNull Activity activity) {

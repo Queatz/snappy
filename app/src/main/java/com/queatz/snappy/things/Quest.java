@@ -10,6 +10,7 @@ import io.realm.RealmObject;
  */
 public class Quest extends RealmObject {
     private String id;
+    private String name;
     private String details;
     private String status;
     private String reward;
@@ -25,6 +26,14 @@ public class Quest extends RealmObject {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDetails() {

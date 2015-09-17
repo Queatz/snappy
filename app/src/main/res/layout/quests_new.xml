@@ -8,6 +8,18 @@
     android:background="@color/darkpurple">
 
     <com.queatz.snappy.ui.EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textColor="@color/white"
+        android:background="@null"
+        android:hint="@string/enter_quest_name"
+        android:inputType="textShortMessage|textCapWords"
+        android:textColorHint="@color/whiteout"
+        android:textSize="20sp" />
+
+    <com.queatz.snappy.ui.EditText
         android:id="@+id/details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

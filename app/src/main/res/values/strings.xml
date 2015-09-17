@@ -95,6 +95,11 @@
     <string name="specify_reward">Specify a reward</string>
     <string name="this_quest_is_full">This quest is full</string>
     <string name="reward_text"><![CDATA[<b>Reward:</b> %1$s]]></string>
+    <string name="details_text"><![CDATA[<b>Details:</b> %1$s]]></string>
+    <string name="enter_quest_name">Enter quest name</string>
+    <string name="mark_complete">Mark complete</string>
+    <string name="view_contact">View contact</string>
+    <string name="close_quest">Close quest</string>
 
     <plurals name="people_near_place">
         <item quantity="one">%1$s person near %2$s</item>

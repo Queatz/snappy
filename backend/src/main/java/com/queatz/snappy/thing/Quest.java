@@ -38,6 +38,7 @@ public class Quest implements Thing {
 
             jsonObject.put("host", Things.getService().person.toJson(person, user, true));
             jsonObject.put("status", d.getOnlyField("status").getAtom());
+            jsonObject.put("name", d.getOnlyField("name").getText());
             jsonObject.put("details", d.getOnlyField("details").getText());
             jsonObject.put("reward", d.getOnlyField("reward").getText());
             jsonObject.put("opened", Util.dateToString(d.getOnlyField("opened").getDate()));
@@ -87,6 +88,7 @@ public class Quest implements Thing {
         documentBuilder.addField(Field.newBuilder().setName("time").setAtom(request.getParameter(Config.PARAM_TIME)));
         documentBuilder.addField(Field.newBuilder().setName("status").setAtom(Config.QUEST_STATUS_OPEN));
         documentBuilder.addField(Field.newBuilder().setName("reward").setText(Util.encode(request.getParameter(Config.PARAM_REWARD))));
+        documentBuilder.addField(Field.newBuilder().setName("name").setText(Util.encode(request.getParameter(Config.PARAM_NAME))));
         documentBuilder.addField(Field.newBuilder().setName("details").setText(Util.encode(request.getParameter(Config.PARAM_DETAILS))));
         documentBuilder.addField(Field.newBuilder().setName("teamSize").setNumber(teamSize));
         documentBuilder.addField(Field.newBuilder().setName("opened").setDate(new Date()));
@@ -157,6 +159,26 @@ public class Quest implements Thing {
 
     private int teamSizeSoFar(Document quest) {
         return (int) Search.getService().index.get(Search.Type.QUEST_PERSON).search("quest = \"" + quest.getId() + "\"").getNumberFound();
+    }
+
+    public boolean setQuestStatus(Document quest, String status) {
+        if (!status.equals(quest.getOnlyField("status").getAtom())) {
+            Document.Builder documentBulder = Document.newBuilder().setId(quest.getId()).addField(
+                    Field.newBuilder().setName("status").setAtom(status)
+            );
+
+            Util.copyIn(documentBulder, quest, "status");
+
+            try {
+                Search.getService().index.get(Search.Type.QUEST).put(documentBulder.build());
+                return true;
+            } catch (PutException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        return false;
     }
 
     private boolean updateQuestStatus(Document quest) {

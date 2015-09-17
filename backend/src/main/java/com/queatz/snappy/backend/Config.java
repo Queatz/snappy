@@ -19,7 +19,7 @@ public class Config {
     public static final int NEARBY_MAX_VISIBILITY = 1609 * 2;
     public static final int BOUNTIES_MAX_AGE = 1000 * 60 * 60 * 24 * 7;
     public static final long QUESTS_MAX_AGE = 1000L * 60L * 60L * 24L * 30L;
-    public static final int QUEST_MAX_TEAM_SIZE = 10;
+    public static final int QUEST_MAX_TEAM_SIZE = 6;
     public static final int BOUNTIES_MAXIMUM = 100;
     public static final int QUESTS_MAXIMUM = 100;
     public static final int SUGGESTION_LIMIT = 5;
@@ -104,6 +104,7 @@ public class Config {
     public static final String PARAM_TEAM_SIZE = "team_size";
     public static final String PARAM_REWARD = "reward";
     public static final String PARAM_START = "start";
+    public static final String PARAM_COMPLETE = "complete";
 
     public static final String GOOGLE_PLUS_PROFILE_URL = "https://www.googleapis.com/plus/v1/people/me";
     public static final String GOOGLE_PLUS_TOKENINFO_URL = "https://www.googleapis.com/oauth2/v1/tokeninfo";
