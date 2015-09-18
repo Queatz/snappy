@@ -22,6 +22,7 @@ import com.queatz.snappy.activity.Quests;
 import com.queatz.snappy.things.Contact;
 import com.queatz.snappy.things.Join;
 import com.queatz.snappy.things.Message;
+import com.queatz.snappy.things.Quest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -350,7 +351,7 @@ public class Push {
 
                     break;
                 case Config.PUSH_ACTION_QUEST_STARTED:
-                    String questName = push.getJSONObject("quest").getString("name");
+                    String questName = URLDecoder.decode(push.getJSONObject("quest").getString("name"), "UTF-8");
                     String questId = push.getJSONObject("quest").getString("id");
 
                     JSONArray questTeam = push.getJSONObject("quest").getJSONArray("team");
@@ -359,7 +360,7 @@ public class Push {
 
                     switch (questTeam.length()) {
                         case 1:
-                            str = team.context.getString(R.string.person_started_quest, questTeam.getJSONObject(0).getString("firstName"), questName);
+                            str = team.context.getString(R.string.person_started_quest, URLDecoder.decode(questTeam.getJSONObject(0).getString("firstName"), "UTF-8"), questName);
                             break;
                         default:
                             str = team.context.getString(R.string.quest_has_a_team, questName);
@@ -368,7 +369,7 @@ public class Push {
 
                     builder = new NotificationCompat.Builder(team.context)
                             .setAutoCancel(true)
-                            .setContentTitle(team.context.getString(R.string.quest_completed))
+                            .setContentTitle(team.context.getString(R.string.quest_started))
                             .setContentText(str)
                             .setSmallIcon(R.drawable.icon_system)
                             .setPriority(Notification.PRIORITY_DEFAULT)
@@ -392,7 +393,7 @@ public class Push {
 
                     break;
                 case Config.PUSH_ACTION_QUEST_COMPLETED:
-                    questName = push.getJSONObject("quest").getString("name");
+                    questName = URLDecoder.decode(push.getJSONObject("quest").getString("name"), "UTF-8");
                     questId = push.getJSONObject("quest").getString("id");
                     questTeam = push.getJSONObject("quest").getJSONArray("team");
 
@@ -403,15 +404,15 @@ public class Push {
                             str = team.context.getResources().getString(R.string.you_completed_quest, questName);
                             break;
                         case 2:
-                            other = team.auth.me().getFirstName().equals(questTeam.getJSONObject(0).getString("firstName")) ? 1 : 0;
-                            str = team.context.getResources().getString(R.string.you_completed_quest_with_person, questName, questTeam.getJSONObject(other).getString("firstName"));
+                            other = team.auth.me().getFirstName().equals(URLDecoder.decode(questTeam.getJSONObject(0).getString("firstName"), "UTF-8")) ? 1 : 0;
+                            str = team.context.getResources().getString(R.string.you_completed_quest_with_person, questName, URLDecoder.decode(questTeam.getJSONObject(other).getString("firstName"), "UTF-8"));
                             break;
                         case 3:
                             boolean accountedForMe = false;
                             ArrayList<String> otherNames = new ArrayList<>();
 
                             for (int i = 0; i < questTeam.length(); i++) {
-                                String otherName = questTeam.getJSONObject(i).getString("firstName");
+                                String otherName = URLDecoder.decode(questTeam.getJSONObject(i).getString("firstName"), "UTF-8");
 
                                 if (accountedForMe || !team.auth.me().getFirstName().equals(otherName)) {
                                     otherNames.add(otherName);
@@ -523,6 +524,22 @@ public class Push {
 
                     break;
                 case Config.PUSH_ACTION_FOLLOW:
+
+                    break;
+
+                case Config.PUSH_ACTION_QUEST_STARTED:
+                case Config.PUSH_ACTION_QUEST_COMPLETED:
+                    team.api.get(String.format(Config.PATH_QUEST_ID, push.getJSONObject("quest").getString("id")), new Api.Callback() {
+                        @Override
+                        public void success(String response) {
+                            team.things.put(Quest.class, response);
+                        }
+
+                        @Override
+                        public void fail(String response) {
+
+                        }
+                    });
 
                     break;
             }

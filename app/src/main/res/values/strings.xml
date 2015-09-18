@@ -107,6 +107,8 @@
     <string name="you_completed_quest_with_two_people">You completed %1$s with %2$s and %3$s</string>
     <string name="you_completed_quest_with_more_people">Your team completed %1$s</string>
     <string name="quest_completed">Quest completed</string>
+    <string name="join_quest">Join quest</string>
+    <string name="quest_started">Quest started</string>
 
     <plurals name="people_near_place">
         <item quantity="one">%1$s person near %2$s</item>

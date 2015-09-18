@@ -94,7 +94,7 @@ public class QuestAdapter extends RealmBaseAdapter<Quest> {
                 }
             });
         } else {
-            action.setText(context.getString(R.string.start_quest));
+            action.setText(context.getString(quest.getTeam().size() == quest.getTeamSize() -1 ? R.string.start_quest : R.string.join_quest));
             action.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

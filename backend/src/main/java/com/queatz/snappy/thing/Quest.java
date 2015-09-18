@@ -27,8 +27,6 @@ public class Quest implements Thing {
         if(quest == null)
             return null;
 
-        Document person = Search.getService().get(Search.Type.PERSON, quest.getOnlyField("host").getAtom());
-
         JSONObject push = new JSONObject();
 
         try {
@@ -188,15 +186,14 @@ public class Quest implements Thing {
         try {
             PutResponse put = Search.getService().index.get(Search.Type.QUEST_PERSON).put(questPerson);
             documentBuilder.setId(put.getIds().get(0));
-            questPerson = documentBuilder.build();
         } catch (PutException e) {
             e.printStackTrace();
             return null;
         }
 
-        updateQuestStatus(quest);
+        quest = updateQuestStatus(quest);
 
-        return questPerson;
+        return quest;
     }
 
     public boolean delete(String user, String questId) {
@@ -222,7 +219,7 @@ public class Quest implements Thing {
         return (int) Search.getService().index.get(Search.Type.QUEST_PERSON).search("quest = \"" + quest.getId() + "\"").getNumberFound();
     }
 
-    public boolean setQuestStatus(Document quest, String status) {
+    public Document setQuestStatus(Document quest, String status) {
         if (!status.equals(quest.getOnlyField("status").getAtom())) {
             Document.Builder documentBulder = Document.newBuilder().setId(quest.getId()).addField(
                     Field.newBuilder().setName("status").setAtom(status)
@@ -230,19 +227,21 @@ public class Quest implements Thing {
 
             Util.copyIn(documentBulder, quest, "status");
 
+            quest = documentBulder.build();
+
             try {
-                Search.getService().index.get(Search.Type.QUEST).put(documentBulder.build());
-                return true;
+                Search.getService().index.get(Search.Type.QUEST).put(quest);
+                return quest;
             } catch (PutException e) {
                 e.printStackTrace();
-                return false;
+                return null;
             }
         }
 
-        return false;
+        return null;
     }
 
-    private boolean updateQuestStatus(Document quest) {
+    private Document updateQuestStatus(Document quest) {
         long teamSize = quest.getOnlyField("teamSize").getNumber().longValue();
         long soFar = teamSizeSoFar(quest);
 
@@ -253,15 +252,17 @@ public class Quest implements Thing {
 
             Util.copyIn(documentBulder, quest, "status");
 
+            quest = documentBulder.build();
+
             try {
-                Search.getService().index.get(Search.Type.QUEST).put(documentBulder.build());
-                return true;
+                PutResponse put = Search.getService().index.get(Search.Type.QUEST).put(quest);
+                return quest;
             } catch (PutException e) {
                 e.printStackTrace();
-                return false;
+                return null;
             }
         }
 
-        return false;
+        return null;
     }
 }

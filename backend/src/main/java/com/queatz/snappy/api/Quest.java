@@ -28,6 +28,16 @@ public class Quest extends Api.Path {
     @Override
     public void call() throws IOException, PrintingError {
         switch (method) {
+            case GET:
+                switch (path.size()) {
+                    case 1:
+                        getQuest(path.get(0));
+                        break;
+                    default:
+                        die("quest - bad path");
+                }
+
+                break;
             case POST:
                 switch (path.size()) {
                     case 0:
@@ -62,6 +72,13 @@ public class Quest extends Api.Path {
         }
     }
 
+    private void getQuest(String questId) throws IOException {
+        Document quest = Search.getService().get(Search.Type.QUEST, questId);
+
+        JSONObject json = Things.getService().quest.toJson(quest, user, false);
+        response.getWriter().write(json.toString());
+    }
+
     private void post() throws IOException {
         String localId = request.getParameter(Config.PARAM_LOCAL_ID);
 
@@ -74,9 +91,12 @@ public class Quest extends Api.Path {
     }
 
     private void postStart(String questId) throws IOException {
-        Document questPerson = Things.getService().quest.start(user, questId);
+        Document quest = Things.getService().quest.start(user, questId);
 
-        Document quest = Search.getService().get(Search.Type.QUEST, questId);
+        if (quest == null) {
+            response.getWriter().write(Boolean.toString(false));
+            return;
+        }
 
         if (Config.QUEST_STATUS_STARTED.equals(quest.getOnlyField("status").getAtom())) {
             Push.getService().send(quest.getOnlyField("host").getAtom(), Things.getService().quest.makePush(quest));
@@ -90,7 +110,7 @@ public class Quest extends Api.Path {
             }
         }
 
-        response.getWriter().write(Boolean.toString(questPerson != null));
+        response.getWriter().write(Boolean.toString(true));
     }
 
     private void postComplete(String questId) throws IOException, PrintingError {
@@ -100,17 +120,15 @@ public class Quest extends Api.Path {
             die("quest - not authenticated");
         }
 
-        boolean success = Things.getService().quest.setQuestStatus(quest, Config.QUEST_STATUS_COMPLETE);
+        quest = Things.getService().quest.setQuestStatus(quest, Config.QUEST_STATUS_COMPLETE);
 
-        if (success) {
-            quest = Search.getService().get(Search.Type.QUEST, questId);
-
+        if (quest != null) {
             for (ScoredDocument document : Things.getService().quest.getTeam(quest)) {
                 Push.getService().send(document.getOnlyField("person").getAtom(), Things.getService().quest.makePush(quest));
             }
         }
 
-        response.getWriter().write(Boolean.toString(success));
+        response.getWriter().write(Boolean.toString(quest != null));
     }
 
     private void delete(String questId) throws IOException {
