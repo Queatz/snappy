@@ -693,9 +693,20 @@ public class Action {
                 .show();
     }
 
-    public void newQuest(@NonNull String name, @NonNull String details, @NonNull String reward, String time, int teamSize) {
-        if(details.trim().isEmpty() || reward.trim().isEmpty()) {
-            return;
+    public boolean newQuest(@NonNull String name, @NonNull String details, @NonNull String reward, String time, int teamSize) {
+        if (name.trim().isEmpty()) {
+            Toast.makeText(team.context, team.context.getString(R.string.enter_quest_name), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (details.trim().isEmpty()) {
+            Toast.makeText(team.context, team.context.getString(R.string.describe_the_quest), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (reward.trim().isEmpty()) {
+            Toast.makeText(team.context, team.context.getString(R.string.specify_reward), Toast.LENGTH_SHORT).show();
+            return false;
         }
 
         team.realm.beginTransaction();
@@ -730,6 +741,8 @@ public class Action {
                 Toast.makeText(team.context, "Couldn't open new quest", Toast.LENGTH_SHORT).show();
             }
         });
+
+        return true;
     }
 
     public void startQuest(@NonNull final Activity activity, @NonNull final Quest quest) {

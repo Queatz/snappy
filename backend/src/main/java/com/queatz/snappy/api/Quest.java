@@ -1,10 +1,13 @@
 package com.queatz.snappy.api;
 
 import com.google.appengine.api.search.Document;
+import com.google.appengine.api.search.Results;
+import com.google.appengine.api.search.ScoredDocument;
 import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.service.Api;
+import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Search;
 import com.queatz.snappy.service.Things;
 
@@ -73,6 +76,20 @@ public class Quest extends Api.Path {
     private void postStart(String questId) throws IOException {
         Document questPerson = Things.getService().quest.start(user, questId);
 
+        Document quest = Search.getService().get(Search.Type.QUEST, questId);
+
+        if (Config.QUEST_STATUS_STARTED.equals(quest.getOnlyField("status").getAtom())) {
+            Push.getService().send(quest.getOnlyField("host").getAtom(), Things.getService().join.makePush(quest));
+
+            Results<ScoredDocument> team = Things.getService().quest.getTeam(quest);
+
+            if (team.getNumberReturned() > 1) {
+                for (ScoredDocument document : team) {
+                    Push.getService().send(document.getOnlyField("person").getAtom(), Things.getService().join.makePush(quest));
+                }
+            }
+        }
+
         response.getWriter().write(Boolean.toString(questPerson != null));
     }
 
@@ -84,6 +101,14 @@ public class Quest extends Api.Path {
         }
 
         boolean success = Things.getService().quest.setQuestStatus(quest, Config.QUEST_STATUS_COMPLETE);
+
+        if (success) {
+            quest = Search.getService().get(Search.Type.QUEST, questId);
+
+            for (ScoredDocument document : Things.getService().quest.getTeam(quest)) {
+                Push.getService().send(document.getOnlyField("person").getAtom(), Things.getService().join.makePush(quest));
+            }
+        }
 
         response.getWriter().write(Boolean.toString(success));
     }

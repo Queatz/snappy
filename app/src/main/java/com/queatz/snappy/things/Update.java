@@ -19,6 +19,7 @@ public class Update extends RealmObject {
     private Person person;
     private Party party;
     private Location location;
+    private Quest quest;
     private Date date;
 
     public String getId() {
@@ -67,6 +68,14 @@ public class Update extends RealmObject {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public Quest getQuest() {
+        return quest;
+    }
+
+    public void setQuest(Quest quest) {
+        this.quest = quest;
     }
 
     public String getMessage() {

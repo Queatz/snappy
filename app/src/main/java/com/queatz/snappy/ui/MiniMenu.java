@@ -19,6 +19,7 @@ import com.queatz.snappy.things.Quest;
 import java.util.Date;
 
 import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 /**
  * Created by jacob on 1/3/15.
@@ -116,10 +117,9 @@ public class MiniMenu extends FrameLayout {
         final Team team = ((MainApplication) getContext().getApplicationContext()).team;
 
         RealmQuery<Quest> query = team.realm.where(Quest.class).greaterThan("opened", new Date(new Date().getTime() - 1000L * 60 * 60 * 24 * 30))
-                .equalTo("status", Config.QUEST_STATUS_OPEN)
-                .or()
+                .notEqualTo("status", Config.QUEST_STATUS_COMPLETE)
                 .beginGroup()
-                    .notEqualTo("status", Config.QUEST_STATUS_STARTED)
+                    .equalTo("status", Config.QUEST_STATUS_OPEN)
                     .or()
                     .equalTo("team.id", team.auth.getUser())
                     .or()

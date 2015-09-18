@@ -23,6 +23,67 @@ import javax.servlet.http.HttpServletRequest;
  * Created by jacob on 9/15/15.
  */
 public class Quest implements Thing {
+    public JSONObject makePush(Document quest) {
+        if(quest == null)
+            return null;
+
+        Document person = Search.getService().get(Search.Type.PERSON, quest.getOnlyField("host").getAtom());
+
+        JSONObject push = new JSONObject();
+
+        try {
+            String action;
+
+            switch (quest.getOnlyField("status").getAtom()) {
+                case Config.QUEST_STATUS_STARTED:
+                    action = Config.PUSH_ACTION_QUEST_STARTED;
+                    break;
+                case Config.QUEST_STATUS_COMPLETE:
+                    action = Config.PUSH_ACTION_QUEST_COMPLETED;
+                    break;
+                default:
+                    return null;
+            }
+
+            push.put("action", action);
+            push.put("quest", toPushJson(quest));
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return push;
+    }
+
+    public JSONObject toPushJson(Document d) {
+        if(d == null)
+            return null;
+
+        JSONObject o = new JSONObject();
+
+        try {
+            o.put("id", d.getId());
+            o.put("name", d.getOnlyField("name").getText());
+
+            JSONArray team = new JSONArray();
+            Results<ScoredDocument> results = getTeam(d);
+
+            for (ScoredDocument document : results) {
+                Document questPerson = Search.getService().get(Search.Type.PERSON, document.getOnlyField("person").getAtom());
+                team.put(Things.getService().person.toPushJson(questPerson));
+            }
+
+            o.put("team", team);
+
+            return o;
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @Override
     public JSONObject toJson(Document d, String user, boolean shallow) {
         JSONObject jsonObject = new JSONObject();
@@ -45,19 +106,15 @@ public class Quest implements Thing {
             jsonObject.put("time", d.getOnlyField("time").getAtom());
             jsonObject.put("teamSize", d.getOnlyField("teamSize").getNumber().intValue());
 
-            Results<ScoredDocument> results = Search.getService().index.get(Search.Type.QUEST_PERSON).search("quest = " + d.getId());
+            Results<ScoredDocument> results = getTeam(d);
+            JSONArray team = new JSONArray();
 
-            if (results.getNumberReturned() > 0) {
-                JSONArray team = new JSONArray();
-
-                for (ScoredDocument document : results) {
-                    Document questPerson = Search.getService().get(Search.Type.PERSON, document.getOnlyField("person").getAtom());
-                    team.put(Things.getService().person.toJson(questPerson, user, true));
-                }
-
-                if(team.length() > 0)
-                    jsonObject.put("team", team);
+            for (ScoredDocument document : results) {
+                Document questPerson = Search.getService().get(Search.Type.PERSON, document.getOnlyField("person").getAtom());
+                team.put(Things.getService().person.toJson(questPerson, user, true));
             }
+
+            jsonObject.put("team", team);
 
             return jsonObject;
         } catch (JSONException e) {
@@ -155,6 +212,10 @@ public class Quest implements Thing {
 
         Search.getService().index.get(Search.Type.QUEST).delete(questId);
         return true;
+    }
+
+    public Results<ScoredDocument> getTeam(Document quest) {
+        return Search.getService().index.get(Search.Type.QUEST_PERSON).search("quest = " + quest.getId());
     }
 
     private int teamSizeSoFar(Document quest) {

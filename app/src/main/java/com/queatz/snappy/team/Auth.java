@@ -177,7 +177,7 @@ public class Auth {
         mUser = team.preferences.getString(Config.PREFERENCE_USER, null);
         mAuthToken = team.preferences.getString(Config.PREFERENCE_AUTH_TOKEN, null);
         mGcmRegistrationId = team.preferences.getString(Config.PREFERENCE_GCM_REGISTRATION_ID, null);
-        mSocialMode = team.preferences.getString(Config.PREFERENCE_SOCIAL_MODE, Config.SOCIAL_MODE_FRIENDS);
+        mSocialMode = team.preferences.getString(Config.PREFERENCE_SOCIAL_MODE, Config.SOCIAL_MODE_ON);
 
         Log.d(Config.LOG_TAG, "user = " + mUser);
 

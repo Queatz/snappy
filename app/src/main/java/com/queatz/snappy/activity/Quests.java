@@ -81,19 +81,19 @@ public class Quests extends Activity {
             newButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    team.action.newQuest(
+                    if (team.action.newQuest(
                             questName.getText().toString(),
                             questDetails.getText().toString(),
                             questReward.getText().toString(),
                             getTimeOfDay(timeOfDaySlider.getPercent()),
                             getTeamSize(teamSizeSlider.getPercent())
-                    );
-
-                    timeOfDaySlider.setPercent(0);
-                    teamSizeSlider.setPercent(0);
-                    questDetails.setText("");
-                    questReward.setText("");
-                    questName.setText("");
+                    )) {
+                        timeOfDaySlider.setPercent(0);
+                        teamSizeSlider.setPercent(0);
+                        questDetails.setText("");
+                        questReward.setText("");
+                        questName.setText("");
+                    }
                 }
             });
         }

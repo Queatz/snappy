@@ -51,7 +51,7 @@ public class PersonUptoAdapter extends RealmBaseAdapter<Update> {
 
             Picasso.with(context)
                     .load(location == null ? person.getImageUrlForSize(s) : Util.locationPhoto(location, s))
-                    .placeholder(R.color.spacer)
+                    .placeholder(location == null ? R.color.spacer : R.drawable.location)
                     .into((ImageView) view.findViewById(R.id.profile));
         }
 
@@ -60,12 +60,14 @@ public class PersonUptoAdapter extends RealmBaseAdapter<Update> {
         if (Config.UPDATE_ACTION_UPTO.equals(update.getAction())) {
             String photoUrl = Config.API_URL + String.format(Config.PATH_UPDATE_PHOTO + "?s=" + (parent.getMeasuredWidth() / 2) + "&auth=" + team.auth.getAuthParam(), update.getId());
 
+            photo.setVisibility(View.VISIBLE);
+
+            photo.setImageDrawable(null);
+
             Picasso.with(context)
                     .load(photoUrl)
                     .placeholder(R.color.spacer)
                     .into(photo);
-
-            photo.setVisibility(View.VISIBLE);
 
             if(update.getMessage() == null || update.getMessage().isEmpty()) {
                 view.findViewById(R.id.details).setVisibility(View.GONE);

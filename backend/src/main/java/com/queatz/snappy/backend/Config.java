@@ -51,7 +51,7 @@ public class Config {
     public static final String PUSH_ACTION_REFRESH_ME = "refresh_me";
     public static final String PUSH_ACTION_CLEAR_NOTIFICATION = "clear_notification";
     public static final String PUSH_ACTION_BOUNTY_FINISHED = "bounty_finished";
-    public static final String PUSH_ACTION_QUEST_JOIN = "quest_join";
+    public static final String PUSH_ACTION_QUEST_COMPLETED = "quest_completed";
     public static final String PUSH_ACTION_QUEST_STARTED = "quest_started";
 
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";

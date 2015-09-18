@@ -18,15 +18,18 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.activity.Person;
+import com.queatz.snappy.activity.Quests;
 import com.queatz.snappy.things.Contact;
 import com.queatz.snappy.things.Join;
 import com.queatz.snappy.things.Message;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Date;
 
 import io.realm.RealmResults;
@@ -335,7 +338,6 @@ public class Push {
                     stackBuilder.addParentStack(Main.class);
                     stackBuilder.addNextIntent(resultIntent);
                     pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
                     builder.setContentIntent(pendingIntent);
 
                     if(Build.VERSION.SDK_INT >= 21) {
@@ -345,6 +347,109 @@ public class Push {
                     }
 
                     show("bounty/" + bountyId + "/finished", builder.build());
+
+                    break;
+                case Config.PUSH_ACTION_QUEST_STARTED:
+                    String questName = push.getJSONObject("quest").getString("name");
+                    String questId = push.getJSONObject("quest").getString("id");
+
+                    JSONArray questTeam = push.getJSONObject("quest").getJSONArray("team");
+
+                    String str;
+
+                    switch (questTeam.length()) {
+                        case 1:
+                            str = team.context.getString(R.string.person_started_quest, questTeam.getJSONObject(0).getString("firstName"), questName);
+                            break;
+                        default:
+                            str = team.context.getString(R.string.quest_has_a_team, questName);
+                            break;
+                    }
+
+                    builder = new NotificationCompat.Builder(team.context)
+                            .setAutoCancel(true)
+                            .setContentTitle(team.context.getString(R.string.quest_completed))
+                            .setContentText(str)
+                            .setSmallIcon(R.drawable.icon_system)
+                            .setPriority(Notification.PRIORITY_DEFAULT)
+                            .setDefaults(Notification.DEFAULT_ALL);
+
+                    resultIntent = new Intent(team.context, Quests.class);
+                    stackBuilder = TaskStackBuilder.create(team.context);
+                    stackBuilder.addParentStack(Main.class);
+                    stackBuilder.addNextIntent(resultIntent);
+                    pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    builder.setContentIntent(pendingIntent);
+
+                    if(Build.VERSION.SDK_INT >= 21) {
+                        builder
+                                .setColor(team.context.getResources().getColor(R.color.red))
+                                .setCategory(Notification.CATEGORY_SOCIAL);
+                    }
+
+                    show("quest/" + questId + "/started", builder.build());
+
+                    break;
+                case Config.PUSH_ACTION_QUEST_COMPLETED:
+                    questName = push.getJSONObject("quest").getString("name");
+                    questId = push.getJSONObject("quest").getString("id");
+                    questTeam = push.getJSONObject("quest").getJSONArray("team");
+
+                    int other;
+
+                    switch (questTeam.length()) {
+                        case 1:
+                            str = team.context.getResources().getString(R.string.you_completed_quest, questName);
+                            break;
+                        case 2:
+                            other = team.auth.me().getFirstName().equals(questTeam.getJSONObject(0).getString("firstName")) ? 1 : 0;
+                            str = team.context.getResources().getString(R.string.you_completed_quest_with_person, questName, questTeam.getJSONObject(other).getString("firstName"));
+                            break;
+                        case 3:
+                            boolean accountedForMe = false;
+                            ArrayList<String> otherNames = new ArrayList<>();
+
+                            for (int i = 0; i < questTeam.length(); i++) {
+                                String otherName = questTeam.getJSONObject(i).getString("firstName");
+
+                                if (accountedForMe || !team.auth.me().getFirstName().equals(otherName)) {
+                                    otherNames.add(otherName);
+                                } else {
+                                    accountedForMe = true;
+                                }
+                            }
+
+                            str = team.context.getResources().getString(R.string.you_completed_quest_with_two_people, questName, otherNames.get(0), otherNames.get(1));
+                            break;
+                        default:
+                            str = team.context.getResources().getString(R.string.you_completed_quest_with_more_people, questName);
+                            break;
+                    }
+
+                    builder = new NotificationCompat.Builder(team.context)
+                            .setAutoCancel(true)
+                            .setContentTitle(team.context.getString(R.string.quest_completed))
+                            .setContentText(str)
+                            .setSmallIcon(R.drawable.icon_system)
+                            .setPriority(Notification.PRIORITY_DEFAULT)
+                            .setDefaults(Notification.DEFAULT_ALL);
+
+                    resultIntent = new Intent(team.context, Quests.class);
+                    stackBuilder = TaskStackBuilder.create(team.context);
+                    stackBuilder.addParentStack(Main.class);
+                    stackBuilder.addNextIntent(resultIntent);
+                    pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    builder.setContentIntent(pendingIntent);
+
+                    if(Build.VERSION.SDK_INT >= 21) {
+                        builder
+                                .setColor(team.context.getResources().getColor(R.color.red))
+                                .setCategory(Notification.CATEGORY_SOCIAL);
+                    }
+
+                    show("quest/" + questId + "/completed", builder.build());
 
                     break;
             }

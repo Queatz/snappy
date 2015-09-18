@@ -5,7 +5,7 @@
     <string name="mark_party_full">Mark as full</string>
     <string name="close_party">Close party</string>
     <string name="requested">Waiting…</string>
-    <string name="host_party">Host party</string>
+    <string name="host_party">Throw party</string>
     <string name="host_again">Host again</string>
     <string name="write_message">Write message</string>
     <string name="today">Today, %1$s</string>
@@ -100,6 +100,13 @@
     <string name="mark_complete">Mark complete</string>
     <string name="view_contact">View contact</string>
     <string name="close_quest">Close quest</string>
+    <string name="quest_has_a_team">%1$s has a team</string>
+    <string name="person_started_quest">%1$s started %2$s</string>
+    <string name="you_completed_quest">You completed %1$s</string>
+    <string name="you_completed_quest_with_person">You and %2$s completed %1$s</string>
+    <string name="you_completed_quest_with_two_people">You completed %1$s with %2$s and %3$s</string>
+    <string name="you_completed_quest_with_more_people">Your team completed %1$s</string>
+    <string name="quest_completed">Quest completed</string>
 
     <plurals name="people_near_place">
         <item quantity="one">%1$s person near %2$s</item>
