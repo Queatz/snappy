@@ -171,7 +171,7 @@ public class Quest implements Thing {
         Results<ScoredDocument> results = Search.getService().index.get(Search.Type.QUEST_PERSON).search("quest = \"" + questId + "\" AND person = \"" + user + "\"");
 
         if (results.getNumberReturned() > 0) {
-            return results.iterator().next();
+            return quest;
         }
 
         if (teamSizeSoFar(quest) >= quest.getOnlyField("teamSize").getNumber().intValue()) {
@@ -255,7 +255,7 @@ public class Quest implements Thing {
             quest = documentBulder.build();
 
             try {
-                PutResponse put = Search.getService().index.get(Search.Type.QUEST).put(quest);
+                Search.getService().index.get(Search.Type.QUEST).put(quest);
                 return quest;
             } catch (PutException e) {
                 e.printStackTrace();
