@@ -79,13 +79,13 @@ public class Quest extends Api.Path {
         Document quest = Search.getService().get(Search.Type.QUEST, questId);
 
         if (Config.QUEST_STATUS_STARTED.equals(quest.getOnlyField("status").getAtom())) {
-            Push.getService().send(quest.getOnlyField("host").getAtom(), Things.getService().join.makePush(quest));
+            Push.getService().send(quest.getOnlyField("host").getAtom(), Things.getService().quest.makePush(quest));
 
             Results<ScoredDocument> team = Things.getService().quest.getTeam(quest);
 
             if (team.getNumberReturned() > 1) {
                 for (ScoredDocument document : team) {
-                    Push.getService().send(document.getOnlyField("person").getAtom(), Things.getService().join.makePush(quest));
+                    Push.getService().send(document.getOnlyField("person").getAtom(), Things.getService().quest.makePush(quest));
                 }
             }
         }
@@ -106,7 +106,7 @@ public class Quest extends Api.Path {
             quest = Search.getService().get(Search.Type.QUEST, questId);
 
             for (ScoredDocument document : Things.getService().quest.getTeam(quest)) {
-                Push.getService().send(document.getOnlyField("person").getAtom(), Things.getService().join.makePush(quest));
+                Push.getService().send(document.getOnlyField("person").getAtom(), Things.getService().quest.makePush(quest));
             }
         }
 
