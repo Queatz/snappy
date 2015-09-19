@@ -105,7 +105,11 @@ public class Quest extends Api.Path {
 
             if (quest.getOnlyField("teamSize").getNumber().intValue() > 1) {
                 for (ScoredDocument document : team) {
-                    Push.getService().send(document.getOnlyField("person").getAtom(), Things.getService().quest.makePush(quest));
+                    String person = document.getOnlyField("person").getAtom();
+
+                    if (!user.equals(person)) {
+                        Push.getService().send(person, Things.getService().quest.makePush(quest));
+                    }
                 }
             }
         }
