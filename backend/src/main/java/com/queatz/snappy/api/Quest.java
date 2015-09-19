@@ -103,7 +103,7 @@ public class Quest extends Api.Path {
 
             Results<ScoredDocument> team = Things.getService().quest.getTeam(quest);
 
-            if (team.getNumberReturned() > 1) {
+            if (quest.getOnlyField("teamSize").getNumber().intValue() > 1) {
                 for (ScoredDocument document : team) {
                     Push.getService().send(document.getOnlyField("person").getAtom(), Things.getService().quest.makePush(quest));
                 }
