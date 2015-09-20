@@ -14,6 +14,7 @@ import com.queatz.snappy.backend.Config;
 import com.queatz.snappy.backend.PrintingError;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -95,27 +96,27 @@ public class Api {
     public AppIdentityService mAppIdentityService;
     public ImagesService mImagesService;
 
-    private HashMap<String, Path> paths;
+    private HashMap<String, Class<? extends Api.Path>> paths;
 
     public Api() {
         paths = new HashMap<>();
-        paths.put("example", new Example(this));
-        paths.put(Config.PATH_PARTY, new Party(this));
-        paths.put(Config.PATH_MESSAGES, new Messages(this));
-        paths.put(Config.PATH_PEOPLE, new People(this));
-        paths.put(Config.PATH_FOLLOW, new Follow(this));
-        paths.put(Config.PATH_ME, new Me(this));
-        paths.put(Config.PATH_PIRATE, new Pirate(this));
-        paths.put(Config.PATH_JOIN, new Join(this));
-        paths.put(Config.PATH_ADMIN, new Admin(this));
-        paths.put(Config.PATH_LOCATIONS, new Locations(this));
-        paths.put(Config.PATH_LOCATION, new Location(this));
-        paths.put(Config.PATH_HERE, new Here(this));
-        paths.put(Config.PATH_BOUNTIES, new Bounties(this));
-        paths.put(Config.PATH_BOUNTY, new Bounty(this));
-        paths.put(Config.PATH_UPDATE, new Update(this));
-        paths.put(Config.PATH_PARTIES, new Parties(this));
-        paths.put(Config.PATH_QUEST, new Quest(this));
+        paths.put("example", Example.class);
+        paths.put(Config.PATH_PARTY, Party.class);
+        paths.put(Config.PATH_MESSAGES, Messages.class);
+        paths.put(Config.PATH_PEOPLE, People.class);
+        paths.put(Config.PATH_FOLLOW, Follow.class);
+        paths.put(Config.PATH_ME, Me.class);
+        paths.put(Config.PATH_PIRATE, Pirate.class);
+        paths.put(Config.PATH_JOIN, Join.class);
+        paths.put(Config.PATH_ADMIN, Admin.class);
+        paths.put(Config.PATH_LOCATIONS, Locations.class);
+        paths.put(Config.PATH_LOCATION, Location.class);
+        paths.put(Config.PATH_HERE, Here.class);
+        paths.put(Config.PATH_BOUNTIES, Bounties.class);
+        paths.put(Config.PATH_BOUNTY, Bounty.class);
+        paths.put(Config.PATH_UPDATE, Update.class);
+        paths.put(Config.PATH_PARTIES, Parties.class);
+        paths.put(Config.PATH_QUEST, Quest.class);
 
         mGCS = GcsServiceFactory.createGcsService(RetryParams.getDefaultInstance());
         mAppIdentityService = AppIdentityServiceFactory.getAppIdentityService();
@@ -139,15 +140,16 @@ public class Api {
 
         pathParts.addAll(Arrays.asList(path).subList(3, path.length));
 
-        try {
-            Path p = paths.get(basePath);
-
-            if(p != null)
-                p._call(pathParts, user, method, request, response);
-            else
-                throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "bad request path");
+        if (!paths.containsKey(basePath)) {
+            throw new PrintingError(Error.NOT_AUTHENTICATED, "bad request path");
         }
-        catch (IOException e) {
+
+        try {
+            Path p = paths.get(basePath).getDeclaredConstructor(Api.class).newInstance(this);
+
+            p._call(pathParts, user, method, request, response);
+        }
+        catch (NullPointerException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException | IOException e) {
             e.printStackTrace();
             throw new PrintingError(Api.Error.SERVER_ERROR, "api error");
         }

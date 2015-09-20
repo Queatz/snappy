@@ -174,7 +174,9 @@ public class Quest implements Thing {
             return quest;
         }
 
-        if (teamSizeSoFar(quest) >= quest.getOnlyField("teamSize").getNumber().intValue()) {
+        long soFar = teamSizeSoFar(quest);
+
+        if (soFar >= quest.getOnlyField("teamSize").getNumber().intValue()) {
             return null;
         }
 
@@ -191,7 +193,7 @@ public class Quest implements Thing {
             return null;
         }
 
-        quest = updateQuestStatus(quest);
+        quest = updateQuestStatus(soFar + 1, quest);
 
         return quest;
     }
@@ -241,9 +243,8 @@ public class Quest implements Thing {
         return null;
     }
 
-    private Document updateQuestStatus(Document quest) {
+    private Document updateQuestStatus(long soFar, Document quest) {
         long teamSize = quest.getOnlyField("teamSize").getNumber().longValue();
-        long soFar = teamSizeSoFar(quest);
 
         if (soFar >= teamSize && Config.QUEST_STATUS_OPEN.equals(quest.getOnlyField("status").getAtom())) {
             Document.Builder documentBulder = Document.newBuilder().setId(quest.getId()).addField(
@@ -259,10 +260,10 @@ public class Quest implements Thing {
                 return quest;
             } catch (PutException e) {
                 e.printStackTrace();
-                return null;
+                return quest;
             }
         }
 
-        return null;
+        return quest;
     }
 }

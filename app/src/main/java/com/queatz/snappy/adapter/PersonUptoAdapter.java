@@ -64,6 +64,8 @@ public class PersonUptoAdapter extends RealmBaseAdapter<Update> {
 
             photo.setImageDrawable(null);
 
+            Picasso.with(context).cancelRequest(photo);
+
             Picasso.with(context)
                     .load(photoUrl)
                     .placeholder(R.color.spacer)
