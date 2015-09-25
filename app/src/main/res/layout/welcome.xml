@@ -3,11 +3,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ImageView
+    <com.queatz.snappy.ui.AnimatedImageView
+        android:id="@+id/welcome"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/welcome"
-        android:scaleType="centerCrop"/>
+        android:src="@drawable/welcome" />
 
     <LinearLayout
         android:orientation="vertical"

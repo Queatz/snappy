@@ -2,8 +2,10 @@ package com.queatz.snappy.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
@@ -41,6 +43,7 @@ public class Welcome extends Activity {
         });
 
         team.buy.pullGoogle(this);
+
     }
 
     @Override

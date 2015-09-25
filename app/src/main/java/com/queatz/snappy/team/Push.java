@@ -150,7 +150,6 @@ public class Push {
 
                     personFirstName = URLDecoder.decode(push.getJSONObject("message").getJSONObject("from").getString("firstName"), "UTF-8");
                     String message = URLDecoder.decode(push.getJSONObject("message").getString("message"), "UTF-8");
-                    String messageId = push.getJSONObject("message").getString("id");
 
                     RealmResults<Contact> contacts = team.realm.where(Contact.class).equalTo("seen", false).findAllSorted("updated");
 

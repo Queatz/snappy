@@ -150,7 +150,9 @@ public class Person extends Activity {
 
         mIsActive = false;
 
-        team.view.clearTop("person/" + mPerson.getId() + "/messages");
+        if (mPerson != null) {
+            team.view.clearTop("person/" + mPerson.getId() + "/messages");
+        }
     }
 
     @Override

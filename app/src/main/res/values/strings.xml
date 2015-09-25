@@ -32,7 +32,7 @@
     <string name="me_message">Me: %1$s</string>
     <string name="time_in">in %1$s</string>
     <string name="time_ago">%1$s ago</string>
-    <string name="welcome_to">Welcome to the</string>
+    <string name="welcome_to">Welcome to</string>
     <string name="SNAPPY">VILLAGE</string>
     <string name="enter_address">Find a location for \"%1$s\"…</string>
     <string name="parties_empty">Nothing is happening</string>
