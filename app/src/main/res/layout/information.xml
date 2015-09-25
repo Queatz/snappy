@@ -34,7 +34,7 @@
                 android:gravity="center_horizontal"
                 android:textSize="11sp"
                 android:textAlignment="center"
-                android:text="village dynamics + city vivace" />
+                android:text="village dynamics in the city" />
 
         </LinearLayout>
 
@@ -89,6 +89,7 @@
                 android:text="Quests are small excursions, occasionally requiring multiple people to complete.  You get a reward upon completion." />
 
             <com.queatz.snappy.ui.TextView
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -98,6 +99,7 @@
                 android:text="What are skills and endorsements?" />
 
             <com.queatz.snappy.ui.TextView
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text"
@@ -172,7 +174,7 @@
                 android:layout_marginBottom="8dp"
                 android:textStyle="bold"
                 android:textColor="@color/text"
-                android:text="What do I get if I pay for Village?" />
+                android:text="What do I get when I pay for Village?" />
 
             <com.queatz.snappy.ui.TextView
                 android:layout_width="match_parent"
