@@ -8,13 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.queatz.snappy.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
+import com.queatz.snappy.Util;
 import com.queatz.snappy.adapter.PersonMessagesAdapter;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Message;
@@ -58,8 +61,6 @@ public class PersonMessagesSlide extends Fragment {
                     .findAllSorted("date", true);
 
             list.setAdapter(new PersonMessagesAdapter(getActivity(), messages, team.auth.me()));
-
-            Log.w(Config.LOG_TAG, "Messages: " + list.getAdapter().getCount());
 
             final EditText writeMessage = (EditText) view.findViewById(R.id.writeMessage);
             final View sendButton = view.findViewById(R.id.sendButton);

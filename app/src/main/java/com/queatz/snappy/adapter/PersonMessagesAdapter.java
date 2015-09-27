@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
@@ -42,8 +43,8 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<Message> {
             view = inflater.inflate(R.layout.person_messages_item, parent, false);
         }
 
-        Message message = realmResults.get(position);
-        Person person = message.getFrom();
+        final Message message = realmResults.get(position);
+        final Person person = message.getFrom();
 
         boolean isOwn = mToPerson.getId().equals(person.getId());
 
@@ -66,6 +67,13 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<Message> {
                 .into(profile);
 
         textView.setText(message.getMessage());
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, Util.agoDate(message.getDate()), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }

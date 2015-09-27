@@ -20,7 +20,7 @@ public class Search {
         return _service;
     }
 
-    public static enum Type {
+    public enum Type {
         PERSON,
         PARTY,
         LOCATION,
