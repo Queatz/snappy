@@ -98,7 +98,7 @@ public class Update implements Thing {
         Document result = documentBuild.build();
 
         try {
-            Search.getService().index.get(Search.Type.PERSON).put(result);
+            Search.getService().index.get(Search.Type.UPDATE).put(result);
         } catch (PutException e) {
             e.printStackTrace();
         }

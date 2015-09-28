@@ -196,8 +196,7 @@ public class Me extends Api.Path {
 
                     break;
                 }
-
-                if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {
+                else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {
                     message = Streams.asString(stream, "UTF-8");
                 }
             }
