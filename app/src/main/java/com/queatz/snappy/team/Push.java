@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -108,11 +110,9 @@ public class Push {
                     partyName = URLDecoder.decode(push.getJSONObject("party").getString("name"), "UTF-8");
                     partyDate = Util.stringToDate(push.getJSONObject("party").getString("date"));
 
-                    builder = new NotificationCompat.Builder(team.context)
-                            .setAutoCancel(true)
+                    builder = newNotification()
                             .setContentTitle(String.format(team.context.getString(R.string.party_by_person), partyName, personFirstName))
                             .setContentText(String.format(team.context.getString(R.string.party_starts_at), Util.cuteDate(partyDate, true)))
-                            .setSmallIcon(R.drawable.icon_system)
                             .setPriority(Notification.PRIORITY_LOW)
                             .setDefaults(Notification.DEFAULT_LIGHTS);
 
@@ -175,13 +175,9 @@ public class Push {
                         message = summary;
                     }
 
-                    builder = new NotificationCompat.Builder(team.context)
-                            .setAutoCancel(true)
+                    builder = newNotification()
                             .setContentTitle(personFirstName)
-                            .setContentText(message)
-                            .setSmallIcon(R.drawable.icon_system)
-                            .setPriority(Notification.PRIORITY_HIGH)
-                            .setDefaults(Notification.DEFAULT_ALL);
+                            .setContentText(message);
 
                     if(count > 1) {
                         resultIntent = new Intent(team.context, Main.class);
@@ -221,13 +217,9 @@ public class Push {
                     partyName = URLDecoder.decode(push.getJSONObject("party").getString("name"), "UTF-8");
                     joinId = push.getString("join");
 
-                    builder = new NotificationCompat.Builder(team.context)
-                            .setAutoCancel(true)
+                    builder = newNotification()
                             .setContentTitle(personFirstName)
-                            .setContentText(String.format(team.context.getString(R.string.requested_to_join_party), partyName))
-                            .setSmallIcon(R.drawable.icon_system)
-                            .setPriority(Notification.PRIORITY_DEFAULT)
-                            .setDefaults(Notification.DEFAULT_ALL);
+                            .setContentText(String.format(team.context.getString(R.string.requested_to_join_party), partyName));
 
                     resultIntent = new Intent(team.context, Main.class);
                     pendingIntent = PendingIntent.getActivity(team.context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -261,13 +253,9 @@ public class Push {
                     partyDate = Util.stringToDate(push.getJSONObject("party").getString("date"));
                     joinId = push.getString("join");
 
-                    builder = new NotificationCompat.Builder(team.context)
-                            .setAutoCancel(true)
+                    builder = newNotification()
                             .setContentTitle(partyName)
-                            .setContentText(String.format(team.context.getString(R.string.request_accepted), Util.relDate(partyDate)))
-                            .setSmallIcon(R.drawable.icon_system)
-                            .setPriority(Notification.PRIORITY_DEFAULT)
-                            .setDefaults(Notification.DEFAULT_ALL);
+                            .setContentText(String.format(team.context.getString(R.string.request_accepted), Util.relDate(partyDate)));
 
                     resultIntent = new Intent(team.context, Main.class);
                     pendingIntent = PendingIntent.getActivity(team.context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -287,13 +275,9 @@ public class Push {
                     personFirstName = URLDecoder.decode(push.getJSONObject("person").getString("firstName"), "UTF-8");
                     personId = push.getJSONObject("person").getString("id");
 
-                    builder = new NotificationCompat.Builder(team.context)
-                            .setAutoCancel(true)
+                    builder = newNotification()
                             .setContentTitle(personFirstName)
-                            .setContentText(team.context.getString(R.string.started_following_you))
-                            .setSmallIcon(R.drawable.icon_system)
-                            .setPriority(Notification.PRIORITY_DEFAULT)
-                            .setDefaults(Notification.DEFAULT_ALL);
+                            .setContentText(team.context.getString(R.string.started_following_you));
 
                     resultIntent = new Intent(team.context, Person.class);
                     extras = new Bundle();
@@ -322,12 +306,8 @@ public class Push {
                     String bountyId = push.getString("bounty");
 
                     builder = new NotificationCompat.Builder(team.context)
-                            .setAutoCancel(true)
                             .setContentTitle(team.context.getString(R.string.your_bounty_was_finished))
-                            .setContentText(team.context.getString(R.string.by, personFirstName))
-                            .setSmallIcon(R.drawable.icon_system)
-                            .setPriority(Notification.PRIORITY_DEFAULT)
-                            .setDefaults(Notification.DEFAULT_ALL);
+                            .setContentText(team.context.getString(R.string.by, personFirstName));
 
                     resultIntent = new Intent(team.context, Person.class);
                     extras = new Bundle();
@@ -367,12 +347,8 @@ public class Push {
                     }
 
                     builder = new NotificationCompat.Builder(team.context)
-                            .setAutoCancel(true)
                             .setContentTitle(team.context.getString(R.string.quest_started))
-                            .setContentText(str)
-                            .setSmallIcon(R.drawable.icon_system)
-                            .setPriority(Notification.PRIORITY_DEFAULT)
-                            .setDefaults(Notification.DEFAULT_ALL);
+                            .setContentText(str);
 
                     resultIntent = new Intent(team.context, Quests.class);
                     stackBuilder = TaskStackBuilder.create(team.context);
@@ -428,12 +404,8 @@ public class Push {
                     }
 
                     builder = new NotificationCompat.Builder(team.context)
-                            .setAutoCancel(true)
                             .setContentTitle(team.context.getString(R.string.quest_completed))
-                            .setContentText(str)
-                            .setSmallIcon(R.drawable.icon_system)
-                            .setPriority(Notification.PRIORITY_DEFAULT)
-                            .setDefaults(Notification.DEFAULT_ALL);
+                            .setContentText(str);
 
                     resultIntent = new Intent(team.context, Quests.class);
                     stackBuilder = TaskStackBuilder.create(team.context);
@@ -546,5 +518,16 @@ public class Push {
         catch (UnsupportedEncodingException | JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private NotificationCompat.Builder newNotification() {
+        final Uri sound = Uri.parse("android.resource://" + team.context.getPackageName() + "/" + R.raw.completetask);
+
+        return new NotificationCompat.Builder(team.context)
+                .setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS)
+                .setAutoCancel(true)
+                .setSmallIcon(R.drawable.icon_system)
+                .setPriority(Notification.PRIORITY_DEFAULT)
+                .setSound(sound, AudioManager.STREAM_NOTIFICATION);
     }
 }
