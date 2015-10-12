@@ -3,15 +3,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/shadow"
+    android:background="@color/white"
     android:orientation="vertical">
-
     <ListView
         android:id="@+id/personList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/white_rounded"
-        android:layout_margin="8dp"
         android:dividerHeight="0dp"
         android:divider="@null"/>
 

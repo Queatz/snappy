@@ -2,6 +2,7 @@ package com.queatz.snappy;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.location.Location;
 import android.media.ExifInterface;
@@ -10,12 +11,16 @@ import android.provider.MediaStore;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 
 import com.luckycatlabs.sunrisesunset.Zenith;
 import com.luckycatlabs.sunrisesunset.calculator.SolarEventCalculator;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Party;
+import com.queatz.snappy.things.Person;
 import com.queatz.snappy.things.Update;
 
 import java.io.IOException;
@@ -50,6 +55,16 @@ public class Util {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static CharSequence fancyName(Person person) {
+        final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(person.getName());
+        final ForegroundColorSpan colorSpan = new ForegroundColorSpan(context.getResources().getColor(R.color.spacer));
+
+        int start = person.getFirstName().length() + 1;
+        stringBuilder.setSpan(colorSpan, start, start + person.getLastName().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+
+        return stringBuilder;
     }
 
     public static String dateToString(Date date) {

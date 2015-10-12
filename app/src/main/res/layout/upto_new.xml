@@ -1,46 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:minWidth="300dp"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <com.queatz.snappy.ui.TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/red"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:padding="6dp"
-        android:elevation="1dp"
-        android:text="Village"
-        android:textSize="14sp"
-        android:textColor="@color/white" />
+        android:background="@android:color/white"
+        android:minWidth="300dp"
+        android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/photo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="100dp"
-        android:adjustViewBounds="true" />
+        <com.queatz.snappy.ui.TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/red"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:padding="6dp"
+            android:elevation="1dp"
+            android:text="Village"
+            android:textSize="14sp"
+            android:textColor="@color/white" />
 
-    <com.queatz.snappy.ui.EditText
-        android:id="@+id/message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Write something..."
-        android:inputType="textCapSentences|textMultiLine"
-        android:padding="12dp"
-        android:textColorHint="@color/gray"/>
+        <ImageView
+            android:id="@+id/photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="100dp"
+            android:adjustViewBounds="true" />
 
-    <Button style="@style/Widget.AppCompat.Button.Borderless"
-        android:id="@+id/post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:textColor="@color/clickable"
-        android:text="@string/post"/>
+        <com.queatz.snappy.ui.EditText
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/write_something"
+            android:inputType="textCapSentences|textMultiLine"
+            android:padding="12dp"
+            android:textColorHint="@color/gray"/>
 
-</LinearLayout>
+        <Button style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:textColor="@color/clickable"
+            android:text="@string/post"/>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -53,7 +53,7 @@ public class PersonListAdapter extends RealmBaseAdapter<Follow> {
                     .placeholder(R.color.spacer)
                     .into((ImageView) view.findViewById(R.id.profile));
 
-            ((TextView) view.findViewById(R.id.person)).setText(person.getName());
+            ((TextView) view.findViewById(R.id.person)).setText(Util.fancyName(person));
         }
 
         return view;
