@@ -109,6 +109,7 @@
     <string name="quest_completed">Quest completed</string>
     <string name="join_quest">Join quest</string>
     <string name="quest_started">Quest started</string>
+    <string name="added_a_new_photo">added a new photo</string>
 
     <plurals name="people_near_place">
         <item quantity="one">%1$s person near %2$s</item>

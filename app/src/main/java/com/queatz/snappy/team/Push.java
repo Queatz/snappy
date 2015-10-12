@@ -78,7 +78,6 @@ public class Push {
             NotificationCompat.Builder builder;
 
             Intent resultIntent;
-            TaskStackBuilder stackBuilder;
             PendingIntent pendingIntent;
             Bundle extras;
 
@@ -194,10 +193,7 @@ public class Push {
                         extras.putString("person", personId);
                         extras.putString("show", "messages");
                         resultIntent.putExtras(extras);
-                        stackBuilder = TaskStackBuilder.create(team.context);
-                        stackBuilder.addParentStack(Person.class);
-                        stackBuilder.addNextIntent(resultIntent);
-                        pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                        pendingIntent = newIntentWithStack(resultIntent);
 
                         builder.setContentIntent(pendingIntent);
                     }
@@ -283,10 +279,7 @@ public class Push {
                     extras = new Bundle();
                     extras.putString("person", personId);
                     resultIntent.putExtras(extras);
-                    stackBuilder = TaskStackBuilder.create(team.context);
-                    stackBuilder.addParentStack(Main.class);
-                    stackBuilder.addNextIntent(resultIntent);
-                    pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    pendingIntent = newIntentWithStack(resultIntent);
 
                     builder.setContentIntent(pendingIntent);
 
@@ -314,10 +307,7 @@ public class Push {
                     extras.putString("person", personId);
                     extras.putString("show", "messages");
                     resultIntent.putExtras(extras);
-                    stackBuilder = TaskStackBuilder.create(team.context);
-                    stackBuilder.addParentStack(Main.class);
-                    stackBuilder.addNextIntent(resultIntent);
-                    pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    pendingIntent = newIntentWithStack(resultIntent);
                     builder.setContentIntent(pendingIntent);
 
                     if(Build.VERSION.SDK_INT >= 21) {
@@ -351,10 +341,7 @@ public class Push {
                             .setContentText(str);
 
                     resultIntent = new Intent(team.context, Quests.class);
-                    stackBuilder = TaskStackBuilder.create(team.context);
-                    stackBuilder.addParentStack(Main.class);
-                    stackBuilder.addNextIntent(resultIntent);
-                    pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    pendingIntent = newIntentWithStack(resultIntent);
 
                     builder.setContentIntent(pendingIntent);
 
@@ -408,10 +395,7 @@ public class Push {
                             .setContentText(str);
 
                     resultIntent = new Intent(team.context, Quests.class);
-                    stackBuilder = TaskStackBuilder.create(team.context);
-                    stackBuilder.addParentStack(Main.class);
-                    stackBuilder.addNextIntent(resultIntent);
-                    pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    pendingIntent = newIntentWithStack(resultIntent);
 
                     builder.setContentIntent(pendingIntent);
 
@@ -424,11 +408,36 @@ public class Push {
                     show("quest/" + questId + "/completed", builder.build());
 
                     break;
+                case Config.PUSH_ACTION_NEW_UPTO:
+                    JSONObject person = push.getJSONObject("people");
+                    personFirstName = URLDecoder.decode(person.getString("firstName"), "UTF-8");
+                    //String personLastName = URLDecoder.decode(person.getString("lastName"), "UTF-8");
+                    personId = push.getJSONObject("people").getString("id");
+
+                    builder = new NotificationCompat.Builder(team.context)
+                            .setContentTitle(personFirstName)
+                            .setContentText(team.context.getString(R.string.added_a_new_photo));
+
+                    resultIntent = new Intent(team.context, Person.class);
+                    extras = new Bundle();
+                    extras.putString("person", personId);
+                    resultIntent.putExtras(extras);
+                    builder.setContentIntent(newIntentWithStack(resultIntent));
+
+                    if(Build.VERSION.SDK_INT >= 21) {
+                        builder
+                                .setColor(team.context.getResources().getColor(R.color.red))
+                                .setCategory(Notification.CATEGORY_SOCIAL);
+                    }
+
+                    show("person/" + personId + "/upto", builder.build());
+
+                    break;
             }
 
             // Grab more data from server
 
-            switch (push.getString("action")) {
+            switch (action) {
                 case Config.PUSH_ACTION_MESSAGE:
                     team.api.get(String.format(Config.PATH_MESSAGES_ID, push.getJSONObject("message").getString("id")), new Api.Callback() {
                         @Override
@@ -518,6 +527,13 @@ public class Push {
         catch (UnsupportedEncodingException | JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private PendingIntent newIntentWithStack(Intent resultIntent) {
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(team.context);
+        stackBuilder.addParentStack(Main.class);
+        stackBuilder.addNextIntent(resultIntent);
+        return stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private NotificationCompat.Builder newNotification() {

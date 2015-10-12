@@ -18,6 +18,45 @@ import java.util.Date;
  * Created by jacob on 2/15/15.
  */
 public class Update implements Thing {
+    public JSONObject makePush(Document update) {
+        if(update == null)
+            return null;
+
+        Document person = Search.getService().get(Search.Type.PERSON, update.getOnlyField("person").getAtom());
+
+        JSONObject push = new JSONObject();
+
+        try {
+            push.put("action", Config.PUSH_ACTION_NEW_UPTO);
+            push.put("person", Things.getService().person.toPushJson(person));
+            push.put("update", toPushJson(update));
+
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return push;
+    }
+
+    public JSONObject toPushJson(Document update) {
+        if(update == null)
+            return null;
+
+        JSONObject o = new JSONObject();
+
+        try {
+            o.put("id", update.getId());
+
+            return o;
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public JSONObject toJson(Document d, String user, boolean shallow) {
         if(d == null)
             return null;

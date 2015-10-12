@@ -200,6 +200,10 @@ public class Me extends Api.Path {
                     message = Streams.asString(stream, "UTF-8");
                 }
             }
+
+            if (allGood) {
+                Push.getService().sendToFollowers(user, Things.getService().update.makePush(update));
+            }
         }
         catch (FileUploadException e) {
             Logger.getLogger(Config.NAME).severe(e.toString());

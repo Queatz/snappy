@@ -49,7 +49,7 @@ public class Location implements
             .setInterval(3000)
             .setFastestInterval(1000);
     private boolean mLocationIsAvailable = true;
-    private ArrayList<Runnable> mRunWhenConnected = new ArrayList<>();
+    final private ArrayList<Runnable> mRunWhenConnected = new ArrayList<>();
 
     public interface LocationAvailabilityCallback {
         void onLocationAvailabilityChanged(boolean enabled);

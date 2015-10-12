@@ -46,6 +46,7 @@ public class Config {
     public static final String PUSH_ACTION_BOUNTY_FINISHED = "bounty_finished";
     public static final String PUSH_ACTION_QUEST_COMPLETED = "quest_completed";
     public static final String PUSH_ACTION_QUEST_STARTED = "quest_started";
+    public static final String PUSH_ACTION_NEW_UPTO = "new_upto";
 
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";
     public static final String UPDATE_ACTION_HOST_PARTY = "host_party";

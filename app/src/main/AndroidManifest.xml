@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.queatz.snappy">
+    package="com.queatz.snappy" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -39,12 +39,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:theme="@style/WelcomeTheme"
             android:name=".activity.Welcome"
             android:alwaysRetainTaskState="true"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
+            android:theme="@style/WelcomeTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.Main"
@@ -58,8 +58,8 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="standard"
-            android:windowSoftInputMode="adjustPan"
-            android:parentActivityName=".activity.Main"/>
+            android:parentActivityName=".activity.Main"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.PersonList"
             android:alwaysRetainTaskState="true"
@@ -73,45 +73,46 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan"
-            android:parentActivityName=".activity.Main" />
-        <activity android:theme="@style/BountiesTheme"
+            android:parentActivityName=".activity.Main"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
             android:name=".activity.Bounties"
             android:alwaysRetainTaskState="true"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan"
-            android:parentActivityName=".activity.Main" />
-        <activity android:theme="@style/QuestsTheme"
+            android:parentActivityName=".activity.Main"
+            android:theme="@style/BountiesTheme"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
             android:name=".activity.Quests"
             android:alwaysRetainTaskState="true"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan"
-            android:parentActivityName=".activity.Main" />
-
-        <activity android:theme="@style/DialogTheme"
+            android:parentActivityName=".activity.Main"
+            android:theme="@style/QuestsTheme"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
             android:name=".activity.NewUpto"
             android:alwaysRetainTaskState="true"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:excludeFromRecents="true"
             android:label="@string/app_name"
             android:launchMode="standard"
-            android:excludeFromRecents="true"
-            android:windowSoftInputMode="adjustPan">
-
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="image/*" />
                 <data android:mimeType="audio/*" />
             </intent-filter>
-
         </activity>
 
         <service android:name=".GCMIntentService" />
-
         <service android:name=".Background" />
 
         <receiver

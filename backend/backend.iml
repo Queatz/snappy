@@ -46,7 +46,7 @@
     <orderEntry type="library" exported="" name="objectify-4.0b3" level="project" />
     <orderEntry type="library" exported="" name="gcm-server-1.0.2" level="project" />
     <orderEntry type="library" exported="" name="json-20090211" level="project" />
-    <orderEntry type="library" exported="" name="appengine-api-1.0-sdk-1.9.26" level="project" />
+    <orderEntry type="library" exported="" name="appengine-api-1.0-sdk-1.9.27" level="project" />
     <orderEntry type="library" exported="" name="guava-19.0-rc2" level="project" />
     <orderEntry type="library" exported="" name="joda-time-2.3" level="project" />
     <orderEntry type="library" exported="" name="google-api-services-storage-v1-rev15-1.19.0" level="project" />
