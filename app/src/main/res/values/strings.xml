@@ -26,8 +26,8 @@
     <string name="host_a_party">Throw a party</string>
     <string name="accept_person"><![CDATA[Accept <b>%1$s</b>]]></string>
     <string name="hosted">Hosted</string>
-    <string name="Following">Following</string>
-    <string name="Followers">Followers</string>
+    <string name="Following">Liked</string>
+    <string name="Followers">Likers</string>
     <string name="follow_person">Follow %1$s</string>
     <string name="me_message">Me: %1$s</string>
     <string name="time_in">in %1$s</string>

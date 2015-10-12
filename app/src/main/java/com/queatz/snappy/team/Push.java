@@ -298,7 +298,7 @@ public class Push {
                     personId = push.getJSONObject("people").getString("id");
                     String bountyId = push.getString("bounty");
 
-                    builder = new NotificationCompat.Builder(team.context)
+                    builder = newNotification()
                             .setContentTitle(team.context.getString(R.string.your_bounty_was_finished))
                             .setContentText(team.context.getString(R.string.by, personFirstName));
 
@@ -336,7 +336,7 @@ public class Push {
                             break;
                     }
 
-                    builder = new NotificationCompat.Builder(team.context)
+                    builder = newNotification()
                             .setContentTitle(team.context.getString(R.string.quest_started))
                             .setContentText(str);
 
@@ -390,7 +390,7 @@ public class Push {
                             break;
                     }
 
-                    builder = new NotificationCompat.Builder(team.context)
+                    builder = newNotification()
                             .setContentTitle(team.context.getString(R.string.quest_completed))
                             .setContentText(str);
 
@@ -409,12 +409,12 @@ public class Push {
 
                     break;
                 case Config.PUSH_ACTION_NEW_UPTO:
-                    JSONObject person = push.getJSONObject("people");
+                    JSONObject person = push.getJSONObject("person");
                     personFirstName = URLDecoder.decode(person.getString("firstName"), "UTF-8");
                     //String personLastName = URLDecoder.decode(person.getString("lastName"), "UTF-8");
-                    personId = push.getJSONObject("people").getString("id");
+                    personId = person.getString("id");
 
-                    builder = new NotificationCompat.Builder(team.context)
+                    builder = newNotification()
                             .setContentTitle(personFirstName)
                             .setContentText(team.context.getString(R.string.added_a_new_photo));
 
