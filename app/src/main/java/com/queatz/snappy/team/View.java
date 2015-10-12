@@ -46,8 +46,9 @@ public class View {
     }
 
     public void clearTop(String top) {
-        if(top != null && top.equals(getTop()))
+        if(top != null && top.equals(getTop())) {
             mTop = null;
+        }
     }
 
     public String getTop() {

@@ -385,7 +385,7 @@ public class Action {
         team.api.post(String.format(Config.PATH_JOIN_ID, join.getId()), params, new Api.Callback() {
             @Override
             public void success(String response) {
-                team.push.clear("join_request/" + join.getId());
+                team.push.clear("join/" + join.getId() + "/request");
             }
 
             @Override

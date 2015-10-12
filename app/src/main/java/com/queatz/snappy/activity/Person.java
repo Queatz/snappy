@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
@@ -95,7 +94,7 @@ public class Person extends Activity {
                 if(mPerson != null) {
                     if (slide == 1 && mIsActive) {
                         team.action.setSeen(mPerson);
-                        team.push.clear("person/" + mPerson.getId() + "/messages");
+                        team.push.clear("messages");
                         team.view.setTop("person/" + mPerson.getId() + "/messages");
                     } else {
                         team.view.clearTop("person/" + mPerson.getId() + "/messages");

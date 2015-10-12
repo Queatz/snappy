@@ -240,7 +240,7 @@ public class Push {
                                 .setCategory(Notification.CATEGORY_EVENT);
                     }
 
-                    show("join_request/" + joinId, builder.build());
+                    show("join/" + joinId + "/request", builder.build());
 
                     break;
                 case Config.PUSH_ACTION_JOIN_ACCEPTED:
@@ -264,7 +264,7 @@ public class Push {
                                 .setCategory(Notification.CATEGORY_EVENT);
                     }
 
-                    show("join_accept/" + joinId, builder.build());
+                    show("join/" + joinId + "/accept", builder.build());
 
                     break;
                 case Config.PUSH_ACTION_FOLLOW:
