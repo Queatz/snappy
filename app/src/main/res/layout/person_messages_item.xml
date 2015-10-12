@@ -27,6 +27,7 @@
 
         <com.queatz.snappy.ui.TextView
             android:id="@+id/message"
+            android:clickable="true"
             android:textIsSelectable="true"
             android:autoLink="web"
             android:layout_gravity="top"

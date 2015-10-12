@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -68,10 +69,14 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<Message> {
 
         textView.setText(message.getMessage());
 
-        textView.setOnClickListener(new View.OnClickListener() {
+        textView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(context, Util.agoDate(message.getDate()), Toast.LENGTH_SHORT).show();
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    Toast.makeText(context, Util.agoDate(message.getDate()), Toast.LENGTH_SHORT).show();
+                }
+
+                return false;
             }
         });
 
