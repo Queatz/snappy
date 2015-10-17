@@ -1,1 +1,1 @@
-include ':app', ':backend', ':web'
+include ':app', ':backend', ':web', ':shared'

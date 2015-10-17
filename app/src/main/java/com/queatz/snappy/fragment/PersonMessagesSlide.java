@@ -2,22 +2,18 @@ package com.queatz.snappy.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.queatz.snappy.Config;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
-import com.queatz.snappy.Util;
 import com.queatz.snappy.adapter.PersonMessagesAdapter;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Message;

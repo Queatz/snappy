@@ -1,21 +1,15 @@
 package com.queatz.snappy.api;
 
-import com.google.appengine.api.search.Document;
-import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.ScoredDocument;
-import com.queatz.snappy.backend.Config;
-import com.queatz.snappy.backend.PrintingError;
-import com.queatz.snappy.backend.Util;
+import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Push;
-import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Things;
-
-import org.json.JSONObject;
+import com.queatz.snappy.service.Thing;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.PushSpec;
+import com.queatz.snappy.shared.things.PersonSpec;
+import com.queatz.snappy.shared.things.QuestSpec;
 
 import java.io.IOException;
-
-import javax.print.Doc;
 
 /**
  * Created by jacob on 9/15/15.
@@ -26,7 +20,7 @@ public class Quest extends Api.Path {
     }
 
     @Override
-    public void call() throws IOException, PrintingError {
+    public void call() throws IOException {
         switch (method) {
             case GET:
                 switch (path.size()) {
@@ -72,71 +66,63 @@ public class Quest extends Api.Path {
         }
     }
 
-    private void getQuest(String questId) throws IOException {
-        Document quest = Search.getService().get(Search.Type.QUEST, questId);
-
-        JSONObject json = Things.getService().quest.toJson(quest, user, false);
-        response.getWriter().write(json.toString());
+    private void getQuest(String questId) {
+        ok(Datastore.get(QuestSpec.class, questId));
     }
 
-    private void post() throws IOException {
+    private void post() {
         String localId = request.getParameter(Config.PARAM_LOCAL_ID);
 
-        Document quest = Things.getService().quest.createFromRequest(user, request);
-
-        JSONObject json = Things.getService().quest.toJson(quest, user, false);
-        Util.localId(json, localId);
-
-        response.getWriter().write(json.toString());
+        QuestSpec quest = Thing.getService().quest.createFromRequest(user, request);
+        quest.localId = localId;
+        ok(quest);
     }
 
-    private void postStart(String questId) throws IOException {
-        Document quest = Things.getService().quest.start(user, questId);
+    private void postStart(String questId) {
+        QuestSpec quest = Datastore.get(QuestSpec.class, questId);
 
         if (quest == null) {
-            response.getWriter().write(Boolean.toString(false));
-            return;
+            ok(false);
         }
 
-        if (Config.QUEST_STATUS_STARTED.equals(quest.getOnlyField("status").getAtom())) {
-            Push.getService().send(quest.getOnlyField("host").getAtom(), Things.getService().quest.makePush(quest));
+        if (Config.QUEST_STATUS_STARTED.equals(quest.status)) {
+            Push.getService().send(Datastore.id(quest.hostId), new PushSpec(Config.PUSH_ACTION_QUEST_STARTED, quest));
 
-            Results<ScoredDocument> team = Things.getService().quest.getTeam(quest);
+            quest.team = Thing.getService().quest.getTeam(quest);
 
-            if (quest.getOnlyField("teamSize").getNumber().intValue() > 1) {
-                for (ScoredDocument document : team) {
-                    String person = document.getOnlyField("person").getAtom();
-
-                    if (!user.equals(person)) {
-                        Push.getService().send(person, Things.getService().quest.makePush(quest));
+            if (quest.teamSize > 1) {
+                for (PersonSpec person : quest.team) {
+                    if (!user.equals(person.id)) {
+                        Push.getService().send(person.id, new PushSpec(Config.PUSH_ACTION_QUEST_STARTED, quest));
                     }
                 }
             }
         }
 
-        response.getWriter().write(Boolean.toString(true));
+        ok(true);
     }
 
-    private void postComplete(String questId) throws IOException, PrintingError {
-        Document quest = Search.getService().get(Search.Type.QUEST, questId);
+    private void postComplete(String questId) {
+        QuestSpec quest = Datastore.get(QuestSpec.class, questId);
 
-        if (!user.equals(quest.getOnlyField("host").getAtom())) {
+        if (!user.equals(Datastore.id(quest.hostId))) {
             die("quest - not authenticated");
         }
 
-        quest = Things.getService().quest.setQuestStatus(quest, Config.QUEST_STATUS_COMPLETE);
+        quest = Thing.getService().quest.setQuestStatus(quest, Config.QUEST_STATUS_COMPLETE);
 
         if (quest != null) {
-            for (ScoredDocument document : Things.getService().quest.getTeam(quest)) {
-                Push.getService().send(document.getOnlyField("person").getAtom(), Things.getService().quest.makePush(quest));
+            quest.team = Thing.getService().quest.getTeam(quest);
+
+            for (PersonSpec person : quest.team) {
+                Push.getService().send(person.id, new PushSpec(Config.PUSH_ACTION_QUEST_COMPLETED, quest));
             }
         }
 
-        response.getWriter().write(Boolean.toString(quest != null));
+        ok(quest != null);
     }
 
     private void delete(String questId) throws IOException {
-        boolean success = Things.getService().quest.delete(user, questId);
-        response.getWriter().write(Boolean.toString(success));
+        ok(Thing.getService().quest.delete(user.id, questId));
     }
 }

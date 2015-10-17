@@ -9,13 +9,12 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
-import com.queatz.snappy.Config;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.Main;
@@ -33,6 +32,7 @@ import com.queatz.snappy.things.Quest;
 import com.queatz.snappy.things.Update;
 import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.ui.MiniMenu;
+import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
@@ -157,8 +157,8 @@ public class Action {
         team.realm.beginTransaction();
         Follow o = team.realm.createObject(Follow.class);
         o.setId(localId);
-        o.setPerson(team.auth.me());
-        o.setFollowing(person);
+        o.setSource(team.auth.me());
+        o.setTarget(person);
         team.realm.commitTransaction();
 
         RequestParams params = new RequestParams();
@@ -424,7 +424,7 @@ public class Action {
             params.put("id", group);
 
         params.put(Config.PARAM_NAME, name);
-        params.put(Config.PARAM_DATE, Util.dateToString(date));
+        params.put(Config.PARAM_DATE, TimeUtil.dateToString(date));
         params.put(Config.PARAM_LOCATION, location.getId() == null ? location.getJson() : location.getId());
         params.put(Config.PARAM_DETAILS, details);
 

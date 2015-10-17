@@ -1,20 +1,13 @@
 package com.queatz.snappy.api;
 
-import com.google.appengine.api.search.Query;
-import com.google.appengine.api.search.QueryOptions;
-import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.ScoredDocument;
-import com.google.appengine.api.search.SortExpression;
-import com.google.appengine.api.search.SortOptions;
-import com.queatz.snappy.backend.Config;
-import com.queatz.snappy.backend.PrintingError;
+import com.google.appengine.api.datastore.GeoPt;
+import com.queatz.snappy.backend.Json;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Things;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.things.LocationSpec;
 
-import org.json.JSONArray;
-
-import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by jacob on 8/11/15.
@@ -25,7 +18,7 @@ public class Locations extends Api.Path {
     }
 
     @Override
-    public void call() throws IOException, PrintingError {
+    public void call() {
         switch (method) {
             case GET:
                 if (path.size() > 0) {
@@ -44,28 +37,15 @@ public class Locations extends Api.Path {
         }
     }
 
-    private void get(String paramLatitude, String paramLongitude, String name) throws IOException, PrintingError {
+    private void get(String paramLatitude, String paramLongitude, String name) {
         if (paramLatitude == null || paramLongitude == null || name == null) {
             die("locations - bad parameters");
         }
 
-        double latitude = Double.parseDouble(paramLatitude);
-        double longitude = Double.parseDouble(paramLongitude);
+        float latitude = Float.parseFloat(paramLatitude);
+        float longitude = Float.parseFloat(paramLongitude);
+        List<LocationSpec> locations = Search.getService().getNearby(LocationSpec.class, new GeoPt(latitude, longitude), null, Config.SUGGESTION_LIMIT);
 
-        SortOptions sortOptions = SortOptions.newBuilder().addSortExpression(
-                SortExpression.newBuilder().setExpression("distance(location, geopoint(" + latitude + ", " + longitude + "))").setDirection(SortExpression.SortDirection.ASCENDING).build()
-        ).build();
-        QueryOptions queryOptions = QueryOptions.newBuilder().setSortOptions(sortOptions).setLimit(Config.SUGGESTION_LIMIT).build();
-        Query query = Query.newBuilder().setOptions(queryOptions).build("name = ~\"" + name + "\" AND distance(location, geopoint(" + latitude + ", " + longitude + ")) < " + Config.SUGGESTION_MAX_DISTANCE);
-
-        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.LOCATION).search(query);
-
-        JSONArray r = new JSONArray();
-
-        for (ScoredDocument result : results) {
-            r.put(Things.getService().location.toJson(result, user, true));
-        }
-
-        response.getWriter().write(r.toString());
+        ok(locations, Json.Compression.SHALLOW);
     }
 }

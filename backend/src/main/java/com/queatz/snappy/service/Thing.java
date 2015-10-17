@@ -11,18 +11,17 @@ import com.queatz.snappy.thing.Offer;
 import com.queatz.snappy.thing.Party;
 import com.queatz.snappy.thing.Person;
 import com.queatz.snappy.thing.Quest;
-import com.queatz.snappy.thing.QuestPerson;
 import com.queatz.snappy.thing.Update;
 
 /**
  * Created by jacob on 2/15/15.
  */
-public class Things {
-    private static Things _service;
+public class Thing {
+    private static Thing _service;
 
-    public static Things getService() {
+    public static Thing getService() {
         if(_service == null)
-            _service = new Things();
+            _service = new Thing();
 
         return _service;
     }
@@ -39,9 +38,8 @@ public class Things {
     public Offer offer;
     public Bounty bounty;
     public Quest quest;
-    public QuestPerson questPerson;
 
-    public Things() {
+    public Thing() {
         party = new Party();
         location = new Location();
         message = new Message();
@@ -54,6 +52,5 @@ public class Things {
         offer = new Offer();
         bounty = new Bounty();
         quest = new Quest();
-        questPerson = new QuestPerson();
     }
 }

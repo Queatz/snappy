@@ -7,11 +7,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.queatz.snappy.Config;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.things.Party;
+import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 
 import io.realm.RealmBaseAdapter;
@@ -40,7 +41,7 @@ public class HostPartyAdapter extends RealmBaseAdapter<Party> {
         Party party = realmResults.get(position);
 
         ((TextView) view.findViewById(R.id.name)).setText(party.getName());
-        ((TextView) view.findViewById(R.id.ago)).setText(Util.agoDate(party.getDate()));
+        ((TextView) view.findViewById(R.id.ago)).setText(TimeUtil.agoDate(party.getDate()));
 
         int s = (int) Util.px(128);
         String photoUrl = Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=" + s + "&auth=" + ((MainApplication) context.getApplicationContext()).team.auth.getAuthParam(), party.getLocation().getId());

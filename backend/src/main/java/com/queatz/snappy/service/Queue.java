@@ -2,7 +2,7 @@ package com.queatz.snappy.service;
 
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
-import com.queatz.snappy.backend.Config;
+import com.queatz.snappy.shared.Config;
 
 /**
  * Created by jacob on 4/11/15.

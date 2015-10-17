@@ -12,7 +12,6 @@ import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Bounty;
-import com.queatz.snappy.ui.RevealAnimation;
 import com.squareup.picasso.Picasso;
 
 import io.realm.RealmBaseAdapter;

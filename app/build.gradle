@@ -8,8 +8,8 @@ android {
         applicationId "com.queatz.snappy"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 21
-        versionName "0.22"
+        versionCode 23
+        versionName "0.23"
     }
 
     signingConfigs {
@@ -54,4 +54,7 @@ dependencies {
     compile 'io.realm:realm-android:0.82.1'
     compile 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.google.code.gson:gson:2.4'
+    compile project(':shared')
+
 }

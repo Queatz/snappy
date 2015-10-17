@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.support.v4.widget.SwipeRefreshLayout;
 
 import com.loopj.android.http.RequestParams;
-import com.queatz.snappy.Config;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.things.Bounty;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;

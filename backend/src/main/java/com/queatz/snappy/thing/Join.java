@@ -1,166 +1,54 @@
 package com.queatz.snappy.thing;
 
-import com.google.appengine.api.search.Document;
-import com.google.appengine.api.search.Field;
-import com.google.appengine.api.search.PutException;
-import com.google.appengine.api.search.PutResponse;
-import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.ScoredDocument;
-import com.queatz.snappy.backend.Config;
-import com.queatz.snappy.backend.Util;
-import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Things;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Iterator;
+import com.queatz.snappy.backend.Datastore;
+import com.queatz.snappy.service.Thing;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.things.JoinLinkSpec;
+import com.queatz.snappy.shared.things.PartySpec;
+import com.queatz.snappy.shared.things.PersonSpec;
 
 /**
  * Created by jacob on 2/16/15.
  */
-public class Join implements Thing {
-    public JSONObject makePush(Document join) {
-        if(join == null)
+public class Join {
+    public JoinLinkSpec create(PersonSpec user, String partyId) {
+        JoinLinkSpec join = Datastore.get(JoinLinkSpec.class).filter("personId", user.id).filter("partyId", partyId).first().now();
+
+        if(join != null && !Config.JOIN_STATUS_WITHDRAWN.equals(join.status))
             return null;
 
-        Document party = Search.getService().get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
-        Document person = Search.getService().get(Search.Type.PERSON, join.getOnlyField("person").getAtom());
-
-        JSONObject push = new JSONObject();
-
-        try {
-            String action;
-
-            if(Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
-                action = Config.PUSH_ACTION_JOIN_REQUEST;
-                push.put("person", Things.getService().person.toPushJson(person));
-            }
-            else if(Config.JOIN_STATUS_IN.equals(join.getOnlyField("status").getAtom())) {
-                action = Config.PUSH_ACTION_JOIN_ACCEPTED;
-            }
-            else
-                return null;
-
-            push.put("action", action);
-            push.put("join", join.getId());
-            push.put("party", Things.getService().party.toPushJson(party));
-
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-            return null;
+        if(join == null) {
+            join = new JoinLinkSpec();
+            join.personId = Datastore.key(user);
+            join.partyId = Datastore.key(PartySpec.class, partyId);
         }
 
-        return push;
+        join.status = Config.JOIN_STATUS_REQUESTED;
+
+        Datastore.save(join);
+        return join;
     }
 
-    public JSONObject toJson(Document d, String user, boolean shallow) {
-        if(d == null)
-            return null;
+    public boolean delete(PersonSpec user, String partyId) {
+        JoinLinkSpec join = Datastore.get(JoinLinkSpec.class).filter("personId", user.id).filter("partyId", partyId).first().now();
 
-        JSONObject o = new JSONObject();
-
-        try {
-            o.put("id", d.getId());
-            o.put("person", Things.getService().person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("person").getAtom()), user, true));
-            o.put("party", Things.getService().party.toJson(Search.getService().get(Search.Type.PARTY, d.getOnlyField("party").getAtom()), user, true));
-            o.put("status", d.getOnlyField("status").getAtom());
-
-            return o;
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Document create(String user, String party) {
-        Document join = null;
-        Results<ScoredDocument> results;
-        results = Search.getService().index.get(Search.Type.JOIN).search("person = \"" + user + "\" AND party = \"" + party + "\"");
-
-        Iterator<ScoredDocument> iterator = results.iterator();
-        if(iterator.hasNext())
-            join = iterator.next();
-
-        if(join != null && !Config.JOIN_STATUS_WITHDRAWN.equals(join.getOnlyField("status").getAtom()))
-            return null;
-
-        Document.Builder documentBuild = Document.newBuilder();
-
-        if(join != null) {
-            documentBuild.setId(join.getId());
-            documentBuild.addField(Field.newBuilder().setName("status").setAtom(Config.JOIN_STATUS_REQUESTED));
-            Util.copyIn(documentBuild, join, "status");
-        }
-        else {
-            documentBuild.addField(Field.newBuilder().setName("person").setAtom(user));
-            documentBuild.addField(Field.newBuilder().setName("party").setAtom(party));
-            documentBuild.addField(Field.newBuilder().setName("status").setAtom(Config.JOIN_STATUS_REQUESTED));
-        }
-
-        Document document = documentBuild.build();
-
-        try {
-            PutResponse put = Search.getService().index.get(Search.Type.JOIN).put(document);
-            documentBuild.setId(put.getIds().get(0));
-            return documentBuild.build();
-        } catch (PutException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public boolean delete(String user, String party) {
-        Document join = null;
-        Results<ScoredDocument> results;
-        results = Search.getService().index.get(Search.Type.JOIN).search("person = \"" + user + "\" AND party = \"" + party + "\"");
-
-        Iterator<ScoredDocument> iterator = results.iterator();
-        if(iterator.hasNext())
-            join = iterator.next();
-
-        if(join == null)
-            return false;
-
-        Document.Builder documentBuild = Document.newBuilder();
-        documentBuild.setId(join.getId());
-        documentBuild.addField(Field.newBuilder().setName("status").setAtom(Config.JOIN_STATUS_WITHDRAWN));
-
-        Util.copyIn(documentBuild, join, "status");
-
-        Document document = documentBuild.build();
-
-        try {
-            Search.getService().index.get(Search.Type.JOIN).put(document);
-        } catch (PutException e) {
-            e.printStackTrace();
+        if(join == null) {
             return false;
         }
 
-        return true;
+        join.status = Config.JOIN_STATUS_WITHDRAWN;
+
+        return Datastore.save(join);
     }
 
-    public Document setStatus(Document join, String status) {
-        Document.Builder documentBuild = Document.newBuilder()
-                .setId(join.getId())
-                .addField(Field.newBuilder().setName("status").setAtom(status));
-
-        Util.copyIn(documentBuild, join, "status");
-
-        Document document = documentBuild.build();
-
-        try {
-            Search.getService().index.get(Search.Type.JOIN).put(document);
-        } catch (PutException e) {
-            e.printStackTrace();
-        }
+    public JoinLinkSpec setStatus(JoinLinkSpec join, String status) {
+        join.status = status;
+        Datastore.save(join);
 
         if(Config.JOIN_STATUS_IN.equals(status)) {
-            Things.getService().update.create(Config.UPDATE_ACTION_JOIN_PARTY, join.getOnlyField("person").getAtom(), join.getOnlyField("party").getAtom());
+            Thing.getService().update.create(Config.UPDATE_ACTION_JOIN_PARTY, Datastore.get(join.personId), Datastore.get(join.partyId));
         }
 
-        return document;
+        return join;
     }
 }

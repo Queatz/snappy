@@ -1,22 +1,21 @@
 package com.queatz.snappy.service;
 
-import com.google.appengine.api.search.Document;
-import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
-import com.queatz.snappy.backend.Config;
+import com.google.gson.JsonObject;
+import com.queatz.snappy.backend.Datastore;
+import com.queatz.snappy.backend.Json;
 import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.things.PersonSpec;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Iterator;
 
 /**
  * Created by jacob on 11/17/14.
@@ -35,7 +34,7 @@ public class Auth {
     }
 
     public boolean isRealGoogleAuth(String email, String token) throws PrintingError {
-        if(email == null || email.isEmpty() || token == null || token.isEmpty())
+        if(StringUtils.isEmpty(email) || StringUtils.isEmpty(token))
             return false;
 
         String s;
@@ -48,16 +47,12 @@ public class Auth {
             httpRequest.getFetchOptions().allowTruncate().doNotFollowRedirects();
             HTTPResponse resp = urlFetchService.fetch(httpRequest);
             s = new String(resp.getContent());
-            JSONObject response = new JSONObject(s);
+            JsonObject response = Json.from(s, JsonObject.class);
 
-            if(response.getString("email").equals(email)) {
+            if(response.get("email").getAsString().equals(email)) {
                 return true;
             }
-        }
-        catch (JSONException e) {
-            return false;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             throw new PrintingError(Api.Error.SERVER_ERROR, "real check server fail");
         }
@@ -65,7 +60,7 @@ public class Auth {
         return false;
     }
 
-    public JSONObject getPersonData(JSONObject result, String token) throws PrintingError {
+    public PersonSpec getPersonData(String token) throws PrintingError {
         try {
             URL url = new URL(Config.GOOGLE_PLUS_PROFILE_URL + "?access_token=" + token);
 
@@ -74,51 +69,39 @@ public class Auth {
             httpRequest.getFetchOptions().allowTruncate().doNotFollowRedirects();
             HTTPResponse resp = urlFetchService.fetch(httpRequest);
             String s = new String(resp.getContent());
-            JSONObject response = new JSONObject(s);
+            JsonObject response = Json.from(s, JsonObject.class);
 
-            String gender = "";
-            String firstName = "";
-            String lastName = "";
-            String imageUrl = "";
-            String about = "";
-            String googleId = "";
+            PersonSpec personSpec = new PersonSpec();
 
-            if(response.has("gender"))
-                gender = response.getString("gender");
-
-            if(response.has("name")) {
-                JSONObject name = response.getJSONObject("name");
-
-                if(name.has("givenName"))
-                    firstName = name.getString("givenName");
-
-                if(name.has("familyName"))
-                    lastName = name.getString("familyName");
+            if(response.has("gender")) {
+                personSpec.gender = response.get("gender").getAsString();
             }
 
-            if(response.has("image") && response.getJSONObject("image").has("url"))
-                imageUrl = response.getJSONObject("image").getString("url");
+            if(response.has("name")) {
+                JsonObject name = response.get("name").getAsJsonObject();
 
-            if(response.has("tagline"))
-                about = response.getString("tagline");
+                if(name.has("givenName")) {
+                    personSpec.firstName = name.get("givenName").getAsString();
+                }
 
-            if(response.has("id"))
-                googleId = response.getString("id");
+                if(name.has("familyName")) {
+                    personSpec.lastName = name.get("familyName").getAsString();
+                }
+            }
 
-            if(result == null)
-                result = new JSONObject();
+            if(response.has("image") && response.get("image").getAsJsonObject().has("url")) {
+                personSpec.imageUrl = response.get("image").getAsJsonObject().get("url").getAsString();
+            }
 
-            result.put("gender", gender);
-            result.put("firstName", firstName);
-            result.put("lastName", lastName);
-            result.put("imageUrl", imageUrl);
-            result.put("about", about);
-            result.put("googleId", googleId);
+            if(response.has("tagline")) {
+                personSpec.about = response.get("tagline").getAsString();
+            }
 
-            return result;
-        }
-        catch (JSONException e) {
-            return null;
+            if(response.has("id")) {
+                personSpec.googleId = response.get("id").getAsString();
+            }
+
+            return personSpec;
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -126,58 +109,37 @@ public class Auth {
         }
     }
 
-    public String fetchUserFromAuth(String email, String token) throws PrintingError {
+    public PersonSpec fetchUserFromAuth(String email, String token) throws PrintingError {
         if(token == null) {
             return null;
         }
 
-        JSONObject userJson = new JSONObject();
-
-        Document document = null;
-
-        Results<ScoredDocument> results;
+        PersonSpec person;
 
         if(email != null) // Google login
-            results = Search.getService().index.get(Search.Type.PERSON).search("email = \"" + email + "\"");
+            person = Datastore.get(PersonSpec.class).filter("email", email).first().now();
         else // Auth token login
-            results = Search.getService().index.get(Search.Type.PERSON).search("token = \"" + token + "\"");
+            person = Datastore.get(PersonSpec.class).filter("token", token).first().now();
 
-        Iterator<ScoredDocument> resultsIterator = results.iterator();
-
-        if(resultsIterator.hasNext()) {
-            document = resultsIterator.next();
-        }
-
-        if(document != null && email == null) {
-            String tok = document.getOnlyField("token").getAtom();
-
-            if (tok == null) {
+        if(person != null && email == null) {
+            if (person.token == null) {
                 throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null tok");
             }
 
-            if (tok.equals(token)) {
-                return document.getId();
+            if (person.token.equals(token)) {
+                return person;
             }
         }
 
         if (!isRealGoogleAuth(email, token))
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "iz not realz auth");
 
-        try {
-            userJson.put("email", email);
-            userJson.put("token", token);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
+        PersonSpec o = getPersonData(token);
 
-        JSONObject o = getPersonData(userJson, token);
-
-        if(o == null)
+        if(o == null) {
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "no data or google changed");
+        }
 
-        Document user = Things.getService().person.createOrUpdateWithJson(document, userJson);
-
-        return user.getId();
+        return Thing.getService().person.createOrUpdate(person, o);
     }
 }

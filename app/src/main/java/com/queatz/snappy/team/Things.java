@@ -2,8 +2,8 @@ package com.queatz.snappy.team;
 
 import android.util.Log;
 
-import com.queatz.snappy.Config;
-import com.queatz.snappy.Util;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.util.TimeUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,7 +66,7 @@ public class Things {
                         setter.invoke(thing, putAll(realm, t, o.getJSONArray(fieldName)));
                     }
                     else if(Date.class.isAssignableFrom(fieldType)) {
-                        setter.invoke(thing, Util.stringToDate(o.getString(fieldName)));
+                        setter.invoke(thing, TimeUtil.stringToDate(o.getString(fieldName)));
                     }
                     else if(boolean.class.isAssignableFrom(fieldType)) {
                         setter.invoke(thing, Boolean.valueOf(o.getString(fieldName)));

@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.queatz.snappy.Config;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.adapter.ContactAdapter;

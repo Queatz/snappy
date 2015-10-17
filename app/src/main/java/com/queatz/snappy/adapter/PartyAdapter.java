@@ -15,7 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.makeramen.RoundedImageView;
-import com.queatz.snappy.Config;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
@@ -23,6 +23,7 @@ import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Join;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
+import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 
 import io.realm.RealmBaseAdapter;
@@ -73,7 +74,7 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
 
         ImageView timeIcon = ((ImageView) view.findViewById(R.id.time_icon));
 
-        timeIcon.setImageResource(Util.isDaytime(party.getDate()) ? R.drawable.day : R.drawable.night);
+        timeIcon.setImageResource(TimeUtil.isDaytime(party.getDate()) ? R.drawable.day : R.drawable.night);
 
         view.findViewById(R.id.time_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +101,7 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
         Picasso.with(context).load(photoUrl).placeholder(R.drawable.location).into(backdrop);
 
         ((TextView) view.findViewById(R.id.location_text)).setText(party.getLocation() == null ? context.getString(R.string.hidden) : party.getLocation().getName());
-        ((TextView) view.findViewById(R.id.time_text)).setText(party.getDate() == null ? context.getString(R.string.hidden) : Util.cuteDate(party.getDate()));
+        ((TextView) view.findViewById(R.id.time_text)).setText(party.getDate() == null ? context.getString(R.string.hidden) : TimeUtil.cuteDate(party.getDate()));
 
         String details = party.getDetails();
 

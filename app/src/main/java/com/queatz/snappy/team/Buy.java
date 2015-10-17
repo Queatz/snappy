@@ -17,7 +17,7 @@ import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.loopj.android.http.RequestParams;
-import com.queatz.snappy.Config;
+import com.queatz.snappy.shared.Config;
 
 import org.json.JSONException;
 import org.json.JSONObject;

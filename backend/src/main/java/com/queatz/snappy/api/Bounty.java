@@ -1,14 +1,11 @@
 package com.queatz.snappy.api;
 
-import com.google.appengine.api.search.Document;
-import com.queatz.snappy.backend.Config;
-import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Push;
-import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Things;
-
-import java.io.IOException;
+import com.queatz.snappy.service.Thing;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.things.BountySpec;
 
 /**
  * Created by jacob on 9/5/15.
@@ -19,7 +16,7 @@ public class Bounty extends Api.Path {
     }
 
     @Override
-    public void call() throws IOException, PrintingError {
+    public void call() {
         switch (method) {
             case POST:
                 if (path.size() != 1) {
@@ -49,31 +46,27 @@ public class Bounty extends Api.Path {
         }
     }
 
-    private void postClaim(String bountyId) throws IOException {
-        boolean claimed = Things.getService().bounty.claim(user, bountyId);
-
-        response.getWriter().write(Boolean.toString(claimed));
+    private void postClaim(String bountyId) {
+        ok(Thing.getService().bounty.claim(user, bountyId));
     }
 
-    private void postFinish(String bountyId) throws IOException {
-        Document bounty = Search.getService().get(Search.Type.BOUNTY, bountyId);
+    private void postFinish(String bountyId) {
+        BountySpec bounty = Datastore.get(BountySpec.class, bountyId);
 
-        boolean finished = Things.getService().bounty.finish(user, bountyId);
-
-        response.getWriter().write(Boolean.toString(finished));
+        boolean finished = Thing.getService().bounty.finish(user, bountyId);
 
         if (finished) {
-            Push.getService().send(bounty.getOnlyField("poster").getAtom(), Things.getService().bounty.makePush(bounty));
+            Push.getService().send(Datastore.id(bounty.peopleId), bounty);
         }
+
+        ok(finished);
     }
 
-    private void delete(String bountyId) throws IOException {
-        Document bounty = Search.getService().get(Search.Type.BOUNTY, bountyId);
+    private void delete(String bountyId) {
+        BountySpec bounty = Datastore.get(BountySpec.class, bountyId);
 
-        if (bounty != null && user.equals(bounty.getOnlyField("poster").getAtom())) {
-            boolean success = Things.getService().bounty.delete(bounty);
-
-            response.getWriter().write(Boolean.toString(success));
+        if (bounty != null && user.equals(Datastore.id(bounty.peopleId))) {
+            Datastore.delete(bounty);
         }
     }
 }

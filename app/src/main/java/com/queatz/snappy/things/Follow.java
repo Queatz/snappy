@@ -12,8 +12,8 @@ import io.realm.annotations.RealmClass;
 public class Follow extends RealmObject {
     @Index
     private String id;
-    private Person person;
-    private Person following;
+    private Person source;
+    private Person target;
 
     public String getId() {
         return id;
@@ -23,19 +23,19 @@ public class Follow extends RealmObject {
         this.id = id;
     }
 
-    public Person getPerson() {
-        return person;
+    public Person getSource() {
+        return source;
     }
 
-    public void setPerson(Person person) {
-        this.person = person;
+    public void setSource(Person source) {
+        this.source = source;
     }
 
-    public Person getFollowing() {
-        return following;
+    public Person getTarget() {
+        return target;
     }
 
-    public void setFollowing(Person following) {
-        this.following = following;
+    public void setTarget(Person target) {
+        this.target = target;
     }
 }

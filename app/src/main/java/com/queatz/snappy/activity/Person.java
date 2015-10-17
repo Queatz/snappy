@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.queatz.snappy.Config;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;

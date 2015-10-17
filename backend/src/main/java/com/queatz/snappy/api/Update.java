@@ -6,9 +6,8 @@ import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.appengine.tools.cloudstorage.ListItem;
 import com.google.appengine.tools.cloudstorage.ListOptions;
 import com.google.appengine.tools.cloudstorage.ListResult;
-import com.queatz.snappy.backend.Config;
-import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Api;
+import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
 import java.util.Date;
@@ -22,7 +21,7 @@ public class Update extends Api.Path {
     }
 
     @Override
-    public void call() throws IOException, PrintingError {
+    public void call() throws IOException {
         switch (method) {
             case GET:
                 if (path.size() != 2) {
@@ -45,7 +44,7 @@ public class Update extends Api.Path {
         }
     }
 
-    private void getPhoto(String updateId) throws IOException, PrintingError {
+    private void getPhoto(String updateId) throws IOException {
         int size;
 
         try {
@@ -77,6 +76,5 @@ public class Update extends Api.Path {
         String photoUrl = imagesService.getServingUrl(servingUrlOptions);
 
         response.sendRedirect(photoUrl);
-
     }
 }

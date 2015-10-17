@@ -2,7 +2,6 @@ package com.queatz.snappy.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.queatz.snappy.Config;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;

@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 
 /**

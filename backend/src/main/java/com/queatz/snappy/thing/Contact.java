@@ -1,116 +1,55 @@
 package com.queatz.snappy.thing;
 
-import com.google.appengine.api.search.Document;
-import com.google.appengine.api.search.Field;
-import com.google.appengine.api.search.PutException;
-import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.ScoredDocument;
-import com.queatz.snappy.backend.Util;
-import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Things;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.queatz.snappy.backend.Datastore;
+import com.queatz.snappy.shared.things.ContactSpec;
+import com.queatz.snappy.shared.things.MessageSpec;
+import com.queatz.snappy.shared.things.PersonSpec;
 
 import java.util.Date;
-import java.util.Iterator;
 
 /**
  * Created by jacob on 2/21/15.
  */
-public class Contact implements Thing {
-    public JSONObject toJson(Document d, String user, boolean shallow) {
-        if(d == null)
-            return null;
-
-        JSONObject o = new JSONObject();
-
-        try {
-            o.put("id", d.getId());
-            o.put("person", Things.getService().person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("person").getAtom()), user, true));
-            o.put("contact", Things.getService().person.toJson(Search.getService().get(Search.Type.PERSON, d.getOnlyField("contact").getAtom()), user, true));
-            o.put("last", Things.getService().message.toJson(Search.getService().get(Search.Type.MESSAGE, d.getOnlyField("last").getAtom()), user, true));
-            o.put("updated", Util.dateToString(d.getOnlyField("updated").getDate()));
-            o.put("seen", d.getOnlyField("seen").getAtom());
-
-            return o;
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
+public class Contact {
+    public ContactSpec get(String personId, String contactId) {
+        return Datastore.get(ContactSpec.class).filter("personId", personId).filter("contactId", contactId).first().now();
     }
 
-    public boolean markSeen(String user, String personId) {
-        Document contact = null;
-        Results<ScoredDocument> results;
-        results = Search.getService().index.get(Search.Type.CONTACT).search("person = \"" + user + "\" AND contact = \"" + personId + "\"");
+    public boolean markSeen(PersonSpec user, String personId) {
+        ContactSpec contact = get(user.id, personId);
 
-        Iterator<ScoredDocument> iterator = results.iterator();
-        if(iterator.hasNext())
-            contact = iterator.next();
-
-        if(contact == null)
-            return false;
-
-        Document.Builder documentBuild = Document.newBuilder();
-        documentBuild.setId(contact.getId());
-        documentBuild.addField(Field.newBuilder().setName("seen").setAtom(Boolean.toString(true)));
-
-        Util.copyIn(documentBuild, contact, "seen");
-
-        Document document = documentBuild.build();
-
-        try {
-            Search.getService().index.get(Search.Type.CONTACT).put(document);
-        } catch (PutException e) {
-            e.printStackTrace();
+        if(contact == null) {
             return false;
         }
 
-        return true;
+        contact.seen = true;
+        return Datastore.save(contact);
     }
 
-    public void updateWithMessage(Document message) {
+    public void updateWithMessage(MessageSpec message) {
         for(String fromTo[] : new String[][] {
                 new String [] {
-                        "from",
-                        "to"
+                        Datastore.id(message.fromId),
+                        Datastore.id(message.toId)
                 },
                 new String [] {
-                        "to",
-                        "from"
+                        Datastore.id(message.toId),
+                        Datastore.id(message.fromId)
                 },
         }) {
-            Document.Builder documentBuild = Document.newBuilder();
+            ContactSpec contact = get(fromTo[0], fromTo[1]);
 
-            String p1 = message.getOnlyField(fromTo[0]).getAtom();
-            String p2 = message.getOnlyField(fromTo[1]).getAtom();
-
-            Document contact = null;
-            Results<ScoredDocument> results;
-            results = Search.getService().index.get(Search.Type.CONTACT).search("person = \"" + p1 + "\" AND contact = \"" + p2 + "\"");
-
-            Iterator<ScoredDocument> iterator = results.iterator();
-            if(iterator.hasNext())
-                contact = iterator.next();
-
-            if(contact != null)
-                documentBuild.setId(contact.getId());
-
-            documentBuild.addField(Field.newBuilder().setName("person").setAtom(p1));
-            documentBuild.addField(Field.newBuilder().setName("contact").setAtom(p2));
-            documentBuild.addField(Field.newBuilder().setName("last").setAtom(message.getId()));
-            documentBuild.addField(Field.newBuilder().setName("updated").setDate(new Date()));
-            documentBuild.addField(Field.newBuilder().setName("seen").setAtom(Boolean.toString("from".equals(fromTo[0]))));
-
-            Document document = documentBuild.build();
-
-            try {
-                Search.getService().index.get(Search.Type.CONTACT).put(document);
-            } catch (PutException e) {
-                e.printStackTrace();
+            if(contact == null) {
+                contact = new ContactSpec();
+                contact.personId = Datastore.key(PersonSpec.class, fromTo[0]);
+                contact.contactId = Datastore.key(PersonSpec.class, fromTo[1]);
             }
+
+            contact.lastId = Datastore.key(message);
+            contact.updated = new Date();
+            contact.seen = false;
+
+            Datastore.save(contact);
         }
     }
 }

@@ -1,26 +1,19 @@
 package com.queatz.snappy.api;
 
-import com.google.appengine.api.search.GeoPoint;
-import com.google.appengine.api.search.Query;
-import com.google.appengine.api.search.QueryOptions;
-import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.ScoredDocument;
-import com.google.appengine.api.search.SortExpression;
-import com.google.appengine.api.search.SortOptions;
-import com.queatz.snappy.backend.Config;
-import com.queatz.snappy.backend.PrintingError;
-import com.queatz.snappy.backend.Util;
+import com.google.appengine.api.datastore.GeoPt;
+import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Things;
+import com.queatz.snappy.service.Thing;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.HereResponseSpec;
+import com.queatz.snappy.shared.things.LocationSpec;
+import com.queatz.snappy.shared.things.PartySpec;
+import com.queatz.snappy.shared.things.PersonSpec;
+import com.queatz.snappy.shared.things.QuestSpec;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by jacob on 8/21/15.
@@ -30,125 +23,8 @@ public class Here extends Api.Path {
         super(api);
     }
 
-    private JSONArray fetchLocations(String user, double latitude, double longitude) {
-        JSONArray r = new JSONArray();
-
-        String queryString = "distance(location, geopoint(" + latitude + ", " + longitude + ")) < " + Config.SEARCH_MAX_VISIBILITY;
-
-        SortOptions sortOptions = SortOptions.newBuilder().addSortExpression(
-                SortExpression.newBuilder().setExpression("distance(location, geopoint(" + latitude + ", " + longitude + "))").setDirection(SortExpression.SortDirection.ASCENDING).build()
-        ).build();
-
-        QueryOptions queryOptions = QueryOptions.newBuilder().setSortOptions(sortOptions).setLimit(Config.SEARCH_LOCATIONS_MAX_HERE).build();
-
-        Query query = Query.newBuilder().setOptions(queryOptions).build(queryString);
-
-        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.LOCATION).search(query);
-
-        if (results.getNumberReturned() > 0) {
-            r.put(Things.getService().location.toJson(results.iterator().next(), user, false));
-        }
-
-        return r;
-    }
-
-    private JSONArray fetchPeople(String user, double latitude, double longitude) {
-        JSONArray r = new JSONArray();
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-        Date oneHourAgo = new Date(new Date().getTime() - 1000 * 60 * 60);
-
-        String queryString = "distance(latlng, geopoint(" + latitude + ", " + longitude + ")) < " + Config.SEARCH_PEOPLE_MAX_DISTANCE + " AND around >= \"" + format.format(oneHourAgo) + "\"";
-
-        SortOptions sortOptions = SortOptions.newBuilder().addSortExpression(
-                SortExpression.newBuilder().setExpression("distance(latlng, geopoint(" + latitude + ", " + longitude + "))").setDirection(SortExpression.SortDirection.ASCENDING).build()
-        ).build();
-
-        QueryOptions queryOptions = QueryOptions.newBuilder().setSortOptions(sortOptions).setLimit(Config.SEARCH_PEOPLE_MAX_NEAR_HERE).build();
-
-        Query query = Query.newBuilder().setOptions(queryOptions).build(queryString);
-
-        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PERSON).search(query);
-
-        for (ScoredDocument result : results) {
-            if (user.equals(result.getId()) || result.getOnlyField("around").getDate().before(oneHourAgo))
-                continue;
-
-            r.put(Things.getService().person.toJson(result, user, true));
-        }
-
-        return r;
-    }
-
-    private JSONArray fetchParties(String user, double latitude, double longitude) {
-        JSONArray r = new JSONArray();
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-        // TODO: Audit that this is actually sorting and then matching, not matching and then sorting
-        String queryString = "(host = \"" + user + "\" OR (distance(loc_cache, geopoint(" + latitude + ", " + longitude + ")) < " + Config.SEARCH_MAX_VISIBILITY + " AND full=\"" + Boolean.toString(false) + "\")) AND date >= \"" + format.format(new Date(new Date().getTime() - 1000 * 60 * 60)) + "\"";
-
-        SortOptions sortOptions = SortOptions.newBuilder().addSortExpression(
-                SortExpression.newBuilder().setExpression("distance(loc_cache, geopoint(" + latitude + ", " + longitude + "))").setDirection(SortExpression.SortDirection.ASCENDING).build()
-        ).build();
-
-        QueryOptions queryOptions = QueryOptions.newBuilder().setSortOptions(sortOptions).setLimit(Config.SEARCH_MAXIMUM).build();
-        Query query = Query.newBuilder().setOptions(queryOptions).build(queryString);
-        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PARTY).search(query);
-
-        for (ScoredDocument result : results) {
-            r.put(Things.getService().party.toJson(result, user, false));
-
-            if (r.length() >= Config.SEARCH_MINIMUM) {
-                GeoPoint point = Things.getService().location.getGeoPoint(result);
-
-                if (Util.distance(latitude, longitude, point.getLatitude(), point.getLongitude()) > Config.SEARCH_DISTANCE)
-                    break;
-            }
-        }
-
-        return r;
-    }
-
-    private JSONArray fetchBounties(String user, double latitude, double longitude) {
-        JSONArray r = new JSONArray();
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-        String queryString = "distance(latlng, geopoint(" + latitude + ", " + longitude + ")) < " + Config.NEARBY_MAX_VISIBILITY + " AND posted >= \"" + format.format(new Date(new Date().getTime() - Config.BOUNTIES_MAX_AGE)) + "\"";
-
-        QueryOptions queryOptions = QueryOptions.newBuilder().setLimit(Config.BOUNTIES_MAXIMUM).build();
-        Query query = Query.newBuilder().setOptions(queryOptions).build(queryString);
-        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.BOUNTY).search(query);
-
-        for (ScoredDocument result : results) {
-            r.put(Things.getService().bounty.toJson(result, user, false));
-        }
-
-        return r;
-    }
-
-    private JSONArray fetchQuests(String user, double latitude, double longitude) {
-        JSONArray r = new JSONArray();
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-        String queryString = "distance(latlng, geopoint(" + latitude + ", " + longitude + ")) < " + Config.NEARBY_MAX_VISIBILITY + " AND opened >= \"" + format.format(new Date(new Date().getTime() - Config.QUESTS_MAX_AGE)) + "\"";
-
-        QueryOptions queryOptions = QueryOptions.newBuilder().setLimit(Config.QUESTS_MAXIMUM).build();
-        Query query = Query.newBuilder().setOptions(queryOptions).build(queryString);
-        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.QUEST).search(query);
-
-        for (ScoredDocument result : results) {
-            r.put(Things.getService().quest.toJson(result, user, false));
-        }
-
-        return r;
-    }
-
     @Override
-    public void call() throws IOException, PrintingError {
+    public void call() {
         switch (method) {
             case GET:
                 get(request.getParameter(Config.PARAM_LATITUDE), request.getParameter(Config.PARAM_LONGITUDE));
@@ -159,29 +35,51 @@ public class Here extends Api.Path {
         }
     }
 
-    private void get(String latitudeParameter, String longitudeParameter) throws IOException, PrintingError {
+    private void get(String latitudeParameter, String longitudeParameter) {
         if (longitudeParameter == null || latitudeParameter == null) {
             die("here - missing location parameter(s)");
         }
 
-        double latitude = Double.parseDouble(latitudeParameter);
-        double longitude = Double.parseDouble(longitudeParameter);
+        float latitude = Float.parseFloat(latitudeParameter);
+        float longitude = Float.parseFloat(longitudeParameter);
+        GeoPt geo = new GeoPt(latitude, longitude);
 
-        Things.getService().person.updateLocation(user, latitude, longitude);
+        Thing.getService().person.updateLocation(user.id, geo);
 
-        JSONObject jsonObject = new JSONObject();
+        HereResponseSpec response = new HereResponseSpec();
 
-        try {
-            jsonObject.put("parties", fetchParties(user, latitude, longitude));
-            jsonObject.put("people", fetchPeople(user, latitude, longitude));
-            jsonObject.put("locations", fetchLocations(user, latitude, longitude));
-            //jsonObject.put("bounties", fetchBounties(user, latitude, longitude));
-            jsonObject.put("quests", fetchQuests(user, latitude, longitude));
-        } catch (JSONException e) {
-            e.printStackTrace();
+        response.parties = fetchParties(user.id, geo);
+        response.people = fetchPeople(geo);
+        response.locations = fetchLocations(geo);
+        response.quests = fetchQuests(geo);
+
+        ok(response);
+    }
+
+    private List<LocationSpec> fetchLocations(GeoPt geo) {
+        return Search.getService().getNearby(LocationSpec.class, geo, null, 1);
+    }
+
+    private List<PersonSpec> fetchPeople(GeoPt geo) {
+        return Search.getService().getNearby(PersonSpec.class, geo, new Date(new Date().getTime() - 1000 * 60 * 60), Config.SEARCH_PEOPLE_MAX_NEAR_HERE);
+    }
+
+    private List<PartySpec> fetchParties(String user, GeoPt geo) {
+        Date anHourAgo = new Date(new Date().getTime() - 1000 * 60 * 60);
+
+        List<PartySpec> parties = Search.getService().getNearby(PartySpec.class, geo, anHourAgo, Config.SEARCH_MAXIMUM);
+
+        for(PartySpec party : Datastore.ofy().load().type(PartySpec.class).filter("hostId", user).filter("date >=", anHourAgo).list()) {
+            if (!parties.contains(party)) {
+                parties.add(party);
+            }
         }
 
-        response.getWriter().write(jsonObject.toString());
+        return parties;
+    }
+
+    private List<QuestSpec> fetchQuests(GeoPt geo) {
+        return Search.getService().getNearby(QuestSpec.class, geo, new Date(new Date().getTime() - Config.QUESTS_MAX_AGE), Config.NEARBY_MAX_VISIBILITY);
     }
 }
 

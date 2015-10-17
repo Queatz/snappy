@@ -1,10 +1,9 @@
 package com.queatz.snappy.service;
 
+import com.queatz.snappy.backend.Json;
 import com.queatz.snappy.backend.RegistrationRecord;
 
-import org.json.JSONObject;
-
-import static com.queatz.snappy.backend.OfyService.ofy;
+import static com.queatz.snappy.backend.Datastore.ofy;
 
 /**
  * Created by jacob on 3/18/15.
@@ -46,18 +45,18 @@ public class Push {
         ofy().delete().entity(record).now();
     }
 
-    public void send(final String toUser, final JSONObject message) {
+    public void send(final String toUser, final Object message) {
         if(message == null)
             return;
 
-        Queue.getService().enqueuePushMessageToUser(toUser, message.toString());
+        Queue.getService().enqueuePushMessageToUser(toUser, Json.json(message, Json.Compression.PUSH));
     }
 
-    public void sendToFollowers(final String fromUser, final JSONObject message) {
+    public void sendToFollowers(final String fromUser, final Object message) {
         if(message == null)
             return;
 
-        Queue.getService().enqueuePushMessageFromUser(fromUser, message.toString());
+        Queue.getService().enqueuePushMessageFromUser(fromUser, Json.json(message, Json.Compression.PUSH));
     }
 
     public void clear(String messageId) {

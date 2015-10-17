@@ -1,18 +1,16 @@
 package com.queatz.snappy.api;
 
-import com.google.appengine.api.search.Document;
-import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.ScoredDocument;
-import com.queatz.snappy.backend.Config;
-import com.queatz.snappy.backend.PrintingError;
-import com.queatz.snappy.backend.Util;
+import com.queatz.snappy.backend.Datastore;
+import com.queatz.snappy.backend.Json;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Push;
-import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Things;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.queatz.snappy.service.Thing;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.PushSpec;
+import com.queatz.snappy.shared.things.FollowLinkSpec;
+import com.queatz.snappy.shared.things.MessageSpec;
+import com.queatz.snappy.shared.things.PartySpec;
+import com.queatz.snappy.shared.things.PersonSpec;
 
 import java.io.IOException;
 
@@ -25,7 +23,7 @@ public class People extends Api.Path {
     }
 
     @Override
-    public void call() throws IOException, PrintingError {
+    public void call() throws IOException {
         String personId;
 
         switch (method) {
@@ -67,7 +65,7 @@ public class People extends Api.Path {
                 } else if (Boolean.toString(true).equals(request.getParameter(Config.PARAM_FOLLOW))) {
                     postFollow(personId);
                 } else if (Boolean.toString(false).equals(request.getParameter(Config.PARAM_FOLLOW))) {
-                    postUnfollow(personId);
+                    postStopFollowing(personId);
                 } else {
                     String message = request.getParameter(Config.PARAM_MESSAGE);
 
@@ -84,112 +82,76 @@ public class People extends Api.Path {
         }
     }
 
-    private void getPerson(String personId) throws IOException, PrintingError {
-        Document person = Search.getService().get(Search.Type.PERSON, personId);
-        JSONObject r = Things.getService().person.toJson(person, user, false);
-
-        if (r != null) {
-            response.getWriter().write(r.toString());
-        } else {
-                notFound();
-        }
+    private void getPerson(String personId){
+        ok(Datastore.get(PersonSpec.class, personId));
     }
 
-    private void getFollows(boolean followers, String personId) throws IOException, PrintingError {
-        Document person = Search.getService().get(Search.Type.PERSON, personId);
+    private void getFollows(boolean followers, String personId) {
+        PersonSpec person = Datastore.get(PersonSpec.class, personId);
 
         if (person == null) {
             notFound();
         }
 
-        JSONArray jsonArray = new JSONArray();
-
-        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.FOLLOW).search(
-                (followers ? "following" : "person") + " = \"" + personId + "\""
-        );
-
-        for (ScoredDocument result : results) {
-            JSONObject follower = Things.getService().follow.toJson(
-                    result, user, false
-            );
-
-            jsonArray.put(follower);
-        }
-
-        response.getWriter().write(jsonArray.toString());
+        ok(Datastore.get(FollowLinkSpec.class).filter(followers ? "targetId" : "sourceId", person).list());
     }
 
-    private void getParties(String personId) throws IOException, PrintingError {
-        Document person = Search.getService().get(Search.Type.PERSON, personId);
+    private void getParties(String personId) {
+        PersonSpec person = Datastore.get(PersonSpec.class, personId);
 
         if (person == null) {
             notFound();
         }
 
-        JSONArray jsonArray = new JSONArray();
-
-        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PARTY).search(
-                "host = \"" + personId + "\""
-        );
-
-        for (ScoredDocument result : results) {
-            JSONObject party = Things.getService().party.toJson(
-                    result, user, true
-            );
-
-            jsonArray.put(party);
-        }
-
-        response.getWriter().write(jsonArray.toString());
+        ok(Datastore.get(PartySpec.class).filter("hostId", personId).list(), Json.Compression.SHALLOW);
     }
 
-    private void postSeen(String personId) throws IOException {
-        response.getWriter().write(Boolean.toString(Things.getService().contact.markSeen(user, personId)));
+    private void postSeen(String personId) {
+        ok(Thing.getService().contact.markSeen(user, personId));
     }
 
-    private void postFollow(String personId) throws IOException {
-        Document person = Search.getService().get(Search.Type.PERSON, personId);
+    private void postFollow(String personId) {
+        PersonSpec person = Datastore.get(PersonSpec.class, personId);
 
         String localId = request.getParameter(Config.PARAM_LOCAL_ID);
 
         if (person != null) {
-            Document follow = Things.getService().follow.createOrUpdate(user, person.getId());
+            FollowLinkSpec follow = Thing.getService().follow.createOrUpdate(user.id, person.id);
 
             if (follow != null) {
-                JSONObject json = Things.getService().follow.toJson(follow, user, false);
-                Util.localId(json, localId);
+                follow.localId = localId;
 
-                response.getWriter().write(json.toString());
+                Push.getService().send(Datastore.id(follow.targetId), new PushSpec(Config.PUSH_ACTION_FOLLOW, follow));
 
-                Push.getService().send(follow.getOnlyField("following").getAtom(), Things.getService().follow.makePush(follow));
+                ok(follow);
             }
         }
     }
 
-    private void postUnfollow(String personId) {
-        Document person = Search.getService().get(Search.Type.PERSON, personId);
+    private void postStopFollowing(String personId) {
+        PersonSpec person = Datastore.get(PersonSpec.class, personId);
 
         if (person != null) {
-            Document follow = Things.getService().follow.get(user, person.getId());
+            FollowLinkSpec follow = Thing.getService().follow.get(user.id, person.id);
 
             if (follow != null) {
-                Things.getService().follow.stopFollowing(follow);
+                Thing.getService().follow.stopFollowing(follow);
             }
         }
     }
 
     private void postMessage(String personId, String message) throws IOException {
-        Document person = Search.getService().get(Search.Type.PERSON, personId);
+        PersonSpec person = Datastore.get(PersonSpec.class, personId);
+
         String localId = request.getParameter(Config.PARAM_LOCAL_ID);
-        Document sent = Things.getService().message.newMessage(user, person.getId(), message);
+        MessageSpec sent = Thing.getService().message.newMessage(user.id, person.id, message);
 
         if (sent != null) {
-            JSONObject json = Things.getService().message.toJson(sent, user, false);
-            Util.localId(json, localId);
+            sent.localId = localId;
 
-            response.getWriter().write(json.toString());
+            Push.getService().send(Datastore.id(sent.toId), sent);
 
-            Push.getService().send(sent.getOnlyField("to").getAtom(), Things.getService().message.makePush(sent));
+            ok(sent);
         }
     }
 }

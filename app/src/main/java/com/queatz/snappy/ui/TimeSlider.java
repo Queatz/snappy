@@ -17,8 +17,8 @@ import com.queatz.snappy.Util;
  * Created by jacob on 2/21/15.
  */
 public class TimeSlider extends RelativeLayout {
-    public static interface TextCallback {
-        public String getText(float percent);
+    public interface TextCallback {
+        String getText(float percent);
     }
 
     private TextView mHandle;

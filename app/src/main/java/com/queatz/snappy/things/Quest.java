@@ -4,10 +4,13 @@ import java.util.Date;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.RealmClass;
 
 /**
  * Created by jacob on 9/15/15.
  */
+
+@RealmClass
 public class Quest extends RealmObject {
     private String id;
     private String name;

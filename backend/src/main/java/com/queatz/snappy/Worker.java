@@ -4,15 +4,15 @@ import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
-import com.google.appengine.api.search.Document;
-import com.google.appengine.api.search.GeoPoint;
-import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.ScoredDocument;
-import com.queatz.snappy.backend.Config;
+import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.backend.RegistrationRecord;
 import com.queatz.snappy.service.Search;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.things.FollowLinkSpec;
+import com.queatz.snappy.shared.things.PersonSpec;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.queatz.snappy.backend.OfyService.ofy;
+import static com.queatz.snappy.backend.Datastore.ofy;
 
 /**
  * Created by jacob on 4/11/15.
@@ -72,12 +72,8 @@ public class Worker extends HttpServlet {
                 // Social Mode: Friends
 
                 if(fromUser != null) {
-                    Results<ScoredDocument> results = Search.getService().index.get(Search.Type.FOLLOW).search("following = \"" + fromUser + "\"");
-
-                    if(results != null) {
-                        for(Document follow : results) {
-                            toUsers.add(new SendInstance(follow.getOnlyField("person").getAtom(), Config.SOCIAL_MODE_FRIENDS));
-                        }
+                    for(FollowLinkSpec follow : Datastore.get(FollowLinkSpec.class).filter("targetId", fromUser)) {
+                        toUsers.add(new SendInstance(Datastore.id(follow.sourceId), Config.SOCIAL_MODE_FRIENDS));
                     }
                 }
 
@@ -85,19 +81,12 @@ public class Worker extends HttpServlet {
                 // Friends will have higher priority due to HashSet not overwriting existing elements
 
                 if(fromUser != null) {
-                    GeoPoint fromLocation = Search.getService().get(Search.Type.PERSON, fromUser).getOnlyField("latlng").getGeoPoint();
+                    PersonSpec source = Datastore.get(PersonSpec.class, fromUser);
+                    for (PersonSpec person : Search.getService().getNearby(PersonSpec.class, source.latlng, new Date(new Date().getTime() - 1000 * 60 * 60 * 12), 10000)) {
+                        if(fromUser.equals(person.id))
+                            continue;
 
-                    if(fromLocation != null) {
-                        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PERSON).search("distance(latlng, geopoint(" + fromLocation.getLatitude() + ", " + fromLocation.getLongitude() + ")) < " + Config.SEARCH_DISTANCE);
-
-                        if (results != null) {
-                            for (Document person : results) {
-                                if(fromUser.equals(person.getId()))
-                                    continue;
-
-                                toUsers.add(new SendInstance(person.getId(), Config.SOCIAL_MODE_ON));
-                            }
-                        }
+                        toUsers.add(new SendInstance(person.id, Config.SOCIAL_MODE_ON));
                     }
                 }
 

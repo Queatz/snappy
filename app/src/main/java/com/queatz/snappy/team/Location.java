@@ -22,7 +22,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.AsyncHttpGet;
 import com.koushikdutta.async.http.AsyncHttpResponse;
-import com.queatz.snappy.Config;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.R;
 
 import org.json.JSONException;

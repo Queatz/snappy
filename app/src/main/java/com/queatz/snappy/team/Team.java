@@ -9,7 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-import com.queatz.snappy.Config;
+import com.queatz.snappy.shared.Config;
 
 import java.io.Closeable;
 

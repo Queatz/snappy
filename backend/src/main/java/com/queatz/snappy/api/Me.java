@@ -1,25 +1,28 @@
 package com.queatz.snappy.api;
 
-import com.google.appengine.api.search.Document;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
-import com.queatz.snappy.backend.Config;
-import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.backend.Datastore;
+import com.queatz.snappy.backend.GooglePurchaseDataSpec;
+import com.queatz.snappy.backend.Json;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Buy;
 import com.queatz.snappy.service.Push;
-import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Things;
+import com.queatz.snappy.service.Thing;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.PushSpec;
+import com.queatz.snappy.shared.things.OfferSpec;
+import com.queatz.snappy.shared.things.PersonSpec;
+import com.queatz.snappy.shared.things.UpdateSpec;
 
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +40,7 @@ public class Me extends Api.Path {
     }
 
     @Override
-    public void call() throws IOException, PrintingError {
+    public void call() throws IOException {
         switch (method) {
             case GET:
                 if (path.size() == 0) {
@@ -115,45 +118,41 @@ public class Me extends Api.Path {
         }
     }
 
-    private void get() throws IOException, PrintingError {
-        Document me = Search.getService().get(Search.Type.PERSON, user);
-
-        if (me == null) {
-            die("me - inexistent");
-        }
-
-        response.getWriter().write(Things.getService().person.toJson(me, user, false).toString());
+    private void get() {
+        user.auth = user.token;
+        ok(user);
     }
 
-    private void getBuy() throws IOException, PrintingError {
-        Document me = Search.getService().get(Search.Type.PERSON, user);
+    private void getBuy() {
+        PersonSpec me = user;
+        me.auth = me.token;
 
         if (me == null) {
             die("me - inexistent");
         }
 
         try {
-            String subscription = me.getOnlyField("subscription").getAtom();
             String r;
 
-            if (subscription == null || subscription.isEmpty()) {
+            if (StringUtils.isBlank(me.subscription)) {
                 r = Config.HOSTING_ENABLED_FALSE;
-            } else if (Config.HOSTING_ENABLED_AVAILABLE.equals(subscription)) {
+            } else if (Config.HOSTING_ENABLED_AVAILABLE.equals(me.subscription)) {
                 r = Config.HOSTING_ENABLED_AVAILABLE;
             } else {
                 r = Config.HOSTING_ENABLED_TRUE;
             }
 
-            response.getWriter().write(r);
+            ok(r);
         }
         catch (IllegalArgumentException e) {
             e.printStackTrace();
-            response.getWriter().write(Boolean.toString(false));
+            ok(false);
         }
     }
 
-    private void post() throws PrintingError {
-        Document me = Search.getService().get(Search.Type.PERSON, user);
+    private void post() {
+        PersonSpec me = user;
+        me.auth = me.token;
 
         if (me == null) {
             die("me - inexistent");
@@ -162,13 +161,13 @@ public class Me extends Api.Path {
         String about = request.getParameter(Config.PARAM_ABOUT);
 
         if (about != null) {
-            Things.getService().person.updateAbout(me, about);
+            Thing.getService().person.updateAbout(me, about);
         }
     }
 
-    private void postUpto() throws IOException, PrintingError {
-        Document update = Things.getService().update.createUpto(user);
-        GcsFilename photoName = new GcsFilename(api.mAppIdentityService.getDefaultGcsBucketName(), "upto/photo/" + update.getId() + "/" + new Date().getTime());
+    private void postUpto() throws IOException {
+        UpdateSpec update = Thing.getService().update.createUpto(user.id);
+        GcsFilename photoName = new GcsFilename(api.mAppIdentityService.getDefaultGcsBucketName(), "upto/photo/" + update.id + "/" + new Date().getTime());
 
         String message = null;
         boolean allGood = false;
@@ -207,19 +206,19 @@ public class Me extends Api.Path {
         }
 
         if (message != null) {
-            update = Things.getService().update.setMessage(update, message);
+            update = Thing.getService().update.setMessage(update, message);
         }
 
         if (allGood) {
-            Push.getService().sendToFollowers(user, Things.getService().update.makePush(update));
+            Push.getService().sendToFollowers(user.id, update);
         } else {
             die("upto photo - not all good");
         }
 
-        response.getWriter().write(Things.getService().update.toJson(update, user, false).toString());
+        ok(update);
     }
 
-    private void postOffers() throws IOException, PrintingError {
+    private void postOffers() {
         String localId = request.getParameter(Config.PARAM_LOCAL_ID);
         String details = request.getParameter(Config.PARAM_DETAILS);
 
@@ -232,51 +231,47 @@ public class Me extends Api.Path {
         }
 
         if (details != null && details.length() > 0) {
-            Document offer = Things.getService().offer.create(user, details, price);
+            OfferSpec offer = Thing.getService().offer.create(user, details, price);
 
             if (offer != null) {
-                JSONObject json = Things.getService().offer.toJson(offer, user, false);
-                Util.localId(json, localId);
-
-                response.getWriter().write(json.toString());
+                offer.localId = localId;
+                ok(offer);
             } else {
                 error("offers - error");
             }
         }
     }
 
-    private void postBuy(String purchaseData) throws IOException, PrintingError {
-        response.getWriter().write(Boolean.toString(Buy.getService().validate(user, purchaseData)));
+    private void postBuy(String purchaseData) {
+        ok(Buy.getService().validate(user, Json.from(purchaseData, GooglePurchaseDataSpec.class)));
     }
 
     private void postRegisterDevice(String deviceId, String socialMode) {
         if (deviceId != null && deviceId.length() > 0) {
-            Push.getService().register(user, deviceId, socialMode);
+            Push.getService().register(user.id, deviceId, socialMode);
         }
     }
 
     private void postUnregisterDevice(String deviceId) {
         if (deviceId != null && deviceId.length() > 0) {
-            Push.getService().unregister(user, deviceId);
+            Push.getService().unregister(user.id, deviceId);
         }
     }
 
-    private void postClearNotification(String notification) {
-        try {
-            JSONObject push = Util.makeSimplePush(Config.PUSH_ACTION_CLEAR_NOTIFICATION);
-            push.put("notification", notification);
-            Push.getService().send(user, push);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    private void postClearNotification(final String n) {
+        PushSpec push = Util.makeSimplePush(Config.PUSH_ACTION_CLEAR_NOTIFICATION);
+        push.body = new Object() {
+            String notification = n;
+        };
 
+        Push.getService().send(user.id, push);
     }
 
     private void deleteOffer(String offerId) {
-        Document offer = Search.getService().get(Search.Type.OFFER, offerId);
+        OfferSpec offer = Datastore.get(OfferSpec.class, offerId);
 
-        if (offer != null && user.equals(offer.getOnlyField("person").getAtom())) {
-            Things.getService().offer.delete(offer);
+        if (offer != null && user.equals(Datastore.id(offer.personId))) {
+            Thing.getService().offer.delete(offer.id);
         }
     }
 }

@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.queatz.snappy.Config;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
@@ -19,7 +19,6 @@ import com.queatz.snappy.things.Quest;
 import java.util.Date;
 
 import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 /**
  * Created by jacob on 1/3/15.

@@ -1,13 +1,14 @@
 package com.queatz.snappy;
 
 import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.queatz.snappy.backend.Config;
+import com.queatz.snappy.backend.Json;
+import com.queatz.snappy.backend.ObjectResponse;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Auth;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.ErrorResponseSpec;
+import com.queatz.snappy.shared.things.PersonSpec;
 
 import java.io.IOException;
 
@@ -27,41 +28,44 @@ public class SnappyServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         handle(HTTPMethod.GET, req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         handle(HTTPMethod.POST, req, resp);
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         handle(HTTPMethod.PUT, req, resp);
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         handle(HTTPMethod.DELETE, req, resp);
     }
 
-    private void handle(HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) {
-        String user;
+    private void handle(HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        PersonSpec user = null;
 
-        resp.setContentType("text/javascript");
+        resp.setContentType("application/json");
 
         try {
-            user = Auth.getService().fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH));
+            try {
+                user = Auth.getService().fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH));
 
-            if(user == null)
-                throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null auth");
+                if (user == null)
+                    throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null auth");
 
-            Api.getService().call(user, method, req, resp);
-        }
-        catch (PrintingError e) {
-            e.printStackTrace();
-            errorOut(resp, e);
+                Api.getService().call(user, method, req, resp);
+            } catch (PrintingError e) {
+                e.printStackTrace();
+                errorOut(resp, e);
+            }
+        } catch (ObjectResponse success) {
+            resp.getWriter().write(Json.json(success.getObject(), success.getCompression()));
         }
     }
 
@@ -82,15 +86,7 @@ public class SnappyServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 
-        if(false) try {
-            JSONObject json = new JSONObject();
-            json.put("error", error.toString());
-            json.put("reason", error.getReason());
-
-            resp.getWriter().println(json.toString());
-        }
-        catch (IOException | JSONException e) {
-            e.printStackTrace();
-        }
+        if (false)
+        throw new ObjectResponse(new ErrorResponseSpec(error.toString(), error.getReason()));
     }
 }

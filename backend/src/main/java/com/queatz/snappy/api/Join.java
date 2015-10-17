@@ -1,14 +1,12 @@
 package com.queatz.snappy.api;
 
-import com.google.appengine.api.search.Document;
-import com.queatz.snappy.backend.Config;
-import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Push;
-import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Things;
-
-import org.json.JSONObject;
+import com.queatz.snappy.service.Thing;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.things.JoinLinkSpec;
+import com.queatz.snappy.shared.things.PartySpec;
 
 import java.io.IOException;
 
@@ -21,7 +19,7 @@ public class Join extends Api.Path {
     }
 
     @Override
-    public void call() throws IOException, PrintingError {
+    public void call() throws IOException {
         switch (method) {
             case GET:
                 if (path.size() != 1) {
@@ -50,54 +48,45 @@ public class Join extends Api.Path {
         }
     }
 
-    private void get(String joinId) throws IOException, PrintingError {
-        Document join = Search.getService().get(Search.Type.JOIN, joinId);
-        JSONObject r = Things.getService().join.toJson(join, user, false);
-
-        if (r != null) {
-            response.getWriter().write(r.toString());
-        } else {
-            notFound();
-        }
+    private void get(String joinId) {
+        ok(Datastore.get(JoinLinkSpec.class, joinId));
     }
 
-    private void postHide(String joinId) throws IOException {
+    private void postHide(String joinId) {
         boolean succeeded = false;
-        Document join = Search.getService().get(Search.Type.JOIN, joinId);
+        JoinLinkSpec join = Datastore.get(JoinLinkSpec.class, joinId);
 
-        if (join != null && Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
-            Document party = Search.getService().get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
-
-            if (party != null) {
-                if (user.equals(party.getOnlyField("host").getAtom())) {
-                    Things.getService().join.setStatus(join, Config.JOIN_STATUS_OUT);
+        if (join != null && Config.JOIN_STATUS_REQUESTED.equals(join.status)) {
+            if (join.party != null) {
+                if (user.equals(join.party.id)) {
+                    join.status = Config.JOIN_STATUS_OUT;
                     succeeded = true;
                 }
             }
         }
 
-        response.getWriter().write(Boolean.toString(succeeded));
+        ok(succeeded);
     }
 
-    private void postAccept(String joinId) throws IOException {
+    private void postAccept(String joinId) {
         boolean succeeded = false;
-        Document join = Search.getService().get(Search.Type.JOIN, joinId);
+        JoinLinkSpec join = Datastore.get(JoinLinkSpec.class, joinId);
 
-        if (join != null && Config.JOIN_STATUS_REQUESTED.equals(join.getOnlyField("status").getAtom())) {
-            Document party = Search.getService().get(Search.Type.PARTY, join.getOnlyField("party").getAtom());
+        if (join != null && Config.JOIN_STATUS_REQUESTED.equals(join.status)) {
+            PartySpec party = Datastore.get(join.partyId);
 
             if (party != null) {
-                if (user.equals(party.getOnlyField("host").getAtom())) {
-                    join = Things.getService().join.setStatus(join, Config.JOIN_STATUS_IN);
+                if (user.equals(Datastore.id(party.hostId))) {
+                    join = Thing.getService().join.setStatus(join, Config.JOIN_STATUS_IN);
                     succeeded = true;
                 }
             }
         }
-
-        response.getWriter().write(Boolean.toString(succeeded));
 
         if (succeeded) {
-            Push.getService().send(join.getOnlyField("person").getAtom(), Things.getService().join.makePush(join));
+            Push.getService().send(Datastore.id(join.personId), join);
         }
+
+        ok(succeeded);
     }
 }

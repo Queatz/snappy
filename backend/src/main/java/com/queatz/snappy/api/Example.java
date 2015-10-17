@@ -1,9 +1,6 @@
 package com.queatz.snappy.api;
 
-import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Api;
-
-import java.io.IOException;
 
 /**
  * Created by jacob on 2/8/15.
@@ -15,7 +12,7 @@ public class Example extends Api.Path {
     }
 
     @Override
-    public void call() throws IOException, PrintingError {
+    public void call() {
         switch (method) {
             case GET:
                 get();
@@ -26,7 +23,7 @@ public class Example extends Api.Path {
         }
     }
 
-    private void get() throws IOException {
-        response.getWriter().write("example");
+    private void get() {
+        ok("example");
     }
 }

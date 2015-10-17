@@ -2,8 +2,6 @@ package com.queatz.snappy.team;
 
 import android.accounts.AccountManager;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -18,8 +16,7 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
-import com.queatz.snappy.Config;
-import com.queatz.snappy.R;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.things.Person;
 
 import org.json.JSONException;

@@ -5,17 +5,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.queatz.snappy.Config;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
-import com.queatz.snappy.Util;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Location;
 import com.queatz.snappy.things.Offer;
-import com.squareup.picasso.Picasso;
 
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;

@@ -1,6 +1,85 @@
-package com.queatz.snappy.backend;
+package com.queatz.snappy.shared;
 
+/**
+ * Created by jacob on 10/25/14.
+ */
 public class Config {
+
+    // Android
+
+    public static final String LOG_TAG = "SNAPPY_LOG";
+    public static final String API_URL = "http://queatz-snappy.appspot.com/api/";
+    public static final String BACKEND_URL = "https://queatz-snappy.appspot.com/_ah/api/";
+    public static final String GOOGLE_PLACES_AUTOCOMPLETE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?location=%f,%f&radius=1609&input=%s&key=%s";
+    public static final String GOOGLE_PLACES_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?placeid=%s&key=%s";
+    public static final int maxRequestRetries = 4;
+    public static final int maxHoursInFuture = 18;
+    public static final float locationAccuracy = 100;
+    public static final float defaultMapZoom = 18;
+
+    public static final String PREFERENCE_USER = "auth.user";
+    public static final String PREFERENCE_AUTH_TOKEN = "auth.auth_token";
+    public static final String PREFERENCE_GCM_REGISTRATION_ID = "auth.gcm_registration_id";
+    public static final String PREFERENCE_HOST_PARTY_SCREEN_SHOWN = "other.party_screen_shown";
+    public static final String PREFERENCE_HOSTING_ENABLED = "other.hosting_enabled";
+    public static final String PREFERENCE_SOCIAL_MODE = "other.social_mode";
+    public static final String PREFERENCE_APP_VERSION = "app.version";
+
+    public static final int REQUEST_CODE_AUTH_RESOLUTION = 1;
+    public static final int REQUEST_CODE_ACCOUNT_PICKER = 2;
+    public static final int REQUEST_CODE_BUY_INTENT = 3;
+    public static final int REQUEST_CODE_PLAY_SERVICES = 4;
+    public static final int REQUEST_CODE_CHECK_SETTINGS = 5;
+    public static final int REQUEST_CODE_CHOOSER = 6;
+
+    public static final String EXTRA_ACTION = "action";
+    public static final String EXTRA_PARTY_ID = "party";
+    public static final String EXTRA_JOIN_ID = "join";
+    public static final String EXTRA_ACTION_JOIN_ACCEPT = "join.accept";
+    public static final String EXTRA_ACTION_JOIN_REQUEST = "join.request";
+
+    public static final String PATH_BOUNTY_ID = "bounty/%s";
+    public static final String PATH_QUEST_ID = "quest/%s";
+    public static final String PATH_PARTY_ID = "party/%s";
+    public static final String PATH_JOIN_ID = "join/%s";
+    public static final String PATH_PEOPLE_ID = "people/%s";
+    public static final String PATH_PEOPLE_FOLLOWING = "people/%s/following";
+    public static final String PATH_PEOPLE_FOLLOWERS = "people/%s/followers";
+    public static final String PATH_PEOPLE_PARTIES = "people/%s/parties";
+    public static final String PATH_SEARCH = "search";
+    public static final String PATH_UPDATE_PHOTO = "update/%s/photo";
+    public static final String PATH_LOCATION_PHOTO = "location/%s/photo";
+    public static final String PATH_MESSAGES_ID = "messages/%s";
+    public static final String PATH_ME_OFFERS= "me/offers";
+    public static final String PATH_ME_OFFERS_ID= "me/offers/%s";
+    public static final String PATH_ME_UPTO= "me/upto";
+    public static final String PATH_ME_BUY= "me/buy";
+    public static final String PATH_ME_REGISTER_DEVICE = "me/register_device";
+    public static final String PATH_ME_UNREGISTER_DEVICE = "me/unregister_device";
+    public static final String PATH_ME_CLEAR_NOTIFICATION = "me/clear_notification";
+
+    public static final int BILLING_RESPONSE_RESULT_OK                  = 0;
+    public static final int BILLING_RESPONSE_RESULT_USER_CANCELED       = 1;
+    public static final int BILLING_RESPONSE_RESULT_SERVICE_UNAVAILABLE = 2;
+    public static final int BILLING_RESPONSE_RESULT_BILLING_UNAVAILABLE = 3;
+    public static final int BILLING_RESPONSE_RESULT_ITEM_UNAVAILABLE    = 4;
+    public static final int BILLING_RESPONSE_RESULT_DEVELOPER_ERROR     = 5;
+    public static final int BILLING_RESPONSE_RESULT_ERROR               = 6;
+    public static final int BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED  = 7;
+    public static final int BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED      = 8;
+    public static final String BILLING_RESPONSE_CODE                    = "RESPONSE_CODE";
+    public static final String BILLING_DETAILS_LIST                     = "DETAILS_LIST";
+    public static final String BILLING_BUY_INTENT                       = "BUY_INTENT";
+    public static final String BILLING_INAPP_PURCHASE_DATA              = "INAPP_PURCHASE_DATA";
+    public static final String BILLING_INAPP_DATA_SIGNATURE             = "INAPP_DATA_SIGNATURE";
+    public static final String BILLING_INAPP_PURCHASE_ITEM_LIST         = "INAPP_PURCHASE_ITEM_LIST";
+    public static final String BILLING_INAPP_PURCHASE_DATA_LIST         = "INAPP_PURCHASE_DATA_LIST";
+    public static final String BILLING_INAPP_DATA_SIGNATURE_LIST        = "INAPP_DATA_SIGNATURE_LIST";
+    public static final String BILLING_INAPP_CONTINUATION_TOKEN         = "INAPP_CONTINUATION_TOKEN";
+    public static final String BILLING_ITEM_ID_LIST                     = "ITEM_ID_LIST";
+
+    // Shared
+
     public static final String NAME = "snappy";
     public static final String PACKAGE = "com.queatz.snappy";
     public static final String CLIENT_ID = "1098230558363-qe1do9mi41ptg644bd12m90sbba767e2.apps.googleusercontent.com";

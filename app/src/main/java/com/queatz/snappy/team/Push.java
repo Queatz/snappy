@@ -15,9 +15,8 @@ import android.util.Log;
 
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.Background;
-import com.queatz.snappy.Config;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.R;
-import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.activity.Quests;
@@ -25,6 +24,7 @@ import com.queatz.snappy.things.Contact;
 import com.queatz.snappy.things.Join;
 import com.queatz.snappy.things.Message;
 import com.queatz.snappy.things.Quest;
+import com.queatz.snappy.util.TimeUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -107,11 +107,11 @@ public class Push {
                     personFirstName = URLDecoder.decode(push.getJSONObject("host").getString("firstName"), "UTF-8");
                     partyId = push.getJSONObject("party").getString("id");
                     partyName = URLDecoder.decode(push.getJSONObject("party").getString("name"), "UTF-8");
-                    partyDate = Util.stringToDate(push.getJSONObject("party").getString("date"));
+                    partyDate = TimeUtil.stringToDate(push.getJSONObject("party").getString("date"));
 
                     builder = newNotification()
                             .setContentTitle(String.format(team.context.getString(R.string.party_by_person), partyName, personFirstName))
-                            .setContentText(String.format(team.context.getString(R.string.party_starts_at), Util.cuteDate(partyDate, true)))
+                            .setContentText(String.format(team.context.getString(R.string.party_starts_at), TimeUtil.cuteDate(partyDate, true)))
                             .setPriority(Notification.PRIORITY_LOW)
                             .setDefaults(Notification.DEFAULT_LIGHTS);
 
@@ -246,12 +246,12 @@ public class Push {
                 case Config.PUSH_ACTION_JOIN_ACCEPTED:
                     partyName = URLDecoder.decode(push.getJSONObject("party").getString("name"), "UTF-8");
                     partyId = push.getJSONObject("party").getString("id");
-                    partyDate = Util.stringToDate(push.getJSONObject("party").getString("date"));
+                    partyDate = TimeUtil.stringToDate(push.getJSONObject("party").getString("date"));
                     joinId = push.getString("join");
 
                     builder = newNotification()
                             .setContentTitle(partyName)
-                            .setContentText(String.format(team.context.getString(R.string.request_accepted), Util.relDate(partyDate)));
+                            .setContentText(String.format(team.context.getString(R.string.request_accepted), TimeUtil.relDate(partyDate)));
 
                     resultIntent = new Intent(team.context, Main.class);
                     pendingIntent = PendingIntent.getActivity(team.context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);

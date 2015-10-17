@@ -31,7 +31,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.loopj.android.http.RequestParams;
-import com.queatz.snappy.Config;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
@@ -42,6 +42,7 @@ import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.ui.TextView;
 import com.queatz.snappy.ui.TimeSlider;
+import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -67,7 +68,7 @@ public class HostParty extends Activity {
     private GoogleMap mGoogleMap;
 
     private Date percentToDate(float percent) {
-        return Util.quantizeDate(new Date(mDate.getTime() + (int) (percent * Config.maxHoursInFuture * 1000 * 60 * 60)));
+        return TimeUtil.quantizeDate(new Date(mDate.getTime() + (int) (percent * Config.maxHoursInFuture * 1000 * 60 * 60)));
     }
 
     private float dateToPercent(Date date) {
@@ -203,7 +204,7 @@ public class HostParty extends Activity {
 
         float p = .25f;
 
-        if(Util.everybodyIsSleeping(percentToDate(p)))
+        if(TimeUtil.everybodyIsSleeping(percentToDate(p)))
             p = .75f;
 
         timeSlider.setPercent(p);
@@ -211,7 +212,7 @@ public class HostParty extends Activity {
         timeSlider.setTextCallback(new TimeSlider.TextCallback() {
             @Override
             public String getText(float percent) {
-                return Util.cuteDate(percentToDate(percent));
+                return TimeUtil.cuteDate(percentToDate(percent));
             }
         });
 
@@ -525,7 +526,7 @@ public class HostParty extends Activity {
 
         TimeSlider date = ((TimeSlider) mNewParty.findViewById(R.id.timeSlider));
 
-        Date newDate = Util.matchDateHour(party.getDate());
+        Date newDate = TimeUtil.matchDateHour(party.getDate());
         float percent = dateToPercent(newDate);
 
         Log.e(Config.LOG_TAG, newDate + " • " + percent);

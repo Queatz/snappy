@@ -1,15 +1,12 @@
 package com.queatz.snappy.api;
 
-import com.google.appengine.api.search.Document;
-import com.queatz.snappy.backend.Config;
-import com.queatz.snappy.backend.PrintingError;
-import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Buy;
 import com.queatz.snappy.service.Push;
-import com.queatz.snappy.service.Things;
-
-import org.json.JSONObject;
+import com.queatz.snappy.service.Thing;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.PushSpec;
+import com.queatz.snappy.shared.things.PartySpec;
 
 import java.io.IOException;
 
@@ -22,7 +19,7 @@ public class Parties extends Api.Path {
     }
 
     @Override
-    public void call() throws IOException, PrintingError {
+    public void call() throws IOException {
         switch (method) {
             case POST:
                 if (path.size() != 0) {
@@ -37,21 +34,21 @@ public class Parties extends Api.Path {
         }
     }
 
-    private void post() throws IOException, PrintingError {
+    private void post() {
         if (!Buy.getService().valid(user)) {
             die("parties - not bought");
         }
 
         String localId = request.getParameter(Config.PARAM_LOCAL_ID);
 
-        Document document = Things.getService().party.createFromRequest(request, user);
+        PartySpec party = Thing.getService().party.createFromRequest(request, user);
 
-        if (document != null) {
-            JSONObject json = Things.getService().party.toJson(document, user, false);
-            Util.localId(json, localId);
+        if (party != null) {
+            party.localId = localId;
 
-            Push.getService().sendToFollowers(user, Things.getService().party.makePush(document));
-            response.getWriter().write(json.toString());
+            Push.getService().sendToFollowers(user.id, new PushSpec(Config.PUSH_ACTION_NEW_PARTY, party));
+
+            ok(party);
         }
     }
 }

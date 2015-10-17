@@ -30,7 +30,7 @@ public class PersonListAdapter extends RealmBaseAdapter<Follow> {
     public Person getPerson(int position) {
         Follow follow = realmResults.get(position);
 
-        return showFollowing ? follow.getFollowing() : follow.getPerson();
+        return showFollowing ? follow.getTarget() : follow.getSource();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class PersonListAdapter extends RealmBaseAdapter<Follow> {
                     .placeholder(R.color.spacer)
                     .into((ImageView) view.findViewById(R.id.profile));
 
-            ((TextView) view.findViewById(R.id.person)).setText(Util.fancyName(person));
+            ((TextView) view.findViewById(R.id.person)).setText(person.getName());
         }
 
         return view;

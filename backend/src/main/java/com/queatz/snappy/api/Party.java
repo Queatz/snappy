@@ -1,17 +1,13 @@
 package com.queatz.snappy.api;
 
-import com.google.appengine.api.search.Document;
-import com.queatz.snappy.backend.Config;
-import com.queatz.snappy.backend.PrintingError;
-import com.queatz.snappy.backend.Util;
+import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Push;
-import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Things;
-
-import org.json.JSONObject;
-
-import java.io.IOException;
+import com.queatz.snappy.service.Thing;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.PushSpec;
+import com.queatz.snappy.shared.things.JoinLinkSpec;
+import com.queatz.snappy.shared.things.PartySpec;
 
 /**
  * Created by jacob on 2/8/15.
@@ -23,7 +19,7 @@ public class Party extends Api.Path {
     }
 
     @Override
-    public void call() throws IOException, PrintingError {
+    public void call() {
         String partyId;
 
         switch (method) {
@@ -58,48 +54,40 @@ public class Party extends Api.Path {
         }
     }
 
-    private void get(String partyId) throws IOException, PrintingError {
-        Document party = Search.getService().get(Search.Type.PARTY, partyId);
-        JSONObject r = Things.getService().party.toJson(party, user, false);
-
-        if (r == null) {
-            notFound();
-        }
-
-        response.getWriter().write(r.toString());
+    private void get(String partyId) {
+        ok(Datastore.get(PartySpec.class, partyId));
     }
 
-    private void postJoin(String partyId) throws IOException {
-        Document party = Search.getService().get(Search.Type.PARTY, partyId);
+    private void postJoin(String partyId) {
+        PartySpec party = Datastore.get(PartySpec.class, partyId);
 
         if (party != null) {
             String localId = request.getParameter(Config.PARAM_LOCAL_ID);
-            Document join = Things.getService().join.create(user, partyId);
+            JoinLinkSpec join = Thing.getService().join.create(user, partyId);
 
             if (join != null) {
-                JSONObject json = Things.getService().join.toJson(join, user, false);
-                Util.localId(json, localId);
+                join.localId = localId;
 
-                response.getWriter().write(json.toString());
+                Push.getService().send(Datastore.id(party.hostId), new PushSpec(Config.PUSH_ACTION_JOIN_REQUEST, join));
 
-                Push.getService().send(party.getOnlyField("host").getAtom(), Things.getService().join.makePush(join));
+                ok(join);
             }
         }
     }
 
-    private void postCancelJoin(String partyId) throws IOException {
-        response.getWriter().write(Boolean.toString(Things.getService().join.delete(user, partyId)));
+    private void postCancelJoin(String partyId) {
+        ok(Thing.getService().join.delete(user, partyId));
     }
 
-    private void postFull(String partyId) throws IOException {
-        Document party = Search.getService().get(Search.Type.PARTY, partyId);
+    private void postFull(String partyId) {
+        PartySpec party = Datastore.get(PartySpec.class, partyId);
 
-        if (party == null || user == null || !user.equals(party.getOnlyField("host").getAtom())) {
-            response.getWriter().write(Boolean.toString(false));
+        if (party == null || user == null || !user.equals(Datastore.id(party.hostId))) {
+            ok(false);
         }
 
-        Things.getService().party.setFull(party);
+        Thing.getService().party.setFull(party);
 
-        response.getWriter().write(Boolean.toString(true));
+        ok(true);
     }
 }

@@ -5,7 +5,7 @@ import com.queatz.snappy.service.Api;
 /**
  * Created by jacob on 2/8/15.
  */
-public class PrintingError extends Exception {
+public class PrintingError extends RuntimeException {
     Api.Error mError;
     String mReason;
 

@@ -1,21 +1,14 @@
 package com.queatz.snappy.api;
 
-import com.google.appengine.api.search.Document;
-import com.google.appengine.api.search.Query;
-import com.google.appengine.api.search.QueryOptions;
-import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.ScoredDocument;
-import com.queatz.snappy.backend.Config;
-import com.queatz.snappy.backend.PrintingError;
+import com.google.appengine.api.datastore.Query;
+import com.queatz.snappy.backend.Datastore;
+import com.queatz.snappy.backend.Json;
 import com.queatz.snappy.service.Api;
-import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Things;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.queatz.snappy.shared.things.ContactSpec;
+import com.queatz.snappy.shared.things.MessageSpec;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by jacob on 2/14/15.
@@ -27,7 +20,7 @@ public class Messages extends Api.Path {
     }
 
     @Override
-    public void call() throws IOException, PrintingError {
+    public void call() throws IOException {
         switch (method) {
             case GET:
                 if (path.size() == 0) {
@@ -44,60 +37,28 @@ public class Messages extends Api.Path {
         }
     }
 
-    private void get() throws IOException {
-        JSONObject r = new JSONObject();
-
-        QueryOptions queryOptions = QueryOptions.newBuilder()
-                .setLimit(Config.TEMPORARY_API_LIMIT)
-                .build();
-
-        Query query = Query.newBuilder().setOptions(queryOptions).build("from = \"" + user + "\" OR to = \"" + user + "\"");
-
-        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.MESSAGE).search(query);
-
-        JSONArray a = new JSONArray();
-
-        for (ScoredDocument doc : results) {
-            a.put(Things.getService().message.toJson(doc, user, true));
-        }
-
-        results = Search.getService().index.get(Search.Type.CONTACT).search("person = \"" + user + "\"");
-
-        JSONArray c = new JSONArray();
-
-        for (ScoredDocument doc : results) {
-            c.put(Things.getService().contact.toJson(doc, user, true));
-        }
-
-        try {
-            if (a.length() > 0) {
-                r.put("messages", a);
-            }
-
-            if (c.length() > 0) {
-                r.put("contacts", c);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        response.getWriter().write(r.toString());
+    private void get() {
+        ok(new Object() {
+            List<MessageSpec> messages = Datastore.get(MessageSpec.class, Query.CompositeFilterOperator.or(
+                    new Query.FilterPredicate("from",
+                            Query.FilterOperator.EQUAL,
+                            user),
+                    new Query.FilterPredicate("to",
+                            Query.FilterOperator.EQUAL,
+                            user)
+            )).list();
+            List<ContactSpec> contacts = Datastore.get(ContactSpec.class).filter("personId", user).list();
+        }, Json.Compression.SHALLOW);
     }
 
-    private void get(String messageId) throws IOException, PrintingError {
-        Document message = Search.getService().get(Search.Type.MESSAGE, messageId);
+    private void get(String messageId) {
+        MessageSpec message = Datastore.get(MessageSpec.class, messageId);
 
-        JSONObject r = null;
-
-        if (user.equals(message.getOnlyField("from").getAtom()) || user.equals(message.getOnlyField("to").getAtom())) {
-            r = Things.getService().message.toJson(message, user, false);
-        }
-
-        if (r != null) {
-            response.getWriter().write(r.toString());
-        } else {
+        if (!user.equals(Datastore.id(message.fromId)) && !user.equals(Datastore.id(message.toId))) {
             notFound();
         }
+
+        ok(message);
     }
 }
 

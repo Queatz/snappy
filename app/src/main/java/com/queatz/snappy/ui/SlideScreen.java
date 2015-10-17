@@ -12,7 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.queatz.snappy.Config;
+import com.queatz.snappy.shared.Config;
 
 import java.util.Date;
 

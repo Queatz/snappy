@@ -16,6 +16,7 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.things.Message;
 import com.queatz.snappy.things.Person;
+import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 
 import io.realm.RealmBaseAdapter;
@@ -73,7 +74,7 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<Message> {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    Toast.makeText(context, Util.agoDate(message.getDate()), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, TimeUtil.agoDate(message.getDate()), Toast.LENGTH_SHORT).show();
                 }
 
                 return false;

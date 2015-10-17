@@ -1,127 +1,22 @@
 package com.queatz.snappy.thing;
 
-import com.google.appengine.api.search.Document;
-import com.google.appengine.api.search.Field;
-import com.google.appengine.api.search.PutException;
-import com.google.appengine.api.search.PutResponse;
-import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.ScoredDocument;
-import com.queatz.snappy.backend.Config;
-import com.queatz.snappy.backend.Util;
-import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Things;
+import com.queatz.snappy.backend.Datastore;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.things.PersonSpec;
+import com.queatz.snappy.shared.things.QuestLinkSpec;
+import com.queatz.snappy.shared.things.QuestSpec;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by jacob on 9/15/15.
  */
-public class Quest implements Thing {
-    public JSONObject makePush(Document quest) {
-        if(quest == null)
-            return null;
-
-        JSONObject push = new JSONObject();
-
-        try {
-            String action;
-
-            switch (quest.getOnlyField("status").getAtom()) {
-                case Config.QUEST_STATUS_STARTED:
-                    action = Config.PUSH_ACTION_QUEST_STARTED;
-                    break;
-                case Config.QUEST_STATUS_COMPLETE:
-                    action = Config.PUSH_ACTION_QUEST_COMPLETED;
-                    break;
-                default:
-                    return null;
-            }
-
-            push.put("action", action);
-            push.put("quest", toPushJson(quest));
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        return push;
-    }
-
-    public JSONObject toPushJson(Document d) {
-        if(d == null)
-            return null;
-
-        JSONObject o = new JSONObject();
-
-        try {
-            o.put("id", d.getId());
-            o.put("name", d.getOnlyField("name").getText());
-
-            JSONArray team = new JSONArray();
-            Results<ScoredDocument> results = getTeam(d);
-
-            for (ScoredDocument document : results) {
-                Document questPerson = Search.getService().get(Search.Type.PERSON, document.getOnlyField("person").getAtom());
-                team.put(Things.getService().person.toPushJson(questPerson));
-            }
-
-            o.put("team", team);
-
-            return o;
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Override
-    public JSONObject toJson(Document d, String user, boolean shallow) {
-        JSONObject jsonObject = new JSONObject();
-
-        Document person = Search.getService().get(Search.Type.PERSON, d.getOnlyField("host").getAtom());
-
-        try {
-            jsonObject.put("id", d.getId());
-
-            if (shallow) {
-                return jsonObject;
-            }
-
-            jsonObject.put("host", Things.getService().person.toJson(person, user, true));
-            jsonObject.put("status", d.getOnlyField("status").getAtom());
-            jsonObject.put("name", d.getOnlyField("name").getText());
-            jsonObject.put("details", d.getOnlyField("details").getText());
-            jsonObject.put("reward", d.getOnlyField("reward").getText());
-            jsonObject.put("opened", Util.dateToString(d.getOnlyField("opened").getDate()));
-            jsonObject.put("time", d.getOnlyField("time").getAtom());
-            jsonObject.put("teamSize", d.getOnlyField("teamSize").getNumber().intValue());
-
-            Results<ScoredDocument> results = getTeam(d);
-            JSONArray team = new JSONArray();
-
-            for (ScoredDocument document : results) {
-                Document questPerson = Search.getService().get(Search.Type.PERSON, document.getOnlyField("person").getAtom());
-                team.put(Things.getService().person.toJson(questPerson, user, true));
-            }
-
-            jsonObject.put("team", team);
-
-            return jsonObject;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Document createFromRequest(String user, HttpServletRequest request) {
+public class Quest {
+    public QuestSpec createFromRequest(PersonSpec user, HttpServletRequest request) {
         int teamSize = 1;
 
         try {
@@ -136,62 +31,44 @@ public class Quest implements Thing {
             teamSize = Config.QUEST_MAX_TEAM_SIZE;
         }
 
-        Document person = Search.getService().get(Search.Type.PERSON, user);
+        QuestSpec quest = new QuestSpec();
+        quest.hostId = Datastore.key(user);
+        quest.time = request.getParameter(Config.PARAM_TIME);
+        quest.status = Config.QUEST_STATUS_OPEN;
+        quest.reward = request.getParameter(Config.PARAM_REWARD);
+        quest.name = request.getParameter(Config.PARAM_NAME);
+        quest.details = request.getParameter(Config.PARAM_DETAILS);
+        quest.teamSize = teamSize;
+        quest.opened = new Date();
+        quest.latlng = user.latlng;
+        Datastore.save(quest);
 
-        Document.Builder documentBuilder = Document.newBuilder();
-        documentBuilder.addField(Field.newBuilder().setName("host").setAtom(user));
-        documentBuilder.addField(Field.newBuilder().setName("time").setAtom(request.getParameter(Config.PARAM_TIME)));
-        documentBuilder.addField(Field.newBuilder().setName("status").setAtom(Config.QUEST_STATUS_OPEN));
-        documentBuilder.addField(Field.newBuilder().setName("reward").setText(Util.encode(request.getParameter(Config.PARAM_REWARD))));
-        documentBuilder.addField(Field.newBuilder().setName("name").setText(Util.encode(request.getParameter(Config.PARAM_NAME))));
-        documentBuilder.addField(Field.newBuilder().setName("details").setText(Util.encode(request.getParameter(Config.PARAM_DETAILS))));
-        documentBuilder.addField(Field.newBuilder().setName("teamSize").setNumber(teamSize));
-        documentBuilder.addField(Field.newBuilder().setName("opened").setDate(new Date()));
-        documentBuilder.addField(Field.newBuilder().setName("latlng").setGeoPoint(person.getOnlyField("latlng").getGeoPoint()));
-
-        Document document = documentBuilder.build();
-
-        try {
-            PutResponse put = Search.getService().index.get(Search.Type.QUEST).put(document);
-            documentBuilder.setId(put.getIds().get(0));
-            return documentBuilder.build();
-        } catch (PutException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return quest;
     }
 
-    public Document start(String user, String questId) {
-        Document quest = Search.getService().get(Search.Type.QUEST, questId);
+    public QuestSpec start(String user, String questId) {
+        QuestSpec quest = Datastore.get(QuestSpec.class, questId);
 
         if(quest == null) {
             return null;
         }
 
-        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.QUEST_PERSON).search("quest = \"" + questId + "\" AND person = \"" + user + "\"");
+        QuestLinkSpec link = Datastore.get(QuestLinkSpec.class).filter("questId", questId).filter("personId", user).first().now();
 
-        if (results.getNumberReturned() > 0) {
+        if (link != null) {
             return quest;
         }
 
-        long soFar = teamSizeSoFar(quest);
+        int soFar = teamSizeSoFar(quest);
 
-        if (soFar >= quest.getOnlyField("teamSize").getNumber().intValue()) {
+        if (soFar >= quest.teamSize) {
             return null;
         }
 
-        Document.Builder documentBuilder = Document.newBuilder();
-        documentBuilder.addField(Field.newBuilder().setName("person").setAtom(user));
-        documentBuilder.addField(Field.newBuilder().setName("quest").setAtom(questId));
-        Document questPerson = documentBuilder.build();
-
-        try {
-            PutResponse put = Search.getService().index.get(Search.Type.QUEST_PERSON).put(questPerson);
-            documentBuilder.setId(put.getIds().get(0));
-        } catch (PutException e) {
-            e.printStackTrace();
-            return null;
-        }
+        link = new QuestLinkSpec();
+        link.personId = Datastore.key(PersonSpec.class, user);
+        link.questId = Datastore.key(QuestSpec.class, questId);
+        Datastore.save(link);
 
         quest = updateQuestStatus(soFar + 1, quest);
 
@@ -199,9 +76,9 @@ public class Quest implements Thing {
     }
 
     public boolean delete(String user, String questId) {
-        Document quest = Search.getService().get(Search.Type.QUEST, questId);
+        QuestSpec quest = Datastore.get(QuestSpec.class, questId);
 
-        if (quest == null || !user.equals(quest.getOnlyField("host").getAtom())) {
+        if (quest == null || !user.equals(Datastore.id(quest.hostId))) {
             return false;
         }
 
@@ -209,59 +86,34 @@ public class Quest implements Thing {
             return false;
         }
 
-        Search.getService().index.get(Search.Type.QUEST).delete(questId);
+        Datastore.delete(quest);
         return true;
     }
 
-    public Results<ScoredDocument> getTeam(Document quest) {
-        return Search.getService().index.get(Search.Type.QUEST_PERSON).search("quest = " + quest.getId());
-    }
+    public List<PersonSpec> getTeam(QuestSpec quest) {
+        List<PersonSpec> team = new ArrayList<>();
 
-    private int teamSizeSoFar(Document quest) {
-        return (int) Search.getService().index.get(Search.Type.QUEST_PERSON).search("quest = \"" + quest.getId() + "\"").getNumberFound();
-    }
-
-    public Document setQuestStatus(Document quest, String status) {
-        if (!status.equals(quest.getOnlyField("status").getAtom())) {
-            Document.Builder documentBulder = Document.newBuilder().setId(quest.getId()).addField(
-                    Field.newBuilder().setName("status").setAtom(status)
-            );
-
-            Util.copyIn(documentBulder, quest, "status");
-
-            quest = documentBulder.build();
-
-            try {
-                Search.getService().index.get(Search.Type.QUEST).put(quest);
-                return quest;
-            } catch (PutException e) {
-                e.printStackTrace();
-                return null;
-            }
+        for(QuestLinkSpec link : Datastore.get(QuestLinkSpec.class).filter("questId", quest.id).list()) {
+            team.add(Datastore.get(PersonSpec.class, Datastore.id(link.personId)));
         }
 
-        return null;
+        return team;
     }
 
-    private Document updateQuestStatus(long soFar, Document quest) {
-        long teamSize = quest.getOnlyField("teamSize").getNumber().longValue();
+    private int teamSizeSoFar(QuestSpec quest) {
+        return Datastore.get(QuestLinkSpec.class).filter("questId", quest.id).count();
+    }
 
-        if (soFar >= teamSize && Config.QUEST_STATUS_OPEN.equals(quest.getOnlyField("status").getAtom())) {
-            Document.Builder documentBulder = Document.newBuilder().setId(quest.getId()).addField(
-                    Field.newBuilder().setName("status").setAtom(Config.QUEST_STATUS_STARTED)
-            );
+    public QuestSpec setQuestStatus(QuestSpec quest, String status) {
+        quest.status = status;
+        Datastore.save(quest);
+        return quest;
+    }
 
-            Util.copyIn(documentBulder, quest, "status");
-
-            quest = documentBulder.build();
-
-            try {
-                Search.getService().index.get(Search.Type.QUEST).put(quest);
-                return quest;
-            } catch (PutException e) {
-                e.printStackTrace();
-                return quest;
-            }
+    private QuestSpec updateQuestStatus(int soFar, QuestSpec quest) {
+        if (soFar >= quest.teamSize && Config.QUEST_STATUS_OPEN.equals(quest.status)) {
+            quest.status = Config.QUEST_STATUS_STARTED;
+            Datastore.save(quest);
         }
 
         return quest;

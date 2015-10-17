@@ -1,18 +1,16 @@
 package com.queatz.snappy.api;
 
-import com.google.appengine.api.search.Document;
-import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.ScoredDocument;
-import com.queatz.snappy.backend.Config;
-import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Push;
-import com.queatz.snappy.service.Search;
-import com.queatz.snappy.service.Things;
+import com.queatz.snappy.service.Thing;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.things.PersonSpec;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 /**
  * Created by jacob on 4/11/15.
@@ -23,7 +21,7 @@ public class Admin extends Api.Path {
     }
 
     @Override
-    public void call() throws IOException, PrintingError {
+    public void call() throws IOException {
         switch (method) {
             case GET:
                 if (path.size() == 2) {
@@ -45,92 +43,44 @@ public class Admin extends Api.Path {
         }
     }
 
-    private void getBetatester(String personEmail) throws IOException {
-        Document person = null;
-
-        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PERSON).search("email = \"" + personEmail + "\"");
-
-        Iterator<ScoredDocument> resultsIterator = results.iterator();
-
-        if (resultsIterator.hasNext()) {
-            person = resultsIterator.next();
-        }
+    private void getBetatester(String personEmail) {
+        PersonSpec person = Datastore.get(PersonSpec.class).filter("email", personEmail).first().now();
 
         if (person != null) {
-            String subs = null;
-
-            try {
-                subs = person.getOnlyField("subscription").getAtom();
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            }
-
-            if (subs == null || subs.isEmpty()) {
-                Things.getService().person.updateSubscription(person, Config.HOSTING_BETATESTER);
-                Push.getService().send(person.getId(), Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
-                response.getWriter().write(person.getOnlyField("email").getAtom() + " has been upgraded");
+            if (StringUtils.isBlank(person.subscription)) {
+                Thing.getService().person.updateSubscription(person, Config.HOSTING_BETATESTER);
+                Push.getService().send(person.id, Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
+                ok(person.email + " has been upgraded");
             } else {
-                response.getWriter().write(person.getOnlyField("email").getAtom() + " is already upgraded");
+                ok(person.email + " is already upgraded");
             }
         }
     }
 
-    private void getEnableHosting(String personEmail) throws IOException {
-        Document person = null;
-
-        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PERSON).search("email = \"" + personEmail + "\"");
-
-        Iterator<ScoredDocument> resultsIterator = results.iterator();
-
-        if (resultsIterator.hasNext()) {
-            person = resultsIterator.next();
-        }
+    private void getEnableHosting(String personEmail) {
+        PersonSpec person = Datastore.get(PersonSpec.class).filter("email", personEmail).first().now();
 
         if (person != null) {
-            String subs = null;
-
-            try {
-                subs = person.getOnlyField("subscription").getAtom();
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            }
-
-            if (subs == null || subs.isEmpty()) {
-                Things.getService().person.updateSubscription(person, Config.HOSTING_ENABLED_AVAILABLE);
-                Push.getService().send(person.getId(), Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
-                response.getWriter().write(person.getOnlyField("email").getAtom() + " can now host");
+            if (StringUtils.isBlank(person.subscription)) {
+                Thing.getService().person.updateSubscription(person, Config.HOSTING_ENABLED_AVAILABLE);
+                Push.getService().send(person.id, Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
+                ok(person.email + " can now host");
             } else {
-                response.getWriter().write(person.getOnlyField("email").getAtom() + " can already host");
+                ok(person.email + " can already host");
             }
         }
     }
 
-    private void getDisableHosting(String personEmail) throws IOException {
-        Document person = null;
-
-        Results<ScoredDocument> results = Search.getService().index.get(Search.Type.PERSON).search("email = \"" + personEmail + "\"");
-
-        Iterator<ScoredDocument> resultsIterator = results.iterator();
-
-        if (resultsIterator.hasNext()) {
-            person = resultsIterator.next();
-        }
+    private void getDisableHosting(String personEmail) {
+        PersonSpec person = Datastore.get(PersonSpec.class).filter("email", personEmail).first().now();
 
         if (person != null) {
-            String subs = null;
-
-            try {
-                subs = person.getOnlyField("subscription").getAtom();
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            }
-
-            if (subs == null || subs.isEmpty()) {
-                response.getWriter().write(person.getOnlyField("email").getAtom() + " already can't host");
+            if (StringUtils.isBlank(person.subscription)) {
+                ok(person.email + " already can't host");
             } else {
-                Things.getService().person.updateSubscription(person, "");
-                Push.getService().send(person.getId(), Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
-                response.getWriter().write(person.getOnlyField("email").getAtom() + " can no longer host");
+                Thing.getService().person.updateSubscription(person, "");
+                Push.getService().send(person.id, Util.makeSimplePush(Config.PUSH_ACTION_REFRESH_ME));
+                ok(person.email + " can no longer host");
             }
         }
     }

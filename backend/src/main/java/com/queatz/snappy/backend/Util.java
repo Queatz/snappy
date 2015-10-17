@@ -1,19 +1,13 @@
 package com.queatz.snappy.backend;
 
-import com.google.appengine.api.search.Document;
-import com.google.appengine.api.search.Field;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.queatz.snappy.shared.PushSpec;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -25,17 +19,9 @@ public class Util {
         return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
     }
 
-    public static JSONObject makeSimplePush(String action) {
-        JSONObject push = new JSONObject();
-
-        try {
-            push.put("action", action);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-
+    public static PushSpec makeSimplePush(String action) {
+        PushSpec push = new PushSpec();
+        push.action = action;
         return push;
     }
 
@@ -45,7 +31,7 @@ public class Util {
                 UUID.randomUUID().toString();
     }
 
-   static public Date longToDate(long millis) {
+    static public Date longToDate(long millis) {
         return new Date(millis);
     }
 
@@ -66,26 +52,6 @@ public class Util {
 
     public static String dateToString(Date date) {
         return formatter.format(date);
-    }
-
-    public static void localId(JSONObject o, String localId) {
-        if(localId != null) try {
-            o.put("localId", localId);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Helper function until Datastore has geo-spacial query support
-    public static void copyIn(Document.Builder builder, Document document, String... ignore) {
-        HashSet<String> ignored = new HashSet<>();
-        Collections.addAll(ignored, ignore);
-
-        for(Field field : document.getFields()) {
-            if(!ignored.contains(field.getName()))
-                builder.addField(field);
-        }
     }
 
     // Helper function until Datastore has geo-spacial query support

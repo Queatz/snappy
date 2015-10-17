@@ -5,7 +5,7 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.queatz.snappy.Config;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.HostParty;
 import com.queatz.snappy.things.Bounty;
