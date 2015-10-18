@@ -140,6 +140,8 @@ public class Auth {
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "no data or google changed");
         }
 
+        o.email = email;
+
         return Thing.getService().person.createOrUpdate(person, o);
     }
 }

@@ -3,6 +3,7 @@ package com.queatz.snappy.shared.things;
 import com.google.appengine.api.datastore.GeoPt;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Ignore;
+import com.googlecode.objectify.annotation.Index;
 import com.queatz.snappy.shared.Hide;
 import com.queatz.snappy.shared.Push;
 import com.queatz.snappy.shared.Search;
@@ -24,13 +25,13 @@ public class PersonSpec extends ThingSpec {
 
     public @Shallow String about;
 
-    public @Hide String token;
+    public @Hide @Index String token;
     public @Hide String subscription;
     public @Hide @Search("geo") GeoPt latlng;
     public @Hide String googleId;
     public @Hide String gender;
-    public @Hide String email;
-    public @Hide @Search("age") Date around;
+    public @Hide @Index String email;
+    public @Hide @Index @Search("age") Date around;
 
     public @Ignore String auth;
     public @Ignore @Shallow int infoFollowers;

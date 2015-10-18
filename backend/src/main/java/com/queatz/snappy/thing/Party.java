@@ -1,5 +1,6 @@
 package com.queatz.snappy.thing;
 
+import com.google.appengine.api.datastore.GeoPt;
 import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.backend.Json;
 import com.queatz.snappy.backend.Util;
@@ -28,6 +29,7 @@ public class Party {
 
         if(locationParam.startsWith("{")) {
             location = Json.from(locationParam, LocationSpec.class);
+            location.latlng = new GeoPt(location.latitude, location.longitude);
             Datastore.save(location);
         }
 
@@ -35,7 +37,7 @@ public class Party {
             location = Datastore.get(LocationSpec.class, locationParam);
         }
 
-        PartySpec party = new PartySpec();
+        PartySpec party = Datastore.create(PartySpec.class);
 
         party.locationId = Datastore.key(location);
 

@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class Update {
     public UpdateSpec create(String action, PersonSpec user, PartySpec party) {
-        UpdateSpec update = new UpdateSpec();
+        UpdateSpec update = Datastore.create(UpdateSpec.class);
         update.action = action;
         update.personId = Datastore.key(user);
         update.partyId = Datastore.key(party);
@@ -23,7 +23,7 @@ public class Update {
     }
 
     public UpdateSpec createUpto(String user) {
-        UpdateSpec update = new UpdateSpec();
+        UpdateSpec update = Datastore.create(UpdateSpec.class);
         update.action = Config.UPDATE_ACTION_UPTO;
         update.personId = Datastore.key(PersonSpec.class, user);
         update.date = new Date();

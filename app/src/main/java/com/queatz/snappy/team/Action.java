@@ -181,8 +181,8 @@ public class Action {
 
     public void stopFollowingPerson(@NonNull Person person) {
         Follow follow = team.realm.where(Follow.class)
-                .equalTo("person.id", team.auth.getUser())
-                .equalTo("following.id", person.getId())
+                .equalTo("source.id", team.auth.getUser())
+                .equalTo("target.id", person.getId())
                 .findFirst();
 
         if(follow != null) {

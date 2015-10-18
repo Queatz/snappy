@@ -340,8 +340,8 @@ public class PersonUptoSlide extends Fragment {
 
             if(team.auth.getUser() != null) {
                 follow = team.realm.where(Follow.class)
-                        .equalTo("person.id", team.auth.getUser())
-                        .equalTo("following.id", mPerson.getId())
+                        .equalTo("source.id", team.auth.getUser())
+                        .equalTo("target.id", mPerson.getId())
                         .findFirst();
             }
 

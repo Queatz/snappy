@@ -10,6 +10,8 @@ android {
         targetSdkVersion 22
         versionCode 23
         versionName "0.23"
+
+        multiDexEnabled true
     }
 
     signingConfigs {
@@ -44,17 +46,18 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:cardview-v7:22.2.1'
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.loopj.android:android-async-http:1.4.8'
     compile 'com.koushikdutta.async:androidasync:2.1.6'
     compile 'com.makeramen:roundedimageview:1.5.0'
-    compile 'io.realm:realm-android:0.82.1'
+    compile 'io.realm:realm-android:0.83.1'
     compile 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.google.code.gson:gson:2.4'
-    compile project(':shared')
+    compile (project(':shared')) {
+        transitive = false
+    }
 
 }

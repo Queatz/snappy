@@ -15,7 +15,7 @@ public class Offer {
         if(price < 0 || price > Config.OFFER_MAX_PRICE)
             return null;
 
-        OfferSpec offer = new OfferSpec();
+        OfferSpec offer = Datastore.create(OfferSpec.class);
         offer.details = details;
         offer.personId = Datastore.key(user);
         offer.price = price;

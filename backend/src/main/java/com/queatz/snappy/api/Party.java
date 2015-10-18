@@ -82,7 +82,7 @@ public class Party extends Api.Path {
     private void postFull(String partyId) {
         PartySpec party = Datastore.get(PartySpec.class, partyId);
 
-        if (party == null || user == null || !user.equals(Datastore.id(party.hostId))) {
+        if (party == null || user == null || !user.id.equals(Datastore.id(party.hostId))) {
             ok(false);
         }
 

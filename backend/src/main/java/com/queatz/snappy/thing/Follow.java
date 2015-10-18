@@ -23,7 +23,7 @@ public class Follow {
             return follow;
         }
 
-        follow = new FollowLinkSpec();
+        follow = Datastore.create(FollowLinkSpec.class);
         follow.sourceId = Datastore.key(PersonSpec.class, user);
         follow.targetId = Datastore.key(PersonSpec.class, following);
 

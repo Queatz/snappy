@@ -1,9 +1,9 @@
 package com.queatz.snappy.backend;
 
 import com.google.appengine.api.datastore.GeoPt;
-import com.google.appengine.repackaged.com.google.gson.JsonElement;
-import com.google.appengine.repackaged.com.google.gson.JsonSerializationContext;
-import com.google.appengine.repackaged.com.google.gson.JsonSerializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.googlecode.objectify.annotation.Ignore;
 import com.queatz.snappy.shared.ThingSpec;
 

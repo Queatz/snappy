@@ -65,7 +65,7 @@ public class Bounty extends Api.Path {
     private void delete(String bountyId) {
         BountySpec bounty = Datastore.get(BountySpec.class, bountyId);
 
-        if (bounty != null && user.equals(Datastore.id(bounty.peopleId))) {
+        if (bounty != null && user.id.equals(Datastore.id(bounty.peopleId))) {
             Datastore.delete(bounty);
         }
     }

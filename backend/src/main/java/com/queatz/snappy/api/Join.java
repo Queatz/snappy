@@ -58,7 +58,7 @@ public class Join extends Api.Path {
 
         if (join != null && Config.JOIN_STATUS_REQUESTED.equals(join.status)) {
             if (join.party != null) {
-                if (user.equals(join.party.id)) {
+                if (user.id.equals(join.party.id)) {
                     join.status = Config.JOIN_STATUS_OUT;
                     succeeded = true;
                 }
@@ -76,7 +76,7 @@ public class Join extends Api.Path {
             PartySpec party = Datastore.get(join.partyId);
 
             if (party != null) {
-                if (user.equals(Datastore.id(party.hostId))) {
+                if (user.id.equals(Datastore.id(party.hostId))) {
                     join = Thing.getService().join.setStatus(join, Config.JOIN_STATUS_IN);
                     succeeded = true;
                 }

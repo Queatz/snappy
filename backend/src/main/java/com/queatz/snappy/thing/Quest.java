@@ -31,7 +31,7 @@ public class Quest {
             teamSize = Config.QUEST_MAX_TEAM_SIZE;
         }
 
-        QuestSpec quest = new QuestSpec();
+        QuestSpec quest = Datastore.create(QuestSpec.class);
         quest.hostId = Datastore.key(user);
         quest.time = request.getParameter(Config.PARAM_TIME);
         quest.status = Config.QUEST_STATUS_OPEN;
@@ -65,7 +65,7 @@ public class Quest {
             return null;
         }
 
-        link = new QuestLinkSpec();
+        link = Datastore.create(QuestLinkSpec.class);
         link.personId = Datastore.key(PersonSpec.class, user);
         link.questId = Datastore.key(QuestSpec.class, questId);
         Datastore.save(link);

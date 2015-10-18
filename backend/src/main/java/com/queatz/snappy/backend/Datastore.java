@@ -24,6 +24,7 @@ import com.queatz.snappy.shared.things.UpdateLikeSpec;
 import com.queatz.snappy.shared.things.UpdateSpec;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.Random;
 
 public class Datastore {
 
@@ -45,6 +46,22 @@ public class Datastore {
         ObjectifyService.register(QuestSpec.class);
         ObjectifyService.register(UpdateLikeSpec.class);
         ObjectifyService.register(UpdateSpec.class);
+    }
+
+    public static <T extends ThingSpec> T create(Class<T> type) {
+        try {
+            T thing = type.newInstance();
+            thing.id = newId();
+            return thing;
+        } catch (IllegalAccessException | InstantiationException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static String newId() {
+        return Long.toString(new Random().nextLong());
     }
 
     public static String id(Key key) {
@@ -75,6 +92,10 @@ public class Datastore {
 
     public static <T> boolean save(T thing) {
         if (ThingSpec.class.isAssignableFrom(thing.getClass())) {
+            if (((ThingSpec) thing).id == null) {
+                ((ThingSpec) thing).id = newId();
+            }
+
             Search.getService().update((ThingSpec) thing);
         }
 

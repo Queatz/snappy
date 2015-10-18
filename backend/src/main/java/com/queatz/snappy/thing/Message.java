@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class Message {
     public MessageSpec newMessage(String from, String to, String text) {
-        MessageSpec message = new MessageSpec();
+        MessageSpec message = Datastore.create(MessageSpec.class);
         message.fromId = Datastore.key(PersonSpec.class, from);
         message.toId = Datastore.key(PersonSpec.class, to);
         message.message = text;

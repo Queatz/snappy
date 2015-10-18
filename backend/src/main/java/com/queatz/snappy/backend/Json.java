@@ -65,13 +65,13 @@ public class Json {
 
     static public String json(Object thing, Compression compression) {
         GsonBuilder builder = new GsonBuilder()
-                .registerTypeAdapter(ThingSpec.class, ThingSpecSerializer.class)
+                .registerTypeAdapter(ThingSpec.class, new ThingSpecSerializer())
                 .addSerializationExclusionStrategy(hideExclusionStrategy);
 
         if (compression == Compression.SHALLOW) {
             builder.addSerializationExclusionStrategy(shallowExclusionStrategy);
         } else if (compression == Compression.PUSH) {
-            builder.registerTypeAdapter(String.class, StringClipper.class);
+            builder.registerTypeAdapter(String.class, new StringClipper());
             builder.addSerializationExclusionStrategy(pushExclusionStrategy);
         }
 

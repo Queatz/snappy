@@ -29,7 +29,7 @@ public class Person {
     }
 
     public boolean updateLocation(String user, GeoPt geoPt) {
-        PersonSpec person = Datastore.ofy().load().type(PersonSpec.class).id(user).now();
+        PersonSpec person = Datastore.get(PersonSpec.class).id(user).now();
 
         if(person == null) {
             return false;
@@ -43,7 +43,7 @@ public class Person {
 
     public PersonSpec createOrUpdate(PersonSpec person, PersonSpec data) {
         if (person == null) {
-            person = new PersonSpec();
+            person = Datastore.create(PersonSpec.class);
             person.token = Util.genToken();
             person.email = data.email;
         } else {

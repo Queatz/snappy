@@ -3,6 +3,7 @@ package com.queatz.snappy.shared.things;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Ignore;
+import com.googlecode.objectify.annotation.Index;
 import com.queatz.snappy.shared.Hide;
 import com.queatz.snappy.shared.ThingSpec;
 
@@ -12,8 +13,8 @@ import com.queatz.snappy.shared.ThingSpec;
 
 @Entity
 public class QuestLinkSpec extends ThingSpec {
-    public @Hide Key<PersonSpec> personId;
-    public @Hide Key<QuestSpec> questId;
+    public @Hide @Index Key<PersonSpec> personId;
+    public @Hide @Index Key<QuestSpec> questId;
 
     public @Ignore PersonSpec person;
     public @Ignore QuestSpec quest;

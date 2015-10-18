@@ -69,7 +69,7 @@ public class Here extends Api.Path {
 
         List<PartySpec> parties = Search.getService().getNearby(PartySpec.class, geo, anHourAgo, Config.SEARCH_MAXIMUM);
 
-        for(PartySpec party : Datastore.ofy().load().type(PartySpec.class).filter("hostId", user).filter("date >=", anHourAgo).list()) {
+        for(PartySpec party : Datastore.get(PartySpec.class).filter("hostId", user).filter("date >=", anHourAgo).list()) {
             if (!parties.contains(party)) {
                 parties.add(party);
             }

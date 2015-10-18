@@ -6,7 +6,7 @@ import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
-import com.google.appengine.repackaged.com.google.gson.JsonObject;
+import com.google.gson.JsonObject;
 import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.backend.GooglePurchaseDataSpec;
 import com.queatz.snappy.backend.Json;

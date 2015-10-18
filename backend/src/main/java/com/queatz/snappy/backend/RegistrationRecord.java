@@ -9,7 +9,7 @@ import com.googlecode.objectify.annotation.Index;
  */
 @Entity
 public class RegistrationRecord {
-    @Id Long id;
+    @Id private Long id;
     @Index private String regId;
     @Index private String userId;
     @Index private String socialMode;

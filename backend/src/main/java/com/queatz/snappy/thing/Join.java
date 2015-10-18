@@ -18,7 +18,7 @@ public class Join {
             return null;
 
         if(join == null) {
-            join = new JoinLinkSpec();
+            join = Datastore.create(JoinLinkSpec.class);
             join.personId = Datastore.key(user);
             join.partyId = Datastore.key(PartySpec.class, partyId);
         }

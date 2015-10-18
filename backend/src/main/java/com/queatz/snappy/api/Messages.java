@@ -40,21 +40,21 @@ public class Messages extends Api.Path {
     private void get() {
         ok(new Object() {
             List<MessageSpec> messages = Datastore.get(MessageSpec.class, Query.CompositeFilterOperator.or(
-                    new Query.FilterPredicate("from",
+                    new Query.FilterPredicate("fromId",
                             Query.FilterOperator.EQUAL,
-                            user),
-                    new Query.FilterPredicate("to",
+                            user.id),
+                    new Query.FilterPredicate("toId",
                             Query.FilterOperator.EQUAL,
-                            user)
+                            user.id)
             )).list();
-            List<ContactSpec> contacts = Datastore.get(ContactSpec.class).filter("personId", user).list();
+            List<ContactSpec> contacts = Datastore.get(ContactSpec.class).filter("personId", user.id).list();
         }, Json.Compression.SHALLOW);
     }
 
     private void get(String messageId) {
         MessageSpec message = Datastore.get(MessageSpec.class, messageId);
 
-        if (!user.equals(Datastore.id(message.fromId)) && !user.equals(Datastore.id(message.toId))) {
+        if (!user.id.equals(Datastore.id(message.fromId)) && !user.id.equals(Datastore.id(message.toId))) {
             notFound();
         }
 

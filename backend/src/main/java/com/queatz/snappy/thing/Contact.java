@@ -40,7 +40,7 @@ public class Contact {
             ContactSpec contact = get(fromTo[0], fromTo[1]);
 
             if(contact == null) {
-                contact = new ContactSpec();
+                contact = Datastore.create(ContactSpec.class);
                 contact.personId = Datastore.key(PersonSpec.class, fromTo[0]);
                 contact.contactId = Datastore.key(PersonSpec.class, fromTo[1]);
             }

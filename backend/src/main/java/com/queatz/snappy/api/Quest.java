@@ -92,7 +92,7 @@ public class Quest extends Api.Path {
 
             if (quest.teamSize > 1) {
                 for (PersonSpec person : quest.team) {
-                    if (!user.equals(person.id)) {
+                    if (!user.id.equals(person.id)) {
                         Push.getService().send(person.id, new PushSpec(Config.PUSH_ACTION_QUEST_STARTED, quest));
                     }
                 }
@@ -105,7 +105,7 @@ public class Quest extends Api.Path {
     private void postComplete(String questId) {
         QuestSpec quest = Datastore.get(QuestSpec.class, questId);
 
-        if (!user.equals(Datastore.id(quest.hostId))) {
+        if (!user.id.equals(Datastore.id(quest.hostId))) {
             die("quest - not authenticated");
         }
 

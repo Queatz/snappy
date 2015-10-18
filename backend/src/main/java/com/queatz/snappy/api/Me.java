@@ -270,7 +270,7 @@ public class Me extends Api.Path {
     private void deleteOffer(String offerId) {
         OfferSpec offer = Datastore.get(OfferSpec.class, offerId);
 
-        if (offer != null && user.equals(Datastore.id(offer.personId))) {
+        if (offer != null && user.id.equals(Datastore.id(offer.personId))) {
             Thing.getService().offer.delete(offer.id);
         }
     }

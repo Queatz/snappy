@@ -58,7 +58,7 @@ public class PersonList extends Activity implements RealmChangeListener {
 
         if(mPerson != null && personAdapter != null) {
             RealmResults<Follow> results = team.realm.where(Follow.class)
-                    .equalTo(mShowFollowing ? "person.id" : "following.id", mPerson.getId())
+                    .equalTo(mShowFollowing ? "source.id" : "target.id", mPerson.getId())
                     .findAll();
 
             final PersonListAdapter adapter = new PersonListAdapter(this, results, mShowFollowing);

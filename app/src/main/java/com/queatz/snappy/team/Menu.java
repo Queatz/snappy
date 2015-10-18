@@ -47,8 +47,8 @@ public class Menu {
                 //TODO make sure follow for you -> them is leaded when loading profile...
 
                 Follow follow = team.realm.where(Follow.class)
-                        .equalTo("person.id", team.auth.getUser())
-                        .equalTo("following.id", person.getId())
+                        .equalTo("source.id", team.auth.getUser())
+                        .equalTo("target.id", person.getId())
                         .findFirst();
 
                 menu.add(follow == null ? R.string.follow : R.string.stop_following);

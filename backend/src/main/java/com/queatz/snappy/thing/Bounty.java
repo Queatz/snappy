@@ -44,7 +44,7 @@ public class Bounty {
         if(price < Config.BOUNTY_MIN_PRICE  || price > Config.BOUNTY_MAX_PRICE)
             return null;
 
-        BountySpec bounty = new BountySpec();
+        BountySpec bounty = Datastore.create(BountySpec.class);
 
         bounty.details = details;
         bounty.status = Config.BOUNTY_STATUS_OPEN;

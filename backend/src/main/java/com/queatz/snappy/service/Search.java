@@ -100,7 +100,7 @@ public class Search {
     private <T extends ThingSpec> T typeFromDocument(Class<T> type, Document document) {
         String id = document.getOnlyField("id").getAtom();
 
-        return Datastore.ofy().load().type(type).id(id).now();
+        return Datastore.get(type).id(id).now();
     }
 
     private <T extends ThingSpec> Document build(T object) {
@@ -121,13 +121,28 @@ public class Search {
 
                 if (GeoPt.class.isAssignableFrom(field.getType())) {
                     GeoPt geoPt = (GeoPt) fields.get(search).get(object);
-                    fieldBuilder.setGeoPoint(new GeoPoint(geoPt.getLatitude(), geoPt.getLongitude()));
+
+                    if (geoPt != null) {
+                        fieldBuilder.setGeoPoint(new GeoPoint(geoPt.getLatitude(), geoPt.getLongitude()));
+                    }
                 } else if (Date.class.isAssignableFrom(field.getType())) {
-                    fieldBuilder.setDate((Date) fields.get(search).get(object));
+                    Date date = (Date) fields.get(search).get(object);
+
+                    if (date != null) {
+                        fieldBuilder.setDate(date);
+                    }
                 } else if (String.class.isAssignableFrom(field.getType())) {
-                    fieldBuilder.setText((String) fields.get(search).get(object));
+                    String string = (String) fields.get(search).get(object);
+
+                    if (string != null) {
+                        fieldBuilder.setText(string);
+                    }
                 } else if (Number.class.isAssignableFrom(field.getType())) {
-                    fieldBuilder.setNumber((double) fields.get(search).get(object));
+                    Number number = (Number) fields.get(search).get(object);
+
+                    if (number != null) {
+                        fieldBuilder.setNumber(number.doubleValue());
+                    }
                 }
 
                 builder.addField(fieldBuilder.build());

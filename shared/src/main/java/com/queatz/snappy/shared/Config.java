@@ -7,9 +7,10 @@ public class Config {
 
     // Android
 
+    public static final boolean BETA_VERSION = true;
+
     public static final String LOG_TAG = "SNAPPY_LOG";
-    public static final String API_URL = "http://queatz-snappy.appspot.com/api/";
-    public static final String BACKEND_URL = "https://queatz-snappy.appspot.com/_ah/api/";
+    public static final String API_URL = (BETA_VERSION ? "https://beta-dot-queatz-snappy.appspot.com/api/" : "http://queatz-snappy.appspot.com/api/");
     public static final String GOOGLE_PLACES_AUTOCOMPLETE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?location=%f,%f&radius=1609&input=%s&key=%s";
     public static final String GOOGLE_PLACES_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?placeid=%s&key=%s";
     public static final int maxRequestRetries = 4;
