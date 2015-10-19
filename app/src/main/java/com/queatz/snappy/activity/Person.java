@@ -10,12 +10,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.adapter.PeopleTabAdapter;
 import com.queatz.snappy.adapter.PersonAdapter;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.ui.ActionBar;
 import com.queatz.snappy.ui.SlideScreen;

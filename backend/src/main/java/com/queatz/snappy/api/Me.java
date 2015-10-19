@@ -119,40 +119,31 @@ public class Me extends Api.Path {
     }
 
     private void get() {
-        user.auth = user.token;
         ok(user);
     }
 
     private void getBuy() {
         PersonSpec me = user;
-        me.auth = me.token;
 
         if (me == null) {
             die("me - inexistent");
         }
 
-        try {
-            String r;
+        String r;
 
-            if (StringUtils.isBlank(me.subscription)) {
-                r = Config.HOSTING_ENABLED_FALSE;
-            } else if (Config.HOSTING_ENABLED_AVAILABLE.equals(me.subscription)) {
-                r = Config.HOSTING_ENABLED_AVAILABLE;
-            } else {
-                r = Config.HOSTING_ENABLED_TRUE;
-            }
+        if (StringUtils.isBlank(me.subscription)) {
+            r = Config.HOSTING_ENABLED_FALSE;
+        } else if (Config.HOSTING_ENABLED_AVAILABLE.equals(me.subscription)) {
+            r = Config.HOSTING_ENABLED_AVAILABLE;
+        } else {
+            r = Config.HOSTING_ENABLED_TRUE;
+        }
 
-            ok(r);
-        }
-        catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            ok(false);
-        }
+        ok(r);
     }
 
     private void post() {
         PersonSpec me = user;
-        me.auth = me.token;
 
         if (me == null) {
             die("me - inexistent");

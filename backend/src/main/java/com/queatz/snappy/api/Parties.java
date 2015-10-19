@@ -46,7 +46,7 @@ public class Parties extends Api.Path {
         if (party != null) {
             party.localId = localId;
 
-            Push.getService().sendToFollowers(user.id, new PushSpec(Config.PUSH_ACTION_NEW_PARTY, party));
+            Push.getService().sendToFollowers(user.id, new PushSpec<>(Config.PUSH_ACTION_NEW_PARTY, party));
 
             ok(party);
         }

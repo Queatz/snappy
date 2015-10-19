@@ -12,9 +12,6 @@ import android.os.Looper;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class GCMIntentService extends IntentService {
 
     public GCMIntentService() {
@@ -43,12 +40,7 @@ public class GCMIntentService extends IntentService {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                try {
-                    ((MainApplication) getApplication()).team.push.got(new JSONObject(message));
-                }
-                catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                ((MainApplication) getApplication()).team.push.got(message);
             }
         });
     }

@@ -1,6 +1,7 @@
 package com.queatz.snappy;
 
 import com.google.appengine.api.urlfetch.HTTPMethod;
+import com.google.appengine.repackaged.com.google.gson.GsonBuilder;
 import com.queatz.snappy.backend.Json;
 import com.queatz.snappy.backend.ObjectResponse;
 import com.queatz.snappy.backend.PrintingError;
@@ -11,6 +12,7 @@ import com.queatz.snappy.shared.ErrorResponseSpec;
 import com.queatz.snappy.shared.things.PersonSpec;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -48,16 +50,15 @@ public class SnappyServlet extends HttpServlet {
     }
 
     private void handle(HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        PersonSpec user = null;
-
         resp.setContentType("application/json");
 
         try {
             try {
-                user = Auth.getService().fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH));
+                PersonSpec user = Auth.getService().fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH));
 
-                if (user == null)
+                if (user == null) {
                     throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null auth");
+                }
 
                 Api.getService().call(user, method, req, resp);
             } catch (PrintingError e) {
@@ -86,7 +87,7 @@ public class SnappyServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 
-        if (false)
+        if (true)
         throw new ObjectResponse(new ErrorResponseSpec(error.toString(), error.getReason()));
     }
 }

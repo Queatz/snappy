@@ -121,7 +121,7 @@ public class People extends Api.Path {
             if (follow != null) {
                 follow.localId = localId;
 
-                Push.getService().send(Datastore.id(follow.targetId), new PushSpec(Config.PUSH_ACTION_FOLLOW, follow));
+                Push.getService().send(Datastore.id(follow.targetId), new PushSpec<>(Config.PUSH_ACTION_FOLLOW, follow));
 
                 ok(follow);
             }

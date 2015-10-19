@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;

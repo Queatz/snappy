@@ -53,7 +53,9 @@ public class Datastore {
             T thing = type.newInstance();
             thing.id = newId();
             return thing;
-        } catch (IllegalAccessException | InstantiationException e) {
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
 

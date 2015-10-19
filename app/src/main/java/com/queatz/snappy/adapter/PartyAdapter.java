@@ -15,10 +15,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.makeramen.RoundedImageView;
-import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Join;
 import com.queatz.snappy.things.Party;

@@ -18,6 +18,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.SuccessResponseSpec;
+import com.queatz.snappy.util.Json;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,6 +89,8 @@ public class Buy {
             public void success(String response) {
                 if(response == null)
                     return;
+
+                response = Json.from(response, SuccessResponseSpec.class).success;
 
                 boolean purchased = false;
 

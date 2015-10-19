@@ -68,7 +68,7 @@ public class Party extends Api.Path {
             if (join != null) {
                 join.localId = localId;
 
-                Push.getService().send(Datastore.id(party.hostId), new PushSpec(Config.PUSH_ACTION_JOIN_REQUEST, join));
+                Push.getService().send(Datastore.id(party.hostId), new PushSpec<>(Config.PUSH_ACTION_JOIN_REQUEST, join));
 
                 ok(join);
             }

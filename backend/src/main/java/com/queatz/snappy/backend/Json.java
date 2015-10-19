@@ -21,7 +21,7 @@ public class Json {
 
         @Override
         public boolean shouldSkipClass(Class<?> aClass) {
-            return false;
+            return aClass.getAnnotation(Hide.class) != null;
         }
     };
 
@@ -33,7 +33,7 @@ public class Json {
 
         @Override
         public boolean shouldSkipClass(Class<?> aClass) {
-            return false;
+            return aClass.getAnnotation(Id.class) == null && aClass.getAnnotation(Shallow.class) != null;
         }
     };
 
@@ -45,7 +45,7 @@ public class Json {
 
         @Override
         public boolean shouldSkipClass(Class<?> aClass) {
-            return false;
+            return aClass.getAnnotation(Id.class) == null && aClass.getAnnotation(Push.class) == null;
         }
     };
 

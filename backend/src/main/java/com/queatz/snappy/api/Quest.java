@@ -86,14 +86,14 @@ public class Quest extends Api.Path {
         }
 
         if (Config.QUEST_STATUS_STARTED.equals(quest.status)) {
-            Push.getService().send(Datastore.id(quest.hostId), new PushSpec(Config.PUSH_ACTION_QUEST_STARTED, quest));
+            Push.getService().send(Datastore.id(quest.hostId), new PushSpec<>(Config.PUSH_ACTION_QUEST_STARTED, quest));
 
             quest.team = Thing.getService().quest.getTeam(quest);
 
             if (quest.teamSize > 1) {
                 for (PersonSpec person : quest.team) {
                     if (!user.id.equals(person.id)) {
-                        Push.getService().send(person.id, new PushSpec(Config.PUSH_ACTION_QUEST_STARTED, quest));
+                        Push.getService().send(person.id, new PushSpec<>(Config.PUSH_ACTION_QUEST_STARTED, quest));
                     }
                 }
             }
@@ -115,7 +115,7 @@ public class Quest extends Api.Path {
             quest.team = Thing.getService().quest.getTeam(quest);
 
             for (PersonSpec person : quest.team) {
-                Push.getService().send(person.id, new PushSpec(Config.PUSH_ACTION_QUEST_COMPLETED, quest));
+                Push.getService().send(person.id, new PushSpec<>(Config.PUSH_ACTION_QUEST_COMPLETED, quest));
             }
         }
 

@@ -43,11 +43,9 @@ public class Util {
         context = ctx;
     }
 
-
     public static String createLocalId() {
         return "local:" + UUID.randomUUID().toString();
     }
-
 
     public static float px(float dp) {
         return dp * context.getResources().getDisplayMetrics().density;
@@ -56,7 +54,6 @@ public class Util {
     public static float dp(float px) {
         return px / context.getResources().getDisplayMetrics().density;
     }
-
 
     public static Spanned getUpdateText(Update update) {
         boolean past;

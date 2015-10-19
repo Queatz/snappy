@@ -14,11 +14,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
-import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.activity.PersonList;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.things.Bounty;
 import com.queatz.snappy.things.Contact;
 import com.queatz.snappy.things.Follow;

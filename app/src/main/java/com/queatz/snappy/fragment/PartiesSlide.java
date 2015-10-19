@@ -14,11 +14,11 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
 
-import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.adapter.PartyAdapter;
 import com.queatz.snappy.adapter.PeopleNearHereAdapter;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Here;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Bounty;
