@@ -55,7 +55,6 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
         final Person host = party.getHost();
 
         ImageView profile = ((ImageView) view.findViewById(R.id.profile));
-        Picasso.with(context).load(host == null ? "" : host.getImageUrlForSize((int) Util.px(64))).placeholder(R.color.spacer).into(profile);
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +69,7 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
         if(host != null) {
             String name = String.format(context.getString(R.string.by), host.getFirstName() + " " + host.getLastName());
             ((TextView) view.findViewById(R.id.by_text)).setText(name);
+            Picasso.with(context).load(host.getImageUrlForSize((int) Util.px(64))).placeholder(R.color.spacer).into(profile);
         }
 
         ImageView timeIcon = ((ImageView) view.findViewById(R.id.time_icon));
@@ -83,25 +83,27 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
             }
         });
 
-        view.findViewById(R.id.location_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                team.action.openLocation((Activity) context, party.getLocation());
-            }
-        });
+        if (party.getLocation() != null) {
+            view.findViewById(R.id.location_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    team.action.openLocation((Activity) context, party.getLocation());
+                }
+            });
 
-        view.findViewById(R.id.location_button).setTag(party.getLocation());
-        ((Activity) context).registerForContextMenu(view.findViewById(R.id.location_button));
+            view.findViewById(R.id.location_button).setTag(party.getLocation());
+            ((Activity) context).registerForContextMenu(view.findViewById(R.id.location_button));
 
-        String photoUrl = Util.locationPhoto(party.getLocation(), (int) Util.px(128));
+            String photoUrl = Util.locationPhoto(party.getLocation(), (int) Util.px(128));
 
-        ImageView locationIcon = (ImageView) view.findViewById(R.id.location_icon);
-        ImageView backdrop = ((ImageView) view.findViewById(R.id.backdrop));
-        Picasso.with(context).load(photoUrl).placeholder(R.drawable.location).into(locationIcon);
-        Picasso.with(context).load(photoUrl).placeholder(R.drawable.location).into(backdrop);
+            ImageView locationIcon = (ImageView) view.findViewById(R.id.location_icon);
+            ImageView backdrop = ((ImageView) view.findViewById(R.id.backdrop));
+            Picasso.with(context).load(photoUrl).placeholder(R.drawable.location).into(locationIcon);
+            Picasso.with(context).load(photoUrl).placeholder(R.drawable.location).into(backdrop);
 
-        ((TextView) view.findViewById(R.id.location_text)).setText(party.getLocation() == null ? context.getString(R.string.hidden) : party.getLocation().getName());
-        ((TextView) view.findViewById(R.id.time_text)).setText(party.getDate() == null ? context.getString(R.string.hidden) : TimeUtil.cuteDate(party.getDate()));
+            ((TextView) view.findViewById(R.id.location_text)).setText(party.getLocation() == null ? context.getString(R.string.hidden) : party.getLocation().getName());
+            ((TextView) view.findViewById(R.id.time_text)).setText(party.getDate() == null ? context.getString(R.string.hidden) : TimeUtil.cuteDate(party.getDate()));
+        }
 
         String details = party.getDetails();
 

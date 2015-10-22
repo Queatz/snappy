@@ -32,6 +32,7 @@ import com.queatz.snappy.things.Quest;
 import com.queatz.snappy.things.Update;
 import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.ui.MiniMenu;
+import com.queatz.snappy.util.ResponseUtil;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 
@@ -529,7 +530,7 @@ public class Action {
             team.api.delete(String.format(Config.PATH_BOUNTY_ID, bounty.getId()), new Api.Callback() {
                 @Override
                 public void success(String response) {
-                    if(response != null && !Boolean.valueOf(response)) {
+                    if(!ResponseUtil.isSuccess(response)) {
                         Toast.makeText(team.context, "Couldn't cancel bounty", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -593,7 +594,7 @@ public class Action {
         team.api.post(String.format(Config.PATH_BOUNTY_ID, bounty.getId()), params, new Api.Callback() {
             @Override
             public void success(String response) {
-                if (response != null && Boolean.valueOf(response)) {
+                if (ResponseUtil.isSuccess(response)) {
                     Toast.makeText(team.context, "Bounty finished", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(team.context, "Bounty couldn't be finished", Toast.LENGTH_SHORT).show();
@@ -673,7 +674,7 @@ public class Action {
                         team.api.post(String.format(Config.PATH_BOUNTY_ID, bounty.getId()), params, new Api.Callback() {
                             @Override
                             public void success(String response) {
-                                if (response != null && Boolean.valueOf(response)) {
+                                if (ResponseUtil.isSuccess(response)) {
                                     Toast.makeText(team.context, "Bounty claimed", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(team.context, "Bounty couldn't be claimed", Toast.LENGTH_SHORT).show();
@@ -757,7 +758,7 @@ public class Action {
         team.api.post(String.format(Config.PATH_QUEST_ID, quest.getId()), params, new Api.Callback() {
             @Override
             public void success(String response) {
-                if (response == null || !Boolean.valueOf(response)) {
+                if (!ResponseUtil.isSuccess(response)) {
                     Toast.makeText(team.context, "Quest couldn't be started", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -781,7 +782,7 @@ public class Action {
         team.api.post(String.format(Config.PATH_QUEST_ID, quest.getId()), params, new Api.Callback() {
             @Override
             public void success(String response) {
-                if (response != null && Boolean.valueOf(response)) {
+                if (ResponseUtil.isSuccess(response)) {
                     Toast.makeText(team.context, "Quest completed", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(team.context, "Quest couldn't be completed", Toast.LENGTH_SHORT).show();

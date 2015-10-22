@@ -30,7 +30,7 @@ public class PartySpec extends ThingSpec {
     public @Hide Key<LocationSpec> locationId;
     public @Hide Key<PartySpec> originalId;
 
-    public @Ignore @Shallow List<PersonSpec> people;
+    public @Ignore @Shallow List<JoinLinkSpec> people;
     public @Ignore @Push PersonSpec host;
     public @Ignore LocationSpec location;
     public @Ignore PartySpec original;

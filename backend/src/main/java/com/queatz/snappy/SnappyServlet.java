@@ -1,7 +1,6 @@
 package com.queatz.snappy;
 
 import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.google.appengine.repackaged.com.google.gson.GsonBuilder;
 import com.queatz.snappy.backend.Json;
 import com.queatz.snappy.backend.ObjectResponse;
 import com.queatz.snappy.backend.PrintingError;
@@ -12,7 +11,6 @@ import com.queatz.snappy.shared.ErrorResponseSpec;
 import com.queatz.snappy.shared.things.PersonSpec;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

@@ -87,7 +87,15 @@ public class Push {
     }
 
     public void got(String message) {
-        JsonObject json = Json.from(message, JsonObject.class);
+        JsonObject json;
+
+        try {
+            json = Json.from(message, JsonObject.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
         String action = json.get("action").getAsString();
         switch (action) {
             case Config.PUSH_ACTION_MESSAGE:
@@ -98,7 +106,7 @@ public class Push {
                 break;
             case Config.PUSH_ACTION_REFRESH_ME:
             case Config.PUSH_ACTION_CLEAR_NOTIFICATION:
-                defaultPushHandler.got(new PushSpec<>(action, json.get("body").getAsJsonObject()));
+                defaultPushHandler.got(new PushSpec<>(action, json.get("body")));
                 break;
             case Config.PUSH_ACTION_NEW_PARTY:
                 partyPushHandler.got(gen(action, json, PartySpec.class));

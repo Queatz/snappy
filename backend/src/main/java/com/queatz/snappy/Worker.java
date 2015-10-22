@@ -72,7 +72,7 @@ public class Worker extends HttpServlet {
                 // Social Mode: Friends
 
                 if(fromUser != null) {
-                    for(FollowLinkSpec follow : Datastore.get(FollowLinkSpec.class).filter("targetId", fromUser)) {
+                    for(FollowLinkSpec follow : Datastore.get(FollowLinkSpec.class).filter("targetId", Datastore.key(PersonSpec.class, fromUser))) {
                         toUsers.add(new SendInstance(Datastore.id(follow.sourceId), Config.SOCIAL_MODE_FRIENDS));
                     }
                 }
@@ -82,7 +82,7 @@ public class Worker extends HttpServlet {
 
                 if(fromUser != null) {
                     PersonSpec source = Datastore.get(PersonSpec.class, fromUser);
-                    for (PersonSpec person : Search.getService().getNearby(PersonSpec.class, source.latlng, new Date(new Date().getTime() - 1000 * 60 * 60 * 12), 10000)) {
+                    for (PersonSpec person : Search.getService().getNearby(PersonSpec.class, source.latlng, new Date(new Date().getTime() - 1000 * 60 * 60 * 12), 300)) {
                         if(fromUser.equals(person.id))
                             continue;
 
@@ -93,7 +93,7 @@ public class Worker extends HttpServlet {
                 // Send
 
                 for(SendInstance sendInstance : toUsers) {
-                    List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).filter("userId", sendInstance.userId).list();
+                    List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).filter("userId", Datastore.key(PersonSpec.class, sendInstance.userId)).list();
                     for (RegistrationRecord record : records) {
                         if(sendInstance.lowestRequiredSocialMode != null && record.getSocialMode() != null) {
                             if(

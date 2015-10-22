@@ -11,8 +11,8 @@ import java.util.List;
  * Created by jacob on 10/15/15.
  */
 public class HereResponseSpec {
-    public List<PartySpec> parties;
-    public List<PersonSpec> people;
-    public List<LocationSpec> locations;
-    public List<QuestSpec> quests;
+    public @Deep List<PartySpec> parties;
+    public @Deep List<PersonSpec> people;
+    public @Deep List<LocationSpec> locations;
+    public @Deep List<QuestSpec> quests;
 }

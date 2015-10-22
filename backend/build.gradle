@@ -24,6 +24,12 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.0'
     compile 'com.ganyo:gcm-server:1.0.2'
     compile project(':shared')
+    testCompile 'org.testng:testng:6.9.4'
+}
+
+
+test {
+    useTestNG() {}
 }
 
 appengine {

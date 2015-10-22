@@ -19,8 +19,12 @@ public class Person {
             return false;
         }
 
-        person.subscription = subscriptionId;
-        return Datastore.save(person);
+        if (person.subscription == null || subscriptionId != null) {
+            person.subscription = subscriptionId;
+            return Datastore.save(person);
+        } else {
+            return false;
+        }
     }
 
     public boolean updateAbout(PersonSpec person, String about) {
@@ -60,9 +64,9 @@ public class Person {
             person.about = data.about;
         }
 
-        if (StringUtils.isBlank(data.subscription)) {
+        if (!StringUtils.isBlank(data.subscription)) {
             person.subscription = data.subscription;
-        } else {
+        } else if (StringUtils.isBlank(person.subscription)) {
             if (Config.IN_BETA) {
                 person.subscription = Config.HOSTING_BETATESTER;
             } else if (Config.PUBLIC_BUY) {

@@ -1,14 +1,13 @@
 package com.queatz.snappy.api;
 
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.repackaged.com.google.common.collect.ImmutableMap;
 import com.queatz.snappy.backend.Datastore;
-import com.queatz.snappy.backend.Json;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.shared.things.ContactSpec;
 import com.queatz.snappy.shared.things.MessageSpec;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by jacob on 2/14/15.
@@ -38,17 +37,14 @@ public class Messages extends Api.Path {
     }
 
     private void get() {
-        ok(new Object() {
-            List<MessageSpec> messages = Datastore.get(MessageSpec.class, Query.CompositeFilterOperator.or(
-                    new Query.FilterPredicate("fromId",
-                            Query.FilterOperator.EQUAL,
-                            user.id),
-                    new Query.FilterPredicate("toId",
-                            Query.FilterOperator.EQUAL,
-                            user.id)
-            )).list();
-            List<ContactSpec> contacts = Datastore.get(ContactSpec.class).filter("personId", user.id).list();
-        }, Json.Compression.SHALLOW);
+        ok(ImmutableMap.of("messages", Datastore.get(MessageSpec.class, Query.CompositeFilterOperator.or(
+                new Query.FilterPredicate("fromId",
+                        Query.FilterOperator.EQUAL,
+                        user.id),
+                new Query.FilterPredicate("toId",
+                        Query.FilterOperator.EQUAL,
+                        user.id)
+        )).list(), "contacts", Datastore.get(ContactSpec.class).filter("personId", user).list()));
     }
 
     private void get(String messageId) {

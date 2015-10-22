@@ -23,7 +23,6 @@ import com.queatz.snappy.shared.things.QuestSpec;
 import com.queatz.snappy.shared.things.UpdateLikeSpec;
 import com.queatz.snappy.shared.things.UpdateSpec;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.Random;
 
 public class Datastore {
@@ -66,8 +65,8 @@ public class Datastore {
         return Long.toString(new Random().nextLong());
     }
 
-    public static String id(Key key) {
-        return key.getString();
+    public static <T> String id(Key<T> key) {
+        return key.getName();
     }
 
     public static <T> LoadType<T> get(Class<T> clazz) {
@@ -78,14 +77,8 @@ public class Datastore {
         return ofy().load().type(clazz).filter(filter);
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> T get(Key<T> key) {
-        return (T) get(typeFromKey(key), key.getString());
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T> Class<T> typeFromKey(Key key) {
-        return (Class<T>) ((ParameterizedType) key.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        return ofy().load().key(key).now();
     }
 
     public static <T> T get(Class<T> clazz, String id) {

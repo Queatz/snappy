@@ -189,7 +189,7 @@ public class Api {
 
             p._call(pathParts, user, method, request, response);
         }
-        catch (NullPointerException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException | IOException e) {
+        catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException | IOException e) {
             e.printStackTrace();
             throw new PrintingError(Api.Error.SERVER_ERROR, "api error");
         }

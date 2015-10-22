@@ -85,6 +85,8 @@ public class Quest extends Api.Path {
             ok(false);
         }
 
+        quest = Thing.getService().quest.start(user, questId);
+
         if (Config.QUEST_STATUS_STARTED.equals(quest.status)) {
             Push.getService().send(Datastore.id(quest.hostId), new PushSpec<>(Config.PUSH_ACTION_QUEST_STARTED, quest));
 

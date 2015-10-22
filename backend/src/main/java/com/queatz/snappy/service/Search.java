@@ -47,8 +47,14 @@ public class Search {
     }
 
     public <T extends ThingSpec> boolean update(T object) {
+        Document document = build(object);
+
+        if (document == null) {
+            return false;
+        }
+
         try {
-            index.put(build(object));
+            index.put(document);
         } catch (PutException e) {
             e.printStackTrace();
             return false;
@@ -64,40 +70,36 @@ public class Search {
     public <T extends ThingSpec> List<T> getNearby(Class<T> type, GeoPt location, Date age, String string, int count) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-        try {
-            String queryString = "distance(geo, geopoint(" + location.getLatitude() + ", " + location.getLatitude() + ")) < " + Config.SEARCH_MAX_VISIBILITY;
+        String queryString = "distance(geo, geopoint(" + location.getLatitude() + ", " + location.getLongitude() + ")) < " + Config.SEARCH_MAX_VISIBILITY;
 
-            if (age != null) {
-                queryString += " AND age >= " + format.format(age);
-            }
+        queryString += " AND type = \"" + type.getSimpleName() + "\"";
 
-            if (string != null) {
-                queryString += " " + string;
-            }
-
-            SortOptions sortOptions = SortOptions.newBuilder().addSortExpression(
-                    SortExpression.newBuilder().setExpression("distance(geo, geopoint(" + location.getLatitude() + ", " + location.getLongitude() + "))")
-                            .setDirection(SortExpression.SortDirection.ASCENDING).build()
-            ).build();
-
-            QueryOptions queryOptions = QueryOptions.newBuilder().setSortOptions(sortOptions).setLimit(count).build();
-            Query query = Query.newBuilder().setOptions(queryOptions).build(queryString);
-
-            ArrayList<T> results = new ArrayList<>();
-
-            for(ScoredDocument document : index.search(query)) {
-                results.add(typeFromDocument(type, document));
-            }
-
-            return results;
+        if (age != null) {
+            queryString += " AND age >= " + format.format(age);
         }
-        catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            return null;
+
+        if (string != null) {
+            queryString += " " + string;
         }
+
+        SortOptions sortOptions = SortOptions.newBuilder().addSortExpression(
+                SortExpression.newBuilder().setExpression("distance(geo, geopoint(" + location.getLatitude() + ", " + location.getLongitude() + "))")
+                        .setDirection(SortExpression.SortDirection.ASCENDING).build()
+        ).build();
+
+        QueryOptions queryOptions = QueryOptions.newBuilder().setSortOptions(sortOptions).setLimit(count).build();
+        Query query = Query.newBuilder().setOptions(queryOptions).build(queryString);
+
+        ArrayList<T> results = new ArrayList<>();
+
+        for(ScoredDocument document : index.search(query)) {
+            results.add(thingFromDocument(type, document));
+        }
+
+        return results;
     }
 
-    private <T extends ThingSpec> T typeFromDocument(Class<T> type, Document document) {
+    private <T extends ThingSpec> T thingFromDocument(Class<T> type, Document document) {
         String id = document.getOnlyField("id").getAtom();
 
         return Datastore.get(type).id(id).now();

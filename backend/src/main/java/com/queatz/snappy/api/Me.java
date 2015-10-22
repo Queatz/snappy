@@ -3,6 +3,7 @@ package com.queatz.snappy.api;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
+import com.google.common.collect.ImmutableMap;
 import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.backend.GooglePurchaseDataSpec;
 import com.queatz.snappy.backend.Json;
@@ -251,9 +252,7 @@ public class Me extends Api.Path {
 
     private void postClearNotification(final String n) {
         PushSpec push = Util.makeSimplePush(Config.PUSH_ACTION_CLEAR_NOTIFICATION);
-        push.body = new Object() {
-            String notification = n;
-        };
+        push.body = ImmutableMap.of("notification", n);
 
         Push.getService().send(user.id, push);
     }

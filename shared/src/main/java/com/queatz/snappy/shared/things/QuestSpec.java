@@ -24,7 +24,7 @@ public class QuestSpec extends ThingSpec {
     public String reward;
     public @Search("status") @Index String status;
     public String time;
-    public @Index Date opened;
+    public @Index @Search("age") Date opened;
     public int teamSize;
     public @Search("geo") @Hide GeoPt latlng;
 

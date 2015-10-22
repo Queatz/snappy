@@ -61,7 +61,16 @@ public class Here extends Api.Path {
     }
 
     private List<PersonSpec> fetchPeople(GeoPt geo) {
-        return Search.getService().getNearby(PersonSpec.class, geo, new Date(new Date().getTime() - 1000 * 60 * 60), Config.SEARCH_PEOPLE_MAX_NEAR_HERE);
+        List<PersonSpec> people = Search.getService().getNearby(PersonSpec.class, geo, new Date(new Date().getTime() - 1000 * 60 * 60), Config.SEARCH_PEOPLE_MAX_NEAR_HERE);
+
+        for (int i = 0; i < people.size(); i++) {
+            if (people.get(i).id.equals(user.id)) {
+                people.remove(i);
+                break;
+            }
+        }
+
+        return people;
     }
 
     private List<PartySpec> fetchParties(String user, GeoPt geo) {
@@ -69,7 +78,7 @@ public class Here extends Api.Path {
 
         List<PartySpec> parties = Search.getService().getNearby(PartySpec.class, geo, anHourAgo, Config.SEARCH_MAXIMUM);
 
-        for(PartySpec party : Datastore.get(PartySpec.class).filter("hostId", user).filter("date >=", anHourAgo).list()) {
+        for(PartySpec party : Datastore.get(PartySpec.class).filter("hostId", Datastore.key(PersonSpec.class, user)).list()) {
             if (!parties.contains(party)) {
                 parties.add(party);
             }
@@ -79,7 +88,7 @@ public class Here extends Api.Path {
     }
 
     private List<QuestSpec> fetchQuests(GeoPt geo) {
-        return Search.getService().getNearby(QuestSpec.class, geo, new Date(new Date().getTime() - Config.QUESTS_MAX_AGE), Config.NEARBY_MAX_VISIBILITY);
+        return Search.getService().getNearby(QuestSpec.class, geo, new Date(new Date().getTime() - Config.QUESTS_MAX_AGE), Config.QUESTS_MAXIMUM);
     }
 }
 

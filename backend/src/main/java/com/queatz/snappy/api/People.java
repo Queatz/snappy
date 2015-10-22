@@ -103,7 +103,7 @@ public class People extends Api.Path {
             notFound();
         }
 
-        ok(Datastore.get(PartySpec.class).filter("hostId", personId).list(), Json.Compression.SHALLOW);
+        ok(Datastore.get(PartySpec.class).filter("hostId", Datastore.key(PersonSpec.class, personId)).list(), Json.Compression.SHALLOW);
     }
 
     private void postSeen(String personId) {
@@ -116,7 +116,7 @@ public class People extends Api.Path {
         String localId = request.getParameter(Config.PARAM_LOCAL_ID);
 
         if (person != null) {
-            FollowLinkSpec follow = Thing.getService().follow.createOrUpdate(user.id, person.id);
+            FollowLinkSpec follow = Thing.getService().follow.createOrUpdate(user, person);
 
             if (follow != null) {
                 follow.localId = localId;
@@ -132,7 +132,7 @@ public class People extends Api.Path {
         PersonSpec person = Datastore.get(PersonSpec.class, personId);
 
         if (person != null) {
-            FollowLinkSpec follow = Thing.getService().follow.get(user.id, person.id);
+            FollowLinkSpec follow = Thing.getService().follow.get(user, person);
 
             if (follow != null) {
                 Thing.getService().follow.stopFollowing(follow);

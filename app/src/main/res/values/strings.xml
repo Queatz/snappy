@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Village</string>
     <string name="whos_in">Who\'s in?</string>
-    <string name="interested">Join</string>
+    <string name="interested">Start adventure</string>
     <string name="mark_party_full">Mark as full</string>
-    <string name="close_party">Close party</string>
+    <string name="close_party">Close adventure</string>
     <string name="requested">Waiting…</string>
-    <string name="host_party">Throw party</string>
+    <string name="host_party">Start adventure</string>
     <string name="host_again">Host again</string>
     <string name="write_message">Write message</string>
     <string name="today">Today, %1$s</string>
@@ -16,14 +16,14 @@
     <string name="sentence_tonight">%1$s tonight</string>
     <string name="hidden">Hidden</string>
     <string name="by">by %1$s</string>
-    <string name="enter_party_name">Enter party name</string>
+    <string name="enter_party_name">Enter adventure name</string>
     <string name="enter_time">Enter time</string>
     <string name="enter_location">Enter location</string>
     <string name="enter_details">Enter details</string>
     <string name="social_mode">Social mode</string>
     <string name="on">On</string>
     <string name="my_profile">Me</string>
-    <string name="host_a_party">Throw a party</string>
+    <string name="host_a_party">Start an adventure…</string>
     <string name="accept_person"><![CDATA[Accept <b>%1$s</b>]]></string>
     <string name="hosted">Hosted</string>
     <string name="Following">Liked</string>
@@ -52,10 +52,10 @@
     <string name="about">About</string>
     <string name="messages">Messages</string>
     <string name="people">People</string>
-    <string name="parties">Parties</string>
-    <string name="message_host_party">Your party will show up to people nearby.  You can mark the party as full when you have accepted enough people.</string>
+    <string name="parties">Explore</string>
+    <string name="message_host_party">Your adventure will show up to people nearby.  You can mark the adventure as full when you have accepted enough people.</string>
     <string name="ok">OK</string>
-    <string name="message_join_party">Would you like to write a message to %1$s, the party\'s host?</string>
+    <string name="message_join_party">Would you like to write a message to %1$s, the adventure\'s host?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="logout">Log out</string>
@@ -77,10 +77,10 @@
     <string name="stop_offering">Stop offering</string>
     <string name="describe_another_experience">Describe another experience</string>
     <string name="information">\?</string>
-    <string name="quests">%1$s quests</string>
-    <string name="start_a_quest">New quest</string>
+    <string name="quests">%1$s side quests</string>
+    <string name="start_a_quest">New side quest</string>
     <string name="start_quest">Start quest</string>
-    <string name="describe_the_quest">Describe the quest</string>
+    <string name="describe_the_quest">Describe the side quest</string>
     <string name="claim">Claim</string>
     <string name="claim_this_bounty">Claim this bounty?</string>
     <string name="message">Message</string>
@@ -90,25 +90,25 @@
     <string name="finish">Finish</string>
     <string name="you_finished_this_bounty">You already finished this bounty</string>
     <string name="post">Post</string>
-    <string name="you_started_this_quest">You already started this quest</string>
-    <string name="start_this_quest">Do you want to start this quest?</string>
+    <string name="you_started_this_quest">You already started this side quest</string>
+    <string name="start_this_quest">Do you want to start this side quest?</string>
     <string name="specify_reward">Specify a reward</string>
-    <string name="this_quest_is_full">This quest is full</string>
+    <string name="this_quest_is_full">This side quest is full</string>
     <string name="reward_text"><![CDATA[<b>Reward:</b> %1$s]]></string>
     <string name="details_text"><![CDATA[<b>Details:</b> %1$s]]></string>
-    <string name="enter_quest_name">Enter quest name</string>
+    <string name="enter_quest_name">Enter side quest name</string>
     <string name="mark_complete">Mark complete</string>
     <string name="view_contact">View contact</string>
-    <string name="close_quest">Close quest</string>
+    <string name="close_quest">Close side quest</string>
     <string name="quest_has_a_team">%1$s has a team</string>
     <string name="person_started_quest">%1$s started %2$s</string>
     <string name="you_completed_quest">You completed %1$s</string>
     <string name="you_completed_quest_with_person">You and %2$s completed %1$s</string>
     <string name="you_completed_quest_with_two_people">You completed %1$s with %2$s and %3$s</string>
     <string name="you_completed_quest_with_more_people">Your team completed %1$s</string>
-    <string name="quest_completed">Quest completed</string>
+    <string name="quest_completed">Side quest completed</string>
     <string name="join_quest">Join quest</string>
-    <string name="quest_started">Quest started</string>
+    <string name="quest_started">Side quest started</string>
     <string name="added_a_new_photo">added a new photo</string>
     <string name="write_something">Write something…</string>
 
@@ -163,8 +163,8 @@
     </plurals>
 
     <plurals name="quests">
-        <item quantity="one">%1$s quest</item>
-        <item quantity="other">%1$s quests</item>
+        <item quantity="one">%1$s side quest</item>
+        <item quantity="other">%1$s side quests</item>
     </plurals>
 
 </resources>

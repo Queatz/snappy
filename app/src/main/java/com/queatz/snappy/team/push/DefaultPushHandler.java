@@ -1,5 +1,6 @@
 package com.queatz.snappy.team.push;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.PushSpec;
@@ -13,10 +14,10 @@ public class DefaultPushHandler extends PushHandler {
         super(team);
     }
 
-    public void got(PushSpec<JsonObject> push) {
+    public void got(PushSpec<JsonElement> push) {
         switch (push.action) {
             case Config.PUSH_ACTION_CLEAR_NOTIFICATION:
-                String n = push.body.get("notification").getAsString();
+                String n = ((JsonObject) push.body).get("notification").getAsString();
                 team.push.clear(n, false);
 
                 break;

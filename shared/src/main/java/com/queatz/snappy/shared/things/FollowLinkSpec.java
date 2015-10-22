@@ -2,7 +2,6 @@ package com.queatz.snappy.shared.things;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
 import com.queatz.snappy.shared.Hide;

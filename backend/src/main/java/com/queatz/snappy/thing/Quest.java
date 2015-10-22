@@ -46,14 +46,14 @@ public class Quest {
         return quest;
     }
 
-    public QuestSpec start(String user, String questId) {
+    public QuestSpec start(PersonSpec user, String questId) {
         QuestSpec quest = Datastore.get(QuestSpec.class, questId);
 
         if(quest == null) {
             return null;
         }
 
-        QuestLinkSpec link = Datastore.get(QuestLinkSpec.class).filter("questId", questId).filter("personId", user).first().now();
+        QuestLinkSpec link = Datastore.get(QuestLinkSpec.class).filter("questId", Datastore.key(QuestSpec.class, questId)).filter("personId", user).first().now();
 
         if (link != null) {
             return quest;
@@ -62,11 +62,11 @@ public class Quest {
         int soFar = teamSizeSoFar(quest);
 
         if (soFar >= quest.teamSize) {
-            return null;
+            return quest;
         }
 
         link = Datastore.create(QuestLinkSpec.class);
-        link.personId = Datastore.key(PersonSpec.class, user);
+        link.personId = Datastore.key(PersonSpec.class, user.id);
         link.questId = Datastore.key(QuestSpec.class, questId);
         Datastore.save(link);
 
@@ -93,15 +93,15 @@ public class Quest {
     public List<PersonSpec> getTeam(QuestSpec quest) {
         List<PersonSpec> team = new ArrayList<>();
 
-        for(QuestLinkSpec link : Datastore.get(QuestLinkSpec.class).filter("questId", quest.id).list()) {
-            team.add(Datastore.get(PersonSpec.class, Datastore.id(link.personId)));
+        for(QuestLinkSpec link : Datastore.get(QuestLinkSpec.class).filter("questId", quest).list()) {
+            team.add(Datastore.get(link.personId));
         }
 
         return team;
     }
 
     private int teamSizeSoFar(QuestSpec quest) {
-        return Datastore.get(QuestLinkSpec.class).filter("questId", quest.id).count();
+        return Datastore.get(QuestLinkSpec.class).filter("questId", quest).count();
     }
 
     public QuestSpec setQuestStatus(QuestSpec quest, String status) {

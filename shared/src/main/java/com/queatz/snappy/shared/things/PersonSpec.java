@@ -35,7 +35,7 @@ public class PersonSpec extends ThingSpec {
 
     public @Ignore String auth;
     public @Ignore @Shallow int infoFollowers;
-    public @Ignore @Shallow int infoFolowing;
+    public @Ignore @Shallow int infoFollowing;
     public @Ignore @Shallow int infoHosted;
     public @Ignore @Shallow List<FollowLinkSpec> followers;
     public @Ignore @Shallow List<UpdateSpec> updates;

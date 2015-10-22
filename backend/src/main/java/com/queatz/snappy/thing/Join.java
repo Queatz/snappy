@@ -12,7 +12,7 @@ import com.queatz.snappy.shared.things.PersonSpec;
  */
 public class Join {
     public JoinLinkSpec create(PersonSpec user, String partyId) {
-        JoinLinkSpec join = Datastore.get(JoinLinkSpec.class).filter("personId", user.id).filter("partyId", partyId).first().now();
+        JoinLinkSpec join = Datastore.get(JoinLinkSpec.class).filter("personId", user).filter("partyId", Datastore.key(PartySpec.class, partyId)).first().now();
 
         if(join != null && !Config.JOIN_STATUS_WITHDRAWN.equals(join.status))
             return null;
@@ -30,7 +30,7 @@ public class Join {
     }
 
     public boolean delete(PersonSpec user, String partyId) {
-        JoinLinkSpec join = Datastore.get(JoinLinkSpec.class).filter("personId", user.id).filter("partyId", partyId).first().now();
+        JoinLinkSpec join = Datastore.get(JoinLinkSpec.class).filter("personId", user).filter("partyId", Datastore.key(PartySpec.class, partyId)).first().now();
 
         if(join == null) {
             return false;
