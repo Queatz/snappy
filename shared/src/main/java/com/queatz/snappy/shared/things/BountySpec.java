@@ -4,6 +4,7 @@ import com.google.appengine.api.datastore.GeoPt;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Ignore;
+import com.googlecode.objectify.annotation.Index;
 import com.queatz.snappy.shared.Hide;
 import com.queatz.snappy.shared.Push;
 import com.queatz.snappy.shared.Search;
@@ -24,8 +25,8 @@ public class BountySpec extends ThingSpec {
 
     public @Search("geo") @Hide GeoPt latlng;
 
-    public @Hide Key<PersonSpec> posterId;
-    public @Hide Key<PersonSpec> peopleId;
+    public @Index @Hide Key<PersonSpec> posterId;
+    public @Index @Hide Key<PersonSpec> peopleId;
 
     public @Ignore PersonSpec poster;
     public @Ignore @Push PersonSpec people;
