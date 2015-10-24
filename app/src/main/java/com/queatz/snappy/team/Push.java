@@ -96,6 +96,11 @@ public class Push {
             return;
         }
 
+        if (!json.has("action")) {
+            Log.w(Config.LOG_TAG, "Push got with no action");
+            return;
+        }
+
         String action = json.get("action").getAsString();
         switch (action) {
             case Config.PUSH_ACTION_MESSAGE:

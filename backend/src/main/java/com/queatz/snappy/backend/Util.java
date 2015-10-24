@@ -19,12 +19,6 @@ public class Util {
         return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
     }
 
-    public static PushSpec makeSimplePush(String action) {
-        PushSpec push = new PushSpec();
-        push.action = action;
-        return push;
-    }
-
     public static String genToken() {
         return UUID.randomUUID().toString() +
                 UUID.randomUUID().toString() +

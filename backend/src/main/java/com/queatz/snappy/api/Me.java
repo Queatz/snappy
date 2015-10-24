@@ -202,7 +202,7 @@ public class Me extends Api.Path {
         }
 
         if (allGood) {
-            Push.getService().sendToFollowers(user.id, update);
+            Push.getService().sendToFollowers(user.id, new PushSpec<>(Config.PUSH_ACTION_NEW_UPTO, update));
         } else {
             die("upto photo - not all good");
         }
@@ -251,10 +251,10 @@ public class Me extends Api.Path {
     }
 
     private void postClearNotification(final String n) {
-        PushSpec push = Util.makeSimplePush(Config.PUSH_ACTION_CLEAR_NOTIFICATION);
-        push.body = ImmutableMap.of("notification", n);
-
-        Push.getService().send(user.id, push);
+        Push.getService().send(user.id, new PushSpec<>(
+                Config.PUSH_ACTION_CLEAR_NOTIFICATION,
+                ImmutableMap.of("notification", n)
+        ));
     }
 
     private void deleteOffer(String offerId) {

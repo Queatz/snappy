@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -93,7 +94,7 @@ public class Worker extends HttpServlet {
                 // Send
 
                 for(SendInstance sendInstance : toUsers) {
-                    List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).filter("userId", Datastore.key(PersonSpec.class, sendInstance.userId)).list();
+                    List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).filter("userId", sendInstance.userId).list();
                     for (RegistrationRecord record : records) {
                         if(sendInstance.lowestRequiredSocialMode != null && record.getSocialMode() != null) {
                             if(
@@ -126,6 +127,7 @@ public class Worker extends HttpServlet {
                                 }
                             }
                         } catch (IOException e) {
+                            Logger.getLogger("push").warning("error sending" + e);
                             e.printStackTrace();
                         }
                     }

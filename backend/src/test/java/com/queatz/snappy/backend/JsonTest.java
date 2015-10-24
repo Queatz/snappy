@@ -1,16 +1,15 @@
 package com.queatz.snappy.backend;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.common.collect.ImmutableMap;
+import com.google.appengine.api.datastore.GeoPt;
 import com.queatz.snappy.shared.Deep;
+import com.queatz.snappy.shared.Hide;
+import com.queatz.snappy.shared.Push;
 import com.queatz.snappy.shared.Shallow;
 
 import org.testng.annotations.Test;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.testng.Assert.*;
 
@@ -20,18 +19,42 @@ import static org.testng.Assert.*;
 public class JsonTest {
 
     class JsonShallowTestObject {
-        String name;
-        JsonShallowTestObject normal;
-        @Shallow JsonShallowTestObject shallow;
-        @Deep JsonShallowTestObject deep;
-        @Deep List<JsonShallowTestObject> deepList;
-        @Shallow List<JsonShallowTestObject> shallowList;
+        public @Push String name;
+        public JsonShallowTestObject normal;
+        public @Shallow JsonShallowTestObject shallow;
+        public @Deep JsonShallowTestObject deep;
+        public @Deep List<JsonShallowTestObject> deepList;
+        public @Shallow List<JsonShallowTestObject> shallowList;
+        public @Push JsonShallowTestObject push;
+        public @Hide GeoPt latlng;
+        public @Push float latitude;
+        public @Push float longitude;
 
         public JsonShallowTestObject() {}
 
         public JsonShallowTestObject(String name) {
             this.name = name;
         }
+    }
+
+    @Test
+    public void push() {
+        JsonShallowTestObject result = new JsonShallowTestObject("base");
+        result.push = new JsonShallowTestObject("push");
+        result.push.latlng = new GeoPt(5, 10);
+        result.push.push = new JsonShallowTestObject("push");
+        result.push.push.latlng = new GeoPt(15, 20);
+
+        result = transform(result, Json.Compression.PUSH);
+
+        assertNotNull(result.push);
+        assertNotNull(result.push.name);
+        assertEquals(result.push.latitude, 5f);
+        assertEquals(result.push.longitude, 10f);
+        assertNotNull(result.push.push);
+        assertNotNull(result.push.push.name);
+        assertEquals(result.push.push.latitude, 15f);
+        assertEquals(result.push.push.longitude, 20f);
     }
 
     @Test
@@ -42,7 +65,7 @@ public class JsonTest {
         result.deep.shallow = new JsonShallowTestObject("deep.shallow");
         result.deep.deep.shallow = new JsonShallowTestObject("deep.deep.shallow");
 
-        result = transform(result);
+        result = transform(result, Json.Compression.NONE);
 
         assertNotNull(result.deep);
         assertNotNull(result.deep.deep);
@@ -57,7 +80,7 @@ public class JsonTest {
         result.deepList = Collections.singletonList(deepList);
         deepList.shallow = new JsonShallowTestObject("deepList.shallow");
 
-        result = transform(result);
+        result = transform(result, Json.Compression.NONE);
 
         assertNotNull(result.deepList);
         assertEquals(result.deepList.size(), 1);
@@ -80,7 +103,7 @@ public class JsonTest {
         deepList.normal = new JsonShallowTestObject("deepList.normal");
         result.deepList = Collections.singletonList(deepList);
 
-        result = transform(result);
+        result = transform(result, Json.Compression.NONE);
 
         assertNotNull(result.deepList);
         assertNotNull(result.deepList.get(0));
@@ -101,7 +124,7 @@ public class JsonTest {
         result.shallow.shallow = new JsonShallowTestObject("shallow.shallow");
         result.shallow.normal = new JsonShallowTestObject("shallow.normal");
 
-        result = transform(result);
+        result = transform(result, Json.Compression.NONE);
 
         assertNotNull(result.name);
         assertNotNull(result.shallow);
@@ -119,8 +142,8 @@ public class JsonTest {
         assertNotNull(result.normal.normal.name);
     }
 
-    private JsonShallowTestObject transform(JsonShallowTestObject jsonShallowTestObject) {
-        String json = Json.json(jsonShallowTestObject);
+    private JsonShallowTestObject transform(JsonShallowTestObject jsonShallowTestObject, Json.Compression compression) {
+        String json = Json.json(jsonShallowTestObject, compression);
         return Json.from(json, JsonShallowTestObject.class);
     }
 }

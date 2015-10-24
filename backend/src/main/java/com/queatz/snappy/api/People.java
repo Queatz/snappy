@@ -149,7 +149,7 @@ public class People extends Api.Path {
         if (sent != null) {
             sent.localId = localId;
 
-            Push.getService().send(Datastore.id(sent.toId), sent);
+            Push.getService().send(Datastore.id(sent.toId), new PushSpec<>(Config.PUSH_ACTION_MESSAGE, sent));
 
             ok(sent);
         }

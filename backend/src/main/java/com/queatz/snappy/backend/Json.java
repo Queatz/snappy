@@ -1,6 +1,7 @@
 package com.queatz.snappy.backend;
 
 import com.google.appengine.api.datastore.GeoPt;
+import com.google.appengine.repackaged.com.google.common.collect.ImmutableList;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -24,8 +25,10 @@ import com.queatz.snappy.shared.things.QuestSpec;
 import com.queatz.snappy.shared.things.UpdateSpec;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +47,7 @@ public class Json {
 
         @Override
         public boolean shouldSkipClass(Class<?> aClass) {
-            return aClass.getAnnotation(Hide.class) != null;
+            return false;
         }
     };
 
@@ -56,7 +59,7 @@ public class Json {
 
         @Override
         public boolean shouldSkipClass(Class<?> aClass) {
-            return aClass.getAnnotation(Shallow.class) != null;
+            return false;
         }
     };
 
@@ -68,7 +71,7 @@ public class Json {
 
         @Override
         public boolean shouldSkipClass(Class<?> aClass) {
-            return  aClass.getAnnotation(Push.class) == null;
+            return false;
         }
     };
 
@@ -244,8 +247,11 @@ public class Json {
         if (geoPtFields != null) {
             try {
                 GeoPt geoPt = (GeoPt) geoPtFields.latlng.get(object);
-                geoPtFields.latitude.set(object, geoPt.getLatitude());
-                geoPtFields.longitude.set(object, geoPt.getLongitude());
+
+                if (geoPt != null) {
+                    geoPtFields.latitude.set(object, geoPt.getLatitude());
+                    geoPtFields.longitude.set(object, geoPt.getLongitude());
+                }
             } catch (IllegalAccessException e) {
                 Log.log(Level.WARNING, "Internal problem #193371", e);
             }
@@ -260,13 +266,18 @@ public class Json {
                 Key<? extends ThingSpec> key = (Key<? extends ThingSpec>) field.id.get(object);
 
                 if (key != null) {
-                    Object t = Datastore.get(key);
-
-                    prepare(t, depth + 1 - fieldDepth(field.thing));
-                    field.thing.set(object, t);
+                    field.thing.set(object, Datastore.get(key));
                 }
             } catch (IllegalAccessException e) {
                 Log.log(Level.WARNING, "Internal problem #193372", e);
+            }
+        }
+
+        for (Field field : getAllFields(object.getClass())) {
+            try {
+                prepare(field.get(object), depth + 1 - fieldDepth(field));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -364,6 +375,7 @@ public class Json {
     private static final Map<Class, GeoPtFields> geopt_fields = new HashMap<>();
     private static final Map<Class, List<Field>> list_fields = new HashMap<>();
     private static final Map<Class, List<Field>> map_fields = new HashMap<>();
+    private static final Map<Class, List<Field>> all_fields = new HashMap<>();
 
     private static List<Field> getListFields(Class type) {
         if (!list_fields.containsKey(type)) {
@@ -401,9 +413,9 @@ public class Json {
         if (!geopt_fields.containsKey(type)) {
             try {
                 geopt_fields.put(type, new GeoPtFields(
-                        type.getField("latlng"),
-                        type.getField("latitude"),
-                        type.getField("longitude")
+                        type.getDeclaredField("latlng"),
+                        type.getDeclaredField("latitude"),
+                        type.getDeclaredField("longitude")
                 ));
 
             } catch (NoSuchFieldException ignored) {
@@ -421,7 +433,7 @@ public class Json {
             for (Field field : type.getDeclaredFields()) {
                 try {
                     if (ThingSpec.class.isAssignableFrom(field.getType())) {
-                        resolve.add(new ResolveFields(field, type.getField(field.getName() + "Id")));
+                        resolve.add(new ResolveFields(field, type.getDeclaredField(field.getName() + "Id")));
                     }
                 } catch (NoSuchFieldException ignored) {
                     Log.log(Level.WARNING, "No matching Id field for: " + type);
@@ -432,5 +444,26 @@ public class Json {
         }
 
         return fields.get(type);
+    }
+
+    private static List<Field> getAllFields(Class type) {
+        if (!all_fields.containsKey(type)) {
+            ArrayList<Field> resolve = new ArrayList<>();
+
+            for (Field field : type.getDeclaredFields()) {
+                if (Modifier.isStatic(field.getModifiers()) ||
+                        !Modifier.isPublic(field.getModifiers()) ||
+                        List.class.isAssignableFrom(field.getType()) ||
+                        Map.class.isAssignableFrom(field.getType())) {
+                    continue;
+                }
+
+                resolve.add(field);
+            }
+
+            all_fields.put(type, resolve);
+        }
+
+        return all_fields.get(type);
     }
 }

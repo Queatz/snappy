@@ -22,7 +22,7 @@
   @com.google.api.client.util.Key <fields>;
 }
 
--keepattributes Signature, RuntimeVisibleAnnotations, AnnotationDefault
+-keepattributes Signature
 
 -keepnames public class * extends io.realm.RealmObject
 -keep class io.realm.** { *; }

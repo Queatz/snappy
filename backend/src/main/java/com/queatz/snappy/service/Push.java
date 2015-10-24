@@ -2,6 +2,7 @@ package com.queatz.snappy.service;
 
 import com.queatz.snappy.backend.Json;
 import com.queatz.snappy.backend.RegistrationRecord;
+import com.queatz.snappy.shared.PushSpec;
 
 import static com.queatz.snappy.backend.Datastore.ofy;
 
@@ -45,14 +46,14 @@ public class Push {
         ofy().delete().entity(record).now();
     }
 
-    public void send(final String toUser, final Object message) {
+    public void send(final String toUser, final PushSpec message) {
         if(message == null)
             return;
 
         Queue.getService().enqueuePushMessageToUser(toUser, Json.json(message, Json.Compression.PUSH));
     }
 
-    public void sendToFollowers(final String fromUser, final Object message) {
+    public void sendToFollowers(final String fromUser, final PushSpec message) {
         if(message == null)
             return;
 

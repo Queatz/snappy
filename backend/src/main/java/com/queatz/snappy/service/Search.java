@@ -63,6 +63,22 @@ public class Search {
         return true;
     }
 
+    public void delete(ThingSpec object) {
+        index.delete(getId(object));
+    }
+
+    public void delete(Class<? extends ThingSpec> type, String id) {
+        index.delete(getId(type, id));
+    }
+
+    public String getId(Class<? extends ThingSpec> clazz, String id) {
+        return clazz.getSimpleName() + "-" + id;
+    }
+
+    public String getId(ThingSpec object) {
+        return getId(object.getClass(), object.id);
+    }
+
     public <T extends ThingSpec> List<T> getNearby(Class<T> type, GeoPt location, Date age, int count) {
         return getNearby(type, location, age, null, count);
     }
@@ -93,6 +109,12 @@ public class Search {
         ArrayList<T> results = new ArrayList<>();
 
         for(ScoredDocument document : index.search(query)) {
+            if (age != null) {
+                if(age.after(document.getOnlyField("age").getDate())) {
+                    continue;
+                }
+            }
+
             results.add(thingFromDocument(type, document));
         }
 
@@ -154,7 +176,7 @@ public class Search {
             return null;
         }
 
-        builder.setId(object.getClass().getSimpleName() + "-" + object.id);
+        builder.setId(getId(object));
 
         com.google.appengine.api.search.Field f;
 

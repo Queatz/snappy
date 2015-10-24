@@ -100,10 +100,18 @@ public class Datastore {
 
     public static <T> void delete(T thing) {
         ofy().delete().entity(thing).now();
+
+        if (ThingSpec.class.isAssignableFrom(thing.getClass())) {
+            Search.getService().delete((ThingSpec) thing);
+        }
     }
 
     public static <T> void delete(Class<T> type, String id) {
         ofy().delete().type(type).id(id).now();
+
+        if (ThingSpec.class.isAssignableFrom(type)) {
+            Search.getService().delete((Class<? extends ThingSpec>) type, id);
+        }
     }
 
     public static Objectify ofy() {

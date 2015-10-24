@@ -5,6 +5,7 @@ import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Thing;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.PushSpec;
 import com.queatz.snappy.shared.things.BountySpec;
 
 /**
@@ -56,7 +57,7 @@ public class Bounty extends Api.Path {
         boolean finished = Thing.getService().bounty.finish(user, bountyId);
 
         if (finished) {
-            Push.getService().send(Datastore.id(bounty.peopleId), bounty);
+            Push.getService().send(Datastore.id(bounty.peopleId), new PushSpec<>(Config.PUSH_ACTION_BOUNTY_FINISHED, bounty));
         }
 
         ok(finished);

@@ -19,6 +19,7 @@ import com.queatz.snappy.Util;
 import com.queatz.snappy.adapter.MainAdapter;
 import com.queatz.snappy.adapter.MainTabAdapter;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.things.MessageSpec;
 import com.queatz.snappy.team.Buy;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Person;
@@ -40,6 +41,7 @@ public class Main extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        new MessageSpec();
         super.onCreate(savedInstanceState);
 
         team = ((MainApplication) getApplication()).team;

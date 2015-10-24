@@ -5,6 +5,7 @@ import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Thing;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.PushSpec;
 import com.queatz.snappy.shared.things.JoinLinkSpec;
 import com.queatz.snappy.shared.things.PartySpec;
 
@@ -84,7 +85,7 @@ public class Join extends Api.Path {
         }
 
         if (succeeded) {
-            Push.getService().send(Datastore.id(join.personId), join);
+            Push.getService().send(Datastore.id(join.personId), new PushSpec<>(Config.PUSH_ACTION_JOIN_ACCEPTED, join));
         }
 
         ok(succeeded);

@@ -1,5 +1,6 @@
 package com.queatz.snappy.shared.things;
 
+import com.google.gson.annotations.Expose;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Ignore;
