@@ -115,17 +115,10 @@ public class MessagePushHandler extends PushHandler {
                 team.api.get(String.format(Config.PATH_MESSAGES_ID, push.body.id), new Api.Callback() {
                     @Override
                     public void success(String response) {
-                        try {
-                            JSONObject o = new JSONObject(response);
+                        Message m = team.things.put(Message.class, response);
 
-                            Message m = team.things.put(Message.class, o);
-
-                            if(m != null)
-                                team.local.updateContactsForMessage(m);
-                        }
-                        catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        if(m != null)
+                            team.local.updateContactsForMessage(m);
                     }
 
                     @Override

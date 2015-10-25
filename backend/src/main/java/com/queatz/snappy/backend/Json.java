@@ -304,7 +304,7 @@ public class Json {
             if (person.updates == null) {
                 person.updates = new ArrayList<>();
 
-                for (UpdateSpec update : Datastore.get(UpdateSpec.class).filter("personId", person).list()) {
+                for (UpdateSpec update : Datastore.get(UpdateSpec.class).filter("personId", person).order("-date").limit(Config.SEARCH_MAXIMUM).list()) {
                     person.updates.add(update);
                 }
             }

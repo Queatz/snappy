@@ -2,19 +2,18 @@ package com.queatz.snappy.team;
 
 import android.util.Log;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.util.TimeUtil;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.queatz.snappy.util.Json;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.Date;
-import java.util.Iterator;
+import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -30,11 +29,9 @@ public class Things {
         team = t;
     }
 
-    private void deepJson(Realm realm, RealmObject thing, JSONObject o) {
-        Iterator<String> keys = o.keys();
-
-        while (keys.hasNext()) {
-            String key = keys.next();
+    private void deepJson(Realm realm, RealmObject thing, JsonObject o) {
+        for (Map.Entry<String, JsonElement> entry : o.entrySet()) {
+            String key = entry.getKey();
 
             Field field;
 
@@ -54,30 +51,52 @@ public class Things {
             try {
                 Method setter = thing.getClass().getDeclaredMethod(setterName, field.getType());
 
+                JsonElement oo = o.get(fieldName);
+
                 if(setter != null) {
-                    if(RealmObject.class.isAssignableFrom(fieldType)) {
-                        setter.invoke(thing, put(realm, fieldType, o.getJSONObject(fieldName)));
-                    }
-                    else if(RealmList.class.isAssignableFrom(fieldType)) {
+                    if (oo.isJsonNull()) {
+                        setter.invoke(thing, null);
+                    } else if(RealmObject.class.isAssignableFrom(fieldType) && oo.isJsonObject()) {
+                        setter.invoke(thing, put(realm, fieldType, oo.getAsJsonObject()));
+                    } else if(RealmList.class.isAssignableFrom(fieldType) && oo.isJsonArray()) {
                         Class t = (Class) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
 
-                        setter.invoke(thing, putAll(realm, t, o.getJSONArray(fieldName)));
-                    }
-                    else if(Date.class.isAssignableFrom(fieldType)) {
-                        setter.invoke(thing, TimeUtil.stringToDate(o.getString(fieldName)));
-                    }
-                    else if(boolean.class.isAssignableFrom(fieldType)) {
-                        setter.invoke(thing, Boolean.valueOf(o.getString(fieldName)));
-                    }
-                    else {
-                        setter.invoke(thing, o.get(fieldName));
+                        setter.invoke(thing, putAll(realm, t, oo.getAsJsonArray()));
+                    } else if(Date.class.isAssignableFrom(fieldType)) {
+                        setter.invoke(thing, Json.from(oo, Date.class));
+                    } else if(String.class.isAssignableFrom(fieldType)) {
+                        setter.invoke(thing, oo.getAsString());
+                    } else if(boolean.class.isAssignableFrom(fieldType)) {
+                        setter.invoke(thing, oo.getAsBoolean());
+                    } else if(int.class.isAssignableFrom(fieldType)) {
+                        setter.invoke(thing, oo.getAsInt());
+                    } else if(long.class.isAssignableFrom(fieldType)) {
+                        setter.invoke(thing, oo.getAsInt());
+                    } else if(double.class.isAssignableFrom(fieldType)) {
+                        setter.invoke(thing, oo.getAsDouble());
+                    } else if(float.class.isAssignableFrom(fieldType)) {
+                        setter.invoke(thing, oo.getAsFloat());
+                    } else if(short.class.isAssignableFrom(fieldType)) {
+                        setter.invoke(thing, oo.getAsShort());
+                    } else if(byte.class.isAssignableFrom(fieldType)) {
+                        setter.invoke(thing, oo.getAsByte());
+                    } else if(char.class.isAssignableFrom(fieldType)) {
+                        setter.invoke(thing, oo.getAsCharacter());
+                    } else if(Number.class.isAssignableFrom(fieldType)) {
+                        setter.invoke(thing, oo.getAsNumber());
+                    } else {
+                        try {
+                            setter.invoke(thing, oo);
+                        } catch (ClassCastException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 else {
                     Log.w(Config.LOG_TAG, "JSON setter not found for: " + fieldType.getName() + "." + fieldName);
                 }
             }
-            catch (JSONException | IllegalArgumentException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
             }
         }
@@ -91,21 +110,19 @@ public class Things {
         return team.realm.where(clazz).equalTo("id", id).findFirst();
     }
 
-    public <T extends RealmObject> T put(Realm realm, Class<T> clazz, JSONObject jsonObject) {
+    public <T extends RealmObject> T put(Realm realm, Class<T> clazz, JsonObject jsonObject) {
         String localId = null, id;
 
-        try {
-            if(jsonObject.has("localId")) {
-                localId = jsonObject.getString("localId");
-            }
-
-            id = jsonObject.getString("id");
-        }
-        catch (JSONException e) {
-            Log.w(Config.LOG_TAG, "Things *must* have an ID! thing = " + clazz.getName() + ", json = " + jsonObject);
-            e.printStackTrace();
+        if (!jsonObject.has("id")) {
+            Log.w(Config.LOG_TAG, "Object must have ID! " + jsonObject);
             return null;
         }
+
+        if(jsonObject.has("localId")) {
+            localId = jsonObject.get("localId").getAsString();
+        }
+
+        id = jsonObject.get("id").getAsString();
 
         T o;
 
@@ -123,7 +140,7 @@ public class Things {
         return o;
     }
 
-    public <T extends RealmObject> T put(Class<T> clazz, JSONObject jsonObject) {
+    public <T extends RealmObject> T put(Class<T> clazz, JsonObject jsonObject) {
         team.realm.beginTransaction();
         T o = put(team.realm, clazz, jsonObject);
         team.realm.commitTransaction();
@@ -132,19 +149,15 @@ public class Things {
     }
 
     public <T extends RealmObject> T put(Class<T> clazz, String jsonObject) {
-        if(jsonObject != null) try {
-            return put(clazz, new JSONObject(jsonObject));
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-            return null;
+        if(jsonObject != null) {
+            return put(clazz, Json.from(jsonObject, JsonObject.class));
         }
         else {
             return null;
         }
     }
 
-    public <T extends RealmObject> RealmList<T> putAll(Class<T> clazz, JSONArray jsonArray) {
+    public <T extends RealmObject> RealmList<T> putAll(Class<T> clazz, JsonArray jsonArray) {
         team.realm.beginTransaction();
         RealmList<T> o = putAll(team.realm, clazz, jsonArray);
         team.realm.commitTransaction();
@@ -152,29 +165,20 @@ public class Things {
         return o;
     }
 
-    public <T extends RealmObject> RealmList<T> putAll(Realm realm, Class<T> clazz, JSONArray jsonArray) {
-        try {
-            RealmList<T> results = new RealmList<>();
+    public <T extends RealmObject> RealmList<T> putAll(Realm realm, Class<T> clazz, JsonArray jsonArray) {
+        RealmList<T> results = new RealmList<>();
 
-            for (int i = 0; i < jsonArray.length(); i++) {
-                T o = put(realm, clazz, jsonArray.getJSONObject(i));
-                results.add(o);
-            }
-
-            return results;
-        } catch (JSONException e) {
-            e.printStackTrace();
+        for (int i = 0; i < jsonArray.size(); i++) {
+            T o = put(realm, clazz, jsonArray.get(i).getAsJsonObject());
+            results.add(o);
         }
 
-        return null;
+        return results;
     }
 
     public <T extends RealmObject> RealmList<T> putAll(Class<T> clazz, String jsonArray) {
-        if(jsonArray != null) try {
-            return putAll(clazz, new JSONArray(jsonArray));
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
+        if(jsonArray != null) {
+            return putAll(clazz, Json.from(jsonArray, JsonArray.class));
         }
         else {
             return null;

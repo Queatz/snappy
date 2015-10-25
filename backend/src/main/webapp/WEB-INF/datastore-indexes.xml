@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<datastore-indexes autoGenerate="true">
+
+    <datastore-index kind="MessageSpec" ancestor="false">
+        <property name="fromId" direction="asc"/>
+        <property name="date" direction="desc"/>
+    </datastore-index>
+
+    <datastore-index kind="MessageSpec" ancestor="false">
+        <property name="toId" direction="asc"/>
+        <property name="date" direction="desc"/>
+    </datastore-index>
+
+    <datastore-index kind="UpdateSpec" ancestor="false">
+        <property name="personId" direction="asc"/>
+        <property name="date" direction="desc"/>
+    </datastore-index>
+
+</datastore-indexes>

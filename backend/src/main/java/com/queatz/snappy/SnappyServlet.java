@@ -10,6 +10,8 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.ErrorResponseSpec;
 import com.queatz.snappy.shared.things.PersonSpec;
 
+import org.apache.commons.lang3.CharSet;
+
 import java.io.IOException;
 
 import javax.servlet.http.HttpServlet;
@@ -49,6 +51,7 @@ public class SnappyServlet extends HttpServlet {
 
     private void handle(HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
+        resp.setCharacterEncoding("utf-8");
 
         try {
             try {

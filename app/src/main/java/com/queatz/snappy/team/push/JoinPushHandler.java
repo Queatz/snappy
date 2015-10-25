@@ -96,14 +96,7 @@ public class JoinPushHandler extends PushHandler {
                 team.api.get(String.format(Config.PATH_JOIN_ID, push.body.id), new Api.Callback() {
                     @Override
                     public void success(String response) {
-                        try {
-                            JSONObject o = new JSONObject(response);
-
-                            team.things.put(Join.class, o);
-                        }
-                        catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        team.things.put(Join.class, response);
                     }
 
                     @Override
@@ -117,13 +110,7 @@ public class JoinPushHandler extends PushHandler {
                 team.api.get(String.format(Config.PATH_JOIN_ID, push.body.id), new Api.Callback() {
                     @Override
                     public void success(String response) {
-                        try {
-                            JSONObject o = new JSONObject(response);
-
-                            team.things.put(Join.class, o);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        team.things.put(Join.class, response);
                     }
 
                     @Override

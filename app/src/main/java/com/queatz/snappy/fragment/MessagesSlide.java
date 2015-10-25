@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.gson.JsonObject;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.adapter.ContactAdapter;
@@ -17,6 +18,7 @@ import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Contact;
 import com.queatz.snappy.things.Message;
+import com.queatz.snappy.util.Json;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,19 +95,13 @@ public class MessagesSlide extends Fragment {
             public void success(String response) {
                 mRefresh.setRefreshing(false);
 
-                try {
-                    JSONObject o = new JSONObject(response);
+                JsonObject o = Json.from(response, JsonObject.class);
 
-                    if(o.has("messages"))
-                        team.things.putAll(Message.class, o.getJSONArray("messages"));
+                if(o.has("messages"))
+                    team.things.putAll(Message.class, o.getAsJsonArray("messages"));
 
-                    if(o.has("contacts"))
-                        team.things.putAll(Contact.class, o.getJSONArray("contacts"));
-
-                }
-                catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                if(o.has("contacts"))
+                    team.things.putAll(Contact.class, o.getAsJsonArray("contacts"));
 
                 update();
             }
