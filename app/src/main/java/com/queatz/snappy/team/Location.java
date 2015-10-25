@@ -19,16 +19,17 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.koushikdutta.async.http.AsyncHttpClient;
-import com.koushikdutta.async.http.AsyncHttpGet;
-import com.koushikdutta.async.http.AsyncHttpResponse;
+import com.google.gson.JsonObject;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.queatz.snappy.R;
 import com.queatz.snappy.shared.Config;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.queatz.snappy.util.Json;
 
 import java.util.ArrayList;
+
+import cz.msebera.android.httpclient.Header;
+
+;
 
 /**
  * Created by jacob on 10/19/14.
@@ -61,7 +62,7 @@ public class Location implements
     }
 
     public interface AutocompleteCallback {
-        void onResult(JSONObject result);
+        void onResult(JsonObject result);
     }
 
     @Override
@@ -224,44 +225,47 @@ public class Location implements
                 input,
                 team.context.getString(R.string.google_api_key));
 
-        AsyncHttpClient.getDefaultInstance().executeJSONObject(new AsyncHttpGet(url), new AsyncHttpClient.JSONObjectCallback() {
+        team.api.client().get(url, new TextHttpResponseHandler() {
             @Override
-            public void onCompleted(Exception e, AsyncHttpResponse response, JSONObject jsonObject) {
-                if (e != null) {
-                    e.printStackTrace();
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable error) {
+                error.printStackTrace();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                if (responseString == null) {
                     return;
                 }
 
-                try {
-                    String url = String.format(Config.GOOGLE_PLACES_DETAILS_URL,
-                            jsonObject.getJSONArray("predictions").getJSONObject(0).getString("place_id"),
-                            team.context.getString(R.string.google_api_key));
+                JsonObject jsonObject = Json.from(responseString, JsonObject.class);
 
-                    AsyncHttpClient.getDefaultInstance().executeJSONObject(new AsyncHttpGet(url), new AsyncHttpClient.JSONObjectCallback() {
-                                @Override
-                                public void onCompleted(Exception e, AsyncHttpResponse response, final JSONObject jsonObject) {
-                                    if (e != null) {
-                                        e.printStackTrace();
-                                        return;
-                                    }
+                String url = String.format(Config.GOOGLE_PLACES_DETAILS_URL,
+                        jsonObject.getAsJsonArray("predictions").get(0).getAsJsonObject().get("place_id").getAsString(),
+                        team.context.getString(R.string.google_api_key));
 
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            try {
-                                                callback.onResult(jsonObject.getJSONObject("result"));
-                                            } catch (JSONException e2) {
-                                                e2.printStackTrace();
-                                            }
-                                        }
-                                    });
-                                }
+                team.api.client().get(url, new TextHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                        if (responseString == null) {
+                            return;
+                        }
+
+                        final JsonObject jsonObject = Json.from(responseString, JsonObject.class);
+
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                callback.onResult(jsonObject.getAsJsonObject("result"));
                             }
-                    );
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                 }
-                catch (JSONException e2) {
-                    e2.printStackTrace();
-                }
+                );
             }
         });
     }

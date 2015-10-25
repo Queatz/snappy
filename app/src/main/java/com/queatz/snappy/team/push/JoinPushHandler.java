@@ -18,9 +18,6 @@ import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Join;
 import com.queatz.snappy.util.TimeUtil;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 /**
  * Created by jacob on 10/18/15.
  */

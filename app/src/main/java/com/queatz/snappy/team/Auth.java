@@ -14,13 +14,12 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.gson.JsonObject;
 import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.things.Person;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.queatz.snappy.util.Json;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -250,21 +249,16 @@ public class Auth {
                 team.api.get(Config.PATH_ME, params, new Api.Callback() {
                     @Override
                     public void success(String response) {
-                        try {
-                            JSONObject o = new JSONObject(response);
+                        JsonObject o = Json.from(response, JsonObject.class);
 
-                            if(o.has("auth"))
-                                setAuthToken(o.getString("auth"));
+                        if(o.has("auth"))
+                            setAuthToken(o.get("auth").getAsString());
 
-                            if(o.has("social_mode"))
-                                setSocialMode(o.getString("social_mode"));
+                        if(o.has("social_mode"))
+                            setSocialMode(o.get("social_mode").getAsString());
 
-                            setUser(team.things.put(Person.class, response));
-                            callbacks(Step.COMPLETE);
-                        }
-                        catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        setUser(team.things.put(Person.class, response));
+                        callbacks(Step.COMPLETE);
                     }
 
                     @Override

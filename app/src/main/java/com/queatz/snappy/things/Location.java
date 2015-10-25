@@ -2,8 +2,7 @@ package com.queatz.snappy.things;
 
 import android.net.Uri;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
@@ -24,22 +23,16 @@ public class Location extends RealmObject {
     private double longitude;
 
     @Ignore
-    private JSONObject json;
+    private JsonObject json;
     @Ignore
     private String text;
 
-    public JSONObject getJson() {
-        JSONObject o = new JSONObject();
-
-        try {
-            o.put("latitude", latitude);
-            o.put("longitude", longitude);
-            o.put("name", name);
-            o.put("address", address);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public JsonObject getJson() {
+        JsonObject o = new JsonObject();
+        o.addProperty("latitude", latitude);
+        o.addProperty("longitude", longitude);
+        o.addProperty("name", name);
+        o.addProperty("address", address);
 
         return o;
     }

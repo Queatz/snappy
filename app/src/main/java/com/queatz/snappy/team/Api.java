@@ -10,17 +10,17 @@ import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.shared.Config;
 
-import org.apache.http.Header;
-import org.apache.http.HttpStatus;
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.HttpStatus;
 
 /**
  * Created by jacob on 11/16/14.
  */
 
 public class Api {
-    public static interface Callback {
-        public void success(String response);
-        public void fail(String response);
+    public interface Callback {
+        void success(String response);
+        void fail(String response);
     }
 
     public enum HTTPMethod {
@@ -153,6 +153,10 @@ public class Api {
 
         mHandler = new Handler(Looper.getMainLooper());
         mClient = new AsyncHttpClient();
+    }
+
+    public AsyncHttpClient client() {
+        return mClient;
     }
 
     private RequestParams auth(RequestParams params) {

@@ -20,9 +20,6 @@ import com.queatz.snappy.things.Contact;
 import com.queatz.snappy.things.Message;
 import com.queatz.snappy.util.Json;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import io.realm.RealmResults;
 
 /**

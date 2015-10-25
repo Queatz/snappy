@@ -30,6 +30,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.JsonObject;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
@@ -44,9 +45,6 @@ import com.queatz.snappy.ui.TextView;
 import com.queatz.snappy.ui.TimeSlider;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Date;
 
@@ -304,48 +302,44 @@ public class HostParty extends Activity {
 
         team.location.getTopGoogleLocationForInput(q, new com.queatz.snappy.team.Location.AutocompleteCallback() {
             @Override
-            public void onResult(final JSONObject result) {
+            public void onResult(final JsonObject result) {
                 Log.d(Config.LOG_TAG, "result: " + result);
 
                 mLocationMap.getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(final GoogleMap googleMap) {
-                        try {
-                            JSONObject l = result.getJSONObject("geometry").getJSONObject("location");
-                            LatLng latLng = new LatLng(l.getDouble("lat"), l.getDouble("lng"));
-                            CameraUpdate center = CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(latLng, Config.defaultMapZoom));
-                            googleMap.animateCamera(center);
+                        JsonObject l = result.getAsJsonObject("geometry").getAsJsonObject("location");
+                        LatLng latLng = new LatLng(l.get("lat").getAsDouble(), l.get("lng").getAsDouble());
+                        CameraUpdate center = CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(latLng, Config.defaultMapZoom));
+                        googleMap.animateCamera(center);
 
-                            if (mMapMarker == null) {
-                                mMapMarker = googleMap.addMarker(new MarkerOptions().position(latLng));
-                            } else {
-                                mMapMarker.setPosition(latLng);
-                            }
-
-                            final String title = result.getString("name");
-                            final String address = result.has("formatted_address") ? result.getString("formatted_address") : null;
-
-                            mMapMarker.setTitle(title);
-                            mMapMarker.showInfoWindow();
-
-                            googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                                @Override
-                                public void onInfoWindowClick(Marker marker) {
-                                    com.queatz.snappy.things.Location location = new com.queatz.snappy.things.Location();
-
-                                    final EditText locationName = (EditText) mNewParty.findViewById(R.id.location);
-
-                                    location.setName(locationName.getText().toString());
-                                    location.setLatitude(mMapMarker.getPosition().latitude);
-                                    location.setLongitude(mMapMarker.getPosition().longitude);
-                                    location.setAddress(address);
-
-                                    setLocation(location);
-                                }
-                            });
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        if (mMapMarker == null) {
+                            mMapMarker = googleMap.addMarker(new MarkerOptions().position(latLng));
+                        } else {
+                            mMapMarker.setPosition(latLng);
                         }
+
+                        final String title = result.get("name").getAsString();
+                        final String address = result.has("formatted_address") ? result.get("formatted_address").getAsString() : null;
+
+                        mMapMarker.setTitle(title);
+                        mMapMarker.showInfoWindow();
+
+                        googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                            @Override
+                            public void onInfoWindowClick(Marker marker) {
+                                com.queatz.snappy.things.Location location = new com.queatz.snappy.things.Location();
+
+                                final EditText locationName = (EditText) mNewParty.findViewById(R.id.location);
+
+                                location.setName(locationName.getText().toString());
+                                location.setLatitude(mMapMarker.getPosition().latitude);
+                                location.setLongitude(mMapMarker.getPosition().longitude);
+                                location.setAddress(address);
+
+                                setLocation(location);
+                            }
+                        });
                     }
                 });
             }

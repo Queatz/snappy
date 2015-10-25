@@ -16,13 +16,11 @@ import android.util.Log;
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.gson.JsonObject;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.SuccessResponseSpec;
 import com.queatz.snappy.util.Json;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -66,17 +64,11 @@ public class Buy {
         return mGooglePurchaseData != null;
     }
 
-    public JSONObject getPurchaseData() {
+    public JsonObject getPurchaseData() {
         if(mGooglePurchaseData == null)
             return null;
 
-        try {
-            return new JSONObject(mGooglePurchaseData);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return Json.from(mGooglePurchaseData, JsonObject.class);
     }
 
     public void callback(PurchaseCallback callback) {
