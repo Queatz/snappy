@@ -136,7 +136,6 @@ public class Main extends Activity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        Boolean showPostHostMessage = intent.getBooleanExtra("show_post_host_message", false);
         String show = intent.getStringExtra("show");
 
         if(show != null) {
@@ -144,21 +143,6 @@ public class Main extends Activity {
         }
         else  {
             mActionBar.reslove();
-        }
-
-        if(showPostHostMessage) {
-            final String pref = Config.PREFERENCE_HOST_PARTY_SCREEN_SHOWN + "." + team.auth.getUser();
-
-            if(!team.preferences.getBoolean(pref, false)) {
-                new AlertDialog.Builder(this)
-                        .setMessage(team.context.getString(R.string.message_host_party))
-                        .setPositiveButton(team.context.getString(R.string.ok), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                team.preferences.edit().putBoolean(pref, true).apply();
-                            }
-                        }).show();
-            }
         }
     }
 

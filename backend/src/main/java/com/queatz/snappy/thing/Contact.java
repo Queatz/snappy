@@ -48,7 +48,7 @@ public class Contact {
 
             contact.lastId = Datastore.key(message);
             contact.updated = new Date();
-            contact.seen = false;
+            contact.seen = message.fromId.equals(fromTo[0]);
 
             Datastore.save(contact);
         }

@@ -29,11 +29,13 @@ import java.util.HashSet;
  */
 public class Auth {
     public enum Step {
+        AUTHENTICATION_CANCELED,
+        AUTHENTICATION_FAILED,
         AUTHENTICATED,
         COMPLETE
     }
 
-    public static interface Callback {
+    public interface Callback {
         void onStep(Step step);
     }
 
@@ -133,6 +135,10 @@ public class Auth {
         @Override
         protected void onPostExecute(String token) {
             mAuth.setGoogleAuthToken(token);
+
+            if (token == null) {
+                mAuth.callbacks(Step.AUTHENTICATION_FAILED);
+            }
         }
 
         protected String fetchToken() throws IOException {
@@ -140,7 +146,7 @@ public class Auth {
                 return GoogleAuthUtil.getToken(mAuth.mActivity, mAuth.mEmail, SCOPE);
             } catch (UserRecoverableAuthException e) {
                 mAuth.mActivity.startActivityForResult(e.getIntent(), Config.REQUEST_CODE_AUTH_RESOLUTION);
-            } catch (GoogleAuthException e) {
+            } catch (GoogleAuthException | IOException e) {
                 e.printStackTrace();
             }
 
@@ -263,7 +269,7 @@ public class Auth {
 
                     @Override
                     public void fail(String response) {
-
+                        callbacks(Step.AUTHENTICATION_FAILED);
                     }
                 });
             }
@@ -345,11 +351,15 @@ public class Auth {
                 if(resultCode == Activity.RESULT_OK && data != null) {
                     setEmail(data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
                     fetchAuthToken();
+                } else {
+                    callbacks(Step.AUTHENTICATION_CANCELED);
                 }
                 break;
             case Config.REQUEST_CODE_AUTH_RESOLUTION:
                 if(resultCode == Activity.RESULT_OK && data != null) {
                     setGoogleAuthToken(data.getStringExtra("authtoken"));
+                } else {
+                    callbacks(Step.AUTHENTICATION_FAILED);
                 }
 
                 break;

@@ -58,7 +58,7 @@ public class Person {
         person.lastName = data.lastName;
         person.gender = data.gender;
         person.imageUrl = data.imageUrl;
-        person.googleId = data.about;
+        person.googleId = data.googleId;
 
         if (StringUtils.isBlank(person.about)) {
             person.about = data.about;
@@ -73,8 +73,6 @@ public class Person {
                 person.subscription = Config.HOSTING_ENABLED_AVAILABLE;
             }
         }
-
-        person.about = data.about;
 
         Datastore.save(person);
 

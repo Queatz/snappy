@@ -1,0 +1,198 @@
+@import url(https://fonts.googleapis.com/css?family=Poiret+One);
+@import url(https://fonts.googleapis.com/css?family=Pompiere);
+@import url(https://fonts.googleapis.com/css?family=Palanquin);
+
+html, body {
+    background-color: black;
+    margin: 0;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    font-family: "Palanquin", sans;
+}
+
+h1, h2, h3, h4 {
+    font-family: "Pompiere", sans;
+}
+
+a {
+    color: #c54859;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.hide {
+    display: none;
+}
+
+
+/* Elements */
+
+
+.seam {
+    background-size: 100% auto;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-image: url(../img/layer-1.png);
+    margin-top: 30vw;
+    height: 20vw;
+    pointer-events: none;
+}
+
+.seam-top {
+    top: -30vw; left: 0; right: 0;
+    background-size: 100% auto;
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-image: url(../img/layer-2.png);
+    height: 20vw;
+    pointer-events: none;
+}
+
+.boobs {
+    background-size: cover;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-image: url(../img/67b1cc0c039418a664f74a06ea7b71d9.jpg);
+    transform-origin: 50% 60%;
+    height: 50vw;
+    top: -50vh !important;
+}
+
+.cave {
+    background-size: cover;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-image: url(../img/la-trb-calico-mine-ride-knotts-berry-farm-2014-013.jpg);
+    height: 100vw;
+}
+
+.main-text {
+    margin-top: -18vw;
+}
+
+.text {
+    text-align: center;
+    text-shadow: 0 0 4rem white;
+    font-size: 3.5vw;
+    color: #fff;
+    pointer-events: none;
+}
+
+.title {
+    font-size: 11vw;
+    z-index: -1;
+}
+
+.badge {
+    text-align: center;
+    margin-top: 4vw;
+}
+
+
+/* Structure */
+
+
+.parallax {
+    position: relative;
+    perspective: 1px;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.group {
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+.cover {
+    position: relative;
+    pointer-events: none;
+}
+
+.portal {
+    font-family: "Poiret One", sans;
+}
+
+.portal > div {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+}
+
+.content {
+    padding: 2rem;
+    pointer-events: all;
+    background-color: #e5e4e1;
+    color: #000;
+    z-index: 10;
+    font-size: 16pt;
+    text-align: center;
+}
+
+.content > div {
+    vertical-align: top;
+    padding: 2rem;
+    display: inline-block;
+    width: 30rem;
+}
+
+.img-about {
+    background-image: url(../img/location.png);
+}
+
+.img-who {
+    background-image: url(../img/welcome.png);
+}
+
+.img-special {
+    background-image: url(../img/night.png);
+}
+
+.img-teased {
+    background-image: url(../img/day.png);
+}
+
+.glory {
+    width: 12rem;
+    height: 12rem;
+    border-radius: 6rem;
+    background-size: cover;
+    box-shadow: 0 0 1.5rem rgba(0, 0, 0, .5) inset;
+}
+
+
+/* Depth & Groupings */
+
+
+.depth-0 {
+  -webkit-transform: translateZ(0);
+  z-index: 0;
+}
+
+.depth-1 {
+    transform: translateZ(-1px) scale(2);
+    z-index: -1;
+}
+
+.depth-01 {
+    transform: translateZ(.125px) scale(.875);
+    z-index: 1;
+}
+
+.depth-2 {
+    transform: translateZ(-2px) scale(3);
+    z-index: -2;
+}
+
+.depth-3 {
+    transform: translateZ(-3px) scale(4);
+    z-index: -3;
+}
+
+.group-1 {
+    z-index: 10;
+}
+
+.group-2 {
+    z-index: 9;
+}

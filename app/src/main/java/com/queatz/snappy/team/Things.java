@@ -55,7 +55,7 @@ public class Things {
 
                 if(setter != null) {
                     if (oo.isJsonNull()) {
-                        setter.invoke(thing, null);
+                        setter.invoke(thing, (Object) null);
                     } else if(RealmObject.class.isAssignableFrom(fieldType) && oo.isJsonObject()) {
                         setter.invoke(thing, put(realm, fieldType, oo.getAsJsonObject()));
                     } else if(RealmList.class.isAssignableFrom(fieldType) && oo.isJsonArray()) {

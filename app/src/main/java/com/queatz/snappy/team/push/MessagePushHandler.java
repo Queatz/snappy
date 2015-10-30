@@ -38,7 +38,7 @@ public class MessagePushHandler extends PushHandler {
                 if(("person/" + push.body.from.id + "/messages").equals(team.view.getTop()))
                     break;
 
-                RealmResults<Contact> contacts = team.realm.where(Contact.class).equalTo("seen", false).findAllSorted("updated");
+                RealmResults<Contact> contacts = team.realm.where(Contact.class).equalTo("person.id", team.auth.getUser()).equalTo("seen", false).findAllSorted("updated");
 
                 int count = 1;
                 String summary = "";

@@ -9,6 +9,7 @@ import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.team.Auth;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.ui.RevealAnimation;
 
 /**
  * Created by jacob on 10/19/14.
@@ -27,6 +28,7 @@ public class Welcome extends Activity {
         findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                enableSignin(false);
                 team.auth.signin();
             }
         });
@@ -34,14 +36,28 @@ public class Welcome extends Activity {
         team.auth.callback(new Auth.Callback() {
             @Override
             public void onStep(Auth.Step step) {
-                if(step == Auth.Step.COMPLETE) {
-                    finish();
+                switch (step) {
+                    case AUTHENTICATION_CANCELED:
+                    case AUTHENTICATION_FAILED:
+                        enableSignin(true);
+                        break;
+                    case COMPLETE:
+                        finish();
+                        break;
                 }
             }
         });
 
         team.buy.pullGoogle(this);
 
+    }
+
+    private void enableSignin(boolean enable) {
+        View signinButton = findViewById(R.id.sign_in_button);
+
+        float target = enable ? 1 : 0;
+
+        signinButton.animate().scaleX(target).scaleY(target).setDuration(100).start();
     }
 
     @Override

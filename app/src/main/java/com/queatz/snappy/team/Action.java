@@ -311,23 +311,6 @@ public class Action {
                 Toast.makeText(team.context, "Join failed", Toast.LENGTH_SHORT).show();
             }
         });
-
-        if(activity != null) {
-            new AlertDialog.Builder(activity)
-                    .setMessage(String.format(team.context.getString(R.string.message_join_party), party.getHost().getFirstName()))
-                    .setPositiveButton(team.context.getString(R.string.yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            openMessages(activity, party.getHost());
-                        }
-                    })
-                    .setNegativeButton(team.context.getString(R.string.no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    }).show();
-        }
     }
 
     public void cancelJoin(@NonNull final Party party) {
@@ -408,6 +391,9 @@ public class Action {
         team.api.post(String.format(Config.PATH_JOIN_ID, join.getId()), params, new Api.Callback() {
             @Override
             public void success(String response) {
+                if(!ResponseUtil.isSuccess(response)) {
+                    Toast.makeText(team.context, "Hide join failed", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
