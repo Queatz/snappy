@@ -90,6 +90,7 @@ public class Json {
     }
 
     static public String json(final Object thing, final Compression compression) {
+        // TODO this is terribly slow
         prepare(thing, compression == Compression.NONE ? 0 : 1);
 
         final GsonBuilder builder = new GsonBuilder()

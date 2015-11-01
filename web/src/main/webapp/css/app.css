@@ -39,41 +39,51 @@ a {
 }
 
 .seam-top {
-    top: -30vw; left: 0; right: 0;
+    top: 0; left: 0; right: 0;
     background-size: 100% auto;
     background-position: top center;
     background-repeat: no-repeat;
     background-image: url(../img/layer-2.png);
     height: 20vw;
     pointer-events: none;
+    position: absolute;
 }
 
 .boobs {
     background-size: cover;
     background-position: bottom center;
     background-repeat: no-repeat;
-    background-image: url(../img/67b1cc0c039418a664f74a06ea7b71d9.jpg);
+    background-image: url(../img/photo-126888255.jpg);
     transform-origin: 50% 60%;
     height: 50vw;
     top: -50vh !important;
 }
 
 .cave {
-    background-size: cover;
+    background-size: 100%;
     background-position: bottom center;
     background-repeat: no-repeat;
-    background-image: url(../img/la-trb-calico-mine-ride-knotts-berry-farm-2014-013.jpg);
-    height: 100vw;
+    background-image: url(../img/photo-127058787.jpg);
+    transform-origin: 50% 100%;
+    height: 65vw;
+    top: 52vh !important;
 }
 
 .main-text {
     margin-top: -18vw;
+    text-shadow: 0 0 2rem black;
+    font-size: 3.5vw;
+}
+
+.end-text {
+    top: initial !important;
+    bottom: 2.5vw;
+    font-size: 3vw;
+    text-shadow: 0 0 2rem white;
 }
 
 .text {
     text-align: center;
-    text-shadow: 0 0 4rem white;
-    font-size: 3.5vw;
     color: #fff;
     pointer-events: none;
 }
@@ -114,9 +124,15 @@ a {
     font-family: "Poiret One", sans;
 }
 
-.portal > div {
+.portal > div, .window > div {
     position: absolute;
     top: 0; left: 0; right: 0;
+}
+
+.window {
+    position: absolute;
+    height: 60vw;
+    overflow: hidden;
 }
 
 .content {

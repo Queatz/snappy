@@ -123,7 +123,6 @@
     <orderEntry type="library" exported="" name="picasso-2.5.2" level="project" />
     <orderEntry type="library" exported="" name="roundedimageview-1.5.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-gcm-7.5.0" level="project" />
-    <orderEntry type="library" exported="" name="androidasync-2.1.6" level="project" />
     <orderEntry type="library" exported="" name="httpclient-4.3.6" level="project" />
     <orderEntry type="library" exported="" name="play-services-appindexing-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-wearable-7.5.0" level="project" />
