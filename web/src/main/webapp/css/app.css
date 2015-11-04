@@ -88,6 +88,11 @@ a {
     pointer-events: none;
 }
 
+.text > a {
+    color: inherit;
+    pointer-events: all;
+}
+
 .title {
     font-size: 11vw;
     z-index: -1;
