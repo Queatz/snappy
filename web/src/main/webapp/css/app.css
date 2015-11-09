@@ -24,6 +24,17 @@ a {
     display: none;
 }
 
+#doers {
+    position: relative;
+    text-align: left;
+}
+
+#doers > span {
+    position: relative;
+    width: 17vw;
+    white-space: nowrap;
+    display: inline-block;
+}
 
 /* Elements */
 
