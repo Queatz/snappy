@@ -20,6 +20,6 @@ public class MainTabAdapter extends ActionBar.TabAdapter {
     }
 
     public String getTabName(int i) {
-        return new String[]{mContext.getString(R.string.parties), mContext.getString(R.string.people)}[i];
+        return new String[]{mContext.getString(R.string.explore), mContext.getString(R.string.people)}[i];
     }
 }

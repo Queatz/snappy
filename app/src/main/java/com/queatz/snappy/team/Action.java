@@ -302,6 +302,10 @@ public class Action {
         team.api.post(String.format(Config.PATH_PARTY_ID, party.getId()), params, new Api.Callback() {
             @Override
             public void success(String response) {
+                if (response == null) {
+                    return;
+                }
+
                 team.things.put(Join.class, response);
             }
 

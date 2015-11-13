@@ -125,6 +125,7 @@
     <orderEntry type="library" exported="" name="play-services-gcm-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="httpclient-4.3.6" level="project" />
     <orderEntry type="library" exported="" name="play-services-appindexing-7.5.0" level="project" />
+    <orderEntry type="library" exported="" name="realm-android-0.84.2" level="project" />
     <orderEntry type="library" exported="" name="play-services-wearable-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-safetynet-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-games-7.5.0" level="project" />
@@ -145,7 +146,6 @@
     <orderEntry type="library" exported="" name="support-v4-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-cast-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-22.2.1" level="project" />
-    <orderEntry type="library" exported="" name="realm-android-0.83.1" level="project" />
     <orderEntry type="library" exported="" name="gson-2.4" level="project" />
     <orderEntry type="library" exported="" name="play-services-ads-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-location-7.5.0" level="project" />

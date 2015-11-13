@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.queatz.snappy.ui.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/darkpurple">
 
-    <ListView
-        android:id="@+id/quests"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:dividerHeight="8dp"
-        android:footerDividersEnabled="true"
-        android:divider="@null" />
-
-</com.queatz.snappy.ui.SwipeRefreshLayout>
+</LinearLayout>

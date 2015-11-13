@@ -36,6 +36,14 @@ a {
     display: inline-block;
 }
 
+.more {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1rem;
+    color: white;
+}
+
 /* Elements */
 
 

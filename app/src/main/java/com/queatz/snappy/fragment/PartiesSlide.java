@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,19 +17,23 @@ import android.widget.ListView;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
+import com.queatz.snappy.adapter.FeedAdapter;
 import com.queatz.snappy.adapter.PartyAdapter;
 import com.queatz.snappy.adapter.PeopleNearHereAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Here;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Bounty;
+import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.things.Quest;
 import com.queatz.snappy.ui.RevealAnimation;
 import com.queatz.snappy.ui.TextView;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import io.realm.RealmChangeListener;
 import io.realm.RealmList;
@@ -43,6 +48,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
     SwipeRefreshLayout mRefresh;
     ListView mList;
     View emptyView;
+    Object mContextObject;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -168,7 +174,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Person person = ((PeopleNearHereAdapter) parent.getAdapter()).getItem(position);
 
-                if(person != null) {
+                if (person != null) {
                     team.action.openProfile(getActivity(), person);
                 }
             }
@@ -191,7 +197,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         if(mList.getAdapter() == null) {
             String me = team.auth.getUser();
 
-            RealmResults<Party> discoveryList = team.realm.where(Party.class)
+            RealmResults<Party> queryParties = team.realm.where(Party.class)
                         .greaterThan("date", new Date(new Date().getTime() - 1000 * 60 * 60))
                     .beginGroup()
                         .equalTo("full", false).or()
@@ -200,7 +206,24 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
                     .endGroup()
                     .findAllSorted("date", true);
 
-            mList.setAdapter(new PartyAdapter(getActivity(), discoveryList));
+            RealmResults<Quest> queryQuests = team.realm.where(Quest.class).greaterThan("opened", new Date(new Date().getTime() - 1000L * 60 * 60 * 24 * 30))
+                    .notEqualTo("status", Config.QUEST_STATUS_COMPLETE)
+                    .beginGroup()
+                    .equalTo("status", Config.QUEST_STATUS_OPEN)
+                    .or()
+                    .equalTo("team.id", team.auth.getUser())
+                    .or()
+                    .equalTo("host.id", team.auth.getUser())
+                    .endGroup()
+                    .findAllSorted("opened", false);
+
+            RealmResults<Offer> queryOffers = team.realm.where(Offer.class).findAllSorted("price", true);
+
+            final ArrayList<RealmResults> list = new ArrayList<>();
+            list.add(queryParties);
+            list.add(queryQuests);
+            list.add(queryOffers);
+            mList.setAdapter(new FeedAdapter(getActivity(), list));
         }
 
         Log.w(Config.LOG_TAG, "parties count = " + mList.getAdapter().getCount());
@@ -219,31 +242,14 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         team.here.update(getActivity(), mRefresh, new Here.Callback() {
             @Override
             public void onSuccess(RealmList<Person> people, RealmList<com.queatz.snappy.things.Location> locations, RealmList<Party> parties, RealmList<Bounty> bounties, RealmList<Quest> quests) {
-                if(locations != null && people != null) {
+                if (locations != null && people != null) {
                     updateBanner(people, locations);
                 }
 
-                if(parties != null) {
+                if (parties != null) {
                     update();
                 }
             }
         });
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getActivity().getMenuInflater();
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch (item.getItemId()) {
-            case R.id.delete:
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
     }
 }

@@ -115,30 +115,11 @@ public class MiniMenu extends FrameLayout {
     private void updateQuestsText() {
         final Team team = ((MainApplication) getContext().getApplicationContext()).team;
 
-        RealmQuery<Quest> query = team.realm.where(Quest.class).greaterThan("opened", new Date(new Date().getTime() - 1000L * 60 * 60 * 24 * 30))
-                .notEqualTo("status", Config.QUEST_STATUS_COMPLETE)
-                .beginGroup()
-                    .equalTo("status", Config.QUEST_STATUS_OPEN)
-                    .or()
-                    .equalTo("team.id", team.auth.getUser())
-                    .or()
-                    .equalTo("host.id", team.auth.getUser())
-                .endGroup();
-
-        long bounties = query.count();
-
-        findViewById(R.id.action_quests).setVisibility(View.VISIBLE);
-
-        if(0 == bounties) {
-            if(Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
-                ((TextView) findViewById(R.id.action_quests)).setText(getResources().getString(R.string.start_a_quest));
-            }
-            else {
-                findViewById(R.id.action_quests).setVisibility(View.GONE);
-            }
+        if(Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
+            findViewById(R.id.action_quests).setVisibility(View.VISIBLE);
         }
         else {
-            ((TextView) findViewById(R.id.action_quests)).setText(getResources().getQuantityString(R.plurals.quests, (int) bounties, bounties));
+            findViewById(R.id.action_quests).setVisibility(View.GONE);
         }
     }
 
