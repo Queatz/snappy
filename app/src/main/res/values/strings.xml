@@ -3,9 +3,9 @@
     <string name="whos_in">Who\'s in?</string>
     <string name="interested">I\'m Interested</string>
     <string name="mark_party_full">Mark as full</string>
-    <string name="close_party">Close meet</string>
+    <string name="close_party">Close party</string>
     <string name="requested">Waiting for host…</string>
-    <string name="host_party">Host meet</string>
+    <string name="host_party">Host party</string>
     <string name="host_again">Host again</string>
     <string name="write_message">Write message</string>
     <string name="today">Today, %1$s</string>
@@ -16,14 +16,14 @@
     <string name="sentence_tonight">%1$s tonight</string>
     <string name="hidden">Hidden</string>
     <string name="by">by %1$s</string>
-    <string name="enter_party_name">Enter meet name</string>
+    <string name="enter_party_name">Enter party name</string>
     <string name="enter_time">Enter time</string>
     <string name="enter_location">Enter location</string>
     <string name="enter_details">Enter details</string>
     <string name="social_mode">Social mode</string>
     <string name="on">On</string>
     <string name="my_profile">Me</string>
-    <string name="host_a_party">Host a meet</string>
+    <string name="host_a_party">Throw a party</string>
     <string name="accept_person"><![CDATA[Accept <b>%1$s</b>]]></string>
     <string name="hosted">Hosted</string>
     <string name="Following">Following</string>
@@ -52,7 +52,7 @@
     <string name="about">About</string>
     <string name="messages">Messages</string>
     <string name="people">People</string>
-    <string name="parties">Meets</string>
+    <string name="parties">Parties</string>
     <string name="ok">OK</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
