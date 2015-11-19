@@ -3,6 +3,7 @@ package com.queatz.snappy.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -64,7 +65,7 @@ public class Person extends Activity {
         mActionBar.setLeftContent(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                NavUtils.navigateUpFromSameTask(Person.this);
             }
         });
 
@@ -116,7 +117,7 @@ public class Person extends Activity {
             onNewIntent(getIntent());
         }
         else {
-            mActionBar.reslove();
+            mActionBar.resolve();
         }
     }
 
@@ -125,7 +126,7 @@ public class Person extends Activity {
         String show = intent.getStringExtra("show");
 
         if(show == null) {
-            mActionBar.reslove();
+            mActionBar.resolve();
             return;
         }
 

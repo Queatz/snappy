@@ -21,7 +21,7 @@ import com.queatz.snappy.Util;
 
 public class ActionBar extends FrameLayout {
     public interface OnPageChangeListener {
-        public void onPageChange(int page);
+        void onPageChange(int page);
     }
 
     public abstract static class TabAdapter {
@@ -208,7 +208,7 @@ public class ActionBar extends FrameLayout {
         mSlider.setLayoutParams(lp);
     }
 
-    public void reslove() {
+    public void resolve() {
         setPage((int) mSlidePosition);
     }
 }

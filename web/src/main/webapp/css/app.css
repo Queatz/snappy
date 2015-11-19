@@ -1,5 +1,4 @@
 @import url(https://fonts.googleapis.com/css?family=Poiret+One);
-@import url(https://fonts.googleapis.com/css?family=Pompiere);
 @import url(https://fonts.googleapis.com/css?family=Palanquin);
 
 html, body {
@@ -8,10 +7,6 @@ html, body {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     font-family: "Palanquin", sans;
-}
-
-h1, h2, h3, h4 {
-    font-family: "Pompiere", sans;
 }
 
 a {
@@ -88,6 +83,26 @@ a {
     top: 52vh !important;
 }
 
+.middletown {
+    background-size: 100%;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    transform-origin: 50% 50%;
+    height: 100%;
+}
+
+.bg-discover-people {
+    background-image: url(../img/photo-122677021.jpg);
+}
+
+.bg-advertise-yourself {
+    background-image: url(../img/photo-59737928.jpg);
+}
+
+.bg-upgrade-today {
+    background-image: url(../img/photo-73912411.jpg);
+}
+
 .main-text {
     margin-top: -18vw;
     text-shadow: 0 0 2rem black;
@@ -99,6 +114,32 @@ a {
     bottom: 2.5vw;
     font-size: 3vw;
     text-shadow: 0 0 2rem white;
+}
+
+.mid-text {
+    color: white;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 0 0 2rem black;
+}
+
+.mid-text > div {
+}
+
+.mid-text > div > h2 {
+    font-size: 6vw;
+}
+
+.mid-text > div > p {
+    font-size: 2vw;
+    padding: 2rem 25%;
+    background-color: rgba(0, 0, 0, .85);
+    margin: auto;
 }
 
 .text {
@@ -134,7 +175,7 @@ a {
     overflow-y: auto;
 }
 
-.group {
+.parallax > div {
     position: relative;
     transform-style: preserve-3d;
 }
@@ -153,6 +194,10 @@ a {
     top: 0; left: 0; right: 0;
 }
 
+.screen {
+    height: 10vw !important;
+}
+
 .window {
     position: absolute;
     height: 60vw;
@@ -163,13 +208,21 @@ a {
     padding: 2rem;
     pointer-events: all;
     background-color: #e5e4e1;
-    color: #000;
+    color: #333;
     z-index: 10;
     font-size: 16pt;
     text-align: center;
 }
 
-.content > div {
+.headline {
+    font-family: "Poiret One", sans;
+    font-size: 3vw;
+    padding-bottom: 3rem;
+    padding-left: 15%;
+    padding-right: 15%;
+}
+
+.components > div {
     vertical-align: top;
     padding: 2rem;
     display: inline-block;
@@ -193,9 +246,9 @@ a {
 }
 
 .glory {
-    width: 12rem;
-    height: 12rem;
-    border-radius: 6rem;
+    width: 16rem;
+    height: 16rem;
+    border-radius: 8rem;
     background-size: cover;
     box-shadow: 0 0 1.5rem rgba(0, 0, 0, .5) inset;
 }
@@ -229,10 +282,42 @@ a {
     z-index: -3;
 }
 
-.group-1 {
+parallax > div:nth-child(0) {
     z-index: 10;
 }
 
-.group-2 {
+parallax > div:nth-child(1) {
     z-index: 9;
+}
+
+parallax > div:nth-child(2) {
+    z-index: 8;
+}
+
+parallax > div:nth-child(3) {
+    z-index: 7;
+}
+
+parallax > div:nth-child(4) {
+    z-index: 6;
+}
+
+parallax > div:nth-child(5) {
+    z-index: 5;
+}
+
+parallax > div:nth-child(6) {
+    z-index: 4;
+}
+
+parallax > div:nth-child(7) {
+    z-index: 3;
+}
+
+parallax > div:nth-child(8) {
+    z-index: 2;
+}
+
+parallax > div:nth-child(9) {
+    z-index: 1;
 }

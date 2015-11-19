@@ -292,8 +292,7 @@ var doers = [
     'Decision Making',
     'Thrill Seekers',
     'Stellar Health',
-    'Stealthiness',
-    'Sneakiness',
+    'Armchair Hackers',
 
     // Places
     'Campouts',

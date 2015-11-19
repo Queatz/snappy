@@ -7,17 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.ui.TimeSlider;
-
-import java.util.Date;
-
-import io.realm.RealmResults;
 
 /**
  * Created by jacob on 9/16/15.

@@ -1,8 +1,6 @@
 package com.queatz.snappy.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -124,7 +122,7 @@ public class Main extends Activity {
             onNewIntent(getIntent());
         }
         else {
-            mActionBar.reslove();
+            mActionBar.resolve();
         }
     }
 
@@ -142,7 +140,7 @@ public class Main extends Activity {
             mActionBar.setPage("parties".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
         }
         else  {
-            mActionBar.reslove();
+            mActionBar.resolve();
         }
     }
 
