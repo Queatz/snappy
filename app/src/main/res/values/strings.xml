@@ -47,7 +47,7 @@
     <string name="request_accepted">starts %1$s</string>
     <string name="started_following_you">started following you</string>
     <string name="buy_didnt_work">Buy didn\'t work</string>
-    <string name="buy_and_host">Buy and host</string>
+    <string name="buy_and_host">Buy Village</string>
     <string name="accept">Accept</string>
     <string name="about">About</string>
     <string name="messages">Messages</string>
@@ -67,13 +67,13 @@
     <string name="friends">Friends</string>
     <string name="here">here</string>
     <string name="what_are_you_into">What are you into?</string>
-    <string name="offer_an_experience">Offer an experience</string>
+    <string name="offer_an_experience">Offer something</string>
     <string name="free">Free</string>
     <string name="price">Price</string>
-    <string name="describe_the_experience">Describe the experience</string>
-    <string name="add_experience">Offer experience</string>
+    <string name="describe_the_experience">Describe the offer</string>
+    <string name="add_experience">Offer</string>
     <string name="stop_offering">Stop offering</string>
-    <string name="describe_another_experience">Describe another experience</string>
+    <string name="describe_another_experience">Describe another offer</string>
     <string name="information">\?</string>
     <string name="quests">%1$s side quests</string>
     <string name="start_a_quest">New side quest</string>
@@ -110,6 +110,10 @@
     <string name="added_a_new_photo">added a new photo</string>
     <string name="write_something">Write something…</string>
     <string name="explore">Explore</string>
+    <string name="for_free">Free</string>
+    <string name="for_amount">%1$s</string>
+    <string name="make_amount">Make %1$s</string>
+    <string name="per_what">Per anything?</string>
 
     <plurals name="people_near_place">
         <item quantity="one">%1$s person near %2$s</item>

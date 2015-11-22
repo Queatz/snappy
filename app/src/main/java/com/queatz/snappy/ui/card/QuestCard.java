@@ -17,8 +17,6 @@ import com.queatz.snappy.things.Person;
 import com.queatz.snappy.things.Quest;
 import com.squareup.picasso.Picasso;
 
-import io.realm.RealmObject;
-
 /**
  * Created by jacob on 11/12/15.
  */
@@ -125,7 +123,7 @@ public class QuestCard implements Card<Quest> {
             View.inflate(context, R.layout.quests_item_person, people);
             ImageView imageView = (ImageView) people.getChildAt(people.getChildCount() - 1);
 
-            imageView.setImageResource(R.color.darkpurple);
+            imageView.setImageResource(R.color.spacer);
         }
 
         return view;

@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:clickable="true"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:elevation="2dp">
 
-    <ImageView
-        android:id="@+id/backdrop"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/whiteout" />
+        android:layout_height="@dimen/card_highlight"
+        android:background="@color/red" />
 
     <LinearLayout
         android:id="@+id/layout"
@@ -30,7 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="3dp"
             android:divider="@null"
             android:dividerHeight="0dp"
             android:background="@drawable/actions_rounded"
@@ -190,4 +183,4 @@
 
     </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>

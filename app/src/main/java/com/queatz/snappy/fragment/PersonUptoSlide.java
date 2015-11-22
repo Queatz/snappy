@@ -15,6 +15,7 @@ import android.widget.ListView;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.adapter.OfferAdapter;
 import com.queatz.snappy.adapter.PersonUptoAdapter;
 import com.queatz.snappy.shared.Config;
@@ -40,6 +41,7 @@ public class PersonUptoSlide extends Fragment {
     com.queatz.snappy.things.Person mPerson;
     View personAbout;
     EditText describeExperience;
+    EditText perUnit;
     RealmChangeListener mChangeListener = null;
 
     public void setPerson(com.queatz.snappy.things.Person person) {
@@ -100,7 +102,7 @@ public class PersonUptoSlide extends Fragment {
             if(team.auth.getUser().equals(mPerson.getId())) {
                 ListView offersList = (ListView) personAbout.findViewById(R.id.offers).findViewById(R.id.offersList);
 
-                View newOffer = View.inflate(getActivity(), R.layout.new_offer, null);
+                final View newOffer = View.inflate(getActivity(), R.layout.new_offer, null);
 
                 offersList.addFooterView(newOffer);
 
@@ -109,28 +111,35 @@ public class PersonUptoSlide extends Fragment {
                 final Button addExperience = (Button) newOffer.findViewById(R.id.addExperience);
 
                 describeExperience = experienceDetails;
+                perUnit = (EditText) newOffer.findViewById(R.id.perWhat);
 
-                priceSlider.setPercent(0);
-
+                priceSlider.setPercent(getFreePercent());
                 priceSlider.setTextCallback(new TimeSlider.TextCallback() {
                     @Override
                     public String getText(float percent) {
                         int price = getPrice(percent);
 
+                        if (price < 0) {
+                            newOffer.setBackgroundResource(R.color.darkpurple);
+                        } else {
+                            newOffer.setBackgroundResource(R.color.darkgreen);
+                        }
+
                         if (price == 0) {
                             return getString(R.string.free);
                         }
 
-                        return "$" + Integer.toString(price);
+                        return  (price < 0 ? "-" : "") + "$" + Integer.toString(Math.abs(price));
                     }
                 });
 
                 addExperience.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        team.action.addExperience(experienceDetails.getText().toString(), getPrice(priceSlider.getPercent()));
-                        priceSlider.setPercent(0);
+                        team.action.addExperience(experienceDetails.getText().toString(), getPrice(priceSlider.getPercent()), perUnit.getText().toString());
+                        priceSlider.setPercent(getFreePercent());
                         experienceDetails.setText("");
+                        perUnit.setText("");
                     }
                 });
             }
@@ -165,7 +174,31 @@ public class PersonUptoSlide extends Fragment {
     }
 
     private int getPrice(float percent) {
-        return ((int) (percent * 20) * 10);
+        int price;
+
+        if (Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
+            price = (int) (percent * (Config.PAID_OFFER_PRICE_MAX - Config.PAID_OFFER_PRICE_MIN) + Config.PAID_OFFER_PRICE_MIN);
+        } else {
+            price = (int) (percent * (Config.FREE_OFFER_PRICE_MAX - Config.FREE_OFFER_PRICE_MIN) + Config.FREE_OFFER_PRICE_MIN);
+        }
+
+        if (Math.abs(price) < 200) {
+            price = (int) Math.floor(price / 10) * 10;
+        } else if (Math.abs(price) < 1000) {
+            price = (int) Math.floor(price / 50) * 50;
+        } else {
+            price = (int) Math.floor(price / 100) * 100;
+        }
+
+        return price;
+    }
+
+    private float getFreePercent() {
+        if (Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
+            return (float) -Config.PAID_OFFER_PRICE_MIN / (float) (-Config.PAID_OFFER_PRICE_MIN + Config.PAID_OFFER_PRICE_MAX);
+        } else {
+            return (float) -Config.FREE_OFFER_PRICE_MIN / (float) (-Config.FREE_OFFER_PRICE_MIN + Config.FREE_OFFER_PRICE_MAX);
+        }
     }
 
     private void updateBanner() {
@@ -217,6 +250,12 @@ public class PersonUptoSlide extends Fragment {
                     getResources().getQuantityString(R.plurals.offers, offers.size(), offers.size())
             );
         }
+
+        if (offers.size() > 0 && offers.get(0).getPrice() < 0) {
+            offersView.setBackgroundResource(R.color.purple);
+        } else {
+            offersView.setBackgroundResource(R.color.green);
+        }
     }
 
     public void refresh() {
@@ -226,6 +265,10 @@ public class PersonUptoSlide extends Fragment {
         team.api.get(String.format(Config.PATH_PEOPLE_ID, mPerson.getId()), new Api.Callback() {
             @Override
             public void success(String response) {
+                if (response == null) {
+                    return;
+                }
+
                 //TODO temp for delete arch (send my id list, server says which are gone)
                 if(mPerson != null) {
                     team.realm.beginTransaction();
@@ -285,8 +328,9 @@ public class PersonUptoSlide extends Fragment {
 
             long hosted = mPerson.getInfoHosted();
 
-            personAbout.findViewById(R.id.hosted_button).setVisibility(hosted > 0 ? View.VISIBLE : View.GONE);
-            ((TextView) personAbout.findViewById(R.id.info_hosted)).setText(Long.toString(hosted));
+            personAbout.findViewById(R.id.hosted_button).setVisibility(View.GONE);
+//            personAbout.findViewById(R.id.hosted_button).setVisibility(hosted > 0 ? View.VISIBLE : View.GONE);
+//            ((TextView) personAbout.findViewById(R.id.info_hosted)).setText(Long.toString(hosted));
 
             personAbout.findViewById(R.id.followers_button).setOnClickListener(new View.OnClickListener() {
                 @Override

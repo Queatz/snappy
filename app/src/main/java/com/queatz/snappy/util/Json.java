@@ -2,6 +2,7 @@ package com.queatz.snappy.util;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
 
 import java.text.DateFormat;
 
@@ -10,10 +11,18 @@ import java.text.DateFormat;
  */
 public class Json {
     static public <T> T from(String json, Class<T> clazz) {
-        return new GsonBuilder().setDateFormat(DateFormat.LONG, DateFormat.LONG).create().fromJson(json, clazz);
+        try {
+            return new GsonBuilder().setDateFormat(DateFormat.LONG, DateFormat.LONG).create().fromJson(json, clazz);
+        } catch (JsonSyntaxException e) {
+            return null;
+        }
     }
 
     static public <T> T from(JsonElement json, Class<T> clazz) {
-        return new GsonBuilder().setDateFormat(DateFormat.LONG, DateFormat.LONG).create().fromJson(json, clazz);
+        try {
+            return new GsonBuilder().setDateFormat(DateFormat.LONG, DateFormat.LONG).create().fromJson(json, clazz);
+        } catch (JsonSyntaxException e) {
+            return null;
+        }
     }
 }

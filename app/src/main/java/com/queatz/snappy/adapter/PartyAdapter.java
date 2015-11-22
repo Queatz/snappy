@@ -97,9 +97,7 @@ public class PartyAdapter extends RealmBaseAdapter<Party> {
             String photoUrl = Util.locationPhoto(party.getLocation(), (int) Util.px(128));
 
             ImageView locationIcon = (ImageView) view.findViewById(R.id.location_icon);
-            ImageView backdrop = ((ImageView) view.findViewById(R.id.backdrop));
             Picasso.with(context).load(photoUrl).placeholder(R.drawable.location).into(locationIcon);
-            Picasso.with(context).load(photoUrl).placeholder(R.drawable.location).into(backdrop);
 
             ((TextView) view.findViewById(R.id.location_text)).setText(party.getLocation() == null ? context.getString(R.string.hidden) : party.getLocation().getName());
             ((TextView) view.findViewById(R.id.time_text)).setText(party.getDate() == null ? context.getString(R.string.hidden) : TimeUtil.cuteDate(party.getDate()));

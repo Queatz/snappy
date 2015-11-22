@@ -11,6 +11,7 @@ public class Offer extends RealmObject {
     private String id;
     private String details;
     private int price;
+    private String unit;
     private Person person;
     private Date created;
 
@@ -36,6 +37,14 @@ public class Offer extends RealmObject {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     public Person getPerson() {

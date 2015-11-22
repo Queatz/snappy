@@ -29,6 +29,8 @@ public class Menu {
         if (object instanceof String) {
             switch ((String) object) {
                 case "profile menu":
+                    menu.add(R.string.about);
+
                     if(Config.HOSTING_ENABLED_AVAILABLE.equals(team.buy.hostingEnabled())) {
                         menu.add(R.string.buy_and_host);
                     }
@@ -71,6 +73,8 @@ public class Menu {
                 case "profile menu":
                     if (team.context.getString(R.string.logout).equals(item.getTitle())) {
                         team.auth.logout(activity);
+                    } else if (team.context.getString(R.string.about).equals(item.getTitle())) {
+                        team.action.showAbout(activity);
                     }
                     else if(team.context.getString(R.string.buy_and_host).equals(item.getTitle())) {
                         team.buy.callback(new Buy.PurchaseCallback() {

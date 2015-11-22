@@ -8,10 +8,13 @@ import com.queatz.snappy.service.Thing;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.HereResponseSpec;
 import com.queatz.snappy.shared.things.LocationSpec;
+import com.queatz.snappy.shared.things.OfferSpec;
 import com.queatz.snappy.shared.things.PartySpec;
 import com.queatz.snappy.shared.things.PersonSpec;
 import com.queatz.snappy.shared.things.QuestSpec;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -51,7 +54,7 @@ public class Here extends Api.Path {
         response.parties = fetchParties(user.id, geo);
         response.people = fetchPeople(geo);
         response.locations = fetchLocations(geo);
-        response.quests = fetchQuests(geo);
+        response.offers = fetchOffers(response.people);
 
         ok(response);
     }
@@ -61,7 +64,7 @@ public class Here extends Api.Path {
     }
 
     private List<PersonSpec> fetchPeople(GeoPt geo) {
-        List<PersonSpec> people = Search.getService().getNearby(PersonSpec.class, geo, new Date(new Date().getTime() - 1000 * 60 * 60), Config.SEARCH_PEOPLE_MAX_NEAR_HERE);
+        List<PersonSpec> people = Search.getService().getNearby(PersonSpec.class, geo, new Date(new Date().getTime() - 1000 * 60 * 60 * Config.MAX_IDLE_HOURS), Config.SEARCH_PEOPLE_MAX_NEAR_HERE);
 
         for (int i = 0; i < people.size(); i++) {
             if (people.get(i).id.equals(user.id)) {
@@ -78,7 +81,7 @@ public class Here extends Api.Path {
 
         List<PartySpec> parties = Search.getService().getNearby(PartySpec.class, geo, anHourAgo, Config.SEARCH_MAXIMUM);
 
-        for(PartySpec party : Datastore.get(PartySpec.class).filter("hostId", Datastore.key(PersonSpec.class, user)).list()) {
+        for(PartySpec party : Datastore.get(PartySpec.class).filter("hostId", user).list()) {
             if (!parties.contains(party)) {
                 parties.add(party);
             }
@@ -87,8 +90,14 @@ public class Here extends Api.Path {
         return parties;
     }
 
-    private List<QuestSpec> fetchQuests(GeoPt geo) {
-        return Search.getService().getNearby(QuestSpec.class, geo, new Date(new Date().getTime() - Config.QUESTS_MAX_AGE), Config.QUESTS_MAXIMUM);
+    private List<OfferSpec> fetchOffers(List<PersonSpec> people) {
+        ArrayList<OfferSpec> offers = new ArrayList<>();
+
+        for (PersonSpec person : people) {
+            List<OfferSpec> personOffers = Datastore.get(OfferSpec.class).filter("personId", person).list();
+            offers.addAll(personOffers);
+        }
+
+        return offers;
     }
 }
-

@@ -213,6 +213,7 @@ public class Me extends Api.Path {
     private void postOffers() {
         String localId = request.getParameter(Config.PARAM_LOCAL_ID);
         String details = request.getParameter(Config.PARAM_DETAILS);
+        String unit = request.getParameter(Config.PARAM_UNIT);
 
         int price = 0;
 
@@ -223,7 +224,7 @@ public class Me extends Api.Path {
         }
 
         if (details != null && details.length() > 0) {
-            OfferSpec offer = Thing.getService().offer.create(user, details, price);
+            OfferSpec offer = Thing.getService().offer.create(user, details, price, unit);
 
             if (offer != null) {
                 offer.localId = localId;

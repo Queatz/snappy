@@ -4,4 +4,7 @@
     <integer name="animation_speed_half">250</integer>
     <string name="google_api_key">AIzaSyAbnJ1knRetIhAPX419x1_mAxu9r69pzAM</string>
     <string name="google_android_key">AIzaSyASBzRotdPylD_aczzj5AW5uIROO4sO_ss</string>
+
+    <dimen name="card_spacing">16dp</dimen>
+    <dimen name="card_highlight">3dp</dimen>
 </resources>

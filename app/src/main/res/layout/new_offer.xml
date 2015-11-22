@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/darkgreen"
     android:padding="8dp">
 
     <com.queatz.snappy.ui.EditText
@@ -20,8 +21,7 @@
 
     <com.queatz.snappy.ui.ScrollStopper
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
+        android:layout_height="wrap_content">
 
         <com.queatz.snappy.ui.TimeSlider
             android:id="@+id/price"
@@ -32,6 +32,20 @@
             app:textColor="@color/white" />
 
     </com.queatz.snappy.ui.ScrollStopper>
+
+    <com.queatz.snappy.ui.EditText
+        android:id="@+id/perWhat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:textColor="@color/white"
+        android:background="@null"
+        android:hint="@string/per_what"
+        android:inputType="textShortMessage|textCapWords"
+        android:maxLines="1"
+        android:maxLength="12"
+        android:textColorHint="@color/whiteout"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:orientation="vertical"

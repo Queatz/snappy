@@ -15,7 +15,7 @@
             android:id="@+id/updateList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:dividerHeight="8dp"
+            android:dividerHeight="@dimen/card_spacing"
             android:divider="@android:color/transparent"
             android:footerDividersEnabled="true" />
 

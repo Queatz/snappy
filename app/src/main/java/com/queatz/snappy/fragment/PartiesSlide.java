@@ -4,11 +4,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -18,12 +14,12 @@ import android.widget.ListView;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.adapter.FeedAdapter;
-import com.queatz.snappy.adapter.PartyAdapter;
 import com.queatz.snappy.adapter.PeopleNearHereAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Here;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Bounty;
+import com.queatz.snappy.things.Location;
 import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
@@ -33,7 +29,6 @@ import com.queatz.snappy.ui.TextView;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 import io.realm.RealmChangeListener;
 import io.realm.RealmList;
@@ -217,7 +212,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
                     .endGroup()
                     .findAllSorted("opened", false);
 
-            RealmResults<Offer> queryOffers = team.realm.where(Offer.class).findAllSorted("price", true);
+            RealmResults<Offer> queryOffers = team.realm.where(Offer.class).notEqualTo("person.id", team.auth.getUser()).findAllSorted("price", true);
 
             final ArrayList<RealmResults> list = new ArrayList<>();
             list.add(queryParties);
@@ -241,7 +236,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
 
         team.here.update(getActivity(), mRefresh, new Here.Callback() {
             @Override
-            public void onSuccess(RealmList<Person> people, RealmList<com.queatz.snappy.things.Location> locations, RealmList<Party> parties, RealmList<Bounty> bounties, RealmList<Quest> quests) {
+            public void onSuccess(RealmList<Person> people, RealmList<Location> locations, RealmList<Party> parties, RealmList<Bounty> bounties, RealmList<Quest> quests, RealmList<Offer> offers) {
                 if (locations != null && people != null) {
                     updateBanner(people, locations);
                 }

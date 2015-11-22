@@ -1,27 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:background="@color/green"
+    android:orientation="vertical"
+    android:background="@color/white"
     android:elevation="2dp">
 
-    <com.queatz.snappy.ui.TextView
-        android:id="@+id/details"
+    <View
+        android:id="@+id/highlight"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/card_highlight"
+        android:background="@color/green" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textColor="@color/white"
-        android:textSize="18sp" />
+        android:orientation="horizontal"
+        android:layout_centerVertical="true">
 
-    <com.queatz.snappy.ui.TextView
-        android:id="@+id/price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:layout_marginLeft="8dp"
-        android:textColor="@color/white"
-        android:textSize="18sp" />
+        <com.makeramen.RoundedImageView
+            android:id="@+id/profile"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_weight="0"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
+            app:riv_corner_radius="48dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:gravity="bottom|right"
+            android:layout_weight="0"
+            android:orientation="vertical">
+
+            <com.queatz.snappy.ui.TextView
+                android:id="@+id/details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:textColor="@color/text"
+                android:textSize="18sp" />
+
+            <Button style="@style/Widget.AppCompat.Button.Borderless"
+                android:id="@+id/takeOffer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:minWidth="0dp"
+                android:text="@string/message"
+                android:textColor="@color/green" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

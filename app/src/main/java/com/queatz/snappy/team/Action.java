@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -395,7 +396,7 @@ public class Action {
         team.api.post(String.format(Config.PATH_JOIN_ID, join.getId()), params, new Api.Callback() {
             @Override
             public void success(String response) {
-                if(!ResponseUtil.isSuccess(response)) {
+                if (!ResponseUtil.isSuccess(response)) {
                     Toast.makeText(team.context, "Hide join failed", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -484,7 +485,7 @@ public class Action {
         }
     }
 
-    public void addExperience(@NonNull String details, int price) {
+    public void addExperience(@NonNull String details, int price, @Nullable String unit) {
         if(details.isEmpty()) {
             return;
         }
@@ -494,12 +495,14 @@ public class Action {
         offer.setId(Util.createLocalId());
         offer.setDetails(details);
         offer.setPrice(price);
+        offer.setUnit(unit);
         offer.setPerson(team.auth.me());
         team.realm.commitTransaction();
 
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_LOCAL_ID, offer.getId());
         params.put(Config.PARAM_DETAILS, details);
+        params.put(Config.PARAM_UNIT, unit);
         params.put(Config.PARAM_PRICE, price);
 
         team.api.post(Config.PATH_ME_OFFERS, params, new Api.Callback() {
@@ -510,7 +513,7 @@ public class Action {
 
             @Override
             public void fail(String response) {
-                Toast.makeText(team.context, "Couldn't add experience", Toast.LENGTH_SHORT).show();
+                Toast.makeText(team.context, "Couldn't add offer", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -892,5 +895,14 @@ public class Action {
                 }
                 break;
         }
+    }
+
+    public void showAbout(Activity activity) {
+        View view = View.inflate(activity, R.layout.information, null);
+
+        new AlertDialog.Builder(activity)
+                .setView(view)
+                .setPositiveButton(R.string.ok, null)
+                .show();
     }
 }

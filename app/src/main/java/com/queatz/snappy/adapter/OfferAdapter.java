@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
+import com.queatz.snappy.Util;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Offer;
 
@@ -35,15 +36,21 @@ public class OfferAdapter extends RealmBaseAdapter<Offer> {
             view = inflater.inflate(R.layout.offer_item, parent, false);
         }
 
+        Team team = ((MainApplication) context.getApplicationContext()).team;
+
         Offer offer = realmResults.get(position);
 
         TextView details = (TextView) view.findViewById(R.id.details);
         TextView price = (TextView) view.findViewById(R.id.price);
 
         details.setText(offer.getDetails());
-        price.setText(offer.getPrice() > 0 ? "$" + offer.getPrice() : context.getString(R.string.free));
+        price.setText(offer.getPrice() > 0 ? Util.offerAmount(offer) : offer.getPrice() < 0 ? (team.auth.getUser().equals(offer.getPerson().getId()) ? "-" : "+") + Util.offerAmount(offer) : context.getString(R.string.free));
 
-        Team team = ((MainApplication) context.getApplicationContext()).team;
+        if (offer.getPrice() < 0) {
+            view.setBackgroundResource(R.color.purple);
+        } else {
+            view.setBackgroundResource(R.color.green);
+        }
 
         if(team.auth.getUser() != null && team.auth.getUser().equals(offer.getPerson().getId())) {
             view.setTag(offer);

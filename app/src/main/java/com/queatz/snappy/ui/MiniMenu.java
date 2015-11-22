@@ -113,14 +113,16 @@ public class MiniMenu extends FrameLayout {
     }
 
     private void updateQuestsText() {
-        final Team team = ((MainApplication) getContext().getApplicationContext()).team;
+//        final Team team = ((MainApplication) getContext().getApplicationContext()).team;
 
-        if(Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
-            findViewById(R.id.action_quests).setVisibility(View.VISIBLE);
-        }
-        else {
-            findViewById(R.id.action_quests).setVisibility(View.GONE);
-        }
+        findViewById(R.id.action_quests).setVisibility(View.GONE);
+
+//        if(Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
+//            findViewById(R.id.action_quests).setVisibility(View.VISIBLE);
+//        }
+//        else {
+//            findViewById(R.id.action_quests).setVisibility(View.GONE);
+//        }
     }
 
     private void updateSocialModeText(String socialMode) {
@@ -132,7 +134,8 @@ public class MiniMenu extends FrameLayout {
 
     public void show() {
         final Team team = ((MainApplication) getContext().getApplicationContext()).team;
-        findViewById(R.id.action_host).setVisibility(Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled()) ? View.VISIBLE : View.GONE);
+        findViewById(R.id.action_host).setVisibility(View.GONE);
+//        findViewById(R.id.action_host).setVisibility(Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled()) ? View.VISIBLE : View.GONE);
         show(getVisibility() == View.GONE);
     }
 

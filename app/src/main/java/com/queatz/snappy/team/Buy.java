@@ -60,7 +60,6 @@ public class Buy {
     }
 
     public boolean bought() {
-        Log.e(Config.LOG_TAG, "bought " + mGooglePurchaseData);
         return mGooglePurchaseData != null;
     }
 

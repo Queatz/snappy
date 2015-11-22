@@ -7,12 +7,16 @@ import com.google.gson.JsonObject;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.things.Bounty;
+import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.things.Quest;
 import com.queatz.snappy.util.Json;
 
+import java.util.List;
+
 import io.realm.RealmList;
+import io.realm.RealmResults;
 
 /**
  * Created by jacob on 9/5/15.
@@ -25,7 +29,7 @@ public class Here {
     }
 
     public interface Callback {
-        void onSuccess(RealmList<Person> people, RealmList<com.queatz.snappy.things.Location> locations, RealmList<Party> parties, RealmList<Bounty> bounties, RealmList<Quest> quests);
+        void onSuccess(RealmList<Person> people, RealmList<com.queatz.snappy.things.Location> locations, RealmList<Party> parties, RealmList<Bounty> bounties, RealmList<Quest> quests, RealmList<Offer> offers);
     }
 
     public void update(final Activity activity, final SwipeRefreshLayout refresher, final Callback callback) {
@@ -50,6 +54,7 @@ public class Here {
                         RealmList<Bounty> bounties = null;
                         RealmList<Party> parties = null;
                         RealmList<Quest> quests = null;
+                        RealmList<Offer> offers = null;
 
                         if(jsonObject.has("locations")) {
                             locations = team.things.putAll(com.queatz.snappy.things.Location.class, jsonObject.getAsJsonArray("locations"));
@@ -81,8 +86,22 @@ public class Here {
                             quests = team.things.putAll(Quest.class, jsonObject.getAsJsonArray("quests"));
                         }
 
+                        if(jsonObject.has("offers")) {
+                            RealmResults<Offer> removeOffers = team.realm.where(Offer.class).notEqualTo("person.id", team.auth.getUser()).findAll();
+
+                            team.realm.beginTransaction();
+
+                            while (removeOffers.size() > 0) {
+                                removeOffers.removeLast();
+                            }
+
+                            team.realm.commitTransaction();
+
+                            offers = team.things.putAll(Offer.class, jsonObject.getAsJsonArray("offers"));
+                        }
+
                         if(callback != null) {
-                            callback.onSuccess(people, locations, parties, bounties, quests);
+                            callback.onSuccess(people, locations, parties, bounties, quests, offers);
                         }
                     }
 

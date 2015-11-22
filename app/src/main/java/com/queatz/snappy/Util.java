@@ -15,6 +15,7 @@ import android.text.style.ForegroundColorSpan;
 
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.things.Update;
 import com.queatz.snappy.util.TimeUtil;
@@ -53,6 +54,10 @@ public class Util {
 
     public static float dp(float px) {
         return px / context.getResources().getDisplayMetrics().density;
+    }
+
+    public static String offerAmount(Offer offer) {
+        return "$" + Math.abs(offer.getPrice()) + (offer.getUnit() == null || offer.getUnit().isEmpty() ? "" : "/" + offer.getUnit());
     }
 
     public static Spanned getUpdateText(Update update) {

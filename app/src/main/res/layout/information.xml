@@ -50,43 +50,13 @@
                 android:layout_marginBottom="8dp"
                 android:textStyle="bold"
                 android:textColor="@color/text"
-                android:text="What is a party?" />
+                android:text="What is Village?" />
 
             <com.queatz.snappy.ui.TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text"
-                android:text="Parties are ways to socialize around ideas, projects, or similar goals.  All parties have a point of contact, or host, displayed on the card." />
-
-            <com.queatz.snappy.ui.TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:textStyle="bold"
-                android:textColor="@color/text"
-                android:text="What is an offer?" />
-
-            <com.queatz.snappy.ui.TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text"
-                android:text="Offers are interesting experiences put together by the person offering them, such as cooking dinner, a neighborhood who's who tour, or sharing a unique skill." />
-
-            <com.queatz.snappy.ui.TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:textStyle="bold"
-                android:textColor="@color/text"
-                android:text="What are quests?" />
-
-            <com.queatz.snappy.ui.TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text"
-                android:text="Quests are small excursions, occasionally requiring multiple people to complete.  You get a reward upon completion." />
+                android:text="Village is a marketplace where people share their skills, knowledge, time, and more.  You will only see offers from people within a 3 mile radius of where you are at." />
 
             <com.queatz.snappy.ui.TextView
                 android:visibility="gone"
@@ -129,13 +99,13 @@
                 android:layout_marginBottom="8dp"
                 android:textStyle="bold"
                 android:textColor="@color/text"
-                android:text="What is Social Mode?" />
+                android:text="How does payment work?" />
 
             <com.queatz.snappy.ui.TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text"
-                android:text="Social Mode lets you choose how often you want to be interrupted today." />
+                android:text="Payment is handled outside of Village.  We suggest requesting half upfront for large sums.  If you don't get paid in full for something you did, please contact us right away." />
 
             <com.queatz.snappy.ui.TextView
                 android:layout_width="match_parent"
@@ -150,7 +120,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text"
-                android:text="People who follow you will get notified when you host a party. Accordingly, you will get notified when people you follow throw a party." />
+                android:text="People who follow you will get notified when you offer something. Accordingly, you will get these notifications from people you follow." />
 
             <com.queatz.snappy.ui.TextView
                 android:layout_width="match_parent"
@@ -174,13 +144,22 @@
                 android:layout_marginBottom="8dp"
                 android:textStyle="bold"
                 android:textColor="@color/text"
-                android:text="What do I get when I pay for Village?" />
+                android:text="What if I want to offer more than $20?" />
 
             <com.queatz.snappy.ui.TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text"
-                android:text="You gain the ability to host parties, make quests, and give endorsements." />
+                android:text="Ask us. Plans start out at $5/month." />
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:textColor="@color/text"
+                android:autoLink="all"
+                android:gravity="center"
+                android:text="http://village.city • contact@village.city" />
 
         </LinearLayout>
 

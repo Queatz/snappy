@@ -5,12 +5,16 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
+import com.queatz.snappy.Util;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Offer;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by jacob on 11/12/15.
@@ -31,10 +35,13 @@ public class OfferCard implements Card<Offer> {
         view.setTag(offer);
 
         TextView details = (TextView) view.findViewById(R.id.details);
-        TextView price = (TextView) view.findViewById(R.id.price);
+        Button takeOffer = (Button) view.findViewById(R.id.takeOffer);
 
         details.setText(offer.getDetails());
-        price.setText(offer.getPrice() > 0 ? "$" + offer.getPrice() : context.getString(R.string.free));
+        takeOffer.setText(offer.getPrice() > 0 ?
+                context.getString(R.string.for_amount, Util.offerAmount(offer)) : offer.getPrice() < 0 ?
+                context.getString(R.string.make_amount, Util.offerAmount(offer)) :
+                context.getString(R.string.for_free));
 
         final Team team = ((MainApplication) context.getApplicationContext()).team;
 
@@ -43,12 +50,29 @@ public class OfferCard implements Card<Offer> {
             ((Activity) context).registerForContextMenu(view);
         }
 
-        view.setOnClickListener(new View.OnClickListener() {
+        ImageView profile = (ImageView) view.findViewById(R.id.profile);
+        Picasso.with(context).load(offer.getPerson().getImageUrlForSize((int) Util.px(64))).placeholder(R.color.spacer).into(profile);
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.action.openProfile((Activity) context, offer.getPerson());
+            }
+        });
+
+        View.OnClickListener onClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 team.action.openMessages((Activity) context, offer.getPerson());
             }
-        });
+        };
+
+        view.findViewById(R.id.takeOffer).setOnClickListener(onClick);
+        view.setOnClickListener(onClick);
+
+
+        int colorResource = (offer.getPrice() < 0 ? R.color.purple : R.color.green);
+        view.findViewById(R.id.highlight).setBackgroundResource(colorResource);
+        ((Button) view.findViewById(R.id.takeOffer)).setTextColor(context.getResources().getColor(colorResource));
 
         return view;
     }

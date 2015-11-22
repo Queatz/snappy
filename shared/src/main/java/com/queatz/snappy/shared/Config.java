@@ -7,7 +7,7 @@ public class Config {
 
     // Android
 
-    public static final boolean BETA_VERSION = true;
+    public static final boolean BETA_VERSION = false;
 
     public static final String LOG_TAG = "SNAPPY_LOG";
     public static final String API_URL = (BETA_VERSION ? "https://beta-dot-queatz-snappy.appspot.com/api/" : "http://queatz-snappy.appspot.com/api/");
@@ -92,10 +92,15 @@ public class Config {
     public static final boolean PUBLIC_BUY = true;
     public static final int TEMPORARY_API_LIMIT = 100;
 
+    public static final int FREE_OFFER_PRICE_MIN = -40;
+    public static final int FREE_OFFER_PRICE_MAX = 200;
+    public static final int PAID_OFFER_PRICE_MIN = -1000;
+    public static final int PAID_OFFER_PRICE_MAX = 1000;
+
     public static final int SEARCH_DISTANCE = 1609 * 7;
     public static final int SEARCH_MINIMUM = 10;
     public static final int SEARCH_MAXIMUM = 30;
-    public static final int SEARCH_MAX_VISIBILITY = 1609 * 300;
+    public static final int SEARCH_MAX_VISIBILITY = 1609 * 3;
     public static final int NEARBY_MAX_VISIBILITY = 1609 * 2;
     public static final int BOUNTIES_MAX_AGE = 1000 * 60 * 60 * 24 * 7;
     public static final long QUESTS_MAX_AGE = 1000L * 60L * 60L * 24L * 30L;
@@ -105,11 +110,11 @@ public class Config {
     public static final int SUGGESTION_LIMIT = 5;
     public static final int SUGGESTION_MAX_DISTANCE = 1609 * 7;
     public static final int SEARCH_PEOPLE_MAX_NEAR_HERE = 500;
-    public static final int SEARCH_PEOPLE_MAX_DISTANCE = 804;
+    public static final int SEARCH_HERE_MAX_DISTANCE = 1609 * 2;
     public static final int SEARCH_LOCATIONS_MAX_HERE = 10;
-    public static final int OFFER_MAX_PRICE = 200;
     public static final int BOUNTY_MIN_PRICE = 500;
     public static final int BOUNTY_MAX_PRICE = 15000;
+    public static final int MAX_IDLE_HOURS = 18;
 
     public static final String HOSTING_BETATESTER = "betatester";
 
@@ -162,6 +167,7 @@ public class Config {
     public static final String PARAM_PHOTO = "photo";
     public static final String PARAM_NAME = "name";
     public static final String PARAM_DETAILS = "details";
+    public static final String PARAM_UNIT = "unit";
     public static final String PARAM_DATE = "date";
     public static final String PARAM_ID = "id";
     public static final String PARAM_JOIN = "join";

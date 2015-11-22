@@ -54,9 +54,7 @@ public class Main extends Activity {
         mActionBar.setRightContent(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Team team = ((MainApplication) getApplication()).team;
-
-                team.action.openMinimenu(Main.this, view);
+                team.action.openProfile(Main.this, team.auth.me());
             }
         });
 
