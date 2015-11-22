@@ -35,10 +35,6 @@ public class Parties extends Api.Path {
     }
 
     private void post() {
-        if (!Buy.getService().valid(user)) {
-            die("parties - not bought");
-        }
-
         String localId = request.getParameter(Config.PARAM_LOCAL_ID);
 
         PartySpec party = Thing.getService().party.createFromRequest(request, user);

@@ -30,6 +30,7 @@ public class Menu {
             switch ((String) object) {
                 case "profile menu":
                     menu.add(R.string.about);
+                    menu.add(R.string.host_a_party);
 
                     if(Config.HOSTING_ENABLED_AVAILABLE.equals(team.buy.hostingEnabled())) {
                         menu.add(R.string.buy_and_host);
@@ -75,6 +76,8 @@ public class Menu {
                         team.auth.logout(activity);
                     } else if (team.context.getString(R.string.about).equals(item.getTitle())) {
                         team.action.showAbout(activity);
+                    } else if (team.context.getString(R.string.host_a_party).equals(item.getTitle())) {
+                        team.view.show(activity, HostParty.class, null);
                     }
                     else if(team.context.getString(R.string.buy_and_host).equals(item.getTitle())) {
                         team.buy.callback(new Buy.PurchaseCallback() {
