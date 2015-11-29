@@ -19,7 +19,6 @@ public class OfferSpec extends ThingSpec {
     public int price;
     public String details;
     public String unit;
-    public Date created;
     public Date stopped;
 
     public @Index @Hide Key<PersonSpec> personId;

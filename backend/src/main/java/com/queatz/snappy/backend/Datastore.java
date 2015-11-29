@@ -23,6 +23,7 @@ import com.queatz.snappy.shared.things.QuestSpec;
 import com.queatz.snappy.shared.things.UpdateLikeSpec;
 import com.queatz.snappy.shared.things.UpdateSpec;
 
+import java.util.Date;
 import java.util.Random;
 
 public class Datastore {
@@ -89,6 +90,7 @@ public class Datastore {
         if (ThingSpec.class.isAssignableFrom(thing.getClass())) {
             if (((ThingSpec) thing).id == null) {
                 ((ThingSpec) thing).id = newId();
+                ((ThingSpec) thing).created = new Date();
             }
 
             Search.getService().update((ThingSpec) thing);

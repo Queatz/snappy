@@ -37,6 +37,7 @@ var doers = [
     'Mystics',
     'Animators',
     '3D Modellers',
+    'Location Scouts',
     'Models',
     'Geologists',
     'Deep Sea Divers',
