@@ -28,6 +28,7 @@ import com.queatz.snappy.ui.RevealAnimation;
 import com.queatz.snappy.ui.SlideScreen;
 import com.queatz.snappy.ui.TextView;
 import com.queatz.snappy.ui.TimeSlider;
+import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 
 import io.realm.RealmChangeListener;
@@ -326,11 +327,8 @@ public class PersonUptoSlide extends Fragment {
             ((TextView) personAbout.findViewById(R.id.info_followers)).setText(Long.toString(mPerson.getInfoFollowers()));
             ((TextView) personAbout.findViewById(R.id.info_following)).setText(Long.toString(mPerson.getInfoFollowing()));
 
-            long hosted = mPerson.getInfoHosted();
-
-            personAbout.findViewById(R.id.hosted_button).setVisibility(View.GONE);
-//            personAbout.findViewById(R.id.hosted_button).setVisibility(hosted > 0 ? View.VISIBLE : View.GONE);
-//            ((TextView) personAbout.findViewById(R.id.info_hosted)).setText(Long.toString(hosted));
+            personAbout.findViewById(R.id.hosted_button).setVisibility(mPerson.getCreated() != null ? View.VISIBLE : View.GONE);
+            ((TextView) personAbout.findViewById(R.id.info_hosted)).setText(TimeUtil.agoDate(mPerson.getCreated()));
 
             personAbout.findViewById(R.id.followers_button).setOnClickListener(new View.OnClickListener() {
                 @Override

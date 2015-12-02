@@ -114,6 +114,7 @@
     <string name="for_amount">%1$s</string>
     <string name="make_amount">Make %1$s</string>
     <string name="per_what">Per anything?</string>
+    <string name="memeber_since">Member Since</string>
 
     <plurals name="people_near_place">
         <item quantity="one">%1$s person near %2$s</item>

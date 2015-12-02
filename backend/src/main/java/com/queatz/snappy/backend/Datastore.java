@@ -52,6 +52,7 @@ public class Datastore {
         try {
             T thing = type.newInstance();
             thing.id = newId();
+            thing.created = new Date();
             return thing;
         } catch (InstantiationException e) {
             e.printStackTrace();

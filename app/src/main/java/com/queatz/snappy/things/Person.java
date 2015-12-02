@@ -1,5 +1,7 @@
 package com.queatz.snappy.things;
 
+import java.util.Date;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
@@ -14,6 +16,7 @@ import io.realm.annotations.RealmClass;
 public class Person extends RealmObject {
     @Index
     private String id;
+    private Date created;
     private String firstName;
     private String lastName;
     private String about;
@@ -49,6 +52,14 @@ public class Person extends RealmObject {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
     public String getFirstName() {
