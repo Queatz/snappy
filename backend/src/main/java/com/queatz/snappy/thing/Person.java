@@ -50,7 +50,7 @@ public class Person {
             person = Datastore.create(PersonSpec.class);
             person.token = Util.genToken();
             person.email = data.email;
-        } else {
+        } else if (person.token == null) {
             person.token = data.token;
         }
 

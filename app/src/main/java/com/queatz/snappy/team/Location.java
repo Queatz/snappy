@@ -29,8 +29,6 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-;
-
 /**
  * Created by jacob on 10/19/14.
  */

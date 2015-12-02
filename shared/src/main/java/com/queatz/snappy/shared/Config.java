@@ -83,7 +83,7 @@ public class Config {
 
     public static final String NAME = "snappy";
     public static final String PACKAGE = "com.queatz.snappy";
-    public static final String CLIENT_ID = "1098230558363-qe1do9mi41ptg644bd12m90sbba767e2.apps.googleusercontent.com";
+    public static final String CLIENT_ID = Gateway.clientId;
     public static final String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
     public static final String QUEUE_WORKER_URL = "/worker";
     public static final String QUEUE_WORKER_NAME = "pushes";
@@ -199,7 +199,7 @@ public class Config {
     public static final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/token";
     public static final String GOOGLE_AUTH_URL_POST_PARAMS = "grant_type=refresh_token&refresh_token=%s&client_id=%s";
     public static final String subscriptionProductId = "com.queatz.snappy.monthly";
-    public static final String refreshToken = "1/GBpu5P7H3RGjlaNnVgoKMqE-GrEBbLAJHjEPpFzK5I4";
+    public static final String refreshToken = Gateway.refreshToken;
 
     public static final String PATH_ABOUT = "about";
     public static final String PATH_BOUNTIES = "bounties";
