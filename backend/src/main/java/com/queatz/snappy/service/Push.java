@@ -4,6 +4,8 @@ import com.queatz.snappy.backend.Json;
 import com.queatz.snappy.backend.RegistrationRecord;
 import com.queatz.snappy.shared.PushSpec;
 
+import java.util.Date;
+
 import static com.queatz.snappy.backend.Datastore.ofy;
 
 /**
@@ -27,6 +29,7 @@ public class Push {
 
         if (record != null) {
             record.setSocialMode(socialMode);
+            record.setUpdated(new Date());
             ofy().save().entity(record).now();
         }
         else {
@@ -34,6 +37,8 @@ public class Push {
             record.setRegId(device);
             record.setUserId(user);
             record.setSocialMode(socialMode);
+            record.setCreated(new Date());
+            record.setUpdated(record.getCreated());
             ofy().save().entity(record).now();
         }
     }

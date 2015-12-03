@@ -83,7 +83,9 @@ public class Config {
 
     public static final String NAME = "snappy";
     public static final String PACKAGE = "com.queatz.snappy";
+    public static final String PROJECT_ID = Gateway.projectId;
     public static final String CLIENT_ID = Gateway.clientId;
+    public static final String GCM_KEY = Gateway.gcmKey;
     public static final String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
     public static final String QUEUE_WORKER_URL = "/worker";
     public static final String QUEUE_WORKER_NAME = "pushes";

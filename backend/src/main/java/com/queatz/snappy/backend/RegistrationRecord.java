@@ -4,6 +4,8 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
+import java.util.Date;
+
 /**
  * The Objectify object model for device registrations we are persisting
  */
@@ -13,6 +15,8 @@ public class RegistrationRecord {
     @Index private String regId;
     @Index private String userId;
     @Index private String socialMode;
+    @Index private Date created;
+    @Index private Date updated;
 
     public RegistrationRecord() {
     }
@@ -39,5 +43,21 @@ public class RegistrationRecord {
 
     public void setSocialMode(String socialMode) {
         this.socialMode = socialMode;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
     }
 }

@@ -60,8 +60,6 @@ public class Auth {
         private Auth auth;
         private RequestHandle requestHandle = null;
 
-        private static final String SENDER_ID = "1098230558363";
-
         public GcmRegistrationAsyncTask(Auth auth) {
             this.auth = auth;
         }
@@ -81,7 +79,7 @@ public class Auth {
                     gcm = GoogleCloudMessaging.getInstance(auth.team.context);
                 }
 
-                return gcm.register(SENDER_ID);
+                return gcm.register(Config.PROJECT_ID);
             } catch (IOException e) {
                 Log.w(Config.LOG_TAG, "Device registration failed (code 1)");
                 e.printStackTrace();

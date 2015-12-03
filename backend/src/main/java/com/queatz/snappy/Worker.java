@@ -27,8 +27,6 @@ import static com.queatz.snappy.backend.Datastore.ofy;
  * Created by jacob on 4/11/15.
  */
 public class Worker extends HttpServlet {
-    private static final String API_KEY = System.getProperty("gcm.api.key");
-
     private static class SendInstance {
         protected String userId;
         protected String lowestRequiredSocialMode;
@@ -59,7 +57,7 @@ public class Worker extends HttpServlet {
                 String fromUser = req.getParameter("fromUser");
                 String message = req.getParameter("message");
 
-                Sender sender = new Sender(API_KEY);
+                Sender sender = new Sender(Config.GCM_KEY);
                 Message msg = new Message.Builder().addData("message", message).build();
 
                 HashSet<SendInstance> toUsers = new HashSet<>();
