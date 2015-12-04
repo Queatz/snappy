@@ -22,6 +22,7 @@ import com.queatz.snappy.shared.things.FollowLinkSpec;
 import com.queatz.snappy.shared.things.JoinLinkSpec;
 import com.queatz.snappy.shared.things.MessageSpec;
 import com.queatz.snappy.shared.things.PartySpec;
+import com.queatz.snappy.shared.things.PersonSpec;
 import com.queatz.snappy.shared.things.QuestSpec;
 import com.queatz.snappy.shared.things.UpdateSpec;
 import com.queatz.snappy.team.push.BountyPushHandler;

@@ -1,5 +1,7 @@
 package com.queatz.snappy.shared;
 
+import java.util.UUID;
+
 /**
  * Created by jacob on 10/25/14.
  */
@@ -32,6 +34,15 @@ public class Config {
     public static final int REQUEST_CODE_PLAY_SERVICES = 4;
     public static final int REQUEST_CODE_CHECK_SETTINGS = 5;
     public static final int REQUEST_CODE_CHOOSER = 6;
+    public static final int REQUEST_CODE_ENABLE_BT = 7;
+
+    public static final UUID UUID_SERVICE = UUID.fromString("2d444574-5fdb-4e49-8921-3823f80b39a5");
+    public static final UUID UUID_CHARACTERISTIC_PROFILE_ID = UUID.fromString("9592986d-0038-4ebf-acc2-6454f30e9db4");
+    public static final UUID UUID_CHARACTERISTIC_PROFILE_FIRST_NAME = UUID.fromString("d233da61-49ee-4ec9-94f2-576d8e7dddb0");
+    public static final int REPORTING_DELAY = 5000;
+    public static final int ADVERTISE_TIMEOUT = 1000 * 60 * 2;
+    public static final int ADVERTISE_HIDE_TIMEOUT = 1000 * 60 * 10;
+
 
     public static final String EXTRA_ACTION = "action";
     public static final String EXTRA_PARTY_ID = "party";
@@ -141,6 +152,7 @@ public class Config {
     public static final String PUSH_ACTION_QUEST_COMPLETED = "quest_completed";
     public static final String PUSH_ACTION_QUEST_STARTED = "quest_started";
     public static final String PUSH_ACTION_NEW_UPTO = "new_upto";
+    public static final String PUSH_ACTION_ADVERTISE = "advertise";
 
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";
     public static final String UPDATE_ACTION_HOST_PARTY = "host_party";

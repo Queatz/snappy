@@ -34,6 +34,7 @@ public class Team implements Closeable {
     public Buy buy;
     public Menu menu;
     public Here here;
+    public Advertise advertise;
 
     public Team(Context c) {
         context = c;
@@ -50,6 +51,7 @@ public class Team implements Closeable {
         local = new Local(this);
         menu = new Menu(this);
         here = new Here(this);
+        advertise = new Advertise(this);
     }
 
     public void close() {
@@ -101,5 +103,6 @@ public class Team implements Closeable {
         buy.onActivityResult(activity, requestCode, resultCode, data);
         location.onActivityResult(requestCode, resultCode, data);
         action.onActivityResult(activity, requestCode, resultCode, data);
+        advertise.onActivityResult(activity, requestCode, resultCode, data);
     }
 }
