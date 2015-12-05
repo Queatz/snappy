@@ -14,6 +14,7 @@
     <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <permission
         android:name="${applicationId}.permission.C2D_MESSAGE"
@@ -26,9 +27,11 @@
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
+        android:fullBackupContent="false"
         android:icon="@drawable/pistachio"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
         <activity
             android:name=".MainActivity"
             android:alwaysRetainTaskState="true"
@@ -42,6 +45,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activity.Welcome"
             android:alwaysRetainTaskState="true"
@@ -50,6 +54,7 @@
             android:launchMode="singleTask"
             android:theme="@style/WelcomeTheme"
             android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name=".activity.Main"
             android:alwaysRetainTaskState="true"
@@ -57,6 +62,7 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name=".activity.Person"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -64,6 +70,7 @@
             android:launchMode="standard"
             android:parentActivityName=".activity.Main"
             android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name=".activity.PersonList"
             android:alwaysRetainTaskState="true"
@@ -72,6 +79,7 @@
             android:launchMode="standard"
             android:theme="@style/DialogTheme"
             android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name=".activity.HostParty"
             android:alwaysRetainTaskState="true"
@@ -80,6 +88,7 @@
             android:launchMode="singleTask"
             android:parentActivityName=".activity.Main"
             android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name=".activity.Bounties"
             android:alwaysRetainTaskState="true"
@@ -89,6 +98,7 @@
             android:parentActivityName=".activity.Main"
             android:theme="@style/BountiesTheme"
             android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name=".activity.Quests"
             android:alwaysRetainTaskState="true"
@@ -98,6 +108,7 @@
             android:parentActivityName=".activity.Main"
             android:theme="@style/QuestsTheme"
             android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name=".activity.NewUpto"
             android:alwaysRetainTaskState="true"
@@ -109,7 +120,6 @@
             android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
-
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:mimeType="image/*" />
@@ -118,8 +128,23 @@
         </activity>
 
         <service android:name=".GCMIntentService" />
+
         <service android:name=".Background" />
-        <receiver android:name=".AdvertiseBroadcastReciever" android:exported="false" />
+
+        <service
+            android:name=".AdvertiseService"
+            android:exported="false"/>
+
+        <receiver android:name=".AdvertiseBroadcastReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.intent.action.SCREEN_ON" />
+                <action android:name="android.intent.action.SCREEN_OFF" />
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED"/>
+            </intent-filter>
+        </receiver>
 
         <receiver
             android:name=".GCMBroadcastReceiver"
@@ -133,9 +158,11 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_android_key" />
+
     </application>
 
 </manifest>

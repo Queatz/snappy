@@ -33,6 +33,8 @@ public class Here {
     }
 
     public void update(final Activity activity, final SwipeRefreshLayout refresher, final Callback callback) {
+        team.advertise.enable(null);
+
         team.location.get(activity, new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
             @Override
             public void onLocationFound(final android.location.Location location) {

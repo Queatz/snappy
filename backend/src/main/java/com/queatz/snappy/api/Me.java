@@ -228,6 +228,9 @@ public class Me extends Api.Path {
 
             if (offer != null) {
                 offer.localId = localId;
+
+                Push.getService().sendToFollowers(user.id, new PushSpec<>(Config.PUSH_ACTION_NEW_OFFER, offer));
+
                 ok(offer);
             } else {
                 error("offers - error");

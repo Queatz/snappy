@@ -21,6 +21,7 @@ import com.queatz.snappy.shared.things.BountySpec;
 import com.queatz.snappy.shared.things.FollowLinkSpec;
 import com.queatz.snappy.shared.things.JoinLinkSpec;
 import com.queatz.snappy.shared.things.MessageSpec;
+import com.queatz.snappy.shared.things.OfferSpec;
 import com.queatz.snappy.shared.things.PartySpec;
 import com.queatz.snappy.shared.things.PersonSpec;
 import com.queatz.snappy.shared.things.QuestSpec;
@@ -30,6 +31,7 @@ import com.queatz.snappy.team.push.DefaultPushHandler;
 import com.queatz.snappy.team.push.FollowPushHandler;
 import com.queatz.snappy.team.push.JoinPushHandler;
 import com.queatz.snappy.team.push.MessagePushHandler;
+import com.queatz.snappy.team.push.OfferPushHandler;
 import com.queatz.snappy.team.push.PartyPushHandler;
 import com.queatz.snappy.team.push.QuestPushHandler;
 import com.queatz.snappy.team.push.UpdatePushHandler;
@@ -50,6 +52,7 @@ public class Push {
     private MessagePushHandler messagePushHandler;
     private PartyPushHandler partyPushHandler;
     private UpdatePushHandler updatePushHandler;
+    private OfferPushHandler offerPushHandler;
 
     public Push(Team t) {
         team = t;
@@ -63,6 +66,7 @@ public class Push {
         messagePushHandler = new MessagePushHandler(team);
         partyPushHandler = new PartyPushHandler(team);
         updatePushHandler = new UpdatePushHandler(team);
+        offerPushHandler = new OfferPushHandler(team);
     }
 
     public void show(String push, Notification notification) {
@@ -131,6 +135,9 @@ public class Push {
                 break;
             case Config.PUSH_ACTION_NEW_UPTO:
                 updatePushHandler.got(gen(action, json, UpdateSpec.class));
+                break;
+            case Config.PUSH_ACTION_NEW_OFFER:
+                offerPushHandler.got(gen(action, json, OfferSpec.class));
                 break;
             case Config.PUSH_ACTION_HOSTING_REMINDER:
             default:

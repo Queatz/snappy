@@ -49,6 +49,7 @@ public class Config {
     public static final String EXTRA_JOIN_ID = "join";
     public static final String EXTRA_ACTION_JOIN_ACCEPT = "join.accept";
     public static final String EXTRA_ACTION_JOIN_REQUEST = "join.request";
+    public static final String EXTRA_ACTION_HIDE = "hide";
 
     public static final String PATH_BOUNTY_ID = "bounty/%s";
     public static final String PATH_QUEST_ID = "quest/%s";
@@ -152,6 +153,7 @@ public class Config {
     public static final String PUSH_ACTION_QUEST_COMPLETED = "quest_completed";
     public static final String PUSH_ACTION_QUEST_STARTED = "quest_started";
     public static final String PUSH_ACTION_NEW_UPTO = "new_upto";
+    public static final String PUSH_ACTION_NEW_OFFER = "new_offer";
     public static final String PUSH_ACTION_ADVERTISE = "advertise";
 
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";

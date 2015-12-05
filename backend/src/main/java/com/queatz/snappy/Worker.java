@@ -81,7 +81,7 @@ public class Worker extends HttpServlet {
 
                 if(fromUser != null) {
                     PersonSpec source = Datastore.get(PersonSpec.class, fromUser);
-                    for (PersonSpec person : Search.getService().getNearby(PersonSpec.class, source.latlng, new Date(new Date().getTime() - 1000 * 60 * 60 * 12), 300)) {
+                    for (PersonSpec person : Search.getService().getNearby(PersonSpec.class, source.latlng, new Date(new Date().getTime() - 1000 * 60 * 60 * Config.MAX_IDLE_HOURS), 300)) {
                         if(fromUser.equals(person.id))
                             continue;
 
