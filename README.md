@@ -3,6 +3,7 @@
 # Project Overview
 
 * Snappy is built on top of Google App Engine
+* Snappy has been developed in Android Studio
 
 # Project Notes
 

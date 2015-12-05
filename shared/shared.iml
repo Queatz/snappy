@@ -12,6 +12,15 @@
         <option name="BUILDABLE" value="true" />
       </configuration>
     </facet>
+    <facet type="app-engine-gradle" name="App Engine Gradle">
+      <configuration>
+        <option name="HTTP_ADDRESS" value="localhost" />
+        <option name="HTTP_PORT" value="8080" />
+        <option name="WAR_DIR" value="$MODULE_DIR$/build/exploded-app" />
+        <option name="WEB_APP_DIR" value="$MODULE_DIR$/src/main/webapp" />
+        <option name="APPENGINE_SDKROOT" value="$USER_HOME$/.gradle/appengine-sdk/appengine-java-sdk-1.9.18" />
+      </configuration>
+    </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/build/classes/main" />
@@ -53,5 +62,6 @@
     <orderEntry type="library" exported="" name="httpcore-4.0.1" level="project" />
     <orderEntry type="library" exported="" name="commons-logging-1.1.1" level="project" />
     <orderEntry type="library" exported="" name="commons-codec-1.3" level="project" />
+    <orderEntry type="library" exported="" name="shared.shared" level="project" />
   </component>
 </module>
