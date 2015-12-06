@@ -27,6 +27,8 @@ import io.realm.RealmResults;
 
 /**
  * Created by jacob on 9/5/15.
+ *
+ * @deprecated See {@code PersonUptoSlide}
  */
 public class Bounties extends Activity {
     Team team;

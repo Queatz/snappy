@@ -9,6 +9,8 @@ import com.queatz.snappy.shared.ThingSpec;
 
 /**
  * Created by jacob on 10/14/15.
+ *
+ * @deprecated See {@code OfferSpec}
  */
 
 @Entity

@@ -92,6 +92,9 @@ public class Action {
         team.view.show(from, com.queatz.snappy.activity.Bounties.class, null);
     }
 
+    /**
+     * @deprecated See {@code Offer}
+     */
     public void openQuests(@NonNull Activity from) {
         team.view.show(from, com.queatz.snappy.activity.Quests.class, null);
     }
@@ -518,6 +521,9 @@ public class Action {
         });
     }
 
+    /**
+     * @deprecated See {@code Offer}
+     */
     public void deleteBounty(@NonNull Bounty bounty) {
         try {
             team.api.delete(String.format(Config.PATH_BOUNTY_ID, bounty.getId()), new Api.Callback() {
@@ -543,6 +549,9 @@ public class Action {
         }
     }
 
+    /**
+     * @deprecated See {@code Offer}
+     */
     public void postBounty(@NonNull String details, int price) {
         if(details.isEmpty()) {
             return;
@@ -576,6 +585,9 @@ public class Action {
         });
     }
 
+    /**
+     * @deprecated See {@code Offer}
+     */
     public void finishBounty(@NonNull final Activity activity, @NonNull final Bounty bounty) {
         team.realm.beginTransaction();
         bounty.setStatus(Config.BOUNTY_STATUS_FINISHED);
@@ -602,6 +614,9 @@ public class Action {
         });
     }
 
+    /**
+     * @deprecated See {@code Offer}
+     */
     public void claimBounty(@NonNull final Activity activity, @NonNull final Bounty bounty) {
         boolean isMine = false;
 
@@ -687,6 +702,9 @@ public class Action {
                 .show();
     }
 
+    /**
+     * @deprecated See {@code Offer}
+     */
     public boolean newQuest(@NonNull String name, @NonNull String details, @NonNull String reward, String time, int teamSize) {
         if (name.trim().isEmpty()) {
             Toast.makeText(team.context, team.context.getString(R.string.enter_quest_name), Toast.LENGTH_SHORT).show();
@@ -739,6 +757,9 @@ public class Action {
         return true;
     }
 
+    /**
+     * @deprecated See {@code Offer}
+     */
     public void startQuest(@NonNull final Activity activity, @NonNull final Quest quest) {
         team.realm.beginTransaction();
         quest.setStatus(Config.QUEST_STATUS_STARTED);
@@ -764,6 +785,9 @@ public class Action {
         });
     }
 
+    /**
+     * @deprecated See {@code Offer}
+     */
     public void markQuestComplete(@NonNull Quest quest) {
         team.realm.beginTransaction();
         quest.setStatus(Config.QUEST_STATUS_COMPLETE);

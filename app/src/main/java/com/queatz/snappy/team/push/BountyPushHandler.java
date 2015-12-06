@@ -16,6 +16,8 @@ import com.queatz.snappy.team.Team;
 
 /**
  * Created by jacob on 10/18/15.
+ *
+ * @deprecated See {@code OfferPushHandler}
  */
 public class BountyPushHandler extends PushHandler {
     public BountyPushHandler(Team team) {

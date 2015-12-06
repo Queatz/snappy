@@ -19,6 +19,8 @@ import java.util.ArrayList;
 
 /**
  * Created by jacob on 10/18/15.
+ *
+ * @deprecated See {@code OfferPushHandler}
  */
 public class QuestPushHandler extends PushHandler {
     public QuestPushHandler(Team team) {

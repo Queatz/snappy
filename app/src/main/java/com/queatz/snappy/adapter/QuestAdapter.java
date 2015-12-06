@@ -22,6 +22,8 @@ import io.realm.RealmResults;
 
 /**
  * Created by jacob on 9/16/15.
+ *
+ * @deprecated See {@code OfferAdapter}
  */
 public class QuestAdapter extends RealmBaseAdapter<Quest> {
     public QuestAdapter(Context context, RealmResults<Quest> realmResults) {

@@ -8,6 +8,8 @@ import io.realm.annotations.RealmClass;
 
 /**
  * Created by jacob on 9/15/15.
+ *
+ * @deprecated See {@code Offer}
  */
 
 @RealmClass

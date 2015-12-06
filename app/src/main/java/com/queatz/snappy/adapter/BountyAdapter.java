@@ -19,6 +19,8 @@ import io.realm.RealmResults;
 
 /**
  * Created by jacob on 8/29/15.
+ *
+ * @deprecated See {@code OfferAdapter}
  */
 public class BountyAdapter extends RealmBaseAdapter<Bounty> {
     public BountyAdapter(Context context, RealmResults<Bounty> realmResults) {

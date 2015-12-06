@@ -16,6 +16,8 @@ import com.queatz.snappy.ui.TimeSlider;
 
 /**
  * Created by jacob on 9/16/15.
+ *
+ * @deprecated See {@code PersonUptoSlide}
  */
 public class Quests extends Activity {
     Team team;

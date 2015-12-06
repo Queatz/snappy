@@ -3,10 +3,12 @@ package com.queatz.snappy.things;
 import java.util.Date;
 
 import io.realm.RealmObject;
+import io.realm.annotations.RealmClass;
 
 /**
  * Created by jacob on 8/29/15.
  */
+@RealmClass
 public class Offer extends RealmObject {
     private String id;
     private String details;

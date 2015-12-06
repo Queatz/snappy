@@ -15,6 +15,8 @@ import java.util.List;
 
 /**
  * Created by jacob on 10/14/15.
+ *
+ * @deprecated See {@code OfferSpec}
  */
 
 @Entity
