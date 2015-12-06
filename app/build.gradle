@@ -10,8 +10,8 @@ android {
         applicationId "com.queatz.snappy"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 26
-        versionName "0.25"
+        versionCode 27
+        versionName "0.3"
 
         multiDexEnabled true
     }
