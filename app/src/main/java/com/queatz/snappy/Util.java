@@ -6,6 +6,7 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -15,6 +16,7 @@ import android.text.style.ForegroundColorSpan;
 
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Like;
 import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.things.Update;
@@ -107,6 +109,9 @@ public class Util {
         return Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getId());
     }
 
+    public static boolean liked(@NonNull Update update, @NonNull Person person) {
+        return team.realm.where(Like.class).equalTo("source.id", person.getId()).equalTo("target.id", update.getId()).findFirst() != null;
+    }
 
     public static Matrix transformationFromExif(Uri uri) {
         try {

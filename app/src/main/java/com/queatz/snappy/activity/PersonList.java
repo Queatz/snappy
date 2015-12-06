@@ -12,12 +12,15 @@ import android.widget.ListView;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
+import com.queatz.snappy.adapter.LikerAdapter;
 import com.queatz.snappy.adapter.PersonListAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Follow;
+import com.queatz.snappy.things.Like;
 import com.queatz.snappy.things.Person;
+import com.queatz.snappy.things.Update;
 
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -27,6 +30,7 @@ import io.realm.RealmResults;
  */
 public class PersonList extends Activity implements RealmChangeListener {
     com.queatz.snappy.things.Person mPerson;
+    Update mUpdate;
     boolean mShowFollowing;
     Team team;
 
@@ -42,38 +46,70 @@ public class PersonList extends Activity implements RealmChangeListener {
             return;
         }
 
-        mShowFollowing = intent.getBooleanExtra("showFollowing", false);
-        String id = intent.getStringExtra("person");
-
-        if(id == null) {
-            Log.w(Config.LOG_TAG, "No person specified");
-            return;
-        }
-
-        mPerson = team.realm.where(Person.class).equalTo("id", id).findFirst();
-
         setContentView(R.layout.person_list);
+        final ListView personAdapter = (ListView) findViewById(R.id.personList);
 
-        ListView personAdapter = (ListView) findViewById(R.id.personList);
+        boolean showLikers = intent.getBooleanExtra("showLikers", false);
 
-        if(mPerson != null && personAdapter != null) {
-            RealmResults<Follow> results = team.realm.where(Follow.class)
-                    .equalTo(mShowFollowing ? "source.id" : "target.id", mPerson.getId())
-                    .findAll();
+        if (showLikers) {
+            String id = intent.getStringExtra("update");
 
-            final PersonListAdapter adapter = new PersonListAdapter(this, results, mShowFollowing);
+            if (id == null) {
+                Log.w(Config.LOG_TAG, "No update specified");
+                return;
+            }
 
-            personAdapter.setAdapter(adapter);
+            mUpdate = team.realm.where(Update.class).equalTo("id", id).findFirst();
 
-            personAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    team.action.openProfile(PersonList.this, adapter.getPerson(position));
-                }
-            });
+            if(mUpdate != null && personAdapter != null) {
+                RealmResults<Like> results = team.realm.where(Like.class)
+                        .equalTo("target.id", mUpdate.getId())
+                        .findAll();
+
+                final LikerAdapter adapter = new LikerAdapter(this, results);
+
+                personAdapter.setAdapter(adapter);
+
+                personAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        team.action.openProfile(PersonList.this, adapter.getPerson(position));
+                    }
+                });
+            }
+
+            fetchLikers();
+        } else {
+            mShowFollowing = intent.getBooleanExtra("showFollowing", false);
+            String id = intent.getStringExtra("person");
+
+            if (id == null) {
+                Log.w(Config.LOG_TAG, "No person specified");
+                return;
+            }
+
+            mPerson = team.realm.where(Person.class).equalTo("id", id).findFirst();
+
+            if(mPerson != null && personAdapter != null) {
+                RealmResults<Follow> results = team.realm.where(Follow.class)
+                        .equalTo(mShowFollowing ? "source.id" : "target.id", mPerson.getId())
+                        .findAll();
+
+                final PersonListAdapter adapter = new PersonListAdapter(this, results, mShowFollowing);
+
+                personAdapter.setAdapter(adapter);
+
+                personAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        team.action.openProfile(PersonList.this, adapter.getPerson(position));
+                    }
+                });
+            }
+
+            fetchList();
         }
 
-        fetchList();
 
         team.realm.addChangeListener(this);
     }
@@ -81,6 +117,20 @@ public class PersonList extends Activity implements RealmChangeListener {
     @Override
     public void onChange() {
 
+    }
+
+    private void fetchLikers() {
+        team.api.get(String.format(Config.PATH_UPDATE_LIKERS, mUpdate.getId()), null, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                team.things.putAll(Like.class, response);
+            }
+
+            @Override
+            public void fail(String response) {
+
+            }
+        });
     }
 
     private void fetchList() {

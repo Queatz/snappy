@@ -15,6 +15,8 @@ import java.io.Closeable;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.exceptions.RealmException;
+import io.realm.exceptions.RealmMigrationNeededException;
 
 /**
  * Created by jacob on 10/19/14.
@@ -80,23 +82,12 @@ public class Team implements Closeable {
             e.printStackTrace();
         }
 
-        return Realm.getInstance(context);
-    }
-
-    public void db(@NonNull final Db.Call dbCall) {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                dbCall.db(realm());
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                dbCall.post();
-            }
-        }.execute();
+        try {
+            return Realm.getInstance(context);
+        } catch (RealmMigrationNeededException e) {
+            wipe();
+            return Realm.getInstance(context);
+        }
     }
 
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {

@@ -1,5 +1,6 @@
 package com.queatz.snappy.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -31,17 +32,32 @@ public class PersonUptoAdapter extends RealmBaseAdapter<Update> {
         super(context, realmResults, true);
     }
 
-    public void updateLikes(View view, Update update) {
+    public void updateLikes(View view, final Update update) {
         final Team team = ((MainApplication) context.getApplicationContext()).team;
 
-        TextView likes = (TextView) view.findViewById(R.id.likes);
+        final TextView likes = (TextView) view.findViewById(R.id.likes);
 
-        long likeCount = team.realm.where(Like.class)
+        int likeCount = (int) team.realm.where(Like.class)
                 .equalTo("target.id", update.getId())
                 .count();
 
-        likes.setText(team.context.getString(R.string.likes, likeCount));
+        if (update.getLikers() > likeCount) {
+            likeCount = update.getLikers();
+        }
+
+        boolean byMe = Util.liked(update, team.auth.me());
+
+        likes.setText(team.context.getResources().getQuantityString(byMe ? R.plurals.likes_me : R.plurals.likes, likeCount, likeCount));
         likes.setVisibility(likeCount > 0 ? View.VISIBLE : View.GONE);
+
+        if (likeCount > 0) {
+            likes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    team.action.showLikers((Activity) PersonUptoAdapter.this.context, update);
+                }
+            });
+        }
     }
 
     @Override
@@ -94,6 +110,7 @@ public class PersonUptoAdapter extends RealmBaseAdapter<Update> {
                 view.findViewById(R.id.details).setVisibility(View.VISIBLE);
             }
 
+            photo.setClickable(true);
             photo.setOnTouchListener(new View.OnTouchListener() {
                 private GestureDetector gestureDetector = new GestureDetector(team.context, new GestureDetector.SimpleOnGestureListener() {
                     @Override

@@ -27,5 +27,5 @@ public class UpdateSpec extends ThingSpec {
     public @Ignore @Push PersonSpec person;
     public @Ignore @Push PartySpec party;
 
-    public @Shallow @Ignore long likes;
+    public @Ignore long likers;
 }

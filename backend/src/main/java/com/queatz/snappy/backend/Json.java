@@ -1,7 +1,6 @@
 package com.queatz.snappy.backend;
 
 import com.google.appengine.api.datastore.GeoPt;
-import com.google.appengine.repackaged.com.google.common.collect.ImmutableList;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -29,7 +28,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -348,7 +346,7 @@ public class Json {
             UpdateSpec update = (UpdateSpec) object;
 
             if (Config.UPDATE_ACTION_UPTO.equals(update.action)) {
-                update.likes = Datastore.get(UpdateLikeSpec.class).filter("targetId", update).count();
+                update.likers = Datastore.get(UpdateLikeSpec.class).filter("targetId", update).count();
             }
         }
     }

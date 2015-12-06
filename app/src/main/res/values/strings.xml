@@ -119,7 +119,16 @@
     <string name="new_offer">New Offer</string>
     <string name="offer_by_person">%1$s by %2$s</string>
     <string name="liked_your_photo">liked your photo</string>
-    <string name="likes">%1$s likes</string>
+
+    <plurals name="likes">
+        <item quantity="one">♡ %1$s Liker</item>
+        <item quantity="other">♡ %1$s Likers</item>
+    </plurals>
+
+    <plurals name="likes_me">
+        <item quantity="one">♥ %1$s Liker</item>
+        <item quantity="other">♥ %1$s Likers</item>
+    </plurals>
 
     <plurals name="people_near_place">
         <item quantity="one">%1$s person near %2$s</item>

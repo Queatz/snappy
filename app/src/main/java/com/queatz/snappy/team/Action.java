@@ -157,6 +157,14 @@ public class Action {
         team.view.show(from, PersonList.class, bundle);
     }
 
+    public void showLikers(@NonNull Activity from, @NonNull final Update update) {
+        Bundle bundle = new Bundle();
+        bundle.putString("update", update.getId());
+        bundle.putBoolean("showLikers", true);
+
+        team.view.show(from, PersonList.class, bundle);
+    }
+
     public void followPerson(@NonNull final Person person) {
         final String localId = Util.createLocalId();
 
@@ -932,6 +940,10 @@ public class Action {
     }
 
     public void likeUpdate(Update update) {
+        if (Util.liked(update, team.auth.me())) {
+            return;
+        }
+
         String localId = Util.createLocalId();
 
         team.realm.beginTransaction();
@@ -942,6 +954,7 @@ public class Action {
         team.realm.commitTransaction();
 
         RequestParams params = new RequestParams();
+        params.put(Config.PARAM_LOCAL_ID, localId);
         params.put(Config.PARAM_LIKE, true);
 
         team.api.post(String.format(Config.PATH_UPDATE_ID, update.getId()), params, new Api.Callback() {

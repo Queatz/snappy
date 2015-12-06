@@ -118,6 +118,8 @@ public class Update extends Api.Path {
     private void likeUpdate(String updateId) {
         UpdateSpec update = Datastore.get(UpdateSpec.class, updateId);
 
+        String localId = request.getParameter(Config.PARAM_LOCAL_ID);
+
         if (update == null) {
             notFound();
         }
@@ -125,7 +127,11 @@ public class Update extends Api.Path {
         UpdateLikeSpec updateLike = Thing.getService().update.like(update, user);
 
         if (updateLike != null) {
-            Push.getService().send(Datastore.id(update.personId), new PushSpec<>(Config.PUSH_ACTION_LIKE_UPDATE, updateLike));
+            updateLike.localId = localId;
+
+            if (!user.id.equals(Datastore.id(updateLike.sourceId))) {
+                Push.getService().send(Datastore.id(update.personId), new PushSpec<>(Config.PUSH_ACTION_LIKE_UPDATE, updateLike));
+            }
         }
 
         ok(updateLike);

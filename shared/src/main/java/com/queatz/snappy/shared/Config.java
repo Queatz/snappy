@@ -63,6 +63,7 @@ public class Config {
     public static final String PATH_PEOPLE_PARTIES = "people/%s/parties";
     public static final String PATH_SEARCH = "search";
     public static final String PATH_UPDATE_ID = "update/%s";
+    public static final String PATH_UPDATE_LIKERS = "update/%s/likers";
     public static final String PATH_UPDATE_PHOTO = "update/%s/photo";
     public static final String PATH_LOCATION_PHOTO = "location/%s/photo";
     public static final String PATH_MESSAGES_ID = "messages/%s";
