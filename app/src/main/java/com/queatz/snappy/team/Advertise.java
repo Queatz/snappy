@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.ParcelUuid;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -46,6 +47,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by jacob on 12/3/15.
@@ -56,9 +58,16 @@ public class Advertise {
     private BluetoothAdapter mBluetoothAdapter;
     private ScanCallback mLeScanCallback;
     private AdvertiseCallback mAdvertiseCallback;
+    private BluetoothAdapter.LeScanCallback mLeScanCallbackOld;
 
     private BluetoothGattServer mGattServer;
+    private BluetoothGattService mService;
+    private BluetoothGattCharacteristic mPersonIdCharacteristic;
+    private BluetoothGattCharacteristic mPersonFirstNameCharacteristic;
+
     private Collection<BluetoothGatt> mBluetoothGatts = new HashSet<>();
+
+    private Handler handler;
 
     class BlePerson {
         String deviceAddress;
@@ -74,6 +83,12 @@ public class Advertise {
             this.lastSeen = lastSeen;
             this.lastHidden = null;
         }
+    }
+
+    enum ReadStep {
+        DISCOVERING_SERVICES,
+        READING_ID_CHARACTERISITC,
+        READING_NAME_CHARACTERISTIC,
     }
 
     private Map<String, BlePerson> devices = new HashMap<>();
@@ -106,11 +121,15 @@ public class Advertise {
      * @return Whether or not advertising was enabled successfully
      */
     public boolean enable(@Nullable Activity activity) {
+        handler = new Handler(team.context.getMainLooper());
+
         if (!capable()) {
             return false;
         }
 
-        if (team.auth.me() == null) {
+        com.queatz.snappy.things.Person me = team.auth.me();
+
+        if (me == null) {
             return false;
         }
 
@@ -120,6 +139,30 @@ public class Advertise {
 
         if (mBluetoothAdapter == null) {
             mBluetoothAdapter = mBluetoothManager.getAdapter();
+        }
+
+
+        if (mPersonIdCharacteristic == null) {
+            mPersonIdCharacteristic = new BluetoothGattCharacteristic(
+                    Config.UUID_CHARACTERISTIC_PROFILE_ID,
+                    BluetoothGattCharacteristic.PROPERTY_READ,
+                    BluetoothGattCharacteristic.PERMISSION_READ);
+            mPersonIdCharacteristic.setValue(me.getId());
+        }
+
+        if (mPersonFirstNameCharacteristic == null && me.getFirstName() != null) {
+            mPersonFirstNameCharacteristic = new BluetoothGattCharacteristic(
+                    Config.UUID_CHARACTERISTIC_PROFILE_FIRST_NAME,
+                    BluetoothGattCharacteristic.PROPERTY_READ,
+                    BluetoothGattCharacteristic.PERMISSION_READ);
+            mPersonFirstNameCharacteristic.setValue(me.getFirstName());
+        }
+
+        if (mService == null) {
+            mService = new BluetoothGattService(Config.UUID_SERVICE, BluetoothGattService.SERVICE_TYPE_PRIMARY);
+
+            mService.addCharacteristic(mPersonIdCharacteristic);
+            mService.addCharacteristic(mPersonFirstNameCharacteristic);
         }
 
         if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
@@ -158,7 +201,6 @@ public class Advertise {
             mGattServer = mBluetoothManager.openGattServer(team.context, new BluetoothGattServerCallback() {
                 @Override
                 public void onConnectionStateChange(BluetoothDevice device, int status, int newState) {
-
                 }
 
                 @Override
@@ -167,31 +209,19 @@ public class Advertise {
                 }
             });
 
-            BluetoothGattService service = new BluetoothGattService(Config.UUID_SERVICE, BluetoothGattService.SERVICE_TYPE_PRIMARY);
-
-            BluetoothGattCharacteristic characteristic = new BluetoothGattCharacteristic(
-                    Config.UUID_CHARACTERISTIC_PROFILE_ID,
-                    BluetoothGattCharacteristic.PROPERTY_READ,
-                    BluetoothGattCharacteristic.PERMISSION_READ);
-            characteristic.setValue(me.getId());
-
-            BluetoothGattCharacteristic characteristic2 = new BluetoothGattCharacteristic(
-                    Config.UUID_CHARACTERISTIC_PROFILE_ID,
-                    BluetoothGattCharacteristic.PROPERTY_READ,
-                    BluetoothGattCharacteristic.PERMISSION_READ);
-            characteristic2.setValue(me.getFirstName());
-
-            service.addCharacteristic(characteristic2);
-            mGattServer.addService(service);
+            mGattServer.addService(mService);
         }
 
         if (mAdvertiseCallback == null) {
             AdvertiseSettings advertiseSettings = new AdvertiseSettings.Builder()
-                    .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_POWER)
+                    .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
                     .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
+                    .setConnectable(true)
                     .build();
 
-            AdvertiseData advertiseData = new AdvertiseData.Builder().build();
+            AdvertiseData advertiseData = new AdvertiseData.Builder()
+                    .addServiceUuid(new ParcelUuid(Config.UUID_SERVICE))
+                    .build();
 
             mAdvertiseCallback = new AdvertiseCallback() {
                 @Override
@@ -209,6 +239,12 @@ public class Advertise {
 
             if (advertiser != null) {
                 advertiser.startAdvertising(advertiseSettings, advertiseData, mAdvertiseCallback);
+            } else {
+                Log.w(Config.LOG_TAG, "advertise - advertiser null, trying depricated method...");
+
+
+
+                Log.w(Config.LOG_TAG, "advertise - advertiser null");
             }
         }
     }
@@ -222,12 +258,17 @@ public class Advertise {
             mLeScanCallback = new ScanCallback() {
                 @Override
                 public void onScanResult(int callbackType, ScanResult result) {
+                    Log.w(Config.LOG_TAG, "advertise - scan success");
                     foundDevice(result.getDevice());
                 }
 
                 @Override
                 public void onScanFailed(int errorCode) {
                     Log.w(Config.LOG_TAG, "advertise - scan failed " + errorCode);
+
+                    if (errorCode == SCAN_FAILED_FEATURE_UNSUPPORTED) {
+                        enableDiscoverOld();
+                    }
                 }
             };
 
@@ -236,7 +277,7 @@ public class Advertise {
                     .build();
 
             ScanSettings scanSettings = new ScanSettings.Builder()
-                    .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
+                    .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
                     .setReportDelay(Config.REPORTING_DELAY)
                     .build();
 
@@ -247,6 +288,32 @@ public class Advertise {
 
             if (scanner != null) {
                 scanner.startScan(scanFilters, scanSettings, mLeScanCallback);
+            } else {
+                Log.w(Config.LOG_TAG, "advertise - scanner null, trying deprecated method...");
+
+                enableDiscoverOld();
+            }
+        }
+    }
+
+    private void enableDiscoverOld() {
+        if (mLeScanCallbackOld == null) {
+            mLeScanCallbackOld = new BluetoothAdapter.LeScanCallback() {
+                @Override
+                public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
+                    foundDevice(device);
+                }
+            };
+
+            boolean success = mBluetoothAdapter.startLeScan(
+                    new UUID[] { Config.UUID_SERVICE },
+                    mLeScanCallbackOld
+            );
+
+            if (success) {
+                Log.w(Config.LOG_TAG, "advertise - scanner started using old method");
+            } else {
+                Log.w(Config.LOG_TAG, "advertise - scanner failed completely");
             }
         }
     }
@@ -262,7 +329,7 @@ public class Advertise {
 
             if (advertiser != null) {
                 advertiser.stopAdvertising(mAdvertiseCallback);
-                mBluetoothAdapter = null;
+                mAdvertiseCallback = null;
             }
         }
 
@@ -288,6 +355,13 @@ public class Advertise {
                 mLeScanCallback = null;
             }
         }
+
+        if (mLeScanCallbackOld != null) {
+            if (mBluetoothAdapter != null) {
+                mBluetoothAdapter.stopLeScan(mLeScanCallbackOld);
+                mLeScanCallbackOld = null;
+            }
+        }
     }
 
     public void hidePerson(@NonNull String deviceAddress) {
@@ -306,8 +380,25 @@ public class Advertise {
         }
     }
 
-    private void foundDevice(BluetoothDevice device) {
+    private void foundDevice(final BluetoothDevice device) {
+        Log.e(Config.LOG_TAG, "advertise - device found " + device);
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                doFoundDevice(device);
+            }
+        });
+    }
+
+    private void doFoundDevice(final BluetoothDevice device) {
+        Log.e(Config.LOG_TAG, "advertise - dodevicefound " + device);
+
         if (alreadyFoundPersonRecently(device)) {
+            return;
+        }
+
+        if (mBluetoothGatts.contains(device)) {
             return;
         }
 
@@ -315,10 +406,73 @@ public class Advertise {
             String personName;
             String personId;
 
+            BluetoothGatt gatt;
+            BluetoothGattService service;
+            ReadStep step;
+
+            void close() {
+                if (gatt == null) {
+                    return;
+                }
+
+                mBluetoothGatts.remove(gatt);
+                gatt.close();
+                step = null;
+            }
+
+            void readNextCharacteristic() {
+                if (step == null) {
+                    return;
+                }
+
+                switch (step) {
+                    case DISCOVERING_SERVICES:
+                        if (gatt.readCharacteristic(service.getCharacteristic(Config.UUID_CHARACTERISTIC_PROFILE_ID))) {
+                            step = ReadStep.READING_ID_CHARACTERISITC;
+                        } else {
+                            close();
+                        }
+
+                        break;
+                    case READING_ID_CHARACTERISITC:
+                        if (gatt.readCharacteristic(service.getCharacteristic(Config.UUID_CHARACTERISTIC_PROFILE_FIRST_NAME))) {
+                            step = ReadStep.READING_NAME_CHARACTERISTIC;
+                        } else {
+                            close();
+                        }
+
+                        break;
+                    case READING_NAME_CHARACTERISTIC:
+                        if (personId != null && personName != null) {
+                            foundPerson(personId, personName, gatt.getDevice().getAddress());
+                        } else {
+                            Log.e(Config.LOG_TAG, String.format("Person details not complete: name = %s id = %s ", personName, personId));
+                        }
+
+                        close();
+
+                        break;
+                    default:
+                        close();
+                }
+            }
+
             @Override
             public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+                if (step != null) {
+                    return;
+                }
+
+                this.gatt = gatt;
+
+                Log.e(Config.LOG_TAG, "advertise - onConnectionStateChange " + gatt.getDevice() + " - newState = " + newState);
+
                 switch (newState) {
+                    case BluetoothProfile.STATE_DISCONNECTED:
+                        close();
+                        break;
                     case BluetoothProfile.STATE_CONNECTED:
+                        step = ReadStep.DISCOVERING_SERVICES;
                         gatt.discoverServices();
                         break;
                 }
@@ -326,26 +480,32 @@ public class Advertise {
 
             @Override
             public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-                gatt.readCharacteristic(gatt.getService(Config.UUID_SERVICE).getCharacteristic(Config.UUID_CHARACTERISTIC_PROFILE_ID));
-                gatt.readCharacteristic(gatt.getService(Config.UUID_SERVICE).getCharacteristic(Config.UUID_CHARACTERISTIC_PROFILE_FIRST_NAME));
+                Log.w(Config.LOG_TAG, "advertise - onServicesDiscovered " + gatt.getDevice() + " - getService = " + gatt.getService(Config.UUID_SERVICE));
+
+                BluetoothGattService service = gatt.getService(Config.UUID_SERVICE);
+
+                if (service == null) {
+                    close();
+                    return;
+                }
+
+                this.service = service;
+                readNextCharacteristic();
             }
 
             @Override
             public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+                Log.e(Config.LOG_TAG, "advertise - onCharacteristicRead " + gatt.getDevice() + " - characteristic = " + characteristic.getUuid());
+
                 if (Config.UUID_CHARACTERISTIC_PROFILE_ID.equals(characteristic.getUuid())) {
                     personId = characteristic.getStringValue(0);
                 } else if (Config.UUID_CHARACTERISTIC_PROFILE_FIRST_NAME.equals(characteristic.getUuid())) {
                     personName = characteristic.getStringValue(0);
                 }
 
-                if (personId != null && personName != null) {
-                    foundPerson(personId, personName, gatt.getDevice().getAddress());
-                    gatt.disconnect();
-                    gatt.close();
-                    mBluetoothGatts.remove(gatt);
-                }
+                readNextCharacteristic();
             }
-        });
+        }, BluetoothDevice.TRANSPORT_LE);
 
         mBluetoothGatts.add(gatt);
     }
@@ -359,6 +519,8 @@ public class Advertise {
     }
 
     private void foundPerson(String personId, String personName, String address) {
+        Log.e(Config.LOG_TAG, "advertise - found person " + personId + " - " + personName);
+
         BlePerson blePerson;
 
         if (devices.containsKey(address)) {
@@ -396,8 +558,11 @@ public class Advertise {
         Intent deleteIntent;
         PendingIntent deletePendingIntent;
 
+        Bundle deleteExtras = new Bundle();
+        deleteExtras.putString("deviceAddress", blePerson.deviceAddress);
+
         deleteIntent = new Intent(team.context, AdvertiseBroadcastReceiver.class);
-        deleteIntent.getExtras().putString("deviceAddress", blePerson.deviceAddress);
+        deleteIntent.putExtras(deleteExtras);
         deletePendingIntent = PendingIntent.getBroadcast(team.context, 0, deleteIntent, 0);
 
         builder = new NotificationCompat.Builder(team.context)
@@ -407,8 +572,7 @@ public class Advertise {
                 .setPriority(Notification.PRIORITY_LOW)
                 .setContentTitle(blePerson.personName)
                 .setContentText(team.context.getString(R.string.is_here))
-                .setDeleteIntent(deletePendingIntent)
-                        .setDefaults(0);
+                .setDeleteIntent(deletePendingIntent);
 
         resultIntent = new Intent(team.context, Person.class);
         Bundle extras = new Bundle();

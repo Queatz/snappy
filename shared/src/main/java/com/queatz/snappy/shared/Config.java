@@ -10,6 +10,7 @@ public class Config {
     // Android
 
     public static final boolean BETA_VERSION = false;
+    public static final int WIPE_VERSIONS_BELOW = 26;
 
     public static final String LOG_TAG = "SNAPPY_LOG";
     public static final String API_URL = (BETA_VERSION ? "https://beta-dot-queatz-snappy.appspot.com/api/" : "http://queatz-snappy.appspot.com/api/");
@@ -39,7 +40,7 @@ public class Config {
     public static final UUID UUID_SERVICE = UUID.fromString("2d444574-5fdb-4e49-8921-3823f80b39a5");
     public static final UUID UUID_CHARACTERISTIC_PROFILE_ID = UUID.fromString("9592986d-0038-4ebf-acc2-6454f30e9db4");
     public static final UUID UUID_CHARACTERISTIC_PROFILE_FIRST_NAME = UUID.fromString("d233da61-49ee-4ec9-94f2-576d8e7dddb0");
-    public static final int REPORTING_DELAY = 5000;
+    public static final int REPORTING_DELAY = 1000;
     public static final int ADVERTISE_TIMEOUT = 1000 * 60 * 2;
     public static final int ADVERTISE_HIDE_TIMEOUT = 1000 * 60 * 10;
 
@@ -47,6 +48,7 @@ public class Config {
     public static final String EXTRA_ACTION = "action";
     public static final String EXTRA_PARTY_ID = "party";
     public static final String EXTRA_JOIN_ID = "join";
+    public static final String EXTRA_PERSON_ID = "person";
     public static final String EXTRA_ACTION_JOIN_ACCEPT = "join.accept";
     public static final String EXTRA_ACTION_JOIN_REQUEST = "join.request";
     public static final String EXTRA_ACTION_HIDE = "hide";
@@ -60,6 +62,7 @@ public class Config {
     public static final String PATH_PEOPLE_FOLLOWERS = "people/%s/followers";
     public static final String PATH_PEOPLE_PARTIES = "people/%s/parties";
     public static final String PATH_SEARCH = "search";
+    public static final String PATH_UPDATE_ID = "update/%s";
     public static final String PATH_UPDATE_PHOTO = "update/%s/photo";
     public static final String PATH_LOCATION_PHOTO = "location/%s/photo";
     public static final String PATH_MESSAGES_ID = "messages/%s";
@@ -155,6 +158,7 @@ public class Config {
     public static final String PUSH_ACTION_NEW_UPTO = "new_upto";
     public static final String PUSH_ACTION_NEW_OFFER = "new_offer";
     public static final String PUSH_ACTION_ADVERTISE = "advertise";
+    public static final String PUSH_ACTION_LIKE_UPDATE = "like_update";
 
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";
     public static final String UPDATE_ACTION_HOST_PARTY = "host_party";
@@ -208,6 +212,7 @@ public class Config {
     public static final String PARAM_REWARD = "reward";
     public static final String PARAM_START = "start";
     public static final String PARAM_COMPLETE = "complete";
+    public static final String PARAM_LIKE = "like";
 
     public static final String GOOGLE_PLUS_PROFILE_URL = "https://www.googleapis.com/plus/v1/people/me";
     public static final String GOOGLE_PLUS_TOKENINFO_URL = "https://www.googleapis.com/oauth2/v1/tokeninfo";
@@ -244,4 +249,5 @@ public class Config {
     public static final String PATH_FOLLOWERS = "followers";
     public static final String PATH_FOLLOWING = "following";
     public static final String PATH_UPDATE = "update";
+    public static final String PATH_LIKERS = "likers";
 }

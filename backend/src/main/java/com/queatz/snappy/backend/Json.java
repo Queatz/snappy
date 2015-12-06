@@ -22,6 +22,7 @@ import com.queatz.snappy.shared.things.PartySpec;
 import com.queatz.snappy.shared.things.PersonSpec;
 import com.queatz.snappy.shared.things.QuestLinkSpec;
 import com.queatz.snappy.shared.things.QuestSpec;
+import com.queatz.snappy.shared.things.UpdateLikeSpec;
 import com.queatz.snappy.shared.things.UpdateSpec;
 
 import java.lang.reflect.Field;
@@ -340,6 +341,14 @@ public class Json {
                 for (JoinLinkSpec join : Datastore.get(JoinLinkSpec.class).filter("partyId", party).list()) {
                     party.people.add(join);
                 }
+            }
+        }
+
+        else if (UpdateSpec.class.isAssignableFrom(object.getClass())) {
+            UpdateSpec update = (UpdateSpec) object;
+
+            if (Config.UPDATE_ACTION_UPTO.equals(update.action)) {
+                update.likes = Datastore.get(UpdateLikeSpec.class).filter("targetId", update).count();
             }
         }
     }

@@ -14,9 +14,9 @@ import com.queatz.snappy.shared.ThingSpec;
 
 @Entity
 public class UpdateLikeSpec extends ThingSpec {
-    public @Hide @Push @Index Key<PersonSpec> personId;
-    public @Hide @Push @Index Key<UpdateSpec> updateId;
+    public @Hide @Push @Index Key<PersonSpec> sourceId;
+    public @Hide @Push @Index Key<UpdateSpec> targetId;
 
-    public @Ignore @Push PersonSpec person;
-    public @Ignore @Push UpdateSpec update;
+    public @Ignore @Push PersonSpec source;
+    public @Ignore @Push UpdateSpec target;
 }

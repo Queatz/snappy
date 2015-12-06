@@ -328,7 +328,15 @@ public class PersonUptoSlide extends Fragment {
             ((TextView) personAbout.findViewById(R.id.info_following)).setText(Long.toString(mPerson.getInfoFollowing()));
 
             personAbout.findViewById(R.id.hosted_button).setVisibility(mPerson.getCreated() != null ? View.VISIBLE : View.GONE);
-            ((TextView) personAbout.findViewById(R.id.info_hosted)).setText(TimeUtil.agoDate(mPerson.getCreated()));
+
+            TextView created = (TextView) personAbout.findViewById(R.id.info_hosted);
+
+            if (mPerson.getCreated() != null) {
+                created.setText(TimeUtil.agoDate(mPerson.getCreated()));
+                created.setVisibility(View.VISIBLE);
+            } else {
+                created.setVisibility(View.GONE);
+            }
 
             personAbout.findViewById(R.id.followers_button).setOnClickListener(new View.OnClickListener() {
                 @Override

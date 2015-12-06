@@ -25,16 +25,19 @@ import com.queatz.snappy.shared.things.OfferSpec;
 import com.queatz.snappy.shared.things.PartySpec;
 import com.queatz.snappy.shared.things.PersonSpec;
 import com.queatz.snappy.shared.things.QuestSpec;
+import com.queatz.snappy.shared.things.UpdateLikeSpec;
 import com.queatz.snappy.shared.things.UpdateSpec;
 import com.queatz.snappy.team.push.BountyPushHandler;
 import com.queatz.snappy.team.push.DefaultPushHandler;
 import com.queatz.snappy.team.push.FollowPushHandler;
 import com.queatz.snappy.team.push.JoinPushHandler;
+import com.queatz.snappy.team.push.LikePushHandler;
 import com.queatz.snappy.team.push.MessagePushHandler;
 import com.queatz.snappy.team.push.OfferPushHandler;
 import com.queatz.snappy.team.push.PartyPushHandler;
 import com.queatz.snappy.team.push.QuestPushHandler;
 import com.queatz.snappy.team.push.UpdatePushHandler;
+import com.queatz.snappy.things.Like;
 import com.queatz.snappy.util.Json;
 
 /**
@@ -53,6 +56,7 @@ public class Push {
     private PartyPushHandler partyPushHandler;
     private UpdatePushHandler updatePushHandler;
     private OfferPushHandler offerPushHandler;
+    private LikePushHandler likePushHandler;
 
     public Push(Team t) {
         team = t;
@@ -67,6 +71,7 @@ public class Push {
         partyPushHandler = new PartyPushHandler(team);
         updatePushHandler = new UpdatePushHandler(team);
         offerPushHandler = new OfferPushHandler(team);
+        likePushHandler = new LikePushHandler(team);
     }
 
     public void show(String push, Notification notification) {
@@ -101,7 +106,7 @@ public class Push {
             return;
         }
 
-        if (!json.has("action")) {
+        if (json == null || !json.has("action")) {
             Log.w(Config.LOG_TAG, "Push got with no action");
             return;
         }
@@ -138,6 +143,9 @@ public class Push {
                 break;
             case Config.PUSH_ACTION_NEW_OFFER:
                 offerPushHandler.got(gen(action, json, OfferSpec.class));
+                break;
+            case Config.PUSH_ACTION_LIKE_UPDATE:
+                likePushHandler.got(gen(action, json, UpdateLikeSpec.class));
                 break;
             case Config.PUSH_ACTION_HOSTING_REMINDER:
             default:

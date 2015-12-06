@@ -24,6 +24,7 @@ import com.queatz.snappy.things.Bounty;
 import com.queatz.snappy.things.Contact;
 import com.queatz.snappy.things.Follow;
 import com.queatz.snappy.things.Join;
+import com.queatz.snappy.things.Like;
 import com.queatz.snappy.things.Location;
 import com.queatz.snappy.things.Message;
 import com.queatz.snappy.things.Offer;
@@ -928,5 +929,31 @@ public class Action {
                 .setView(view)
                 .setPositiveButton(R.string.ok, null)
                 .show();
+    }
+
+    public void likeUpdate(Update update) {
+        String localId = Util.createLocalId();
+
+        team.realm.beginTransaction();
+        Like o = team.realm.createObject(Like.class);
+        o.setId(localId);
+        o.setSource(team.auth.me());
+        o.setTarget(update);
+        team.realm.commitTransaction();
+
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_LIKE, true);
+
+        team.api.post(String.format(Config.PATH_UPDATE_ID, update.getId()), params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                team.things.put(Like.class, response);
+            }
+
+            @Override
+            public void fail(String response) {
+                Toast.makeText(team.context, "Couldn't like update", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

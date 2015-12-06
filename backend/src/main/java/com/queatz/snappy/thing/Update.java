@@ -4,6 +4,7 @@ import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.things.PartySpec;
 import com.queatz.snappy.shared.things.PersonSpec;
+import com.queatz.snappy.shared.things.UpdateLikeSpec;
 import com.queatz.snappy.shared.things.UpdateSpec;
 
 import java.util.Date;
@@ -35,5 +36,26 @@ public class Update {
         update.message = message == null ? "" : message;
         Datastore.save(update);
         return update;
+    }
+
+    public UpdateLikeSpec like(UpdateSpec update, PersonSpec person) {
+        UpdateLikeSpec updateLike = Datastore.get(UpdateLikeSpec.class)
+                .filter("targetId", update)
+                .filter("sourceId", person)
+                .first().now();
+
+        if (updateLike != null) {
+            return null;
+        }
+
+        updateLike = Datastore.create(UpdateLikeSpec.class);
+        updateLike.sourceId = Datastore.key(person);
+        updateLike.targetId = Datastore.key(update);
+
+        if(Datastore.save(updateLike)) {
+            return updateLike;
+        } else {
+            return null;
+        }
     }
 }

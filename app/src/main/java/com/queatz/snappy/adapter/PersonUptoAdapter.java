@@ -1,7 +1,9 @@
 package com.queatz.snappy.adapter;
 
 import android.content.Context;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,6 +14,7 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Like;
 import com.queatz.snappy.things.Location;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.things.Update;
@@ -28,9 +31,22 @@ public class PersonUptoAdapter extends RealmBaseAdapter<Update> {
         super(context, realmResults, true);
     }
 
+    public void updateLikes(View view, Update update) {
+        final Team team = ((MainApplication) context.getApplicationContext()).team;
+
+        TextView likes = (TextView) view.findViewById(R.id.likes);
+
+        long likeCount = team.realm.where(Like.class)
+                .equalTo("target.id", update.getId())
+                .count();
+
+        likes.setText(team.context.getString(R.string.likes, likeCount));
+        likes.setVisibility(likeCount > 0 ? View.VISIBLE : View.GONE);
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view;
+        final View view;
 
         if (convertView != null) {
             view = convertView;
@@ -40,11 +56,11 @@ public class PersonUptoAdapter extends RealmBaseAdapter<Update> {
             view = inflater.inflate(R.layout.person_upto_item, parent, false);
         }
 
-        Team team = ((MainApplication) context.getApplicationContext()).team;
+        final Team team = ((MainApplication) context.getApplicationContext()).team;
 
-        Update update = realmResults.get(position);
-        Person person = update.getPerson();
-        Location location = update.getParty() != null ? update.getParty().getLocation() : null;
+        final Update update = realmResults.get(position);
+        final Person person = update.getPerson();
+        final Location location = update.getParty() != null ? update.getParty().getLocation() : null;
 
         if(person != null) {
             int s = (int) Util.px(64);
@@ -77,9 +93,28 @@ public class PersonUptoAdapter extends RealmBaseAdapter<Update> {
             else {
                 view.findViewById(R.id.details).setVisibility(View.VISIBLE);
             }
+
+            photo.setOnTouchListener(new View.OnTouchListener() {
+                private GestureDetector gestureDetector = new GestureDetector(team.context, new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onDoubleTap(MotionEvent e) {
+                        team.action.likeUpdate(update);
+                        updateLikes(view, update);
+                        return true;
+                    }
+                });
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return gestureDetector.onTouchEvent(event);
+                }
+            });
+
+            updateLikes(view, update);
         }
         else {
             view.findViewById(R.id.details).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.likes).setVisibility(View.GONE);
             photo.setVisibility(View.GONE);
         }
 

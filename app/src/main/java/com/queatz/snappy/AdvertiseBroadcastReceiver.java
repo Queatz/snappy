@@ -34,7 +34,5 @@ public class AdvertiseBroadcastReceiver extends BroadcastReceiver {
                 }
             }
         }
-
-        setResultCode(Activity.RESULT_OK);
     }
 }

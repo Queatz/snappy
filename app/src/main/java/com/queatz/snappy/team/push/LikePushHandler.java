@@ -11,27 +11,27 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.PushSpec;
-import com.queatz.snappy.shared.things.FollowLinkSpec;
+import com.queatz.snappy.shared.things.UpdateLikeSpec;
 import com.queatz.snappy.team.Team;
 
 /**
- * Created by jacob on 10/18/15.
+ * Created by jacob on 12/5/15.
  */
-public class FollowPushHandler extends PushHandler {
-    public FollowPushHandler(Team team) {
+public class LikePushHandler extends PushHandler {
+    public LikePushHandler(Team team) {
         super(team);
     }
 
-    public void got(PushSpec<FollowLinkSpec> push) {
+    public void got(PushSpec<UpdateLikeSpec> push) {
         NotificationCompat.Builder builder;
         PendingIntent pendingIntent;
         Intent resultIntent;
 
         switch (push.action) {
-            case Config.PUSH_ACTION_FOLLOW:
+            case Config.PUSH_ACTION_LIKE_UPDATE:
                 builder = team.push.newNotification()
                         .setContentTitle(push.body.source.firstName)
-                        .setContentText(team.context.getString(R.string.started_following_you));
+                        .setContentText(team.context.getString(R.string.liked_your_photo));
 
                 resultIntent = new Intent(team.context, Person.class);
                 Bundle extras = new Bundle();
@@ -47,7 +47,7 @@ public class FollowPushHandler extends PushHandler {
                             .setCategory(Notification.CATEGORY_SOCIAL);
                 }
 
-                team.push.show("follow", builder.build());
+                team.push.show("liker/" + push.body.source.id, builder.build());
 
                 break;
         }
