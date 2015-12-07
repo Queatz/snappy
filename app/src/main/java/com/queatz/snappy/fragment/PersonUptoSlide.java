@@ -332,7 +332,7 @@ public class PersonUptoSlide extends Fragment {
             TextView created = (TextView) personAbout.findViewById(R.id.info_hosted);
 
             if (mPerson.getCreated() != null) {
-                created.setText(TimeUtil.agoDate(mPerson.getCreated()));
+                created.setText(TimeUtil.agoDate(mPerson.getCreated(), false));
                 created.setVisibility(View.VISIBLE);
             } else {
                 created.setVisibility(View.GONE);

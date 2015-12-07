@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,7 +36,7 @@ public class PersonUptoAdapter extends RealmBaseAdapter<Update> {
     public void updateLikes(View view, final Update update) {
         final Team team = ((MainApplication) context.getApplicationContext()).team;
 
-        final TextView likes = (TextView) view.findViewById(R.id.likes);
+        final Button likes = (Button) view.findViewById(R.id.likers);
 
         int likeCount = (int) team.realm.where(Like.class)
                 .equalTo("target.id", update.getId())
@@ -131,7 +132,7 @@ public class PersonUptoAdapter extends RealmBaseAdapter<Update> {
         }
         else {
             view.findViewById(R.id.details).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.likes).setVisibility(View.GONE);
+            view.findViewById(R.id.likers).setVisibility(View.GONE);
             photo.setVisibility(View.GONE);
         }
 

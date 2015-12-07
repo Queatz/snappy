@@ -16,6 +16,8 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.adapter.PeopleTabAdapter;
 import com.queatz.snappy.adapter.PersonAdapter;
+import com.queatz.snappy.adapter.ProfileAdapter;
+import com.queatz.snappy.adapter.ProfileTabAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.ui.ActionBar;
@@ -60,7 +62,14 @@ public class Person extends Activity {
         setContentView(R.layout.person);
 
         mActionBar = (ActionBar) findViewById(R.id.actionBar);
-        mActionBar.setAdapter(new PeopleTabAdapter(this));
+
+        boolean itsMe = team.auth.getUser() != null && team.auth.getUser().equals(mPerson.getId());
+
+        if (itsMe) {
+            mActionBar.setAdapter(new ProfileTabAdapter(this));
+        } else {
+            mActionBar.setAdapter(new PeopleTabAdapter(this));
+        }
 
         mActionBar.setLeftContent(new View.OnClickListener() {
             @Override
@@ -81,7 +90,12 @@ public class Person extends Activity {
 
         mSlideScreen = (SlideScreen) findViewById(R.id.person_content);
 
-        mSlideScreen.setAdapter(new PersonAdapter(getFragmentManager(), mPerson));
+        if (itsMe) {
+            mSlideScreen.setAdapter(new ProfileAdapter(getFragmentManager(), mPerson));
+        } else {
+            mSlideScreen.setAdapter(new PersonAdapter(getFragmentManager(), mPerson));
+        }
+
         mSlideScreen.setOnSlideCallback(new SlideScreen.OnSlideCallback() {
             @Override
             public void onSlide(int currentSlide, float offset) {
