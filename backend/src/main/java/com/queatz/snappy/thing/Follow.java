@@ -16,7 +16,7 @@ public class Follow {
         return Datastore.get(FollowLinkSpec.class).filter("sourceId", sourceId).filter("targetId", targetId).first().now();
     }
 
-    public FollowLinkSpec createOrUpdate(PersonSpec user, PersonSpec following) {
+    public FollowLinkSpec create(PersonSpec user, PersonSpec following) {
         FollowLinkSpec follow = get(user, following);
 
         if(follow == null) {
@@ -24,8 +24,10 @@ public class Follow {
             follow.sourceId = Datastore.key(user);
             follow.targetId = Datastore.key(following);
             Datastore.save(follow);
+
+            return follow;
         }
 
-        return follow;
+        return null;
     }
 }

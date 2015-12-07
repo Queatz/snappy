@@ -115,6 +115,10 @@ public class TimeUtil {
     }
 
     public static String agoDate(Date date) {
+        return agoDate(date, true);
+    }
+
+    public static String agoDate(Date date, boolean includeText) {
         long timeDiff = new Date().getTime() - date.getTime();
 
         boolean future = timeDiff < 0;
@@ -151,6 +155,10 @@ public class TimeUtil {
         }
         else {
             return "just now";
+        }
+
+        if (!includeText) {
+            return s;
         }
 
         return String.format(Util.context.getString(future ? R.string.time_in : R.string.time_ago), s);

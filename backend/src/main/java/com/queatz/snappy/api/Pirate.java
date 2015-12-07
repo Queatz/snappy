@@ -6,9 +6,15 @@ import com.google.appengine.api.search.Query;
 import com.google.appengine.api.search.QueryOptions;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.search.SearchServiceFactory;
+import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.service.Api;
+import com.queatz.snappy.shared.things.PersonSpec;
+import com.queatz.snappy.thing.Person;
 
+import java.util.Date;
 import java.util.Iterator;
+
+import javax.xml.crypto.Data;
 
 /**
  * Created by jacob on 2/8/15.
@@ -21,10 +27,17 @@ public class Pirate extends Api.Path {
 
     @Override
     public void call() {
-        String s = "";
-        s += doType("update");
+        //String s = "";
+        //s += doType("person");
 
-        ok(s + " yarr!");
+        //ok(s + " yarr!");
+
+        for(PersonSpec person : Datastore.get(PersonSpec.class).list()) {
+            person.created = new Date(1408406400000L);
+            Datastore.save(person);
+        }
+
+        ok("yarr!");
     }
 
     private String doType(String object) {

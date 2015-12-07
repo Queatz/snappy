@@ -116,7 +116,7 @@ public class People extends Api.Path {
         String localId = request.getParameter(Config.PARAM_LOCAL_ID);
 
         if (person != null) {
-            FollowLinkSpec follow = Thing.getService().follow.createOrUpdate(user, person);
+            FollowLinkSpec follow = Thing.getService().follow.create(user, person);
 
             if (follow != null) {
                 follow.localId = localId;
