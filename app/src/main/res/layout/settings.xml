@@ -3,13 +3,36 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/action_socialmode"
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="32dp"
-        android:text="Settings!"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:textSize="32sp"/>
+        android:layout_height="wrap_content">
+
+        <com.queatz.snappy.ui.TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="32dp"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textColor="@color/text"
+            android:text="@string/social_mode" />
+
+
+        <com.queatz.snappy.ui.TextView
+            android:id="@+id/social_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:layout_margin="32dp"
+            android:textAllCaps="true"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/green"
+            android:text="@string/on" />
+
+    </LinearLayout>
 
 </LinearLayout>

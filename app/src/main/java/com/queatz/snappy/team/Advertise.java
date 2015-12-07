@@ -89,6 +89,7 @@ public class Advertise {
         DISCOVERING_SERVICES,
         READING_ID_CHARACTERISITC,
         READING_NAME_CHARACTERISTIC,
+        COMPLETED
     }
 
     private Map<String, BlePerson> devices = new HashMap<>();
@@ -448,6 +449,8 @@ public class Advertise {
                         } else {
                             Log.e(Config.LOG_TAG, String.format("Person details not complete: name = %s id = %s ", personName, personId));
                         }
+
+                        step = ReadStep.COMPLETED;
 
                         close();
 

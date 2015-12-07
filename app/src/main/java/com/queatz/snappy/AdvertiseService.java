@@ -33,7 +33,9 @@ public class AdvertiseService extends Service {
             team.advertise.enable(null);
         } else {
             if (intent.hasExtra(Config.EXTRA_ACTION)) {
-                switch (intent.getStringExtra(Config.EXTRA_ACTION)) {
+                String action = intent.getStringExtra(Config.EXTRA_ACTION);
+
+                if (action != null) switch (action) {
                     case Intent.ACTION_USER_PRESENT:
                     case Intent.ACTION_SCREEN_ON:
                     case Intent.ACTION_BOOT_COMPLETED:
