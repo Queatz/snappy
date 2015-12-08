@@ -1,12 +1,13 @@
 @import url(https://fonts.googleapis.com/css?family=Poiret+One);
 @import url(https://fonts.googleapis.com/css?family=Palanquin);
+@import url(https://fonts.googleapis.com/css?family=Molengo);
 
 html, body {
     background-color: black;
     margin: 0;
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    font-family: "Palanquin", sans;
+    font-family: "Molengo", sans;
 }
 
 a {
@@ -15,16 +16,20 @@ a {
     text-decoration: none;
 }
 
+.b {
+    font-weight: bold;
+}
+
 .hide {
     display: none;
 }
 
-#doers {
+#doerss {
     position: relative;
     text-align: left;
 }
 
-#doers > span {
+#doerss > span {
     position: relative;
     width: 17vw;
     white-space: nowrap;
@@ -109,6 +114,15 @@ a {
     font-size: 3.5vw;
 }
 
+.blark {
+    padding-left: 4vw;
+    padding-right: 4vw;
+}
+
+#doers, #activity, #otherthing {
+    font-size: 5vw;
+}
+
 .end-text {
     top: initial !important;
     bottom: 2.5vw;
@@ -132,7 +146,7 @@ a {
 }
 
 .mid-text > div > div {
-    font-size: 8vw;
+    font-size: 6vw;
 }
 
 .mid-text > div > p {
@@ -160,7 +174,6 @@ a {
 
 .badge {
     text-align: center;
-    margin-top: 4vw;
 }
 
 
@@ -186,7 +199,7 @@ a {
 }
 
 .portal {
-    font-family: "Poiret One", sans;
+    font-family: "Molengo", sans;
 }
 
 .portal > div, .window > div {
@@ -207,7 +220,7 @@ a {
 .content {
     padding: 2rem;
     pointer-events: all;
-    background-color: #e5e4e1;
+    background-color: #fff;
     color: #333;
     z-index: 10;
     font-size: 16pt;
@@ -215,8 +228,8 @@ a {
 }
 
 .headline {
-    font-family: "Poiret One", sans;
-    font-size: 3vw;
+    font-family: "Molengo", sans;
+    font-size: 1.66vw;
     padding-bottom: 3rem;
     padding-left: 15%;
     padding-right: 15%;

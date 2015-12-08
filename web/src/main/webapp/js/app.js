@@ -342,6 +342,7 @@ var doers = [
     'Implementation',
     'Adoration',
     'Chaos',
+    'Mwah',
     'Connection',
     'Daintiness',
     'Delights',
@@ -450,38 +451,93 @@ var doers = [
     '???'
 ];
 
-var last = -1;
+var activities = [
+    'Project',
+    'Business',
+    'Adventure',
+    'Event',
+    'Party',
+    'Campaign',
+    'Activity',
+    'Job',
+    'Night Out',
+    'Date',
+    'Brainstorm',
+    'Weekend',
+    'Camping Trip',
+    'Vataction',
+    'Talk',
+    'Move',
+    'Quest',
+    'Chapter',
+    'Thing',
+    'Idea'
+];
 
-function randInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+function change(looper, id, what) {
+    var last = -1;
 
-function nextInt(min, max) {
-    var current = last;
-
-    while(last === current) {
-        last = randInt(min, max);
+    var randInt = function (min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    return last;
+    var nextInt = function (min, max) {
+        var current = last;
+
+        while(last === current) {
+            last = randInt(min, max);
+        }
+
+        return last;
+    }
+
+    var loop = function () {
+        var color = 'hsl(' + randInt(0, 359) + ', 90%, 50%)';
+
+            var text = $('<span>').text(what[nextInt(0, what.length - 1)].toLowerCase());
+
+            $('#' + id).empty().append(text);
+
+            text.css({color: color, 'text-shadow': '2px 2px 4px black, 0 0 1rem ' + color})
+                .textillate({
+                    minDisplayTime: 3000,
+                    in: { effect: 'bounceInDown', delay: 50, shuffle: true},
+                    out: { effect: 'bounceOutUp', reverse: true, delay: 50, shuffle: true, callback: function () { looper.loop(); } },
+                    loop: true
+                });
+    }
+
+    loop();
+
+    return loop;
 }
 
-function change() {
-    var color = 'hsl(' + randInt(0, 359) + ', 90%, 50%)';
+function loop() {
+    var readyCount = 0;
 
-    var text = $('<span>').text(doers[nextInt(0, doers.length - 1)]);
+    var a = [
+        change(this, 'doers', doers),
+        change(this, 'activity', activities),
+        change(this, 'otherthing', doers)
+    ];
 
-    $('#doers').empty().append(text);
+    var loop = function () {
+        if (readyCount < a.length) {
+            readyCount++;
+            return;
+        }
 
-    text.css({color: color, 'text-shadow': '2px 2px 4px black, 0 0 1rem ' + color})
-        .textillate({
-            minDisplayTime: 1000,
-            in: { effect: 'flipInX', delay: 50},
-            out: { effect: 'flipOutX', reverse: true, delay: 50, callback: function () { change(); } },
-            loop: true
-        });
+        var readyCount = 0;
+
+        for(var b in a) {
+            if (!a.hasOwnProperty(b)) continue;
+
+            b();
+        }
+    };
+
 }
 
 $(function () {
-    change();
+    loop();
 });
