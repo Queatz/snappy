@@ -144,7 +144,7 @@
                 android:layout_marginBottom="8dp"
                 android:textStyle="bold"
                 android:textColor="@color/text"
-                android:text="What if I want to offer more than $20?" />
+                android:text="What if I want to offer more than $100?" />
 
             <com.queatz.snappy.ui.TextView
                 android:layout_width="match_parent"

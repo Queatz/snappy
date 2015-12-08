@@ -110,7 +110,7 @@ public class Config {
     public static final boolean PUBLIC_BUY = true;
     public static final int TEMPORARY_API_LIMIT = 100;
 
-    public static final int FREE_OFFER_PRICE_MIN = -40;
+    public static final int FREE_OFFER_PRICE_MIN = -100;
     public static final int FREE_OFFER_PRICE_MAX = 200;
     public static final int PAID_OFFER_PRICE_MIN = -1000;
     public static final int PAID_OFFER_PRICE_MAX = 1000;

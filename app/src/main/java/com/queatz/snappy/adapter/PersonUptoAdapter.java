@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.queatz.snappy.MainApplication;
@@ -36,29 +37,43 @@ public class PersonUptoAdapter extends RealmBaseAdapter<Update> {
     public void updateLikes(View view, final Update update) {
         final Team team = ((MainApplication) context.getApplicationContext()).team;
 
-        final Button likes = (Button) view.findViewById(R.id.likers);
+        final Button likers = (Button) view.findViewById(R.id.likers);
 
-        int likeCount = (int) team.realm.where(Like.class)
+        int likersCount = (int) team.realm.where(Like.class)
                 .equalTo("target.id", update.getId())
                 .count();
 
-        if (update.getLikers() > likeCount) {
-            likeCount = update.getLikers();
+        if (update.getLikers() > likersCount) {
+            likersCount = update.getLikers();
         }
 
         boolean byMe = Util.liked(update, team.auth.me());
 
-        likes.setText(team.context.getResources().getQuantityString(byMe ? R.plurals.likes_me : R.plurals.likes, likeCount, likeCount));
-        likes.setVisibility(likeCount > 0 ? View.VISIBLE : View.GONE);
+        likers.setText(team.context.getResources().getQuantityString(byMe ? R.plurals.likes_me : R.plurals.likes, likersCount, likersCount));
+        likers.setVisibility(likersCount > 0 ? View.VISIBLE : View.GONE);
 
-        if (likeCount > 0) {
-            likes.setOnClickListener(new View.OnClickListener() {
+        if (likersCount > 0) {
+            likers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     team.action.showLikers((Activity) PersonUptoAdapter.this.context, update);
                 }
             });
         }
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) likers.getLayoutParams();
+
+        if (params == null) {
+            params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        if (View.GONE == view.findViewById(R.id.details).getVisibility()) {
+            params.bottomMargin = 0;
+        } else {
+            params.bottomMargin = (int) Util.px(-8);
+        }
+
+        likers.setLayoutParams(params);
     }
 
     @Override

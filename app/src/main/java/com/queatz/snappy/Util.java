@@ -64,7 +64,7 @@ public class Util {
 
     public static Spanned getUpdateText(Update update) {
         boolean past;
-        Spanned string = null;
+        Spanned string;
 
         switch (update.getAction()) {
             case Config.UPDATE_ACTION_HOST_PARTY:

@@ -19,9 +19,8 @@
         android:id="@+id/likers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="-8dp"
         android:layout_marginLeft="8dp"
-        android:textColor="@color/red"/>
+        android:textColor="@color/red" />
 
     <LinearLayout
         android:id="@+id/details"
@@ -44,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:textColor="@color/event"
+            android:textColor="@color/text"
             android:textSize="18sp" />
     </LinearLayout>
 
