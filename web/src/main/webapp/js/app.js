@@ -12,7 +12,7 @@ var doers = [
     'Filmmakers',
     'Cooks',
     'Actors',
-    'Philospohers',
+    'Philosophers',
     'Writers',
     'Acrobats',
     'Contortionists',
@@ -296,20 +296,6 @@ var doers = [
     'Stellar Health',
     'Armchair Hackers',
 
-    // Places
-    'Campouts',
-    'Campfire Chats',
-    'Home',
-    'Cities',
-    'Neighborhoods',
-    'Towns',
-    'Villages',
-    'Communities',
-    'Planet Earth',
-    'Parties',
-    'Everyday',
-    'Pizza',
-
     // Abstracts
     'Doers',
     'Go Getters',
@@ -473,6 +459,21 @@ var activities = [
     'Chapter',
     'Thing',
     'Idea'
+];
+
+var places = [
+    'Campouts',
+    'Campfire Chats',
+    'Home',
+    'Cities',
+    'Neighborhoods',
+    'Towns',
+    'Villages',
+    'Communities',
+    'Planet Earth',
+    'Parties',
+    'Everyday',
+    'Pizza',
 ];
 
 function change(looper, id, what) {
