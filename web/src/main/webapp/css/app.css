@@ -24,141 +24,37 @@ a {
     display: none;
 }
 
-#doerss {
-    position: relative;
-    text-align: left;
-}
-
-#doerss > span {
-    position: relative;
-    width: 17vw;
-    white-space: nowrap;
-    display: inline-block;
-}
-
-.more {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 1rem;
-    color: white;
-}
-
 /* Elements */
-
-
-.seam {
-    background-size: 100% auto;
-    background-position: bottom center;
-    background-repeat: no-repeat;
-    background-image: url(../img/layer-1.png);
-    margin-top: 30vw;
-    height: 20vw;
-    pointer-events: none;
-}
-
-.seam-top {
-    top: 0; left: 0; right: 0;
-    background-size: 100% auto;
-    background-position: top center;
-    background-repeat: no-repeat;
-    background-image: url(../img/layer-2.png);
-    height: 20vw;
-    pointer-events: none;
-    position: absolute;
-}
 
 .boobs {
     background-size: cover;
-    background-position: bottom center;
+    background-position: center 108%;
     background-repeat: no-repeat;
-    background-image: url(../img/photo-126888255.jpg);
-    transform-origin: 50% 60%;
-    height: 50vw;
-    top: -50vh !important;
-}
+    background-image: url(../img/russian.jpg);
 
-.cave {
-    background-size: 100%;
-    background-position: bottom center;
-    background-repeat: no-repeat;
-    background-image: url(../img/photo-127058787.jpg);
-    transform-origin: 50% 100%;
-    height: 65vw;
-    top: 52vh !important;
-}
-
-.middletown {
-    background-size: 100%;
-    background-position: 50%;
-    background-repeat: no-repeat;
-    transform-origin: 50% 50%;
-    height: 100%;
-}
-
-.bg-discover-people {
-    background-image: url(../img/photo-122677021.jpg);
-}
-
-.bg-advertise-yourself {
-    background-image: url(../img/photo-59737928.jpg);
-}
-
-.bg-upgrade-today {
-    background-image: url(../img/photo-73912411.jpg);
-}
-
-.main-text {
-    margin-top: -18vw;
-    text-shadow: 0 0 2rem black;
-    font-size: 3.5vw;
-}
-
-.blark {
-    padding-left: 4vw;
-    padding-right: 4vw;
-}
-
-#doers, #activity, #otherthing {
-    font-size: 5vw;
-}
-
-.end-text {
-    top: initial !important;
-    bottom: 2.5vw;
-    font-size: 3vw;
-    text-shadow: 0 0 2rem white;
-}
-
-.mid-text {
-    color: white;
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-shadow: 0 0 2rem black;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
-.mid-text > div {
+.footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
-.mid-text > div > div {
-    font-size: 6vw;
-}
-
-.mid-text > div > p {
-    font-size: 2vw;
-    padding: 2rem 25%;
-    background-color: rgba(0, 0, 0, .85);
-    margin: auto;
+#doers {
+    font-size: 8vw;
 }
 
 .text {
+    margin-top: 30vh;
     text-align: center;
     color: #fff;
+    font-size: 3vw;
     pointer-events: none;
 }
 
@@ -167,80 +63,32 @@ a {
     pointer-events: all;
 }
 
-.title {
-    font-size: 11vw;
-    z-index: -1;
-}
-
-.badge {
-    text-align: center;
-}
-
-
-/* Structure */
-
-
-.parallax {
-    position: relative;
-    perspective: 1px;
-    height: 100vh;
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-
-.parallax > div {
-    position: relative;
-    transform-style: preserve-3d;
-}
-
-.cover {
-    position: relative;
-    pointer-events: none;
-}
-
-.portal {
-    font-family: "Molengo", sans;
-}
-
-.portal > div, .window > div {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-}
-
-.screen {
-    height: 10vw !important;
-}
-
-.window {
-    position: absolute;
-    height: 60vw;
-    overflow: hidden;
-}
-
 .content {
-    padding: 2rem;
+    padding: 3rem;
     pointer-events: all;
     background-color: #fff;
     color: #333;
     z-index: 10;
-    font-size: 16pt;
     text-align: center;
+    vertical-align: middle;
 }
 
 .headline {
+    display: inline-block;
+    vertical-align: middle;
     font-family: "Molengo", sans;
-    font-size: 1.66vw;
-    padding-bottom: 3rem;
-    padding-left: 15%;
-    padding-right: 15%;
+    font-size: 32px;
+    margin-left: 1em;
+    margin-right: 1em;
 }
 
-.components > div {
-    vertical-align: top;
-    padding: 2rem;
+
+.badge {
     display: inline-block;
-    width: 30rem;
+    vertical-align: middle;
 }
+
+
 
 .img-about {
     background-image: url(../img/location.png);
@@ -264,73 +112,4 @@ a {
     border-radius: 8rem;
     background-size: cover;
     box-shadow: 0 0 1.5rem rgba(0, 0, 0, .5) inset;
-}
-
-
-/* Depth & Groupings */
-
-
-.depth-0 {
-  -webkit-transform: translateZ(0);
-  z-index: 0;
-}
-
-.depth-1 {
-    transform: translateZ(-1px) scale(2);
-    z-index: -1;
-}
-
-.depth-01 {
-    transform: translateZ(.125px) scale(.875);
-    z-index: 1;
-}
-
-.depth-2 {
-    transform: translateZ(-2px) scale(3);
-    z-index: -2;
-}
-
-.depth-3 {
-    transform: translateZ(-3px) scale(4);
-    z-index: -3;
-}
-
-parallax > div:nth-child(0) {
-    z-index: 10;
-}
-
-parallax > div:nth-child(1) {
-    z-index: 9;
-}
-
-parallax > div:nth-child(2) {
-    z-index: 8;
-}
-
-parallax > div:nth-child(3) {
-    z-index: 7;
-}
-
-parallax > div:nth-child(4) {
-    z-index: 6;
-}
-
-parallax > div:nth-child(5) {
-    z-index: 5;
-}
-
-parallax > div:nth-child(6) {
-    z-index: 4;
-}
-
-parallax > div:nth-child(7) {
-    z-index: 3;
-}
-
-parallax > div:nth-child(8) {
-    z-index: 2;
-}
-
-parallax > div:nth-child(9) {
-    z-index: 1;
 }

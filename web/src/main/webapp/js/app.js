@@ -44,6 +44,7 @@ var doers = [
     'Meteorologists',
     'Aviators',
     'Composers',
+    'Vikings',
     'Folly Artists',
     'Concept Artists',
     'Exotics',
@@ -179,7 +180,7 @@ var doers = [
     'Harpists',
     'Automotive Designers',
     'Radiologists',
-    'Carpenter',
+    'Carpenters',
     'Cargo Ship Crews',
     'Jungle Conservationists',
     'Speed Mages',
@@ -494,15 +495,15 @@ function change(looper, id, what) {
     var loop = function () {
         var color = 'hsl(' + randInt(0, 359) + ', 90%, 50%)';
 
-            var text = $('<span>').text(what[nextInt(0, what.length - 1)].toLowerCase());
+            var text = $('<span>').text(what[nextInt(0, what.length - 1)]);
 
             $('#' + id).empty().append(text);
 
             text.css({color: color, 'text-shadow': '2px 2px 4px black, 0 0 1rem ' + color})
                 .textillate({
-                    minDisplayTime: 3000,
-                    in: { effect: 'bounceInDown', delay: 50, shuffle: true},
-                    out: { effect: 'bounceOutUp', reverse: true, delay: 50, shuffle: true, callback: function () { looper.loop(); } },
+                    minDisplayTime: 1000,
+                    in: { effect: 'bounceInDown', reverse: false, delay: 20, shuffle: true},
+                    out: { effect: 'bounceOutUp', reverse: false, delay: 20, shuffle: true, callback: function () { looper.loop(); } },
                     loop: true
                 });
     }
@@ -517,8 +518,6 @@ function loop() {
 
     var a = [
         change(this, 'doers', doers),
-        change(this, 'activity', activities),
-        change(this, 'otherthing', doers)
     ];
 
     var loop = function () {
