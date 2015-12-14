@@ -42,10 +42,10 @@ public class Buy {
             URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
             HTTPRequest httpRequest = new HTTPRequest(url, HTTPMethod.POST);
             httpRequest.getFetchOptions().allowTruncate().doNotFollowRedirects();
-            httpRequest.addHeader(new HTTPHeader("Content-Type", "application/x-www-form-urlencoded"));
+            httpRequest.addHeader(new HTTPHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8"));
             httpRequest.setPayload(payload.getBytes());
             HTTPResponse resp = urlFetchService.fetch(httpRequest);
-            String s = new String(resp.getContent());
+            String s = new String(resp.getContent(), "UTF-8");
 
             return Json.from(s, JsonObject.class).get("access_token").getAsString();
         }
@@ -64,8 +64,9 @@ public class Buy {
             URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
             HTTPRequest httpRequest = new HTTPRequest(url, HTTPMethod.GET);
             httpRequest.getFetchOptions().allowTruncate().doNotFollowRedirects();
+            httpRequest.setHeader(new HTTPHeader("Content-Type", "application/json; charset=UTF-8"));
             HTTPResponse resp = urlFetchService.fetch(httpRequest);
-            return new String(resp.getContent());
+            return new String(resp.getContent(), "UTF-8");
         }
         catch (IOException e) {
             e.printStackTrace();

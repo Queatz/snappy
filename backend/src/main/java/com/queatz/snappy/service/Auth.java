@@ -1,5 +1,6 @@
 package com.queatz.snappy.service;
 
+import com.google.appengine.api.urlfetch.HTTPHeader;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
@@ -45,8 +46,9 @@ public class Auth {
             URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
             HTTPRequest httpRequest = new HTTPRequest(url, HTTPMethod.GET);
             httpRequest.getFetchOptions().allowTruncate().doNotFollowRedirects();
+            httpRequest.addHeader(new HTTPHeader("Content-Type", "application/json; charset=UTF-8"));
             HTTPResponse resp = urlFetchService.fetch(httpRequest);
-            s = new String(resp.getContent());
+            s = new String(resp.getContent(), "UTF-8");
             JsonObject response = Json.from(s, JsonObject.class);
 
             if(response.get("email").getAsString().equals(email)) {
@@ -67,8 +69,9 @@ public class Auth {
             URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
             HTTPRequest httpRequest = new HTTPRequest(url, HTTPMethod.GET);
             httpRequest.getFetchOptions().allowTruncate().doNotFollowRedirects();
+            httpRequest.addHeader(new HTTPHeader("Content-Type", "application/json; charset=UTF-8"));
             HTTPResponse resp = urlFetchService.fetch(httpRequest);
-            String s = new String(resp.getContent());
+            String s = new String(resp.getContent(), "UTF-8");
             JsonObject response = Json.from(s, JsonObject.class);
 
             PersonSpec personSpec = new PersonSpec();
