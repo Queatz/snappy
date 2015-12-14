@@ -295,6 +295,7 @@ var doers = [
     'Thrill Seekers',
     'Stellar Health',
     'Armchair Hackers',
+    'Lifestyle Designers',
 
     // Abstracts
     'Doers',
