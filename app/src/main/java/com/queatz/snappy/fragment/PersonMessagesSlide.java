@@ -18,6 +18,7 @@ import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Message;
 
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by jacob on 10/26/14.
@@ -53,7 +54,7 @@ public class PersonMessagesSlide extends Fragment {
                         .equalTo("from.id", mPerson.getId())
                         .equalTo("to.id", team.auth.getUser())
                     .endGroup()
-                    .findAllSorted("date", true);
+                    .findAllSorted("date", Sort.ASCENDING);
 
             list.setAdapter(new PersonMessagesAdapter(getActivity(), messages, team.auth.me()));
 

@@ -33,6 +33,7 @@ import com.squareup.picasso.Picasso;
 
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by jacob on 10/23/14.
@@ -147,7 +148,7 @@ public class PersonUptoSlide extends Fragment {
 
             RealmResults<Update> recentUpdates = team.realm.where(Update.class)
                     .equalTo("person.id", mPerson.getId())
-                    .findAllSorted("date", false);
+                    .findAllSorted("date", Sort.DESCENDING);
             updateList.setAdapter(new PersonUptoAdapter(getActivity(), recentUpdates));
         }
 
@@ -206,7 +207,7 @@ public class PersonUptoSlide extends Fragment {
         if(mPerson == null || getActivity() == null)
             return;
 
-        RealmResults<Offer> offers = team.realm.where(Offer.class).equalTo("person.id", mPerson.getId()).findAllSorted("price", true);
+        RealmResults<Offer> offers = team.realm.where(Offer.class).equalTo("person.id", mPerson.getId()).findAllSorted("price", Sort.ASCENDING);
 
         View offersView = personAbout.findViewById(R.id.offers);
 

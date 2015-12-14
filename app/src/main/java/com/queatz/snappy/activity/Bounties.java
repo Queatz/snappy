@@ -24,6 +24,7 @@ import com.queatz.snappy.ui.TimeSlider;
 import java.util.Date;
 
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by jacob on 9/5/15.
@@ -90,7 +91,7 @@ public class Bounties extends Activity {
                     .or()
                     .equalTo("people.id", team.auth.getUser())
                 .endGroup()
-                .findAllSorted("price", true);
+                .findAllSorted("price", Sort.ASCENDING);
 
         final BountyAdapter bountyAdapter = new BountyAdapter(this, bounties);
         bountyList.setAdapter(bountyAdapter);

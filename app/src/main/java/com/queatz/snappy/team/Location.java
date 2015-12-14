@@ -1,12 +1,16 @@
 package com.queatz.snappy.team;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -92,7 +96,7 @@ public class Location implements
     }
 
     private void ensureConnected(Runnable runnable) {
-        if(mGoogleApiClient.isConnected())
+        if(team.auth.checkPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) && mGoogleApiClient.isConnected())
             runnable.run();
         else
             mRunWhenConnected.add(runnable);
@@ -204,6 +208,12 @@ public class Location implements
                 }
 
                 break;
+        }
+    }
+
+    public void onPermissionGranted(String permission) {
+        if (Manifest.permission.ACCESS_FINE_LOCATION.equals(permission)) {
+            locationAvailable(true);
         }
     }
 

@@ -243,8 +243,6 @@ public class Advertise {
             } else {
                 Log.w(Config.LOG_TAG, "advertise - advertiser null, trying depricated method...");
 
-
-
                 Log.w(Config.LOG_TAG, "advertise - advertiser null");
             }
         }

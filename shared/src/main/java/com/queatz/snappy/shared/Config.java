@@ -36,6 +36,7 @@ public class Config {
     public static final int REQUEST_CODE_CHECK_SETTINGS = 5;
     public static final int REQUEST_CODE_CHOOSER = 6;
     public static final int REQUEST_CODE_ENABLE_BT = 7;
+    public static final int REQUEST_CODE_REQUEST_PERMISSION = 8;
 
     public static final UUID UUID_SERVICE = UUID.fromString("2d444574-5fdb-4e49-8921-3823f80b39a5");
     public static final UUID UUID_CHARACTERISTIC_PROFILE_ID = UUID.fromString("9592986d-0038-4ebf-acc2-6454f30e9db4");

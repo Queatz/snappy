@@ -3,6 +3,7 @@ package com.queatz.snappy.activity;
 import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -48,8 +49,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 
+import io.realm.Case;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by jacob on 1/3/15.
@@ -125,7 +128,7 @@ public class HostParty extends Activity {
 
         RealmResults<Party> recentParties = team.realm.where(Party.class)
                 .equalTo("host.id", team.auth.getUser())
-                .findAllSorted("date", false);
+                .findAllSorted("date", Sort.DESCENDING);
         partyList.setAdapter(new HostPartyAdapter(this, recentParties));
 
         TimeSlider timeSlider = (TimeSlider) mNewParty.findViewById(R.id.timeSlider);
@@ -421,8 +424,8 @@ public class HostParty extends Activity {
         }
 
         RealmResults<com.queatz.snappy.things.Location> results = team.realm.where(com.queatz.snappy.things.Location.class)
-                .beginsWith("name", q, RealmQuery.CASE_INSENSITIVE)
-                .findAllSorted("name", true);
+                .beginsWith("name", q, Case.INSENSITIVE)
+                .findAllSorted("name", Sort.ASCENDING);
 
         mSuggestedLocationsList.setAdapter(new LocationAdapter(this, results, 3));
     }
@@ -445,7 +448,7 @@ public class HostParty extends Activity {
 
                 EditText location = ((EditText) mNewParty.findViewById(R.id.location));
 
-                if(location != null) {
+                if (location != null) {
                     String q = location.getText().toString();
                     updateLocationSuggestions(q);
                 }
@@ -550,6 +553,11 @@ public class HostParty extends Activity {
             default:
                 return super.onContextItemSelected(item);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        team.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
 

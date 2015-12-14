@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -92,5 +93,10 @@ public class NewUpto extends Activity {
 
     private void save() {
         team.action.postUpto(mPhoto, ((EditText) findViewById(R.id.message)).getText().toString());
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        team.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

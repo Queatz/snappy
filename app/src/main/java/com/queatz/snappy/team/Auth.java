@@ -1,12 +1,16 @@
 package com.queatz.snappy.team;
 
+import android.Manifest;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.android.gms.auth.GoogleAuthException;
@@ -362,6 +366,21 @@ public class Auth {
 
                 break;
         }
+    }
+
+    /**
+     * Check if a permission is granted.  If it isn't, it will be requested.
+     *
+     * @return if the permission is already granted
+     */
+    public boolean checkPermission(@NonNull final Activity activity, @NonNull final String permission) {
+        if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, Config.REQUEST_CODE_REQUEST_PERMISSION);
+
+            return false;
+        }
+
+        return true;
     }
 
     private void fetchAuthToken() {

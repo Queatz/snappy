@@ -33,6 +33,7 @@ import java.util.Date;
 import io.realm.RealmChangeListener;
 import io.realm.RealmList;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by jacob on 10/19/14.
@@ -199,7 +200,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
                         .equalTo("people.person.id", me).or()
                         .equalTo("host.id", me)
                     .endGroup()
-                    .findAllSorted("date", true);
+                    .findAllSorted("date", Sort.ASCENDING);
 
             RealmResults<Quest> queryQuests = team.realm.where(Quest.class).greaterThan("opened", new Date(new Date().getTime() - 1000L * 60 * 60 * 24 * 30))
                     .notEqualTo("status", Config.QUEST_STATUS_COMPLETE)
@@ -210,9 +211,9 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
                     .or()
                     .equalTo("host.id", team.auth.getUser())
                     .endGroup()
-                    .findAllSorted("opened", false);
+                    .findAllSorted("opened", Sort.DESCENDING);
 
-            RealmResults<Offer> queryOffers = team.realm.where(Offer.class).notEqualTo("person.id", team.auth.getUser()).findAllSorted("price", true);
+            RealmResults<Offer> queryOffers = team.realm.where(Offer.class).notEqualTo("person.id", team.auth.getUser()).findAllSorted("price", Sort.ASCENDING);
 
             final ArrayList<RealmResults> list = new ArrayList<>();
             list.add(queryParties);

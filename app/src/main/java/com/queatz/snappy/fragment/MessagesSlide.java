@@ -21,6 +21,7 @@ import com.queatz.snappy.things.Message;
 import com.queatz.snappy.util.Json;
 
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by jacob on 10/26/14.
@@ -74,7 +75,7 @@ public class MessagesSlide extends Fragment {
             if(mList.getAdapter() == null) {
                 RealmResults<Contact> contacts = team.realm.where(Contact.class)
                         .equalTo("person.id", team.auth.getUser())
-                        .findAllSorted("updated", false);
+                        .findAllSorted("updated", Sort.DESCENDING);
 
                 mList.setAdapter(new ContactAdapter(getActivity(), contacts));
             }

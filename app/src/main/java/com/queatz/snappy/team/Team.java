@@ -1,5 +1,6 @@
 package com.queatz.snappy.team;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -95,5 +96,15 @@ public class Team implements Closeable {
         location.onActivityResult(requestCode, resultCode, data);
         action.onActivityResult(activity, requestCode, resultCode, data);
         advertise.onActivityResult(activity, requestCode, resultCode, data);
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == Config.REQUEST_CODE_REQUEST_PERMISSION) {
+            for (String permission : permissions) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    location.onPermissionGranted(permission);
+                }
+            }
+        }
     }
 }
