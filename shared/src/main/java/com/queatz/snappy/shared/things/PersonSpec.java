@@ -30,6 +30,7 @@ public class PersonSpec extends ThingSpec {
     public @Hide @Search("geo") GeoPt latlng;
     public @Hide String googleId;
     public @Hide String gender;
+    public @Hide String language;
     public @Hide @Index String email;
     public @Hide @Index @Search("age") Date around;
 

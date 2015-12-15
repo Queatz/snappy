@@ -80,6 +80,10 @@ public class Auth {
                 personSpec.gender = response.get("gender").getAsString();
             }
 
+            if(response.has("language")) {
+                personSpec.language = response.get("language").getAsString();
+            }
+
             if(response.has("name")) {
                 JsonObject name = response.get("name").getAsJsonObject();
 
