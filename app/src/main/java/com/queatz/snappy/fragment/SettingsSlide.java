@@ -35,11 +35,19 @@ public class SettingsSlide extends Fragment {
         View view = inflater.inflate(R.layout.settings, container, false);
 
         View socialMode = view.findViewById(R.id.action_socialmode);
+        View halp = view.findViewById(R.id.action_info);
 
         socialMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggleSocialMode();
+            }
+        });
+
+        halp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.action.showAbout(getActivity());
             }
         });
 

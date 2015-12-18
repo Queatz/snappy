@@ -15,7 +15,6 @@ import android.widget.ListView;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
-import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.adapter.OfferAdapter;
 import com.queatz.snappy.adapter.PersonUptoAdapter;
 import com.queatz.snappy.shared.Config;
@@ -45,9 +44,14 @@ public class PersonUptoSlide extends Fragment {
     EditText describeExperience;
     EditText perUnit;
     RealmChangeListener mChangeListener = null;
+    boolean mShowOffers;
 
     public void setPerson(com.queatz.snappy.things.Person person) {
         mPerson = person;
+    }
+
+    public void showOffers() {
+        mShowOffers = true;
     }
 
     SwipeRefreshLayout mRefresh;
@@ -78,12 +82,11 @@ public class PersonUptoSlide extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.person_upto, container, false);
+        final View view = inflater.inflate(R.layout.person_upto, container, false);
 
         final ListView updateList = ((ListView) view.findViewById(R.id.updateList));
 
         personAbout = View.inflate(getActivity(), R.layout.person_upto_about, null);
-
         personAbout.findViewById(R.id.offers).setVisibility(View.GONE);
         personAbout.findViewById(R.id.offers).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -307,7 +310,13 @@ public class PersonUptoSlide extends Fragment {
         personAbout.postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 updateBanner();
+
+                if (mShowOffers) {
+                    mShowOffers = false;
+                    personAbout.findViewById(R.id.offers).callOnClick();
+                }
             }
         }, initial ? 500 : 0);
 

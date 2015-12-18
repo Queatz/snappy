@@ -120,6 +120,8 @@
     <string name="offer_by_person">%1$s by %2$s</string>
     <string name="liked_your_photo">liked your photo</string>
     <string name="settings">Settings</string>
+    <string name="halp">More Information</string>
+    <string name="query">What do you want?</string>
 
     <plurals name="likes">
         <item quantity="one">♡ %1$s Liker</item>

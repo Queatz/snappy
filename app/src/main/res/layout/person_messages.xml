@@ -37,6 +37,7 @@
             android:lineSpacingMultiplier="1.25"
             android:textColorHint="@color/gray"
             android:inputType="textMultiLine|textShortMessage|textCapSentences" />
+
         <ImageView
             android:clickable="true"
             android:background="@drawable/softclick"

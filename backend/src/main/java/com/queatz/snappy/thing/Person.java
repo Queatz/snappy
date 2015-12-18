@@ -57,6 +57,7 @@ public class Person {
         person.firstName = data.firstName;
         person.lastName = data.lastName;
         person.gender = data.gender;
+        person.language = data.language;
         person.imageUrl = data.imageUrl;
         person.googleId = data.googleId;
 

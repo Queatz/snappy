@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -24,8 +25,10 @@ import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.things.Quest;
+import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.ui.RevealAnimation;
 import com.queatz.snappy.ui.TextView;
+import com.queatz.snappy.ui.TimeSlider;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,6 +72,28 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
                     RevealAnimation.expand(view);
                 else
                     RevealAnimation.collapse(view);
+            }
+        });
+
+        final TimeSlider priceSlider = (TimeSlider) emptyView.findViewById(R.id.price);
+        final EditText query = (EditText) emptyView.findViewById(R.id.query);
+        query.requestFocus();
+        priceSlider.setPercent(.25f);
+        priceSlider.setTextCallback(new TimeSlider.TextCallback() {
+            @Override
+            public String getText(float percent) {
+                int price = getPrice(percent);
+
+                return "$" + Integer.toString(price);
+            }
+        });
+
+        emptyView.findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.action.addExperience(query.getText().toString(), -getPrice(priceSlider.getPercent()), "");
+                query.setText("");
+                team.action.openProfileOffers(getActivity(), team.auth.me());
             }
         });
 
@@ -133,6 +158,10 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         else {
             emptyView.findViewById(R.id.enableLocation).setVisibility(View.GONE);
         }
+    }
+
+    private int getPrice(float percent) {
+        return (int) ((percent * 5) + 1) * 10;
     }
 
     private void updateBanner(RealmList<Person> people, RealmList<com.queatz.snappy.things.Location> locations) {

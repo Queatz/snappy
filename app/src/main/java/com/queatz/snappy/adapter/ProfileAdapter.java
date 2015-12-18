@@ -14,11 +14,13 @@ import com.queatz.snappy.ui.SlideScreen;
  */
 public class ProfileAdapter extends SlideScreen.SlideScreenAdapter {
     Person mPerson;
+    boolean showOffers;
 
-    public ProfileAdapter(FragmentManager fragmentManager, Person person) {
+    public ProfileAdapter(FragmentManager fragmentManager, Person person, boolean showOffers) {
         super(fragmentManager);
 
         mPerson = person;
+        this.showOffers = showOffers;
     }
 
     public int getCount() {
@@ -30,10 +32,16 @@ public class ProfileAdapter extends SlideScreen.SlideScreenAdapter {
             case 0:
                 PersonUptoSlide personUptoSlide = new PersonUptoSlide();
                 personUptoSlide.setPerson(mPerson);
+
+                if (showOffers) {
+                    personUptoSlide.showOffers();
+                }
+
                 return personUptoSlide;
             case 1:
                 SettingsSlide settingsSlide = new SettingsSlide();
                 settingsSlide.setPerson(mPerson);
+
                 return settingsSlide;
             default:
                 return null;

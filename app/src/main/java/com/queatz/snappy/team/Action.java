@@ -247,6 +247,13 @@ public class Action {
         team.view.show(from, com.queatz.snappy.activity.Person.class, bundle);
     }
 
+    public void openProfileOffers(Activity from, @NonNull final Person person) {
+        Bundle bundle = new Bundle();
+        bundle.putString("person", person.getId());
+        bundle.putBoolean("showOffers", true);
+        team.view.show(from, com.queatz.snappy.activity.Person.class, bundle);
+    }
+
     public void openMinimenu(Activity in, View source) {
         ((MiniMenu) in.findViewById(R.id.miniMenu)).show();
     }

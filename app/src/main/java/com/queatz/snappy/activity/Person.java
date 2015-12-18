@@ -57,6 +57,8 @@ public class Person extends Activity {
             return;
         }
 
+        boolean showOffers = intent.getBooleanExtra("showOffers", false);
+
         mPerson = team.realm.where(com.queatz.snappy.things.Person.class).equalTo("id", id).findFirst();
         // Else load person and wait
 
@@ -92,9 +94,9 @@ public class Person extends Activity {
         mSlideScreen = (SlideScreen) findViewById(R.id.person_content);
 
         if (itsMe) {
-            mSlideScreen.setAdapter(new ProfileAdapter(getFragmentManager(), mPerson));
+            mSlideScreen.setAdapter(new ProfileAdapter(getFragmentManager(), mPerson, showOffers));
         } else {
-            mSlideScreen.setAdapter(new PersonAdapter(getFragmentManager(), mPerson));
+            mSlideScreen.setAdapter(new PersonAdapter(getFragmentManager(), mPerson, showOffers));
         }
 
         mSlideScreen.setOnSlideCallback(new SlideScreen.OnSlideCallback() {
