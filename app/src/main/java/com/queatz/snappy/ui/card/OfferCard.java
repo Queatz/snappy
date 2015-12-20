@@ -69,6 +69,16 @@ public class OfferCard implements Card<Offer> {
         view.findViewById(R.id.takeOffer).setOnClickListener(onClick);
         view.setOnClickListener(onClick);
 
+        TextView type = (TextView) view.findViewById(R.id.type);
+
+        if (offer.getPrice() < 0) {
+            type.setText(context.getString(R.string.person_wants, offer.getPerson().getFirstName()));
+            type.setTextColor(context.getResources().getColor(R.color.purple));
+        } else {
+            type.setText(context.getString(R.string.person_offers, offer.getPerson().getFirstName()));
+            type.setTextColor(context.getResources().getColor(R.color.green));
+        }
+
 
         int colorResource = (offer.getPrice() < 0 ? R.color.purple : R.color.green);
         view.findViewById(R.id.highlight).setBackgroundResource(colorResource);

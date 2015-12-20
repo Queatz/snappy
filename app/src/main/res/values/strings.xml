@@ -35,7 +35,7 @@
     <string name="welcome_to">Welcome to</string>
     <string name="SNAPPY">VILLAGE</string>
     <string name="enter_address">Find a location for \"%1$s\"…</string>
-    <string name="parties_empty">All systems go</string>
+    <string name="parties_empty">No offers nearby</string>
     <string name="messages_empty">No messages</string>
     <string name="hide">Hide</string>
     <string name="cancel">Cancel</string>
@@ -122,6 +122,9 @@
     <string name="settings">Settings</string>
     <string name="halp">More Information</string>
     <string name="query">What do you want?</string>
+    <string name="for_price">for %1$s</string>
+    <string name="person_offers">%1$s offers</string>
+    <string name="person_wants">%1$s wants</string>
 
     <plurals name="likes">
         <item quantity="one">♡ %1$s Liker</item>

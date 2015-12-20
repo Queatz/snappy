@@ -50,6 +50,7 @@ public class SnappyServlet extends HttpServlet {
     }
 
     private void handle(HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.addHeader("Access-Control-Allow-Origin", "*");
         resp.setContentType("application/json");
         resp.setCharacterEncoding("utf-8");
 

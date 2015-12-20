@@ -84,7 +84,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
             public String getText(float percent) {
                 int price = getPrice(percent);
 
-                return "$" + Integer.toString(price);
+                return getString(R.string.for_price, "$" + Integer.toString(price));
             }
         });
 
