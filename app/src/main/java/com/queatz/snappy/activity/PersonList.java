@@ -12,13 +12,16 @@ import android.widget.ListView;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
+import com.queatz.snappy.adapter.EndorserAdapter;
 import com.queatz.snappy.adapter.LikerAdapter;
 import com.queatz.snappy.adapter.PersonListAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Endorsement;
 import com.queatz.snappy.things.Follow;
 import com.queatz.snappy.things.Like;
+import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.things.Update;
 
@@ -31,6 +34,7 @@ import io.realm.RealmResults;
 public class PersonList extends Activity implements RealmChangeListener {
     com.queatz.snappy.things.Person mPerson;
     Update mUpdate;
+    Offer mOffer;
     boolean mShowFollowing;
     Team team;
 
@@ -50,8 +54,37 @@ public class PersonList extends Activity implements RealmChangeListener {
         final ListView personAdapter = (ListView) findViewById(R.id.personList);
 
         boolean showLikers = intent.getBooleanExtra("showLikers", false);
+        boolean showEndorsers = intent.getBooleanExtra("showEndorsers", false);
 
-        if (showLikers) {
+        if (showEndorsers) {
+            String id = intent.getStringExtra("offer");
+
+            if (id == null) {
+                Log.w(Config.LOG_TAG, "No offer specified");
+                return;
+            }
+
+            mOffer = team.realm.where(Offer.class).equalTo("id", id).findFirst();
+
+            if(mOffer != null && personAdapter != null) {
+                RealmResults<Endorsement> results = team.realm.where(Endorsement.class)
+                        .equalTo("target.id", mOffer.getId())
+                        .findAll();
+
+                final EndorserAdapter adapter = new EndorserAdapter(this, results);
+
+                personAdapter.setAdapter(adapter);
+
+                personAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        team.action.openProfile(PersonList.this, adapter.getPerson(position));
+                    }
+                });
+            }
+
+            fetchEndorsers();
+        } else if (showLikers) {
             String id = intent.getStringExtra("update");
 
             if (id == null) {
@@ -119,6 +152,19 @@ public class PersonList extends Activity implements RealmChangeListener {
 
     }
 
+    private void fetchEndorsers() {
+        team.api.get(String.format(Config.PATH_OFFER_ID_ENDORSERS, mOffer.getId()), null, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                team.things.putAll(Endorsement.class, response);
+            }
+
+            @Override
+            public void fail(String response) {
+
+            }
+        });
+    }
     private void fetchLikers() {
         team.api.get(String.format(Config.PATH_UPDATE_LIKERS, mUpdate.getId()), null, new Api.Callback() {
             @Override

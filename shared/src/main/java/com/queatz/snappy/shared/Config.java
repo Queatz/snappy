@@ -70,6 +70,9 @@ public class Config {
     public static final String PATH_MESSAGES_ID = "messages/%s";
     public static final String PATH_ME_OFFERS= "me/offers";
     public static final String PATH_ME_OFFERS_ID= "me/offers/%s";
+    public static final String PATH_OFFER_ID = "offer/%s";
+    public static final String PATH_OFFER_ID_ENDORSE = "offer/%s/endorse";
+    public static final String PATH_OFFER_ID_ENDORSERS = "offer/%s/endorsers";
     public static final String PATH_ME_UPTO= "me/upto";
     public static final String PATH_ME_BUY= "me/buy";
     public static final String PATH_ME_REGISTER_DEVICE = "me/register_device";
@@ -161,6 +164,7 @@ public class Config {
     public static final String PUSH_ACTION_NEW_OFFER = "new_offer";
     public static final String PUSH_ACTION_ADVERTISE = "advertise";
     public static final String PUSH_ACTION_LIKE_UPDATE = "like_update";
+    public static final String PUSH_ACTION_OFFER_ENDORSEMENT = "offer_endorsement";
 
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";
     public static final String UPDATE_ACTION_HOST_PARTY = "host_party";
@@ -252,4 +256,7 @@ public class Config {
     public static final String PATH_FOLLOWING = "following";
     public static final String PATH_UPDATE = "update";
     public static final String PATH_LIKERS = "likers";
+    public static final String PATH_OFFER = "offer";
+    public static final String PATH_ENDORSERS = "endorsers";
+    public static final String PATH_ENDORSE = "endorse";
 }

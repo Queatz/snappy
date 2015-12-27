@@ -10,6 +10,7 @@ import com.queatz.snappy.service.Search;
 import com.queatz.snappy.shared.ThingSpec;
 import com.queatz.snappy.shared.things.BountySpec;
 import com.queatz.snappy.shared.things.ContactSpec;
+import com.queatz.snappy.shared.things.EndorsementSpec;
 import com.queatz.snappy.shared.things.FollowLinkSpec;
 import com.queatz.snappy.shared.things.GroupSpec;
 import com.queatz.snappy.shared.things.JoinLinkSpec;
@@ -46,6 +47,7 @@ public class Datastore {
         ObjectifyService.register(QuestSpec.class);
         ObjectifyService.register(UpdateLikeSpec.class);
         ObjectifyService.register(UpdateSpec.class);
+        ObjectifyService.register(EndorsementSpec.class);
     }
 
     public static <T extends ThingSpec> T create(Class<T> type) {

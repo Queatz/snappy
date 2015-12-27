@@ -2,8 +2,10 @@ package com.queatz.snappy.thing;
 
 import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.things.EndorsementSpec;
 import com.queatz.snappy.shared.things.OfferSpec;
 import com.queatz.snappy.shared.things.PersonSpec;
+import com.queatz.snappy.shared.things.UpdateLikeSpec;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -42,5 +44,26 @@ public class Offer {
 
     public void delete(String offerId) {
         Datastore.delete(OfferSpec.class, offerId);
+    }
+
+    public EndorsementSpec endorse(OfferSpec offer, PersonSpec person) {
+        EndorsementSpec endorsement = Datastore.get(EndorsementSpec.class)
+                .filter("targetId", offer)
+                .filter("sourceId", person)
+                .first().now();
+
+        if (endorsement != null) {
+            return null;
+        }
+
+        endorsement = Datastore.create(EndorsementSpec.class);
+        endorsement.sourceId = Datastore.key(person);
+        endorsement.targetId = Datastore.key(offer);
+
+        if(Datastore.save(endorsement)) {
+            return endorsement;
+        } else {
+            return null;
+        }
     }
 }

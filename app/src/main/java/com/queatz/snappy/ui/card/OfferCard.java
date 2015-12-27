@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
@@ -62,6 +63,7 @@ public class OfferCard implements Card<Offer> {
         View.OnClickListener onClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(context, team.context.getString(R.string.opening_conversation), Toast.LENGTH_SHORT).show();
                 team.action.openMessages((Activity) context, offer.getPerson());
             }
         };

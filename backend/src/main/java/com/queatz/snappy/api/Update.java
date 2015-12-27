@@ -72,7 +72,7 @@ public class Update extends Api.Path {
     }
 
     private void getLikers(String updateId) {
-        UpdateSpec update= Datastore.get(UpdateSpec.class, updateId);
+        UpdateSpec update = Datastore.get(UpdateSpec.class, updateId);
 
         if (update == null) {
             notFound();

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -77,7 +78,19 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
 
         final TimeSlider priceSlider = (TimeSlider) emptyView.findViewById(R.id.price);
         final EditText query = (EditText) emptyView.findViewById(R.id.query);
-        query.requestFocus();
+
+        // Work around Android bug
+        query.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (MotionEvent.ACTION_CANCEL == event.getAction()) {
+                    return true;
+                }
+
+                return false;
+            }
+        });
+
         priceSlider.setPercent(.25f);
         priceSlider.setTextCallback(new TimeSlider.TextCallback() {
             @Override
@@ -93,7 +106,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
             public void onClick(View v) {
                 team.action.addExperience(query.getText().toString(), -getPrice(priceSlider.getPercent()), "");
                 query.setText("");
-                team.action.openProfileOffers(getActivity(), team.auth.me());
+                team.action.openProfile(getActivity(), team.auth.me());
             }
         });
 

@@ -14,6 +14,7 @@ import com.queatz.snappy.shared.Hide;
 import com.queatz.snappy.shared.Push;
 import com.queatz.snappy.shared.Shallow;
 import com.queatz.snappy.shared.ThingSpec;
+import com.queatz.snappy.shared.things.EndorsementSpec;
 import com.queatz.snappy.shared.things.FollowLinkSpec;
 import com.queatz.snappy.shared.things.JoinLinkSpec;
 import com.queatz.snappy.shared.things.OfferSpec;
@@ -23,6 +24,7 @@ import com.queatz.snappy.shared.things.QuestLinkSpec;
 import com.queatz.snappy.shared.things.QuestSpec;
 import com.queatz.snappy.shared.things.UpdateLikeSpec;
 import com.queatz.snappy.shared.things.UpdateSpec;
+import com.queatz.snappy.thing.Offer;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -348,6 +350,12 @@ public class Json {
             if (Config.UPDATE_ACTION_UPTO.equals(update.action)) {
                 update.likers = Datastore.get(UpdateLikeSpec.class).filter("targetId", update).count();
             }
+        }
+
+        else if (OfferSpec.class.isAssignableFrom(object.getClass())) {
+            OfferSpec offer = (OfferSpec) object;
+
+            offer.endorsers = Datastore.get(EndorsementSpec.class).filter("targetId", offer).count();
         }
     }
 

@@ -88,17 +88,6 @@ public class PersonUptoSlide extends Fragment {
 
         personAbout = View.inflate(getActivity(), R.layout.person_upto_about, null);
         personAbout.findViewById(R.id.offers).setVisibility(View.GONE);
-        personAbout.findViewById(R.id.offers).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                View view = personAbout.findViewById(R.id.offersListHolder);
-
-                if (view.getVisibility() == View.GONE)
-                    RevealAnimation.expand(view);
-                else
-                    RevealAnimation.collapse(view);
-            }
-        });
 
         updateList.addHeaderView(personAbout);
         updateList.addFooterView(new View(getActivity()));
@@ -125,16 +114,16 @@ public class PersonUptoSlide extends Fragment {
                         int price = getPrice(percent);
 
                         if (price < 0) {
-                            newOffer.setBackgroundResource(R.color.darkpurple);
+                            newOffer.setBackgroundResource(R.color.purple);
                         } else {
-                            newOffer.setBackgroundResource(R.color.darkgreen);
+                            newOffer.setBackgroundResource(R.color.green);
                         }
 
                         if (price == 0) {
                             return getString(R.string.free);
                         }
 
-                        return  (price < 0 ? "-" : "") + "$" + Integer.toString(Math.abs(price));
+                        return  (price < 0 ? "+" : "") + "$" + Integer.toString(Math.abs(price));
                     }
                 });
 
@@ -156,13 +145,6 @@ public class PersonUptoSlide extends Fragment {
         }
 
         update(true);
-
-        updateList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //team.action.openUpdate((Update) updateList.getAdapter().getItem(position));
-            }
-        });
 
         mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         mRefresh.setColorSchemeResources(R.color.red);
@@ -228,38 +210,14 @@ public class PersonUptoSlide extends Fragment {
             describeExperience.setHint(offers.size() < 1 ? R.string.describe_the_experience : R.string.describe_another_experience);
         }
 
-        View offersListHolder = offersView.findViewById(R.id.offersListHolder);
         ListView offersList = (ListView) offersView.findViewById(R.id.offersList);
 
         OfferAdapter offersAdapter = new OfferAdapter(getActivity(), offers);
 
         offersList.setAdapter(offersAdapter);
 
-        offersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((SlideScreen) getActivity().findViewById(R.id.person_content)).setSlide(1);
-            }
-        });
-
         if(offersView.getVisibility() == View.GONE) {
-            offersListHolder.setVisibility(View.GONE);
-            RevealAnimation.expand(offersView, 500);
-        }
-
-        if(offers.size() < 1 && itsMe) {
-            ((TextView) offersView.findViewById(R.id.offersText)).setText(R.string.offer_an_experience);
-        }
-        else {
-            ((TextView) offersView.findViewById(R.id.offersText)).setText(
-                    getResources().getQuantityString(R.plurals.offers, offers.size(), offers.size())
-            );
-        }
-
-        if (offers.size() > 0 && offers.get(0).getPrice() < 0) {
-            offersView.setBackgroundResource(R.color.purple);
-        } else {
-            offersView.setBackgroundResource(R.color.green);
+            RevealAnimation.expand(offersView);
         }
     }
 
@@ -394,7 +352,7 @@ public class PersonUptoSlide extends Fragment {
                 about.setText(mPerson.getAbout());
             }
 
-            TextView actionButton = (TextView) personAbout.findViewById(R.id.action_button);
+            Button actionButton = (Button) personAbout.findViewById(R.id.action_button);
 
             Follow follow = null;
 

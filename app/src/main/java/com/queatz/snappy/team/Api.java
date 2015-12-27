@@ -59,13 +59,15 @@ public class Api {
 
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            Log.d(Config.LOG_TAG, "api - success - " + request.url + " - " + request.params + " - " + (responseBody == null ? null : new String(responseBody)));
+
             if(mCallback != null)
                 mCallback.success((responseBody == null ? null : new String(responseBody)));
-
-            Log.d(Config.LOG_TAG, "api - success - " + request.url + " - " + request.params + " - " + (responseBody == null ? null : new String(responseBody)));
         }
 
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            Log.d(Config.LOG_TAG, "api - fail - " + request.url + " - " + request.params + " - " + (responseBody == null ? null : new String(responseBody)));
+
             switch (statusCode) {
                 case HttpStatus.SC_UNAUTHORIZED:
                     mApi.team.auth.reauth();
@@ -79,8 +81,6 @@ public class Api {
 
             if(mCallback != null)
                 mCallback.fail(responseBody == null ? null : new String(responseBody));
-
-            Log.d(Config.LOG_TAG, "api - fail - " + request.url + " - " + request.params + " - " + (responseBody == null ? null : new String(responseBody)));
         }
 
         @Override

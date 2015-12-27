@@ -1,27 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:minHeight="32dp">
 
-    <com.queatz.snappy.ui.TextView
-        android:id="@+id/details"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginLeft="8dp"
-        android:textColor="@color/white"
-        android:textSize="18sp" />
+        android:orientation="horizontal">
 
-    <com.queatz.snappy.ui.TextView
-        android:id="@+id/price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:textColor="@color/white"
-        android:textSize="18sp" />
+        <Button style="@style/Widget.AppCompat.Button"
+            android:id="@+id/endorsements"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:layout_margin="4dp"
+            android:minWidth="54dp"
+            android:backgroundTint="@color/red"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:elevation="1dp"
+            android:textColor="@color/white" />
+
+        <com.queatz.snappy.ui.TextView
+            android:id="@+id/details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:textColor="@color/text"
+            android:paddingBottom="18sp"
+            android:textSize="18sp" />
+
+        <Button style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:minWidth="0dp" />
+
+    </LinearLayout>
 
 </LinearLayout>

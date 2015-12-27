@@ -25,45 +25,6 @@
         </com.queatz.snappy.ui.SquareLayout>
 
         <LinearLayout
-            android:id="@+id/offers"
-            android:visibility="gone"
-            android:clickable="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/green"
-            android:isScrollContainer="true">
-
-            <com.queatz.snappy.ui.TextView
-                android:id="@+id/offersText"
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:paddingTop="8dp"
-                android:gravity="center_horizontal"
-                android:textAlignment="center"
-                android:maxLines="1"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-
-            <FrameLayout
-                android:id="@+id/offersListHolder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
-
-                <com.queatz.snappy.ui.ExpandedListView
-                    android:id="@+id/offersList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:dividerHeight="0dp"
-                    android:divider="@null"
-                    android:scrollbars="none" />
-
-            </FrameLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -182,7 +143,7 @@
             android:textSize="18sp" />
 
 
-        <com.queatz.snappy.ui.TextView
+        <Button style="@style/Widget.AppCompat.Button"
             android:id="@+id/action_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -190,13 +151,35 @@
             android:layout_marginRight="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/button"
+            android:backgroundTint="@color/red"
             android:clickable="true"
-            android:gravity="center_horizontal"
             android:padding="8dp"
             android:text="@string/follow_person"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textColor="@color/white" />
+
+        <LinearLayout
+            android:id="@+id/offers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:isScrollContainer="true">
+
+            <FrameLayout
+                android:id="@+id/offersListHolder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.queatz.snappy.ui.ExpandedListView
+                    android:id="@+id/offersList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:dividerHeight="0dp"
+                    android:divider="@null"
+                    android:scrollbars="none" />
+
+            </FrameLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 

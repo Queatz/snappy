@@ -10,18 +10,18 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.PushSpec;
-import com.queatz.snappy.shared.things.OfferSpec;
+import com.queatz.snappy.shared.things.EndorsementSpec;
 import com.queatz.snappy.team.Team;
 
 /**
- * Created by jacob on 12/5/15.
+ * Created by jacob on 12/26/15.
  */
-public class OfferPushHandler extends PushHandler {
-    public OfferPushHandler(Team team) {
+public class EndorsementPushHandler extends PushHandler {
+    public EndorsementPushHandler(Team team) {
         super(team);
     }
 
-    public void got(PushSpec<OfferSpec> push) {
+    public void got(PushSpec<EndorsementSpec> push) {
         NotificationCompat.Builder builder;
         Intent resultIntent;
         Bundle extras;
@@ -29,22 +29,22 @@ public class OfferPushHandler extends PushHandler {
         switch (push.action) {
             case Config.PUSH_ACTION_NEW_OFFER:
                 builder = team.push.newNotification()
-                        .setContentTitle(team.context.getString(R.string.new_offer))
-                        .setContentText(team.context.getString(R.string.offer_by_person, push.body.details, push.body.person.firstName));
+                        .setContentTitle(team.context.getString(R.string.person_endorsed_you, push.body.source.firstName))
+                        .setContentText(push.body.target.details);
 
                 resultIntent = new Intent(team.context, Person.class);
                 extras = new Bundle();
-                extras.putString("person", push.body.person.id);
+                extras.putString("person", team.auth.getUser());
                 resultIntent.putExtras(extras);
                 builder.setContentIntent(team.push.newIntentWithStack(resultIntent));
 
                 if(Build.VERSION.SDK_INT >= 21) {
                     builder
                             .setColor(team.context.getResources().getColor(R.color.red))
-                            .setCategory(Notification.CATEGORY_PROMO);
+                            .setCategory(Notification.CATEGORY_SOCIAL);
                 }
 
-                team.push.show("offer/" + push.body.id + "/new", builder.build());
+                team.push.show("endorsement/" + push.body.id + "/new", builder.build());
 
                 break;
         }

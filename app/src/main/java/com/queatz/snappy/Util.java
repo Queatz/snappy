@@ -13,9 +13,11 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.widget.TextView;
 
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.things.Endorsement;
 import com.queatz.snappy.things.Like;
 import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.things.Person;
@@ -31,6 +33,10 @@ import java.util.UUID;
 public class Util {
     public static Context context;
     public static Team team;
+
+    public static CharSequence fancyFormat(int resId, Object... params) {
+        return Html.fromHtml(String.format(context.getString(resId), params));
+    }
 
     public static CharSequence fancyName(Person person) {
         final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(person.getName());
@@ -110,7 +116,7 @@ public class Util {
     }
 
     public static boolean liked(@NonNull Update update, @NonNull Person person) {
-        return team.realm.where(Like.class).equalTo("source.id", person.getId()).equalTo("target.id", update.getId()).findFirst() != null;
+        return team.realm.where(Like.class).equalTo("source.id", person.getId()).equalTo("target.id", update.getId()).count() != 0;
     }
 
     public static Matrix transformationFromExif(Uri uri) {
@@ -185,5 +191,9 @@ public class Util {
                 translation = 1;
         }
         return translation;
+    }
+
+    public static boolean endorsed(@NonNull Offer offer, @NonNull Person person) {
+        return team.realm.where(Endorsement.class).equalTo("source.id", person.getId()).equalTo("target.id", offer.getId()).count() != 0;
     }
 }

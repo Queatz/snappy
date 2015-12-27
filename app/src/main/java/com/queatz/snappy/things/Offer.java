@@ -16,6 +16,7 @@ public class Offer extends RealmObject {
     private String unit;
     private Person person;
     private Date created;
+    private int endorsers;
 
     public String getId() {
         return id;
@@ -63,5 +64,13 @@ public class Offer extends RealmObject {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public int getEndorsers() {
+        return endorsers;
+    }
+
+    public void setEndorsers(int endorsers) {
+        this.endorsers = endorsers;
     }
 }

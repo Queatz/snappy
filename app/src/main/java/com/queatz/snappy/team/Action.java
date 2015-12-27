@@ -10,6 +10,7 @@ import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import com.queatz.snappy.activity.PersonList;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.things.Bounty;
 import com.queatz.snappy.things.Contact;
+import com.queatz.snappy.things.Endorsement;
 import com.queatz.snappy.things.Follow;
 import com.queatz.snappy.things.Join;
 import com.queatz.snappy.things.Like;
@@ -244,13 +246,6 @@ public class Action {
     public void openProfile(Activity from, @NonNull final Person person) {
         Bundle bundle = new Bundle();
         bundle.putString("person", person.getId());
-        team.view.show(from, com.queatz.snappy.activity.Person.class, bundle);
-    }
-
-    public void openProfileOffers(Activity from, @NonNull final Person person) {
-        Bundle bundle = new Bundle();
-        bundle.putString("person", person.getId());
-        bundle.putBoolean("showOffers", true);
         team.view.show(from, com.queatz.snappy.activity.Person.class, bundle);
     }
 
@@ -512,7 +507,7 @@ public class Action {
         team.realm.beginTransaction();
         Offer offer = team.realm.createObject(Offer.class);
         offer.setId(Util.createLocalId());
-        offer.setDetails(details);
+        offer.setDetails(details.trim());
         offer.setPrice(price);
         offer.setUnit(unit);
         offer.setPerson(team.auth.me());
@@ -975,5 +970,68 @@ public class Action {
                 Toast.makeText(team.context, "Couldn't like update", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void endorse(@NonNull final Activity activity, @NonNull final Offer offer) {
+        if (offer.getPerson() == null) {
+            Log.w(Config.LOG_TAG, "Offer has no person!");
+            return;
+        }
+
+        if (Util.endorsed(offer, team.auth.me())) {
+            new AlertDialog.Builder(activity)
+                    .setMessage(Util.fancyFormat(R.string.youve_already_endorsed_person, offer.getPerson().getFirstName()))
+                    .setCancelable(true)
+                    .setPositiveButton(team.context.getString(R.string.ok), null)
+                    .show().setCanceledOnTouchOutside(true);
+
+            return;
+        }
+
+        new AlertDialog.Builder(activity)
+                .setMessage(Util.fancyFormat(R.string.endorse_offer, offer.getPerson().getFirstName(), offer.getDetails()))
+                .setNegativeButton(R.string.nope, null)
+                .setCancelable(true)
+                .setPositiveButton(team.context.getString(R.string.endorse), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        doEndorse(offer);
+                    }
+                })
+                .show().setCanceledOnTouchOutside(true);
+    }
+
+    private void doEndorse(@NonNull final Offer offer) {
+        String localId = Util.createLocalId();
+
+        team.realm.beginTransaction();
+        Endorsement o = team.realm.createObject(Endorsement.class);
+        o.setId(localId);
+        o.setSource(team.auth.me());
+        o.setTarget(offer);
+        team.realm.commitTransaction();
+
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_LOCAL_ID, localId);
+
+        team.api.post(String.format(Config.PATH_OFFER_ID_ENDORSE, offer.getId()), params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                team.things.put(Offer.class, response);
+            }
+
+            @Override
+            public void fail(String response) {
+                Toast.makeText(team.context, "Couldn't endorse", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void showEndorsers(@NonNull final Activity activity, @NonNull final Offer offer) {
+        Bundle bundle = new Bundle();
+        bundle.putString("offer", offer.getId());
+        bundle.putBoolean("showEndorsers", true);
+
+        team.view.show(activity, PersonList.class, bundle);
     }
 }

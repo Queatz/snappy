@@ -148,19 +148,15 @@
             android:textColorHint="@color/gray"
             android:padding="16dp" />
 
-        <com.queatz.snappy.ui.TextView
+        <Button style="@style/Widget.AppCompat.Button"
             android:id="@+id/action_host"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:padding="8dp"
-            android:textSize="18sp"
             android:text="@string/host_party"
-            android:background="@drawable/button"
+            android:backgroundTint="@color/red"
             android:textColor="@color/white"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            android:clickable="true" />
+            android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
 

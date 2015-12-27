@@ -125,6 +125,13 @@
     <string name="for_price">for %1$s</string>
     <string name="person_offers">%1$s offers</string>
     <string name="person_wants">%1$s wants</string>
+    <string name="endorse">Endorse</string>
+    <string name="nope">Nope</string>
+    <string name="endorse_person">Endorse %1$s</string>
+    <string name="endorse_offer"><![CDATA[Endorse <b>%1$s</b> for <b>%2$s</b>?]]></string>
+    <string name="person_endorsed_you">%1$s endorsed you</string>
+    <string name="youve_already_endorsed_person">You\'ve already endorsed %1$s</string>
+    <string name="opening_conversation">Opening conversation…</string>
 
     <plurals name="likes">
         <item quantity="one">♡ %1$s Liker</item>
