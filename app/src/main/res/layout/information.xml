@@ -66,23 +66,6 @@
                 android:layout_marginBottom="8dp"
                 android:textStyle="bold"
                 android:textColor="@color/text"
-                android:text="What are skills and endorsements?" />
-
-            <com.queatz.snappy.ui.TextView
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text"
-                android:text="Skills are things you are good at.  People can endorse you for skills, usually after a simple vetting process or presentation from you.  You can collect endorsements by going to parties and doing quests." />
-
-            <com.queatz.snappy.ui.TextView
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:textStyle="bold"
-                android:textColor="@color/text"
                 android:text="What are check-ins?" />
 
             <com.queatz.snappy.ui.TextView
@@ -105,7 +88,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text"
-                android:text="Payment is handled outside of Village.  We suggest requesting half upfront for large sums.  If you don't get paid in full for something you did, please contact us right away." />
+                android:text="Payment is handled outside of Village.  If you don't get paid in full for something you did, please contact us right away." />
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:textStyle="bold"
+                android:textColor="@color/text"
+                android:text="What are endorsements?" />
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text"
+                android:text="People can endorse you for offers.  Give them your best and you might just get an endorsement!" />
 
             <com.queatz.snappy.ui.TextView
                 android:layout_width="match_parent"
@@ -150,7 +148,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text"
-                android:text="Ask us. Plans start out at $5/month." />
+                android:text="You'll need to buy a monthly membership to Village by long-pressing on your profile picture in the top right corner of the main screen." />
 
             <com.queatz.snappy.ui.TextView
                 android:layout_width="match_parent"
