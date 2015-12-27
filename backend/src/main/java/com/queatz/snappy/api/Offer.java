@@ -80,7 +80,7 @@ public class Offer extends Api.Path {
         if (endorsement != null) {
             endorsement.localId = localId;
 
-            if (!user.id.equals(Datastore.id(endorsement.sourceId))) {
+            if (!user.id.equals(Datastore.id(offer.personId))) {
                 Push.getService().send(Datastore.id(offer.personId), new PushSpec<>(Config.PUSH_ACTION_OFFER_ENDORSEMENT, endorsement));
             }
         }

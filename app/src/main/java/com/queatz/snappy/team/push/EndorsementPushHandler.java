@@ -27,7 +27,7 @@ public class EndorsementPushHandler extends PushHandler {
         Bundle extras;
 
         switch (push.action) {
-            case Config.PUSH_ACTION_NEW_OFFER:
+            case Config.PUSH_ACTION_OFFER_ENDORSEMENT:
                 builder = team.push.newNotification()
                         .setContentTitle(team.context.getString(R.string.person_endorsed_you, push.body.source.firstName))
                         .setContentText(push.body.target.details);
