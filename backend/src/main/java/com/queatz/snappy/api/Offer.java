@@ -8,8 +8,6 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.PushSpec;
 import com.queatz.snappy.shared.things.EndorsementSpec;
 import com.queatz.snappy.shared.things.OfferSpec;
-import com.queatz.snappy.shared.things.UpdateLikeSpec;
-import com.queatz.snappy.shared.things.UpdateSpec;
 
 import java.io.IOException;
 
