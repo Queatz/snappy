@@ -25,9 +25,16 @@ import io.realm.Sort;
  */
 public class PersonMessagesSlide extends Fragment {
     com.queatz.snappy.things.Person mPerson;
+    String messagePrefill;
+    Team team;
 
     public void setPerson(com.queatz.snappy.things.Person person) {
         mPerson = person;
+    }
+
+    public void setMessagePrefill(String message) {
+        messagePrefill = message;
+        prefill(getView());
     }
 
     @Override
@@ -39,7 +46,7 @@ public class PersonMessagesSlide extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.person_messages, container, false);
 
-        final Team team = ((MainApplication) getActivity().getApplication()).team;
+        team = ((MainApplication) getActivity().getApplication()).team;
 
         final ListView list = (ListView) view.findViewById(R.id.messagesList);
 
@@ -60,6 +67,8 @@ public class PersonMessagesSlide extends Fragment {
 
             final EditText writeMessage = (EditText) view.findViewById(R.id.writeMessage);
             final View sendButton = view.findViewById(R.id.sendButton);
+
+            prefill(view);
 
             writeMessage.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
@@ -89,5 +98,25 @@ public class PersonMessagesSlide extends Fragment {
         }
 
         return view;
+    }
+
+    private void prefill(View view) {
+        if (view == null) {
+            return;
+        }
+
+        final EditText writeMessage = (EditText) view.findViewById(R.id.writeMessage);
+
+        if (messagePrefill != null) {
+            writeMessage.setText(messagePrefill);
+            writeMessage.post(new Runnable() {
+                @Override
+                public void run() {
+                    writeMessage.requestFocus();
+                    writeMessage.selectAll();
+                    team.view.keyboard(writeMessage);
+                }
+            });
+        }
     }
 }

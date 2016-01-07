@@ -46,8 +46,8 @@ public class SlideScreen extends ViewGroup {
     }
 
     public interface OnSlideCallback {
-        public void onSlide(int currentSlide, float offsetPercentage);
-        public void onSlideChange(int currentSlide);
+        void onSlide(int currentSlide, float offsetPercentage);
+        void onSlideChange(int currentSlide);
     }
 
     public static class SlideAnimation extends Handler {
@@ -164,12 +164,20 @@ public class SlideScreen extends ViewGroup {
         populate();
     }
 
+    public SlideScreenAdapter getAdapter() {
+        return mAdapter;
+    }
+
     public void setSlide(int slide) {
         smoothSlideTo(slide);
     }
 
     public int getSlide() {
         return mSlide;
+    }
+
+    public Fragment getSlideFragment(int slide) {
+        return mSlides.get(slide).fragment;
     }
 
     public void smoothSlideTo(int slide) {

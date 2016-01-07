@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.fragment.PersonMessagesSlide;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Endorsement;
 import com.queatz.snappy.things.Like;
@@ -67,7 +68,9 @@ public class OfferAdapter extends RealmBaseAdapter<Offer> {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(context, team.context.getString(R.string.opening_conversation), Toast.LENGTH_SHORT).show();
-                    ((SlideScreen) ((Activity) context).findViewById(R.id.person_content)).setSlide(1);
+                    SlideScreen slideScreen = (SlideScreen) ((Activity) context).findViewById(R.id.person_content);
+                    ((PersonMessagesSlide) slideScreen.getSlideFragment(1)).setMessagePrefill((offer.getPrice() < 0 ? "I've got " : "I'd like ") + offer.getDetails());
+                    slideScreen.setSlide(1);
                 }
             });
         }

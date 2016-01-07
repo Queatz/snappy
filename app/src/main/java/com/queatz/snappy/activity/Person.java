@@ -94,7 +94,13 @@ public class Person extends Activity {
         if (itsMe) {
             mSlideScreen.setAdapter(new ProfileAdapter(getFragmentManager(), mPerson));
         } else {
-            mSlideScreen.setAdapter(new PersonAdapter(getFragmentManager(), mPerson));
+            PersonAdapter personAdapter = new PersonAdapter(getFragmentManager(), mPerson);
+
+            String message = intent.getStringExtra("message");
+            personAdapter.setMessagePrefill(message);
+
+            mSlideScreen.setAdapter(personAdapter);
+
         }
 
         mSlideScreen.setOnSlideCallback(new SlideScreen.OnSlideCallback() {

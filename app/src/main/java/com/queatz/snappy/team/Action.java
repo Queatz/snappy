@@ -103,9 +103,17 @@ public class Action {
     }
 
     public void openMessages(@NonNull Activity from, @NonNull final Person person) {
+        openMessages(from, person, null);
+    }
+
+    public void openMessages(@NonNull Activity from, @NonNull final Person person, @Nullable String message) {
         Bundle bundle = new Bundle();
         bundle.putString("person", person.getId());
         bundle.putString("show", "messages");
+
+        if (message != null) {
+            bundle.putString("message", message);
+        }
 
         team.view.show(from, com.queatz.snappy.activity.Person.class, bundle);
     }

@@ -13,11 +13,16 @@ import com.queatz.snappy.ui.SlideScreen;
  */
 public class PersonAdapter extends SlideScreen.SlideScreenAdapter {
     Person mPerson;
+    String messagePrefill;
 
     public PersonAdapter(FragmentManager fragmentManager, Person person) {
         super(fragmentManager);
 
         mPerson = person;
+    }
+
+    public void setMessagePrefill(String message) {
+        messagePrefill = message;
     }
 
     public int getCount() {
@@ -34,6 +39,7 @@ public class PersonAdapter extends SlideScreen.SlideScreenAdapter {
             case 1:
                 PersonMessagesSlide personMessagesSlide = new PersonMessagesSlide();
                 personMessagesSlide.setPerson(mPerson);
+                personMessagesSlide.setMessagePrefill(messagePrefill);
 
                 return personMessagesSlide;
             default:

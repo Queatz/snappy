@@ -38,6 +38,8 @@ public class PersonSpec extends ThingSpec {
     public @Ignore @Shallow int infoFollowers;
     public @Ignore @Shallow int infoFollowing;
     public @Ignore @Shallow int infoHosted;
+    public @Ignore @Shallow boolean infoAvailability;
+    public @Ignore @Shallow double infoDistance;
     public @Ignore @Shallow List<FollowLinkSpec> followers;
     public @Ignore @Shallow List<UpdateSpec> updates;
     public @Ignore @Shallow List<OfferSpec> offers;

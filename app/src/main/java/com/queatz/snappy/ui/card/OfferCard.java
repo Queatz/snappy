@@ -64,7 +64,7 @@ public class OfferCard implements Card<Offer> {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, team.context.getString(R.string.opening_conversation), Toast.LENGTH_SHORT).show();
-                team.action.openMessages((Activity) context, offer.getPerson());
+                team.action.openMessages((Activity) context, offer.getPerson(), (offer.getPrice() < 0 ? "I've got " : "I'd like ") + offer.getDetails());
             }
         };
 

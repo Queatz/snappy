@@ -15,6 +15,8 @@ import com.queatz.snappy.shared.ThingSpec;
 public class EndorsementSpec extends ThingSpec {
     public @Hide @Push @Index Key<PersonSpec> sourceId;
     public @Hide @Push @Index Key<OfferSpec> targetId;
+    public int stars;
+    public String message;
 
     public @Ignore @Push PersonSpec source;
     public @Ignore @Push OfferSpec target;
