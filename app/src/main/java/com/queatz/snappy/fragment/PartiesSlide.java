@@ -76,40 +76,6 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
             }
         });
 
-        final TimeSlider priceSlider = (TimeSlider) emptyView.findViewById(R.id.price);
-        final EditText query = (EditText) emptyView.findViewById(R.id.query);
-
-        // Work around Android bug
-        query.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (MotionEvent.ACTION_CANCEL == event.getAction()) {
-                    return true;
-                }
-
-                return false;
-            }
-        });
-
-        priceSlider.setPercent(.25f);
-        priceSlider.setTextCallback(new TimeSlider.TextCallback() {
-            @Override
-            public String getText(float percent) {
-                int price = getPrice(percent);
-
-                return getString(R.string.for_price, "$" + Integer.toString(price));
-            }
-        });
-
-        emptyView.findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                team.action.addExperience(query.getText().toString(), -getPrice(priceSlider.getPercent()), "");
-                query.setText("");
-                team.action.openProfile(getActivity(), team.auth.me());
-            }
-        });
-
         mList = (ListView) view.findViewById(R.id.list);
         mList.addHeaderView(emptyView);
         mList.addFooterView(new View(getActivity()));

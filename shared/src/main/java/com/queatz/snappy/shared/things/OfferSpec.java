@@ -24,6 +24,6 @@ public class OfferSpec extends ThingSpec {
 
     public @Index @Hide Key<PersonSpec> personId;
 
-    public @Ignore PersonSpec person;
+    public @Ignore @Push PersonSpec person;
     public @Ignore long endorsers;
 }

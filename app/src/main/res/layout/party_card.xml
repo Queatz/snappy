@@ -167,19 +167,16 @@
 
         </HorizontalScrollView>
 
-        <com.queatz.snappy.ui.TextView
+        <Button style="@style/Widget.AppCompat.Button"
             android:id="@+id/action_join"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:padding="8dp"
-            android:textSize="18sp"
             android:text="@string/interested"
-            android:clickable="true"
-            android:background="@drawable/button"
+            android:backgroundTint="@color/red"
             android:textColor="@color/white"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
 

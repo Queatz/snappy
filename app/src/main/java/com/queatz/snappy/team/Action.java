@@ -988,7 +988,7 @@ public class Action {
 
         if (Util.endorsed(offer, team.auth.me())) {
             new AlertDialog.Builder(activity)
-                    .setMessage(Util.fancyFormat(R.string.youve_already_endorsed_person, offer.getPerson().getFirstName()))
+                    .setMessage(Util.fancyFormat(R.string.youve_already_endorsed_person, offer.getPerson().getFirstName(), offer.getDetails()))
                     .setCancelable(true)
                     .setPositiveButton(team.context.getString(R.string.ok), null)
                     .show().setCanceledOnTouchOutside(true);
@@ -1026,6 +1026,7 @@ public class Action {
             @Override
             public void success(String response) {
                 team.things.put(Offer.class, response);
+                Toast.makeText(team.context, team.context.getString(R.string.you_endorsed_person, offer.getPerson().getFirstName()), Toast.LENGTH_SHORT).show();
             }
 
             @Override

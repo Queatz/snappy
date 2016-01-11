@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -140,7 +141,7 @@ public class PartyCard implements Card<Party> {
 
         String userId = team.auth.getUser();
 
-        TextView action = ((TextView) view.findViewById(R.id.action_join));
+        Button action = ((Button) view.findViewById(R.id.action_join));
 
         view.findViewById(R.id.layout).setBackground(null);
 
