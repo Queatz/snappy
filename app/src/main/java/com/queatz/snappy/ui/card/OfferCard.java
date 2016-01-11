@@ -88,7 +88,7 @@ public class OfferCard implements Card<Offer> {
 
         ImageView photo = (ImageView) view.findViewById(R.id.photo);
 
-        if (offer.hasPhoto()) {
+        if (offer.isHasPhoto()) {
             String photoUrl = Util.photoUrl(String.format(Config.PATH_OFFER_PHOTO, offer.getId()), parent.getMeasuredWidth() / 2);
 
             photo.setVisibility(View.VISIBLE);

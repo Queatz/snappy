@@ -47,17 +47,22 @@ public class Offer extends Api.Path {
                         if (Config.PATH_ENDORSE.equals(path.get(1))) {
                             endorse(path.get(0));
                             break;
-                        } else {
-                            if (Config.PATH_PHOTO.equals(path.get(1))) {
-                                addPhoto(path.get(0));
-                                break;
-                            }
                         }
                     default:
                         die("offer - bad path");
                 }
 
                 break;
+            case PUT:
+                switch (path.size()) {
+                    case 2:
+                        if (Config.PATH_PHOTO.equals(path.get(1))) {
+                            addPhoto(path.get(0));
+                            break;
+                        }
+                    default:
+                        die("offer - bad path");
+                }
             case DELETE:
                 switch (path.size()) {
                     case 2:

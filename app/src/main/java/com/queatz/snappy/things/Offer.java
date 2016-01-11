@@ -75,7 +75,7 @@ public class Offer extends RealmObject {
         this.endorsers = endorsers;
     }
 
-    public boolean hasPhoto() {
+    public boolean isHasPhoto() {
         return hasPhoto;
     }
 

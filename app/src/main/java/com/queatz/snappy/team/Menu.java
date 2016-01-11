@@ -60,11 +60,11 @@ public class Menu {
         else if (object instanceof Offer) {
             Offer offer = (Offer) object;
 
-            if (offer.hasPhoto()) {
+            if (offer.isHasPhoto()) {
                 menu.add(R.string.change_photo);
                 menu.add(R.string.remove_photo);
             } else {
-                menu.add(R.string.change_photo);
+                menu.add(R.string.add_photo);
             }
 
             menu.add(R.string.stop_offering);

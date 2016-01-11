@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,11 +14,12 @@ import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.fragment.PersonMessagesSlide;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Endorsement;
-import com.queatz.snappy.things.Like;
 import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.ui.SlideScreen;
+import com.squareup.picasso.Picasso;
 
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;
@@ -111,6 +113,23 @@ public class OfferAdapter extends RealmBaseAdapter<Offer> {
             }
         });
 
+        ImageView photo = (ImageView) view.findViewById(R.id.photo);
+
+        if (offer.isHasPhoto()) {
+            String photoUrl = Util.photoUrl(String.format(Config.PATH_OFFER_PHOTO, offer.getId()), parent.getMeasuredWidth() / 2);
+
+            photo.setVisibility(View.VISIBLE);
+            photo.setImageDrawable(null);
+
+            Picasso.with(context).cancelRequest(photo);
+
+            Picasso.with(context)
+                    .load(photoUrl)
+                    .placeholder(R.color.spacer)
+                    .into(photo);
+        } else {
+            photo.setVisibility(View.GONE);
+        }
 
         return view;
     }
