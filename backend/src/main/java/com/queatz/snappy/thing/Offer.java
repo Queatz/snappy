@@ -66,4 +66,16 @@ public class Offer {
             return null;
         }
     }
+
+    public void deletePhoto(String offerId) {
+        OfferSpec offer = Datastore.get(OfferSpec.class, offerId);
+        offer.hasPhoto = false;
+        Datastore.save(offer);
+    }
+
+    public void addPhoto(String offerId) {
+        OfferSpec offer = Datastore.get(OfferSpec.class, offerId);
+        offer.hasPhoto = true;
+        Datastore.save(offer);
+    }
 }

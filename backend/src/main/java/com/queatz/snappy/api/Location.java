@@ -9,6 +9,7 @@ import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.appengine.tools.cloudstorage.ListItem;
 import com.google.appengine.tools.cloudstorage.ListOptions;
 import com.google.appengine.tools.cloudstorage.ListResult;
+import com.queatz.snappy.backend.ApiUtil;
 import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.shared.Config;
@@ -71,38 +72,9 @@ public class Location extends Api.Path {
     }
 
     private void getPhoto(String locationId) throws IOException {
-        int size;
-
-        try {
-            size = Integer.parseInt(request.getParameter(Config.PARAM_SIZE));
-        } catch (NumberFormatException e) {
-            size = 200;
-        }
-
-        ListOptions options = new ListOptions.Builder().setPrefix("location/photo/" + locationId + "/").setRecursive(false).build();
-        ListResult list = api.mGCS.list(api.mAppIdentityService.getDefaultGcsBucketName(), options);
-
-        Date lastModified = new Date(0);
-        String fileName = null;
-        while (list.hasNext()) {
-            ListItem item = list.next();
-            if (!item.isDirectory() && lastModified.before(item.getLastModified())) {
-                lastModified = item.getLastModified();
-                fileName = item.getName();
-            }
-        }
-
-        if (fileName == null) {
+        if (!ApiUtil.getPhoto("location/photo/" + locationId + "/", api, request, response)) {
             notFound();
         }
-
-        ImagesService imagesService = ImagesServiceFactory.getImagesService();
-        ServingUrlOptions servingUrlOptions = ServingUrlOptions.Builder.withGoogleStorageFileName(
-                "/gs/" + api.mAppIdentityService.getDefaultGcsBucketName() + "/" + fileName).imageSize(size);
-        String photoUrl = imagesService.getServingUrl(servingUrlOptions);
-
-        response.sendRedirect(photoUrl);
-
     }
 
     private void putPhoto(String locationId) throws IOException {
@@ -112,40 +84,7 @@ public class Location extends Api.Path {
             notFound();
         }
 
-        GcsFilename photoName = new GcsFilename(api.mAppIdentityService.getDefaultGcsBucketName(), "location/photo/" + location.id + "/" + new Date().getTime());
-
-        boolean allGood = false;
-
-        try {
-            ServletFileUpload upload = new ServletFileUpload();
-            FileItemIterator iterator = upload.getItemIterator(request);
-            while (iterator.hasNext()) {
-                FileItemStream item = iterator.next();
-                InputStream stream = item.openStream();
-
-                if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
-                    int len;
-                    byte[] buffer = new byte[8192];
-
-                    GcsOutputChannel outputChannel = api.mGCS.createOrReplace(photoName, GcsFileOptions.getDefaultInstance());
-
-                    while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
-                        outputChannel.write(ByteBuffer.wrap(buffer, 0, len));
-                    }
-
-                    outputChannel.close();
-
-                    allGood = true;
-
-                    break;
-                }
-            }
-        } catch (FileUploadException e) {
-            Logger.getLogger(Config.NAME).severe(e.toString());
-            error("location photo - couldn't upload because " + e);
-        }
-
-        if (!allGood) {
+        if (!ApiUtil.putPhoto("location/photo/" + location.id + "/" + new Date().getTime(), api, request)) {
             die("location photo - not all good");
         }
 
