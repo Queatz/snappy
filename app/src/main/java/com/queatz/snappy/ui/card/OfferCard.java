@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Offer;
 import com.squareup.picasso.Picasso;
@@ -81,10 +82,27 @@ public class OfferCard implements Card<Offer> {
             type.setTextColor(context.getResources().getColor(R.color.green));
         }
 
-
         int colorResource = (offer.getPrice() < 0 ? R.color.purple : R.color.green);
         view.findViewById(R.id.highlight).setBackgroundResource(colorResource);
         ((Button) view.findViewById(R.id.takeOffer)).setTextColor(context.getResources().getColor(colorResource));
+
+        ImageView photo = (ImageView) view.findViewById(R.id.photo);
+
+        if (offer.hasPhoto()) {
+            String photoUrl = Util.photoUrl(String.format(Config.PATH_OFFER_PHOTO, offer.getId()), parent.getMeasuredWidth() / 2);
+
+            photo.setVisibility(View.VISIBLE);
+            photo.setImageDrawable(null);
+
+            Picasso.with(context).cancelRequest(photo);
+
+            Picasso.with(context)
+                    .load(photoUrl)
+                    .placeholder(R.color.spacer)
+                    .into(photo);
+        } else {
+            photo.setVisibility(View.GONE);
+        }
 
         return view;
     }

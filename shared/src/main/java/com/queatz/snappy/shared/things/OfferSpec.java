@@ -20,6 +20,7 @@ public class OfferSpec extends ThingSpec {
     public int price;
     public @Push String details;
     public String unit;
+    public boolean hasPhoto;
     public Date stopped; // TODO don't actually delete anything!
 
     public @Index @Hide Key<PersonSpec> personId;

@@ -58,6 +58,15 @@ public class Menu {
             }
         }
         else if (object instanceof Offer) {
+            Offer offer = (Offer) object;
+
+            if (offer.hasPhoto()) {
+                menu.add(R.string.change_photo);
+                menu.add(R.string.remove_photo);
+            } else {
+                menu.add(R.string.change_photo);
+            }
+
             menu.add(R.string.stop_offering);
         }
         else if (object instanceof Bounty) {
@@ -113,7 +122,11 @@ public class Menu {
         }
         else if(object instanceof Offer) {
             if(team.context.getString(R.string.stop_offering).equals(item.getTitle())) {
-                team.action.deleteExperience((Offer) object);
+                team.action.deleteOffer((Offer) object);
+            } else if(team.context.getString(R.string.add_photo).equals(item.getTitle()) || team.context.getString(R.string.change_photo).equals(item.getTitle())) {
+                team.action.addPhotoToOffer(activity, (Offer) object);
+            } else if(team.context.getString(R.string.remove_photo).equals(item.getTitle())) {
+                team.action.removePhotoFromOffer((Offer) object);
             }
         }
         else if(object instanceof Bounty) {

@@ -115,6 +115,10 @@ public class Util {
         return Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getId());
     }
 
+    public static String photoUrl(String path, int s) {
+        return Config.API_URL + path + "?s=" + s + "&auth=" + team.auth.getAuthParam();
+    }
+
     public static boolean liked(@NonNull Update update, @NonNull Person person) {
         return team.realm.where(Like.class).equalTo("source.id", person.getId()).equalTo("target.id", update.getId()).count() != 0;
     }

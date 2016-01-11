@@ -6,7 +6,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,7 +23,6 @@ import com.queatz.snappy.things.Follow;
 import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.things.Update;
 import com.queatz.snappy.ui.RevealAnimation;
-import com.queatz.snappy.ui.SlideScreen;
 import com.queatz.snappy.ui.TextView;
 import com.queatz.snappy.ui.TimeSlider;
 import com.queatz.snappy.util.TimeUtil;
@@ -130,7 +128,7 @@ public class PersonUptoSlide extends Fragment {
                 addExperience.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        team.action.addExperience(experienceDetails.getText().toString(), getPrice(priceSlider.getPercent()), perUnit.getText().toString());
+                        team.action.addOffer(experienceDetails.getText().toString(), getPrice(priceSlider.getPercent()), perUnit.getText().toString());
                         priceSlider.setPercent(getFreePercent());
                         experienceDetails.setText("");
                         perUnit.setText("");

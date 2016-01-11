@@ -17,6 +17,7 @@ public class Offer extends RealmObject {
     private Person person;
     private Date created;
     private int endorsers;
+    private boolean hasPhoto;
 
     public String getId() {
         return id;
@@ -72,5 +73,13 @@ public class Offer extends RealmObject {
 
     public void setEndorsers(int endorsers) {
         this.endorsers = endorsers;
+    }
+
+    public boolean hasPhoto() {
+        return hasPhoto;
+    }
+
+    public void setHasPhoto(boolean hasPhoto) {
+        this.hasPhoto = hasPhoto;
     }
 }

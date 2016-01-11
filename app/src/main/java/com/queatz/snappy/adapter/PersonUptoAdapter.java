@@ -106,10 +106,9 @@ public class PersonUptoAdapter extends RealmBaseAdapter<Update> {
         ImageView photo = (ImageView) view.findViewById(R.id.photo);
 
         if (Config.UPDATE_ACTION_UPTO.equals(update.getAction())) {
-            String photoUrl = Config.API_URL + String.format(Config.PATH_UPDATE_PHOTO + "?s=" + (parent.getMeasuredWidth() / 2) + "&auth=" + team.auth.getAuthParam(), update.getId());
+            String photoUrl = Util.photoUrl(String.format(Config.PATH_UPDATE_PHOTO, update.getId()), parent.getMeasuredWidth() / 2);
 
             photo.setVisibility(View.VISIBLE);
-
             photo.setImageDrawable(null);
 
             Picasso.with(context).cancelRequest(photo);

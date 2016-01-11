@@ -58,6 +58,8 @@
     <string name="no">No</string>
     <string name="logout">Log out</string>
     <string name="change_photo">Change photo</string>
+    <string name="remove_photo">Remove photo</string>
+    <string name="add_photo">Add photo</string>
     <string name="stop_following">Stop following</string>
     <string name="follow">Follow</string>
     <string name="update_text_is_hosting"><![CDATA[%1$s is hosting <b>%2$s</b> %3$s]]></string>
@@ -133,6 +135,9 @@
     <string name="youve_already_endorsed_person">You\'ve already endorsed %1$s for %2$s</string>
     <string name="opening_conversation">Opening conversation…</string>
     <string name="you_endorsed_person">You endorsed %1$s</string>
+    <string name="couldnt_set_photo">Couldn\'t set photo</string>
+    <string name="changing_photo">Changing photo</string>
+    <string name="couldnt_endorse">Couldn\'t endorse</string>
 
     <plurals name="likes">
         <item quantity="one">♡ %1$s Liker</item>

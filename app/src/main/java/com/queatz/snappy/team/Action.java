@@ -493,7 +493,7 @@ public class Action {
         return true;
     }
 
-    public void deleteExperience(@NonNull Offer offer) {
+    public void deleteOffer(@NonNull Offer offer) {
         // TODO keep until delete is in place
         try {
             team.api.delete(String.format(Config.PATH_ME_OFFERS_ID, offer.getId()));
@@ -507,7 +507,26 @@ public class Action {
         }
     }
 
-    public void addExperience(@NonNull String details, int price, @Nullable String unit) {
+    Offer nPendingOfferPhotoChange;
+
+    public void addPhotoToOffer(@NonNull Activity activity, @NonNull Offer offer) {
+        nPendingOfferPhotoChange = offer;
+
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        activity.startActivityForResult(intent, Config.REQUEST_CODE_CHOOSER);
+    }
+
+    public void removePhotoFromOffer(@NonNull Offer offer) {
+        team.realm.beginTransaction();
+        offer.setHasPhoto(false);
+        team.realm.commitTransaction();
+
+        team.api.delete(String.format(Config.PATH_OFFER_PHOTO, offer.getId()));
+    }
+
+    public void addOffer(@NonNull String details, int price, @Nullable String unit) {
         if(details.isEmpty()) {
             return;
         }
@@ -899,47 +918,6 @@ public class Action {
         activity.startActivityForResult(intent, Config.REQUEST_CODE_CHOOSER);
     }
 
-    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
-        switch (requestCode) {
-            case Config.REQUEST_CODE_CHOOSER:
-                if(resultCode == Activity.RESULT_OK) {
-                    final Uri photo = intent.getData();
-
-                    if(nPendingLocationPhotoChange == null || photo == null) {
-                        return;
-                    }
-
-                    RequestParams params = new RequestParams();
-
-                    try {
-                        params.put("photo", team.context.getContentResolver().openInputStream(photo));
-                    }
-                    catch (FileNotFoundException e) {
-                        Toast.makeText(team.context, "Couldn't set photo", Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
-                        return;
-                    }
-
-                    Toast.makeText(team.context, "Changing photo", Toast.LENGTH_SHORT).show();
-                    team.api.put(String.format(Config.PATH_LOCATION_PHOTO, nPendingLocationPhotoChange.getId()), params, new Api.Callback() {
-                        @Override
-                        public void success(String response) {
-                            if (nPendingLocationPhotoChange != null) {
-                                String photoUrl = Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=64&auth=" + team.auth.getAuthParam(), nPendingLocationPhotoChange.getId());
-                                Picasso.with(team.context).invalidate(photoUrl);
-                            }
-                        }
-
-                        @Override
-                        public void fail(String response) {
-                            Toast.makeText(team.context, "Couldn't set photo", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-                break;
-        }
-    }
-
     public void showAbout(Activity activity) {
         View view = View.inflate(activity, R.layout.information, null);
 
@@ -1031,7 +1009,7 @@ public class Action {
 
             @Override
             public void fail(String response) {
-                Toast.makeText(team.context, "Couldn't endorse", Toast.LENGTH_SHORT).show();
+                Toast.makeText(team.context, R.string.couldnt_endorse, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -1042,5 +1020,66 @@ public class Action {
         bundle.putBoolean("showEndorsers", true);
 
         team.view.show(activity, PersonList.class, bundle);
+    }
+
+    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
+        switch (requestCode) {
+            case Config.REQUEST_CODE_CHOOSER:
+                if(resultCode == Activity.RESULT_OK) {
+                    final Uri photo = intent.getData();
+
+                    if (photo == null) {
+                        return;
+                    }
+
+                    if(nPendingLocationPhotoChange != null) {
+                        uploadPhoto(String.format(Config.PATH_LOCATION_PHOTO, nPendingLocationPhotoChange.getId()), photo);
+                    } else if(nPendingOfferPhotoChange != null) {
+                        uploadPhoto(String.format(Config.PATH_OFFER_PHOTO, nPendingOfferPhotoChange.getId()), photo);
+                    }
+                }
+
+                break;
+        }
+    }
+
+    private void uploadPhoto(String path, Uri photo) {
+        RequestParams params = new RequestParams();
+
+        try {
+            params.put(Config.PARAM_PHOTO, team.context.getContentResolver().openInputStream(photo));
+        }
+        catch (FileNotFoundException e) {
+            Toast.makeText(team.context, R.string.couldnt_set_photo, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+            return;
+        }
+
+        Toast.makeText(team.context, R.string.changing_photo, Toast.LENGTH_SHORT).show();
+
+        final String id;
+
+        if (nPendingLocationPhotoChange != null) {
+            id = nPendingLocationPhotoChange.getId();
+        } else if (nPendingOfferPhotoChange != null) {
+            id = nPendingOfferPhotoChange.getId();
+        } else {
+            id = null;
+        }
+
+        team.api.put(path, params, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                if (id != null) {
+                    String photoUrl = Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=64&auth=" + team.auth.getAuthParam(), id);
+                    Picasso.with(team.context).invalidate(photoUrl);
+                }
+            }
+
+            @Override
+            public void fail(String response) {
+                Toast.makeText(team.context, R.string.couldnt_set_photo, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
