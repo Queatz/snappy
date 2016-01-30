@@ -60,6 +60,7 @@ public class Person {
         person.language = data.language;
         person.imageUrl = data.imageUrl;
         person.googleId = data.googleId;
+        person.googleUrl= data.googleUrl;
 
         if (StringUtils.isBlank(person.about)) {
             person.about = data.about;

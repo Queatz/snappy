@@ -5,6 +5,7 @@
 <resources>
     <color name="blue">#2196F3</color>
     <color name="lightblue">#6db0b0</color>
+    <color name="darkenedblue">#5EA1A1</color>
     <color name="red">#c54859</color>
     <color name="deepdarkred">#9e3a47</color>
     <color name="gray">#bdbdbd</color>

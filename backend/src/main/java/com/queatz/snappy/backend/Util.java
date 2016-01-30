@@ -3,6 +3,8 @@ package com.queatz.snappy.backend;
 import com.queatz.snappy.shared.PushSpec;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -68,5 +70,9 @@ public class Util {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static String googleUrl(String url) throws MalformedURLException {
+        return new URL(url).getPath().substring(2);
     }
 }

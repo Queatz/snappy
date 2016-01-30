@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.backend.Json;
 import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.things.PersonSpec;
 
@@ -76,6 +77,10 @@ public class Auth {
             JsonObject response = Json.from(s, JsonObject.class);
 
             PersonSpec personSpec = new PersonSpec();
+
+            if(response.has("url")) {
+                personSpec.googleUrl = Util.googleUrl(response.get("url").getAsString()).toLowerCase();
+            }
 
             if(response.has("gender")) {
                 personSpec.gender = response.get("gender").getAsString();

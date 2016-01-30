@@ -31,6 +31,11 @@ public class People extends Api.Path {
                 if (path.size() == 1) {
                     getPerson(path.get(0));
                 } else if (path.size() == 2) {
+                    if (Config.PATH_BY_NAME.equals(path.get(0))) {
+                        getPersonByName(path.get(1));
+                        return;
+                    }
+
                     personId = path.get(0);
 
                     boolean followers = false;
@@ -82,8 +87,12 @@ public class People extends Api.Path {
         }
     }
 
-    private void getPerson(String personId){
+    private void getPerson(String personId) {
         ok(Datastore.get(PersonSpec.class, personId));
+    }
+
+    private void getPersonByName(String personName) {
+        ok(Datastore.get(PersonSpec.class).filter("googleUrl", personName.toLowerCase()).first().now());
     }
 
     private void getFollows(boolean followers, String personId) {

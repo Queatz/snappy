@@ -123,7 +123,7 @@ public class Config {
     public static final int SEARCH_DISTANCE = 1609 * 7;
     public static final int SEARCH_MINIMUM = 10;
     public static final int SEARCH_MAXIMUM = 30;
-    public static final int SEARCH_MAX_VISIBILITY = 1609 * 7;
+    public static final int SEARCH_MAX_VISIBILITY = 1609 * 20;
     public static final int NEARBY_MAX_VISIBILITY = 1609 * 2;
     public static final int BOUNTIES_MAX_AGE = 1000 * 60 * 60 * 24 * 7;
     public static final long QUESTS_MAX_AGE = 1000L * 60L * 60L * 24L * 30L;
@@ -260,4 +260,5 @@ public class Config {
     public static final String PATH_OFFER = "offer";
     public static final String PATH_ENDORSERS = "endorsers";
     public static final String PATH_ENDORSE = "endorse";
+    public static final String PATH_BY_NAME = "by-name";
 }
