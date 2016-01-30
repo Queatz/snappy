@@ -22,6 +22,7 @@ public class PersonSpec extends ThingSpec {
     public @Push String firstName;
     public String lastName;
     public String imageUrl;
+    public @Index String googleUrl;
 
     public @Shallow String about;
 
@@ -29,7 +30,6 @@ public class PersonSpec extends ThingSpec {
     public @Hide String subscription;
     public @Hide @Search("geo") GeoPt latlng;
     public @Hide String googleId;
-    public @Hide @Index String googleUrl;
     public @Hide String gender;
     public @Hide String language;
     public @Hide @Index String email;
