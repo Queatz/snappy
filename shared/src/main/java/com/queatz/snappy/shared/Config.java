@@ -137,7 +137,7 @@ public class Config {
     public static final int SEARCH_LOCATIONS_MAX_HERE = 10;
     public static final int BOUNTY_MIN_PRICE = 500;
     public static final int BOUNTY_MAX_PRICE = 15000;
-    public static final int MAX_IDLE_HOURS = 18;
+    public static final int MAX_IDLE_HOURS = 1800;
 
     public static final String HOSTING_BETATESTER = "betatester";
 

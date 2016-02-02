@@ -10,8 +10,6 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.ErrorResponseSpec;
 import com.queatz.snappy.shared.things.PersonSpec;
 
-import org.apache.commons.lang3.CharSet;
-
 import java.io.IOException;
 
 import javax.servlet.http.HttpServlet;

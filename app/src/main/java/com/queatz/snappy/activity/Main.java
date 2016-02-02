@@ -125,8 +125,7 @@ public class Main extends Activity {
             mActionBar.resolve();
         }
 
-        // TODO: Re-enable in the future
-        // team.advertise.enable(this);
+        team.advertise.enable(this);
     }
 
     @Override

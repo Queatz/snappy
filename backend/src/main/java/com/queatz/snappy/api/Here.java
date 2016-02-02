@@ -64,7 +64,7 @@ public class Here extends Api.Path {
     }
 
     private List<PersonSpec> fetchPeople(GeoPt geo) {
-        List<PersonSpec> people = Search.getService().getNearby(PersonSpec.class, geo, new Date(new Date().getTime() - 1000 * 60 * 60 * Config.MAX_IDLE_HOURS), Config.SEARCH_PEOPLE_MAX_NEAR_HERE);
+        List<PersonSpec> people = Search.getService().getNearby(PersonSpec.class, geo, new Date(new Date().getTime() - (1000L * 60L * 60L * (long) Config.MAX_IDLE_HOURS)), Config.SEARCH_PEOPLE_MAX_NEAR_HERE);
 
         for (int i = 0; i < people.size(); i++) {
             if (people.get(i).id.equals(user.id)) {

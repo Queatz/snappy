@@ -122,6 +122,9 @@ public class Advertise {
      * @return Whether or not advertising was enabled successfully
      */
     public boolean enable(@Nullable Activity activity) {
+        // TODO re-enable this in the future
+        if (true) return false;
+
         handler = new Handler(team.context.getMainLooper());
 
         if (!capable()) {
