@@ -82,7 +82,7 @@ public class Auth {
                 personSpec.googleUrl = Util.googleUrl(response.get("url").getAsString()).toLowerCase();
             }
 
-            if(response.has("gender")) {
+            if(response.has("gender") && StringUtils.isNotBlank(response.get("gender").getAsString())) {
                 personSpec.gender = response.get("gender").getAsString();
             }
 
