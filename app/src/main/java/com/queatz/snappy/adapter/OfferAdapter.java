@@ -96,18 +96,28 @@ public class OfferAdapter extends RealmBaseAdapter<Offer> {
             }
         } else {
             endorsements.setText(endorsers == 0 ? context.getString(R.string.endorse) : Integer.toString(endorsers));
-            endorsements.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    team.action.endorse((Activity) context, offer);
-                }
-            });
+
+            if (endorsers == 0) {
+                endorsements.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        team.action.endorse((Activity) context, offer);
+                    }
+                });
+            } else {
+                endorsements.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        team.action.showEndorsers((Activity) context, offer);
+                    }
+                });
+            }
         }
 
         endorsements.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                team.action.showEndorsers((Activity) context, offer);
+                team.action.endorse((Activity) context, offer);
 
                 return true;
             }

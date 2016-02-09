@@ -60,10 +60,14 @@ public class Person {
         person.language = data.language;
         person.imageUrl = data.imageUrl;
         person.googleId = data.googleId;
-        person.googleUrl= data.googleUrl;
+        person.googleUrl = data.googleUrl;
 
         if (StringUtils.isBlank(person.about)) {
             person.about = data.about;
+        }
+
+        if (StringUtils.isBlank(person.googleUrl)) {
+            person.googleUrl = data.googleId;
         }
 
         if (!StringUtils.isBlank(data.subscription)) {

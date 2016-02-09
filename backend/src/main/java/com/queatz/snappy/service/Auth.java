@@ -78,11 +78,11 @@ public class Auth {
 
             PersonSpec personSpec = new PersonSpec();
 
-            if(response.has("url")) {
+            if(response.has("url") && StringUtils.isNotBlank(response.get("url").getAsString())) {
                 personSpec.googleUrl = Util.googleUrl(response.get("url").getAsString()).toLowerCase();
             }
 
-            if(response.has("gender") && StringUtils.isNotBlank(response.get("gender").getAsString())) {
+            if(response.has("gender")) {
                 personSpec.gender = response.get("gender").getAsString();
             }
 
