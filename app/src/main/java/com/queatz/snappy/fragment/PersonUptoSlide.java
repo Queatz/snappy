@@ -2,6 +2,7 @@ package com.queatz.snappy.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +22,15 @@ import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Follow;
 import com.queatz.snappy.things.Offer;
+import com.queatz.snappy.things.Person;
 import com.queatz.snappy.things.Update;
 import com.queatz.snappy.ui.RevealAnimation;
 import com.queatz.snappy.ui.TextView;
 import com.queatz.snappy.ui.TimeSlider;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -39,17 +43,12 @@ public class PersonUptoSlide extends Fragment {
     Team team;
     com.queatz.snappy.things.Person mPerson;
     View personAbout;
-    EditText describeExperience;
-    EditText perUnit;
+    FloatingActionButton mFloatingAction;
     RealmChangeListener mChangeListener = null;
     boolean mShowOffers;
 
     public void setPerson(com.queatz.snappy.things.Person person) {
         mPerson = person;
-    }
-
-    public void showOffers() {
-        mShowOffers = true;
     }
 
     SwipeRefreshLayout mRefresh;
@@ -91,51 +90,6 @@ public class PersonUptoSlide extends Fragment {
         updateList.addFooterView(new View(getActivity()));
 
         if(mPerson != null) {
-            if(team.auth.getUser().equals(mPerson.getId())) {
-                ListView offersList = (ListView) personAbout.findViewById(R.id.offers).findViewById(R.id.offersList);
-
-                final View newOffer = View.inflate(getActivity(), R.layout.new_offer, null);
-
-                offersList.addFooterView(newOffer);
-
-                final EditText experienceDetails = (EditText) newOffer.findViewById(R.id.details);
-                final TimeSlider priceSlider = (TimeSlider) newOffer.findViewById(R.id.price);
-                final Button addExperience = (Button) newOffer.findViewById(R.id.addExperience);
-
-                describeExperience = experienceDetails;
-                perUnit = (EditText) newOffer.findViewById(R.id.perWhat);
-
-                priceSlider.setPercent(getFreePercent());
-                priceSlider.setTextCallback(new TimeSlider.TextCallback() {
-                    @Override
-                    public String getText(float percent) {
-                        int price = getPrice(percent);
-
-                        if (price < 0) {
-                            newOffer.setBackgroundResource(R.color.purple);
-                        } else {
-                            newOffer.setBackgroundResource(R.color.green);
-                        }
-
-                        if (price == 0) {
-                            return getString(R.string.free);
-                        }
-
-                        return  (price < 0 ? "+" : "") + "$" + Integer.toString(Math.abs(price));
-                    }
-                });
-
-                addExperience.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        team.action.addOffer(experienceDetails.getText().toString(), getPrice(priceSlider.getPercent()), perUnit.getText().toString());
-                        priceSlider.setPercent(getFreePercent());
-                        experienceDetails.setText("");
-                        perUnit.setText("");
-                    }
-                });
-            }
-
             RealmResults<Update> recentUpdates = team.realm.where(Update.class)
                     .equalTo("person.id", mPerson.getId())
                     .findAllSorted("date", Sort.DESCENDING);
@@ -155,35 +109,15 @@ public class PersonUptoSlide extends Fragment {
         mRefresh.setRefreshing(true);
         refresh();
 
+        mFloatingAction = (FloatingActionButton) view.findViewById(R.id.floatingAction);
+        mFloatingAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.action.offerSomething(getActivity());
+            }
+        });
+
         return view;
-    }
-
-    private int getPrice(float percent) {
-        int price;
-
-        if (Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
-            price = (int) (percent * (Config.PAID_OFFER_PRICE_MAX - Config.PAID_OFFER_PRICE_MIN) + Config.PAID_OFFER_PRICE_MIN);
-        } else {
-            price = (int) (percent * (Config.FREE_OFFER_PRICE_MAX - Config.FREE_OFFER_PRICE_MIN) + Config.FREE_OFFER_PRICE_MIN);
-        }
-
-        if (Math.abs(price) < 200) {
-            price = (int) Math.floor(price / 10) * 10;
-        } else if (Math.abs(price) < 1000) {
-            price = (int) Math.floor(price / 50) * 50;
-        } else {
-            price = (int) Math.floor(price / 100) * 100;
-        }
-
-        return price;
-    }
-
-    private float getFreePercent() {
-        if (Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
-            return (float) -Config.PAID_OFFER_PRICE_MIN / (float) (-Config.PAID_OFFER_PRICE_MIN + Config.PAID_OFFER_PRICE_MAX);
-        } else {
-            return (float) -Config.FREE_OFFER_PRICE_MIN / (float) (-Config.FREE_OFFER_PRICE_MIN + Config.FREE_OFFER_PRICE_MAX);
-        }
     }
 
     private void updateBanner() {
@@ -202,10 +136,6 @@ public class PersonUptoSlide extends Fragment {
             }
 
             return;
-        }
-
-        if(describeExperience != null) {
-            describeExperience.setHint(offers.size() < 1 ? R.string.describe_the_experience : R.string.describe_another_experience);
         }
 
         ListView offersList = (ListView) offersView.findViewById(R.id.offersList);
@@ -230,18 +160,14 @@ public class PersonUptoSlide extends Fragment {
                     return;
                 }
 
-                //TODO temp for delete arch (send my id list, server says which are gone)
-                if(mPerson != null) {
-                    team.realm.beginTransaction();
-
-                    while(mPerson.getOffers().size() > 0) {
-                        mPerson.getOffers().get(0).removeFromRealm();
-                    }
-
-                    team.realm.commitTransaction();
+                if(mPerson == null) {
+                    return;
                 }
 
-                team.things.put(com.queatz.snappy.things.Person.class, response);
+                List<Offer> previousOffers = team.realm.where(Offer.class).equalTo("person.id", mPerson.getId()).findAll();
+                Person add = team.things.put(com.queatz.snappy.things.Person.class, response);
+                team.things.diff(previousOffers, add.getOffers());
+
                 update();
 
                 mRefresh.setRefreshing(false);
@@ -266,7 +192,6 @@ public class PersonUptoSlide extends Fragment {
         personAbout.postDelayed(new Runnable() {
             @Override
             public void run() {
-
                 updateBanner();
 
                 if (mShowOffers) {

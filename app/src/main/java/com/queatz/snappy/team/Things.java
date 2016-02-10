@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.util.Json;
 
 import java.lang.reflect.Field;
@@ -13,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import io.realm.Realm;
@@ -183,5 +185,23 @@ public class Things {
         else {
             return null;
         }
+    }
+
+    /**
+     * Locally deletes remotely deleted items by comparing two lists together.
+     *
+     * @param current The current know list of items.
+     * @param actual The refreshed list from the server. Must be the complete list.
+     */
+    public <T extends RealmObject> void diff(List<T> current, List<T> actual) {
+        team.realm.beginTransaction();
+
+        for (int i = 0; i < current.size(); i++) {
+            if (!actual.contains(current.get(i))) {
+                current.get(i).removeFromRealm();
+            }
+        }
+
+        team.realm.commitTransaction();
     }
 }

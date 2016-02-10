@@ -2,6 +2,7 @@ package com.queatz.snappy.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -86,6 +87,14 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
             @Override
             public void onRefresh() {
                 refresh();
+            }
+        });
+
+        View floatingAction = view.findViewById(R.id.floatingAction);
+        floatingAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.action.offerSomething(getActivity());
             }
         });
 

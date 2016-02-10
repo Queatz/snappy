@@ -13,6 +13,8 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
@@ -36,6 +38,7 @@ import com.queatz.snappy.things.Quest;
 import com.queatz.snappy.things.Update;
 import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.ui.MiniMenu;
+import com.queatz.snappy.ui.TimeSlider;
 import com.queatz.snappy.util.ResponseUtil;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
@@ -550,6 +553,7 @@ public class Action {
             @Override
             public void success(String response) {
                 team.things.put(Offer.class, response);
+                Toast.makeText(team.context, "Offer added", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -1081,5 +1085,97 @@ public class Action {
                 Toast.makeText(team.context, R.string.couldnt_set_photo, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void offerSomething(Activity activity) {
+        final View newOffer = View.inflate(activity, R.layout.new_offer, null);
+
+        final EditText experienceDetails = (EditText) newOffer.findViewById(R.id.details);
+        final TimeSlider priceSlider = (TimeSlider) newOffer.findViewById(R.id.price);
+        final EditText perUnit = (EditText) newOffer.findViewById(R.id.perWhat);
+        final View highlight = newOffer.findViewById(R.id.highlight);
+
+        priceSlider.setPercent(getFreePercent());
+        priceSlider.setTextCallback(new TimeSlider.TextCallback() {
+            @Override
+            public String getText(float percent) {
+                int price = getPrice(percent);
+
+                if (price < 0) {
+                    highlight.setBackgroundResource(R.color.purple);
+                    priceSlider.setTextColor(R.color.purple);
+                } else {
+                    highlight.setBackgroundResource(R.color.green);
+                    priceSlider.setTextColor(R.color.green);
+                }
+
+                if (price == 0) {
+                    return team.context.getString(R.string.free);
+                }
+
+                return  (price < 0 ? "+" : "") + "$" + Integer.toString(Math.abs(price));
+            }
+        });
+
+        final AlertDialog dialog = new AlertDialog.Builder(activity).setView(newOffer)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.add_experience, null)
+                .setCancelable(true)
+                .show();
+
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (experienceDetails.getText().toString().isEmpty()) {
+                    Toast.makeText(team.context, "Enter description", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                team.action.addOffer(
+                    experienceDetails.getText().toString(),
+                    getPrice(priceSlider.getPercent()),
+                    perUnit.getText().toString()
+                );
+
+                dialog.dismiss();
+            }
+        });
+
+        experienceDetails.post(new Runnable() {
+            @Override
+            public void run() {
+                team.view.keyboard(experienceDetails);
+            }
+        });
+
+    }
+
+    // TODO move to util
+    private float getFreePercent() {
+        if (Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
+            return (float) -Config.PAID_OFFER_PRICE_MIN / (float) (-Config.PAID_OFFER_PRICE_MIN + Config.PAID_OFFER_PRICE_MAX);
+        } else {
+            return (float) -Config.FREE_OFFER_PRICE_MIN / (float) (-Config.FREE_OFFER_PRICE_MIN + Config.FREE_OFFER_PRICE_MAX);
+        }
+    }
+
+    private int getPrice(float percent) {
+        int price;
+
+        if (Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
+            price = (int) (percent * (Config.PAID_OFFER_PRICE_MAX - Config.PAID_OFFER_PRICE_MIN) + Config.PAID_OFFER_PRICE_MIN);
+        } else {
+            price = (int) (percent * (Config.FREE_OFFER_PRICE_MAX - Config.FREE_OFFER_PRICE_MIN) + Config.FREE_OFFER_PRICE_MIN);
+        }
+
+        if (Math.abs(price) < 200) {
+            price = (int) Math.floor(price / 10) * 10;
+        } else if (Math.abs(price) < 1000) {
+            price = (int) Math.floor(price / 50) * 50;
+        } else {
+            price = (int) Math.floor(price / 100) * 100;
+        }
+
+        return price;
     }
 }

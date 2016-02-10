@@ -24,8 +24,8 @@ public class UpdateSpec extends ThingSpec {
     public @Index @Hide @Push Key<PersonSpec> personId;
     public @Index @Hide Key<PartySpec> partyId;
 
-    public @Ignore @Push PersonSpec person;
-    public @Ignore @Push PartySpec party;
+    public @Ignore @Shallow @Push PersonSpec person;
+    public @Ignore @Shallow @Push PartySpec party;
 
     public @Ignore long likers;
 }

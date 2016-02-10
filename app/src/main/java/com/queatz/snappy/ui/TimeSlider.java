@@ -79,6 +79,10 @@ public class TimeSlider extends RelativeLayout {
         setPercent(0);
     }
 
+    public void setTextColor(int color) {
+        mHandle.setTextColor(getResources().getColor(color));
+    }
+
     public void setTextCallback(TextCallback textCallback) {
         mTextCallback = textCallback;
         setPercent(mPercent);
@@ -117,7 +121,7 @@ public class TimeSlider extends RelativeLayout {
 
         params.leftMargin = (int) Util.px(32);
         params.rightMargin = (int) Util.px(32);
-        params.topMargin = (int) (getMeasuredHeight() / 1.85);
+        params.topMargin = (int) (mHandle.getTextSize() * 1.5f);
         params.height = (int) Util.px(2);
 
         mTrack.setLayoutParams(params);
