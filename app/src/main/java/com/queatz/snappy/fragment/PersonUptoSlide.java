@@ -110,12 +110,17 @@ public class PersonUptoSlide extends Fragment {
         refresh();
 
         mFloatingAction = (FloatingActionButton) view.findViewById(R.id.floatingAction);
-        mFloatingAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                team.action.offerSomething(getActivity());
-            }
-        });
+
+        if(team.auth.getUser() != null && team.auth.getUser().equals(mPerson.getId())) {
+            mFloatingAction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    team.action.offerSomething(getActivity());
+                }
+            });
+        } else {
+            mFloatingAction.setVisibility(View.GONE);
+        }
 
         return view;
     }
