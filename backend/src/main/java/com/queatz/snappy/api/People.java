@@ -1,5 +1,6 @@
 package com.queatz.snappy.api;
 
+import com.google.appengine.api.datastore.Query;
 import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.backend.Json;
 import com.queatz.snappy.service.Api;
@@ -48,6 +49,9 @@ public class People extends Api.Path {
                             break;
                         case Config.PATH_PARTIES:
                             getParties(personId);
+                            break;
+                        case Config.PATH_MESSAGES:
+                            getMessages(personId);
                             break;
                         default:
                             die("people - bad path");
@@ -115,6 +119,28 @@ public class People extends Api.Path {
         ok(Datastore.get(PartySpec.class).filter("hostId", Datastore.key(PersonSpec.class, personId)).list(), Json.Compression.SHALLOW);
     }
 
+    private void getMessages(String personId) {
+        ok(Datastore.get(MessageSpec.class, Query.CompositeFilterOperator.or(
+                Query.CompositeFilterOperator.and(
+                        new Query.FilterPredicate("fromId",
+                                Query.FilterOperator.EQUAL,
+                                Datastore.key(PersonSpec.class, user.id).getRaw()),
+                        new Query.FilterPredicate("toId",
+                                Query.FilterOperator.EQUAL,
+                                Datastore.key(PersonSpec.class, personId).getRaw())
+                ),
+                Query.CompositeFilterOperator.and(
+                        new Query.FilterPredicate("fromId",
+                                Query.FilterOperator.EQUAL,
+                                Datastore.key(PersonSpec.class, personId).getRaw()),
+                        new Query.FilterPredicate("toId",
+                                Query.FilterOperator.EQUAL,
+                                Datastore.key(PersonSpec.class, user.id).getRaw())
+                )
+
+        )).order("-date").limit(Config.SEARCH_MAXIMUM).list());
+    }
+
     private void postSeen(String personId) {
         ok(Thing.getService().contact.markSeen(user, personId));
     }
@@ -153,7 +179,7 @@ public class People extends Api.Path {
         PersonSpec person = Datastore.get(PersonSpec.class, personId);
 
         String localId = request.getParameter(Config.PARAM_LOCAL_ID);
-        MessageSpec sent = Thing.getService().message.newMessage(user.id, person.id, message);
+            MessageSpec sent = Thing.getService().message.newMessage(user.id, person.id, message);
 
         if (sent != null) {
             sent.localId = localId;
