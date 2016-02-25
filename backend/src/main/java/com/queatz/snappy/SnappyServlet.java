@@ -49,14 +49,17 @@ public class SnappyServlet extends HttpServlet {
 
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        addMainHeaders(resp);
+    }
+
+    private void addMainHeaders(final HttpServletResponse resp) {
         resp.addHeader("Access-Control-Allow-Origin", "*");
         resp.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         resp.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     }
 
     private void handle(HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.addHeader("Access-Control-Allow-Origin", "*");
-        resp.addHeader("Access-Control-Allow-Methods", "get, post, put, delete, options");
+        addMainHeaders(resp);
         resp.setContentType("application/json");
         resp.setCharacterEncoding("utf-8");
 
