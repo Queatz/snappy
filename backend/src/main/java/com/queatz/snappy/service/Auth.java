@@ -53,7 +53,7 @@ public class Auth {
             s = new String(resp.getContent(), "UTF-8");
             JsonObject response = Json.from(s, JsonObject.class);
 
-            if(response.get("email").getAsString().equals(email)) {
+            if(response.has("email") && response.get("email").getAsString().equals(email)) {
                 return true;
             }
         } catch (IOException e) {
@@ -61,7 +61,7 @@ public class Auth {
             throw new PrintingError(Api.Error.SERVER_ERROR, "real check server fail");
         }
 
-        return false;
+        throw new PrintingError(Api.Error.SERVER_ERROR, "real check no email correctness");
     }
 
     public PersonSpec getPersonData(String token) throws PrintingError {
