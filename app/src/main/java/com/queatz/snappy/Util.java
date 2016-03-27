@@ -64,8 +64,37 @@ public class Util {
         return px / context.getResources().getDisplayMetrics().density;
     }
 
-    public static String offerAmount(Offer offer) {
-        return "$" + Math.abs(offer.getPrice()) + (offer.getUnit() == null || offer.getUnit().isEmpty() ? "" : "/" + offer.getUnit());
+    public static String offerAmount(@NonNull final Offer offer) {
+        if (offer.getPrice() == null) {
+            return team.context.getString(R.string.ask);
+        } else {
+            return "$" + Math.abs(offer.getPrice()) + (offer.getUnit() == null || offer.getUnit().isEmpty() ? "" : "/" + offer.getUnit());
+        }
+    }
+
+    public static boolean offerIsRequest(@NonNull final Offer offer) {
+        return offer.getPrice() != null && offer.getPrice() < 0;
+    }
+
+    public static String offerPriceText(@NonNull final Offer offer, boolean isShorthand) {
+        if (!isShorthand) {
+            return offerPriceText(offer);
+        }
+
+        return offer.getPrice() == null ? context.getString(R.string.ask) : offer.getPrice() > 0
+                ? Util.offerAmount(offer) : offer.getPrice() < 0 ? "+" + Util.offerAmount(offer)
+                : context.getString(R.string.free);
+    }
+
+    public static String offerPriceText(@NonNull final Offer offer) {
+        return offer.getPrice() == null ? context.getString(R.string.ask) : offer.getPrice() > 0 ?
+                context.getString(R.string.for_amount, Util.offerAmount(offer)) : offer.getPrice() < 0 ?
+                context.getString(R.string.make_amount, Util.offerAmount(offer)) :
+                context.getString(R.string.for_free);
+    }
+
+    public static String offerMessagePrefill(@NonNull final Offer offer) {
+        return context.getString(offerIsRequest(offer) ? R.string.ive_got_offer : R.string.id_like_offer, offer.getDetails());
     }
 
     public static Spanned getUpdateText(Update update) {

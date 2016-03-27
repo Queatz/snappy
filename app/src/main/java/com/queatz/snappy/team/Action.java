@@ -529,7 +529,7 @@ public class Action {
         team.api.delete(String.format(Config.PATH_OFFER_PHOTO, offer.getId()));
     }
 
-    public void addOffer(@NonNull String details, int price, @Nullable String unit) {
+    public void addOffer(@NonNull String details, Integer price, @Nullable String unit) {
         if(details.isEmpty()) {
             return;
         }
@@ -1099,7 +1099,11 @@ public class Action {
         priceSlider.setTextCallback(new TimeSlider.TextCallback() {
             @Override
             public String getText(float percent) {
-                int price = getPrice(percent);
+                Integer price = getPrice(percent);
+
+                if (price == null) {
+                    return team.context.getString(R.string.ask);
+                }
 
                 if (price < 0) {
                     highlight.setBackgroundResource(R.color.purple);
@@ -1160,8 +1164,15 @@ public class Action {
         }
     }
 
-    private int getPrice(float percent) {
-        int price;
+    private Integer getPrice(float percent) {
+        if (percent > 0.9f) {
+            return null;
+        } else {
+            percent /= 0.9f;
+        }
+
+        Integer price;
+
 
         if (Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
             price = (int) (percent * (Config.PAID_OFFER_PRICE_MAX - Config.PAID_OFFER_PRICE_MIN) + Config.PAID_OFFER_PRICE_MIN);

@@ -12,8 +12,6 @@ import com.queatz.snappy.service.Push;
 import com.queatz.snappy.service.Thing;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.PushSpec;
-import com.queatz.snappy.shared.things.FollowLinkSpec;
-import com.queatz.snappy.shared.things.PersonSpec;
 import com.queatz.snappy.shared.things.UpdateLikeSpec;
 import com.queatz.snappy.shared.things.UpdateSpec;
 

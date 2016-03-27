@@ -52,9 +52,9 @@ public class OfferAdapter extends RealmBaseAdapter<Offer> {
         TextView price = (TextView) view.findViewById(R.id.price);
 
         details.setText(offer.getDetails());
-        price.setText(offer.getPrice() > 0 ? Util.offerAmount(offer) : offer.getPrice() < 0 ? "+" + Util.offerAmount(offer) : context.getString(R.string.free));
+        price.setText(Util.offerPriceText(offer, true));
 
-        if (offer.getPrice() < 0) {
+        if (Util.offerIsRequest(offer)) {
             price.setTextColor(context.getResources().getColor(R.color.purple));
         } else {
             price.setTextColor(context.getResources().getColor(R.color.green));
@@ -71,7 +71,7 @@ public class OfferAdapter extends RealmBaseAdapter<Offer> {
                 public void onClick(View v) {
                     Toast.makeText(context, team.context.getString(R.string.opening_conversation), Toast.LENGTH_SHORT).show();
                     SlideScreen slideScreen = (SlideScreen) ((Activity) context).findViewById(R.id.person_content);
-                    ((PersonMessagesSlide) slideScreen.getSlideFragment(1)).setMessagePrefill((offer.getPrice() < 0 ? "I've got " : "I'd like ") + offer.getDetails());
+                    ((PersonMessagesSlide) slideScreen.getSlideFragment(1)).setMessagePrefill(Util.offerMessagePrefill(offer));
                     slideScreen.setSlide(1);
                 }
             });

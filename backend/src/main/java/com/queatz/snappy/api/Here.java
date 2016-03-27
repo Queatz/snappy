@@ -30,7 +30,34 @@ public class Here extends Api.Path {
     public void call() {
         switch (method) {
             case GET:
-                get(request.getParameter(Config.PARAM_LATITUDE), request.getParameter(Config.PARAM_LONGITUDE));
+                GeoPt geo = geo(request.getParameter(Config.PARAM_LATITUDE), request.getParameter(Config.PARAM_LONGITUDE));
+                Thing.getService().person.updateLocation(user.id, geo);
+
+                switch (path.size()) {
+                    case 0:
+                        get(geo);
+                        break;
+                    case 1:
+                        switch (path.get(0)) {
+                            case Config.PATH_PEOPLE:
+                                ok(fetchPeople(geo));
+                                break;
+                            case Config.PATH_LOCATIONS:
+                                ok(fetchLocations(geo));
+                                break;
+                            case Config.PATH_OFFERS:
+                                ok(fetchOffers(fetchPeople(geo)));
+                                break;
+                            case Config.PATH_PARTIES:
+                                ok(fetchParties(user.id, geo));
+                                break;
+                            default:
+                                die("here - bad path");
+                        }
+                        break;
+                        default:
+                            die("here - bad path");
+                }
 
                 break;
             default:
@@ -38,17 +65,18 @@ public class Here extends Api.Path {
         }
     }
 
-    private void get(String latitudeParameter, String longitudeParameter) {
+    private GeoPt geo(String latitudeParameter, String longitudeParameter) {
         if (longitudeParameter == null || latitudeParameter == null) {
             die("here - missing location parameter(s)");
         }
 
         float latitude = Float.parseFloat(latitudeParameter);
         float longitude = Float.parseFloat(longitudeParameter);
-        GeoPt geo = new GeoPt(latitude, longitude);
 
-        Thing.getService().person.updateLocation(user.id, geo);
+        return new GeoPt(latitude, longitude);
+    }
 
+    private void get(GeoPt geo) {
         HereResponseSpec response = new HereResponseSpec();
 
         response.parties = fetchParties(user.id, geo);

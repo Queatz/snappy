@@ -1,0 +1,97 @@
+
+[ ] Get new types working with generified endpoints
+[ ] Once that's done, add people to the generified types with likes, updates, endorsements
+[ ] Determine if messages are a relation
+[ ] Determine if offers are a relation
+
+====[ Projects ]
+
+----[ API ]
+ | 
+ | kinds = [hub, club, project, resource]
+ | 
+
+GET     /api/earth/here/:kind?latitude=<number>&longitude=<number>
+
+POST    /api/earth/:kind => {}
+PUT     /api/earth/:kind/:id => {}
+GET     /api/earth/:kind/:id
+DELETE  /api/earth/:kind/:id
+
+ | 
+ | relation = [follow, endorsement, like, join, update, comment]
+ | 
+
+POST    /api/earth/:relation/:kind/:id
+GET     /api/earth/:relation/:kind/:id
+GET     /api/earth/:relation/:id
+DELETE  /api/earth/:relation/:id
+
+
+====[ Properties ]
+
+/// Language
+
+thing <kind> {
+    <role>: <value>
+}
+
+link <kind> {
+	source: <thing>
+	target: <thing>
+	body: <thing>
+}
+
+///
+
+public class HubThing implements Joinable, Followable, Updatable {
+
+}
+
+public class UpdateRelation extends Relation {
+	Key<? extends Thing> source;
+	Key<? extends Thing> target;
+	UpdateThing update;
+}
+
+///
+
+Hub {
+	name: <string>
+	description: <string>
+	photo: <boolean>
+	contact: <person>
+	location: <location>
+	
+	people: <list<person>>
+	updates: <list<update>>
+	likers: <list<people>>
+	followers: <list<people>>
+	
+	actions {
+		join:
+		leave:
+		update:
+		setPhoto:
+	}
+}
+
+Project {
+	
+}
+
+Resource {
+	
+}
+
+Club {
+	public: <boolean>
+}
+
+
+=== RELATIONS ===
+
+
+Update {
+	
+}

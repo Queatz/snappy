@@ -143,6 +143,9 @@ public class PersonUptoSlide extends Fragment {
             return;
         }
 
+        // TODO find better way to sort with "Ask for price" offers appearing at the end
+
+
         ListView offersList = (ListView) offersView.findViewById(R.id.offersList);
 
         OfferAdapter offersAdapter = new OfferAdapter(getActivity(), offers);

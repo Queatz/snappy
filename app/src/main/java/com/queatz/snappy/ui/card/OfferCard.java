@@ -40,10 +40,7 @@ public class OfferCard implements Card<Offer> {
         Button takeOffer = (Button) view.findViewById(R.id.takeOffer);
 
         details.setText(offer.getDetails());
-        takeOffer.setText(offer.getPrice() > 0 ?
-                context.getString(R.string.for_amount, Util.offerAmount(offer)) : offer.getPrice() < 0 ?
-                context.getString(R.string.make_amount, Util.offerAmount(offer)) :
-                context.getString(R.string.for_free));
+        takeOffer.setText(Util.offerPriceText(offer));
 
         final Team team = ((MainApplication) context.getApplicationContext()).team;
 
@@ -65,7 +62,7 @@ public class OfferCard implements Card<Offer> {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, team.context.getString(R.string.opening_conversation), Toast.LENGTH_SHORT).show();
-                team.action.openMessages((Activity) context, offer.getPerson(), (offer.getPrice() < 0 ? "I've got " : "I'd like ") + offer.getDetails());
+                team.action.openMessages((Activity) context, offer.getPerson(), Util.offerMessagePrefill(offer));
             }
         };
 
@@ -74,7 +71,7 @@ public class OfferCard implements Card<Offer> {
 
         TextView type = (TextView) view.findViewById(R.id.type);
 
-        if (offer.getPrice() < 0) {
+        if (Util.offerIsRequest(offer)) {
             type.setText(context.getString(R.string.person_wants, offer.getPerson().getFirstName()));
             type.setTextColor(context.getResources().getColor(R.color.purple));
         } else {
@@ -82,7 +79,7 @@ public class OfferCard implements Card<Offer> {
             type.setTextColor(context.getResources().getColor(R.color.green));
         }
 
-        int colorResource = (offer.getPrice() < 0 ? R.color.purple : R.color.green);
+        int colorResource = (Util.offerIsRequest(offer) ? R.color.purple : R.color.green);
         view.findViewById(R.id.highlight).setBackgroundResource(colorResource);
         ((Button) view.findViewById(R.id.takeOffer)).setTextColor(context.getResources().getColor(colorResource));
 

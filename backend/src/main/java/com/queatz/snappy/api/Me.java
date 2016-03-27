@@ -215,9 +215,9 @@ public class Me extends Api.Path {
         String details = request.getParameter(Config.PARAM_DETAILS);
         String unit = request.getParameter(Config.PARAM_UNIT);
 
-        int price = 0;
+        Integer price = null;
 
-        try {
+        if (request.getParameter(Config.PARAM_PRICE) != null) try {
             price = Integer.parseInt(request.getParameter(Config.PARAM_PRICE));
         } catch (NumberFormatException e) {
             e.printStackTrace();

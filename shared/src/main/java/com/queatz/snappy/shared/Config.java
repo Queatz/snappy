@@ -261,4 +261,5 @@ public class Config {
     public static final String PATH_ENDORSERS = "endorsers";
     public static final String PATH_ENDORSE = "endorse";
     public static final String PATH_BY_NAME = "by-name";
+    public static final String PATH_EARTH = "earth";
 }

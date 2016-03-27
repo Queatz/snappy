@@ -12,7 +12,7 @@ import io.realm.annotations.RealmClass;
 public class Offer extends RealmObject {
     private String id;
     private String details;
-    private int price;
+    private Integer price;
     private String unit;
     private Person person;
     private Date created;
@@ -35,11 +35,11 @@ public class Offer extends RealmObject {
         this.details = details;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 

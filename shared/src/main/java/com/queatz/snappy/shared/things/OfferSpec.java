@@ -6,7 +6,6 @@ import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
 import com.queatz.snappy.shared.Hide;
 import com.queatz.snappy.shared.Push;
-import com.queatz.snappy.shared.Shallow;
 import com.queatz.snappy.shared.ThingSpec;
 
 import java.util.Date;
@@ -17,7 +16,7 @@ import java.util.Date;
 
 @Entity
 public class OfferSpec extends ThingSpec {
-    public int price;
+    public Integer price;
     public @Push String details;
     public String unit;
     public boolean hasPhoto;

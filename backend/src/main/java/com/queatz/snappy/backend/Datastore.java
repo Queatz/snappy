@@ -62,7 +62,7 @@ public class Datastore {
             e.printStackTrace();
         }
 
-        return null;
+        throw new RuntimeException("Error instantiating new object of type " + type.getSimpleName());
     }
 
     public static String newId() {

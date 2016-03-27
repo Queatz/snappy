@@ -5,7 +5,6 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.things.EndorsementSpec;
 import com.queatz.snappy.shared.things.OfferSpec;
 import com.queatz.snappy.shared.things.PersonSpec;
-import com.queatz.snappy.shared.things.UpdateLikeSpec;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,20 +14,22 @@ import java.util.Date;
  * Created by jacob on 8/29/15.
  */
 public class Offer {
-    public OfferSpec create(PersonSpec user, String details, int price, String unit) {
+    public OfferSpec create(PersonSpec user, String details, Integer price, String unit) {
 
-        if (com.queatz.snappy.service.Buy.getService().valid(user)) {
-            price = Math.min(Config.PAID_OFFER_PRICE_MAX, Math.max(Config.PAID_OFFER_PRICE_MIN, price));
-        } else {
-            price = Math.min(Config.FREE_OFFER_PRICE_MAX, Math.max(Config.FREE_OFFER_PRICE_MIN, price));
-        }
+        if (price != null) {
+            if (com.queatz.snappy.service.Buy.getService().valid(user)) {
+                price = Math.min(Config.PAID_OFFER_PRICE_MAX, Math.max(Config.PAID_OFFER_PRICE_MIN, price));
+            } else {
+                price = Math.min(Config.FREE_OFFER_PRICE_MAX, Math.max(Config.FREE_OFFER_PRICE_MIN, price));
+            }
 
-        if (Math.abs(price) < 200) {
-            price = (int) Math.floor(price / 10) * 10;
-        } else if (Math.abs(price) < 1000) {
-            price = (int) Math.floor(price / 50) * 50;
-        } else {
-            price = (int) Math.floor(price / 100) * 100;
+            if (Math.abs(price) < 200) {
+                price = (int) Math.floor(price / 10) * 10;
+            } else if (Math.abs(price) < 1000) {
+                price = (int) Math.floor(price / 50) * 50;
+            } else {
+                price = (int) Math.floor(price / 100) * 100;
+            }
         }
 
         OfferSpec offer = Datastore.create(OfferSpec.class);

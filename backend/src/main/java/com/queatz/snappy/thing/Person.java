@@ -14,7 +14,7 @@ import java.util.Date;
  * Created by jacob on 2/15/15.
  */
 public class Person {
-    public boolean updateSubscription(PersonSpec person, String subscriptionId) {
+    public boolean updateSubscription(com.queatz.snappy.shared.things.PersonSpec person, String subscriptionId) {
         if(person == null) {
             return false;
         }
@@ -27,13 +27,13 @@ public class Person {
         }
     }
 
-    public boolean updateAbout(PersonSpec person, String about) {
+    public boolean updateAbout(com.queatz.snappy.shared.things.PersonSpec person, String about) {
         person.about = about;
         return Datastore.save(person);
     }
 
     public boolean updateLocation(String user, GeoPt geoPt) {
-        PersonSpec person = Datastore.get(PersonSpec.class).id(user).now();
+        com.queatz.snappy.shared.things.PersonSpec person = Datastore.get(com.queatz.snappy.shared.things.PersonSpec.class).id(user).now();
 
         if(person == null) {
             return false;
@@ -45,9 +45,9 @@ public class Person {
         return Datastore.save(person);
     }
 
-    public PersonSpec createOrUpdate(PersonSpec person, PersonSpec data) {
+    public com.queatz.snappy.shared.things.PersonSpec createOrUpdate(com.queatz.snappy.shared.things.PersonSpec person, com.queatz.snappy.shared.things.PersonSpec data) {
         if (person == null) {
-            person = Datastore.create(PersonSpec.class);
+            person = Datastore.create(com.queatz.snappy.shared.things.PersonSpec.class);
             person.token = Util.genToken();
             person.email = data.email;
         } else if (person.token == null) {

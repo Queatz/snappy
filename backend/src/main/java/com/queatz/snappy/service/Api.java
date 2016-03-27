@@ -12,6 +12,7 @@ import com.queatz.snappy.SnappyServlet;
 import com.queatz.snappy.api.Admin;
 import com.queatz.snappy.api.Bounties;
 import com.queatz.snappy.api.Bounty;
+import com.queatz.snappy.api.EarthApi;
 import com.queatz.snappy.api.Example;
 import com.queatz.snappy.api.Follow;
 import com.queatz.snappy.api.Here;
@@ -159,6 +160,7 @@ public class Api {
         paths.put(Config.PATH_PARTIES, Parties.class);
         paths.put(Config.PATH_QUEST, Quest.class);
         paths.put(Config.PATH_OFFER, Offer.class);
+        paths.put(Config.PATH_EARTH, EarthApi.class);
 
         mGCS = GcsServiceFactory.createGcsService(RetryParams.getDefaultInstance());
         mAppIdentityService = AppIdentityServiceFactory.getAppIdentityService();

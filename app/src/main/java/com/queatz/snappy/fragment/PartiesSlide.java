@@ -219,23 +219,20 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
                     .endGroup()
                     .findAllSorted("date", Sort.ASCENDING);
 
-            RealmResults<Quest> queryQuests = team.realm.where(Quest.class).greaterThan("opened", new Date(new Date().getTime() - 1000L * 60 * 60 * 24 * 30))
-                    .notEqualTo("status", Config.QUEST_STATUS_COMPLETE)
-                    .beginGroup()
-                    .equalTo("status", Config.QUEST_STATUS_OPEN)
-                    .or()
-                    .equalTo("team.id", team.auth.getUser())
-                    .or()
-                    .equalTo("host.id", team.auth.getUser())
-                    .endGroup()
-                    .findAllSorted("opened", Sort.DESCENDING);
+            RealmResults<Offer> queryOffers = team.realm.where(Offer.class)
+                    .notEqualTo("person.id", team.auth.getUser())
+                    .isNotNull("price")
+                    .findAllSorted("price", Sort.ASCENDING);
 
-            RealmResults<Offer> queryOffers = team.realm.where(Offer.class).notEqualTo("person.id", team.auth.getUser()).findAllSorted("price", Sort.ASCENDING);
+            RealmResults<Offer> queryOffersUpmarket = team.realm.where(Offer.class)
+                    .notEqualTo("person.id", team.auth.getUser())
+                    .isNull("price")
+                    .findAll();
 
             final ArrayList<RealmResults> list = new ArrayList<>();
             list.add(queryParties);
-            list.add(queryQuests);
             list.add(queryOffers);
+            list.add(queryOffersUpmarket);
             mList.setAdapter(new FeedAdapter(getActivity(), list));
         }
 

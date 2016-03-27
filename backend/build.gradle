@@ -23,6 +23,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.4'
     compile 'org.apache.commons:commons-lang3:3.0'
     compile 'com.ganyo:gcm-server:1.0.2'
+    compile 'org.reflections:reflections:0.9.10'
+
     compile project(':shared')
     testCompile 'org.testng:testng:6.9.4'
 }

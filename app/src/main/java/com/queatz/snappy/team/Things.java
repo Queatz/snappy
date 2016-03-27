@@ -1,5 +1,6 @@
 package com.queatz.snappy.team;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
@@ -72,6 +73,10 @@ public class Things {
                         setter.invoke(thing, oo.getAsBoolean());
                     } else if(int.class.isAssignableFrom(fieldType)) {
                         setter.invoke(thing, oo.getAsInt());
+                    } else if(Integer.class.isAssignableFrom(fieldType)) {
+                        if (!oo.isJsonNull()) setter.invoke(thing, oo.getAsInt());
+                    } else if(Double.class.isAssignableFrom(fieldType)) {
+                        if (!oo.isJsonNull()) setter.invoke(thing, oo.getAsDouble());
                     } else if(long.class.isAssignableFrom(fieldType)) {
                         setter.invoke(thing, oo.getAsInt());
                     } else if(double.class.isAssignableFrom(fieldType)) {
@@ -108,11 +113,15 @@ public class Things {
         return null;
     }
 
-    public <T extends RealmObject> T get(Class<T> clazz, String id) {
+    public <T extends RealmObject> T get(Class<T> clazz, @NonNull String id) {
         return team.realm.where(clazz).equalTo("id", id).findFirst();
     }
 
     public <T extends RealmObject> T put(Realm realm, Class<T> clazz, JsonObject jsonObject) {
+        if (jsonObject == null) {
+            return null;
+        }
+
         String localId = null, id;
 
         if (!jsonObject.has("id")) {
@@ -134,8 +143,9 @@ public class Things {
             o = realm.where(clazz).equalTo("id", localId).findFirst();
         }
 
-        if(o == null)
+        if(o == null) {
             o = realm.createObject(clazz);
+        }
 
         deepJson(realm, o, jsonObject);
 
@@ -143,6 +153,9 @@ public class Things {
     }
 
     public <T extends RealmObject> T put(Class<T> clazz, JsonObject jsonObject) {
+        if (jsonObject == null) {
+            return null;
+        }
         team.realm.beginTransaction();
         T o = put(team.realm, clazz, jsonObject);
         team.realm.commitTransaction();
@@ -160,6 +173,9 @@ public class Things {
     }
 
     public <T extends RealmObject> RealmList<T> putAll(Class<T> clazz, JsonArray jsonArray) {
+        if (jsonArray == null) {
+            return null;
+        }
         team.realm.beginTransaction();
         RealmList<T> o = putAll(team.realm, clazz, jsonArray);
         team.realm.commitTransaction();
@@ -168,6 +184,10 @@ public class Things {
     }
 
     public <T extends RealmObject> RealmList<T> putAll(Realm realm, Class<T> clazz, JsonArray jsonArray) {
+        if (jsonArray == null) {
+            return null;
+        }
+
         RealmList<T> results = new RealmList<>();
 
         for (int i = 0; i < jsonArray.size(); i++) {
@@ -179,12 +199,11 @@ public class Things {
     }
 
     public <T extends RealmObject> RealmList<T> putAll(Class<T> clazz, String jsonArray) {
-        if(jsonArray != null) {
-            return putAll(clazz, Json.from(jsonArray, JsonArray.class));
-        }
-        else {
+        if(jsonArray == null) {
             return null;
         }
+
+        return putAll(clazz, Json.from(jsonArray, JsonArray.class));
     }
 
     /**
@@ -194,6 +213,10 @@ public class Things {
      * @param actual The refreshed list from the server. Must be the complete list.
      */
     public <T extends RealmObject> void diff(List<T> current, List<T> actual) {
+        if (current == null || actual == null) {
+            return;
+        }
+
         team.realm.beginTransaction();
 
         for (int i = 0; i < current.size(); i++) {
