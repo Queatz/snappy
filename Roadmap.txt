@@ -95,3 +95,48 @@ Club {
 Update {
 	
 }
+
+
+===================
+
+"/here/updates" => [
+    {
+        "source<person>": {
+            "id": "230982402382324",
+            "firstName": "Mai"
+        },
+        "target<club>": {
+            "id": "93547247939348",
+            "name": "Mai's Coffee Shop"
+        },
+        "photo": true,
+        "message": "What's up?",
+        "created": "August 19, 2014 12:00:00 AM UTC"
+    }
+]
+
+ADVANTAGE     |JSON remains the same for all objects
+DISADVANTAGES | id is potentially modified
+
+"/here/updates" => [
+    {
+        "source": {
+            "id": "person.230982402382324",
+            "firstName": "Mai"
+        },
+        "target": {
+            "id": "club.93547247939348",
+            "name": "Mai's Coffee Shop"
+        },
+        "photo": true,
+        "message": "What's up?",
+        "created": "August 19, 2014 12:00:00 AM UTC"
+    }
+]
+
+ADVANTAGE     | keys remain the same
+ADVANTAGE     | don't need a parent key to identify type
+ADVANTAGE     | ids are global
+ADVANTAGE     | can have multiple types in the same list
+DISADVANTAGES | JSON differs on the ID
+DISADVANTAGES | have to read ID to know what it is (don't know type before reading

@@ -11,10 +11,10 @@ import java.util.Map;
 /**
  * Created by jacob on 3/27/16.
  */
-public class ExistenceViewAnnotationMapper implements ExistenceAnnotationMapper<KindView, Class<? extends Existence>, Class<? extends ExistenceView>> {
+public class ExistenceViewAnnotationMapper implements AnnotationMapper<KindView, Class<? extends ExistenceView>, Class<? extends Existence>, Class<? extends ExistenceView>> {
 
     @Override
-    public Map.Entry<Class<? extends Existence>, Class<? extends ExistenceView>> map(KindView annotation, Class<? extends Existence> clazz) {
-        return Pair.<Class<? extends Existence>, Class<? extends ExistenceView>>of(clazz, annotation.value());
+    public Map.Entry<Class<? extends Existence>, Class<? extends ExistenceView>> map(KindView annotation, Class<? extends ExistenceView> clazz) {
+        return Pair.<Class<? extends Existence>, Class<? extends ExistenceView>>of(annotation.value(), clazz);
     }
 }

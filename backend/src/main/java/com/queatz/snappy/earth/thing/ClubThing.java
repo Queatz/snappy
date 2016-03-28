@@ -10,6 +10,5 @@ import com.queatz.snappy.earth.view.ClubThingView;
 
 @Entity
 @Kind("club")
-@KindView(ClubThingView.class)
 public class ClubThing extends Thing {
 }

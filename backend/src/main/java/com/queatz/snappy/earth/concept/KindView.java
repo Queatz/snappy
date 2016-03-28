@@ -1,6 +1,6 @@
 package com.queatz.snappy.earth.concept;
 
-import com.queatz.snappy.earth.view.ExistenceView;
+import com.queatz.snappy.earth.thing.Existence;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,5 +10,5 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface KindView {
-    Class<? extends ExistenceView> value();
+    Class<? extends Existence> value();
 }

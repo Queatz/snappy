@@ -3,17 +3,34 @@ package com.queatz.snappy.earth.concept;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.InstanceCreator;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.queatz.snappy.earth.access.As;
+import com.queatz.snappy.earth.access.NothingEarthException;
 import com.queatz.snappy.earth.access.UnsupportedConceptEarthException;
 import com.queatz.snappy.earth.thing.Existence;
-import com.queatz.snappy.earth.util.ExistenceAnnotationMap;
+import com.queatz.snappy.earth.util.AnnotationMap;
+import com.queatz.snappy.earth.util.AnnotationMapper;
+import com.queatz.snappy.earth.util.AnnotationValueMapper;
 import com.queatz.snappy.earth.util.ExistenceViewAnnotationMapper;
+import com.queatz.snappy.earth.util.MethodAnnotationMap;
 import com.queatz.snappy.earth.view.ExistenceView;
+import com.queatz.snappy.earth.view.KindViewGetter;
+import com.queatz.snappy.earth.view.KindViewSetter;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.reflections.Reflections;
+import org.reflections.util.ConfigurationBuilder;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.annotation.Nonnull;
 
@@ -23,7 +40,40 @@ import javax.annotation.Nonnull;
 public class ViewConcept extends Concept {
 
     final static private Map<Class<? extends Existence>, Class<? extends ExistenceView>> existenceViews =
-            ExistenceAnnotationMap.create(new ExistenceViewAnnotationMapper());
+            AnnotationMap.create(ExistenceView.class, new ExistenceViewAnnotationMapper());
+
+    final static private Map<Class<? extends Existence>, Map<String, Method>> existenceViewGetters =
+            MethodAnnotationMap.create(ExistenceView.class,
+                    KindViewGetter.class,
+                    new AnnotationValueMapper<KindView, Class<? extends Existence>>() {
+                        @Override
+                        public Class<? extends Existence> map(KindView annotation) {
+                            return annotation.value();
+                        }
+                    },
+                    new AnnotationValueMapper<KindViewGetter, String>() {
+                        @Override
+                        public String map(KindViewGetter annotation) {
+                            return annotation.value();
+                        }
+                    });
+
+    final static private Map<Class<? extends Existence>, Map<String, Method>> existenceViewSetters =
+            MethodAnnotationMap.create(ExistenceView.class,
+                    KindViewSetter.class,
+                    new AnnotationValueMapper<KindView, Class<? extends Existence>>() {
+                        @Override
+                        public Class<? extends Existence> map(KindView annotation) {
+                            return annotation.value();
+                        }
+                    },
+                    new AnnotationValueMapper<KindViewSetter, String>() {
+                        @Override
+                        public String map(KindViewSetter annotation) {
+                            return annotation.value();
+                        }
+                    });
+
 
     final Gson gson = newGsonBuilder().create();
 
@@ -31,7 +81,8 @@ public class ViewConcept extends Concept {
         return new GsonBuilder().setDateFormat(DateFormat.LONG, DateFormat.LONG);
     }
 
-    public class ThingReader<T extends Existence, V extends ExistenceView> {
+    public class ThingReader<T extends Existence> {
+
         private T thing;
 
         private ThingReader(T thing) {
@@ -39,27 +90,42 @@ public class ViewConcept extends Concept {
         }
 
         public String json() {
-            return gson.toJson(getView());
-        }
-
-        public Object object() {
-            return getView();
+            return gson.toJson(getJsonTree());
         }
 
         @SuppressWarnings("unchecked")
         @Nonnull
-        private V getView() {
-            Class<V> viewClass = (Class<V>) existenceViews.get(thing.getClass());
+        private JsonElement getJsonTree() {
+            Class<? extends ExistenceView> viewClass = existenceViews.get(thing.getClass());
 
             if (viewClass == null) {
                 throw new UnsupportedConceptEarthException();
             }
 
-            return gson.fromJson(gson.toJsonTree(thing), viewClass);
+            JsonObject json = new JsonObject();
+
+            Map<String, Method> getters = existenceViewGetters.get(thing.getClass());
+
+            for (Map.Entry<String, Method> getter : getters.entrySet()) {
+                Object value;
+
+                try {
+                    value = getter.getValue().invoke(viewClass);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
+
+                // TODO use our own mapper that looks for Existence types returned,
+                // TODO and then does a ThingReader on them...not always json!
+
+                json.add(getter.getKey(), gson.toJsonTree(value));
+            }
+
+            return json;
         }
     }
 
-    public class ThingWriter<T extends Existence, V extends ExistenceView> {
+    public class ThingWriter<T extends Existence> {
         private T thing;
 
         private ThingWriter(T thing) {
@@ -67,27 +133,42 @@ public class ViewConcept extends Concept {
         }
 
         @SuppressWarnings("unchecked")
-        public void json(Object json) {
-            Class<V> viewClass = (Class<V>) existenceViews.get(thing.getClass());
+        public void json(JsonElement json) {
+            if (!json.isJsonObject()) {
+                throw new NothingEarthException();
+            }
+
+            Class<? extends ExistenceView> viewClass = existenceViews.get(thing.getClass());
 
             if (viewClass == null) {
                 throw new UnsupportedConceptEarthException();
             }
 
-            final JsonObject jsonObject = gson.toJsonTree(json).getAsJsonObject();
+            ExistenceView view;
 
-            final InstanceCreator<T> theThing = new InstanceCreator<T>() {
-                @Override
-                public T createInstance(Type type) {
-                    return thing;
+            try {
+                view = viewClass.getConstructor(thing.getClass()).newInstance(thing);
+            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+
+            Map<String, Method> setters = existenceViewSetters.get(thing.getClass());
+
+            // TODO read JSON tree
+            for (Map.Entry<String, JsonElement> role : ((JsonObject) json).entrySet()) {
+                Method setter = setters.get(role.getKey());
+
+                if (setter == null) {
+                    Logger.getGlobal().warning("No setter found. sought=" + role.getKey());
+                    continue;
                 }
-            };
 
-            Gson gsonUpdate = newGsonBuilder()
-                    .registerTypeAdapter(thing.getClass(), theThing)
-                    .create();
-
-            gsonUpdate.fromJson(jsonObject, thing.getClass());
+                try {
+                    setter.invoke(thing, gson.fromJson(role.getValue(), setter.getGenericParameterTypes()[0]));
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 
@@ -95,11 +176,11 @@ public class ViewConcept extends Concept {
         super(as);
     }
 
-    public <T extends Existence, V extends ExistenceView> ThingReader<T, V> read(T thing) {
+    public <T extends Existence> ThingReader<T> read(T thing) {
         return new ThingReader<>(thing);
     }
 
-    public <T extends Existence, V extends ExistenceView> ThingWriter<T, V> write(T thing) {
+    public <T extends Existence> ThingWriter<T> write(T thing) {
         return new ThingWriter<>(thing);
     }
 }

@@ -16,4 +16,5 @@ public class KindExistenceAnnotationMapper implements ExistenceAnnotationMapper<
     public Map.Entry<String, Class<? extends Existence>> map(Kind annotation, Class<? extends Existence> clazz) {
         return Pair.<String, Class<? extends Existence>>of(annotation.value(), clazz);
     }
+
 }
