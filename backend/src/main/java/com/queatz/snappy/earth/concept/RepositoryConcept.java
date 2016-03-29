@@ -4,11 +4,10 @@ import com.google.common.reflect.Reflection;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.annotation.Entity;
-import com.queatz.snappy.earth.access.UnsupportedConceptEarthException;
 import com.queatz.snappy.earth.access.As;
 import com.queatz.snappy.earth.access.NothingEarthException;
+import com.queatz.snappy.earth.access.UnsupportedConceptEarthException;
 import com.queatz.snappy.earth.thing.Existence;
-import com.queatz.snappy.earth.thing.UpdateRelation;
 import com.queatz.snappy.earth.util.ExistenceAnnotationMap;
 import com.queatz.snappy.earth.util.KindExistenceAnnotationMapper;
 

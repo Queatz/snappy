@@ -140,3 +140,33 @@ ADVANTAGE     | ids are global
 ADVANTAGE     | can have multiple types in the same list
 DISADVANTAGES | JSON differs on the ID
 DISADVANTAGES | have to read ID to know what it is (don't know type before reading
+
+
+=== MASTERPIECE ===
+
+[/api/earth]
+EarthApi {
+    ThingHandler -> "/:thing"
+}
+
+[/:thing/:id]
+ThingHandler {
+    new handler(":thing").withId(":id").forward(this)
+}
+
+[/update]
+HubHandler extends RouteHandler {
+    this.register("update", new Updatable(Hub.class))
+}
+
+
+
+
+
+
+
+
+
+
+
+

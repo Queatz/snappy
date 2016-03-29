@@ -2,7 +2,6 @@ package com.queatz.snappy.earth.concept;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.InstanceCreator;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.queatz.snappy.earth.access.As;
@@ -10,7 +9,6 @@ import com.queatz.snappy.earth.access.NothingEarthException;
 import com.queatz.snappy.earth.access.UnsupportedConceptEarthException;
 import com.queatz.snappy.earth.thing.Existence;
 import com.queatz.snappy.earth.util.AnnotationMap;
-import com.queatz.snappy.earth.util.AnnotationMapper;
 import com.queatz.snappy.earth.util.AnnotationValueMapper;
 import com.queatz.snappy.earth.util.ExistenceViewAnnotationMapper;
 import com.queatz.snappy.earth.util.MethodAnnotationMap;
@@ -18,18 +16,10 @@ import com.queatz.snappy.earth.view.ExistenceView;
 import com.queatz.snappy.earth.view.KindViewGetter;
 import com.queatz.snappy.earth.view.KindViewSetter;
 
-import org.apache.commons.lang3.tuple.Pair;
-import org.reflections.Reflections;
-import org.reflections.util.ConfigurationBuilder;
-
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.text.DateFormat;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -133,7 +123,9 @@ public class ViewConcept extends Concept {
         }
 
         @SuppressWarnings("unchecked")
-        public void json(JsonElement json) {
+        public void json(Object object) {
+            JsonElement json = gson.toJsonTree(object);
+
             if (!json.isJsonObject()) {
                 throw new NothingEarthException();
             }
@@ -164,7 +156,7 @@ public class ViewConcept extends Concept {
                 }
 
                 try {
-                    setter.invoke(thing, gson.fromJson(role.getValue(), setter.getGenericParameterTypes()[0]));
+                    setter.invoke(view, gson.fromJson(role.getValue(), setter.getGenericParameterTypes()[0]));
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
