@@ -155,18 +155,22 @@ ThingHandler {
 }
 
 [/update]
-HubHandler extends RouteHandler {
+HubInterface extends InterfaceConcept {
     this.register("update", new Updatable(Hub.class))
 }
 
 
-
-
-
-
-
-
-
-
-
+EarthApi Servlet        | "earth.router.consume(list string, map string object)"
+    |
+    v
+Router Concept          | "Route and deliver a request to an Interface Concept"
+    |
+    v
+Interface Concept       | "Consume a leaf-node request, potentially returning something"
+ |  |  |
+ v  v  v
+Various Concepts
+    |
+    v
+Interface Concept bubbles up response
 

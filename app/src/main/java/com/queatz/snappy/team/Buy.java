@@ -81,7 +81,13 @@ public class Buy {
                 if(response == null)
                     return;
 
-                response = Json.from(response, SuccessResponseSpec.class).success;
+                SuccessResponseSpec success = Json.from(response, SuccessResponseSpec.class);
+
+                if (success == null) {
+                    return;
+                }
+
+                response = success.success;
 
                 boolean purchased = false;
 
