@@ -1,6 +1,7 @@
 package com.queatz.snappy.logic.things;
 
 import com.google.gcloud.datastore.Entity;
+import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.concepts.Interfaceable;
@@ -36,7 +37,14 @@ public class HubInterface implements Interfaceable {
     @Override
     public String post(@Nonnull List<String> route, @Nonnull Map<String, String[]> parameters) {
         if (route.isEmpty()) {
-            Entity hub = hubEditor.newHub();
+            String[] name = parameters.get(EarthField.NAME);
+            String[] about = parameters.get(EarthField.ABOUT);
+
+            if (name == null || about == null || name.length != 1 || about.length != 1) {
+                throw new NothingLogicResponse("hub - no name or about parameters");
+            }
+
+            Entity hub = hubEditor.newHub(name[0], about[0]);
 
             return new HubView(hub).toJson();
         }

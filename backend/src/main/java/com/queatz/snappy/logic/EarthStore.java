@@ -11,6 +11,8 @@ import com.google.gcloud.datastore.NullValue;
 import com.google.gcloud.datastore.StringValue;
 import com.google.gcloud.datastore.Transaction;
 
+import java.util.Random;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -85,7 +87,7 @@ public class EarthStore {
      * @return The new thing
      */
     public Entity create(@Nonnull String kind) {
-        Key key = datastore.allocateId(keyFactory.newKey());
+        Key key = keyFactory.newKey(newRandomId());
         Entity entity = Entity.builder(key)
                 .set(DEFAULT_FIELD_CREATED, DateTime.now())
                 .set(DEFAULT_FIELD_CONCLUDED, NullValue.of())
@@ -157,5 +159,9 @@ public class EarthStore {
         }
 
         return entity;
+    }
+
+    public final String newRandomId() {
+        return Long.toString(new Random().nextLong());
     }
 }

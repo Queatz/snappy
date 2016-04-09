@@ -78,8 +78,9 @@ public class Buy {
         team.api.get(Config.PATH_ME_BUY, new Api.Callback() {
             @Override
             public void success(String response) {
-                if(response == null)
+                if(response == null) {
                     return;
+                }
 
                 SuccessResponseSpec success = Json.from(response, SuccessResponseSpec.class);
 
