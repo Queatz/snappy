@@ -37,37 +37,37 @@ public class Earth implements Interfaceable {
     private final EarthRouter earthRouter = EarthSingleton.of(EarthRouter.class);
 
     @Override
-    public String get(@Nonnull List<String> route, @Nonnull Map<String, String[]> parameters) {
+    public String get(EarthAs as) {
         // Special routes override all
-        if (!route.isEmpty()) try {
-            return earthRouter.getSpecialInterfaceFromRoute0(route.get(0)).get(route, parameters);
+        if (!as.getRoute().isEmpty()) try {
+            return earthRouter.getSpecialInterfaceFromRoute0(as.getRoute().get(0)).get(as);
         } catch (NoSuchElementException ignored) {}
 
         // Otherwise assume it's an ID
-        final Entity entity = getEntityFromRoute(route);
+        final Entity entity = getEntityFromRoute(as.getRoute());
         final Interfaceable interfaceable = getInterfacableFromEntity(entity);
 
-        return interfaceable.get(route, parameters);
+        return interfaceable.get(as);
     }
 
     @Override
-    public String post(@Nonnull List<String> route, @Nonnull Map<String, String[]> parameters) {
+    public String post(EarthAs as) {
         // Special routes override all
-        if (!route.isEmpty()) try {
-            return earthRouter.getSpecialInterfaceFromRoute0(route.get(0)).post(route, parameters);
+        if (!as.getRoute().isEmpty()) try {
+            return earthRouter.getSpecialInterfaceFromRoute0(as.getRoute().get(0)).post(as);
         } catch (NoSuchElementException ignored) {}
 
         final Interfaceable interfaceable;
 
         // Otherwise assume it's an ID, or a create request with a kind supplied in the parameters
-        if (route.isEmpty()) {
-            interfaceable = getInterfacableFromParameters(parameters);
+        if (as.getRoute().isEmpty()) {
+            interfaceable = getInterfacableFromParameters(as.getParameters());
         } else {
-            Entity entity = getEntityFromRoute(route);
+            Entity entity = getEntityFromRoute(as.getRoute());
             interfaceable = getInterfacableFromEntity(entity);
         }
 
-        return interfaceable.post(route, parameters);
+        return interfaceable.post(as);
     }
 
     @Nonnull

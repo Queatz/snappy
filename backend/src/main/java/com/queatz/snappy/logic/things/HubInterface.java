@@ -1,6 +1,10 @@
 package com.queatz.snappy.logic.things;
 
 import com.google.gcloud.datastore.Entity;
+import com.queatz.snappy.backend.ApiUtil;
+import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.logic.Earth;
+import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
@@ -8,11 +12,11 @@ import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.HubEditor;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.view.HubView;
+import com.queatz.snappy.service.Api;
+import com.queatz.snappy.shared.Config;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created by jacob on 4/1/16.
@@ -24,22 +28,33 @@ public class HubInterface implements Interfaceable {
     private final HubEditor hubEditor = EarthSingleton.of(HubEditor.class);
 
     @Override
-    public String get(@Nonnull List<String> route, @Nonnull Map<String, String[]> parameters) {
-        if (route.isEmpty()) {
-            throw new NothingLogicResponse("hub - empty route");
+    public String get(EarthAs as) {
+        switch (as.getRoute().size()) {
+            case 0:
+                throw new NothingLogicResponse("hub - empty route");
+            case 1:
+                Entity hub = earthStore.get(as.getRoute().get(0));
+
+                return new HubView(hub).toJson();
+            case 2:
+                switch (as.getRoute().get(1)) {
+                    case Config.PATH_PHOTO:
+                        getPhoto(as);
+                        return null;
+                    default:
+                        throw new NothingLogicResponse("hub - bad path");
+                }
+            default:
+                throw new NothingLogicResponse("hub - bad path");
         }
-
-        Entity hub = earthStore.get(route.get(0));
-
-        return new HubView(hub).toJson();
     }
 
     @Override
-    public String post(@Nonnull List<String> route, @Nonnull Map<String, String[]> parameters) {
-        if (route.isEmpty()) {
-            String[] name = parameters.get(EarthField.NAME);
-            String[] about = parameters.get(EarthField.ABOUT);
-            String[] address = parameters.get(EarthField.ADDRESS);
+    public String post(EarthAs as) {
+        if (as.getRoute().isEmpty()) {
+            String[] name = as.getParameters().get(EarthField.NAME);
+            String[] about = as.getParameters().get(EarthField.ABOUT);
+            String[] address = as.getParameters().get(EarthField.ADDRESS);
 
             if (name == null
                     || about == null
@@ -55,6 +70,41 @@ public class HubInterface implements Interfaceable {
             return new HubView(hub).toJson();
         }
 
+        if (as.getRoute().size() == 2 && Config.PATH_PHOTO.equals(as.getRoute().get(1))) {
+            postPhoto(as);
+            return null;
+        }
+
         return null;
+    }
+
+    private void getPhoto(EarthAs as) {
+        Entity thing = earthStore.get(as.getRoute().get(0));
+
+        if (!thing.getBoolean(EarthField.PHOTO)) {
+            throw new PrintingError(Api.Error.NOT_FOUND, "hub - photo not set");
+        }
+
+        try {
+            if(!ApiUtil.getPhoto("earth/thing/photo/" + thing.key().name() + "/", as.getApi(), as.getRequest(), as.getResponse())) {
+                throw new PrintingError(Api.Error.NOT_FOUND, "hub - no photo");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new PrintingError(Api.Error.NOT_FOUND, "hub - photo io error");
+        }
+    }
+
+    private void postPhoto(EarthAs as) {
+        Entity thing = earthStore.get(as.getRoute().get(0));
+
+        try {
+            boolean photo = ApiUtil.putPhoto("earth/thing/photo/" + thing.key().name() + "/" + new Date().getTime(), as.getApi(), as.getRequest());
+
+            earthStore.save(earthStore.edit(thing).set(EarthField.PHOTO, photo));
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new PrintingError(Api.Error.NOT_FOUND, "hub - photo io error");
+        }
     }
 }

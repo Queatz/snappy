@@ -1,5 +1,7 @@
 package com.queatz.snappy.logic.concepts;
 
+import com.queatz.snappy.logic.EarthAs;
+
 import java.util.List;
 import java.util.Map;
 
@@ -16,11 +18,10 @@ public interface Interfaceable {
      *
      * - This will never modify entities.
      *
-     * @param route The path the user requested.
-     * @param parameters The user-supplied parameters.
-     * @return A JSON response as a string.
+     *
+     * @param as@return A JSON response as a string.
      */
-    String get(@Nonnull List<String> route, @Nonnull Map<String, String[]> parameters);
+    String get(EarthAs as);
 
     /**
      * Fulfills a POST request for the end user. Use this for all actions taken.
@@ -28,9 +29,8 @@ public interface Interfaceable {
      * - This might modify entities.
      * - Entity kind can be inferred from parameters or an existing id.
      *
-     * @param route The path the user requested.
-     * @param parameters The user-supplied parameters.
-     * @return A JSON response as a string.
+     *
+     * @param as@return A JSON response as a string.
      */
-    String post(@Nonnull List<String> route, @Nonnull Map<String, String[]> parameters);
+    String post(EarthAs as);
 }
