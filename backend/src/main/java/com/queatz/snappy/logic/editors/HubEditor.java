@@ -6,16 +6,38 @@ import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * Created by jacob on 4/4/16.
  */
 public class HubEditor {
     private final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
 
-    public Entity newHub(String name, String about) {
+    public Entity newHub(@Nonnull String name, @Nonnull String address) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.HUB_KIND))
                 .set(EarthField.PHOTO, false)
                 .set(EarthField.NAME, name)
-                .set(EarthField.ABOUT, about));
+                .set(EarthField.ABOUT, "")
+                .set(EarthField.ADDRESS, address));
+    }
+
+    public Entity edit(@Nonnull Entity hub, @Nullable String name, @Nullable String address, @Nullable String about) {
+        Entity.Builder edit = earthStore.edit(hub);
+
+        if (name != null) {
+            edit.set(EarthField.NAME, name);
+        }
+
+        if (about != null) {
+            edit.set(EarthField.ABOUT, about);
+        }
+
+        if (address != null) {
+            edit.set(EarthField.ADDRESS, address);
+        }
+
+        return earthStore.save(edit);
     }
 }

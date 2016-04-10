@@ -53,29 +53,40 @@ public class HubInterface implements Interfaceable {
     public String post(EarthAs as) {
         if (as.getRoute().isEmpty()) {
             String[] name = as.getParameters().get(EarthField.NAME);
-            String[] about = as.getParameters().get(EarthField.ABOUT);
             String[] address = as.getParameters().get(EarthField.ADDRESS);
 
             if (name == null
-                    || about == null
                     || address == null
                     || name.length != 1
-                    || about.length != 1
                     || address.length != 1) {
                 throw new NothingLogicResponse("hub - name, address, and about parameters are expected");
             }
 
-            Entity hub = hubEditor.newHub(name[0], about[0]);
+            Entity hub = hubEditor.newHub(name[0], address[0]);
 
             return new HubView(hub).toJson();
         }
 
-        if (as.getRoute().size() == 2 && Config.PATH_PHOTO.equals(as.getRoute().get(1))) {
+        else if(as.getRoute().size() == 1) {
+            Entity hub = earthStore.get(as.getRoute().get(0));
+
+            String[] name = as.getParameters().get(EarthField.NAME);
+            String[] address = as.getParameters().get(EarthField.ADDRESS);
+            String[] about = as.getParameters().get(EarthField.ABOUT);
+
+            hubEditor.edit(hub, extract(name), extract(address), extract(about));
+        }
+
+        else if (as.getRoute().size() == 2 && Config.PATH_PHOTO.equals(as.getRoute().get(1))) {
             postPhoto(as);
             return null;
         }
 
         return null;
+    }
+
+    private String extract(String[] param) {
+        return param == null || param.length != 1 ? null : param[0];
     }
 
     private void getPhoto(EarthAs as) {

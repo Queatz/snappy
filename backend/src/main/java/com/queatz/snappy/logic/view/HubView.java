@@ -19,6 +19,8 @@ public class HubView extends ThingView {
     final int followers;
     final int members;
 
+    final String address;
+
     public HubView(Entity hub) {
         super(hub);
 
@@ -26,6 +28,8 @@ public class HubView extends ThingView {
         if (!EarthKind.HUB_KIND.equals(kind)) {
             throw new NothingLogicResponse("hub - not a hub");
         }
+
+        address = hub.getString(EarthField.ADDRESS);
 
         // TODO make this a PersonView
         contactId = "<todo>";
