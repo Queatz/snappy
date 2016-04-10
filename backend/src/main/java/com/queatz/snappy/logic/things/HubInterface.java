@@ -39,9 +39,15 @@ public class HubInterface implements Interfaceable {
         if (route.isEmpty()) {
             String[] name = parameters.get(EarthField.NAME);
             String[] about = parameters.get(EarthField.ABOUT);
+            String[] address = parameters.get(EarthField.ADDRESS);
 
-            if (name == null || about == null || name.length != 1 || about.length != 1) {
-                throw new NothingLogicResponse("hub - no name or about parameters");
+            if (name == null
+                    || about == null
+                    || address == null
+                    || name.length != 1
+                    || about.length != 1
+                    || address.length != 1) {
+                throw new NothingLogicResponse("hub - name, address, and about parameters are expected");
             }
 
             Entity hub = hubEditor.newHub(name[0], about[0]);

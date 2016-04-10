@@ -1,5 +1,8 @@
 package com.queatz.snappy.logic;
 
+import com.google.api.client.util.Strings;
+import com.google.appengine.api.datastore.GeoPt;
+import com.google.common.collect.ImmutableList;
 import com.google.gcloud.datastore.Datastore;
 import com.google.gcloud.datastore.DatastoreException;
 import com.google.gcloud.datastore.DatastoreOptions;
@@ -8,9 +11,13 @@ import com.google.gcloud.datastore.Entity;
 import com.google.gcloud.datastore.Key;
 import com.google.gcloud.datastore.KeyFactory;
 import com.google.gcloud.datastore.NullValue;
+import com.google.gcloud.datastore.Query;
+import com.google.gcloud.datastore.QueryResults;
 import com.google.gcloud.datastore.StringValue;
+import com.google.gcloud.datastore.StructuredQuery;
 import com.google.gcloud.datastore.Transaction;
 
+import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Nonnull;
@@ -163,5 +170,47 @@ public class EarthStore {
 
     public final String newRandomId() {
         return Long.toString(new Random().nextLong());
+    }
+
+    public List<Entity> queryNearTo(GeoPt center, String kindFilter) {
+//        TODO
+//        double radius = 11265;
+//        Query.Filter containsFilter = new Query.StContainsFilter(EarthField.LOCATION, new Query.GeoRegion.Circle(center, radius));
+//        Query.Filter filter;
+//
+//        if (kindFilter == null) {
+//            filter = containsFilter;
+//        } else {
+//            filter = new Query.CompositeFilter(Query.CompositeFilterOperator.AND, ImmutableList.of(
+//                    new Query.FilterPredicate(EarthField.KIND, Query.FilterOperator.EQUAL, kindFilter),
+//                    containsFilter
+//            ));
+//        }
+//
+//        Query query = new Query(DEFAULT_KIND).setFilter(filter);
+//        datastore.run(query);
+
+        StructuredQuery.Builder<Entity> query = Query.entityQueryBuilder()
+                .kind(DEFAULT_KIND);
+
+        StructuredQuery.Filter filter = null;
+
+        if (!Strings.isNullOrEmpty(kindFilter)) {
+             filter = StructuredQuery.PropertyFilter
+                    .eq(EarthField.KIND, kindFilter);
+        }
+
+        StructuredQuery.Filter concludedFilter = StructuredQuery.PropertyFilter
+                .eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of());
+
+        if (filter == null) {
+            query.filter(concludedFilter);
+        } else {
+            query.filter(StructuredQuery.CompositeFilter.and(filter, concludedFilter));
+        }
+
+        QueryResults<Entity> queryResults = datastore.run(query.build());
+
+        return ImmutableList.copyOf(queryResults);
     }
 }

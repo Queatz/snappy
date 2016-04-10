@@ -1,4 +1,57 @@
 
+
+
+
+
+
+
+
+
+
+
+
+Visibility rules:
+
+Project
+    [ ] Public (overrides all)
+    [ ] Must be my follower
+    [ ] Must be followed by me
+    [ ] Must be member of a certain group
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 [ ] Get new types working with generified endpoints
 [ ] Once that's done, add people to the generified types with likes, updates, endorsements
 [ ] Determine if messages are a relation
@@ -174,3 +227,21 @@ Various Concepts
     v
 Interface Concept bubbles up response
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+COMMANDS
+
+/home/jacob/.gradle/appengine-sdk/appengine-java-sdk-1.9.14/bin/appcfg.sh --oauth2 rollback /home/jacob/Documents/Projects/snappy/backend/src/main/webapp/

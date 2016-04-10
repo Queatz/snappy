@@ -24,4 +24,24 @@ public class EarthField {
      * A boolean of whether or not a photo is associated with this thing.
      */
     public static final String PHOTO = "photo";
+
+    /**
+     * An address for a thing.
+     */
+    public static final String ADDRESS = "address";
+
+    /**
+     * A latitude.
+     */
+    public static final String LATITUDE = "latitude";
+
+    /**
+     * A longitude.
+     */
+    public static final String LONGITUDE = "longitude";
+
+    /**
+     * The geospatial location of a thing.
+     */
+    public static final String LOCATION = "location";
 }

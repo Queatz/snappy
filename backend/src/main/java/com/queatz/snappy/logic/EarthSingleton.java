@@ -21,10 +21,10 @@ public class EarthSingleton {
             try {
                 singletons.put(clazz, clazz.newInstance());
             } catch (InstantiationException e) {
-                Logger.getGlobal().log(Level.SEVERE, "Singleton said nope " + clazz.getSimpleName(), e);
+                Logger.getGlobal().log(Level.SEVERE, "Singleton said nope for " + clazz.getSimpleName(), e);
                 throw new RuntimeException(e);
             } catch (IllegalAccessException e) {
-                Logger.getGlobal().log(Level.SEVERE, "Singleton said nope " + clazz.getSimpleName(), e);
+                Logger.getGlobal().log(Level.SEVERE, "Singleton said nope for " + clazz.getSimpleName(), e);
                 throw new RuntimeException(e);
             }
         }

@@ -6,6 +6,7 @@ import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import javax.annotation.Nonnull;
 
@@ -37,6 +38,12 @@ public class Earth implements Interfaceable {
 
     @Override
     public String get(@Nonnull List<String> route, @Nonnull Map<String, String[]> parameters) {
+        // Special routes override all
+        if (!route.isEmpty()) try {
+            return earthRouter.getSpecialInterfaceFromRoute0(route.get(0)).get(route, parameters);
+        } catch (NoSuchElementException ignored) {}
+
+        // Otherwise assume it's an ID
         final Entity entity = getEntityFromRoute(route);
         final Interfaceable interfaceable = getInterfacableFromEntity(entity);
 
@@ -45,8 +52,14 @@ public class Earth implements Interfaceable {
 
     @Override
     public String post(@Nonnull List<String> route, @Nonnull Map<String, String[]> parameters) {
+        // Special routes override all
+        if (!route.isEmpty()) try {
+            return earthRouter.getSpecialInterfaceFromRoute0(route.get(0)).post(route, parameters);
+        } catch (NoSuchElementException ignored) {}
+
         final Interfaceable interfaceable;
 
+        // Otherwise assume it's an ID, or a create request with a kind supplied in the parameters
         if (route.isEmpty()) {
             interfaceable = getInterfacableFromParameters(parameters);
         } else {
