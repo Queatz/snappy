@@ -43,5 +43,15 @@ public class EarthField {
     /**
      * The geospatial location of a thing.
      */
-    public static final String LOCATION = "location";
+    public static final String GEO = "geo";
+
+    /**
+     * The source of a link.
+     */
+    public static final String SOURCE = "source";
+
+    /**
+     * The target of a link.
+     */
+    public static final String TARGET = "target";
 }

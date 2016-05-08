@@ -1,6 +1,6 @@
 package com.queatz.snappy.logic.view;
 
-import com.google.gcloud.datastore.Entity;
+import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthField;
 
 /**

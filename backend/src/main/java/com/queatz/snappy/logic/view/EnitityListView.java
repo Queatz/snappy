@@ -1,11 +1,10 @@
 package com.queatz.snappy.logic.view;
 
-import com.google.gcloud.datastore.Entity;
+import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Viewable;
-import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.List;
 public class EnitityListView implements Viewable {
 
     private EarthViewer earthViewer = EarthSingleton.of(EarthViewer.class);
-
     private List<Viewable> entities;
 
     public EnitityListView(List<Entity> entities) {
@@ -27,9 +25,7 @@ public class EnitityListView implements Viewable {
         List<Viewable> viewables = new ArrayList<>();
 
         for (Entity entity : entities) {
-            Viewable view = earthViewer.getViewForEntityOrThrow(entity);
-
-            viewables.add(view);
+            viewables.add(earthViewer.getViewForEntityOrThrow(entity));
         }
 
         return viewables;

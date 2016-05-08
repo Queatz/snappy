@@ -16,4 +16,10 @@
         <property name="date" direction="desc"/>
     </datastore-index>
 
+    <!--<datastore-index kind="Thing">-->
+        <!--<property name="concluded_on" />-->
+        <!--<property name="kind" />-->
+        <!--<property name="geo" mode="geospatial"/>-->
+    <!--</datastore-index>-->
+
 </datastore-indexes>

@@ -5,4 +5,5 @@ package com.queatz.snappy.logic;
  */
 public class EarthKind {
     public static final String HUB_KIND = "hub";
+    public static final String CONTACT_KIND = "contact";
 }

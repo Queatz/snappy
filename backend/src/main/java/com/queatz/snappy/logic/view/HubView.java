@@ -1,12 +1,9 @@
 package com.queatz.snappy.logic.view;
 
-import com.google.gcloud.datastore.Entity;
+import com.google.appengine.api.datastore.GeoPt;
+import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthKind;
-import com.queatz.snappy.logic.EarthSingleton;
-import com.queatz.snappy.logic.EarthStore;
-import com.queatz.snappy.logic.concepts.Viewable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 
 /**
@@ -18,11 +15,16 @@ public class HubView extends ThingView {
     final String contactId;
     final int followers;
     final int members;
-
     final String address;
+    final GeoPt geo;
 
     public HubView(Entity hub) {
         super(hub);
+
+        geo = new GeoPt(
+                (float) hub.getLatLng(EarthField.GEO).latitude(),
+                (float) hub.getLatLng(EarthField.GEO).longitude()
+        );
 
         // Validate that we are actually processing a hub!
         if (!EarthKind.HUB_KIND.equals(kind)) {

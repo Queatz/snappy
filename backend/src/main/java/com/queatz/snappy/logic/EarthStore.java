@@ -1,22 +1,25 @@
 package com.queatz.snappy.logic;
 
-import com.google.api.client.util.Strings;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.GeoPt;
-import com.google.common.collect.ImmutableList;
-import com.google.gcloud.datastore.Datastore;
-import com.google.gcloud.datastore.DatastoreException;
-import com.google.gcloud.datastore.DatastoreOptions;
-import com.google.gcloud.datastore.DateTime;
-import com.google.gcloud.datastore.Entity;
-import com.google.gcloud.datastore.Key;
-import com.google.gcloud.datastore.KeyFactory;
-import com.google.gcloud.datastore.NullValue;
-import com.google.gcloud.datastore.Query;
-import com.google.gcloud.datastore.QueryResults;
-import com.google.gcloud.datastore.StringValue;
-import com.google.gcloud.datastore.StructuredQuery;
-import com.google.gcloud.datastore.Transaction;
+import com.google.appengine.api.datastore.Query;
+import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreException;
+import com.google.cloud.datastore.DatastoreOptions;
+import com.google.cloud.datastore.DateTime;
+import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.Key;
+import com.google.cloud.datastore.KeyFactory;
+import com.google.cloud.datastore.LatLng;
+import com.google.cloud.datastore.NullValue;
+import com.google.cloud.datastore.StringValue;
+import com.google.cloud.datastore.StructuredQuery;
+import com.google.cloud.datastore.Transaction;
+import com.queatz.snappy.shared.Config;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -34,6 +37,9 @@ public class EarthStore {
 
     private final Datastore datastore = DatastoreOptions.defaultInstance().service();
     private final KeyFactory keyFactory = datastore.newKeyFactory().kind(DEFAULT_KIND);
+
+    private final DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
+    EarthSearcher earthSearcher = EarthSingleton.of(EarthSearcher.class);
 
     /**
      * Get a thing from the store.
@@ -56,6 +62,36 @@ public class EarthStore {
 
         return entity;
     }
+
+//    public Entity getWithAuthorities(@Nonnull String id, List<String> authorities) {
+//        StructuredQuery.Builder<Entity> query = Query.entityQueryBuilder()
+//                .kind(DEFAULT_KIND);
+//
+//        StructuredQuery.Filter concludedFilter = StructuredQuery.PropertyFilter
+//                .eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of());
+//
+//
+//        StructuredQuery.Filter idFilter = StructuredQuery.PropertyFilter
+//                .eq(DEFAULT_KEY, keyFactory.newKey(id));
+//
+//        StructuredQuery.Filter authoritiesFilter = StructuredQuery.PropertyFilter
+//                .eq(EarthField.AUTHORITIES, authorities);
+//
+//        query.filter(StructuredQuery.CompositeFilter.and(authoritiesFilter, concludedFilter, idFilter));
+//
+//        Entity entity = datastore.run(query.build());
+//
+//        if (entity == null) {
+//            return null;
+//        }
+//
+//        // Entity has already concluded, don't allow access anymore
+//        if (!entity.isNull(DEFAULT_FIELD_CONCLUDED)) {
+//            return null;
+//        }
+//
+//        return entity;
+//    }
 
     /**
      * Put a thing into the store.
@@ -83,6 +119,7 @@ public class EarthStore {
         }
 
         datastore.put(entity);
+        earthSearcher.update(entity);
     }
 
     /**
@@ -101,6 +138,7 @@ public class EarthStore {
                 .set(DEFAULT_FIELD_KIND, StringValue.of(kind))
                 .build();
         datastore.put(entity);
+        earthSearcher.update(entity);
         return entity;
     }
 
@@ -123,6 +161,7 @@ public class EarthStore {
 
             transaction.put(Entity.builder(entity).set(DEFAULT_FIELD_CONCLUDED, DateTime.now()).build());
             transaction.commit();
+            earthSearcher.delete(id);
         } finally {
             if (transaction.active()) {
                 transaction.rollback();
@@ -159,6 +198,7 @@ public class EarthStore {
 
             transaction.put(entity);
             transaction.commit();
+            earthSearcher.update(entity);
         } finally {
             if (transaction.active()) {
                 transaction.rollback();
@@ -172,45 +212,37 @@ public class EarthStore {
         return Long.toString(new Random().nextLong());
     }
 
-    public List<Entity> queryNearTo(GeoPt center, String kindFilter) {
-//        TODO
+    public List<Entity> getNearby(LatLng center, String kind) {
+        return earthSearcher.getNearby(kind, center, 100);
+    }
+
+//    public List<Entity> queryNearToWithDatastore(GeoPt center, String kindFilter) {
+//        // XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
 //        double radius = 11265;
-//        Query.Filter containsFilter = new Query.StContainsFilter(EarthField.LOCATION, new Query.GeoRegion.Circle(center, radius));
+//        Query.Filter containsFilter = new Query.StContainsFilter(EarthField.GEO, new Query.GeoRegion.Circle(center, radius));
 //        Query.Filter filter;
 //
-//        if (kindFilter == null) {
-//            filter = containsFilter;
-//        } else {
-//            filter = new Query.CompositeFilter(Query.CompositeFilterOperator.AND, ImmutableList.of(
-//                    new Query.FilterPredicate(EarthField.KIND, Query.FilterOperator.EQUAL, kindFilter),
-//                    containsFilter
-//            ));
+//        // XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
+//        List<Query.Filter> conditions = new ArrayList<>();
+//        conditions.add(new Query.FilterPredicate(EarthStore.DEFAULT_FIELD_CONCLUDED, Query.FilterOperator.EQUAL, null));
+//        conditions.add(containsFilter);
+//
+//        if (kindFilter != null) {
+//            conditions.add(new Query.FilterPredicate(EarthField.KIND, Query.FilterOperator.EQUAL, kindFilter));
 //        }
 //
-//        Query query = new Query(DEFAULT_KIND).setFilter(filter);
-//        datastore.run(query);
-
-        StructuredQuery.Builder<Entity> query = Query.entityQueryBuilder()
-                .kind(DEFAULT_KIND);
-
-        StructuredQuery.Filter filter = null;
-
-        if (!Strings.isNullOrEmpty(kindFilter)) {
-             filter = StructuredQuery.PropertyFilter
-                    .eq(EarthField.KIND, kindFilter);
-        }
-
-        StructuredQuery.Filter concludedFilter = StructuredQuery.PropertyFilter
-                .eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of());
-
-        if (filter == null) {
-            query.filter(concludedFilter);
-        } else {
-            query.filter(StructuredQuery.CompositeFilter.and(filter, concludedFilter));
-        }
-
-        QueryResults<Entity> queryResults = datastore.run(query.build());
-
-        return ImmutableList.copyOf(queryResults);
-    }
+//        // XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
+//        filter = new Query.CompositeFilter(Query.CompositeFilterOperator.AND, conditions);
+//        List<com.google.appengine.api.datastore.Entity> entities = datastoreService
+//                .prepare(new Query(DEFAULT_KIND).setFilter(filter))
+//                .asList(FetchOptions.Builder.withDefaults());
+//
+//        // XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
+//        List<Entity> keys = new  ArrayList<>();
+//        for (com.google.appengine.api.datastore.Entity entity : entities) {
+//            keys.add(get(entity.getKey().getName()));
+//        }
+//
+//        return keys;
+//    }
 }

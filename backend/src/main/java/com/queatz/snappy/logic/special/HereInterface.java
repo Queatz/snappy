@@ -1,6 +1,7 @@
 package com.queatz.snappy.logic.special;
 
 import com.google.appengine.api.datastore.GeoPt;
+import com.google.cloud.datastore.LatLng;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthSingleton;
@@ -36,7 +37,7 @@ public class HereInterface implements Interfaceable {
         }
 
         // TODO - and make them views
-        return new EnitityListView(earthStore.queryNearTo(new GeoPt(latitude, longitude), kindFilter)).toJson();
+        return new EnitityListView(earthStore.getNearby(LatLng.of(latitude, longitude), kindFilter)).toJson();
     }
 
     @Override
