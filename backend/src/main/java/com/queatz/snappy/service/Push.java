@@ -1,5 +1,6 @@
 package com.queatz.snappy.service;
 
+import com.googlecode.objectify.ObjectifyService;
 import com.queatz.snappy.backend.RegistrationRecord;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthSingleton;
@@ -20,6 +21,10 @@ public class Push {
             _service = new Push();
 
         return _service;
+    }
+
+    static {
+        ObjectifyService.register(RegistrationRecord.class);
     }
 
     public Push() {

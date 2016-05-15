@@ -9,8 +9,6 @@ import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.mines.RecentMine;
 
-import java.util.Date;
-
 /**
  * Created by jacob on 5/8/16.
  */

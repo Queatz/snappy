@@ -1,5 +1,6 @@
 package com.queatz.snappy.backend;
 
+import com.googlecode.objectify.ObjectifyService;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthSingleton;
 
@@ -9,6 +10,11 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
  * Created by jacob on 3/28/15.
  */
 public class Buy {
+
+    static {
+        ObjectifyService.register(GooglePurchaseDataSpec.class);
+    }
+
     public GooglePurchaseDataSpec makeOrUpdate(GooglePurchaseDataSpec data, String subscriptionInfo) {
         if (data == null) {
             data = new GooglePurchaseDataSpec();
