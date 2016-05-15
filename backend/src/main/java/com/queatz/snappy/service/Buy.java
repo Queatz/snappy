@@ -8,13 +8,13 @@ import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import com.google.cloud.datastore.Entity;
 import com.google.gson.JsonObject;
-import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.backend.GooglePurchaseDataSpec;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.editors.PersonEditor;
+import com.queatz.snappy.logic.mines.PersonMine;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.things.PersonSpec;
 
@@ -36,6 +36,7 @@ public class Buy {
 
     PersonEditor personEditor = EarthSingleton.of(PersonEditor.class);
     EarthJson earthJson = EarthSingleton.of(EarthJson.class);
+    PersonMine personMine = EarthSingleton.of(PersonMine.class);
 
     public Buy() {
     }
@@ -114,7 +115,7 @@ public class Buy {
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "not bought 3");
 
 
-        long subscribers = Datastore.get(PersonSpec.class).filter("subscription", subscription).count();
+        long subscribers = personMine.countBySubscription(subscription);
 
         if(subscribers > 0) {
             throw new PrintingError(Api.Error.NOT_IMPLEMENTED, "not bought already owned by someone else");

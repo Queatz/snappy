@@ -6,11 +6,8 @@ import com.google.appengine.api.search.Query;
 import com.google.appengine.api.search.QueryOptions;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.search.SearchServiceFactory;
-import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.service.Api;
-import com.queatz.snappy.shared.things.PersonSpec;
 
-import java.util.Date;
 import java.util.Iterator;
 
 /**

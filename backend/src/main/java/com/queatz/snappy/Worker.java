@@ -5,7 +5,6 @@ import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 import com.google.cloud.datastore.Entity;
-import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.backend.RegistrationRecord;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
@@ -13,11 +12,8 @@ import com.queatz.snappy.logic.EarthSearcher;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.things.FollowLinkSpec;
-import com.queatz.snappy.shared.things.PersonSpec;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
@@ -26,7 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.queatz.snappy.backend.Datastore.ofy;
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * Created by jacob on 4/11/15.
@@ -79,8 +75,8 @@ public class Worker extends HttpServlet {
                 // Social Mode: Friends
 
                 if(fromUser != null) {
-                    for(FollowLinkSpec follow : Datastore.get(FollowLinkSpec.class).filter("targetId", Datastore.key(PersonSpec.class, fromUser))) {
-                        toUsers.add(new SendInstance(Datastore.id(follow.sourceId), Config.SOCIAL_MODE_FRIENDS));
+                    for(Entity follow : earthStore.find(EarthKind.FOLLOWER_KIND, EarthField.TARGET, earthStore.key(fromUser))) {
+                        toUsers.add(new SendInstance(follow.getKey(EarthField.SOURCE).name(), Config.SOCIAL_MODE_FRIENDS));
                     }
                 }
 

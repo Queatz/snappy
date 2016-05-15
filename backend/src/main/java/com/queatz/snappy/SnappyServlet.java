@@ -9,6 +9,7 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.ErrorResponseSpec;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -62,20 +63,16 @@ public class SnappyServlet extends HttpServlet {
         resp.setCharacterEncoding("utf-8");
 
         try {
-            try {
-                Entity user = Auth.getService().fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH));
+            Entity user = Auth.getService().fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH));
 
-                if (user == null) {
-                    throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null auth");
-                }
-
-                Api.getService().call(user, method, req, resp);
-            } catch (PrintingError e) {
-                e.printStackTrace();
-                errorOut(resp, e);
+            if (user == null) {
+                throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null auth");
             }
-        } catch (ObjectResponse success) {
-            resp.getWriter().write(Json.json(success.getObject(), success.getCompression()));
+
+            Api.getService().call(user, method, req, resp);
+        } catch (PrintingError e) {
+            e.printStackTrace();
+            errorOut(resp, e);
         }
     }
 
@@ -96,7 +93,10 @@ public class SnappyServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 
-        if (true)
-        throw new ObjectResponse(new ErrorResponseSpec(error.toString(), error.getReason()));
+        try {
+            resp.getWriter().write(error.toString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

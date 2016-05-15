@@ -241,7 +241,7 @@ public class EarthStore {
         return count(datastore.run(query));
     }
 
-    private int count(QueryResults queryResults) {
+    public int count(QueryResults queryResults) {
         return Iterators.size(queryResults);
     }
 

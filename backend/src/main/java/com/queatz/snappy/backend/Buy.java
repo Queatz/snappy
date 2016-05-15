@@ -1,9 +1,9 @@
 package com.queatz.snappy.backend;
 
-import com.queatz.snappy.backend.Datastore;
-import com.queatz.snappy.backend.GooglePurchaseDataSpec;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthSingleton;
+
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * Created by jacob on 3/28/15.
@@ -18,7 +18,7 @@ public class Buy {
 
         subscription = EarthSingleton.of(EarthJson.class).fromJson(subscriptionInfo, GooglePurchaseDataSpec.class);
 
-        GooglePurchaseDataSpec purchase = Datastore.get(GooglePurchaseDataSpec.class).filter("orderId", data.orderId).first().now();
+        GooglePurchaseDataSpec purchase = ofy().load().type(GooglePurchaseDataSpec.class).filter("orderId", data.orderId).first().now();
 
         if(purchase != null) {
             purchase.startTimeMillis = data.startTimeMillis;
@@ -29,7 +29,7 @@ public class Buy {
             purchase = subscription;
         }
 
-        Datastore.save(purchase);
+        ofy().save().entity(purchase);
 
         return purchase;
     }

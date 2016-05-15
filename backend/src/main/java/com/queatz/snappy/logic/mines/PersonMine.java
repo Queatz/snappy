@@ -53,4 +53,11 @@ public class PersonMine {
             return null;
         }
     }
+
+    public long countBySubscription(String subscription) {
+        return earthStore.count(earthStore.query(
+                StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.PERSON_KIND),
+                StructuredQuery.PropertyFilter.eq(EarthField.SUBSCRIPTION, subscription)
+        ));
+    }
 }
