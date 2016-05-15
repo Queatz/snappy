@@ -7,7 +7,7 @@ import com.queatz.snappy.shared.PushSpec;
 
 import java.util.Date;
 
-import static com.queatz.snappy.backend.Datastore.ofy;
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * Created by jacob on 3/18/15.

@@ -37,7 +37,6 @@ public class PersonInterface implements Interfaceable {
     RecentEditor recentEditor = EarthSingleton.of(RecentEditor.class);
     FollowerEditor followerEditor = EarthSingleton.of(FollowerEditor.class);
     FollowerMine followerMine = EarthSingleton.of(FollowerMine.class);
-    PersonMine personMine = EarthSingleton.of(PersonMine.class);
     MessageEditor messageEditor = EarthSingleton.of(MessageEditor.class);
 
     @Override
@@ -46,10 +45,6 @@ public class PersonInterface implements Interfaceable {
             case 1:
                 return getPerson(as, as.getRoute().get(0));
             case 2:
-                if (Config.PATH_BY_NAME.equals(as.getRoute().get(0))) {
-                    return getPersonByName(as, as.getRoute().get(1));
-                }
-
                 String personId = as.getRoute().get(0);
 
                 boolean followers = false;
@@ -96,10 +91,6 @@ public class PersonInterface implements Interfaceable {
 
     private String getPerson(EarthAs as, String personId) {
         return new PersonView(earthStore.get(personId)).toJson();
-    }
-
-    private String getPersonByName(EarthAs as, String personName) {
-        return new PersonView(personMine.byGoogleUrl(personName.toLowerCase())).toJson();
     }
 
     private String getFollows(EarthAs as, boolean followers, String personId) {

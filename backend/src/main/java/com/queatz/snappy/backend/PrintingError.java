@@ -28,6 +28,6 @@ public class PrintingError extends RuntimeException {
 
     @Override
     public String toString() {
-        return mError.name();
+        return getError() + " | " + getReason();
     }
 }

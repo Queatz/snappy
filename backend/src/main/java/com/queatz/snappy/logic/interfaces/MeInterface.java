@@ -57,10 +57,10 @@ public class MeInterface implements Interfaceable {
     @Override
     public String get(EarthAs as) {
         switch (as.getRoute().size()) {
-            case 0:
-                return new PersonView(as.getUser()).toJson();
             case 1:
-                switch (as.getRoute().get(0)) {
+                return new PersonView(as.getUser()).toJson();
+            case 2:
+                switch (as.getRoute().get(1)) {
                     case Config.PATH_BUY:
                         return getBuy(as);
                     case Config.PATH_MESSAGES:
@@ -93,7 +93,7 @@ public class MeInterface implements Interfaceable {
         messages.addAll(messagesFromMe);
 
         List<Entity> contacts = Lists.newArrayList(earthStore.query(
-                StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.CONTACT_KIND),
+                StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.RECENT_KIND),
                 StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, as.getUser().key())
         ));
 

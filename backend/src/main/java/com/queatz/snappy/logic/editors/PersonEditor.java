@@ -3,6 +3,7 @@ package com.queatz.snappy.logic.editors;
 import com.google.cloud.datastore.DateTime;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.LatLng;
+import com.google.cloud.datastore.NullValue;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
@@ -20,13 +21,17 @@ public class PersonEditor {
 
     public Entity newPerson() {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.PERSON_KIND))
-                .set(EarthField.TOKEN, Util.genToken()));
+                .set(EarthField.TOKEN, Util.genToken())
+                .set(EarthField.ABOUT, NullValue.of())
+                .set(EarthField.SUBSCRIPTION, NullValue.of()));
     }
 
     public Entity newPerson(String email) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.PERSON_KIND))
                 .set(EarthField.TOKEN, Util.genToken())
-                .set(EarthField.EMAIL, email));
+                .set(EarthField.EMAIL, email)
+                .set(EarthField.ABOUT, NullValue.of())
+                .set(EarthField.SUBSCRIPTION, NullValue.of()));
     }
 
     public Entity updatePerson(Entity person,
@@ -51,7 +56,7 @@ public class PersonEditor {
                 .set(EarthField.GOOGLE_URL, googleUrl);
 
         if (StringUtils.isBlank(person.getString(EarthField.ABOUT))) {
-            update.set(EarthField.ABOUT, about);
+            update.set(EarthField.ABOUT, about == null ? "" : about);
         }
 
         if (StringUtils.isBlank(googleUrl)) {

@@ -6,6 +6,7 @@ import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.concepts.Interfaceable;
+import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.EntityListView;
 
@@ -15,6 +16,7 @@ import com.queatz.snappy.logic.views.EntityListView;
 public class HereInterface implements Interfaceable {
 
     private EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+    private PersonEditor personEditor = EarthSingleton.of(PersonEditor.class);
 
     @Override
     public String get(EarthAs as) {
@@ -35,8 +37,12 @@ public class HereInterface implements Interfaceable {
             kindFilter = as.getRoute().get(1);
         }
 
+        final LatLng latLng = LatLng.of(latitude, longitude);
+
+        personEditor.updateLocation(as.getUser(), latLng);
+
         // TODO - and make them views
-        return new EntityListView(earthStore.getNearby(LatLng.of(latitude, longitude), kindFilter)).toJson();
+        return new EntityListView(earthStore.getNearby(latLng, kindFilter)).toJson();
     }
 
     @Override

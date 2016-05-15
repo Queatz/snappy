@@ -1,6 +1,7 @@
 package com.queatz.snappy.api;
 
 import com.google.cloud.datastore.Entity;
+import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.editors.PersonEditor;
@@ -46,6 +47,14 @@ public class Admin extends Api.Path {
                     }
                 }
                 break;
+        }
+    }
+
+    private void ok(String string) {
+        try {
+            response.getWriter().write(string);
+        } catch (IOException e) {
+            throw new PrintingError(Api.Error.SERVER_ERROR, e.toString());
         }
     }
 

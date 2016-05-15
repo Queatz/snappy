@@ -6,8 +6,10 @@ import com.google.appengine.api.search.Query;
 import com.google.appengine.api.search.QueryOptions;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.search.SearchServiceFactory;
+import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Api;
 
+import java.io.IOException;
 import java.util.Iterator;
 
 /**
@@ -21,9 +23,11 @@ public class Pirate extends Api.Path {
 
     @Override
     public void call() {
-
-
-        ok("yarr!");
+        try {
+            response.getWriter().write("yarr!");
+        } catch (IOException e) {
+            throw new PrintingError(Api.Error.SERVER_ERROR, "yarr failed");
+        }
     }
 
     private String doType(String object) {

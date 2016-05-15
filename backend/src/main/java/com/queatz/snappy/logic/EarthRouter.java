@@ -1,5 +1,6 @@
 package com.queatz.snappy.logic;
 
+import com.queatz.snappy.logic.interfaces.ByNameInterface;
 import com.queatz.snappy.logic.interfaces.ContactInterface;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
@@ -10,6 +11,7 @@ import com.queatz.snappy.logic.interfaces.HubInterface;
 import com.queatz.snappy.logic.interfaces.JoinInterface;
 import com.queatz.snappy.logic.interfaces.LikeInterface;
 import com.queatz.snappy.logic.interfaces.LocationInterface;
+import com.queatz.snappy.logic.interfaces.MeInterface;
 import com.queatz.snappy.logic.interfaces.MessageInterface;
 import com.queatz.snappy.logic.interfaces.OfferInterface;
 import com.queatz.snappy.logic.interfaces.PersonInterface;
@@ -49,6 +51,8 @@ public class EarthRouter {
          * This is the mapping for special routes, such as /here and /me.
          */
         specialMapping.put(EarthSpecialRoute.HERE_ROUTE, new HereInterface());
+        specialMapping.put(EarthSpecialRoute.ME_ROUTE, new MeInterface());
+        specialMapping.put(EarthSpecialRoute.BY_NAME_ROUTE, new ByNameInterface());
     }
 
     public Interfaceable interfaceFromKindOrThrowNothingResponse(String kind) {

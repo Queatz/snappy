@@ -1,7 +1,9 @@
 package com.queatz.snappy.api;
 
+import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.logic.Earth;
 import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.service.Api;
 
 import java.io.IOException;
@@ -40,7 +42,7 @@ public class Logic extends Api.Path {
                 }
                 break;
             default:
-                die("earth - bad method");
+                throw new NothingLogicResponse("earth - bad method");
         }
     }
 }
