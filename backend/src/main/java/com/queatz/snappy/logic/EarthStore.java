@@ -1,10 +1,5 @@
 package com.queatz.snappy.logic;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.FetchOptions;
-import com.google.appengine.api.datastore.GeoPt;
-import com.google.appengine.api.datastore.Query;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreException;
 import com.google.cloud.datastore.DatastoreOptions;
@@ -14,12 +9,15 @@ import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.LatLng;
 import com.google.cloud.datastore.NullValue;
+import com.google.cloud.datastore.Query;
+import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.StringValue;
 import com.google.cloud.datastore.StructuredQuery;
 import com.google.cloud.datastore.Transaction;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 import com.queatz.snappy.shared.Config;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -32,14 +30,17 @@ public class EarthStore {
 
     private static final String DEFAULT_KIND = "Thing";
     public static final String DEFAULT_FIELD_KIND = EarthField.KIND;
-    public static final String DEFAULT_FIELD_CREATED = "created_on";
+    public static final String DEFAULT_FIELD_CREATED = EarthField.CREATED_ON;
     public static final String DEFAULT_FIELD_CONCLUDED = "concluded_on";
 
     private final Datastore datastore = DatastoreOptions.defaultInstance().service();
     private final KeyFactory keyFactory = datastore.newKeyFactory().kind(DEFAULT_KIND);
 
-    private final DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
     EarthSearcher earthSearcher = EarthSingleton.of(EarthSearcher.class);
+
+    public Entity get(@Nonnull String id) {
+        return get(keyFactory.newKey(id));
+    }
 
     /**
      * Get a thing from the store.
@@ -48,8 +49,8 @@ public class EarthStore {
      *
      * @return The thing, or null if it could not be found
      */
-    public Entity get(@Nonnull String id) {
-        Entity entity = datastore.get(keyFactory.newKey(id));
+    public Entity get(@Nonnull Key key) {
+        Entity entity = datastore.get(key);
 
         if (entity == null) {
             return null;
@@ -159,6 +160,8 @@ public class EarthStore {
                 return;
             }
 
+            // XXX TODO Authorize
+
             transaction.put(Entity.builder(entity).set(DEFAULT_FIELD_CONCLUDED, DateTime.now()).build());
             transaction.commit();
             earthSearcher.delete(id);
@@ -169,6 +172,10 @@ public class EarthStore {
         }
     }
 
+    public void conclude(Entity thing) {
+        conclude(thing.key().name());
+    }
+
     /**
      * Save a thing.
      *
@@ -176,6 +183,8 @@ public class EarthStore {
      * - Fails if the thing already concluded.
      */
     public Entity.Builder edit(@Nonnull Entity entity) {
+        // XXX TODO Authorize EarthAuthorize.authorizeEdit(user, entity)
+
         return Entity.builder(entity);
     }
 
@@ -212,10 +221,81 @@ public class EarthStore {
         return Long.toString(new Random().nextLong());
     }
 
+    /**
+     * Count how many things match a query.
+     *
+     * @param kind The kind of thing to count
+     * @param field The field to equate
+     * @param key The value the field should be
+     * @return Number of matching things
+     */
+    public int count(String kind, String field, Key key) {
+        Query query = Query.keyQueryBuilder().kind(DEFAULT_KIND)
+                .filter(StructuredQuery.CompositeFilter.and(
+                        StructuredQuery.PropertyFilter.eq(EarthField.KIND, kind),
+                        StructuredQuery.PropertyFilter.eq(field, key)
+                ))
+// XXX TODO Can we do this?                .filter(StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of()))
+                .build();
+
+        return count(datastore.run(query));
+    }
+
+    private int count(QueryResults queryResults) {
+        return Iterators.size(queryResults);
+    }
+
+    /**
+     * Find things matching a query.
+     *
+     * @param kind The kind of thing to count
+     * @param field The field to equate
+     * @param key The key the field should contain
+     * @return All the things
+     */
+    public List<Entity> find(String kind, String field, Key key) {
+        Query<Entity> query = Query.entityQueryBuilder().kind(DEFAULT_KIND)
+                .filter(StructuredQuery.CompositeFilter.and(
+                        StructuredQuery.PropertyFilter.eq(EarthField.KIND, kind),
+                        StructuredQuery.PropertyFilter.eq(field, key)
+                ))
+// XXX TODO Can we do this?                .filter(StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of()))
+                .build();
+
+        return Lists.newArrayList(datastore.run(query));
+    }
+
+    // XXX what if kind has location dependency, i.e. offer -> person.geo?
     public List<Entity> getNearby(LatLng center, String kind) {
         return earthSearcher.getNearby(kind, center, 100);
     }
 
+    public QueryResults<Entity> query(StructuredQuery.Filter... filters) {
+        StructuredQuery.Filter filter = StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of());
+
+        StructuredQuery.Filter composite = StructuredQuery.CompositeFilter.and(filter, filters);
+
+        return datastore.run(StructuredQuery.entityQueryBuilder()
+                .kind(DEFAULT_KIND)
+                .filter(composite).build());
+    }
+
+    public QueryResults<Entity> queryLimited(int limit, StructuredQuery.Filter... filters) {
+        StructuredQuery.Filter filter = StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of());
+
+        StructuredQuery.Filter composite = StructuredQuery.CompositeFilter.and(filter, filters);
+
+        return datastore.run(StructuredQuery.entityQueryBuilder()
+                .kind(DEFAULT_KIND)
+                .limit(limit)
+                .filter(composite).build());
+    }
+
+    public Key key(String keyName) {
+        return keyFactory.newKey(keyName);
+    }
+
+// XXX TODO When datastore supports geo
 //    public List<Entity> queryNearToWithDatastore(GeoPt center, String kindFilter) {
 //        // XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
 //        double radius = 11265;

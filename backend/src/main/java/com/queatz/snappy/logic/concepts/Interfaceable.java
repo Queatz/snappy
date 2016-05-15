@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 /**
- * Created by jacob on 4/1/16.
+ * Implementations of Interfaceable expose Things to the outside world.
  */
 
 public interface Interfaceable {
@@ -19,7 +19,8 @@ public interface Interfaceable {
      * - This will never modify entities.
      *
      *
-     * @param as@return A JSON response as a string.
+     * @param as
+     * @return A JSON response as a string.
      */
     String get(EarthAs as);
 
@@ -30,7 +31,8 @@ public interface Interfaceable {
      * - Entity kind can be inferred from parameters or an existing id.
      *
      *
-     * @param as@return A JSON response as a string.
+     * @param as
+     * @return A JSON response as a string.
      */
     String post(EarthAs as);
 }

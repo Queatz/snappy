@@ -1,7 +1,8 @@
 package com.queatz.snappy.service;
 
-import com.queatz.snappy.backend.Json;
 import com.queatz.snappy.backend.RegistrationRecord;
+import com.queatz.snappy.logic.EarthJson;
+import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.shared.PushSpec;
 
 import java.util.Date;
@@ -22,6 +23,7 @@ public class Push {
     }
 
     public Push() {
+
     }
 
     public void register(String user, String device, String socialMode) {
@@ -55,14 +57,15 @@ public class Push {
         if(message == null)
             return;
 
-        Queue.getService().enqueuePushMessageToUser(toUser, Json.json(message, Json.Compression.PUSH));
+        // XXX TODO Should use new MessagePush().toJson()
+        Queue.getService().enqueuePushMessageToUser(toUser, EarthSingleton.of(EarthJson.class).toJson(message));
     }
 
     public void sendToFollowers(final String fromUser, final PushSpec message) {
         if(message == null)
             return;
 
-        Queue.getService().enqueuePushMessageFromUser(fromUser, Json.json(message, Json.Compression.PUSH));
+        Queue.getService().enqueuePushMessageFromUser(fromUser, EarthSingleton.of(EarthJson.class).toJson(message));
     }
 
     public void clear(String messageId) {

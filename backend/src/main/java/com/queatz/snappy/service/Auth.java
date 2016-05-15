@@ -6,19 +6,21 @@ import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
+import com.google.cloud.datastore.Entity;
 import com.google.gson.JsonObject;
-import com.queatz.snappy.backend.Datastore;
-import com.queatz.snappy.backend.Json;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.backend.Util;
+import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthJson;
+import com.queatz.snappy.logic.EarthSingleton;
+import com.queatz.snappy.logic.editors.PersonEditor;
+import com.queatz.snappy.logic.mines.PersonMine;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.things.PersonSpec;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Logger;
 
 /**
  * Created by jacob on 11/17/14.
@@ -32,6 +34,21 @@ public class Auth {
 
         return _service;
     }
+
+    private class PersonData {
+        String googleUrl;
+        String gender;
+        String language;
+        String firstName;
+        String lastName;
+        String imageUrl;
+        String about;
+        String googleId;
+    }
+
+    final PersonMine personMine = EarthSingleton.of(PersonMine.class);
+    final PersonEditor personEditor = EarthSingleton.of(PersonEditor.class);
+    final EarthJson earthJson = EarthSingleton.of(EarthJson.class);
 
     public Auth() {
     }
@@ -51,7 +68,7 @@ public class Auth {
             httpRequest.addHeader(new HTTPHeader("Content-Type", "application/json; charset=UTF-8"));
             HTTPResponse resp = urlFetchService.fetch(httpRequest);
             s = new String(resp.getContent(), "UTF-8");
-            JsonObject response = Json.from(s, JsonObject.class);
+            JsonObject response = earthJson.fromJson(s, JsonObject.class);
 
             if(response.has("email") && response.get("email").getAsString().equals(email)) {
                 return true;
@@ -64,7 +81,7 @@ public class Auth {
         throw new PrintingError(Api.Error.SERVER_ERROR, "real check no email correctness");
     }
 
-    public PersonSpec getPersonData(String token) throws PrintingError {
+    public PersonData getPersonData(String token) throws PrintingError {
         try {
             URL url = new URL(Config.GOOGLE_PLUS_PROFILE_URL + "?access_token=" + token);
 
@@ -74,9 +91,9 @@ public class Auth {
             httpRequest.addHeader(new HTTPHeader("Content-Type", "application/json; charset=UTF-8"));
             HTTPResponse resp = urlFetchService.fetch(httpRequest);
             String s = new String(resp.getContent(), "UTF-8");
-            JsonObject response = Json.from(s, JsonObject.class);
+            JsonObject response = earthJson.fromJson(s, JsonObject.class);
 
-            PersonSpec personSpec = new PersonSpec();
+            PersonData personSpec = new PersonData();
 
             if(response.has("url") && StringUtils.isNotBlank(response.get("url").getAsString())) {
                 personSpec.googleUrl = Util.googleUrl(response.get("url").getAsString()).toLowerCase();
@@ -122,25 +139,24 @@ public class Auth {
         }
     }
 
-    public PersonSpec fetchUserFromAuth(String email, String token) throws PrintingError {
+    public Entity fetchUserFromAuth(String email, String token) throws PrintingError {
         if(token == null) {
             return null;
         }
 
-        PersonSpec person;
+        Entity person;
 
         if(email != null) // Google login
-            person = Datastore.get(PersonSpec.class).filter("email", email).first().now();
+            person = personMine.byEmail(email);
         else // Auth token login
-            person = Datastore.get(PersonSpec.class).filter("token", token).first().now();
+            person = personMine.byToken(token);
 
         if(person != null && email == null) {
-            if (person.token == null) {
+            if (!person.contains(EarthField.TOKEN)) {
                 throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null tok");
             }
 
-            if (person.token.equals(token)) {
-                person.auth = person.token;
+            if (person.getString(EarthField.TOKEN).equals(token)) {
                 return person;
             }
         }
@@ -148,17 +164,28 @@ public class Auth {
         if (!isRealGoogleAuth(email, token))
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "iz not realz auth");
 
-        PersonSpec o = getPersonData(token);
+        PersonData personData = getPersonData(token);
 
-        if(o == null) {
-            throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "no data or google changed");
+        if(personData == null) {
+            throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "no data or google's api changed");
         }
 
-        o.email = email;
-        o.token = token;
+        if (person == null) {
+            person = personEditor.newPerson(email);
+        }
 
-        person = Thing.getService().person.createOrUpdate(person, o);
-        person.auth = person.token;
+        person = personEditor.updatePerson(person,
+                token,
+                personData.firstName,
+                personData.lastName,
+                personData.gender,
+                personData.language,
+                personData.imageUrl,
+                personData.googleId,
+                personData.googleUrl,
+                personData.about,
+                null);
+
         return person;
     }
 }

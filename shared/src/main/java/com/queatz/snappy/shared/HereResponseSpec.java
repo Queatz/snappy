@@ -4,7 +4,6 @@ import com.queatz.snappy.shared.things.LocationSpec;
 import com.queatz.snappy.shared.things.OfferSpec;
 import com.queatz.snappy.shared.things.PartySpec;
 import com.queatz.snappy.shared.things.PersonSpec;
-import com.queatz.snappy.shared.things.QuestSpec;
 
 import java.util.List;
 

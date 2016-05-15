@@ -24,15 +24,7 @@ public class Pirate extends Api.Path {
 
     @Override
     public void call() {
-        //String s = "";
-        //s += doType("person");
 
-        //ok(s + " yarr!");
-
-        for(PersonSpec person : Datastore.get(PersonSpec.class).list()) {
-            person.created = new Date(1408406400000L);
-            Datastore.save(person);
-        }
 
         ok("yarr!");
     }

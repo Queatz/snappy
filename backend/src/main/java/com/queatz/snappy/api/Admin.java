@@ -1,13 +1,14 @@
 package com.queatz.snappy.api;
 
-import com.queatz.snappy.backend.Datastore;
-import com.queatz.snappy.backend.Util;
+import com.google.cloud.datastore.Entity;
+import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthSingleton;
+import com.queatz.snappy.logic.editors.PersonEditor;
+import com.queatz.snappy.logic.mines.PersonMine;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Push;
-import com.queatz.snappy.service.Thing;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.PushSpec;
-import com.queatz.snappy.shared.things.PersonSpec;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,6 +18,10 @@ import java.io.IOException;
  * Created by jacob on 4/11/15.
  */
 public class Admin extends Api.Path {
+
+    PersonMine personMine = EarthSingleton.of(PersonMine.class);
+    PersonEditor personEditor = EarthSingleton.of(PersonEditor.class);
+
     public Admin(Api api) {
         super(api);
     }
@@ -45,43 +50,43 @@ public class Admin extends Api.Path {
     }
 
     private void getBetatester(String personEmail) {
-        PersonSpec person = Datastore.get(PersonSpec.class).filter("email", personEmail).first().now();
+        Entity person = personMine.byEmail(personEmail);
 
         if (person != null) {
-            if (StringUtils.isBlank(person.subscription)) {
-                Thing.getService().person.updateSubscription(person, Config.HOSTING_BETATESTER);
-                Push.getService().send(person.id, new PushSpec(Config.PUSH_ACTION_REFRESH_ME));
-                ok(person.email + " has been upgraded");
+            if (StringUtils.isBlank(person.getString(EarthField.SUBSCRIPTION))) {
+                personEditor.updateSubscription(person, Config.HOSTING_BETATESTER);
+                Push.getService().send(person.key().name(), new PushSpec(Config.PUSH_ACTION_REFRESH_ME));
+                ok(person.getString(EarthField.EMAIL) + " has been upgraded");
             } else {
-                ok(person.email + " is already upgraded");
+                ok(person.getString(EarthField.EMAIL) + " is already upgraded");
             }
         }
     }
 
     private void getEnableHosting(String personEmail) {
-        PersonSpec person = Datastore.get(PersonSpec.class).filter("email", personEmail).first().now();
+        Entity person = personMine.byEmail(personEmail);
 
         if (person != null) {
-            if (StringUtils.isBlank(person.subscription)) {
-                Thing.getService().person.updateSubscription(person, Config.HOSTING_ENABLED_AVAILABLE);
-                Push.getService().send(person.id, new PushSpec(Config.PUSH_ACTION_REFRESH_ME));
-                ok(person.email + " can now host");
+            if (StringUtils.isBlank(person.getString(EarthField.SUBSCRIPTION))) {
+                personEditor.updateSubscription(person, Config.HOSTING_ENABLED_AVAILABLE);
+                Push.getService().send(person.key().name(), new PushSpec(Config.PUSH_ACTION_REFRESH_ME));
+                ok(person.getString(EarthField.EMAIL) + " can now host");
             } else {
-                ok(person.email + " can already host");
+                ok(person.getString(EarthField.EMAIL) + " can already host");
             }
         }
     }
 
     private void getDisableHosting(String personEmail) {
-        PersonSpec person = Datastore.get(PersonSpec.class).filter("email", personEmail).first().now();
+        Entity person = personMine.byEmail(personEmail);
 
         if (person != null) {
-            if (StringUtils.isBlank(person.subscription)) {
-                ok(person.email + " already can't host");
+            if (StringUtils.isBlank(person.getString(EarthField.SUBSCRIPTION))) {
+                ok(person.getString(EarthField.EMAIL) + " already can't host");
             } else {
-                Thing.getService().person.updateSubscription(person, "");
-                Push.getService().send(person.id, new PushSpec(Config.PUSH_ACTION_REFRESH_ME));
-                ok(person.email + " can no longer host");
+                personEditor.updateSubscription(person, "");
+                Push.getService().send(person.key().name(), new PushSpec(Config.PUSH_ACTION_REFRESH_ME));
+                ok(person.getString(EarthField.EMAIL) + " can no longer host");
             }
         }
     }

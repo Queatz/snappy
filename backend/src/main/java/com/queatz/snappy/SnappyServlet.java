@@ -1,14 +1,12 @@
 package com.queatz.snappy;
 
 import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.queatz.snappy.backend.Json;
-import com.queatz.snappy.backend.ObjectResponse;
+import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Auth;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.ErrorResponseSpec;
-import com.queatz.snappy.shared.things.PersonSpec;
 
 import java.io.IOException;
 
@@ -65,7 +63,7 @@ public class SnappyServlet extends HttpServlet {
 
         try {
             try {
-                PersonSpec user = Auth.getService().fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH));
+                Entity user = Auth.getService().fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH));
 
                 if (user == null) {
                     throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null auth");

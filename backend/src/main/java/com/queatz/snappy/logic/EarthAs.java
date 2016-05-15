@@ -1,6 +1,7 @@
 package com.queatz.snappy.logic;
 
 import com.google.appengine.api.memcache.AsyncMemcacheService;
+import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.shared.things.PersonSpec;
 
@@ -11,17 +12,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by jacob on 4/9/16.
+ * This class holds the context of a user looking at things.
  */
 public class EarthAs {
     private final Api api;
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private final List<String> route;
-    private final PersonSpec user;
+    private final Entity user;
     private AsyncMemcacheService parameters;
 
-    public EarthAs(Api api, HttpServletRequest request, HttpServletResponse response, List<String> route, PersonSpec user) {
+    public EarthAs(Api api, HttpServletRequest request, HttpServletResponse response, List<String> route, Entity user) {
         this.api = api;
         this.request = request;
         this.response = response;
@@ -45,7 +46,7 @@ public class EarthAs {
         return route;
     }
 
-    public PersonSpec getUser() {
+    public Entity getUser() {
         return user;
     }
 

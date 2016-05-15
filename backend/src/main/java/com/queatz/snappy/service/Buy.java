@@ -6,11 +6,15 @@ import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
+import com.google.cloud.datastore.Entity;
 import com.google.gson.JsonObject;
 import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.backend.GooglePurchaseDataSpec;
-import com.queatz.snappy.backend.Json;
 import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthJson;
+import com.queatz.snappy.logic.EarthSingleton;
+import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.things.PersonSpec;
 
@@ -30,6 +34,9 @@ public class Buy {
         return _service;
     }
 
+    PersonEditor personEditor = EarthSingleton.of(PersonEditor.class);
+    EarthJson earthJson = EarthSingleton.of(EarthJson.class);
+
     public Buy() {
     }
 
@@ -47,7 +54,7 @@ public class Buy {
             HTTPResponse resp = urlFetchService.fetch(httpRequest);
             String s = new String(resp.getContent(), "UTF-8");
 
-            return Json.from(s, JsonObject.class).get("access_token").getAsString();
+            return earthJson.fromJson(s, JsonObject.class).get("access_token").getAsString();
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -74,20 +81,17 @@ public class Buy {
         }
     }
 
-    public boolean valid(PersonSpec me) {
+    public boolean valid(Entity me) {
         if(me == null)
             return false;
 
-        try {
-            return me.subscription != null && !me.subscription.isEmpty() && !Config.HOSTING_ENABLED_AVAILABLE.equals(me.subscription);
-        }
-        catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            return false;
-        }
+        final String subscription = me.getString(EarthField.SUBSCRIPTION);
+        return subscription != null &&
+                !subscription.isEmpty() &&
+                !Config.HOSTING_ENABLED_AVAILABLE.equals(subscription);
     }
 
-    public boolean validate(PersonSpec me, GooglePurchaseDataSpec purchaseData) throws PrintingError {
+    public boolean validate(Entity me, GooglePurchaseDataSpec purchaseData) throws PrintingError {
         if(me == null)
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "not bought no user");
 
@@ -101,7 +105,9 @@ public class Buy {
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "not bought 2");
         }
 
-        GooglePurchaseDataSpec data = Thing.getService().buy.makeOrUpdate(purchaseData, p);
+        // XXX Shouldn't really use EarthSingleton here...
+        GooglePurchaseDataSpec data = EarthSingleton.of(com.queatz.snappy.backend.Buy.class)
+                .makeOrUpdate(purchaseData, p);
         String subscription = data == null ? null : data.orderId;
 
         if (subscription == null)
@@ -114,7 +120,7 @@ public class Buy {
             throw new PrintingError(Api.Error.NOT_IMPLEMENTED, "not bought already owned by someone else");
         }
 
-        Thing.getService().person.updateSubscription(me, subscription);
+        personEditor.updateSubscription(me, subscription);
 
         return true;
     }

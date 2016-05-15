@@ -18,4 +18,8 @@ public class EarthJson {
     public String toJson(Object object) {
         return gson.toJson(object);
     }
+
+    public <T> T fromJson(String json, Class<T> clazz) {
+        return gson.fromJson(json, clazz);
+    }
 }

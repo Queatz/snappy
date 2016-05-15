@@ -4,9 +4,14 @@ import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
+import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.backend.Datastore;
 import com.queatz.snappy.backend.RegistrationRecord;
-import com.queatz.snappy.service.Search;
+import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthKind;
+import com.queatz.snappy.logic.EarthSearcher;
+import com.queatz.snappy.logic.EarthSingleton;
+import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.things.FollowLinkSpec;
 import com.queatz.snappy.shared.things.PersonSpec;
@@ -47,6 +52,9 @@ public class Worker extends HttpServlet {
         }
     }
 
+    EarthSearcher earthSearcher = EarthSingleton.of(EarthSearcher.class);
+    EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         String action = req.getParameter("action");
@@ -80,12 +88,15 @@ public class Worker extends HttpServlet {
                 // Friends will have higher priority due to HashSet not overwriting existing elements
 
                 if(fromUser != null) {
-                    PersonSpec source = Datastore.get(PersonSpec.class, fromUser);
-                    for (PersonSpec person : Search.getService().getNearby(PersonSpec.class, source.latlng, new Date(new Date().getTime() - 1000 * 60 * 60 * Config.MAX_IDLE_HOURS), 300)) {
-                        if(fromUser.equals(person.id))
-                            continue;
+                    Entity source = earthStore.get(fromUser);
 
-                        toUsers.add(new SendInstance(person.id, Config.SOCIAL_MODE_ON));
+                    for (Entity person : earthSearcher.getNearby(EarthKind.PERSON_KIND,
+                            source.getLatLng(EarthField.GEO), 300)) {
+                        if(fromUser.equals(person.key().name())) {
+                            continue;
+                        }
+
+                        toUsers.add(new SendInstance(person.key().name(), Config.SOCIAL_MODE_ON));
                     }
                 }
 

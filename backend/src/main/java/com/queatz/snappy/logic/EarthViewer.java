@@ -3,7 +3,19 @@ package com.queatz.snappy.logic;
 import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.concepts.Viewable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
-import com.queatz.snappy.logic.view.HubView;
+import com.queatz.snappy.logic.views.ContactView;
+import com.queatz.snappy.logic.views.EndorsementView;
+import com.queatz.snappy.logic.views.FollowerView;
+import com.queatz.snappy.logic.views.HubView;
+import com.queatz.snappy.logic.views.JoinView;
+import com.queatz.snappy.logic.views.LikeView;
+import com.queatz.snappy.logic.views.LocationView;
+import com.queatz.snappy.logic.views.MessageView;
+import com.queatz.snappy.logic.views.OfferView;
+import com.queatz.snappy.logic.views.PartyView;
+import com.queatz.snappy.logic.views.PersonView;
+import com.queatz.snappy.logic.views.RecentView;
+import com.queatz.snappy.logic.views.UpdateView;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -20,6 +32,18 @@ public class EarthViewer {
         try {
             // This is the entity to view mapping!
             mapping.put(EarthKind.HUB_KIND, HubView.class.getConstructor(Entity.class));
+            mapping.put(EarthKind.CONTACT_KIND, ContactView.class.getConstructor(Entity.class));
+            mapping.put(EarthKind.FOLLOWER_KIND, FollowerView.class.getConstructor(Entity.class));
+            mapping.put(EarthKind.LIKE_KIND, LikeView.class.getConstructor(Entity.class));
+            mapping.put(EarthKind.OFFER_KIND, OfferView.class.getConstructor(Entity.class));
+            mapping.put(EarthKind.MESSAGE_KIND, MessageView.class.getConstructor(Entity.class));
+            mapping.put(EarthKind.PERSON_KIND, PersonView.class.getConstructor(Entity.class));
+            mapping.put(EarthKind.PARTY_KIND, PartyView.class.getConstructor(Entity.class));
+            mapping.put(EarthKind.LOCATION_KIND, LocationView.class.getConstructor(Entity.class));
+            mapping.put(EarthKind.RECENT_KIND, RecentView.class.getConstructor(Entity.class));
+            mapping.put(EarthKind.ENDORSEMENT_KIND, EndorsementView.class.getConstructor(Entity.class));
+            mapping.put(EarthKind.UPDATE_KIND, UpdateView.class.getConstructor(Entity.class));
+            mapping.put(EarthKind.JOIN_KIND, JoinView.class.getConstructor(Entity.class));
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }

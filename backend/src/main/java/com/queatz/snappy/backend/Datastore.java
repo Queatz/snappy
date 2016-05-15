@@ -6,9 +6,7 @@ import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.cmd.LoadType;
 import com.googlecode.objectify.cmd.Query;
-import com.queatz.snappy.service.Search;
 import com.queatz.snappy.shared.ThingSpec;
-import com.queatz.snappy.shared.things.BountySpec;
 import com.queatz.snappy.shared.things.ContactSpec;
 import com.queatz.snappy.shared.things.EndorsementSpec;
 import com.queatz.snappy.shared.things.FollowLinkSpec;
@@ -19,8 +17,6 @@ import com.queatz.snappy.shared.things.MessageSpec;
 import com.queatz.snappy.shared.things.OfferSpec;
 import com.queatz.snappy.shared.things.PartySpec;
 import com.queatz.snappy.shared.things.PersonSpec;
-import com.queatz.snappy.shared.things.QuestLinkSpec;
-import com.queatz.snappy.shared.things.QuestSpec;
 import com.queatz.snappy.shared.things.UpdateLikeSpec;
 import com.queatz.snappy.shared.things.UpdateSpec;
 

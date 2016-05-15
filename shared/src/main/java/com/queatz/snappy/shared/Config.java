@@ -234,6 +234,7 @@ public class Config {
     public static final String PATH_BOUNTY = "bounty";
     public static final String PATH_API = "api";
     public static final String PATH_PARTY = "party";
+    public static final String PATH_DELETE = "delete";
     public static final String PATH_PARTIES = "parties";
     public static final String PATH_QUEST = "quest";
     public static final String PATH_JOIN = "join";

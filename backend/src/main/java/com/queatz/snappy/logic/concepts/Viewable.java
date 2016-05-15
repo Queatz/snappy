@@ -1,7 +1,7 @@
 package com.queatz.snappy.logic.concepts;
 
 /**
- * Created by jacob on 4/2/16.
+ * A view of a thing.
  */
 public interface Viewable {
     String toJson();
