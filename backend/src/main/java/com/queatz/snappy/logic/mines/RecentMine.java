@@ -4,10 +4,13 @@ import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.StructuredQuery;
+import com.google.common.collect.Lists;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
+
+import java.util.List;
 
 /**
  * Created by jacob on 5/14/16.
@@ -15,6 +18,13 @@ import com.queatz.snappy.logic.EarthStore;
 public class RecentMine {
 
     final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+
+    public List<Entity> forPerson(Entity person) {
+        return Lists.newArrayList(earthStore.query(
+                StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.RECENT_KIND),
+                StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, person.key())
+        ));
+    }
 
     public Entity byPerson(Entity person, Entity contact) {
         return byPerson(person.key(), contact.key());

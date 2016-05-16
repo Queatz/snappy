@@ -14,6 +14,7 @@ import com.queatz.snappy.logic.editors.MessageEditor;
 import com.queatz.snappy.logic.editors.RecentEditor;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.mines.FollowerMine;
+import com.queatz.snappy.logic.mines.MessageMine;
 import com.queatz.snappy.logic.mines.PersonMine;
 import com.queatz.snappy.logic.mines.RecentMine;
 import com.queatz.snappy.logic.views.EntityListView;
@@ -38,6 +39,7 @@ public class PersonInterface implements Interfaceable {
     FollowerEditor followerEditor = EarthSingleton.of(FollowerEditor.class);
     FollowerMine followerMine = EarthSingleton.of(FollowerMine.class);
     MessageEditor messageEditor = EarthSingleton.of(MessageEditor.class);
+    MessageMine messageMine = EarthSingleton.of(MessageMine.class);
 
     @Override
     public String get(EarthAs as) {
@@ -115,21 +117,8 @@ public class PersonInterface implements Interfaceable {
 
     private String getMessages(EarthAs as, String personId) {
         // XXX TODO when Datastore supports OR expressions, combine these
-        List<Entity> messagesToMe = Lists.newArrayList(
-                earthStore.queryLimited(Config.SEARCH_MAXIMUM,
-                        StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.MESSAGE_KIND),
-                        StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, as.getUser().key()),
-                        StructuredQuery.PropertyFilter.eq(EarthField.TARGET, earthStore.key(personId))
-                )
-        );
-
-        List<Entity> messagesFromMe = Lists.newArrayList(
-                earthStore.queryLimited(Config.SEARCH_MAXIMUM,
-                        StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.MESSAGE_KIND),
-                        StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, earthStore.key(personId)),
-                        StructuredQuery.PropertyFilter.eq(EarthField.TARGET, as.getUser().key())
-                )
-        );
+        List<Entity> messagesToMe = messageMine.messagesFromTo(as.getUser().key(), earthStore.key(personId));
+        List<Entity> messagesFromMe = messageMine.messagesFromTo(earthStore.key(personId), as.getUser().key());
 
         List<Entity> messages = Lists.newArrayList();
         messages.addAll(messagesToMe);

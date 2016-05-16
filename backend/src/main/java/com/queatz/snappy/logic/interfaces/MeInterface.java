@@ -4,14 +4,12 @@ import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.StructuredQuery;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.queatz.snappy.backend.GooglePurchaseDataSpec;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthJson;
-import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.concepts.Interfaceable;
@@ -19,6 +17,8 @@ import com.queatz.snappy.logic.editors.OfferEditor;
 import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.editors.UpdateEditor;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.logic.mines.MessageMine;
+import com.queatz.snappy.logic.mines.RecentMine;
 import com.queatz.snappy.logic.views.MessagesAndContactsView;
 import com.queatz.snappy.logic.views.OfferView;
 import com.queatz.snappy.logic.views.PersonView;
@@ -51,6 +51,8 @@ public class MeInterface implements Interfaceable {
     EarthStore earthStore = EarthSingleton.of(EarthStore.class);
     PersonEditor personEditor = EarthSingleton.of(PersonEditor.class);
     UpdateEditor updateEditor = EarthSingleton.of(UpdateEditor.class);
+    MessageMine messageMine = EarthSingleton.of(MessageMine.class);
+    RecentMine recentMine = EarthSingleton.of(RecentMine.class);
     OfferEditor offerEditor = EarthSingleton.of(OfferEditor.class);
     EarthJson earthJson = EarthSingleton.of(EarthJson.class);
 
@@ -110,28 +112,14 @@ public class MeInterface implements Interfaceable {
 
     private String getMessages(EarthAs as) {
         // XXX TODO when Datastore supports OR expressions, combine these
-        List<Entity> messagesToMe = Lists.newArrayList(
-                earthStore.queryLimited(Config.SEARCH_MAXIMUM,
-                        StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.MESSAGE_KIND),
-                        StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, as.getUser().key())
-                )
-        );
-
-        List<Entity> messagesFromMe = Lists.newArrayList(
-                earthStore.queryLimited(Config.SEARCH_MAXIMUM,
-                        StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.MESSAGE_KIND),
-                        StructuredQuery.PropertyFilter.eq(EarthField.TARGET, as.getUser().key())
-                )
-        );
+        List<Entity> messagesToMe = messageMine.messagesFrom(as.getUser().key());
+        List<Entity> messagesFromMe = messageMine.messagesTo(as.getUser().key());
 
         List<Entity> messages = Lists.newArrayList();
         messages.addAll(messagesToMe);
         messages.addAll(messagesFromMe);
 
-        List<Entity> contacts = Lists.newArrayList(earthStore.query(
-                StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.RECENT_KIND),
-                StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, as.getUser().key())
-        ));
+        List<Entity> contacts = recentMine.forPerson(as.getUser());
 
         return new MessagesAndContactsView(messages, contacts).toJson();
     }

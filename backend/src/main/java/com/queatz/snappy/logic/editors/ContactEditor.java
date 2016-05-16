@@ -16,7 +16,7 @@ public class ContactEditor {
 
     public Entity newContact(@Nonnull Entity thing, @Nonnull Entity person) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.CONTACT_KIND))
-                .set(EarthField.SOURCE, thing)
-                .set(EarthField.TARGET, person));
+                .set(EarthField.SOURCE, thing.key())
+                .set(EarthField.TARGET, person.key()));
     }
 }
