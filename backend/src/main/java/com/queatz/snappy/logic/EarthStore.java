@@ -233,9 +233,9 @@ public class EarthStore {
         Query query = Query.keyQueryBuilder().kind(DEFAULT_KIND)
                 .filter(StructuredQuery.CompositeFilter.and(
                         StructuredQuery.PropertyFilter.eq(EarthField.KIND, kind),
-                        StructuredQuery.PropertyFilter.eq(field, key)
+                        StructuredQuery.PropertyFilter.eq(field, key),
+                        StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of())
                 ))
-// XXX TODO Can we do this?                .filter(StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of()))
                 .build();
 
         return count(datastore.run(query));
@@ -257,9 +257,9 @@ public class EarthStore {
         Query<Entity> query = Query.entityQueryBuilder().kind(DEFAULT_KIND)
                 .filter(StructuredQuery.CompositeFilter.and(
                         StructuredQuery.PropertyFilter.eq(EarthField.KIND, kind),
-                        StructuredQuery.PropertyFilter.eq(field, key)
+                        StructuredQuery.PropertyFilter.eq(field, key),
+                        StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of())
                 ))
-// XXX TODO Can we do this?                .filter(StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of()))
                 .build();
 
         return Lists.newArrayList(datastore.run(query));

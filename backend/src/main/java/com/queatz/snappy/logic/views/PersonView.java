@@ -50,9 +50,9 @@ public class PersonView extends ExistenceView {
         infoDistance = 0;
 
         switch (view) {
-            case SHALLOW:
-                List<Entity> updatesList = earthStore.find(EarthKind.FOLLOWER_KIND, EarthField.TARGET, person.key());
-                List<Entity> offersList = earthStore.find(EarthKind.FOLLOWER_KIND, EarthField.TARGET, person.key());
+            case DEEP:
+                List<Entity> updatesList = earthStore.find(EarthKind.UPDATE_KIND, EarthField.SOURCE, person.key());
+                List<Entity> offersList = earthStore.find(EarthKind.OFFER_KIND, EarthField.SOURCE, person.key());
 
                 updates = new EntityListView(updatesList).asList();
                 offers = new EntityListView(offersList).asList();

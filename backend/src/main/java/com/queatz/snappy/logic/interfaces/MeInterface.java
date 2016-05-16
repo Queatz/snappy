@@ -72,6 +72,42 @@ public class MeInterface implements Interfaceable {
         }
     }
 
+    @Override
+    public String post(EarthAs as) {
+        switch (as.getRoute().size()) {
+            case 1:
+                String about = as.getRequest().getParameter(Config.PARAM_ABOUT);
+
+                if (about != null) {
+                    personEditor.updateAbout(as.getUser(), about);
+                }
+
+                return new SuccessView(true).toJson();
+            case 2:
+                switch (as.getRoute().get(1)) {
+                    case Config.PATH_UPTO:
+                        return postUpdate(as);
+                    case Config.PATH_OFFERS:
+                        return postOffers(as);
+                    case Config.PATH_BUY:
+                        return postBuy(as, as.getRequest().getParameter(Config.PARAM_PURCHASE_DATA));
+                    case Config.PATH_REGISTER_DEVICE:
+                        return postRegisterDevice(as,
+                                as.getRequest().getParameter(Config.PARAM_DEVICE_ID),
+                                as.getRequest().getParameter(Config.PARAM_SOCIAL_MODE)
+                        );
+                    case Config.PATH_UNREGISTER_DEVICE:
+                        return postUnregisterDevice(as, as.getRequest().getParameter(Config.PARAM_DEVICE_ID));
+                    case Config.PATH_CLEAR_NOTIFICATION:
+                        return postClearNotification(as, as.getRequest().getParameter(Config.PARAM_NOTIFICATION));
+                    default:
+                        throw new NothingLogicResponse("me - bad path");
+                }
+            default:
+                throw new NothingLogicResponse("me - bad path");
+        }
+    }
+
     private String getMessages(EarthAs as) {
         // XXX TODO when Datastore supports OR expressions, combine these
         List<Entity> messagesToMe = Lists.newArrayList(
@@ -98,42 +134,6 @@ public class MeInterface implements Interfaceable {
         ));
 
         return new MessagesAndContactsView(messages, contacts).toJson();
-    }
-
-    @Override
-    public String post(EarthAs as) {
-        switch (as.getRoute().size()) {
-            case 0:
-                String about = as.getRequest().getParameter(Config.PARAM_ABOUT);
-
-                if (about != null) {
-                    personEditor.updateAbout(as.getUser(), about);
-                }
-
-                return new SuccessView(true).toJson();
-            case 1:
-                switch (as.getRoute().get(0)) {
-                    case Config.PATH_UPTO:
-                        return postUpdate(as);
-                    case Config.PATH_OFFERS:
-                        return postOffers(as);
-                    case Config.PATH_BUY:
-                        return postBuy(as, as.getRequest().getParameter(Config.PARAM_PURCHASE_DATA));
-                    case Config.PATH_REGISTER_DEVICE:
-                        return postRegisterDevice(as,
-                                as.getRequest().getParameter(Config.PARAM_DEVICE_ID),
-                                as.getRequest().getParameter(Config.PARAM_SOCIAL_MODE)
-                        );
-                    case Config.PATH_UNREGISTER_DEVICE:
-                        return postUnregisterDevice(as, as.getRequest().getParameter(Config.PARAM_DEVICE_ID));
-                    case Config.PATH_CLEAR_NOTIFICATION:
-                        return postClearNotification(as, as.getRequest().getParameter(Config.PARAM_NOTIFICATION));
-                    default:
-                        throw new NothingLogicResponse("me - bad path");
-                }
-            default:
-                throw new NothingLogicResponse("me - bad path");
-        }
     }
 
     private String postClearNotification(EarthAs as, String notification) {

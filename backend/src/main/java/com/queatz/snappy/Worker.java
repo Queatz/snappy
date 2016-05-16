@@ -5,6 +5,7 @@ import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 import com.google.cloud.datastore.Entity;
+import com.googlecode.objectify.ObjectifyService;
 import com.queatz.snappy.backend.RegistrationRecord;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
@@ -28,6 +29,11 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
  * Created by jacob on 4/11/15.
  */
 public class Worker extends HttpServlet {
+
+    static {
+        ObjectifyService.register(RegistrationRecord.class);
+    }
+
     private static class SendInstance {
         protected String userId;
         protected String lowestRequiredSocialMode;

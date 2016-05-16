@@ -25,7 +25,7 @@ public class MessagesAndContactsView implements Viewable {
         }
 
         for (Entity contact : contacts) {
-            this.contacts.add(new ContactView(contact));
+            this.contacts.add(new RecentView(contact));
         }
     }
 

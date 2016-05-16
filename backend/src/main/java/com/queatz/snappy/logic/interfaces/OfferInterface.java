@@ -68,7 +68,7 @@ public class OfferInterface implements com.queatz.snappy.logic.concepts.Interfac
                     case Config.PATH_PHOTO:
                         switch (as.getRoute().get(2)) {
                             case Config.PATH_DELETE:
-                                deletePhoto(as, as.getRoute().get(0));
+                                return deletePhoto(as, as.getRoute().get(0));
                         }
                 }
 
@@ -108,7 +108,7 @@ public class OfferInterface implements com.queatz.snappy.logic.concepts.Interfac
     }
 
     private String deletePhoto(EarthAs as, String offerId) {
-        earthStore.conclude(offerId);
+        offerEditor.setPhoto(earthStore.get(offerId), false);
         return new SuccessView(true).toJson();
     }
 

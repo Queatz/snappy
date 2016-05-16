@@ -31,6 +31,12 @@ public class EarthSearcher {
     }
 
     public boolean update(Entity object) {
+        boolean success = updateGeo(object);
+        updateLinked(object);
+        return success;
+    }
+
+    private boolean updateGeo(Entity object) {
         Document document = build(object);
 
         if (document == null) {
@@ -60,7 +66,20 @@ public class EarthSearcher {
     }
 
     public List<Entity> getNearby(String kind, LatLng location, int count) {
-        String queryString = "distance(geo, geopoint(" + location.latitude() + ", " + location.longitude() + ")) < " + Config.SEARCH_MAX_VISIBILITY;
+        String queryString = "(";
+
+        final String geoString = "geopoint(" + location.latitude() + ", " + location.longitude() + ")";
+
+        queryString += "distance(geo, " + geoString + ") < " + Config.SEARCH_MAX_VISIBILITY;
+
+        boolean searchWithLinks = true;
+
+        if (searchWithLinks) {
+            queryString += " OR distance(source_geo, " + geoString + ") < " + Config.SEARCH_MAX_VISIBILITY;
+            queryString += " OR distance(target_geo, " + geoString + ") < " + Config.SEARCH_MAX_VISIBILITY;
+        }
+
+        queryString += ")";
 
         queryString += " AND kind = \"" + kind + "\"";
 
@@ -82,28 +101,68 @@ public class EarthSearcher {
     }
 
     private Entity thingFromDocument(Document document) {
-        return EarthSingleton.of(EarthStore.class).get(document.getId());
+        final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+        return earthStore.get(document.getId());
     }
 
     private Document build(Entity object) {
-        if (!object.contains(EarthField.GEO)) {
-            return null;
-        }
+        final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
 
         Document.Builder builder = Document.newBuilder();
 
-        LatLng latLng = object.getLatLng(EarthField.GEO);
+        if (object.contains(EarthField.GEO)) {
+            LatLng latLng = object.getLatLng(EarthField.GEO);
 
-        Field geoField = Field.newBuilder().setName(EarthField.GEO)
-                .setGeoPoint(new GeoPoint(latLng.latitude(), latLng.longitude())).build();
+            Field geoField = Field.newBuilder().setName(EarthField.GEO)
+                    .setGeoPoint(new GeoPoint(latLng.latitude(), latLng.longitude())).build();
+
+            builder.addField(geoField);
+        }
 
         Field kindField = Field.newBuilder().setName(EarthField.KIND)
                 .setAtom(object.getString(EarthField.KIND)).build();
 
-        builder.addField(geoField);
         builder.addField(kindField);
         builder.setId(getId(object));
 
+        // Add linked geo's
+        // Fields source, target, source_geo, target_geo
+        for (String field : new String[] { EarthField.SOURCE, EarthField.TARGET }) {
+            if (object.contains(field)) {
+                Entity linkedEntity = earthStore.get(object.getKey(field));
+
+                if (linkedEntity != null) {
+                    Field linkedId = Field.newBuilder().setName(field)
+                            .setAtom(object.key().name()).build();
+
+                    builder.addField(linkedId);
+
+                    if (linkedEntity.contains(EarthField.GEO)) {
+                        LatLng linkedLatLng = linkedEntity.getLatLng(EarthField.GEO);
+
+                        Field linkedGeo = Field.newBuilder().setName(field + "_" + EarthField.GEO)
+                                .setGeoPoint(new GeoPoint(linkedLatLng.latitude(), linkedLatLng.longitude())).build();
+
+                        builder.addField(linkedGeo);
+                    }
+                }
+            }
+        }
+
         return builder.build();
+    }
+
+    // XXX slow, and sluggish
+    // Updates the linked locations of linked entities
+    private void updateLinked(Entity entity) {
+        final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+
+        String id = entity.key().name();
+
+        String queryString = "source = \"" + id + "\" OR target = \"" + id + "\"";
+
+        for(ScoredDocument document : index.search(Query.newBuilder().build(queryString))) {
+            updateGeo(earthStore.get(document.getId())); // XXX TODO sadly, cascading dependencies will not be updated
+        }
     }
 }

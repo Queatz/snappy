@@ -85,7 +85,7 @@ public class Api {
 
     public Api() {
         paths = new HashMap<>();
-        paths.put("temporary-earth-logic", Logic.class);
+        paths.put(Config.PATH_EARTH, Logic.class);
         paths.put(Config.PATH_PIRATE, Pirate.class);
         paths.put(Config.PATH_ADMIN, Admin.class);
 
