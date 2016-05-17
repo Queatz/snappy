@@ -28,4 +28,8 @@ public class FollowerMine {
             return null;
         }
     }
+
+    public int countFollowers(Entity entity) {
+        return earthStore.count(EarthKind.FOLLOWER_KIND, EarthField.TARGET, entity.key());
+    }
 }

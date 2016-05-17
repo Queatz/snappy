@@ -23,7 +23,11 @@ public class UpdateView extends ThingView {
     final Viewable target;
 
     public UpdateView(Entity update) {
-        super(update);
+        this(update, EarthView.DEEP);
+    }
+
+    public UpdateView(Entity update, EarthView view) {
+        super(update, view);
 
         final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
         final EarthViewer earthViewer = EarthSingleton.of(EarthViewer.class);

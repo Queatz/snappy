@@ -17,7 +17,11 @@ public class OfferView extends ThingView {
     final int likers;
 
     public OfferView(Entity offer) {
-        super(offer);
+        this(offer, EarthView.DEEP);
+    }
+
+    public OfferView(Entity offer, EarthView view) {
+        super(offer, view);
 
         EarthStore earthStore = EarthSingleton.of(EarthStore.class);
 

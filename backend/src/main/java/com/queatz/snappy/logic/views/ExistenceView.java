@@ -4,6 +4,7 @@ import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthSingleton;
+import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Viewable;
 
 /**
@@ -20,6 +21,10 @@ public class ExistenceView implements Viewable {
     final String kind;
 
     public ExistenceView(Entity entity) {
+        this(entity, EarthView.DEEP);
+    }
+
+    public ExistenceView(Entity entity, EarthView view) {
         id = entity.key().name();
         kind = entity.getString(EarthField.KIND);
     }

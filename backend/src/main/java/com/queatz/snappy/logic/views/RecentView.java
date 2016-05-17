@@ -4,6 +4,7 @@ import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthView;
 
 import java.util.Date;
 
@@ -17,7 +18,11 @@ public class RecentView extends LinkView {
     final MessageView latest;
 
     public RecentView(Entity recent) {
-        super(recent);
+        this(recent, EarthView.DEEP);
+    }
+
+    public RecentView(Entity recent, EarthView view) {
+        super(recent, view);
 
         final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
 

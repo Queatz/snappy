@@ -19,7 +19,11 @@ public class MessageView extends ExistenceView {
     final PersonView to;
 
     public MessageView(Entity message) {
-        super(message);
+        this(message, EarthView.DEEP);
+    }
+
+    public MessageView(Entity message, EarthView view) {
+        super(message, view);
 
         EarthStore earthStore = EarthSingleton.of(EarthStore.class);
 

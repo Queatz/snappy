@@ -33,7 +33,7 @@ public class PersonView extends ExistenceView {
     }
 
     public PersonView(Entity person, EarthView view) {
-        super(person);
+        super(person, view);
 
         final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
 

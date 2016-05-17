@@ -4,6 +4,7 @@ import com.google.api.client.util.Lists;
 import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthSingleton;
+import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Viewable;
 
 import java.util.List;
@@ -21,11 +22,11 @@ public class MessagesAndContactsView implements Viewable {
         this.contacts = Lists.newArrayList();
 
         for (Entity message : messages) {
-            this.messages.add(new MessageView(message));
+            this.messages.add(new MessageView(message, EarthView.SHALLOW));
         }
 
         for (Entity contact : contacts) {
-            this.contacts.add(new RecentView(contact));
+            this.contacts.add(new RecentView(contact, EarthView.SHALLOW));
         }
     }
 

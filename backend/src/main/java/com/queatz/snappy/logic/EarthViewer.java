@@ -22,34 +22,44 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.text.View;
+
 /**
  * Created by jacob on 4/9/16.
  */
 public class EarthViewer {
     private static final Map<String, Constructor<? extends Viewable>> mapping = new HashMap<>();
 
-    static {
+    private static <T> Constructor<T> getConstructor(Class<T> clazz) {
         try {
-            // This is the entity to view mapping!
-            mapping.put(EarthKind.HUB_KIND, HubView.class.getConstructor(Entity.class));
-            mapping.put(EarthKind.CONTACT_KIND, ContactView.class.getConstructor(Entity.class));
-            mapping.put(EarthKind.FOLLOWER_KIND, FollowerView.class.getConstructor(Entity.class));
-            mapping.put(EarthKind.LIKE_KIND, LikeView.class.getConstructor(Entity.class));
-            mapping.put(EarthKind.OFFER_KIND, OfferView.class.getConstructor(Entity.class));
-            mapping.put(EarthKind.MESSAGE_KIND, MessageView.class.getConstructor(Entity.class));
-            mapping.put(EarthKind.PERSON_KIND, PersonView.class.getConstructor(Entity.class));
-            mapping.put(EarthKind.PARTY_KIND, PartyView.class.getConstructor(Entity.class));
-            mapping.put(EarthKind.LOCATION_KIND, LocationView.class.getConstructor(Entity.class));
-            mapping.put(EarthKind.RECENT_KIND, RecentView.class.getConstructor(Entity.class));
-            mapping.put(EarthKind.ENDORSEMENT_KIND, EndorsementView.class.getConstructor(Entity.class));
-            mapping.put(EarthKind.UPDATE_KIND, UpdateView.class.getConstructor(Entity.class));
-            mapping.put(EarthKind.JOIN_KIND, JoinView.class.getConstructor(Entity.class));
+            return clazz.getConstructor(Entity.class, EarthView.class);
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            return null;
         }
     }
 
+    static {
+        // This is the entity to view mapping!
+        mapping.put(EarthKind.HUB_KIND, getConstructor(HubView.class));
+        mapping.put(EarthKind.CONTACT_KIND, getConstructor(ContactView.class));
+        mapping.put(EarthKind.FOLLOWER_KIND, getConstructor(FollowerView.class));
+        mapping.put(EarthKind.LIKE_KIND, getConstructor(LikeView.class));
+        mapping.put(EarthKind.OFFER_KIND, getConstructor(OfferView.class));
+        mapping.put(EarthKind.MESSAGE_KIND, getConstructor(MessageView.class));
+        mapping.put(EarthKind.PERSON_KIND, getConstructor(PersonView.class));
+        mapping.put(EarthKind.PARTY_KIND, getConstructor(PartyView.class));
+        mapping.put(EarthKind.LOCATION_KIND, getConstructor(LocationView.class));
+        mapping.put(EarthKind.RECENT_KIND, getConstructor(RecentView.class));
+        mapping.put(EarthKind.ENDORSEMENT_KIND, getConstructor(EndorsementView.class));
+        mapping.put(EarthKind.UPDATE_KIND, getConstructor(UpdateView.class));
+        mapping.put(EarthKind.JOIN_KIND, getConstructor(JoinView.class));
+    }
+
     public Viewable getViewForEntityOrThrow(Entity entity) {
+        return getViewForEntityOrThrow(entity, EarthView.DEEP);
+    }
+
+    public Viewable getViewForEntityOrThrow(Entity entity, EarthView view) {
         Constructor<? extends Viewable> constructor = mapping.get(entity.getString(EarthField.KIND));
 
         if (constructor == null) {
@@ -58,7 +68,7 @@ public class EarthViewer {
         }
 
         try {
-            return constructor.newInstance(entity);
+            return constructor.newInstance(entity, view);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
