@@ -42,6 +42,8 @@ public class PersonView extends ExistenceView {
         about = person.getString(EarthField.ABOUT);
         imageUrl = person.getString(EarthField.IMAGE_URL);
         googleUrl = person.getString(EarthField.GOOGLE_URL);
+
+        // XXX TODO only if it's us
         auth = person.getString(EarthField.TOKEN);
 
         infoFollowers = earthStore.count(EarthKind.FOLLOWER_KIND, EarthField.TARGET, person.key());

@@ -3,6 +3,9 @@ package com.queatz.snappy.logic.interfaces;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
+import com.google.appengine.tools.cloudstorage.GcsFileOptions;
+import com.google.appengine.tools.cloudstorage.GcsFilename;
+import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.appengine.tools.cloudstorage.ListItem;
 import com.google.appengine.tools.cloudstorage.ListOptions;
 import com.google.appengine.tools.cloudstorage.ListResult;
@@ -14,17 +17,28 @@ import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.LikeEditor;
+import com.queatz.snappy.logic.editors.UpdateEditor;
 import com.queatz.snappy.logic.exceptions.LogicException;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.EntityListView;
 import com.queatz.snappy.logic.views.LikeView;
+import com.queatz.snappy.logic.views.UpdateView;
 import com.queatz.snappy.service.Push;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.PushSpec;
 
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by jacob on 5/9/16.
@@ -33,6 +47,7 @@ public class UpdateInterface implements Interfaceable {
 
     final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
     final LikeEditor likeEditor = EarthSingleton.of(LikeEditor.class);
+    final UpdateEditor updateEditor = EarthSingleton.of(UpdateEditor.class);
 
     @Override
     public String get(EarthAs as) {
@@ -55,6 +70,8 @@ public class UpdateInterface implements Interfaceable {
     @Override
     public String post(EarthAs as) {
         switch (as.getRoute().size()) {
+            case 0:
+                return postUpdate(as);
             case 1:
                 String updateId = as.getRoute().get(0);
 
@@ -63,6 +80,7 @@ public class UpdateInterface implements Interfaceable {
                 if (Boolean.toString(true).equals(like)) {
                     return likeUpdate(as, updateId);
                 }
+                break;
         }
 
         throw new NothingLogicResponse("update - bad path");
@@ -95,7 +113,7 @@ public class UpdateInterface implements Interfaceable {
         }
 
         try {
-            ListOptions options = new ListOptions.Builder().setPrefix("upto/photo/" + updateId + "/").setRecursive(false).build();
+            ListOptions options = new ListOptions.Builder().setPrefix("earth/thing/photo/" + updateId + "/").setRecursive(false).build();
             ListResult list = as.getApi().mGCS.list(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), options);
 
             Date lastModified = new Date(0);
@@ -123,6 +141,64 @@ public class UpdateInterface implements Interfaceable {
         }
 
         return null;
+    }
+
+    private String postUpdate(EarthAs as) {
+        Entity update = updateEditor.stageUpdate(as.getUser());
+        GcsFilename photoName = new GcsFilename(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), "earth/thing/photo/" + update.key().name() + "/" + new Date().getTime());
+
+        String message = null;
+        boolean photoUploaded = false;
+        String thingId = null;
+
+        try {
+            ServletFileUpload upload = new ServletFileUpload();
+            FileItemIterator iterator = upload.getItemIterator(as.getRequest());
+            while (iterator.hasNext()) {
+                FileItemStream item = iterator.next();
+                InputStream stream = item.openStream();
+
+                if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
+                    int len;
+                    byte[] buffer = new byte[8192];
+
+                    GcsOutputChannel outputChannel = as.getApi().mGCS.createOrReplace(photoName, GcsFileOptions.getDefaultInstance());
+
+                    while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
+                        outputChannel.write(ByteBuffer.wrap(buffer, 0, len));
+                    }
+
+                    outputChannel.close();
+
+                    photoUploaded = true;
+                }
+                else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {
+                    message = Streams.asString(stream, "UTF-8");
+                }
+                else if (Config.PARAM_THING.equals(item.getFieldName())) {
+                    thingId = Streams.asString(stream, "UTF-8");
+                }
+            }
+        }
+        catch (FileUploadException | IOException e) {
+            Logger.getLogger(Config.NAME).severe(e.toString());
+            throw new NothingLogicResponse("upto photo - couldn't upload because: " + e);
+        }
+
+        if (thingId == null) {
+            throw new NothingLogicResponse("post update - no thing");
+        }
+
+        if (message == null && !photoUploaded) {
+            throw new NothingLogicResponse("post update - nothing to post");
+        }
+
+        update = updateEditor.updateWith(update, earthStore.get(thingId), message, photoUploaded);
+
+        // XXX TODO post to followers of hub
+        //Push.getService().sendToFollowers(as.getUser().key().name(), new PushSpec<>(Config.PUSH_ACTION_NEW_UPTO, update));
+
+        return new UpdateView(update).toJson();
     }
 
 }

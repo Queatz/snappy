@@ -203,9 +203,12 @@ public class MeInterface implements Interfaceable {
         return null;
     }
 
+    /**
+     * @deprecated Use UpdateInterface
+     */
     private String postUpdate(EarthAs as) {
         Entity update = updateEditor.newUpdate(as.getUser());
-        GcsFilename photoName = new GcsFilename(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), "upto/photo/" + update.key().name() + "/" + new Date().getTime());
+        GcsFilename photoName = new GcsFilename(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), "earth/thing/photo/" + update.key().name() + "/" + new Date().getTime());
 
         String message = null;
         boolean allGood = false;
@@ -230,8 +233,6 @@ public class MeInterface implements Interfaceable {
                     outputChannel.close();
 
                     allGood = true;
-
-                    break;
                 }
                 else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {
                     message = Streams.asString(stream, "UTF-8");

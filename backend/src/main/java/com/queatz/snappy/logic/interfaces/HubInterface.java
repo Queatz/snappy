@@ -53,30 +53,30 @@ public class HubInterface implements Interfaceable {
 
     @Override
     public String post(EarthAs as) {
-        if (as.getRoute().isEmpty()) {
-            String[] name = as.getParameters().get(EarthField.NAME);
-            String[] address = as.getParameters().get(EarthField.ADDRESS);
-            String[] latitude = as.getParameters().get(EarthField.LATITUDE);
-            String[] longitude = as.getParameters().get(EarthField.LONGITUDE);
+        switch (as.getRoute().size()) {
+            case 0: {
+                String[] name = as.getParameters().get(EarthField.NAME);
+                String[] address = as.getParameters().get(EarthField.ADDRESS);
+                String[] latitude = as.getParameters().get(EarthField.LATITUDE);
+                String[] longitude = as.getParameters().get(EarthField.LONGITUDE);
 
-            if (name == null
-                    || address == null
-                    || name.length != 1
-                    || address.length != 1
-                    || latitude.length != 1
-                    || longitude.length != 1) {
-                throw new NothingLogicResponse("hub - name, address, and about parameters are expected");
+                if (name == null
+                        || address == null
+                        || name.length != 1
+                        || address.length != 1
+                        || latitude.length != 1
+                        || longitude.length != 1) {
+                    throw new NothingLogicResponse("hub - name, address, and about parameters are expected");
+                }
+
+                Entity hub = hubEditor.newHub(name[0], address[0],
+                        LatLng.of(Double.valueOf(latitude[0]), Double.valueOf(longitude[0])));
+
+                contactEditor.newContact(hub, as.getUser());
+
+                return new HubView(hub).toJson();
             }
-
-            Entity hub = hubEditor.newHub(name[0], address[0],
-                    LatLng.of(Double.valueOf(latitude[0]), Double.valueOf(longitude[0])));
-
-            contactEditor.newContact(hub, as.getUser());
-
-            return new HubView(hub).toJson();
-        }
-
-        else if(as.getRoute().size() == 1) {
+            case 1: {
             Entity hub = earthStore.get(as.getRoute().get(0));
 
             String[] name = as.getParameters().get(EarthField.NAME);
@@ -91,11 +91,17 @@ public class HubInterface implements Interfaceable {
             }
 
             hubEditor.edit(hub, extract(name), extract(address), latLng, extract(about));
-        }
 
-        else if (as.getRoute().size() == 2 && Config.PATH_PHOTO.equals(as.getRoute().get(1))) {
-            postPhoto(as);
-            return null;
+                break;
+            }
+
+            case 2: {
+                if (Config.PATH_PHOTO.equals(as.getRoute().get(1))) {
+                    postPhoto(as);
+                }
+
+                break;
+            }
         }
 
         return null;
