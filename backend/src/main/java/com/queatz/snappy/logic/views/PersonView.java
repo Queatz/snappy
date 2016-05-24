@@ -53,7 +53,7 @@ public class PersonView extends ExistenceView {
 
         switch (view) {
             case DEEP:
-                List<Entity> updatesList = earthStore.find(EarthKind.UPDATE_KIND, EarthField.SOURCE, person.key());
+                List<Entity> updatesList = earthStore.find(EarthKind.UPDATE_KIND, EarthField.TARGET, person.key());
                 List<Entity> offersList = earthStore.find(EarthKind.OFFER_KIND, EarthField.SOURCE, person.key());
 
                 updates = new EntityListView(updatesList).asList();

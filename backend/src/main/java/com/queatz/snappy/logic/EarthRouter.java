@@ -15,7 +15,9 @@ import com.queatz.snappy.logic.interfaces.MeInterface;
 import com.queatz.snappy.logic.interfaces.MessageInterface;
 import com.queatz.snappy.logic.interfaces.OfferInterface;
 import com.queatz.snappy.logic.interfaces.PersonInterface;
+import com.queatz.snappy.logic.interfaces.ProjectInterface;
 import com.queatz.snappy.logic.interfaces.RecentInterface;
+import com.queatz.snappy.logic.interfaces.ResourceInterface;
 import com.queatz.snappy.logic.interfaces.UpdateInterface;
 
 import java.util.HashMap;
@@ -46,6 +48,8 @@ public class EarthRouter {
         mapping.put(EarthKind.UPDATE_KIND, new UpdateInterface());
         mapping.put(EarthKind.JOIN_KIND, new JoinInterface());
         mapping.put(EarthKind.ENDORSEMENT_KIND, new EndorsementInterface());
+        mapping.put(EarthKind.RESOURCE_KIND, new ResourceInterface());
+        mapping.put(EarthKind.PROJECT_KIND, new ProjectInterface());
 
         /**
          * This is the mapping for special routes, such as /here and /me.

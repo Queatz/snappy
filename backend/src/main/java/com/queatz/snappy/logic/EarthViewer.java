@@ -14,15 +14,15 @@ import com.queatz.snappy.logic.views.MessageView;
 import com.queatz.snappy.logic.views.OfferView;
 import com.queatz.snappy.logic.views.PartyView;
 import com.queatz.snappy.logic.views.PersonView;
+import com.queatz.snappy.logic.views.ProjectView;
 import com.queatz.snappy.logic.views.RecentView;
+import com.queatz.snappy.logic.views.ResourceView;
 import com.queatz.snappy.logic.views.UpdateView;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.text.View;
 
 /**
  * Created by jacob on 4/9/16.
@@ -53,6 +53,8 @@ public class EarthViewer {
         mapping.put(EarthKind.ENDORSEMENT_KIND, getConstructor(EndorsementView.class));
         mapping.put(EarthKind.UPDATE_KIND, getConstructor(UpdateView.class));
         mapping.put(EarthKind.JOIN_KIND, getConstructor(JoinView.class));
+        mapping.put(EarthKind.RESOURCE_KIND, getConstructor(ResourceView.class));
+        mapping.put(EarthKind.PROJECT_KIND, getConstructor(ProjectView.class));
     }
 
     public Viewable getViewForEntityOrThrow(Entity entity) {

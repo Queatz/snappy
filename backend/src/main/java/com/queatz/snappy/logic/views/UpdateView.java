@@ -37,7 +37,7 @@ public class UpdateView extends ThingView {
         likers = earthStore.count(EarthKind.LIKE_KIND, EarthField.TARGET, update.key());
 
         if (update.contains(EarthField.TARGET)) {
-            target = earthViewer.getViewForEntityOrThrow(earthStore.get(update.getKey(EarthField.TARGET)));
+            target = earthViewer.getViewForEntityOrThrow(earthStore.get(update.getKey(EarthField.TARGET)), EarthView.SHALLOW);
         } else {
             target = null;
         }

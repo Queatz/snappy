@@ -94,7 +94,11 @@ public class EarthSearcher {
         List<Entity> results = new ArrayList<>();
 
         for(ScoredDocument document : index.search(query)) {
-            results.add(thingFromDocument(document));
+            Entity entity = thingFromDocument(document);
+
+            if (entity != null) {
+                results.add(entity);
+            }
         }
 
         return results;
