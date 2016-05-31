@@ -27,6 +27,10 @@ public class PersonView extends ExistenceView {
     final double infoDistance;
     final List<Viewable> updates;
     final List<Viewable> offers;
+    final List<Viewable> resources;
+    final List<Viewable> projects;
+    final List<Viewable> hubs;
+    final List<Viewable> clubs;
 
     public PersonView(Entity person) {
         this(person, EarthView.DEEP);
@@ -55,14 +59,26 @@ public class PersonView extends ExistenceView {
             case DEEP:
                 List<Entity> updatesList = earthStore.find(EarthKind.UPDATE_KIND, EarthField.TARGET, person.key());
                 List<Entity> offersList = earthStore.find(EarthKind.OFFER_KIND, EarthField.SOURCE, person.key());
+                List<Entity> resourcesList = earthStore.find(EarthKind.RESOURCE_KIND, EarthField.SOURCE, person.key());
+                List<Entity> projectsList = earthStore.find(EarthKind.PROJECT_KIND, EarthField.SOURCE, person.key());
+                List<Entity> hubsList = earthStore.find(EarthKind.HUB_KIND, EarthField.SOURCE, person.key());
+                List<Entity> clubsList = earthStore.find(EarthKind.CLUB_KIND, EarthField.SOURCE, person.key());
 
                 updates = new EntityListView(updatesList).asList();
                 offers = new EntityListView(offersList).asList();
+                resources = new EntityListView(resourcesList).asList();
+                projects = new EntityListView(projectsList).asList();
+                hubs = new EntityListView(hubsList).asList();
+                clubs = new EntityListView(clubsList).asList();
 
                 break;
             default:
                 updates = null;
                 offers = null;
+                resources = null;
+                projects = null;
+                hubs = null;
+                clubs = null;
         }
     }
 }
