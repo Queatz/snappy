@@ -295,6 +295,10 @@ public class EarthStore {
         return keyFactory.newKey(keyName);
     }
 
+    public Datastore getDatastore() {
+        return datastore;
+    }
+
 // XXX TODO When datastore supports geo
 //    public List<Entity> queryNearToWithDatastore(GeoPt center, String kindFilter) {
 //        // XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
