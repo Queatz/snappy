@@ -4,6 +4,7 @@ import com.queatz.snappy.logic.interfaces.ByNameInterface;
 import com.queatz.snappy.logic.interfaces.ContactInterface;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.logic.interfaces.FeedbackInterface;
 import com.queatz.snappy.logic.interfaces.HereInterface;
 import com.queatz.snappy.logic.interfaces.EndorsementInterface;
 import com.queatz.snappy.logic.interfaces.FollowerInterface;
@@ -57,6 +58,7 @@ public class EarthRouter {
         specialMapping.put(EarthSpecialRoute.HERE_ROUTE, new HereInterface());
         specialMapping.put(EarthSpecialRoute.ME_ROUTE, new MeInterface());
         specialMapping.put(EarthSpecialRoute.BY_NAME_ROUTE, new ByNameInterface());
+        specialMapping.put(EarthSpecialRoute.FEEDBACK_ROUTE, new FeedbackInterface());
     }
 
     public Interfaceable interfaceFromKindOrThrowNothingResponse(String kind) {

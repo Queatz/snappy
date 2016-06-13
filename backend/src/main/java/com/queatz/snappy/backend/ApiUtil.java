@@ -58,7 +58,8 @@ public class ApiUtil {
 
         ImagesService imagesService = ImagesServiceFactory.getImagesService();
         ServingUrlOptions servingUrlOptions = ServingUrlOptions.Builder.withGoogleStorageFileName(
-                "/gs/" + api.mAppIdentityService.getDefaultGcsBucketName() + "/" + fileName).imageSize(size);
+                "/gs/" + api.mAppIdentityService.getDefaultGcsBucketName() + "/" + fileName).imageSize(size)
+                .secureUrl(true);
         String photoUrl = imagesService.getServingUrl(servingUrlOptions);
 
         response.sendRedirect(photoUrl);
