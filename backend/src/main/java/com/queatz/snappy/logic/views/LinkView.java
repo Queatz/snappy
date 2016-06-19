@@ -26,7 +26,14 @@ public class LinkView extends ExistenceView {
         final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
         final EarthViewer earthViewer = EarthSingleton.of(EarthViewer.class);
 
-        source = earthViewer.getViewForEntityOrThrow(earthStore.get(link.getKey(EarthField.SOURCE)), view);
+        switch (view) {
+            case DEEP:
+                source = earthViewer.getViewForEntityOrThrow(earthStore.get(link.getKey(EarthField.SOURCE)), view);
+                break;
+            default:
+                source = null;
+        }
+
         target = earthViewer.getViewForEntityOrThrow(earthStore.get(link.getKey(EarthField.TARGET)), view);
     }
 }

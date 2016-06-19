@@ -52,6 +52,17 @@ public abstract class CommonThingInterface implements Interfaceable {
      */
     public abstract Entity editThing(EarthAs as, Entity thing);
 
+    /**
+     * Implement this method to delete things of this kind.
+     *
+     * @param thing The thing to delete.
+     * @return If the thing was deleted.
+     */
+    public boolean deleteThing(EarthAs as, Entity thing) {
+        earthStore.conclude(thing);
+        return true;
+    }
+
     @Override
     public String get(EarthAs as) {
         switch (as.getRoute().size()) {
@@ -93,9 +104,13 @@ public abstract class CommonThingInterface implements Interfaceable {
             case 2: {
                 if (Config.PATH_PHOTO.equals(as.getRoute().get(1))) {
                     postPhoto(as);
+                    return new SuccessView(true).toJson();
+                } else if (Config.PATH_DELETE.equals(as.getRoute().get(1))) {
+                    Entity thing = earthStore.get(as.getRoute().get(0));
+                    return new SuccessView(deleteThing(as, thing)).toJson();
                 }
 
-                return new SuccessView(true).toJson();
+                throw new NothingLogicResponse("thing - bad path");
             }
         }
 

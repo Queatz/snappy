@@ -46,7 +46,6 @@ public class PersonEditor {
                                String about,
                                String subscription) {
         Entity.Builder update = earthStore.edit(person)
-                .set(EarthField.TOKEN, token)
                 .set(EarthField.FIRST_NAME, firstName)
                 .set(EarthField.LAST_NAME, lastName)
                 .set(EarthField.GENDER, gender)
@@ -54,6 +53,10 @@ public class PersonEditor {
                 .set(EarthField.IMAGE_URL, imageUrl)
                 .set(EarthField.GOOGLE_ID, googleId)
                 .set(EarthField.GOOGLE_URL, googleUrl);
+
+        if (StringUtils.isBlank(person.getString(EarthField.TOKEN))) {
+            update.set(EarthField.TOKEN, token);
+        }
 
         if (StringUtils.isBlank(person.getString(EarthField.ABOUT))) {
             update.set(EarthField.ABOUT, about == null ? "" : about);

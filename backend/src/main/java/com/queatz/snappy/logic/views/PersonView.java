@@ -21,8 +21,9 @@ public class PersonView extends ExistenceView {
     final String imageUrl;
     final String googleUrl;
     final String auth;
-    final int infoFollowers;
-    final int infoFollowing;
+    final Integer infoFollowers;
+    final Integer infoFollowing;
+    final Integer infoOffers;
     final boolean infoAvailability;
     final double infoDistance;
     final List<Viewable> updates;
@@ -50,8 +51,6 @@ public class PersonView extends ExistenceView {
         // XXX TODO only if it's us
         auth = person.getString(EarthField.TOKEN);
 
-        infoFollowers = earthStore.count(EarthKind.FOLLOWER_KIND, EarthField.TARGET, person.key());
-        infoFollowing = earthStore.count(EarthKind.FOLLOWER_KIND, EarthField.SOURCE, person.key());
         infoAvailability = true;
         infoDistance = 0;
 
@@ -71,6 +70,10 @@ public class PersonView extends ExistenceView {
                 hubs = new EntityListView(hubsList, EarthView.SHALLOW).asList();
                 clubs = new EntityListView(clubsList, EarthView.SHALLOW).asList();
 
+                infoFollowers = earthStore.count(EarthKind.FOLLOWER_KIND, EarthField.TARGET, person.key());
+                infoFollowing = earthStore.count(EarthKind.FOLLOWER_KIND, EarthField.SOURCE, person.key());
+                infoOffers = null;
+
                 break;
             default:
                 updates = null;
@@ -79,6 +82,10 @@ public class PersonView extends ExistenceView {
                 projects = null;
                 hubs = null;
                 clubs = null;
+                infoFollowers = null;
+                infoFollowing = null;
+                infoOffers = earthStore.count(EarthKind.OFFER_KIND, EarthField.SOURCE, person.key());
+
         }
     }
 }

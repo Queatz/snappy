@@ -5,6 +5,7 @@ import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
@@ -42,7 +43,7 @@ public class HereInterface implements Interfaceable {
         personEditor.updateLocation(as.getUser(), latLng);
 
         // TODO - and make them views
-        return new EntityListView(earthStore.getNearby(latLng, kindFilter)).toJson();
+        return new EntityListView(earthStore.getNearby(latLng, kindFilter), EarthView.SHALLOW).toJson();
     }
 
     @Override
