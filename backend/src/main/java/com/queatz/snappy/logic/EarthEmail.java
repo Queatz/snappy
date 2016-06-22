@@ -21,17 +21,28 @@ import javax.servlet.http.HttpServletRequest;
  * Created by jacob on 5/29/16.
  */
 public class EarthEmail {
-    public void sendEmail(Entity fromPerson,
-                          Entity toPerson,
-                          String subject,
-                          String message) {
+    public void sendRawEmail(Entity fromPerson,
+                             Entity toPerson,
+                             String subject,
+                             String message) {
+        sendRawEmail(
+                fromPerson.getString(EarthField.EMAIL),
+                toPerson.getString(EarthField.EMAIL),
+                subject,
+                message);
+    }
+
+    public void sendRawEmail(String fromPerson,
+                             String toPerson,
+                             String subject,
+                             String message) {
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
 
         try {
             Message msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress(fromPerson.getString(EarthField.EMAIL)));
-            msg.addRecipient(Message.RecipientType.TO, new InternetAddress(toPerson.getString(EarthField.EMAIL)));
+            msg.setFrom(new InternetAddress(fromPerson));
+            msg.addRecipient(Message.RecipientType.TO, new InternetAddress(toPerson));
             msg.setSubject(subject);
             msg.setText(message);
             Transport.send(msg);

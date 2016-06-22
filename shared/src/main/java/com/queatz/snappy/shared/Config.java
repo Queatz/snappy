@@ -9,8 +9,12 @@ public class Config {
 
     // Android
 
-    public static final boolean BETA_VERSION = false;
+    public static final boolean BETA_VERSION = true;
     public static final int WIPE_VERSIONS_BELOW = 26;
+
+    // The email emails are sent from
+    public static final String VILLAGE_EMAIL = "my@village.city";
+    public static final String VILLAGE_WEBSITE = "https://village.city/";
 
     public static final String LOG_TAG = "SNAPPY_LOG";
     public static final String API_URL = (BETA_VERSION ? "https://beta-dot-queatz-snappy.appspot.com/api/" : "http://queatz-snappy.appspot.com/api/");

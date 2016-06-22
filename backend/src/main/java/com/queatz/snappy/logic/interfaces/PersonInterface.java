@@ -1,9 +1,9 @@
 package com.queatz.snappy.logic.interfaces;
 
 import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.StructuredQuery;
 import com.google.common.collect.Lists;
 import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthSingleton;
@@ -15,7 +15,6 @@ import com.queatz.snappy.logic.editors.RecentEditor;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.mines.FollowerMine;
 import com.queatz.snappy.logic.mines.MessageMine;
-import com.queatz.snappy.logic.mines.PersonMine;
 import com.queatz.snappy.logic.mines.RecentMine;
 import com.queatz.snappy.logic.views.EntityListView;
 import com.queatz.snappy.logic.views.FollowerView;
@@ -34,6 +33,7 @@ import java.util.List;
 public class PersonInterface implements Interfaceable {
 
     EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+    EarthUpdate earthEvent = EarthSingleton.of(EarthUpdate.class);
     RecentMine recentMine = EarthSingleton.of(RecentMine.class);
     RecentEditor recentEditor = EarthSingleton.of(RecentEditor.class);
     FollowerEditor followerEditor = EarthSingleton.of(FollowerEditor.class);

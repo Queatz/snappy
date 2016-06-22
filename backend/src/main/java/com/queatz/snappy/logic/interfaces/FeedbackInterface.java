@@ -26,7 +26,7 @@ public class FeedbackInterface implements Interfaceable {
         Entity jacob = earthStore.get("-697803823443327660");
         String feedback = as.getRequest().getParameter("feedback");
 
-        earthEmail.sendEmail(as.getUser(), jacob, "Village Feedback", feedback);
+        earthEmail.sendRawEmail(as.getUser(), jacob, "Village Feedback", feedback);
 
         return new SuccessView(true).toJson();
     }

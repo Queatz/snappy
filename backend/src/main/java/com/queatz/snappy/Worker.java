@@ -5,13 +5,18 @@ import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 import com.google.cloud.datastore.Entity;
+import com.google.gson.JsonObject;
 import com.googlecode.objectify.ObjectifyService;
 import com.queatz.snappy.backend.RegistrationRecord;
+import com.queatz.snappy.logic.EarthEmail;
+import com.queatz.snappy.logic.EarthJson;
+import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthSearcher;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
@@ -56,6 +61,8 @@ public class Worker extends HttpServlet {
 
     EarthSearcher earthSearcher = EarthSingleton.of(EarthSearcher.class);
     EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+    EarthEmail earthEmail = EarthSingleton.of(EarthEmail.class);
+    EarthUpdate earthUpdate = EarthSingleton.of(EarthUpdate.class);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
@@ -66,9 +73,6 @@ public class Worker extends HttpServlet {
                 String toUser = req.getParameter("toUser");
                 String fromUser = req.getParameter("fromUser");
                 String message = req.getParameter("message");
-
-                Sender sender = new Sender(Config.GCM_KEY);
-                Message msg = new Message.Builder().addData("message", message).build();
 
                 HashSet<SendInstance> toUsers = new HashSet<>();
 
@@ -104,28 +108,36 @@ public class Worker extends HttpServlet {
 
                 // Send
 
+                final Sender sender = new Sender(Config.GCM_KEY);
+                final Message msg = new Message.Builder().addData("message", message).build();
+
                 for(SendInstance sendInstance : toUsers) {
                     List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).filter("userId", sendInstance.userId).list();
+
+
+                    if (records.isEmpty()) {
+//                        if (!passesSocialMode(sendInstance, Config.SOCIAL_MODE_FRIENDS)) {
+//                            continue;
+//                        }
+
+                        sendEmail(action, message, sendInstance.userId);
+                        continue;
+                    }
+
+                    boolean didSendPush = false;
+
+                    // Send to devices
                     for (RegistrationRecord record : records) {
-                        if(sendInstance.lowestRequiredSocialMode != null && record.getSocialMode() != null) {
-                            if(
-                                    (
-                                            Config.SOCIAL_MODE_OFF.equals(record.getSocialMode()) &&
-                                            (sendInstance.lowestRequiredSocialMode.equals(Config.SOCIAL_MODE_FRIENDS) || sendInstance.lowestRequiredSocialMode.equals(Config.SOCIAL_MODE_ON))
-                                    ) ||
-                                    (
-                                            Config.SOCIAL_MODE_FRIENDS.equals(record.getSocialMode()) &&
-                                            (sendInstance.lowestRequiredSocialMode.equals(Config.SOCIAL_MODE_ON))
-                                    )
-                            ) {
-                                continue;
-                            }
+                        if (!passesSocialMode(sendInstance, record.getSocialMode())) {
+                            continue;
                         }
 
                         try {
                             Result result = sender.send(msg, record.getRegId(), 5);
 
                             if (result.getMessageId() != null) {
+                                didSendPush = true;
+
                                 String canonicalRegId = result.getCanonicalRegistrationId();
                                 if (canonicalRegId != null) {
                                     record.setRegId(canonicalRegId);
@@ -138,12 +150,64 @@ public class Worker extends HttpServlet {
                                 }
                             }
                         } catch (IOException e) {
-                            Logger.getLogger("push").warning("error sending" + e);
+                            Logger.getLogger("push").warning("error sending, trying email fallback " + e);
                             e.printStackTrace();
                         }
+                    }
+
+                    if (!didSendPush) {
+                        sendEmail(action, message, sendInstance.userId);
                     }
                 }
                 break;
         }
+    }
+
+    private boolean passesSocialMode(SendInstance sendInstance, String socialMode) {
+        if(sendInstance.lowestRequiredSocialMode != null && socialMode != null) {
+            if(
+                    (
+                            Config.SOCIAL_MODE_OFF.equals(socialMode) &&
+                                    (sendInstance.lowestRequiredSocialMode.equals(Config.SOCIAL_MODE_FRIENDS) || sendInstance.lowestRequiredSocialMode.equals(Config.SOCIAL_MODE_ON))
+                    ) ||
+                            (
+                                    Config.SOCIAL_MODE_FRIENDS.equals(socialMode) &&
+                                            (sendInstance.lowestRequiredSocialMode.equals(Config.SOCIAL_MODE_ON))
+                            )
+                    ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void sendEmail(String action, String message, String toUser) {
+        Entity thing;
+
+        try {
+            String id = EarthSingleton.of(EarthJson.class)
+                    .fromJson(message, JsonObject.class)
+                    .get("body").getAsJsonObject()
+                    .get("id").getAsString();
+
+            thing = earthStore.get(id);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return;
+        }
+
+        final Eventable eventable = earthUpdate.get(action);
+        final String subject = eventable.makeSubject(thing);
+
+        // Not an email-able notification
+        if (subject == null) {
+            return;
+        }
+
+        earthEmail.sendRawEmail(Config.VILLAGE_EMAIL,
+                earthStore.get(toUser).getString(EarthField.EMAIL),
+                subject,
+                eventable.makeEmail(thing));
     }
 }
