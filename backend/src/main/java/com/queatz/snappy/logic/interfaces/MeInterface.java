@@ -4,7 +4,6 @@ import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.cloud.datastore.Entity;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.queatz.snappy.backend.GooglePurchaseDataSpec;
 import com.queatz.snappy.logic.EarthAs;
@@ -12,10 +11,14 @@ import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.OfferEditor;
 import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.editors.UpdateEditor;
+import com.queatz.snappy.logic.eventables.ClearNotificationEvent;
+import com.queatz.snappy.logic.eventables.NewOfferEvent;
+import com.queatz.snappy.logic.eventables.NewUpdateEvent;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.mines.MessageMine;
 import com.queatz.snappy.logic.mines.RecentMine;
@@ -27,7 +30,6 @@ import com.queatz.snappy.logic.views.UpdateView;
 import com.queatz.snappy.service.Buy;
 import com.queatz.snappy.service.Push;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.PushSpec;
 
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -55,6 +57,7 @@ public class MeInterface implements Interfaceable {
     RecentMine recentMine = EarthSingleton.of(RecentMine.class);
     OfferEditor offerEditor = EarthSingleton.of(OfferEditor.class);
     EarthJson earthJson = EarthSingleton.of(EarthJson.class);
+    EarthUpdate earthUpdate = EarthSingleton.of(EarthUpdate.class);
 
     @Override
     public String get(EarthAs as) {
@@ -125,10 +128,8 @@ public class MeInterface implements Interfaceable {
     }
 
     private String postClearNotification(EarthAs as, String notification) {
-        Push.getService().send(as.getUser().key().name(), new PushSpec<>(
-                Config.PUSH_ACTION_CLEAR_NOTIFICATION,
-                ImmutableMap.of("notification", notification)
-        ));
+        earthUpdate.send(new ClearNotificationEvent(notification))
+                .to(as.getUser());
 
         return new SuccessView(true).toJson();
     }
@@ -192,7 +193,8 @@ public class MeInterface implements Interfaceable {
             Entity offer = offerEditor.newOffer(as.getUser(), details, price, unit);
 
             if (offer != null) {
-                Push.getService().sendToFollowers(as.getUser().key().name(), new PushSpec<>(Config.PUSH_ACTION_NEW_OFFER, offer));
+                earthUpdate.send(new NewOfferEvent(offer))
+                        .toFollowersOf(as.getUser());
 
                 return new OfferView(offer).setLocalId(localId).toJson();
             } else {
@@ -249,7 +251,8 @@ public class MeInterface implements Interfaceable {
         }
 
         if (allGood) {
-            Push.getService().sendToFollowers(as.getUser().key().name(), new PushSpec<>(Config.PUSH_ACTION_NEW_UPTO, update));
+            earthUpdate.send(new NewUpdateEvent(update))
+                    .toFollowersOf(as.getUser());
         } else {
             throw new NothingLogicResponse("upto photo - not all good");
         }

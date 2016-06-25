@@ -2,9 +2,6 @@ package com.queatz.snappy.service;
 
 import com.googlecode.objectify.ObjectifyService;
 import com.queatz.snappy.backend.RegistrationRecord;
-import com.queatz.snappy.logic.EarthJson;
-import com.queatz.snappy.logic.EarthSingleton;
-import com.queatz.snappy.shared.PushSpec;
 
 import java.util.Date;
 
@@ -56,21 +53,6 @@ public class Push {
             return;
         }
         ofy().delete().entity(record).now();
-    }
-
-    public void send(final String toUser, final PushSpec message) {
-        if(message == null)
-            return;
-
-        // XXX TODO Should use new MessagePush().toJson()
-        Queue.getService().enqueuePushMessageToUser(toUser, EarthSingleton.of(EarthJson.class).toJson(message));
-    }
-
-    public void sendToFollowers(final String fromUser, final PushSpec message) {
-        if(message == null)
-            return;
-
-        Queue.getService().enqueuePushMessageFromUser(fromUser, EarthSingleton.of(EarthJson.class).toJson(message));
     }
 
     public void clear(String messageId) {

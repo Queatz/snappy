@@ -1,9 +1,13 @@
 package com.queatz.snappy.logic.eventables;
 
 import com.google.cloud.datastore.Entity;
+import com.google.common.collect.ImmutableMap;
+import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.concepts.Eventable;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.PushSpec;
 
 /**
  * Created by jacob on 6/19/16.
@@ -11,18 +15,47 @@ import com.queatz.snappy.logic.concepts.Eventable;
 public class NewPartyEvent implements Eventable {
     EarthStore earthStore = EarthSingleton.of(EarthStore.class);
 
+    Entity party;
+
+    // Serialization
+
+    public NewPartyEvent() {}
+
+    public NewPartyEvent fromData(String data) {
+        party = earthStore.get(data);
+        return this;
+    }
+
+    public String toData() {
+        return party.key().name();
+    }
+
+    // End Serialization
+
+    public NewPartyEvent(Entity party) {
+        this.party = party;
+    }
+
     @Override
-    public String makePush(Entity thing) {
+    public Object makePush() {
+        return new PushSpec<>(
+                Config.PUSH_ACTION_NEW_PARTY,
+                ImmutableMap.of(
+                        "id", party.key().name(),
+                        "name", party.getKey(EarthField.NAME),
+                        "date", party.getKey(EarthField.DATE), // go deeper {name: ...}
+                        "host", party.getKey(EarthField.HOST) // go deeper {name: ...}
+                )
+        );
+    }
+
+    @Override
+    public String makeSubject() {
         return null;
     }
 
     @Override
-    public String makeSubject(Entity thing) {
-        return null;
-    }
-
-    @Override
-    public String makeEmail(Entity thing) {
+    public String makeEmail() {
         return null;
     }
 

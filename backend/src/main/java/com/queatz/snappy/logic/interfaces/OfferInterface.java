@@ -7,17 +7,17 @@ import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.editors.EndorsementEditor;
 import com.queatz.snappy.logic.editors.OfferEditor;
+import com.queatz.snappy.logic.eventables.OfferEndorsementEvent;
 import com.queatz.snappy.logic.exceptions.LogicException;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.EndorsementView;
 import com.queatz.snappy.logic.views.EntityListView;
 import com.queatz.snappy.logic.views.OfferView;
 import com.queatz.snappy.logic.views.SuccessView;
-import com.queatz.snappy.service.Push;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.PushSpec;
 
 import java.io.IOException;
 import java.util.Date;
@@ -31,6 +31,7 @@ public class OfferInterface implements com.queatz.snappy.logic.concepts.Interfac
     final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
     final OfferEditor offerEditor = EarthSingleton.of(OfferEditor.class);
     final EndorsementEditor endorsementEditor = EarthSingleton.of(EndorsementEditor.class);
+    final EarthUpdate earthUpdate = EarthSingleton.of(EarthUpdate.class);
 
     @Override
     public String get(EarthAs as) {
@@ -132,7 +133,8 @@ public class OfferInterface implements com.queatz.snappy.logic.concepts.Interfac
         // XXX TODO don't allow endorse self
         Entity endorsement = endorsementEditor.newEndorsement(offer, as.getUser());
 
-        Push.getService().send(offer.getKey(EarthField.SOURCE).name(), new PushSpec<>(Config.PUSH_ACTION_OFFER_ENDORSEMENT, endorsement));
+        earthUpdate.send(new OfferEndorsementEvent(endorsement))
+                .to(offer.getKey(EarthField.SOURCE));
 
         return new EndorsementView(endorsement).setLocalId(localId).toJson();
     }

@@ -6,16 +6,17 @@ import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.JoinEditor;
 import com.queatz.snappy.logic.editors.PartyEditor;
+import com.queatz.snappy.logic.eventables.JoinRequestEvent;
+import com.queatz.snappy.logic.eventables.NewPartyEvent;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.mines.JoinMine;
 import com.queatz.snappy.logic.views.JoinView;
 import com.queatz.snappy.logic.views.PartyView;
-import com.queatz.snappy.service.Push;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.PushSpec;
 
 import java.util.Date;
 
@@ -24,10 +25,11 @@ import java.util.Date;
  */
 public class PartyInterface implements Interfaceable {
 
-    EarthStore earthStore = EarthSingleton.of(EarthStore.class);
-    PartyEditor partyEditor = EarthSingleton.of(PartyEditor.class);
-    JoinMine joinMine = EarthSingleton.of(JoinMine.class);
-    JoinEditor joinEditor = EarthSingleton.of(JoinEditor.class);
+    final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+    final PartyEditor partyEditor = EarthSingleton.of(PartyEditor.class);
+    final JoinMine joinMine = EarthSingleton.of(JoinMine.class);
+    final JoinEditor joinEditor = EarthSingleton.of(JoinEditor.class);
+    final EarthUpdate earthUpdate = EarthSingleton.of(EarthUpdate.class);
 
     @Override
     public String get(EarthAs as) {
@@ -61,7 +63,8 @@ public class PartyInterface implements Interfaceable {
                         details
                 );
 
-                Push.getService().sendToFollowers(as.getUser().key().name(), new PushSpec<>(Config.PUSH_ACTION_NEW_PARTY, party));
+                earthUpdate.send(new NewPartyEvent(party))
+                        .toFollowersOf(as.getUser());
 
                 return new PartyView(party).setLocalId(localId).toJson();
             case 1:
@@ -85,7 +88,8 @@ public class PartyInterface implements Interfaceable {
         Entity join = joinEditor.newJoin(as.getUser(), party);
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
-        Push.getService().send(party.getKey(EarthField.HOST).name(), new PushSpec<>(Config.PUSH_ACTION_JOIN_REQUEST, join));
+        earthUpdate.send(new JoinRequestEvent(join))
+                .to(party.getKey(EarthField.HOST));
 
         return new JoinView(join).setLocalId(localId).toJson();
     }

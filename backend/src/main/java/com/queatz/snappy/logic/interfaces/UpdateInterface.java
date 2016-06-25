@@ -15,17 +15,17 @@ import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.LikeEditor;
 import com.queatz.snappy.logic.editors.UpdateEditor;
+import com.queatz.snappy.logic.eventables.LikeEvent;
 import com.queatz.snappy.logic.exceptions.LogicException;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.EntityListView;
 import com.queatz.snappy.logic.views.LikeView;
 import com.queatz.snappy.logic.views.UpdateView;
-import com.queatz.snappy.service.Push;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.PushSpec;
 
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -48,6 +48,7 @@ public class UpdateInterface implements Interfaceable {
     final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
     final LikeEditor likeEditor = EarthSingleton.of(LikeEditor.class);
     final UpdateEditor updateEditor = EarthSingleton.of(UpdateEditor.class);
+    final EarthUpdate earthUpdate = EarthSingleton.of(EarthUpdate.class);
 
     @Override
     public String get(EarthAs as) {
@@ -89,10 +90,12 @@ public class UpdateInterface implements Interfaceable {
     private String likeUpdate(EarthAs as, String updateId) {
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
-        Entity like = likeEditor.newLike(as.getUser(), earthStore.get(updateId));
+        Entity poster = earthStore.get(updateId);
+        Entity like = likeEditor.newLike(as.getUser(), poster);
 
         // XXX TODO authorize && not my own like
-        Push.getService().send(as.getUser().key().name(), new PushSpec<>(Config.PUSH_ACTION_LIKE_UPDATE, like));
+        earthUpdate.send(new LikeEvent(like))
+                .to(poster.getKey(EarthField.SOURCE));
 
         return new LikeView(like).setLocalId(localId).toJson();
     }

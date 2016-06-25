@@ -1,11 +1,13 @@
 package com.queatz.snappy.logic.eventables;
 
 import com.google.cloud.datastore.Entity;
+import com.google.common.collect.ImmutableMap;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.PushSpec;
 
 /**
  * Created by jacob on 6/19/16.
@@ -13,24 +15,52 @@ import com.queatz.snappy.shared.Config;
 public class NewOfferEvent implements Eventable {
     EarthStore earthStore = EarthSingleton.of(EarthStore.class);
 
-    @Override
-    public String makePush(Entity thing) {
-        return null;
+    Entity offer;
+
+    // Serialization
+
+    public NewOfferEvent() {}
+
+    public NewOfferEvent fromData(String data) {
+        offer = earthStore.get(data);
+        return this;
+    }
+
+    public String toData() {
+        return offer.key().name();
+    }
+
+    // End Serialization
+
+    public NewOfferEvent(Entity offer) {
+        this.offer = offer;
     }
 
     @Override
-    public String makeSubject(Entity thing) {
-        Entity person = earthStore.get(thing.getKey(EarthField.SOURCE));
+    public Object makePush() {
+        return new PushSpec<>(
+                Config.PUSH_ACTION_NEW_OFFER,
+                ImmutableMap.of(
+                        "id", offer.key().name(),
+                        "details", offer.getKey(EarthField.ABOUT), // go deeper {name: ...}
+                        "person", offer.getKey(EarthField.SOURCE) // go deeper {name: ...}
+                )
+        );
+    }
+
+    @Override
+    public String makeSubject() {
+        Entity person = earthStore.get(offer.getKey(EarthField.SOURCE));
 
         return person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME)  + " added a new offer";
     }
 
     @Override
-    public String makeEmail(Entity thing) {
-        Entity person = earthStore.get(thing.getKey(EarthField.SOURCE));
+    public String makeEmail() {
+        Entity person = earthStore.get(offer.getKey(EarthField.SOURCE));
         String personUrl = Config.VILLAGE_WEBSITE + person.getString(EarthField.GOOGLE_URL);
 
-        return thing.getString(EarthField.NAME) + "<br /><br />View their profile at " + personUrl;
+        return offer.getString(EarthField.NAME) + "<br /><br />View their profile at " + personUrl;
     }
 
     @Override

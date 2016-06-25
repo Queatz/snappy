@@ -5,17 +5,16 @@ import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 import com.google.cloud.datastore.Entity;
-import com.google.gson.JsonObject;
 import com.googlecode.objectify.ObjectifyService;
 import com.queatz.snappy.backend.RegistrationRecord;
 import com.queatz.snappy.logic.EarthEmail;
-import com.queatz.snappy.logic.EarthJson;
-import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthSearcher;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
 
@@ -63,6 +62,7 @@ public class Worker extends HttpServlet {
     EarthStore earthStore = EarthSingleton.of(EarthStore.class);
     EarthEmail earthEmail = EarthSingleton.of(EarthEmail.class);
     EarthUpdate earthUpdate = EarthSingleton.of(EarthUpdate.class);
+    EarthJson earthJson = EarthSingleton.of(EarthJson.class);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
@@ -72,7 +72,8 @@ public class Worker extends HttpServlet {
             case "message":
                 String toUser = req.getParameter("toUser");
                 String fromUser = req.getParameter("fromUser");
-                String message = req.getParameter("message");
+                String data = req.getParameter("message");
+                Eventable eventable = earthUpdate.from(action, data);
 
                 HashSet<SendInstance> toUsers = new HashSet<>();
 
@@ -109,7 +110,7 @@ public class Worker extends HttpServlet {
                 // Send
 
                 final Sender sender = new Sender(Config.GCM_KEY);
-                final Message msg = new Message.Builder().addData("message", message).build();
+                final Message msg = new Message.Builder().addData("message", earthJson.toJson(eventable.makePush())).build();
 
                 for(SendInstance sendInstance : toUsers) {
                     List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).filter("userId", sendInstance.userId).list();
@@ -120,7 +121,7 @@ public class Worker extends HttpServlet {
 //                            continue;
 //                        }
 
-                        sendEmail(action, message, sendInstance.userId);
+                        sendEmail(eventable, sendInstance.userId);
                         continue;
                     }
 
@@ -156,7 +157,7 @@ public class Worker extends HttpServlet {
                     }
 
                     if (!didSendPush) {
-                        sendEmail(action, message, sendInstance.userId);
+                        sendEmail(eventable, sendInstance.userId);
                     }
                 }
                 break;
@@ -182,23 +183,8 @@ public class Worker extends HttpServlet {
         return false;
     }
 
-    private void sendEmail(String action, String message, String toUser) {
-        Entity thing;
-
-        try {
-            String id = EarthSingleton.of(EarthJson.class)
-                    .fromJson(message, JsonObject.class)
-                    .get("body").getAsJsonObject()
-                    .get("id").getAsString();
-
-            thing = earthStore.get(id);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            return;
-        }
-
-        final Eventable eventable = earthUpdate.get(action);
-        final String subject = eventable.makeSubject(thing);
+    private void sendEmail(Eventable eventable, String toUser) {
+        final String subject = eventable.makeSubject();
 
         // Not an email-able notification
         if (subject == null) {
@@ -208,6 +194,6 @@ public class Worker extends HttpServlet {
         earthEmail.sendRawEmail(Config.VILLAGE_EMAIL,
                 earthStore.get(toUser).getString(EarthField.EMAIL),
                 subject,
-                eventable.makeEmail(thing));
+                eventable.makeEmail());
     }
 }

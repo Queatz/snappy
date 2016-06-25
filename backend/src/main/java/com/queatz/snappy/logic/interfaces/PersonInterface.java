@@ -3,15 +3,17 @@ package com.queatz.snappy.logic.interfaces;
 import com.google.cloud.datastore.Entity;
 import com.google.common.collect.Lists;
 import com.queatz.snappy.logic.EarthAs;
-import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.FollowerEditor;
 import com.queatz.snappy.logic.editors.MessageEditor;
 import com.queatz.snappy.logic.editors.RecentEditor;
+import com.queatz.snappy.logic.eventables.FollowEvent;
+import com.queatz.snappy.logic.eventables.MessageEvent;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.mines.FollowerMine;
 import com.queatz.snappy.logic.mines.MessageMine;
@@ -21,9 +23,7 @@ import com.queatz.snappy.logic.views.FollowerView;
 import com.queatz.snappy.logic.views.MessageView;
 import com.queatz.snappy.logic.views.PersonView;
 import com.queatz.snappy.logic.views.SuccessView;
-import com.queatz.snappy.service.Push;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.PushSpec;
 
 import java.util.List;
 
@@ -40,6 +40,7 @@ public class PersonInterface implements Interfaceable {
     FollowerMine followerMine = EarthSingleton.of(FollowerMine.class);
     MessageEditor messageEditor = EarthSingleton.of(MessageEditor.class);
     MessageMine messageMine = EarthSingleton.of(MessageMine.class);
+    final EarthUpdate earthUpdate = EarthSingleton.of(EarthUpdate.class);
 
     @Override
     public String get(EarthAs as) {
@@ -137,7 +138,8 @@ public class PersonInterface implements Interfaceable {
 
         Entity follow = followerEditor.newFollower(as.getUser(), person);
 
-        Push.getService().send(follow.getKey(EarthField.TARGET).name(), new PushSpec<>(Config.PUSH_ACTION_FOLLOW, follow));
+        earthUpdate.send(new FollowEvent(follow))
+                .to(follow.getKey(EarthField.TARGET));
 
         return new FollowerView(follow).setLocalId(localId).toJson();
     }
@@ -155,7 +157,7 @@ public class PersonInterface implements Interfaceable {
 
         recentEditor.updateWithMessage(sent);
 
-        Push.getService().send(person.key().name(), new PushSpec<>(Config.PUSH_ACTION_MESSAGE, sent));
+        earthUpdate.send(new MessageEvent(sent)).to(person);
 
         return new MessageView(sent).setLocalId(localId).toJson();
     }
