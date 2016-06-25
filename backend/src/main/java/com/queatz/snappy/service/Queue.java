@@ -23,16 +23,16 @@ public class Queue {
         queue = QueueFactory.getQueue(Config.QUEUE_WORKER_NAME);
     }
 
-    public void enqueuePushMessageToUser(String toUser, String message) {
+    public void enqueuePushMessageToUser(String toUser, String action, String message) {
         queue.add(TaskOptions.Builder.withUrl(Config.QUEUE_WORKER_URL)
-                .param("action", "message")
+                .param("action", action)
                 .param("toUser", toUser)
                 .param("message", message));
     }
 
-    public void enqueuePushMessageFromUser(String fromUser, String message) {
+    public void enqueuePushMessageFromUser(String fromUser, String action, String message) {
         queue.add(TaskOptions.Builder.withUrl(Config.QUEUE_WORKER_URL)
-                .param("action", "message")
+                .param("action", action)
                 .param("fromUser", fromUser)
                 .param("message", message));
     }

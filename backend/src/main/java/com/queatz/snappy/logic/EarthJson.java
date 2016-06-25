@@ -3,7 +3,9 @@ package com.queatz.snappy.logic;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 
 /**
@@ -21,5 +23,9 @@ public class EarthJson {
 
     public <T> T fromJson(String json, Class<T> clazz) {
         return gson.fromJson(json, clazz);
+    }
+
+    public <T> T fromJson(String json, Type token) {
+        return gson.fromJson(json, token);
     }
 }

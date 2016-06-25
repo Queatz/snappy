@@ -68,99 +68,96 @@ public class Worker extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         String action = req.getParameter("action");
 
-        switch (action) {
-            case "message":
-                String toUser = req.getParameter("toUser");
-                String fromUser = req.getParameter("fromUser");
-                String data = req.getParameter("message");
-                Eventable eventable = earthUpdate.from(action, data);
+        String toUser = req.getParameter("toUser");
+        String fromUser = req.getParameter("fromUser");
+        String data = req.getParameter("message");
 
-                HashSet<SendInstance> toUsers = new HashSet<>();
+        Eventable eventable = earthUpdate.from(action, data);
 
-                // Specific
+        HashSet<SendInstance> toUsers = new HashSet<>();
 
-                if(toUser != null) {
-                    toUsers.add(new SendInstance(toUser, Config.SOCIAL_MODE_OFF));
+        // Specific
+
+        if(toUser != null) {
+            toUsers.add(new SendInstance(toUser, Config.SOCIAL_MODE_OFF));
+        }
+
+        // Social Mode: Friends
+
+        if(fromUser != null) {
+            for(Entity follow : earthStore.find(EarthKind.FOLLOWER_KIND, EarthField.TARGET, earthStore.key(fromUser))) {
+                toUsers.add(new SendInstance(follow.getKey(EarthField.SOURCE).name(), Config.SOCIAL_MODE_FRIENDS));
+            }
+        }
+
+        // Social Mode: On
+        // Friends will have higher priority due to HashSet not overwriting existing elements
+
+        if(fromUser != null) {
+            Entity source = earthStore.get(fromUser);
+
+            for (Entity person : earthSearcher.getNearby(EarthKind.PERSON_KIND,
+                    source.getLatLng(EarthField.GEO), 300)) {
+                if(fromUser.equals(person.key().name())) {
+                    continue;
                 }
 
-                // Social Mode: Friends
+                toUsers.add(new SendInstance(person.key().name(), Config.SOCIAL_MODE_ON));
+            }
+        }
 
-                if(fromUser != null) {
-                    for(Entity follow : earthStore.find(EarthKind.FOLLOWER_KIND, EarthField.TARGET, earthStore.key(fromUser))) {
-                        toUsers.add(new SendInstance(follow.getKey(EarthField.SOURCE).name(), Config.SOCIAL_MODE_FRIENDS));
-                    }
-                }
+        // Send
 
-                // Social Mode: On
-                // Friends will have higher priority due to HashSet not overwriting existing elements
+        final Sender sender = new Sender(Config.GCM_KEY);
+        final Message msg = new Message.Builder().addData("message", earthJson.toJson(eventable.makePush())).build();
 
-                if(fromUser != null) {
-                    Entity source = earthStore.get(fromUser);
-
-                    for (Entity person : earthSearcher.getNearby(EarthKind.PERSON_KIND,
-                            source.getLatLng(EarthField.GEO), 300)) {
-                        if(fromUser.equals(person.key().name())) {
-                            continue;
-                        }
-
-                        toUsers.add(new SendInstance(person.key().name(), Config.SOCIAL_MODE_ON));
-                    }
-                }
-
-                // Send
-
-                final Sender sender = new Sender(Config.GCM_KEY);
-                final Message msg = new Message.Builder().addData("message", earthJson.toJson(eventable.makePush())).build();
-
-                for(SendInstance sendInstance : toUsers) {
-                    List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).filter("userId", sendInstance.userId).list();
+        for(SendInstance sendInstance : toUsers) {
+            List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).filter("userId", sendInstance.userId).list();
 
 
-                    if (records.isEmpty()) {
+            if (records.isEmpty()) {
 //                        if (!passesSocialMode(sendInstance, Config.SOCIAL_MODE_FRIENDS)) {
 //                            continue;
 //                        }
 
-                        sendEmail(eventable, sendInstance.userId);
-                        continue;
-                    }
+                sendEmail(eventable, sendInstance.userId);
+                continue;
+            }
 
-                    boolean didSendPush = false;
+            boolean didSendPush = false;
 
-                    // Send to devices
-                    for (RegistrationRecord record : records) {
-                        if (!passesSocialMode(sendInstance, record.getSocialMode())) {
-                            continue;
-                        }
-
-                        try {
-                            Result result = sender.send(msg, record.getRegId(), 5);
-
-                            if (result.getMessageId() != null) {
-                                didSendPush = true;
-
-                                String canonicalRegId = result.getCanonicalRegistrationId();
-                                if (canonicalRegId != null) {
-                                    record.setRegId(canonicalRegId);
-                                    ofy().save().entity(record).now();
-                                }
-                            } else {
-                                String error = result.getErrorCodeName();
-                                if (error.equals(Constants.ERROR_NOT_REGISTERED) || error.equals(Constants.ERROR_MISMATCH_SENDER_ID)) {
-                                    ofy().delete().entity(record).now();
-                                }
-                            }
-                        } catch (IOException e) {
-                            Logger.getLogger("push").warning("error sending, trying email fallback " + e);
-                            e.printStackTrace();
-                        }
-                    }
-
-                    if (!didSendPush) {
-                        sendEmail(eventable, sendInstance.userId);
-                    }
+            // Send to devices
+            for (RegistrationRecord record : records) {
+                if (!passesSocialMode(sendInstance, record.getSocialMode())) {
+                    continue;
                 }
-                break;
+
+                try {
+                    Result result = sender.send(msg, record.getRegId(), 5);
+
+                    if (result.getMessageId() != null) {
+                        didSendPush = true;
+
+                        String canonicalRegId = result.getCanonicalRegistrationId();
+                        if (canonicalRegId != null) {
+                            record.setRegId(canonicalRegId);
+                            ofy().save().entity(record).now();
+                        }
+                    } else {
+                        String error = result.getErrorCodeName();
+                        if (error.equals(Constants.ERROR_NOT_REGISTERED) || error.equals(Constants.ERROR_MISMATCH_SENDER_ID)) {
+                            ofy().delete().entity(record).now();
+                        }
+                    }
+                } catch (IOException e) {
+                    Logger.getLogger("push").warning("error sending, trying email fallback " + e);
+                    e.printStackTrace();
+                }
+            }
+
+            if (!didSendPush) {
+                sendEmail(eventable, sendInstance.userId);
+            }
         }
     }
 

@@ -2,6 +2,7 @@ package com.queatz.snappy.logic;
 
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
+import com.google.common.collect.HashBiMap;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.logic.eventables.ClearNotificationEvent;
 import com.queatz.snappy.logic.eventables.JoinRequestEvent;
@@ -25,35 +26,40 @@ import java.util.Map;
 public class EarthUpdate {
 
     public static final Map<String, Class<? extends Eventable>> eventableMap = new HashMap<>();
+    public static final Map<Class<? extends Eventable>, String> actionMap;
 
     static {
-        eventableMap.put(Config.PUSH_ACTION_JOIN_REQUEST , JoinRequestEvent.class);
-        eventableMap.put(Config.PUSH_ACTION_MESSAGE , MessageEvent.class);
-        eventableMap.put(Config.PUSH_ACTION_NEW_PARTY , NewPartyEvent.class);
-        eventableMap.put(Config.PUSH_ACTION_CLEAR_NOTIFICATION , ClearNotificationEvent.class);
-        eventableMap.put(Config.PUSH_ACTION_NEW_UPTO , NewUpdateEvent.class);
-        eventableMap.put(Config.PUSH_ACTION_NEW_OFFER , NewOfferEvent.class);
-        eventableMap.put(Config.PUSH_ACTION_LIKE_UPDATE , LikeEvent.class);
-        eventableMap.put(Config.PUSH_ACTION_OFFER_ENDORSEMENT , OfferEndorsementEvent.class);
+        eventableMap.put(Config.PUSH_ACTION_JOIN_REQUEST, JoinRequestEvent.class);
+        eventableMap.put(Config.PUSH_ACTION_MESSAGE, MessageEvent.class);
+        eventableMap.put(Config.PUSH_ACTION_NEW_PARTY, NewPartyEvent.class);
+        eventableMap.put(Config.PUSH_ACTION_CLEAR_NOTIFICATION, ClearNotificationEvent.class);
+        eventableMap.put(Config.PUSH_ACTION_NEW_UPTO, NewUpdateEvent.class);
+        eventableMap.put(Config.PUSH_ACTION_NEW_OFFER, NewOfferEvent.class);
+        eventableMap.put(Config.PUSH_ACTION_LIKE_UPDATE, LikeEvent.class);
+        eventableMap.put(Config.PUSH_ACTION_OFFER_ENDORSEMENT, OfferEndorsementEvent.class);
+
+        actionMap = HashBiMap.create(eventableMap).inverse();
     }
 
     /*
      * Used to map an event to the right recipients.
      */
     public static class EventableWrapper {
+        final String action;
         final Eventable event;
 
-        protected EventableWrapper(Eventable event) {
+        protected EventableWrapper(String action, Eventable event) {
             this.event = event;
+            this.action = action;
         }
 
         public EventableWrapper to(Key key) {
-            Queue.getService().enqueuePushMessageToUser(key.name(), event.toData());
+            Queue.getService().enqueuePushMessageToUser(key.name(), action, event.toData());
             return this;
         }
 
         public EventableWrapper toFollowersOf(Key key) {
-            Queue.getService().enqueuePushMessageFromUser(key.name(), event.toData());
+            Queue.getService().enqueuePushMessageFromUser(key.name(), action, event.toData());
             return this;
         }
 
@@ -83,6 +89,6 @@ public class EarthUpdate {
     }
 
     public EventableWrapper send(Eventable event) {
-        return new EventableWrapper(event);
+        return new EventableWrapper(actionMap.get(event.getClass()), event);
     }
 }
