@@ -42,8 +42,8 @@ public class OfferEndorsementEvent implements Eventable {
                 Config.PUSH_ACTION_OFFER_ENDORSEMENT,
                 ImmutableMap.of(
                         "id", endorsement.key().name(),
-                        "source", endorsement.getKey(EarthField.SOURCE), // go deeper {name: ...}
-                        "target", endorsement.getKey(EarthField.TARGET) // go deeper {name: ...}
+                        "source", endorsement.getKey(EarthField.SOURCE).name(), // go deeper {name: ...}
+                        "target", endorsement.getKey(EarthField.TARGET).name() // go deeper {name: ...}
                 )
         );
     }

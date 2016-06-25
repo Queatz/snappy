@@ -42,8 +42,8 @@ public class NewOfferEvent implements Eventable {
                 Config.PUSH_ACTION_NEW_OFFER,
                 ImmutableMap.of(
                         "id", offer.key().name(),
-                        "details", offer.getKey(EarthField.ABOUT), // go deeper {name: ...}
-                        "person", offer.getKey(EarthField.SOURCE) // go deeper {name: ...}
+                        "details", offer.getString(EarthField.ABOUT),
+                        "person", offer.getKey(EarthField.SOURCE).name() // go deeper {name: ...}
                 )
         );
     }

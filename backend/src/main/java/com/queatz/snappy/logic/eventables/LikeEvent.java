@@ -43,8 +43,8 @@ public class LikeEvent implements Eventable {
                 Config.PUSH_ACTION_LIKE_UPDATE,
                 ImmutableMap.of(
                         "id", like.key().name(),
-                        "source", like.getKey(EarthField.SOURCE), // go deeper {name: ...}
-                        "target", like.getKey(EarthField.TARGET) // go deeper {name: ...}
+                        "source", like.getKey(EarthField.SOURCE).name(), // go deeper {name: ...}
+                        "target", like.getKey(EarthField.TARGET).name() // go deeper {name: ...}
                 )
         );
     }

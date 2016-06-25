@@ -42,8 +42,8 @@ public class NewUpdateEvent implements Eventable {
                 Config.PUSH_ACTION_NEW_UPTO,
                 ImmutableMap.of(
                         "id", update.key().name(),
-                        "person", update.getKey(EarthField.SOURCE),
-                        "party", update.getKey(EarthField.TARGET) // go deeper {name: ...}, not party
+                        "person", update.getKey(EarthField.SOURCE).name(), // go deeper {name: ...}
+                        "party", update.getKey(EarthField.TARGET).name() // go deeper {name: ...}, not party
                 )
         );
     }

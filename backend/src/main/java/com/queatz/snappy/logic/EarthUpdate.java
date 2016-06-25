@@ -73,7 +73,7 @@ public class EarthUpdate {
 
         try {
             Eventable eventable = eventableMap.get(action).getConstructor().newInstance();
-            return (Eventable) eventableMap.get(action).getMethod("fromData").invoke(eventable, data);
+            return (Eventable) eventableMap.get(action).getMethod("fromData", String.class).invoke(eventable, data);
         } catch (IllegalAccessException |
                 InvocationTargetException |
                 InstantiationException |

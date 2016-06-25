@@ -42,9 +42,9 @@ public class NewPartyEvent implements Eventable {
                 Config.PUSH_ACTION_NEW_PARTY,
                 ImmutableMap.of(
                         "id", party.key().name(),
-                        "name", party.getKey(EarthField.NAME),
-                        "date", party.getKey(EarthField.DATE), // go deeper {name: ...}
-                        "host", party.getKey(EarthField.HOST) // go deeper {name: ...}
+                        "name", party.getString(EarthField.NAME),
+                        "date", party.getDateTime(EarthField.DATE),
+                        "host", party.getKey(EarthField.HOST).name() // go deeper {name: ...}
                 )
         );
     }

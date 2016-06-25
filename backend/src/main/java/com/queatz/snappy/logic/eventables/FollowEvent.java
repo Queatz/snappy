@@ -42,7 +42,7 @@ public class FollowEvent implements Eventable {
                 Config.PUSH_ACTION_CLEAR_NOTIFICATION,
                 ImmutableMap.of(
                         "id", follow.key().name(),
-                        "source", follow.getKey(EarthField.SOURCE)
+                        "source", follow.getKey(EarthField.SOURCE).name() // go deeper {name: ...}
                 )
         );
     }

@@ -43,8 +43,8 @@ public class JoinRequestEvent implements Eventable {
                 Config.PUSH_ACTION_JOIN_REQUEST,
                 ImmutableMap.of(
                         "id", join.key().name(),
-                        "person", join.getKey(EarthField.SOURCE), // go deeper {name: ...}
-                        "party", join.getKey(EarthField.TARGET) // go deeper {name: ...}
+                        "person", join.getKey(EarthField.SOURCE).name(), // go deeper {name: ...}
+                        "party", join.getKey(EarthField.TARGET).name() // go deeper {name: ...}
                 )
         );
     }

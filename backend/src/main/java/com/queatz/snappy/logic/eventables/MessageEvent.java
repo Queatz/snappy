@@ -42,8 +42,8 @@ public class MessageEvent implements Eventable {
                 Config.PUSH_ACTION_MESSAGE,
                 ImmutableMap.of(
                         "id", message.key().name(),
-                        "from", message.getKey(EarthField.SOURCE), // go deeper {name: ...}
-                        "message", message.getKey(EarthField.MESSAGE) // go deeper {name: ...}
+                        "from", message.getKey(EarthField.SOURCE).name(), // go deeper {name: ...}
+                        "message", message.getString(EarthField.MESSAGE)
                 )
         );
     }
