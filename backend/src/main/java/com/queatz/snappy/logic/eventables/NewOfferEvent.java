@@ -52,7 +52,7 @@ public class NewOfferEvent implements Eventable {
     public String makeSubject() {
         Entity person = earthStore.get(offer.getKey(EarthField.SOURCE));
 
-        return person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME)  + " added a new offer";
+        return person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME) + " added a new offer";
     }
 
     @Override

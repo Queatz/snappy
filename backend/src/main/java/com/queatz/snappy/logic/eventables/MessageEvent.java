@@ -2,6 +2,7 @@ package com.queatz.snappy.logic.eventables;
 
 import com.google.cloud.datastore.Entity;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.html.HtmlEscapers;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
@@ -57,7 +58,8 @@ public class MessageEvent implements Eventable {
 
     @Override
     public String makeEmail() {
-        return message.getString(EarthField.MESSAGE) + "<br /><br />View your message and reply at " + Config.VILLAGE_WEBSITE + "messages";
+        return HtmlEscapers.htmlEscaper().escape(message.getString(EarthField.MESSAGE)) +
+                "<br /><br />View your message and reply at " + Config.VILLAGE_WEBSITE + "messages";
     }
 
     @Override

@@ -191,7 +191,7 @@ public class Worker extends HttpServlet {
             return;
         }
 
-        earthEmail.sendRawEmail(Config.VILLAGE_EMAIL,
+        earthEmail.sendRawEmail(
                 earthStore.get(toUser).getString(EarthField.EMAIL),
                 subject,
                 eventable.makeEmail());
