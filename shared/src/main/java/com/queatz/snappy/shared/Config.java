@@ -13,7 +13,7 @@ public class Config {
     public static final int WIPE_VERSIONS_BELOW = 26;
 
     // The email emails are sent from
-    public static final String VILLAGE_EMAIL = "my@village.city";
+    public static final String VILLAGE_EMAIL = "Village <my@village.city>";
     public static final String VILLAGE_WEBSITE = "https://village.city/";
 
     public static final String LOG_TAG = "SNAPPY_LOG";
