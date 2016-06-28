@@ -5,6 +5,7 @@ import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.LatLng;
 import com.googlecode.objectify.ObjectifyService;
 import com.queatz.snappy.backend.RegistrationRecord;
 import com.queatz.snappy.logic.EarthEmail;
@@ -96,8 +97,15 @@ public class Worker extends HttpServlet {
         if(fromUser != null) {
             Entity source = earthStore.get(fromUser);
 
-            for (Entity person : earthSearcher.getNearby(EarthKind.PERSON_KIND,
-                    source.getLatLng(EarthField.GEO), 300)) {
+            LatLng latLng;
+
+            if (source.contains(EarthField.GEO)) {
+                latLng = source.getLatLng(EarthField.GEO);
+            } else {
+                latLng = earthStore.get(source.getKey(EarthField.SOURCE)).getLatLng(EarthField.GEO);
+            }
+
+            for (Entity person : earthSearcher.getNearby(EarthKind.PERSON_KIND, latLng, 300)) {
                 if(fromUser.equals(person.key().name())) {
                     continue;
                 }

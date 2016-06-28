@@ -1,5 +1,6 @@
 package com.queatz.snappy.logic.interfaces;
 
+import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.concepts.Interfaceable;
@@ -29,6 +30,12 @@ public class ByNameInterface implements Interfaceable {
     }
 
     private String getPersonByName(EarthAs as, String personName) {
-        return new PersonView(personMine.byGoogleUrl(personName.toLowerCase())).toJson();
+        Entity person = personMine.byGoogleUrl(personName.toLowerCase());
+
+        if (person == null) {
+            throw new NothingLogicResponse("by name - nobody");
+        }
+
+        return new PersonView(person).toJson();
     }
 }

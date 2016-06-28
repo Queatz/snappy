@@ -15,7 +15,7 @@ public class ContactMine {
 
     EarthStore earthStore = EarthSingleton.of(EarthStore.class);
 
-    public List<Entity> getContacts(Entity hub) {
-        return earthStore.find(EarthKind.CONTACT_KIND, EarthField.SOURCE, hub.key());
+    public List<Entity> getContacts(Entity thing) {
+        return earthStore.find(EarthKind.CONTACT_KIND, EarthField.SOURCE, thing.key());
     }
 }

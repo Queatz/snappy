@@ -59,7 +59,7 @@ public class MessageEvent implements Eventable {
     @Override
     public String makeEmail() {
         return HtmlEscapers.htmlEscaper().escape(message.getString(EarthField.MESSAGE)) +
-                "<br /><br />View your message and reply at " + Config.VILLAGE_WEBSITE + "messages";
+                "<br /><br /><span style=\"color: #757575;\">View your message and reply at " + Config.VILLAGE_WEBSITE + "messages</span>";
     }
 
     @Override

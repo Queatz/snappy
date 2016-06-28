@@ -20,6 +20,7 @@ import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.LikeEditor;
 import com.queatz.snappy.logic.editors.UpdateEditor;
 import com.queatz.snappy.logic.eventables.LikeEvent;
+import com.queatz.snappy.logic.eventables.NewUpdateEvent;
 import com.queatz.snappy.logic.exceptions.LogicException;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.EntityListView;
@@ -196,12 +197,12 @@ public class UpdateInterface implements Interfaceable {
             throw new NothingLogicResponse("post update - nothing to post");
         }
 
-        update = updateEditor.updateWith(update, earthStore.get(thingId), message, photoUploaded);
+        Entity thing = earthStore.get(thingId);
 
-        // XXX TODO post to followers of hub
-        //Push.getService().sendToFollowers(as.getUser().key().name(), new PushSpec<>(Config.PUSH_ACTION_NEW_UPTO, update));
+        update = updateEditor.updateWith(update, thing, message, photoUploaded);
+
+        earthUpdate.send(new NewUpdateEvent(update)).toFollowersOf(thing);
 
         return new UpdateView(update).toJson();
     }
-
 }

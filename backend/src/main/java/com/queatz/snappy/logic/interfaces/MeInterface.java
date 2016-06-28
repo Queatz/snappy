@@ -252,7 +252,7 @@ public class MeInterface implements Interfaceable {
 
         if (allGood) {
             earthUpdate.send(new NewUpdateEvent(update))
-                    .toFollowersOf(as.getUser());
+                    .toFollowersOf(update.getKey(EarthField.TARGET));
         } else {
             throw new NothingLogicResponse("upto photo - not all good");
         }

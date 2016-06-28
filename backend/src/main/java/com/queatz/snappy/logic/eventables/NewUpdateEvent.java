@@ -53,7 +53,15 @@ public class NewUpdateEvent implements Eventable {
         Entity person = earthStore.get(update.getKey(EarthField.SOURCE));
         Entity updatedThing = earthStore.get(update.getKey(EarthField.TARGET));
 
-        return person.getString(EarthField.FIRST_NAME) + " posted in " + updatedThing.getString(EarthField.NAME);
+        String subject;
+
+        if (person.key().equals(updatedThing.key())) {
+            subject = person.getString(EarthField.FIRST_NAME) + " posted a new update";
+        } else {
+            subject = person.getString(EarthField.FIRST_NAME) + " posted in " + updatedThing.getString(EarthField.NAME);
+        }
+
+        return subject;
     }
 
     @Override
@@ -62,9 +70,18 @@ public class NewUpdateEvent implements Eventable {
         Entity updatedThing = earthStore.get(update.getKey(EarthField.TARGET));
 
         String personUrl = Config.VILLAGE_WEBSITE + person.getString(EarthField.GOOGLE_URL);
-        String updateUrl = Config.VILLAGE_WEBSITE + updatedThing.key().name();
+        String updateUrl = Config.VILLAGE_WEBSITE + updatedThing.getString(EarthField.KIND) + "s/" + updatedThing.key().name();
 
-        return "View their profile at " + personUrl + "<br /><br />View " + updatedThing.getString(EarthField.NAME) + " at " + updateUrl;
+        String body;
+
+        if (person.key().equals(updatedThing.key())) {
+            body = "View their profile at " + personUrl + "<br /><br />";
+        } else {
+            body = "View " + updatedThing.getString(EarthField.NAME) + " at " + updateUrl
+                    + "<br /><br />View their profile at " + personUrl;
+        }
+
+        return update.getString(EarthField.ABOUT) + "<br /><br /><span style=\"color: #757575;\">" + body + "</span>";
     }
 
     @Override

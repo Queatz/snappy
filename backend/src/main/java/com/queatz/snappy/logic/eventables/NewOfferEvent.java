@@ -60,7 +60,7 @@ public class NewOfferEvent implements Eventable {
         Entity person = earthStore.get(offer.getKey(EarthField.SOURCE));
         String personUrl = Config.VILLAGE_WEBSITE + person.getString(EarthField.GOOGLE_URL);
 
-        return offer.getString(EarthField.ABOUT) + "<br /><br />View their profile at " + personUrl;
+        return offer.getString(EarthField.ABOUT) + "<br /><br /><span style=\"color: #757575;\">View their profile at " + personUrl + "</span>";
     }
 
     @Override

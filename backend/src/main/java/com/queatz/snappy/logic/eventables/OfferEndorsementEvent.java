@@ -60,7 +60,7 @@ public class OfferEndorsementEvent implements Eventable {
     public String makeEmail() {
         Entity person = earthStore.get(endorsement.getKey(EarthField.SOURCE));
 
-        return "View their profile at " + Config.VILLAGE_WEBSITE + person.getString(EarthField.GOOGLE_URL);
+        return "<span style=\"color: #757575;\">View their profile at " + Config.VILLAGE_WEBSITE + person.getString(EarthField.GOOGLE_URL) + "</span>";
     }
 
     @Override

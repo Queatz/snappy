@@ -59,7 +59,7 @@ public class FollowEvent implements Eventable {
         Entity person = earthStore.get(follow.getKey(EarthField.SOURCE));
         String personUrl = Config.VILLAGE_WEBSITE + person.getString(EarthField.GOOGLE_URL);
 
-        return "View their profile at " + personUrl;
+        return "<span style=\"color: #757575;\">View their profile at " + personUrl + "</span>";
     }
 
     @Override

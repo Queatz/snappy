@@ -13,5 +13,7 @@ public interface Eventable {
     Eventable fromData(String data);
     String toData();
 
+    // The delay before sending the email. This allows the email to be cancelled if they undo
+    // whatever caused the email.
     int emailDelay();
 }

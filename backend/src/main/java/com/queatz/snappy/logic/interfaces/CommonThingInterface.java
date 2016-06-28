@@ -7,9 +7,11 @@ import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.ContactEditor;
+import com.queatz.snappy.logic.eventables.NewThingEvent;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.service.Api;
@@ -36,6 +38,7 @@ public abstract class CommonThingInterface implements Interfaceable {
     private final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
     private final ContactEditor contactEditor = EarthSingleton.of(ContactEditor.class);
     private final EarthViewer earthViewer = EarthSingleton.of(EarthViewer.class);
+    private final EarthUpdate earthUpdate = EarthSingleton.of(EarthUpdate.class);
 
     /**
      * Implement this method to create new things of this kind.
@@ -91,6 +94,9 @@ public abstract class CommonThingInterface implements Interfaceable {
             case 0: {
                 Entity thing = this.createThing(as);
                 contactEditor.newContact(thing, as.getUser());
+
+                earthUpdate.send(new NewThingEvent(thing)).toFollowersOf(as.getUser());
+
                 return earthViewer.getViewForEntityOrThrow(thing).toJson();
             }
             case 1: {

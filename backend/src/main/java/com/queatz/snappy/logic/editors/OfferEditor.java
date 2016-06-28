@@ -15,13 +15,20 @@ public class OfferEditor {
     private final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
 
     public Entity newOffer(Entity person, String about, Integer price, String unit) {
-        return earthStore.save(earthStore.edit(earthStore.create(EarthKind.OFFER_KIND))
+        Entity.Builder edit = earthStore.edit(earthStore.create(EarthKind.OFFER_KIND))
                 .set(EarthField.SOURCE, person.key())
                 .set(EarthField.ABOUT, about)
-                .set(EarthField.PRICE, price)
                 .set(EarthField.PHOTO, false)
                 .set(EarthField.NAME, NullValue.of())
-                .set(EarthField.UNIT, unit));
+                .set(EarthField.UNIT, unit);
+
+        if (price == null) {
+            edit.set(EarthField.PRICE, NullValue.of());
+        } else {
+            edit.set(EarthField.PRICE, price);
+        }
+
+        return earthStore.save(edit);
     }
 
     public Entity setPhoto(Entity offer, boolean photo) {
