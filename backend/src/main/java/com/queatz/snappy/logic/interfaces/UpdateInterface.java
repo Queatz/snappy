@@ -25,6 +25,7 @@ import com.queatz.snappy.logic.exceptions.LogicException;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.EntityListView;
 import com.queatz.snappy.logic.views.LikeView;
+import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.logic.views.UpdateView;
 import com.queatz.snappy.shared.Config;
 
@@ -78,11 +79,21 @@ public class UpdateInterface implements Interfaceable {
                 String updateId = as.getRoute().get(0);
 
                 String like = as.getRequest().getParameter(Config.PARAM_LIKE);
+                String edit = as.getRequest().getParameter(Config.PARAM_EDIT);
 
                 if (Boolean.toString(true).equals(like)) {
                     return likeUpdate(as, updateId);
                 }
+                else if (Boolean.toString(true).equals(edit)) {
+                    return editUpdate(as, updateId);
+                }
                 break;
+            case 2:
+                if (Config.PATH_DELETE.equals(as.getRoute().get(1))) {
+                    earthStore.conclude(as.getRoute().get(0));
+
+                    return new SuccessView(true).toJson();
+                }
         }
 
         throw new NothingLogicResponse("update - bad path");
@@ -202,6 +213,53 @@ public class UpdateInterface implements Interfaceable {
         update = updateEditor.updateWith(update, thing, message, photoUploaded);
 
         earthUpdate.send(new NewUpdateEvent(update)).toFollowersOf(thing);
+
+        return new UpdateView(update).toJson();
+    }
+    private String editUpdate(EarthAs as, String updateId) {
+        Entity update = earthStore.get(updateId);
+
+        GcsFilename photoName = new GcsFilename(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), "earth/thing/photo/" + update.key().name() + "/" + new Date().getTime());
+
+        String message = null;
+        boolean photoUploaded = update.getBoolean(EarthField.PHOTO);
+
+        try {
+            ServletFileUpload upload = new ServletFileUpload();
+            FileItemIterator iterator = upload.getItemIterator(as.getRequest());
+            while (iterator.hasNext()) {
+                FileItemStream item = iterator.next();
+                InputStream stream = item.openStream();
+
+                if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
+                    int len;
+                    byte[] buffer = new byte[8192];
+
+                    GcsOutputChannel outputChannel = as.getApi().mGCS.createOrReplace(photoName, GcsFileOptions.getDefaultInstance());
+
+                    while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
+                        outputChannel.write(ByteBuffer.wrap(buffer, 0, len));
+                    }
+
+                    outputChannel.close();
+
+                    photoUploaded = true;
+                }
+                else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {
+                    message = Streams.asString(stream, "UTF-8");
+                }
+            }
+        }
+        catch (FileUploadException | IOException e) {
+            Logger.getLogger(Config.NAME).severe(e.toString());
+            throw new NothingLogicResponse("upto photo - couldn't upload because: " + e);
+        }
+
+        if (message == null && !photoUploaded) {
+            throw new NothingLogicResponse("post update - nothing to post");
+        }
+
+        update = updateEditor.updateWith(update, message, photoUploaded);
 
         return new UpdateView(update).toJson();
     }

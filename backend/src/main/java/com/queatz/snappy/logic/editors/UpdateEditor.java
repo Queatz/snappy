@@ -54,4 +54,17 @@ public class UpdateEditor {
 
         return earthStore.save(edit);
     }
+
+    public Entity updateWith(Entity update, String message, boolean photo) {
+        Entity.Builder edit = earthStore.edit(update)
+                .set(EarthField.PHOTO, photo);
+
+        if (message == null) {
+            edit.set(EarthField.ABOUT, NullValue.of());
+        } else {
+            edit.set(EarthField.ABOUT, message);
+        }
+
+        return earthStore.save(edit);
+    }
 }
