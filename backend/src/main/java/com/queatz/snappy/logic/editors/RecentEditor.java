@@ -42,7 +42,7 @@ public class RecentEditor {
             if(recent == null) {
                 newRecent(earthStore.get(fromTo[0]), earthStore.get(fromTo[1]), message);
             } else {
-                earthStore.save(earthStore.edit(message)
+                earthStore.save(earthStore.edit(recent)
                         .set(EarthField.UPDATED_ON, DateTime.now())
                         .set(EarthField.LATEST, message.key())
                         .set(EarthField.SEEN, message.getKey(EarthField.SOURCE).equals(fromTo[0])));
