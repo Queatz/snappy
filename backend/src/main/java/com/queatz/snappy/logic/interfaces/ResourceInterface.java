@@ -22,7 +22,10 @@ public class ResourceInterface extends CommonThingInterface {
             throw new NothingLogicResponse("resource - name parameter is expected");
         }
 
-        return resourceEditor.newResource(name[0], as.getUser());
+        Entity resource = resourceEditor.newResource(name[0], as.getUser());
+        resource = postPhoto(resource, as);
+
+        return resource;
     }
 
     @Override

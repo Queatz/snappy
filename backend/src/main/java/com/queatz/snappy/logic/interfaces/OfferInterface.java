@@ -17,6 +17,7 @@ import com.queatz.snappy.logic.views.EndorsementView;
 import com.queatz.snappy.logic.views.EntityListView;
 import com.queatz.snappy.logic.views.OfferView;
 import com.queatz.snappy.logic.views.SuccessView;
+import com.queatz.snappy.service.Buy;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
@@ -61,6 +62,8 @@ public class OfferInterface implements com.queatz.snappy.logic.concepts.Interfac
                         return endorse(as, as.getRoute().get(0));
                     case Config.PATH_PHOTO:
                         return addPhoto(as, as.getRoute().get(0));
+                    case Config.PATH_EDIT:
+                        return edit(as, as.getRoute().get(0));
                 }
 
                 break;
@@ -71,6 +74,7 @@ public class OfferInterface implements com.queatz.snappy.logic.concepts.Interfac
                             case Config.PATH_DELETE:
                                 return deletePhoto(as, as.getRoute().get(0));
                         }
+                        break;
                 }
 
                 break;
@@ -106,6 +110,46 @@ public class OfferInterface implements com.queatz.snappy.logic.concepts.Interfac
         }
 
         return null;
+    }
+
+    private String edit(EarthAs as, String offerId) {
+        String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
+        String details = as.getRequest().getParameter(Config.PARAM_DETAILS);
+        String unit = as.getRequest().getParameter(Config.PARAM_UNIT);
+
+        Integer price = null;
+
+        if (as.getRequest().getParameter(Config.PARAM_PRICE) != null) try {
+            price = Integer.parseInt(as.getRequest().getParameter(Config.PARAM_PRICE));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+        if (details != null && details.length() > 0) {
+
+            // Validate pricing
+            if (price != null) {
+                if (Buy.getService().valid(as.getUser())) {
+                    price = Math.min(Config.PAID_OFFER_PRICE_MAX, Math.max(Config.PAID_OFFER_PRICE_MIN, price));
+                } else {
+                    price = Math.min(Config.FREE_OFFER_PRICE_MAX, Math.max(Config.FREE_OFFER_PRICE_MIN, price));
+                }
+
+                if (Math.abs(price) < 200) {
+                    price = (int) Math.floor(price / 10) * 10;
+                } else if (Math.abs(price) < 1000) {
+                    price = (int) Math.floor(price / 50) * 50;
+                } else {
+                    price = (int) Math.floor(price / 100) * 100;
+                }
+            }
+
+            Entity offer = offerEditor.edit(earthStore.get(offerId), details, price, unit);
+
+            return new OfferView(offer).setLocalId(localId).toJson();
+        }
+
+        return new SuccessView(false).toJson();
     }
 
     private String deletePhoto(EarthAs as, String offerId) {

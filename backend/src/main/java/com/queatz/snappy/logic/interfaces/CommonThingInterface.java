@@ -109,7 +109,7 @@ public abstract class CommonThingInterface implements Interfaceable {
 
             case 2: {
                 if (Config.PATH_PHOTO.equals(as.getRoute().get(1))) {
-                    postPhoto(as);
+                    postPhoto(earthStore.get(as.getRoute().get(0)), as);
                     return new SuccessView(true).toJson();
                 } else if (Config.PATH_DELETE.equals(as.getRoute().get(1))) {
                     Entity thing = earthStore.get(as.getRoute().get(0));
@@ -140,13 +140,11 @@ public abstract class CommonThingInterface implements Interfaceable {
         }
     }
 
-    private void postPhoto(EarthAs as) {
-        Entity thing = earthStore.get(as.getRoute().get(0));
-
+    protected Entity postPhoto(Entity thing, EarthAs as) {
         try {
             boolean photo = ApiUtil.putPhoto("earth/thing/photo/" + thing.key().name() + "/" + new Date().getTime(), as.getApi(), as.getRequest());
 
-            earthStore.save(earthStore.edit(thing).set(EarthField.PHOTO, photo));
+            return earthStore.save(earthStore.edit(thing).set(EarthField.PHOTO, photo));
         } catch (IOException e) {
             e.printStackTrace();
             throw new PrintingError(Api.Error.NOT_FOUND, "thing - photo io error");

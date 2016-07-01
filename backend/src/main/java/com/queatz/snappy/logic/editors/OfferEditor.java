@@ -34,4 +34,18 @@ public class OfferEditor {
     public Entity setPhoto(Entity offer, boolean photo) {
         return earthStore.save(earthStore.edit(offer).set(EarthField.PHOTO, photo));
     }
+
+    public Entity edit(Entity entity, String details, Integer price, String unit) {
+        Entity.Builder edit = earthStore.edit(entity)
+                .set(EarthField.ABOUT, details)
+                .set(EarthField.UNIT, unit);
+
+        if (price == null) {
+            edit.set(EarthField.PRICE, NullValue.of());
+        } else {
+            edit.set(EarthField.PRICE, price);
+        }
+
+        return earthStore.save(edit);
+    }
 }

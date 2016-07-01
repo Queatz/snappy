@@ -248,3 +248,4 @@ Interface Concept bubbles up response
 COMMANDS
 
 /home/jacob/.gradle/appengine-sdk/appengine-java-sdk-1.9.14/bin/appcfg.sh --oauth2 --version=1 rollback /home/jacob/Documents/Projects/snappy/backend/src/main/webapp/
+ NOTE: May need to add -A project-id AND / OR CHANGE the version
