@@ -51,7 +51,9 @@ public class FollowEvent implements Eventable {
     public String makeSubject() {
         Entity person = earthStore.get(follow.getKey(EarthField.SOURCE));
 
-        return person.getString(EarthField.FIRST_NAME) + " started following you";// XXX TODO or your project?
+        String name = person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME);
+
+        return name + " started following you"; // XXX TODO or your project?
     }
 
     @Override

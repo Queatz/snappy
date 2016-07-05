@@ -19,4 +19,11 @@ public class ContactEditor {
                 .set(EarthField.SOURCE, thing.key())
                 .set(EarthField.TARGET, person.key()));
     }
+
+    public Entity newContact(@Nonnull Entity thing, @Nonnull Entity person, @Nonnull String role) {
+        return earthStore.save(earthStore.edit(earthStore.create(EarthKind.CONTACT_KIND))
+                .set(EarthField.SOURCE, thing.key())
+                .set(EarthField.TARGET, person.key())
+                .set(EarthField.ROLE, role));
+    }
 }

@@ -128,4 +128,5 @@ public class EarthField {
     public static final String FULL = "full";
     public static final String HOST = "host";
     public static final String ACTION = "action";
+    public static final String ROLE = "role";
 }

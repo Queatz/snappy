@@ -271,4 +271,6 @@ public class Config {
     public static final String PATH_BY_NAME = "by-name";
     public static final String PATH_EARTH = "earth";
     public static final String PATH_EDIT = "edit";
+    public static final String PARAM_ROLE = "role";
+    public static final String PARAM_PERSON = "person";
 }
