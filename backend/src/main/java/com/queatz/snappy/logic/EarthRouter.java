@@ -19,6 +19,7 @@ import com.queatz.snappy.logic.interfaces.PersonInterface;
 import com.queatz.snappy.logic.interfaces.ProjectInterface;
 import com.queatz.snappy.logic.interfaces.RecentInterface;
 import com.queatz.snappy.logic.interfaces.ResourceInterface;
+import com.queatz.snappy.logic.interfaces.SearchInterface;
 import com.queatz.snappy.logic.interfaces.UpdateInterface;
 
 import java.util.HashMap;
@@ -59,6 +60,7 @@ public class EarthRouter {
         specialMapping.put(EarthSpecialRoute.ME_ROUTE, new MeInterface());
         specialMapping.put(EarthSpecialRoute.BY_NAME_ROUTE, new ByNameInterface());
         specialMapping.put(EarthSpecialRoute.FEEDBACK_ROUTE, new FeedbackInterface());
+        specialMapping.put(EarthSpecialRoute.SEARCH_ROUTE, new SearchInterface());
     }
 
     public Interfaceable interfaceFromKindOrThrowNothingResponse(String kind) {

@@ -265,9 +265,12 @@ public class EarthStore {
         return Lists.newArrayList(datastore.run(query));
     }
 
-    // XXX what if kind has location dependency, i.e. offer -> person.geo?
     public List<Entity> getNearby(LatLng center, String kind) {
-        return earthSearcher.getNearby(kind, center, 100);
+        return earthSearcher.getNearby(kind, null, center, 100);
+    }
+
+    public List<Entity> getNearby(LatLng center, String kind, String q) {
+        return earthSearcher.getNearby(kind, q, center, 100);
     }
 
     public QueryResults<Entity> query(StructuredQuery.Filter... filters) {

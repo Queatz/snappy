@@ -65,7 +65,7 @@ public class EarthSearcher {
         return object.key().name();
     }
 
-    public List<Entity> getNearby(String kind, LatLng location, int count) {
+    public List<Entity> getNearby(String kind, String q, LatLng location, int count) {
         String queryString = "(";
 
         final String geoString = "geopoint(" + location.latitude() + ", " + location.longitude() + ")";
@@ -82,6 +82,10 @@ public class EarthSearcher {
         queryString += ")";
 
         queryString += " AND kind = \"" + kind + "\"";
+
+        if (q != null) {
+            queryString += " AND name = \"" + q + "\"";
+        }
 
         SortOptions sortOptions = SortOptions.newBuilder().addSortExpression(
                 SortExpression.newBuilder().setExpression("distance(geo, geopoint(" + location.latitude() + ", " + location.longitude() + "))")
@@ -129,6 +133,13 @@ public class EarthSearcher {
         builder.addField(kindField);
         builder.setId(getId(object));
 
+        if (object.contains(EarthField.NAME)) {
+            Field nameField = Field.newBuilder().setName(EarthField.NAME)
+                    .setText(tokenizeName(object.getString(EarthField.NAME))).build();
+
+            builder.addField(nameField);
+        }
+
         // Add linked geo's
         // Fields source, target, source_geo, target_geo
         for (String field : new String[] { EarthField.SOURCE, EarthField.TARGET }) {
@@ -168,5 +179,20 @@ public class EarthSearcher {
         for(ScoredDocument document : index.search(Query.newBuilder().build(queryString))) {
             updateGeo(earthStore.get(document.getId())); // XXX TODO sadly, cascading dependencies will not be updated
         }
+    }
+
+    // Splits name into tokens based on the start of words
+    // Example: "Jeff Lange" -> "J Je Jef Jeff L La Lan Lang Lange"
+    private String tokenizeName(String name) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        String[] tokens = name.split("\\s+");
+        for (String token : tokens) {
+            for (int i = 1; i < token.length(); i++) {
+                stringBuilder.append(token.substring(0, i));
+            }
+        }
+
+        return stringBuilder.toString();
     }
 }

@@ -64,8 +64,11 @@ public class NewThingEvent implements Eventable {
         Entity contact = contactMine.getContacts(thing).get(0);
         Entity person = earthStore.get(contact.getKey(EarthField.TARGET));
 
+        String thingUrl = Config.VILLAGE_WEBSITE + thing.getString(EarthField.KIND) + "s/" + thing.key().name();
+
         return thing.getString(EarthField.NAME) +
-                "<br /><br /><span style=\"color: #757575;\">View their profile at " +
+                "<br /><br /><span style=\"color: #757575;\">" +
+                "View at " + thingUrl + "<br /><br />View their profile at " +
                 Config.VILLAGE_WEBSITE +
                 person.getString(EarthField.GOOGLE_URL) + "</span>";
     }

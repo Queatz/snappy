@@ -227,6 +227,9 @@ public class Config {
     public static final String PARAM_LIKE = "like";
     public static final String PARAM_THING = "thing";
     public static final String PARAM_EDIT = "edit";
+    public static final String PARAM_ROLE = "role";
+    public static final String PARAM_PERSON = "person";
+    public static final String PARAM_Q = "q";
 
     public static final String GOOGLE_PLUS_PROFILE_URL = "https://www.googleapis.com/plus/v1/people/me";
     public static final String GOOGLE_PLUS_TOKENINFO_URL = "https://www.googleapis.com/oauth2/v1/tokeninfo";
@@ -271,6 +274,4 @@ public class Config {
     public static final String PATH_BY_NAME = "by-name";
     public static final String PATH_EARTH = "earth";
     public static final String PATH_EDIT = "edit";
-    public static final String PARAM_ROLE = "role";
-    public static final String PARAM_PERSON = "person";
 }
