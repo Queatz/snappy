@@ -133,7 +133,7 @@ public class EarthSearcher {
         builder.addField(kindField);
         builder.setId(getId(object));
 
-        if (object.contains(EarthField.NAME)) {
+        if (object.contains(EarthField.NAME) && object.getString(EarthField.NAME) != null) {
             Field nameField = Field.newBuilder().setName(EarthField.NAME)
                     .setText(tokenizeName(object.getString(EarthField.NAME))).build();
 

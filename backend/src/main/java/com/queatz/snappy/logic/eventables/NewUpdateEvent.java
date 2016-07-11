@@ -54,7 +54,7 @@ public class NewUpdateEvent implements Eventable {
         Entity updatedThing = earthStore.get(update.getKey(EarthField.TARGET));
 
         String subject;
-        String name = person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.FIRST_NAME);
+        String name = person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME);
 
         if (person.key().equals(updatedThing.key())) {
             subject = name + " posted a new update";

@@ -54,7 +54,7 @@ public class NewThingEvent implements Eventable {
         Entity contact = contactMine.getContacts(thing).get(0);
         Entity person = earthStore.get(contact.getKey(EarthField.TARGET));
 
-        String name = person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.FIRST_NAME);
+        String name = person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME);
 
         return name + " added a new " + thing.getString(EarthField.KIND);
     }

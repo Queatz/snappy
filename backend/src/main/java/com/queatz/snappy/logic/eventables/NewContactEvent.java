@@ -50,7 +50,7 @@ public class NewContactEvent implements Eventable {
         Entity thing = earthStore.get(contact.getKey(EarthField.SOURCE));
 
         String subject;
-        String name = person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.FIRST_NAME);
+        String name = person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME);
 
         subject = name + " added you to " + thing.getString(EarthField.NAME);
 
