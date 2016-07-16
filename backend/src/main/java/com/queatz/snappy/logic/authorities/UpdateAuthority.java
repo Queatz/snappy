@@ -2,6 +2,7 @@ package com.queatz.snappy.logic.authorities;
 
 import com.google.appengine.api.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.EarthRule;
 import com.queatz.snappy.logic.concepts.Authority;
 
 /**
@@ -9,7 +10,7 @@ import com.queatz.snappy.logic.concepts.Authority;
  */
 public class UpdateAuthority implements Authority {
     @Override
-    public boolean authorized(Entity entity, EarthAs as) {
+    public boolean authorized(Entity entity, EarthAs as, EarthRule rule) {
         return true; // TODO actually return EarthAuthority(entity.target, as)
     }
 }

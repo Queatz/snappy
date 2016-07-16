@@ -52,7 +52,7 @@ public class NewContactEvent implements Eventable {
         String subject;
         String name = person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME);
 
-        subject = name + " added you to " + thing.getString(EarthField.NAME);
+        subject = name + " added you as a contact for " + thing.getString(EarthField.NAME);
 
         return subject;
     }
@@ -66,7 +66,7 @@ public class NewContactEvent implements Eventable {
 
         body = "View " + thing.getString(EarthField.NAME) + " at " + thingUrl;
 
-        return "You will now be visible to everybody.<br /><br /><span style=\"color: #757575;\">" + body + "</span>";
+        return "You may be contacted by people about this.<br /><br /><span style=\"color: #757575;\">" + body + "</span>";
     }
 
     @Override

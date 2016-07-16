@@ -84,7 +84,20 @@ public class EarthSearcher {
         queryString += " AND kind = \"" + kind + "\"";
 
         if (q != null) {
-            queryString += " AND name = \"" + q + "\"";
+            String[] qs = q.split("\\s+");
+
+            if (qs.length == 1) {
+                queryString += " AND name = \"" + q + "\"";
+            } else if (qs.length > 1) {
+                queryString += " AND (name = \"" + qs[0] + "\"";
+
+                for (int i = 1; i < qs.length; i++) {
+                    queryString += " OR name = \"" + qs[i] + "\"";
+                }
+
+                queryString += ")";
+            }
+
         }
 
         SortOptions sortOptions = SortOptions.newBuilder().addSortExpression(
@@ -139,6 +152,18 @@ public class EarthSearcher {
 
             builder.addField(nameField);
         }
+        else if (object.contains(EarthField.FIRST_NAME)) {
+            String name = object.getString(EarthField.FIRST_NAME);
+
+            if (object.contains(EarthField.LAST_NAME)) {
+                name += " " + object.getString(EarthField.LAST_NAME);
+            }
+
+            Field nameField = Field.newBuilder().setName(EarthField.NAME)
+                    .setText(tokenizeName(name)).build();
+
+            builder.addField(nameField);
+        }
 
         // Add linked geo's
         // Fields source, target, source_geo, target_geo
@@ -188,7 +213,8 @@ public class EarthSearcher {
 
         String[] tokens = name.split("\\s+");
         for (String token : tokens) {
-            for (int i = 1; i < token.length(); i++) {
+            for (int i = 1; i < token.length() + 1; i++) {
+                stringBuilder.append(" ");
                 stringBuilder.append(token.substring(0, i));
             }
         }

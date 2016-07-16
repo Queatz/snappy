@@ -16,6 +16,8 @@ import com.google.cloud.datastore.StructuredQuery;
 import com.google.cloud.datastore.Transaction;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
+import com.queatz.snappy.logic.concepts.Authority;
+import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.shared.Config;
 
 import java.util.List;
@@ -36,7 +38,8 @@ public class EarthStore {
     private final Datastore datastore = DatastoreOptions.defaultInstance().service();
     private final KeyFactory keyFactory = datastore.newKeyFactory().kind(DEFAULT_KIND);
 
-    EarthSearcher earthSearcher = EarthSingleton.of(EarthSearcher.class);
+    private final EarthAuthority earthAuthority = EarthSingleton.of(EarthAuthority.class);
+    private final EarthSearcher earthSearcher = EarthSingleton.of(EarthSearcher.class);
 
     public Entity get(@Nonnull String id) {
         return get(keyFactory.newKey(id));
@@ -58,6 +61,10 @@ public class EarthStore {
 
         // Entity has already concluded, don't allow access anymore
         if (!entity.isNull(DEFAULT_FIELD_CONCLUDED)) {
+            return null;
+        }
+
+        if (!earthAuthority.authorize(getUser(), entity, EarthRule.ACCESS)) {
             return null;
         }
 
@@ -150,6 +157,12 @@ public class EarthStore {
      * - Fails if the thing already concluded.
      */
     public void conclude(@Nonnull String id) {
+
+//        XXX TODO
+//        if (!earthAuthority.authorize(entity, as, EarthRule.MODIFY)) {
+//            return null;
+//        }
+//
         Transaction transaction = datastore.newTransaction();
 
         try {
@@ -172,8 +185,13 @@ public class EarthStore {
         }
     }
 
-    public void conclude(Entity thing) {
-        conclude(thing.key().name());
+    public void conclude(Entity entity) {
+
+        if (!earthAuthority.authorize(getUser(), entity, EarthRule.MODIFY)) {
+            return;
+        }
+
+        conclude(entity.key().name());
     }
 
     /**
@@ -183,7 +201,10 @@ public class EarthStore {
      * - Fails if the thing already concluded.
      */
     public Entity.Builder edit(@Nonnull Entity entity) {
-        // XXX TODO Authorize EarthAuthorize.authorizeEdit(user, entity)
+
+        if (!earthAuthority.authorize(getUser(), entity, EarthRule.MODIFY)) {
+            throw new NothingLogicResponse("unauthorized");
+        }
 
         return Entity.builder(entity);
     }
@@ -194,8 +215,12 @@ public class EarthStore {
      * - Assumes external validation happens.
      * - Fails if the thing already concluded.
      */
-    public Entity save(@Nonnull Entity.Builder entityBulder) {
-        Entity entity = entityBulder.build();
+    public Entity save(@Nonnull Entity.Builder entityBuilder) {
+        Entity entity = entityBuilder.build();
+
+        if (!earthAuthority.authorize(getUser(), entity, EarthRule.MODIFY)) {
+            throw new NothingLogicResponse("unauthorized");
+        }
 
         Transaction transaction = datastore.newTransaction();
 

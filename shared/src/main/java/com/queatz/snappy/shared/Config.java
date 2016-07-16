@@ -171,6 +171,7 @@ public class Config {
     public static final String PUSH_ACTION_LIKE_UPDATE = "like_update";
     public static final String PUSH_ACTION_OFFER_ENDORSEMENT = "offer_endorsement";
     public static final String PUSH_ACTION_NEW_THING = "new_thing";
+    public static final String PUSH_ACTION_NEW_CONTACT = "new_contact";
 
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";
     public static final String UPDATE_ACTION_HOST_PARTY = "host_party";

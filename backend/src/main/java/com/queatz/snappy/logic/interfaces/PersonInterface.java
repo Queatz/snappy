@@ -32,14 +32,13 @@ import java.util.List;
  */
 public class PersonInterface implements Interfaceable {
 
-    EarthStore earthStore = EarthSingleton.of(EarthStore.class);
-    EarthUpdate earthEvent = EarthSingleton.of(EarthUpdate.class);
-    RecentMine recentMine = EarthSingleton.of(RecentMine.class);
-    RecentEditor recentEditor = EarthSingleton.of(RecentEditor.class);
-    FollowerEditor followerEditor = EarthSingleton.of(FollowerEditor.class);
-    FollowerMine followerMine = EarthSingleton.of(FollowerMine.class);
-    MessageEditor messageEditor = EarthSingleton.of(MessageEditor.class);
-    MessageMine messageMine = EarthSingleton.of(MessageMine.class);
+    final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+    final RecentMine recentMine = EarthSingleton.of(RecentMine.class);
+    final RecentEditor recentEditor = EarthSingleton.of(RecentEditor.class);
+    final FollowerEditor followerEditor = EarthSingleton.of(FollowerEditor.class);
+    final FollowerMine followerMine = EarthSingleton.of(FollowerMine.class);
+    final MessageEditor messageEditor = EarthSingleton.of(MessageEditor.class);
+    final MessageMine messageMine = EarthSingleton.of(MessageMine.class);
     final EarthUpdate earthUpdate = EarthSingleton.of(EarthUpdate.class);
 
     @Override

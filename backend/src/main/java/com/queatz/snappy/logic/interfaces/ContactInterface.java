@@ -56,7 +56,7 @@ public class ContactInterface implements Interfaceable {
 
                 earthUpdate.send(new NewContactEvent(as.getUser(), contact)).to(person);
 
-                return earthViewer.getViewForEntityOrThrow(thing).toJson();
+                return earthViewer.getViewForEntityOrThrow(contact).toJson();
             }
             case 1: {
                 Entity thing = earthStore.get(as.getRoute().get(0));

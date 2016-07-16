@@ -20,7 +20,6 @@ public class EarthAs {
     private final HttpServletResponse response;
     private final List<String> route;
     private final Entity user;
-    private AsyncMemcacheService parameters;
 
     public EarthAs(Api api, HttpServletRequest request, HttpServletResponse response, List<String> route, Entity user) {
         this.api = api;
