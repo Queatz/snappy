@@ -35,6 +35,10 @@ public class EarthAs {
         singletons = new HashMap<>();
     }
 
+    public EarthAs () {
+        this(null, null, null, null, null);
+    }
+
     @SuppressWarnings("unchecked")
     public <T> T s(Class<T> clazz) {
         if (!singletons.containsKey(clazz)) {

@@ -3,6 +3,7 @@ package com.queatz.snappy;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Auth;
 import com.queatz.snappy.shared.Config;
@@ -61,7 +62,7 @@ public class SnappyServlet extends HttpServlet {
         resp.setCharacterEncoding("utf-8");
 
         try {
-            Entity user = new Auth(null).fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH));
+            Entity user = new Auth().fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH));
 
             if (user == null) {
                 throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null auth");

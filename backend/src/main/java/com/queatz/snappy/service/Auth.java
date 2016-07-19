@@ -41,7 +41,8 @@ public class Auth {
     private final PersonEditor personEditor;
     private final EarthJson earthJson;
 
-    public Auth(EarthAs as) {
+    public Auth() {
+        EarthAs as = new EarthAs();
         personMine = new PersonMine(as);
         personEditor = new PersonEditor(as);
         earthJson = new EarthJson();
