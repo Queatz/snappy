@@ -2,7 +2,6 @@ package com.queatz.snappy.logic.interfaces;
 
 import com.google.cloud.datastore.LatLng;
 import com.queatz.snappy.logic.EarthAs;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Interfaceable;
@@ -14,8 +13,6 @@ import com.queatz.snappy.shared.Config;
  * Created by jacob on 7/9/16.
  */
 public class SearchInterface implements Interfaceable {
-
-    private EarthStore earthStore = EarthSingleton.of(EarthStore.class);
 
     @Override
     public String get(EarthAs as) {
@@ -39,7 +36,8 @@ public class SearchInterface implements Interfaceable {
 
         final LatLng latLng = LatLng.of(latitude, longitude);
 
-        return new EntityListView(earthStore.getNearby(latLng, kindFilter, qParam), EarthView.SHALLOW).toJson();
+        return new EntityListView(as,
+                new EarthStore(as).getNearby(latLng, kindFilter, qParam), EarthView.SHALLOW).toJson();
     }
 
     @Override

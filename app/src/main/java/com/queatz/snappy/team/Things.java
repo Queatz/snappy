@@ -7,7 +7,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.util.Json;
 
 import java.lang.reflect.Field;

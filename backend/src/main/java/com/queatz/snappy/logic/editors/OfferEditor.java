@@ -2,17 +2,23 @@ package com.queatz.snappy.logic.editors;
 
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.NullValue;
+import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 
 /**
  * Created by jacob on 5/8/16.
  */
-public class OfferEditor {
+public class OfferEditor extends EarthControl {
+    private final EarthStore earthStore;
 
-    private final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+    public OfferEditor(final EarthAs as) {
+        super(as);
+
+        earthStore = use(EarthStore.class);
+    }
 
     public Entity newOffer(Entity person, String about, Integer price, String unit) {
         Entity.Builder edit = earthStore.edit(earthStore.create(EarthKind.OFFER_KIND))

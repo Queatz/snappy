@@ -27,12 +27,16 @@ import java.util.Map;
 /**
  * Created by jacob on 4/9/16.
  */
-public class EarthViewer {
+public class EarthViewer extends EarthControl {
+    public EarthViewer(final EarthAs as) {
+        super(as);
+    }
+
     private static final Map<String, Constructor<? extends Viewable>> mapping = new HashMap<>();
 
     private static <T> Constructor<T> getConstructor(Class<T> clazz) {
         try {
-            return clazz.getConstructor(Entity.class, EarthView.class);
+            return clazz.getConstructor(EarthAs.class, Entity.class, EarthView.class);
         } catch (NoSuchMethodException e) {
             return null;
         }
@@ -70,7 +74,7 @@ public class EarthViewer {
         }
 
         try {
-            return constructor.newInstance(entity, view);
+            return constructor.newInstance(as, entity, view);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {

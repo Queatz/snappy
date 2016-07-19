@@ -4,7 +4,6 @@ import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Viewable;
@@ -34,14 +33,14 @@ public class PersonView extends ExistenceView {
     final List<Viewable> hubs;
     final List<Viewable> clubs;
 
-    public PersonView(Entity person) {
-        this(person, EarthView.DEEP);
+    public PersonView(EarthAs as, Entity person) {
+        this(as, person, EarthView.DEEP);
     }
 
-    public PersonView(Entity person, EarthView view) {
-        super(person, view);
+    public PersonView(EarthAs as, Entity person, EarthView view) {
+        super(as, person, view);
 
-        final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+        final EarthStore earthStore = use(EarthStore.class);
 
         firstName = person.getString(EarthField.FIRST_NAME);
         lastName = person.getString(EarthField.LAST_NAME);
@@ -64,12 +63,12 @@ public class PersonView extends ExistenceView {
                 List<Entity> hubsList = earthStore.find(EarthKind.HUB_KIND, EarthField.SOURCE, person.key());
                 List<Entity> clubsList = earthStore.find(EarthKind.CLUB_KIND, EarthField.SOURCE, person.key());
 
-                updates = new EntityListView(updatesList, EarthView.SHALLOW).asList();
-                offers = new EntityListView(offersList, EarthView.SHALLOW).asList();
-                resources = new EntityListView(resourcesList, EarthView.SHALLOW).asList();
-                projects = new EntityListView(projectsList, EarthView.SHALLOW).asList();
-                hubs = new EntityListView(hubsList, EarthView.SHALLOW).asList();
-                clubs = new EntityListView(clubsList, EarthView.SHALLOW).asList();
+                updates = new EntityListView(as, updatesList, EarthView.SHALLOW).asList();
+                offers = new EntityListView(as, offersList, EarthView.SHALLOW).asList();
+                resources = new EntityListView(as, resourcesList, EarthView.SHALLOW).asList();
+                projects = new EntityListView(as, projectsList, EarthView.SHALLOW).asList();
+                hubs = new EntityListView(as, hubsList, EarthView.SHALLOW).asList();
+                clubs = new EntityListView(as, clubsList, EarthView.SHALLOW).asList();
 
                 infoFollowers = earthStore.count(EarthKind.FOLLOWER_KIND, EarthField.TARGET, person.key());
                 infoFollowing = earthStore.count(EarthKind.FOLLOWER_KIND, EarthField.SOURCE, person.key());

@@ -1,7 +1,6 @@
 package com.queatz.snappy.logic;
 
 import com.google.cloud.datastore.Entity;
-import com.google.common.html.HtmlEscapers;
 import com.queatz.snappy.shared.Config;
 
 import java.util.Properties;

@@ -1,13 +1,11 @@
 package com.queatz.snappy.team;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.queatz.snappy.shared.Config;
@@ -16,7 +14,6 @@ import java.io.Closeable;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.exceptions.RealmException;
 import io.realm.exceptions.RealmMigrationNeededException;
 
 /**

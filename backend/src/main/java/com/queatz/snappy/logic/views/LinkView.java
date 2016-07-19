@@ -1,8 +1,8 @@
 package com.queatz.snappy.logic.views;
 
 import com.google.cloud.datastore.Entity;
+import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.EarthViewer;
@@ -16,15 +16,15 @@ public class LinkView extends ExistenceView {
     final Viewable source;
     final Viewable target;
 
-    public LinkView(Entity link) {
-        this(link, EarthView.DEEP);
+    public LinkView(EarthAs as, Entity link) {
+        this(as, link, EarthView.DEEP);
     }
 
-    public LinkView(Entity link, EarthView view) {
-        super(link, view);
+    public LinkView(EarthAs as, Entity link, EarthView view) {
+        super(as, link, view);
 
-        final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
-        final EarthViewer earthViewer = EarthSingleton.of(EarthViewer.class);
+        final EarthStore earthStore = use(EarthStore.class);
+        final EarthViewer earthViewer = use(EarthViewer.class);
 
         switch (view) {
             case DEEP:

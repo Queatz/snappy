@@ -10,9 +10,9 @@ import com.google.cloud.datastore.Entity;
 import com.google.gson.JsonObject;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.backend.Util;
+import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthJson;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.mines.PersonMine;
 import com.queatz.snappy.shared.Config;
@@ -26,15 +26,6 @@ import java.net.URL;
  * Created by jacob on 11/17/14.
  */
 public class Auth {
-    private static Auth _service;
-
-    public static Auth getService() {
-        if(_service == null)
-            _service = new Auth();
-
-        return _service;
-    }
-
     private class PersonData {
         String googleUrl;
         String gender;
@@ -46,11 +37,14 @@ public class Auth {
         String googleId;
     }
 
-    final PersonMine personMine = EarthSingleton.of(PersonMine.class);
-    final PersonEditor personEditor = EarthSingleton.of(PersonEditor.class);
-    final EarthJson earthJson = EarthSingleton.of(EarthJson.class);
+    private final PersonMine personMine;
+    private final PersonEditor personEditor;
+    private final EarthJson earthJson;
 
-    public Auth() {
+    public Auth(EarthAs as) {
+        personMine = new PersonMine(as);
+        personEditor = new PersonEditor(as);
+        earthJson = new EarthJson();
     }
 
     public boolean isRealGoogleAuth(String email, String token) throws PrintingError {

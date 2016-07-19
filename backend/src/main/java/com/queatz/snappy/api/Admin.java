@@ -2,8 +2,8 @@ package com.queatz.snappy.api;
 
 import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.eventables.RefreshMeEvent;
@@ -20,12 +20,17 @@ import java.io.IOException;
  */
 public class Admin extends Api.Path {
 
-    PersonMine personMine = EarthSingleton.of(PersonMine.class);
-    PersonEditor personEditor = EarthSingleton.of(PersonEditor.class);
-    EarthUpdate earthUpdate = EarthSingleton.of(EarthUpdate.class);
+    private final PersonMine personMine;
+    private final PersonEditor personEditor;
+    private final EarthUpdate earthUpdate;
 
     public Admin(Api api) {
         super(api);
+
+        EarthAs as = new EarthAs(api, request, response, path, user);
+        personMine = new PersonMine(as);
+        personEditor = new PersonEditor(as);
+        earthUpdate = new EarthUpdate(as);
     }
 
     @Override

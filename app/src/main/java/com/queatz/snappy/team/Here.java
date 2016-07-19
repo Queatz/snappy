@@ -13,8 +13,6 @@ import com.queatz.snappy.things.Person;
 import com.queatz.snappy.things.Quest;
 import com.queatz.snappy.util.Json;
 
-import java.util.List;
-
 import io.realm.RealmList;
 import io.realm.RealmResults;
 

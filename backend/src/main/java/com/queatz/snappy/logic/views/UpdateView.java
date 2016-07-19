@@ -1,9 +1,9 @@
 package com.queatz.snappy.logic.views;
 
 import com.google.cloud.datastore.Entity;
+import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.EarthViewer;
@@ -22,18 +22,18 @@ public class UpdateView extends ThingView {
     final String action;
     final Viewable target;
 
-    public UpdateView(Entity update) {
-        this(update, EarthView.DEEP);
+    public UpdateView(EarthAs as, Entity update) {
+        this(as, update, EarthView.DEEP);
     }
 
-    public UpdateView(Entity update, EarthView view) {
-        super(update, view);
+    public UpdateView(EarthAs as, Entity update, EarthView view) {
+        super(as, update, view);
 
-        final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
-        final EarthViewer earthViewer = EarthSingleton.of(EarthViewer.class);
+        final EarthStore earthStore = use(EarthStore.class);
+        final EarthViewer earthViewer = use(EarthViewer.class);
 
         date = update.getDateTime(EarthField.CREATED_ON).toDate();
-        person = new PersonView(earthStore.get(update.getKey(EarthField.SOURCE)), EarthView.SHALLOW);
+        person = new PersonView(as, earthStore.get(update.getKey(EarthField.SOURCE)), EarthView.SHALLOW);
         likers = earthStore.count(EarthKind.LIKE_KIND, EarthField.TARGET, update.key());
 
         if (update.contains(EarthField.TARGET)) {

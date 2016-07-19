@@ -13,7 +13,6 @@ import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthSearcher;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.concepts.Eventable;
@@ -59,12 +58,6 @@ public class Worker extends HttpServlet {
         }
     }
 
-    EarthSearcher earthSearcher = EarthSingleton.of(EarthSearcher.class);
-    EarthStore earthStore = EarthSingleton.of(EarthStore.class);
-    EarthEmail earthEmail = EarthSingleton.of(EarthEmail.class);
-    EarthUpdate earthUpdate = EarthSingleton.of(EarthUpdate.class);
-    EarthJson earthJson = EarthSingleton.of(EarthJson.class);
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         String action = req.getParameter("action");
@@ -73,7 +66,7 @@ public class Worker extends HttpServlet {
         String fromUser = req.getParameter("fromUser");
         String data = req.getParameter("message");
 
-        Eventable eventable = earthUpdate.from(action, data);
+        Eventable eventable = new EarthUpdate(null).from(action, data);
 
         HashSet<SendInstance> toUsers = new HashSet<>();
 
@@ -86,15 +79,15 @@ public class Worker extends HttpServlet {
         // Social Mode: Friends
 
         if(fromUser != null) {
+            final EarthStore earthStore = new EarthStore(null);
+
             for(Entity follow : earthStore.find(EarthKind.FOLLOWER_KIND, EarthField.TARGET, earthStore.key(fromUser))) {
                 toUsers.add(new SendInstance(follow.getKey(EarthField.SOURCE).name(), Config.SOCIAL_MODE_FRIENDS));
             }
-        }
 
-        // Social Mode: On
-        // Friends will have higher priority due to HashSet not overwriting existing elements
+            // Social Mode: On
+            // Friends will have higher priority due to HashSet not overwriting existing elements
 
-        if(fromUser != null) {
             Entity source = earthStore.get(fromUser);
 
             LatLng latLng;
@@ -105,7 +98,7 @@ public class Worker extends HttpServlet {
                 latLng = earthStore.get(source.getKey(EarthField.SOURCE)).getLatLng(EarthField.GEO);
             }
 
-            for (Entity person : earthSearcher.getNearby(EarthKind.PERSON_KIND, null, latLng, 300)) {
+            for (Entity person : new EarthSearcher(null).getNearby(EarthKind.PERSON_KIND, null, latLng, 300)) {
                 if(fromUser.equals(person.key().name())) {
                     continue;
                 }
@@ -117,7 +110,7 @@ public class Worker extends HttpServlet {
         // Send
 
         final Sender sender = new Sender(Config.GCM_KEY);
-        final Message msg = new Message.Builder().addData("message", earthJson.toJson(eventable.makePush())).build();
+        final Message msg = new Message.Builder().addData("message", new EarthJson().toJson(eventable.makePush())).build();
 
         for(SendInstance sendInstance : toUsers) {
             List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).filter("userId", sendInstance.userId).list();
@@ -196,8 +189,8 @@ public class Worker extends HttpServlet {
             return;
         }
 
-        earthEmail.sendRawEmail(
-                earthStore.get(toUser).getString(EarthField.EMAIL),
+        new EarthEmail().sendRawEmail(
+                new EarthStore(null).get(toUser).getString(EarthField.EMAIL),
                 subject,
                 eventable.makeEmail());
     }

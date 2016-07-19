@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
-import com.queatz.snappy.things.Follow;
 import com.queatz.snappy.things.Like;
 import com.queatz.snappy.things.Person;
 import com.squareup.picasso.Picasso;

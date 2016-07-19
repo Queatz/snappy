@@ -31,10 +31,14 @@ import javax.annotation.Nonnull;
  *
  * POST /?kind=hub -> { hub-definition }
  */
-public class Earth implements Interfaceable {
+public class Earth extends EarthControl implements Interfaceable {
+    private final EarthRouter earthRouter;
 
-    private final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
-    private final EarthRouter earthRouter = EarthSingleton.of(EarthRouter.class);
+    public Earth(EarthAs as) {
+        super(as);
+
+        earthRouter = use(EarthRouter.class);
+    }
 
     @Override
     public String get(EarthAs as) {
@@ -82,7 +86,7 @@ public class Earth implements Interfaceable {
             throw new NothingLogicResponse("earth - id is empty");
         }
 
-        Entity entity = earthStore.get(id);
+        Entity entity = use(EarthStore.class).get(id);
 
         if (entity == null) {
             throw new NothingLogicResponse("earth - no entity was found");

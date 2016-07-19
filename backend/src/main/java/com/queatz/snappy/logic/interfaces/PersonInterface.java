@@ -5,9 +5,9 @@ import com.google.common.collect.Lists;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthUpdate;
+import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.FollowerEditor;
 import com.queatz.snappy.logic.editors.MessageEditor;
@@ -21,7 +21,6 @@ import com.queatz.snappy.logic.mines.RecentMine;
 import com.queatz.snappy.logic.views.EntityListView;
 import com.queatz.snappy.logic.views.FollowerView;
 import com.queatz.snappy.logic.views.MessageView;
-import com.queatz.snappy.logic.views.PersonView;
 import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.shared.Config;
 
@@ -31,15 +30,6 @@ import java.util.List;
  * Created by jacob on 5/9/16.
  */
 public class PersonInterface implements Interfaceable {
-
-    final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
-    final RecentMine recentMine = EarthSingleton.of(RecentMine.class);
-    final RecentEditor recentEditor = EarthSingleton.of(RecentEditor.class);
-    final FollowerEditor followerEditor = EarthSingleton.of(FollowerEditor.class);
-    final FollowerMine followerMine = EarthSingleton.of(FollowerMine.class);
-    final MessageEditor messageEditor = EarthSingleton.of(MessageEditor.class);
-    final MessageMine messageMine = EarthSingleton.of(MessageMine.class);
-    final EarthUpdate earthUpdate = EarthSingleton.of(EarthUpdate.class);
 
     @Override
     public String get(EarthAs as) {
@@ -71,7 +61,7 @@ public class PersonInterface implements Interfaceable {
     public String post(EarthAs as) {
         switch (as.getRoute().size()) {
             case 1:
-                Entity person = earthStore.get(as.getRoute().get(0));
+                Entity person = new EarthStore(as).get(as.getRoute().get(0));
 
                 if (Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_SEEN))) {
                    return postSeen(as, person);
@@ -92,72 +82,72 @@ public class PersonInterface implements Interfaceable {
     }
 
     private String getPerson(EarthAs as, String personId) {
-        return new PersonView(earthStore.get(personId)).toJson();
+        return new EarthViewer(as).getViewForEntityOrThrow(new EarthStore(as).get(personId)).toJson();
     }
 
     private String getFollows(EarthAs as, boolean followers, String personId) {
-        Entity person = earthStore.get(personId);
+        Entity person = new EarthStore(as).get(personId);
 
-        List<Entity> follows = earthStore.find(EarthKind.FOLLOWER_KIND,
+        List<Entity> follows = new EarthStore(as).find(EarthKind.FOLLOWER_KIND,
                 followers ? EarthField.TARGET : EarthField.SOURCE,
                 person.key());
 
-        return new EntityListView(follows).toJson();
+        return new EntityListView(as, follows).toJson();
     }
 
     private String getParties(EarthAs as, String personId) {
-        Entity person = earthStore.get(personId);
+        Entity person = new EarthStore(as).get(personId);
 
-        List<Entity> follows = earthStore.find(EarthKind.FOLLOWER_KIND,
+        List<Entity> follows = new EarthStore(as).find(EarthKind.FOLLOWER_KIND,
                 EarthField.HOST,
                 person.key());
 
-        return new EntityListView(follows).toJson();
+        return new EntityListView(as, follows).toJson();
     }
 
     private String getMessages(EarthAs as, String personId) {
         // XXX TODO when Datastore supports OR expressions, combine these
-        List<Entity> messagesToMe = messageMine.messagesFromTo(as.getUser().key(), earthStore.key(personId));
-        List<Entity> messagesFromMe = messageMine.messagesFromTo(earthStore.key(personId), as.getUser().key());
+        List<Entity> messagesToMe = new MessageMine(as).messagesFromTo(as.getUser().key(), new EarthStore(as).key(personId));
+        List<Entity> messagesFromMe = new MessageMine(as).messagesFromTo(new EarthStore(as).key(personId), as.getUser().key());
 
         List<Entity> messages = Lists.newArrayList();
         messages.addAll(messagesToMe);
         messages.addAll(messagesFromMe);
 
-        return new EntityListView(messages).toJson();
+        return new EntityListView(as, messages).toJson();
     }
 
     private String postSeen(EarthAs as, Entity personId) {
-        recentEditor.markSeen(recentMine.byPerson(as.getUser(), personId));
+        new RecentEditor(as).markSeen(new RecentMine(as).byPerson(as.getUser(), personId));
         return new SuccessView(true).toJson();
     }
 
     private String postFollow(EarthAs as, Entity person) {
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
-        Entity follow = followerEditor.newFollower(as.getUser(), person);
+        Entity follow = new FollowerEditor(as).newFollower(as.getUser(), person);
 
-        earthUpdate.send(new FollowEvent(follow))
+        new EarthUpdate(as).send(new FollowEvent(follow))
                 .to(follow.getKey(EarthField.TARGET));
 
-        return new FollowerView(follow).setLocalId(localId).toJson();
+        return new FollowerView(as, follow).setLocalId(localId).toJson();
     }
 
     private String postStopFollowing(EarthAs as, Entity person) {
-        Entity follower = followerMine.forPerson(as.getUser(), person);
-        earthStore.conclude(follower);
+        Entity follower = new FollowerMine(as).forPerson(as.getUser(), person);
+        new EarthStore(as).conclude(follower);
 
         return new SuccessView(true).toJson();
     }
 
     private String postMessage(EarthAs as, Entity person, String message) {
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
-        Entity sent = messageEditor.newMessage(as.getUser(), person, message);
+        Entity sent = new MessageEditor(as).newMessage(as.getUser(), person, message);
 
-        recentEditor.updateWithMessage(sent);
+        new RecentEditor(as).updateWithMessage(sent);
 
-        earthUpdate.send(new MessageEvent(sent)).to(person);
+        new EarthUpdate(as).send(new MessageEvent(sent)).to(person);
 
-        return new MessageView(sent).setLocalId(localId).toJson();
+        return new MessageView(as, sent).setLocalId(localId).toJson();
     }
 }

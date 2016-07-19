@@ -3,17 +3,23 @@ package com.queatz.snappy.logic.mines;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.StructuredQuery;
+import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 
 /**
  * Created by jacob on 5/14/16.
  */
-public class PersonMine {
+public class PersonMine extends EarthControl {
+    private final EarthStore earthStore;
 
-    EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+    public PersonMine(final EarthAs as) {
+        super(as);
+
+        earthStore = use(EarthStore.class);
+    }
 
     public Entity byEmail(String email) {
         QueryResults<Entity> results = earthStore.query(

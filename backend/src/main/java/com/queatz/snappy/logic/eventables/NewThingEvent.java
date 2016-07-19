@@ -3,7 +3,6 @@ package com.queatz.snappy.logic.eventables;
 import com.google.cloud.datastore.Entity;
 import com.google.common.collect.ImmutableMap;
 import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.logic.mines.ContactMine;
@@ -14,8 +13,8 @@ import com.queatz.snappy.shared.PushSpec;
  * Created by jacob on 6/26/16.
  */
 public class NewThingEvent implements Eventable {
-    EarthStore earthStore = EarthSingleton.of(EarthStore.class);
-    ContactMine contactMine = EarthSingleton.of(ContactMine.class);
+    EarthStore earthStore = new EarthStore(null);
+    ContactMine contactMine = new ContactMine(null);
 
     Entity thing;
 

@@ -16,9 +16,7 @@ import com.google.cloud.datastore.StructuredQuery;
 import com.google.cloud.datastore.Transaction;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
-import com.queatz.snappy.logic.concepts.Authority;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
-import com.queatz.snappy.shared.Config;
 
 import java.util.List;
 import java.util.Random;
@@ -28,7 +26,16 @@ import javax.annotation.Nonnull;
 /**
  * Created by jacob on 4/2/16.
  */
-public class EarthStore {
+public class EarthStore extends EarthControl {
+    private final EarthAuthority earthAuthority;
+    private final EarthSearcher earthSearcher;
+
+    public EarthStore(EarthAs as) {
+        super(as);
+
+        earthAuthority = use(EarthAuthority.class);
+        earthSearcher = use(EarthSearcher.class);
+    }
 
     private static final String DEFAULT_KIND = "Thing";
     public static final String DEFAULT_FIELD_KIND = EarthField.KIND;
@@ -37,9 +44,6 @@ public class EarthStore {
 
     private final Datastore datastore = DatastoreOptions.defaultInstance().service();
     private final KeyFactory keyFactory = datastore.newKeyFactory().kind(DEFAULT_KIND);
-
-    private final EarthAuthority earthAuthority = EarthSingleton.of(EarthAuthority.class);
-    private final EarthSearcher earthSearcher = EarthSingleton.of(EarthSearcher.class);
 
     public Entity get(@Nonnull String id) {
         return get(keyFactory.newKey(id));
@@ -64,7 +68,7 @@ public class EarthStore {
             return null;
         }
 
-        if (!earthAuthority.authorize(getUser(), entity, EarthRule.ACCESS)) {
+        if (!earthAuthority.authorize(entity, EarthRule.ACCESS)) {
             return null;
         }
 
@@ -187,7 +191,7 @@ public class EarthStore {
 
     public void conclude(Entity entity) {
 
-        if (!earthAuthority.authorize(getUser(), entity, EarthRule.MODIFY)) {
+        if (!earthAuthority.authorize(entity, EarthRule.MODIFY)) {
             return;
         }
 
@@ -202,7 +206,7 @@ public class EarthStore {
      */
     public Entity.Builder edit(@Nonnull Entity entity) {
 
-        if (!earthAuthority.authorize(getUser(), entity, EarthRule.MODIFY)) {
+        if (!earthAuthority.authorize(entity, EarthRule.MODIFY)) {
             throw new NothingLogicResponse("unauthorized");
         }
 
@@ -218,7 +222,7 @@ public class EarthStore {
     public Entity save(@Nonnull Entity.Builder entityBuilder) {
         Entity entity = entityBuilder.build();
 
-        if (!earthAuthority.authorize(getUser(), entity, EarthRule.MODIFY)) {
+        if (!earthAuthority.authorize(entity, EarthRule.MODIFY)) {
             throw new NothingLogicResponse("unauthorized");
         }
 

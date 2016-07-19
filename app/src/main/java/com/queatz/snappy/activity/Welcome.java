@@ -10,7 +10,6 @@ import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.team.Auth;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.ui.RevealAnimation;
 
 /**
  * Created by jacob on 10/19/14.

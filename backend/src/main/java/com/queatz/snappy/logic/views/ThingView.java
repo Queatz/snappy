@@ -1,6 +1,7 @@
 package com.queatz.snappy.logic.views;
 
 import com.google.cloud.datastore.Entity;
+import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthView;
 
@@ -13,12 +14,12 @@ public class ThingView extends ExistenceView {
     final String about;
     final boolean photo;
 
-    public ThingView(Entity hub) {
-        this(hub, EarthView.DEEP);
+    public ThingView(EarthAs as, Entity hub) {
+        this(as, hub, EarthView.DEEP);
     }
 
-    public ThingView(Entity hub, EarthView view) {
-        super(hub, view);
+    public ThingView(EarthAs as, Entity hub, EarthView view) {
+        super(as, hub, view);
 
         name = hub.getString(EarthField.NAME);
         about = hub.getString(EarthField.ABOUT);

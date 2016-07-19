@@ -10,13 +10,12 @@ import com.google.cloud.datastore.Entity;
 import com.google.gson.JsonObject;
 import com.queatz.snappy.backend.GooglePurchaseDataSpec;
 import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthJson;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.mines.PersonMine;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.things.PersonSpec;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,20 +24,14 @@ import java.net.URL;
  * Created by jacob on 4/4/15.
  */
 public class Buy {
-    private static Buy _service;
+    PersonEditor personEditor;
+    EarthJson earthJson;
+    PersonMine personMine;
 
-    public static Buy getService() {
-        if(_service == null)
-            _service = new Buy();
-
-        return _service;
-    }
-
-    PersonEditor personEditor = EarthSingleton.of(PersonEditor.class);
-    EarthJson earthJson = EarthSingleton.of(EarthJson.class);
-    PersonMine personMine = EarthSingleton.of(PersonMine.class);
-
-    public Buy() {
+    public Buy(EarthAs as) {
+        personEditor = new PersonEditor(as);
+        earthJson = new EarthJson();
+        personMine = new PersonMine(as);
     }
 
     public String getServerAuthToken() throws PrintingError {
@@ -106,8 +99,7 @@ public class Buy {
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "not bought 2");
         }
 
-        // XXX Shouldn't really use EarthSingleton here...
-        GooglePurchaseDataSpec data = EarthSingleton.of(com.queatz.snappy.backend.Buy.class)
+        GooglePurchaseDataSpec data = new com.queatz.snappy.backend.Buy()
                 .makeOrUpdate(purchaseData, p);
         String subscription = data == null ? null : data.orderId;
 

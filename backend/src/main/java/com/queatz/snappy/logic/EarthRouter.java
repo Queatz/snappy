@@ -1,13 +1,13 @@
 package com.queatz.snappy.logic;
 
-import com.queatz.snappy.logic.interfaces.ByNameInterface;
-import com.queatz.snappy.logic.interfaces.ContactInterface;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
-import com.queatz.snappy.logic.interfaces.FeedbackInterface;
-import com.queatz.snappy.logic.interfaces.HereInterface;
+import com.queatz.snappy.logic.interfaces.ByNameInterface;
+import com.queatz.snappy.logic.interfaces.ContactInterface;
 import com.queatz.snappy.logic.interfaces.EndorsementInterface;
+import com.queatz.snappy.logic.interfaces.FeedbackInterface;
 import com.queatz.snappy.logic.interfaces.FollowerInterface;
+import com.queatz.snappy.logic.interfaces.HereInterface;
 import com.queatz.snappy.logic.interfaces.HubInterface;
 import com.queatz.snappy.logic.interfaces.JoinInterface;
 import com.queatz.snappy.logic.interfaces.LikeInterface;
@@ -29,7 +29,11 @@ import java.util.NoSuchElementException;
 /**
  * Created by jacob on 4/2/16.
  */
-public class EarthRouter {
+public class EarthRouter extends EarthControl {
+    public EarthRouter(EarthAs as) {
+        super(as);
+    }
+
     private static final Map<String, Interfaceable> mapping = new HashMap<>();
     private static final Map<String, Interfaceable> specialMapping = new HashMap<>();
 

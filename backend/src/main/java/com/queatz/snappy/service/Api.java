@@ -14,8 +14,6 @@ import com.queatz.snappy.api.Admin;
 import com.queatz.snappy.api.Logic;
 import com.queatz.snappy.api.Pirate;
 import com.queatz.snappy.backend.PrintingError;
-import com.queatz.snappy.logic.EarthJson;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
@@ -39,8 +37,6 @@ public class Api {
 
         return _service;
     }
-
-    final EarthJson earthJson = EarthSingleton.of(EarthJson.class);
 
     public enum Error {
         NOT_FOUND,

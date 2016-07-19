@@ -3,19 +3,26 @@ package com.queatz.snappy.logic.editors;
 import com.google.cloud.datastore.DateTime;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
+import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.mines.RecentMine;
 
 /**
  * Created by jacob on 5/8/16.
  */
-public class RecentEditor {
+public class RecentEditor extends EarthControl {
+    private final EarthStore earthStore;
+    private final RecentMine recentMine;
 
-    private final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
-    private final RecentMine recentMine = EarthSingleton.of(RecentMine.class);
+    public RecentEditor(final EarthAs as) {
+        super(as);
+
+        earthStore = use(EarthStore.class);
+        recentMine = use(RecentMine.class);
+    }
 
     public Entity newRecent(Entity person, Entity with, Entity latest) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.RECENT_KIND))

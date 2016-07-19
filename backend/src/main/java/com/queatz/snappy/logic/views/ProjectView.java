@@ -1,6 +1,7 @@
 package com.queatz.snappy.logic.views;
 
 import com.google.cloud.datastore.Entity;
+import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthView;
 
 /**
@@ -8,11 +9,11 @@ import com.queatz.snappy.logic.EarthView;
  */
 public class ProjectView extends CommonThingView {
 
-    public ProjectView(Entity resource) {
-        this(resource, EarthView.DEEP);
+    public ProjectView(EarthAs as, Entity resource) {
+        this(as, resource, EarthView.DEEP);
     }
 
-    public ProjectView(Entity resource, EarthView view) {
-        super(resource, view);
+    public ProjectView(EarthAs as, Entity resource, EarthView view) {
+        super(as, resource, view);
     }
 }

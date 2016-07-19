@@ -1,6 +1,7 @@
 package com.queatz.snappy.logic.views;
 
 import com.google.cloud.datastore.Entity;
+import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthView;
 
 /**
@@ -8,11 +9,11 @@ import com.queatz.snappy.logic.EarthView;
  */
 public class PartyView extends ThingView {
 
-    public PartyView(Entity party) {
-        this(party, EarthView.DEEP);
+    public PartyView(EarthAs as, Entity party) {
+        this(as, party, EarthView.DEEP);
     }
 
-    public PartyView(Entity party, EarthView view) {
-        super(party, view);
+    public PartyView(EarthAs as, Entity party, EarthView view) {
+        super(as, party, view);
     }
 }

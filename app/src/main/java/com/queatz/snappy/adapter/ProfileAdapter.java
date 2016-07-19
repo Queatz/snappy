@@ -3,7 +3,6 @@ package com.queatz.snappy.adapter;
 import android.app.Fragment;
 import android.app.FragmentManager;
 
-import com.queatz.snappy.fragment.PersonMessagesSlide;
 import com.queatz.snappy.fragment.PersonUptoSlide;
 import com.queatz.snappy.fragment.SettingsSlide;
 import com.queatz.snappy.things.Person;

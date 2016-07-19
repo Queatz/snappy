@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -26,7 +25,6 @@ import com.queatz.snappy.things.Person;
 import com.queatz.snappy.things.Update;
 import com.queatz.snappy.ui.RevealAnimation;
 import com.queatz.snappy.ui.TextView;
-import com.queatz.snappy.ui.TimeSlider;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 

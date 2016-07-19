@@ -25,7 +25,10 @@ import java.util.Map;
 /**
  * Created by jacob on 6/19/16.
  */
-public class EarthUpdate {
+public class EarthUpdate extends EarthControl {
+    public EarthUpdate(EarthAs as) {
+        super(as);
+    }
 
     public static final Map<String, Class<? extends Eventable>> eventableMap = new HashMap<>();
     public static final Map<Class<? extends Eventable>, String> actionMap;

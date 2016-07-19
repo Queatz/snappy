@@ -2,7 +2,6 @@ package com.queatz.snappy.backend;
 
 import com.googlecode.objectify.ObjectifyService;
 import com.queatz.snappy.logic.EarthJson;
-import com.queatz.snappy.logic.EarthSingleton;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -22,7 +21,7 @@ public class Buy {
 
         GooglePurchaseDataSpec subscription;
 
-        subscription = EarthSingleton.of(EarthJson.class).fromJson(subscriptionInfo, GooglePurchaseDataSpec.class);
+        subscription = new EarthJson().fromJson(subscriptionInfo, GooglePurchaseDataSpec.class);
 
         GooglePurchaseDataSpec purchase = ofy().load().type(GooglePurchaseDataSpec.class).filter("orderId", data.orderId).first().now();
 

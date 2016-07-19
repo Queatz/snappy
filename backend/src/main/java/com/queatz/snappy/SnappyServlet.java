@@ -6,10 +6,8 @@ import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Auth;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.ErrorResponseSpec;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -63,7 +61,7 @@ public class SnappyServlet extends HttpServlet {
         resp.setCharacterEncoding("utf-8");
 
         try {
-            Entity user = Auth.getService().fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH));
+            Entity user = new Auth(null).fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH));
 
             if (user == null) {
                 throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null auth");

@@ -2,14 +2,11 @@ package com.queatz.snappy.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -27,10 +24,8 @@ import com.queatz.snappy.things.Offer;
 import com.queatz.snappy.things.Party;
 import com.queatz.snappy.things.Person;
 import com.queatz.snappy.things.Quest;
-import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.ui.RevealAnimation;
 import com.queatz.snappy.ui.TextView;
-import com.queatz.snappy.ui.TimeSlider;
 
 import java.util.ArrayList;
 import java.util.Date;

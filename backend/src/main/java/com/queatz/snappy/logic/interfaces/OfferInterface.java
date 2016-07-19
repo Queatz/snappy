@@ -5,9 +5,10 @@ import com.queatz.snappy.backend.ApiUtil;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthUpdate;
+import com.queatz.snappy.logic.EarthViewer;
+import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.EndorsementEditor;
 import com.queatz.snappy.logic.editors.OfferEditor;
 import com.queatz.snappy.logic.eventables.OfferEndorsementEvent;
@@ -27,12 +28,7 @@ import java.util.List;
 /**
  * Created by jacob on 5/9/16.
  */
-public class OfferInterface implements com.queatz.snappy.logic.concepts.Interfaceable {
-
-    final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
-    final OfferEditor offerEditor = EarthSingleton.of(OfferEditor.class);
-    final EndorsementEditor endorsementEditor = EarthSingleton.of(EndorsementEditor.class);
-    final EarthUpdate earthUpdate = EarthSingleton.of(EarthUpdate.class);
+public class OfferInterface implements Interfaceable {
 
     @Override
     public String get(EarthAs as) {
@@ -56,7 +52,7 @@ public class OfferInterface implements com.queatz.snappy.logic.concepts.Interfac
             case 2:
                 switch (as.getRoute().get(1)) {
                     case Config.PATH_DELETE:
-                        earthStore.conclude(as.getRoute().get(0));
+                        new EarthStore(as).conclude(as.getRoute().get(0));
                         return new SuccessView(true).toJson();
                     case Config.PATH_ENDORSE:
                         return endorse(as, as.getRoute().get(0));
@@ -85,7 +81,7 @@ public class OfferInterface implements com.queatz.snappy.logic.concepts.Interfac
 
 
     private String addPhoto(EarthAs as, String offerId) {
-        Entity offer = earthStore.get(offerId);
+        Entity offer = new EarthStore(as).get(offerId);
 
         try {
             if (!ApiUtil.putPhoto("offer/photo/" + offer.key().name() + "/" + new Date().getTime(), as.getApi(), as.getRequest())) {
@@ -95,9 +91,9 @@ public class OfferInterface implements com.queatz.snappy.logic.concepts.Interfac
             throw new LogicException("offer photo - not all good");
         }
 
-        offer = offerEditor.setPhoto(offer, true);
+        offer = new OfferEditor(as).setPhoto(offer, true);
 
-        return new OfferView(offer).toJson();
+        return new EarthViewer(as).getViewForEntityOrThrow(offer).toJson();
     }
 
     private String getPhoto(EarthAs as, String offerId) {
@@ -129,7 +125,7 @@ public class OfferInterface implements com.queatz.snappy.logic.concepts.Interfac
 
             // Validate pricing
             if (price != null) {
-                if (Buy.getService().valid(as.getUser())) {
+                if (new Buy(as).valid(as.getUser())) {
                     price = Math.min(Config.PAID_OFFER_PRICE_MAX, Math.max(Config.PAID_OFFER_PRICE_MIN, price));
                 } else {
                     price = Math.min(Config.FREE_OFFER_PRICE_MAX, Math.max(Config.FREE_OFFER_PRICE_MIN, price));
@@ -144,29 +140,29 @@ public class OfferInterface implements com.queatz.snappy.logic.concepts.Interfac
                 }
             }
 
-            Entity offer = offerEditor.edit(earthStore.get(offerId), details, price, unit);
+            Entity offer = new OfferEditor(as).edit(new EarthStore(as).get(offerId), details, price, unit);
 
-            return new OfferView(offer).setLocalId(localId).toJson();
+            return new OfferView(as, offer).setLocalId(localId).toJson();
         }
 
         return new SuccessView(false).toJson();
     }
 
     private String deletePhoto(EarthAs as, String offerId) {
-        offerEditor.setPhoto(earthStore.get(offerId), false);
+        new OfferEditor(as).setPhoto(new EarthStore(as).get(offerId), false);
         return new SuccessView(true).toJson();
     }
 
     private String getEndorsers(EarthAs as, String offerId) {
-        Entity offer = earthStore.get(offerId);
+        Entity offer = new EarthStore(as).get(offerId);
 
-        List<Entity> endorsers = earthStore.find(EarthKind.ENDORSEMENT_KIND, EarthField.TARGET, offer.key());
+        List<Entity> endorsers = new EarthStore(as).find(EarthKind.ENDORSEMENT_KIND, EarthField.TARGET, offer.key());
 
-        return new EntityListView(endorsers).toJson();
+        return new EntityListView(as, endorsers).toJson();
     }
 
     private String endorse(EarthAs as, String offerId) {
-        Entity offer = earthStore.get(offerId);
+        Entity offer = new EarthStore(as).get(offerId);
 
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
@@ -175,11 +171,11 @@ public class OfferInterface implements com.queatz.snappy.logic.concepts.Interfac
         }
 
         // XXX TODO don't allow endorse self
-        Entity endorsement = endorsementEditor.newEndorsement(offer, as.getUser());
+        Entity endorsement = new EndorsementEditor(as).newEndorsement(offer, as.getUser());
 
-        earthUpdate.send(new OfferEndorsementEvent(endorsement))
+        new EarthUpdate(as).send(new OfferEndorsementEvent(endorsement))
                 .to(offer.getKey(EarthField.SOURCE));
 
-        return new EndorsementView(endorsement).setLocalId(localId).toJson();
+        return new EndorsementView(as, endorsement).setLocalId(localId).toJson();
     }
 }

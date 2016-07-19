@@ -24,7 +24,6 @@ import com.queatz.snappy.shared.things.JoinLinkSpec;
 import com.queatz.snappy.shared.things.MessageSpec;
 import com.queatz.snappy.shared.things.OfferSpec;
 import com.queatz.snappy.shared.things.PartySpec;
-import com.queatz.snappy.shared.things.PersonSpec;
 import com.queatz.snappy.shared.things.QuestSpec;
 import com.queatz.snappy.shared.things.UpdateLikeSpec;
 import com.queatz.snappy.shared.things.UpdateSpec;
@@ -39,8 +38,6 @@ import com.queatz.snappy.team.push.OfferPushHandler;
 import com.queatz.snappy.team.push.PartyPushHandler;
 import com.queatz.snappy.team.push.QuestPushHandler;
 import com.queatz.snappy.team.push.UpdatePushHandler;
-import com.queatz.snappy.things.Endorsement;
-import com.queatz.snappy.things.Like;
 import com.queatz.snappy.util.Json;
 
 /**

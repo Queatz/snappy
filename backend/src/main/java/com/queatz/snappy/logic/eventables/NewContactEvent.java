@@ -1,9 +1,7 @@
 package com.queatz.snappy.logic.eventables;
 
-import com.google.api.client.util.StringUtils;
 import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
@@ -13,7 +11,7 @@ import com.queatz.snappy.shared.Config;
  */
 public class NewContactEvent implements Eventable {
 
-    EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+    EarthStore earthStore = new EarthStore(null);
 
     Entity person;
     Entity contact;

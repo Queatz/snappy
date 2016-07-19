@@ -2,11 +2,6 @@ package com.queatz.snappy.logic.concepts;
 
 import com.queatz.snappy.logic.EarthAs;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
 /**
  * Implementations of Interfaceable expose Things to the outside world.
  */

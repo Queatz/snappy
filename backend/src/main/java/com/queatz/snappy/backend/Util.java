@@ -1,7 +1,5 @@
 package com.queatz.snappy.backend;
 
-import com.queatz.snappy.shared.PushSpec;
-
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;

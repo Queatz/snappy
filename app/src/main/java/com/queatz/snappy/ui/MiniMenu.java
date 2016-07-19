@@ -14,11 +14,6 @@ import com.queatz.snappy.activity.HostParty;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.things.Person;
-import com.queatz.snappy.things.Quest;
-
-import java.util.Date;
-
-import io.realm.RealmQuery;
 
 /**
  * Created by jacob on 1/3/15.

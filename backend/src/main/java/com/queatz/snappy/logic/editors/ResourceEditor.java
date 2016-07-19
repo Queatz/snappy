@@ -1,9 +1,10 @@
 package com.queatz.snappy.logic.editors;
 
 import com.google.cloud.datastore.Entity;
+import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 
@@ -12,8 +13,14 @@ import javax.annotation.Nonnull;
 /**
  * Created by jacob on 5/22/16.
  */
-public class ResourceEditor {
-    private final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+public class ResourceEditor extends EarthControl {
+    private final EarthStore earthStore;
+
+    public ResourceEditor(final EarthAs as) {
+        super(as);
+
+        earthStore = use(EarthStore.class);
+    }
 
     public Entity newResource(@Nonnull String name, Entity primaryOwner) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.RESOURCE_KIND))

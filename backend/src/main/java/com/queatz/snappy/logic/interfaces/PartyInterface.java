@@ -4,9 +4,9 @@ import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthUpdate;
+import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.JoinEditor;
 import com.queatz.snappy.logic.editors.PartyEditor;
@@ -25,17 +25,12 @@ import java.util.Date;
  */
 public class PartyInterface implements Interfaceable {
 
-    final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
-    final PartyEditor partyEditor = EarthSingleton.of(PartyEditor.class);
-    final JoinMine joinMine = EarthSingleton.of(JoinMine.class);
-    final JoinEditor joinEditor = EarthSingleton.of(JoinEditor.class);
-    final EarthUpdate earthUpdate = EarthSingleton.of(EarthUpdate.class);
-
     @Override
     public String get(EarthAs as) {
         switch (as.getRoute().size()) {
             case 1:
-                return new PartyView(earthStore.get(as.getRoute().get(0))).toJson();
+                return new EarthViewer(as).getViewForEntityOrThrow(
+                        new EarthStore(as).get(as.getRoute().get(0))).toJson();
         }
 
         throw new NothingLogicResponse("party - bad path");
@@ -54,7 +49,7 @@ public class PartyInterface implements Interfaceable {
                 String locationParam = as.getRequest().getParameter(Config.PARAM_LOCATION);
                 String details = as.getRequest().getParameter(Config.PARAM_DETAILS);
 
-                party = partyEditor.newParty(
+                party = new PartyEditor(as).newParty(
                         original,
                         as.getUser(),
                         name,
@@ -63,19 +58,20 @@ public class PartyInterface implements Interfaceable {
                         details
                 );
 
-                earthUpdate.send(new NewPartyEvent(party))
+                new EarthUpdate(as).send(new NewPartyEvent(party))
                         .toFollowersOf(as.getUser());
 
-                return new PartyView(party).setLocalId(localId).toJson();
+                return new PartyView(as, party).setLocalId(localId).toJson();
             case 1:
-                party = earthStore.get(as.getRoute().get(0));
+                party = new EarthStore(as).get(as.getRoute().get(0));
 
                 if (Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_JOIN))) {
                     return postJoin(as, party);
                 } else if (Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_CANCEL_JOIN))) {
                     return postCancelJoin(as, party);
                 } else if (Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_FULL))) {
-                    return new PartyView(partyEditor.setFull(party)).toJson();
+                    return new EarthViewer(as).getViewForEntityOrThrow(
+                            new PartyEditor(as).setFull(party)).toJson();
                 } else {
                     throw new NothingLogicResponse("party - bad path");
                 }
@@ -85,19 +81,19 @@ public class PartyInterface implements Interfaceable {
     }
 
     private String postJoin(EarthAs as, Entity party) {
-        Entity join = joinEditor.newJoin(as.getUser(), party);
+        Entity join = new JoinEditor(as).newJoin(as.getUser(), party);
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
-        earthUpdate.send(new JoinRequestEvent(join))
+        new EarthUpdate(as).send(new JoinRequestEvent(join))
                 .to(party.getKey(EarthField.HOST));
 
-        return new JoinView(join).setLocalId(localId).toJson();
+        return new JoinView(as, join).setLocalId(localId).toJson();
     }
 
     private String postCancelJoin(EarthAs as, Entity party) {
-        Entity join = joinMine.byPersonAndParty(as.getUser(), party);
+        Entity join = new JoinMine(as).byPersonAndParty(as.getUser(), party);
 
-        joinEditor.setStatus(join, Config.JOIN_STATUS_WITHDRAWN);
+        new JoinEditor(as).setStatus(join, Config.JOIN_STATUS_WITHDRAWN);
         return null;
     }
 }

@@ -2,12 +2,11 @@ package com.queatz.snappy.logic.interfaces;
 
 import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.JoinEditor;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
-import com.queatz.snappy.logic.views.JoinView;
 import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.shared.Config;
 
@@ -16,14 +15,11 @@ import com.queatz.snappy.shared.Config;
  */
 public class JoinInterface implements Interfaceable {
 
-    EarthStore earthStore = EarthSingleton.of(EarthStore.class);
-    JoinEditor joinEditor = EarthSingleton.of(JoinEditor.class);
-
     @Override
     public String post(EarthAs as) {
         switch (as.getRoute().size()) {
             case 1:
-                Entity join = earthStore.get(as.getRoute().get(0));
+                Entity join = new EarthStore(as).get(as.getRoute().get(0));
 
                 if (join == null) {
                     throw new NothingLogicResponse("join - no");
@@ -32,9 +28,9 @@ public class JoinInterface implements Interfaceable {
                 // XXX authorize
 
                 if (Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_HIDE))) {
-                    joinEditor.hide(join);
+                    new JoinEditor(as).hide(join);
                 } else if (Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_ACCEPT))) {
-                    joinEditor.accept(join);
+                    new JoinEditor(as).accept(join);
                 } else {
                     throw new NothingLogicResponse("join - bad path");
                 }
@@ -49,13 +45,13 @@ public class JoinInterface implements Interfaceable {
     public String get(EarthAs as) {
         switch (as.getRoute().size()) {
             case 1:
-                Entity join = earthStore.get(as.getRoute().get(0));
+                Entity join = new EarthStore(as).get(as.getRoute().get(0));
 
                 if (join == null) {
                     throw new NothingLogicResponse("join - no");
                 }
 
-                return new JoinView(join).toJson();
+                return new EarthViewer(as).getViewForEntityOrThrow(join).toJson();
             default:
                 throw new NothingLogicResponse("join - bad path");
         }

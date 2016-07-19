@@ -1,7 +1,6 @@
 package com.queatz.snappy.logic.views;
 
 import com.queatz.snappy.logic.EarthJson;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.concepts.Viewable;
 
 /**
@@ -16,6 +15,6 @@ public class SuccessView implements Viewable {
 
     @Override
     public String toJson() {
-        return EarthSingleton.of(EarthJson.class).toJson(this);
+        return new EarthJson().toJson(this);
     }
 }

@@ -13,7 +13,6 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.widget.TextView;
 
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;

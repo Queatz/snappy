@@ -22,13 +22,15 @@ import java.util.List;
 /**
  * Created by jacob on 11/17/14.
  */
-public class EarthSearcher {
-    private Index index;
+public class EarthSearcher extends EarthControl {
+    public EarthSearcher(final EarthAs as) {
+        super(as);
 
-    public EarthSearcher() {
         IndexSpec indexSpec = IndexSpec.newBuilder().setName("Thing").build();
         index = SearchServiceFactory.getSearchService().getIndex(indexSpec);
     }
+
+    private Index index;
 
     public boolean update(Entity object) {
         boolean success = updateGeo(object);
@@ -122,12 +124,12 @@ public class EarthSearcher {
     }
 
     private Entity thingFromDocument(Document document) {
-        final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+        final EarthStore earthStore = use(EarthStore.class);
         return earthStore.get(document.getId());
     }
 
     private Document build(Entity object) {
-        final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+        final EarthStore earthStore = use(EarthStore.class);
 
         Document.Builder builder = Document.newBuilder();
 
@@ -195,7 +197,7 @@ public class EarthSearcher {
     // XXX slow, and sluggish
     // Updates the linked locations of linked entities
     private void updateLinked(Entity entity) {
-        final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+        final EarthStore earthStore = use(EarthStore.class);
 
         String id = entity.key().name();
 

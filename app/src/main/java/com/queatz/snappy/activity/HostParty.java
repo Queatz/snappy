@@ -50,7 +50,6 @@ import com.squareup.picasso.Picasso;
 import java.util.Date;
 
 import io.realm.Case;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 

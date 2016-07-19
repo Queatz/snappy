@@ -9,9 +9,8 @@ import com.queatz.snappy.backend.GooglePurchaseDataSpec;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthJson;
-import com.queatz.snappy.logic.EarthSingleton;
-import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthUpdate;
+import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.OfferEditor;
 import com.queatz.snappy.logic.editors.PersonEditor;
@@ -24,9 +23,7 @@ import com.queatz.snappy.logic.mines.MessageMine;
 import com.queatz.snappy.logic.mines.RecentMine;
 import com.queatz.snappy.logic.views.MessagesAndContactsView;
 import com.queatz.snappy.logic.views.OfferView;
-import com.queatz.snappy.logic.views.PersonView;
 import com.queatz.snappy.logic.views.SuccessView;
-import com.queatz.snappy.logic.views.UpdateView;
 import com.queatz.snappy.service.Buy;
 import com.queatz.snappy.service.Push;
 import com.queatz.snappy.shared.Config;
@@ -50,20 +47,11 @@ import java.util.logging.Logger;
  */
 public class MeInterface implements Interfaceable {
 
-    EarthStore earthStore = EarthSingleton.of(EarthStore.class);
-    PersonEditor personEditor = EarthSingleton.of(PersonEditor.class);
-    UpdateEditor updateEditor = EarthSingleton.of(UpdateEditor.class);
-    MessageMine messageMine = EarthSingleton.of(MessageMine.class);
-    RecentMine recentMine = EarthSingleton.of(RecentMine.class);
-    OfferEditor offerEditor = EarthSingleton.of(OfferEditor.class);
-    EarthJson earthJson = EarthSingleton.of(EarthJson.class);
-    EarthUpdate earthUpdate = EarthSingleton.of(EarthUpdate.class);
-
     @Override
     public String get(EarthAs as) {
         switch (as.getRoute().size()) {
             case 1:
-                return new PersonView(as.getUser()).toJson();
+                return new EarthViewer(as).getViewForEntityOrThrow(as.getUser()).toJson();
             case 2:
                 switch (as.getRoute().get(1)) {
                     case Config.PATH_BUY:
@@ -84,7 +72,7 @@ public class MeInterface implements Interfaceable {
                 String about = as.getRequest().getParameter(Config.PARAM_ABOUT);
 
                 if (about != null) {
-                    personEditor.updateAbout(as.getUser(), about);
+                    new PersonEditor(as).updateAbout(as.getUser(), about);
                 }
 
                 return new SuccessView(true).toJson();
@@ -115,20 +103,20 @@ public class MeInterface implements Interfaceable {
 
     private String getMessages(EarthAs as) {
         // XXX TODO when Datastore supports OR expressions, combine these
-        List<Entity> messagesToMe = messageMine.messagesFrom(as.getUser().key());
-        List<Entity> messagesFromMe = messageMine.messagesTo(as.getUser().key());
+        List<Entity> messagesToMe = new MessageMine(as).messagesFrom(as.getUser().key());
+        List<Entity> messagesFromMe = new MessageMine(as).messagesTo(as.getUser().key());
 
         List<Entity> messages = Lists.newArrayList();
         messages.addAll(messagesToMe);
         messages.addAll(messagesFromMe);
 
-        List<Entity> contacts = recentMine.forPerson(as.getUser());
+        List<Entity> contacts = new RecentMine(as).forPerson(as.getUser());
 
-        return new MessagesAndContactsView(messages, contacts).toJson();
+        return new MessagesAndContactsView(as, messages, contacts).toJson();
     }
 
     private String postClearNotification(EarthAs as, String notification) {
-        earthUpdate.send(new ClearNotificationEvent(notification))
+        new EarthUpdate(as).send(new ClearNotificationEvent(notification))
                 .to(as.getUser());
 
         return new SuccessView(true).toJson();
@@ -153,7 +141,7 @@ public class MeInterface implements Interfaceable {
     }
 
     private String postBuy(EarthAs as, String purchaseData) {
-        boolean ok = Buy.getService().validate(as.getUser(), earthJson.fromJson(purchaseData, GooglePurchaseDataSpec.class));
+        boolean ok = new Buy(as).validate(as.getUser(), new EarthJson().fromJson(purchaseData, GooglePurchaseDataSpec.class));
 
         return new SuccessView(ok).toJson();
     }
@@ -175,7 +163,7 @@ public class MeInterface implements Interfaceable {
 
             // Validate pricing
             if (price != null) {
-                if (Buy.getService().valid(as.getUser())) {
+                if (new Buy(as).valid(as.getUser())) {
                     price = Math.min(Config.PAID_OFFER_PRICE_MAX, Math.max(Config.PAID_OFFER_PRICE_MIN, price));
                 } else {
                     price = Math.min(Config.FREE_OFFER_PRICE_MAX, Math.max(Config.FREE_OFFER_PRICE_MIN, price));
@@ -190,13 +178,13 @@ public class MeInterface implements Interfaceable {
                 }
             }
 
-            Entity offer = offerEditor.newOffer(as.getUser(), details, price, unit);
+            Entity offer = new OfferEditor(as).newOffer(as.getUser(), details, price, unit);
 
             if (offer != null) {
-                earthUpdate.send(new NewOfferEvent(offer))
+                new EarthUpdate(as).send(new NewOfferEvent(offer))
                         .toFollowersOf(as.getUser());
 
-                return new OfferView(offer).setLocalId(localId).toJson();
+                return new OfferView(as, offer).setLocalId(localId).toJson();
             } else {
                 throw new NothingLogicResponse("offers - error");
             }
@@ -209,7 +197,7 @@ public class MeInterface implements Interfaceable {
      * @deprecated Use UpdateInterface
      */
     private String postUpdate(EarthAs as) {
-        Entity update = updateEditor.newUpdate(as.getUser());
+        Entity update = new UpdateEditor(as).newUpdate(as.getUser());
         GcsFilename photoName = new GcsFilename(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), "earth/thing/photo/" + update.key().name() + "/" + new Date().getTime());
 
         String message = null;
@@ -247,17 +235,17 @@ public class MeInterface implements Interfaceable {
         }
 
         if (message != null) {
-            update = updateEditor.setMessage(update, message);
+            update = new UpdateEditor(as).setMessage(update, message);
         }
 
         if (allGood) {
-            earthUpdate.send(new NewUpdateEvent(update))
+            new EarthUpdate(as).send(new NewUpdateEvent(update))
                     .toFollowersOf(update.getKey(EarthField.TARGET));
         } else {
             throw new NothingLogicResponse("upto photo - not all good");
         }
 
-        return new UpdateView(update).toJson();
+        return new EarthViewer(as).getViewForEntityOrThrow(update).toJson();
     }
 
     private String getBuy(EarthAs as) {

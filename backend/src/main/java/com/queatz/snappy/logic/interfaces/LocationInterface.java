@@ -3,7 +3,6 @@ package com.queatz.snappy.logic.interfaces;
 import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.backend.ApiUtil;
 import com.queatz.snappy.logic.EarthAs;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.exceptions.LogicException;
@@ -18,8 +17,6 @@ import java.util.Date;
  * Created by jacob on 5/14/16.
  */
 public class LocationInterface implements Interfaceable {
-
-    EarthStore earthStore = EarthSingleton.of(EarthStore.class);
 
     @Override
     public String get(EarthAs as) {
@@ -60,7 +57,7 @@ public class LocationInterface implements Interfaceable {
     }
 
     private String putPhoto(EarthAs as, String locationId) {
-        Entity location = earthStore.get(locationId);
+        Entity location = new EarthStore(as).get(locationId);
 
         try {
             if (!ApiUtil.putPhoto("location/photo/" + location.key().name() + "/" + new Date().getTime(), as.getApi(), as.getRequest())) {

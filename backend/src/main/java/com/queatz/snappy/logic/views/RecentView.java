@@ -1,8 +1,8 @@
 package com.queatz.snappy.logic.views;
 
 import com.google.cloud.datastore.Entity;
+import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthView;
 
@@ -17,17 +17,17 @@ public class RecentView extends LinkView {
     final boolean seen;
     final MessageView latest;
 
-    public RecentView(Entity recent) {
-        this(recent, EarthView.DEEP);
+    public RecentView(EarthAs as, Entity recent) {
+        this(as, recent, EarthView.DEEP);
     }
 
-    public RecentView(Entity recent, EarthView view) {
-        super(recent, view);
+    public RecentView(EarthAs as, Entity recent, EarthView view) {
+        super(as, recent, view);
 
-        final EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+        final EarthStore earthStore = use(EarthStore.class);
 
         updated = recent.getDateTime(EarthField.UPDATED_ON).toDate();
         seen = recent.getBoolean(EarthField.SEEN);
-        latest = new MessageView(earthStore.get(recent.getKey(EarthField.LATEST)));
+        latest = new MessageView(as, earthStore.get(recent.getKey(EarthField.LATEST)));
     }
 }

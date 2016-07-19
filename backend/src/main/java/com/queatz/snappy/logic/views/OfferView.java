@@ -1,9 +1,9 @@
 package com.queatz.snappy.logic.views;
 
 import com.google.cloud.datastore.Entity;
+import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthView;
 
@@ -16,18 +16,18 @@ public class OfferView extends ThingView {
     final PersonView person;
     final int likers;
 
-    public OfferView(Entity offer) {
-        this(offer, EarthView.DEEP);
+    public OfferView(EarthAs as, Entity offer) {
+        this(as, offer, EarthView.DEEP);
     }
 
-    public OfferView(Entity offer, EarthView view) {
-        super(offer, view);
+    public OfferView(EarthAs as, Entity offer, EarthView view) {
+        super(as, offer, view);
 
-        EarthStore earthStore = EarthSingleton.of(EarthStore.class);
+        EarthStore earthStore = use(EarthStore.class);
 
         price = offer.isNull(EarthField.PRICE) ? null : (int) offer.getLong(EarthField.PRICE);
         unit = offer.getString(EarthField.UNIT);
-        person = new PersonView(earthStore.get(offer.getKey(EarthField.SOURCE)), EarthView.SHALLOW);
+        person = new PersonView(as, earthStore.get(offer.getKey(EarthField.SOURCE)), EarthView.SHALLOW);
         likers = earthStore.count(EarthKind.LIKE_KIND, EarthField.TARGET, offer.key());
     }
 }

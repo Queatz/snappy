@@ -4,10 +4,11 @@ import com.google.cloud.datastore.DateTime;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.LatLng;
 import com.google.gson.JsonObject;
+import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthKind;
-import com.queatz.snappy.logic.EarthSingleton;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.shared.Config;
 
@@ -16,12 +17,20 @@ import java.util.Date;
 /**
  * Created by jacob on 5/14/16.
  */
-public class PartyEditor {
+public class PartyEditor extends EarthControl {
+    private final EarthStore earthStore;
+    private final EarthJson earthJson;
+    private final LocationEditor locationEditor;
+    private final UpdateEditor updateEditor;
 
-    private final EarthStore     earthStore     = EarthSingleton.of(EarthStore.class);
-    private final EarthJson      earthJson      = EarthSingleton.of(EarthJson.class);
-    private final LocationEditor locationEditor = EarthSingleton.of(LocationEditor.class);
-    private final UpdateEditor   updateEditor   = EarthSingleton.of(UpdateEditor.class);
+    public PartyEditor(final EarthAs as) {
+        super(as);
+
+        earthStore = use(EarthStore.class);
+        earthJson = use(EarthJson.class);
+        locationEditor = use(LocationEditor.class);
+        updateEditor = use(UpdateEditor.class);
+    }
 
     public Entity newParty(String original,
                            Entity person,

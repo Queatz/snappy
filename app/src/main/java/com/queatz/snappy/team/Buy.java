@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.util.Log;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.common.ConnectionResult;

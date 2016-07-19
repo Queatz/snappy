@@ -1,12 +1,14 @@
 package com.queatz.snappy.logic;
 
-import com.google.appengine.api.memcache.AsyncMemcacheService;
 import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.service.Api;
-import com.queatz.snappy.shared.things.PersonSpec;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,12 +23,39 @@ public class EarthAs {
     private final List<String> route;
     private final Entity user;
 
+    private Map<Class, Object> singletons;
+
     public EarthAs(Api api, HttpServletRequest request, HttpServletResponse response, List<String> route, Entity user) {
         this.api = api;
         this.request = request;
         this.response = response;
         this.route = route;
         this.user = user;
+
+        singletons = new HashMap<>();
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T s(Class<T> clazz) {
+        if (!singletons.containsKey(clazz)) {
+            try {
+                singletons.put(clazz, clazz.getConstructor(EarthAs.class).newInstance(this));
+            } catch (InstantiationException e) {
+                Logger.getGlobal().log(Level.SEVERE, "Singleton said nope for " + clazz.getSimpleName(), e);
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                Logger.getGlobal().log(Level.SEVERE, "Singleton said nope for " + clazz.getSimpleName(), e);
+                throw new RuntimeException(e);
+            } catch (NoSuchMethodException e) {
+                Logger.getGlobal().log(Level.SEVERE, "Singleton said nope for " + clazz.getSimpleName(), e);
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                Logger.getGlobal().log(Level.SEVERE, "Singleton said nope for " + clazz.getSimpleName(), e);
+                throw new RuntimeException(e);
+            }
+        }
+
+        return (T) singletons.get(clazz);
     }
 
     public Api getApi() {
