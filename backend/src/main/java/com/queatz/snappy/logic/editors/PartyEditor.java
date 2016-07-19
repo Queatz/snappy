@@ -27,7 +27,7 @@ public class PartyEditor extends EarthControl {
         super(as);
 
         earthStore = use(EarthStore.class);
-        earthJson = use(EarthJson.class);
+        earthJson = new EarthJson();
         locationEditor = use(LocationEditor.class);
         updateEditor = use(UpdateEditor.class);
     }

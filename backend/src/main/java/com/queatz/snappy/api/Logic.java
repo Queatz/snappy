@@ -23,9 +23,11 @@ public class Logic extends Api.Path {
     public void call() throws IOException {
         String jsonResponse;
 
+        EarthAs as = new EarthAs(api, request, response, path, user);
+
         switch (method) {
             case GET:
-                jsonResponse = new Earth().get(new EarthAs(api, request, response, path, user));
+                jsonResponse = new Earth(as).get(new EarthAs(api, request, response, path, user));
 
                 if (jsonResponse != null) {
                     response.getWriter().write(jsonResponse);
@@ -33,7 +35,7 @@ public class Logic extends Api.Path {
                 }
                 break;
             case POST:
-                jsonResponse = new Earth().post(new EarthAs(api, request, response, path, user));
+                jsonResponse = new Earth(as).post(new EarthAs(api, request, response, path, user));
 
                 if (jsonResponse != null) {
                     response.getWriter().write(jsonResponse);
