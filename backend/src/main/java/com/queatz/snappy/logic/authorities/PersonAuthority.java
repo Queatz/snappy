@@ -1,24 +1,23 @@
 package com.queatz.snappy.logic.authorities;
 
 import com.google.cloud.datastore.Entity;
-import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthRule;
-import com.queatz.snappy.logic.concepts.Authority;
 
 /**
- * Created by jacob on 7/9/16.
+ * Created by jacob on 7/19/16.
  */
-public class CommonThingAuthority implements Authority {
+public class PersonAuthority extends CommonThingAuthority {
     @Override
     public boolean authorize(Entity as, Entity entity, EarthRule rule) {
         switch (rule) {
             case ACCESS:
+                // Anyone can see
                 return true;
             case MODIFY:
-                // XXX todo if as.getUser() in entity.getContacts()
-                return as.key().equals(entity.getKey(EarthField.SOURCE));
+                // Only people can edit themselves
+                return as.key().equals(entity.key());
+            default:
+                return true;
         }
-
-        return true;
     }
 }

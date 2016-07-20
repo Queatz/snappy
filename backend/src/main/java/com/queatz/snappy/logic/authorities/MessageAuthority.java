@@ -6,19 +6,21 @@ import com.queatz.snappy.logic.EarthRule;
 import com.queatz.snappy.logic.concepts.Authority;
 
 /**
- * Created by jacob on 7/9/16.
+ * Created by jacob on 7/19/16.
  */
-public class CommonThingAuthority implements Authority {
+public class MessageAuthority implements Authority {
     @Override
     public boolean authorize(Entity as, Entity entity, EarthRule rule) {
         switch (rule) {
             case ACCESS:
-                return true;
+                // Only message senders / receivers can see message
+                return as.key().equals(entity.getKey(EarthField.SOURCE)) ||
+                        as.key().equals(entity.getKey(EarthField.TARGET));
             case MODIFY:
-                // XXX todo if as.getUser() in entity.getContacts()
+                // Only message senders can edit messages
                 return as.key().equals(entity.getKey(EarthField.SOURCE));
+            default:
+                return true;
         }
-
-        return true;
     }
 }
