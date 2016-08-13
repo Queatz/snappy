@@ -12,6 +12,8 @@ import java.util.Locale;
 import java.util.UUID;
 
 /**
+ * A bunch of unused functions...
+ *
  * Created by jacob on 2/16/15.
  */
 public class Util {

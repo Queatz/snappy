@@ -9,6 +9,8 @@ import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
 
 /**
+ * Clips a string to max 200 chars.
+ *
  * Created by jacob on 10/17/15.
  */
 public class StringClipper implements JsonSerializer<String> {

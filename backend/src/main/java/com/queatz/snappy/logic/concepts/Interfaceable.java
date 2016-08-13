@@ -3,7 +3,7 @@ package com.queatz.snappy.logic.concepts;
 import com.queatz.snappy.logic.EarthAs;
 
 /**
- * Implementations of Interfaceable expose Things to the outside world.
+ * Implementations of Interfaceable expose Things to the outside world via the API.
  */
 
 public interface Interfaceable {

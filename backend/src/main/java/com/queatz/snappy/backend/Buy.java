@@ -6,6 +6,10 @@ import com.queatz.snappy.logic.EarthJson;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
+ * Handles the Android app's purchase states.
+ *
+ * @deprecated App was open-sourced.
+ *
  * Created by jacob on 3/28/15.
  */
 public class Buy {

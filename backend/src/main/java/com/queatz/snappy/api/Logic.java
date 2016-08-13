@@ -10,6 +10,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * The main entry point for all earthly access.
+ *
  * Created by jacob on 4/2/16.
  */
 public class Logic extends Api.Path {

@@ -7,7 +7,7 @@ import com.googlecode.objectify.annotation.Index;
 import java.util.Date;
 
 /**
- * The Objectify object model for device registrations we are persisting
+ * The Objectify object model for device registrations we are persisting (push notifications)
  */
 @Entity
 public class RegistrationRecord {

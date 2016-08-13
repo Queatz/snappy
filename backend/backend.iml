@@ -50,7 +50,7 @@
     <orderEntry type="library" exported="" name="commons-lang3-3.0" level="project" />
     <orderEntry type="library" exported="" name="gcm-server-1.0.2" level="project" />
     <orderEntry type="library" exported="" name="reflections-0.9.10" level="project" />
-    <orderEntry type="library" exported="" name="appengine-api-1.0-sdk-1.9.38" level="project" />
+    <orderEntry type="library" exported="" name="appengine-api-1.0-sdk-1.9.42" level="project" />
     <orderEntry type="library" exported="" name="guava-19.0" level="project" />
     <orderEntry type="library" exported="" name="google-api-services-storage-v1-rev15-1.19.0" level="project" />
     <orderEntry type="library" exported="" name="google-api-client-appengine-1.22.0" level="project" />

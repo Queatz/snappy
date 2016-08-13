@@ -16,7 +16,9 @@ public class CommonThingAuthority implements Authority {
                 return true;
             case MODIFY:
                 // XXX todo if as.getUser() in entity.getContacts()
-                return as.key().equals(entity.getKey(EarthField.SOURCE));
+                // XXX todo no source === just being created, so it's ok, but is it?
+                return !entity.contains(EarthField.SOURCE) ||
+                        as.key().equals(entity.getKey(EarthField.SOURCE));
         }
 
         return true;

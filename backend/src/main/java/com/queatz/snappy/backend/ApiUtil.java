@@ -27,9 +27,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Utilities for server stuff.
+ *
  * Created by jacob on 1/11/16.
  */
 public class ApiUtil {
+    /**
+     * Function to read a photo from a GCS instance.
+     *
+     * @param prefix Filename
+     * @param api Api object with the GCS instance
+     * @param request The raw request
+     * @param response The raw response
+     * @return If the get was successful
+     * @throws IOException
+     */
     public static boolean getPhoto(String prefix, Api api, HttpServletRequest request, HttpServletResponse response) throws IOException {
         int size;
 
@@ -67,6 +79,15 @@ public class ApiUtil {
         return true;
     }
 
+    /**
+     * Function to put a photo in a GCS instance.
+     *
+     * @param name The file name
+     * @param api The Api with the GCS instance
+     * @param request The request object
+     * @return If the save was successful
+     * @throws IOException
+     */
     public static boolean putPhoto(String name, Api api, HttpServletRequest request) throws IOException {
         GcsFilename photoName = new GcsFilename(api.mAppIdentityService.getDefaultGcsBucketName(), name);
 

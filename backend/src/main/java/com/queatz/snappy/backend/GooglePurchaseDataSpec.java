@@ -4,6 +4,8 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
 /**
+ * @deprecated App was open-sourced.
+ *
  * Created by jacob on 10/17/15.
  */
 @Entity

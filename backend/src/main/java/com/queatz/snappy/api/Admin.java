@@ -16,6 +16,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 
 /**
+ * Api endpoints for manipulating Village.
+ *
  * Created by jacob on 4/11/15.
  */
 public class Admin extends Api.Path {
