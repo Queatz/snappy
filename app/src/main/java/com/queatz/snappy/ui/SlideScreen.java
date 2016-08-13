@@ -131,7 +131,7 @@ public class SlideScreen extends ViewGroup {
     private SlideAnimation mAnimation;
     private float mXFlingDelta;
     private float mDownX, mDownY;
-    private boolean mSnatched;
+    private boolean mSnatched, mUnsnatchable;
     private boolean mChildIsUsingMotion;
 
     public SlideScreen(Context context) {
@@ -153,6 +153,7 @@ public class SlideScreen extends ViewGroup {
         mContext = context;
         mSlides = new SparseArray<>();
         mSnatched = false;
+        mUnsnatchable = false;
     }
 
     public void setOnSlideCallback(OnSlideCallback onSlideCallback) {
@@ -278,6 +279,7 @@ public class SlideScreen extends ViewGroup {
                     mAnimation.stop();
 
                 mSnatched = false;
+                mUnsnatchable = false;
                 mDownX = event.getRawX();
                 mDownY = event.getRawY();
                 mXFlingDelta = 0;
@@ -294,7 +296,7 @@ public class SlideScreen extends ViewGroup {
                     );
                 }
 
-                if(!mSnatched) {
+                if(!mSnatched && !mUnsnatchable) {
                     if(shouldLetGo(event)) {
                         resolve(false);
                         getParent().requestDisallowInterceptTouchEvent(false);
@@ -302,6 +304,7 @@ public class SlideScreen extends ViewGroup {
                     }
                     else {
                         mSnatched = shouldSnatch(event);
+                        mUnsnatchable = isUnsnatchable(event);
 
                         if(mSnatched) {
                             getParent().requestDisallowInterceptTouchEvent(true);
@@ -334,6 +337,7 @@ public class SlideScreen extends ViewGroup {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mSnatched = false;
+                mUnsnatchable = false;
                 mDownX = event.getRawX();
                 mDownY = event.getRawY();
                 mXFlingDelta = 0;
@@ -342,19 +346,32 @@ public class SlideScreen extends ViewGroup {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 mChildIsUsingMotion = false;
+                mUnsnatchable = false;
                 mSnatched = false;
 
                 break;
             case MotionEvent.ACTION_MOVE:
-                if(mSnatched || mChildIsUsingMotion)
+                if(mSnatched || mChildIsUsingMotion || mUnsnatchable)
                     return mSnatched;
 
                 mSnatched = shouldSnatch(event);
+                mUnsnatchable = isUnsnatchable(event);
 
                 break;
         }
 
         return mSnatched;
+    }
+
+    private boolean isUnsnatchable(MotionEvent event) {
+        if (mSnatched) {
+            return false;
+        }
+
+        float xdif = event.getRawX() - mDownX;
+        float ydif = event.getRawY() - mDownY;
+
+        return Math.abs(xdif) < Math.abs(ydif) && Math.abs(ydif) > 16;
     }
 
     private boolean shouldSnatch(MotionEvent event) {

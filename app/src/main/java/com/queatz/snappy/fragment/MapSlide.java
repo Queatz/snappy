@@ -1,15 +1,17 @@
-package com.queatz.snappy.activity;
+package com.queatz.snappy.fragment;
 
+import android.app.Fragment;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -22,7 +24,7 @@ import com.queatz.snappy.ui.TextView;
  * Created by jacob on 8/7/16.
  */
 
-public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnCameraMoveListener {
+public class MapSlide extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 //    private ImageView custom;
@@ -31,48 +33,15 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleM
     private Handler mHandler = new Handler();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.map);
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-    }
-
-    private void gameLoop() {
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                updatePositions();
-                gameLoop();
-            }
-        }, 10);
-    }
-
-    private void updateGraphics() {
-//        Point point = mMap.getProjection().toScreenLocation(new LatLng(37.7867653, -122.4060986));
-////        mMap.getCameraPosition().zoom; || tilt
-//
-//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) custom.getLayoutParams();
-//        params.topMargin = point.y - custom.getMeasuredHeight();
-//        params.leftMargin = point.x - custom.getMeasuredHeight() / 2;
-//        custom.setLayoutParams(params);
-    }
-
-    private void updatePositions() {
-        if (targetPosition == null) {
-            return;
-        }
-
-        marker.setPosition(new LatLng(
-                marker.getPosition().latitude + (targetPosition.latitude - marker.getPosition().latitude) / 10,
-                marker.getPosition().longitude + (targetPosition.longitude - marker.getPosition().longitude) / 10
-        ));
+        return inflater.inflate(R.layout.map, container, false);
     }
 
     @Override
-    public void onCameraMove() {
-        updateGraphics();
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ((MapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
     }
 
     @Override
@@ -81,10 +50,13 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleM
 
         mMap.getUiSettings().setTiltGesturesEnabled(true);
         mMap.setBuildingsEnabled(false);
-        mMap.setIndoorEnabled(false);
-        mMap.setMinZoomPreference(16);
-        mMap.getUiSettings().setScrollGesturesEnabled(false);
-        mMap.setOnCameraMoveListener(this);
+
+        try {
+            mMap.setMyLocationEnabled(true);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -100,7 +72,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleM
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker marker) {
-                TextView view = new TextView(Map.this);
+                TextView view = new TextView(MapSlide.this.getActivity());
                 view.setTypeface(null, Typeface.BOLD);
                 view.setTextColor(getResources().getColor(R.color.black));
                 view.setText(marker.getTitle());
@@ -133,20 +105,18 @@ public class Map extends FragmentActivity implements OnMapReadyCallback, GoogleM
         // Add a marker in Sydney, Australia, and move the camera.
         LatLng fidi = new LatLng(37.7867653, -122.4060986);
         marker = mMap.addMarker(new MarkerOptions().icon(playerBitmap).infoWindowAnchor(0.5f, 1 + (22f / 16f)).position(fidi).title("Jacob the Mage"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fidi, 19.37f));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fidi, 17f));
 
 
-        for (int i = 0; i < 100; i++) {
-            LatLng latLng = new LatLng(fidi.latitude + (Math.random() - 0.5) * 0.1, fidi.longitude + (Math.random() - 0.5) * 0.1);
-            mMap.addMarker(new MarkerOptions().icon(herbBitmap).position(latLng).infoWindowAnchor(0.5f, 1 + (22f / 147f)).title("Dragon")).showInfoWindow();
-        }
+//        for (int i = 0; i < 100; i++) {
+//            LatLng latLng = new LatLng(fidi.latitude + (Math.random() - 0.5) * 0.1, fidi.longitude + (Math.random() - 0.5) * 0.1);
+//            mMap.addMarker(new MarkerOptions().icon(herbBitmap).position(latLng).infoWindowAnchor(0.5f, 1 + (22f / 147f)).title("Dragon")).showInfoWindow();
+//        }
 
 
         for (int i = 0; i < 400; i++) {
             LatLng latLng = new LatLng(fidi.latitude + (Math.random() - 0.5) * 0.1, fidi.longitude + (Math.random() - 0.5) * 0.1);
             mMap.addMarker(new MarkerOptions().icon(playerBitmap).position(latLng).infoWindowAnchor(0.5f, 1 + (22f / 16f)).title("Player"));
         }
-
-        gameLoop();
     }
 }

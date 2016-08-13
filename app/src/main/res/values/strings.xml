@@ -141,6 +141,7 @@
     <string name="ask">Ask</string>
     <string name="id_like_offer">I\'d like %1$s</string>
     <string name="ive_got_offer">I\'ve got %1$s</string>
+    <string name="map">Map</string>
 
     <plurals name="likes">
         <item quantity="one">♡ %1$s Liker</item>

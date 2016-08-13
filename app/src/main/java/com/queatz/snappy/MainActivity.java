@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.queatz.snappy.activity.Map;
 import com.queatz.snappy.team.Team;
 
 public class MainActivity extends Activity {
@@ -16,8 +15,7 @@ public class MainActivity extends Activity {
 
         team = ((MainApplication) getApplication()).team;
 
-        team.view.show(this, Map.class, null);
-//        team.view.showStartView(this);
+        team.view.showStartView(this);
 
         onNewIntent(getIntent());
         finish();

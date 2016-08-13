@@ -16,10 +16,14 @@ public class MainTabAdapter extends ActionBar.TabAdapter {
     }
 
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     public String getTabName(int i) {
-        return new String[]{mContext.getString(R.string.explore), mContext.getString(R.string.messages)}[i];
+        return new String[]{
+                mContext.getString(R.string.explore),
+                mContext.getString(R.string.map),
+                mContext.getString(R.string.messages)
+        }[i];
     }
 }

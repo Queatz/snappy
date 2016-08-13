@@ -8,8 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/map"
-        tools:context=".activity.Map"
-        android:name="com.google.android.gms.maps.SupportMapFragment" />
+        tools:context=".fragment.MapSlide"
+        android:name="com.google.android.gms.maps.MapFragment" />
 
     <RelativeLayout
         android:id="@+id/graphics"
