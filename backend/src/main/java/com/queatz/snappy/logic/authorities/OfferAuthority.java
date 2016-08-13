@@ -17,7 +17,8 @@ public class OfferAuthority implements Authority {
                 return true;
             case MODIFY:
                 // Only people can edit themselves
-                return as.getKey(EarthField.SOURCE).equals(entity.key());
+                return !entity.contains(EarthField.SOURCE) ||
+                        as.key().equals(entity.getKey(EarthField.SOURCE));
             default:
                 return true;
         }

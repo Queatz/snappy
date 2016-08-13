@@ -14,11 +14,13 @@ public class MessageAuthority implements Authority {
         switch (rule) {
             case ACCESS:
                 // Only message senders / receivers can see message
-                return as.key().equals(entity.getKey(EarthField.SOURCE)) ||
+                return !entity.contains(EarthField.SOURCE) ||
+                        as.key().equals(entity.getKey(EarthField.SOURCE)) ||
                         as.key().equals(entity.getKey(EarthField.TARGET));
             case MODIFY:
                 // Only message senders can edit messages
-                return as.key().equals(entity.getKey(EarthField.SOURCE));
+                return !entity.contains(EarthField.SOURCE) ||
+                        as.key().equals(entity.getKey(EarthField.SOURCE));
             default:
                 return true;
         }

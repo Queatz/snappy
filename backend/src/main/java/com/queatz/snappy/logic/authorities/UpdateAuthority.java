@@ -18,7 +18,8 @@ public class UpdateAuthority implements Authority {
             case MODIFY:
                 // Only people can edit their updates
                 // XXX todo owners of TARGET should be able to remove
-                return as.getKey(EarthField.SOURCE).equals(entity.key());
+                return !entity.contains(EarthField.SOURCE) ||
+                        as.key().equals(entity.getKey(EarthField.SOURCE));
             default:
                 return true;
         }
