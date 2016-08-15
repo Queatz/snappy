@@ -17,26 +17,20 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.PushSpec;
-import com.queatz.snappy.shared.things.BountySpec;
-import com.queatz.snappy.shared.things.EndorsementSpec;
 import com.queatz.snappy.shared.things.FollowLinkSpec;
 import com.queatz.snappy.shared.things.JoinLinkSpec;
 import com.queatz.snappy.shared.things.MessageSpec;
 import com.queatz.snappy.shared.things.OfferSpec;
 import com.queatz.snappy.shared.things.PartySpec;
-import com.queatz.snappy.shared.things.QuestSpec;
 import com.queatz.snappy.shared.things.UpdateLikeSpec;
 import com.queatz.snappy.shared.things.UpdateSpec;
-import com.queatz.snappy.team.push.BountyPushHandler;
 import com.queatz.snappy.team.push.DefaultPushHandler;
-import com.queatz.snappy.team.push.EndorsementPushHandler;
 import com.queatz.snappy.team.push.FollowPushHandler;
 import com.queatz.snappy.team.push.JoinPushHandler;
 import com.queatz.snappy.team.push.LikePushHandler;
 import com.queatz.snappy.team.push.MessagePushHandler;
 import com.queatz.snappy.team.push.OfferPushHandler;
 import com.queatz.snappy.team.push.PartyPushHandler;
-import com.queatz.snappy.team.push.QuestPushHandler;
 import com.queatz.snappy.team.push.UpdatePushHandler;
 import com.queatz.snappy.util.Json;
 
@@ -47,9 +41,7 @@ public class Push {
     public Team team;
     private NotificationManager mNotificationManager;
 
-    private BountyPushHandler bountyPushHandler;
     private DefaultPushHandler defaultPushHandler;
-    private QuestPushHandler questPushHandler;
     private FollowPushHandler followPushHandler;
     private JoinPushHandler joinPushHandler;
     private MessagePushHandler messagePushHandler;
@@ -57,15 +49,12 @@ public class Push {
     private UpdatePushHandler updatePushHandler;
     private OfferPushHandler offerPushHandler;
     private LikePushHandler likePushHandler;
-    private EndorsementPushHandler endorsementPushHandler;
 
     public Push(Team t) {
         team = t;
         mNotificationManager = (NotificationManager) team.context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        bountyPushHandler = new BountyPushHandler(team);
         defaultPushHandler = new DefaultPushHandler(team);
-        questPushHandler = new QuestPushHandler(team);
         followPushHandler = new FollowPushHandler(team);
         joinPushHandler = new JoinPushHandler(team);
         messagePushHandler = new MessagePushHandler(team);
@@ -73,7 +62,6 @@ public class Push {
         updatePushHandler = new UpdatePushHandler(team);
         offerPushHandler = new OfferPushHandler(team);
         likePushHandler = new LikePushHandler(team);
-        endorsementPushHandler = new EndorsementPushHandler(team);
     }
 
     public void show(String push, Notification notification) {
@@ -90,7 +78,7 @@ public class Push {
         if(clearEverywhere) {
             RequestParams params = new RequestParams();
             params.put("notification", push);
-            team.api.post(Config.PATH_ME_CLEAR_NOTIFICATION, params);
+            team.api.post(Config.PATH_EARTH + "/" + Config.PATH_ME_CLEAR_NOTIFICATION, params);
         }
     }
 
@@ -133,21 +121,11 @@ public class Push {
             case Config.PUSH_ACTION_JOIN_ACCEPTED:
                 joinPushHandler.got(gen(action, json, JoinLinkSpec.class));
                 break;
-            case Config.PUSH_ACTION_BOUNTY_FINISHED:
-                bountyPushHandler.got(gen(action, json, BountySpec.class));
-                break;
-            case Config.PUSH_ACTION_QUEST_COMPLETED:
-            case Config.PUSH_ACTION_QUEST_STARTED:
-                questPushHandler.got(gen(action, json, QuestSpec.class));
-                break;
             case Config.PUSH_ACTION_NEW_UPTO:
                 updatePushHandler.got(gen(action, json, UpdateSpec.class));
                 break;
             case Config.PUSH_ACTION_NEW_OFFER:
                 offerPushHandler.got(gen(action, json, OfferSpec.class));
-                break;
-            case Config.PUSH_ACTION_OFFER_ENDORSEMENT:
-                endorsementPushHandler.got(gen(action, json, EndorsementSpec.class));
                 break;
             case Config.PUSH_ACTION_LIKE_UPDATE:
                 likePushHandler.got(gen(action, json, UpdateLikeSpec.class));

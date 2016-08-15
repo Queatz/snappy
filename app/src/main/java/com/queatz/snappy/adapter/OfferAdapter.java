@@ -16,20 +16,20 @@ import com.queatz.snappy.Util;
 import com.queatz.snappy.fragment.PersonMessagesSlide;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Endorsement;
-import com.queatz.snappy.things.Offer;
+import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.SlideScreen;
 import com.squareup.picasso.Picasso;
 
+import io.realm.DynamicRealmObject;
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;
 
 /**
  * Created by jacob on 8/29/15.
  */
-public class OfferAdapter extends RealmBaseAdapter<Offer> {
-    public OfferAdapter(Context context, RealmResults<Offer> realmResults) {
-        super(context, realmResults, true);
+public class OfferAdapter extends RealmBaseAdapter<DynamicRealmObject> {
+    public OfferAdapter(Context context, RealmResults<DynamicRealmObject> realmResults) {
+        super(context, realmResults);
     }
 
     @Override
@@ -46,12 +46,12 @@ public class OfferAdapter extends RealmBaseAdapter<Offer> {
 
         final Team team = ((MainApplication) context.getApplicationContext()).team;
 
-        final Offer offer = realmResults.get(position);
+        final DynamicRealmObject offer = getItem(position);
 
         TextView details = (TextView) view.findViewById(R.id.details);
         TextView price = (TextView) view.findViewById(R.id.price);
 
-        details.setText(offer.getDetails());
+        details.setText(offer.getString(Thing.ABOUT));
         price.setText(Util.offerPriceText(offer, true));
 
         if (Util.offerIsRequest(offer)) {
@@ -60,7 +60,7 @@ public class OfferAdapter extends RealmBaseAdapter<Offer> {
             price.setTextColor(context.getResources().getColor(R.color.green));
         }
 
-        boolean itsMe = team.auth.getUser() != null && team.auth.getUser().equals(offer.getPerson().getId());
+        boolean itsMe = team.auth.getUser() != null && team.auth.getUser().equals(offer.getObject(Thing.PERSON).getString(Thing.ID));
 
         if(itsMe) {
             view.setTag(offer);
@@ -77,47 +77,48 @@ public class OfferAdapter extends RealmBaseAdapter<Offer> {
             });
         }
 
-        Button endorsements = (Button) view.findViewById(R.id.endorsements);
+        Button likesButton = (Button) view.findViewById(R.id.likers);
 
-        int endorsers = (int) team.realm.where(Endorsement.class)
-                .equalTo("target.id", offer.getId())
+        int likers = (int) team.realm.where("Thing")
+                .equalTo(Thing.KIND, "like")
+                .equalTo("target.id", offer.getString(Thing.ID))
                 .count();
 
-        if (offer.getEndorsers() > endorsers) {
-            endorsers = offer.getEndorsers();
+        if (offer.getInt(Thing.LIKERS) > likers) {
+            likers = offer.getInt(Thing.LIKERS);
         }
 
         if (itsMe) {
-            if (endorsers > 0) {
-                endorsements.setVisibility(View.VISIBLE);
-                endorsements.setText(Integer.toString(endorsers));
+            if (likers > 0) {
+                likesButton.setVisibility(View.VISIBLE);
+                likesButton.setText(Integer.toString(likers));
             } else {
-                endorsements.setVisibility(View.GONE);
+                likesButton.setVisibility(View.GONE);
             }
         } else {
-            endorsements.setText(endorsers == 0 ? context.getString(R.string.endorse) : Integer.toString(endorsers));
+            likesButton.setText(likers == 0 ? context.getString(R.string.like) : Integer.toString(likers));
 
-            if (endorsers == 0) {
-                endorsements.setOnClickListener(new View.OnClickListener() {
+            if (likers == 0) {
+                likesButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        team.action.endorse((Activity) context, offer);
+                        //team.action.like((Activity) context, offer);
                     }
                 });
             } else {
-                endorsements.setOnClickListener(new View.OnClickListener() {
+                likesButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        team.action.showEndorsers((Activity) context, offer);
+                       // team.action.showLikers((Activity) context, offer);
                     }
                 });
             }
         }
 
-        endorsements.setOnLongClickListener(new View.OnLongClickListener() {
+        likesButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                team.action.endorse((Activity) context, offer);
+               // team.action.like((Activity) context, offer);
 
                 return true;
             }
@@ -125,8 +126,8 @@ public class OfferAdapter extends RealmBaseAdapter<Offer> {
 
         ImageView photo = (ImageView) view.findViewById(R.id.photo);
 
-        if (offer.isHasPhoto()) {
-            String photoUrl = Util.photoUrl(String.format(Config.PATH_OFFER_PHOTO, offer.getId()), parent.getMeasuredWidth() / 2);
+        if (offer.getBoolean(Thing.PHOTO)) {
+            String photoUrl = Util.photoUrl(String.format(Config.PATH_OFFER_PHOTO, offer.getString(Thing.ID)), parent.getMeasuredWidth() / 2);
 
             photo.setVisibility(View.VISIBLE);
             photo.setImageDrawable(null);

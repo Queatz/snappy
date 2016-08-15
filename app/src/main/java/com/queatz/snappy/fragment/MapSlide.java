@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.queatz.snappy.R;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.ui.TextView;
 
 /**
@@ -103,10 +104,10 @@ public class MapSlide extends Fragment implements OnMapReadyCallback {
         BitmapDescriptor playerBitmap = BitmapDescriptorFactory.fromResource(R.drawable.player);
 
         // Add a marker in Sydney, Australia, and move the camera.
+        // XXX TODO center on myLocation
         LatLng fidi = new LatLng(37.7867653, -122.4060986);
         marker = mMap.addMarker(new MarkerOptions().icon(playerBitmap).infoWindowAnchor(0.5f, 1 + (22f / 16f)).position(fidi).title("Jacob the Mage"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fidi, 17f));
-
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fidi, Config.defaultMapZoom));
 
 //        for (int i = 0; i < 100; i++) {
 //            LatLng latLng = new LatLng(fidi.latitude + (Math.random() - 0.5) * 0.1, fidi.longitude + (Math.random() - 0.5) * 0.1);

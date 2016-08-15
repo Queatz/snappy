@@ -56,7 +56,7 @@ Project
 
 
 [ ] Get new types working with generified endpoints
-[ ] Once that's done, add people to the generified types with likes, updates, endorsements
+[ ] Once that's done, add people to the generified types with likes, updates
 [ ] Determine if messages are a relation
 [ ] Determine if offers are a relation
 
@@ -75,7 +75,7 @@ GET     /api/earth/:kind/:id
 DELETE  /api/earth/:kind/:id
 
  | 
- | relation = [follow, endorsement, like, join, update, comment]
+ | relation = [follow, like, join, update, comment]
  | 
 
 POST    /api/earth/:relation/:kind/:id

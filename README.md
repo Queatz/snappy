@@ -37,8 +37,6 @@ It is licensed under the Apache License 2.0.
     * Most things can have updates posted to them.
 * Likes
     * Most things can accumulate likes.
-* Endorsements
-    * Offers can be endorsed.
 * Contacts
     * Most things have a Main Contact.  This is the person who is managing access to that thing.
 * Messaging

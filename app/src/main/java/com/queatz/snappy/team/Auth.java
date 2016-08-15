@@ -22,11 +22,12 @@ import com.google.gson.JsonObject;
 import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.things.Person;
 import com.queatz.snappy.util.Json;
 
 import java.io.IOException;
 import java.util.HashSet;
+
+import io.realm.DynamicRealmObject;
 
 /**
  * Created by jacob on 10/19/14.
@@ -101,7 +102,7 @@ public class Auth {
                 params.put(Config.PARAM_DEVICE_ID, regId);
                 params.put(Config.PARAM_SOCIAL_MODE, auth.mSocialMode);
 
-                requestHandle = auth.team.api.post(Config.PATH_ME_REGISTER_DEVICE, params, new Api.Callback() {
+                requestHandle = auth.team.api.post(Config.PATH_EARTH + "/" + Config.PATH_ME_REGISTER_DEVICE, params, new Api.Callback() {
                     @Override
                     public void success(String response) {
                         Log.w(Config.LOG_TAG, "Device successfully registered, social mode = " + auth.mSocialMode);
@@ -169,6 +170,8 @@ public class Auth {
     }
 
     public void save() {
+        //XXX todo update user object
+
         team.preferences.edit()
                 .putString(Config.PREFERENCE_USER, mUser)
                 .putString(Config.PREFERENCE_AUTH_TOKEN, mAuthToken)
@@ -188,11 +191,11 @@ public class Auth {
         registerDevice();
     }
 
-    public Person me() {
+    public DynamicRealmObject me() {
         if(mUser == null)
             return null;
 
-        return team.realm.where(Person.class).equalTo("id", mUser).findFirst();
+        return team.realm.where("Thing").equalTo("id", mUser).findFirst();
     }
 
     public String getUser() {
@@ -254,7 +257,7 @@ public class Auth {
                 params.put(Config.PARAM_EMAIL, mEmail);
                 params.put(Config.PARAM_AUTH, mGoogleAuthToken);
 
-                team.api.get(Config.PATH_ME, params, new Api.Callback() {
+                team.api.get(Config.PATH_EARTH + "/" + Config.PATH_ME, params, new Api.Callback() {
                     @Override
                     public void success(String response) {
                         JsonObject o = Json.from(response, JsonObject.class);
@@ -265,7 +268,7 @@ public class Auth {
                         if(o.has("social_mode"))
                             setSocialMode(o.get("social_mode").getAsString());
 
-                        setUser(team.things.put(Person.class, response));
+                        setUser(team.things.put(response));
                         callbacks(Step.COMPLETE);
                     }
 
@@ -311,11 +314,11 @@ public class Auth {
         mEmail = email;
     }
 
-    private void setUser(Person user) {
+    private void setUser(DynamicRealmObject user) {
         if(user == null)
             return;
 
-        mUser = user.getId();
+        mUser = user.getString(Thing.ID);
 
         registerDevice();
         save();
@@ -418,7 +421,7 @@ public class Auth {
             RequestParams params = new RequestParams();
             params.put(Config.PARAM_DEVICE_ID, mGcmRegistrationId);
 
-            team.api.post(Config.PATH_ME_UNREGISTER_DEVICE, params, new Api.Callback() {
+            team.api.post(Config.PATH_EARTH + "/" + Config.PATH_ME_UNREGISTER_DEVICE, params, new Api.Callback() {
                 @Override
                 public void success(String response) {
                     Log.w(Config.LOG_TAG, "Device successfully unregistered");

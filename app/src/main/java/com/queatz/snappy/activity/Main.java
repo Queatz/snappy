@@ -21,10 +21,12 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.things.MessageSpec;
 import com.queatz.snappy.team.Buy;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Person;
 import com.queatz.snappy.ui.ActionBar;
 import com.queatz.snappy.ui.SlideScreen;
+import com.queatz.snappy.util.Functions;
 import com.squareup.picasso.Picasso;
+
+import io.realm.DynamicRealmObject;
 
 /**
  * Created by jacob on 10/19/14.
@@ -51,6 +53,7 @@ public class Main extends Activity {
         setContentView(R.layout.main);
 
         mActionBar = (ActionBar) findViewById(R.id.actionBar);
+        mActionBar.showImg();
         mActionBar.setAdapter(new MainTabAdapter(this));
         mActionBar.setRightContent(new View.OnClickListener() {
             @Override
@@ -87,10 +90,13 @@ public class Main extends Activity {
             String usr = team.auth.getUser();
 
             if(usr != null) {
-                Person person = team.things.get(Person.class, usr);
+                DynamicRealmObject person = team.things.get(usr);
 
                 if(person != null) {
-                    Picasso.with(this).load(person.getImageUrlForSize((int) Util.px(64))).placeholder(R.color.spacer).into(profile);
+                    Picasso.with(this)
+                            .load(Functions.getImageUrlForSize(person, (int) Util.px(64)))
+                            .placeholder(R.color.spacer)
+                            .into(profile);
                 }
             }
         }

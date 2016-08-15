@@ -16,7 +16,6 @@ public class EarthKind {
     public static final String JOIN_KIND = "join";
     public static final String PARTY_KIND = "party";
     public static final String LOCATION_KIND = "location";
-    public static final String ENDORSEMENT_KIND = "endorsement";
     public static final String RESOURCE_KIND = "resource";
     public static final String PROJECT_KIND = "project";
     public static final String CLUB_KIND = "club";

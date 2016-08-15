@@ -15,9 +15,9 @@ import com.queatz.snappy.shared.PushSpec;
 import com.queatz.snappy.shared.things.MessageSpec;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Contact;
-import com.queatz.snappy.things.Message;
+import com.queatz.snappy.team.Thing;
 
+import io.realm.DynamicRealmObject;
 import io.realm.RealmResults;
 
 /**
@@ -38,14 +38,17 @@ public class MessagePushHandler extends PushHandler {
                 if(("person/" + push.body.from.id + "/messages").equals(team.view.getTop()))
                     break;
 
-                RealmResults<Contact> contacts = team.realm.where(Contact.class).equalTo("person.id", team.auth.getUser()).equalTo("seen", false).findAllSorted("updated");
+                RealmResults<DynamicRealmObject> contacts = team.realm.where("Thing")
+                        .equalTo("source.id", team.auth.getUser())
+                        .equalTo("seen", false)
+                        .findAllSorted("updated");
 
                 int count = 1;
                 String summary = "";
 
                 if(contacts.size() > 1) {
                     for (int i = 0; i < contacts.size() && i < 3; i++) {
-                        if(contacts.get(i).getContact().getId().equals(push.body.from.id))
+                        if(contacts.get(i).getObject(Thing.TARGET).getString(Thing.ID).equals(push.body.from.id))
                             continue;
 
                         count++;
@@ -53,7 +56,7 @@ public class MessagePushHandler extends PushHandler {
                         if(!summary.isEmpty())
                             summary += ", ";
 
-                        summary += contacts.get(i).getContact().getFirstName();
+                        summary += contacts.get(i).getObject(Thing.TARGET).getString(Thing.FIRST_NAME);
                     }
                 }
 
@@ -109,10 +112,10 @@ public class MessagePushHandler extends PushHandler {
     private void fetch(PushSpec<MessageSpec> push) {
         switch (push.action) {
             case Config.PUSH_ACTION_MESSAGE:
-                team.api.get(String.format(Config.PATH_MESSAGES_ID, push.body.id), new Api.Callback() {
+                team.api.get(Config.PATH_EARTH + "/" + push.body.id, new Api.Callback() {
                     @Override
                     public void success(String response) {
-                        Message m = team.things.put(Message.class, response);
+                        DynamicRealmObject m = team.things.put(response);
 
                         if(m != null)
                             team.local.updateContactsForMessage(m);

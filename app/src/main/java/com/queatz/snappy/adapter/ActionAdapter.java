@@ -16,19 +16,20 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Join;
-import com.queatz.snappy.things.Person;
+import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.util.Functions;
 import com.squareup.picasso.Picasso;
 
+import io.realm.DynamicRealmObject;
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;
 
 /**
  * Created by jacob on 2/18/15.
  */
-public class ActionAdapter extends RealmBaseAdapter<Join> {
-    public ActionAdapter(Context context, RealmResults<Join> realmResults) {
-        super(context, realmResults, true);
+public class ActionAdapter extends RealmBaseAdapter<DynamicRealmObject> {
+    public ActionAdapter(Context context, RealmResults<DynamicRealmObject> realmResults) {
+        super(context, realmResults);
     }
 
     @Override
@@ -45,12 +46,12 @@ public class ActionAdapter extends RealmBaseAdapter<Join> {
 
         final Team team = ((MainApplication) context.getApplicationContext()).team;
 
-        final Join join = realmResults.get(position);
-        final Person person = join.getPerson();
-        final String status = join.getStatus();
+        final DynamicRealmObject join = getItem(position);
+        final DynamicRealmObject person = join.getObject(Thing.SOURCE);
+        final String status = join.getString(Thing.STATUS);
 
         ImageView profile = ((ImageView) view.findViewById(R.id.profile));
-        Picasso.with(context).load(person == null ? "" : person.getImageUrlForSize((int) Util.px(64))).placeholder(R.color.spacer).into(profile);
+        Picasso.with(context).load(person == null ? "" : Functions.getImageUrlForSize(person, (int) Util.px(64))).placeholder(R.color.spacer).into(profile);
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +64,7 @@ public class ActionAdapter extends RealmBaseAdapter<Join> {
             ((TextView) view.findViewById(R.id.action)).setText("-");
         }
         else {
-            ((TextView) view.findViewById(R.id.action)).setText(Html.fromHtml(String.format(context.getString(R.string.accept_person), person.getName())));
+            ((TextView) view.findViewById(R.id.action)).setText(Html.fromHtml(String.format(context.getString(R.string.accept_person), Functions.getFullName(person))));
         }
 
         view.setOnClickListener(new View.OnClickListener() {

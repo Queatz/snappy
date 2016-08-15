@@ -58,13 +58,12 @@ public class Config {
     public static final String EXTRA_ACTION_JOIN_REQUEST = "join.request";
     public static final String EXTRA_ACTION_HIDE = "hide";
 
-    public static final String PATH_BOUNTY_ID = "bounty/%s";
     public static final String PATH_QUEST_ID = "quest/%s";
     public static final String PATH_PARTY_ID = "party/%s";
     public static final String PATH_JOIN_ID = "join/%s";
     public static final String PATH_PEOPLE_ID = "people/%s";
-    public static final String PATH_PEOPLE_FOLLOWING = "people/%s/following";
-    public static final String PATH_PEOPLE_FOLLOWERS = "people/%s/followers";
+    public static final String PATH_PEOPLE_FOLLOWING = "%s/following";
+    public static final String PATH_PEOPLE_FOLLOWERS = "%s/followers";
     public static final String PATH_PEOPLE_PARTIES = "people/%s/parties";
     public static final String PATH_SEARCH = "search";
     public static final String PATH_UPDATE_ID = "update/%s";
@@ -76,8 +75,6 @@ public class Config {
     public static final String PATH_ME_OFFERS= "me/offers";
     public static final String PATH_ME_OFFERS_ID= "me/offers/%s";
     public static final String PATH_OFFER_ID = "offer/%s";
-    public static final String PATH_OFFER_ID_ENDORSE = "offer/%s/endorse";
-    public static final String PATH_OFFER_ID_ENDORSERS = "offer/%s/endorsers";
     public static final String PATH_ME_UPTO= "me/upto";
     public static final String PATH_ME_BUY= "me/buy";
     public static final String PATH_ME_REGISTER_DEVICE = "me/register_device";
@@ -129,18 +126,14 @@ public class Config {
     public static final int SEARCH_MAXIMUM = 100;
     public static final int SEARCH_MAX_VISIBILITY = 1609 * 20;
     public static final int NEARBY_MAX_VISIBILITY = 1609 * 2;
-    public static final int BOUNTIES_MAX_AGE = 1000 * 60 * 60 * 24 * 7;
     public static final long QUESTS_MAX_AGE = 1000L * 60L * 60L * 24L * 30L;
     public static final int QUEST_MAX_TEAM_SIZE = 6;
-    public static final int BOUNTIES_MAXIMUM = 100;
     public static final int QUESTS_MAXIMUM = 100;
     public static final int SUGGESTION_LIMIT = 5;
     public static final int SUGGESTION_MAX_DISTANCE = 1609 * 7;
     public static final int SEARCH_PEOPLE_MAX_NEAR_HERE = 500;
     public static final int SEARCH_HERE_MAX_DISTANCE = 1609 * 2;
     public static final int SEARCH_LOCATIONS_MAX_HERE = 10;
-    public static final int BOUNTY_MIN_PRICE = 500;
-    public static final int BOUNTY_MAX_PRICE = 15000;
     public static final int MAX_IDLE_HOURS = 1800;
 
     public static final String HOSTING_BETATESTER = "betatester";
@@ -162,14 +155,12 @@ public class Config {
     public static final String PUSH_ACTION_JOIN_PARTY = "join_party";
     public static final String PUSH_ACTION_REFRESH_ME = "refresh_me";
     public static final String PUSH_ACTION_CLEAR_NOTIFICATION = "clear_notification";
-    public static final String PUSH_ACTION_BOUNTY_FINISHED = "bounty_finished";
     public static final String PUSH_ACTION_QUEST_COMPLETED = "quest_completed";
     public static final String PUSH_ACTION_QUEST_STARTED = "quest_started";
     public static final String PUSH_ACTION_NEW_UPTO = "new_upto";
     public static final String PUSH_ACTION_NEW_OFFER = "new_offer";
     public static final String PUSH_ACTION_ADVERTISE = "advertise";
     public static final String PUSH_ACTION_LIKE_UPDATE = "like_update";
-    public static final String PUSH_ACTION_OFFER_ENDORSEMENT = "offer_endorsement";
     public static final String PUSH_ACTION_NEW_THING = "new_thing";
     public static final String PUSH_ACTION_NEW_CONTACT = "new_contact";
 
@@ -181,10 +172,6 @@ public class Config {
     public static final String JOIN_STATUS_IN = "in";
     public static final String JOIN_STATUS_OUT = "out";
     public static final String JOIN_STATUS_WITHDRAWN = "withdrawn";
-
-    public static final String BOUNTY_STATUS_OPEN = "open";
-    public static final String BOUNTY_STATUS_CLAIMED = "claimed";
-    public static final String BOUNTY_STATUS_FINISHED = "finished";
 
     public static final String QUEST_STATUS_OPEN = "open";
     public static final String QUEST_STATUS_STARTED = "started";
@@ -230,6 +217,7 @@ public class Config {
     public static final String PARAM_EDIT = "edit";
     public static final String PARAM_ROLE = "role";
     public static final String PARAM_PERSON = "person";
+    public static final String PARAM_KIND = "kind";
     public static final String PARAM_Q = "q";
 
     public static final String GOOGLE_PLUS_PROFILE_URL = "https://www.googleapis.com/plus/v1/people/me";
@@ -241,8 +229,6 @@ public class Config {
     public static final String refreshToken = Gateway.refreshToken;
 
     public static final String PATH_ABOUT = "about";
-    public static final String PATH_BOUNTIES = "bounties";
-    public static final String PATH_BOUNTY = "bounty";
     public static final String PATH_API = "api";
     public static final String PATH_PARTY = "party";
     public static final String PATH_DELETE = "delete";
@@ -270,9 +256,9 @@ public class Config {
     public static final String PATH_UPDATE = "update";
     public static final String PATH_LIKERS = "likers";
     public static final String PATH_OFFER = "offer";
-    public static final String PATH_ENDORSERS = "endorsers";
-    public static final String PATH_ENDORSE = "endorse";
     public static final String PATH_BY_NAME = "by-name";
     public static final String PATH_EARTH = "earth";
     public static final String PATH_EDIT = "edit";
+    public static final String PATH_LIKE = "like";
+    public static final java.lang.String PUSH_ACTION_OFFER_LIKED = "offer_liked";
 }

@@ -19,17 +19,17 @@ import com.queatz.snappy.adapter.PersonUptoAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Follow;
-import com.queatz.snappy.things.Offer;
-import com.queatz.snappy.things.Person;
-import com.queatz.snappy.things.Update;
+import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.RevealAnimation;
+import com.queatz.snappy.ui.SlideScreen;
 import com.queatz.snappy.ui.TextView;
+import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import io.realm.DynamicRealmObject;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -39,13 +39,13 @@ import io.realm.Sort;
  */
 public class PersonUptoSlide extends Fragment {
     Team team;
-    com.queatz.snappy.things.Person mPerson;
+    DynamicRealmObject mPerson;
     View personAbout;
     FloatingActionButton mFloatingAction;
-    RealmChangeListener mChangeListener = null;
+    RealmChangeListener<DynamicRealmObject> mChangeListener = null;
     boolean mShowOffers;
 
-    public void setPerson(com.queatz.snappy.things.Person person) {
+    public void setPerson(DynamicRealmObject person) {
         mPerson = person;
     }
 
@@ -56,22 +56,22 @@ public class PersonUptoSlide extends Fragment {
         super.onCreate(savedInstanceState);
         team = ((MainApplication) getActivity().getApplication()).team;
 
-        mChangeListener = new RealmChangeListener() {
+        mChangeListener = new RealmChangeListener<DynamicRealmObject>() {
             @Override
-            public void onChange() {
+            public void onChange(DynamicRealmObject object) {
                 update();
             }
         };
 
-        team.realm.addChangeListener(mChangeListener);
+        mPerson.addChangeListener(mChangeListener);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 
-        if(mChangeListener != null) {
-            team.realm.removeChangeListener(mChangeListener);
+        if(mChangeListener != null && mPerson != null) {
+            mPerson.removeChangeListener(mChangeListener);
         }
     }
 
@@ -88,8 +88,9 @@ public class PersonUptoSlide extends Fragment {
         updateList.addFooterView(new View(getActivity()));
 
         if(mPerson != null) {
-            RealmResults<Update> recentUpdates = team.realm.where(Update.class)
-                    .equalTo("person.id", mPerson.getId())
+            RealmResults<DynamicRealmObject> recentUpdates = team.realm.where("Thing")
+                    .equalTo(Thing.KIND, "update")
+                    .equalTo("source.id", mPerson.getString(Thing.ID))
                     .findAllSorted("date", Sort.DESCENDING);
             updateList.setAdapter(new PersonUptoAdapter(getActivity(), recentUpdates));
         }
@@ -109,7 +110,9 @@ public class PersonUptoSlide extends Fragment {
 
         mFloatingAction = (FloatingActionButton) view.findViewById(R.id.floatingAction);
 
-        if(team.auth.getUser() != null && team.auth.getUser().equals(mPerson.getId())) {
+        final boolean itsMe = mPerson != null && team.auth.getUser() != null && team.auth.getUser().equals(mPerson.getString(Thing.ID));
+
+        if(itsMe) {
             mFloatingAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -120,6 +123,20 @@ public class PersonUptoSlide extends Fragment {
             mFloatingAction.setVisibility(View.GONE);
         }
 
+
+        view.findViewById(R.id.socialMode).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SlideScreen slideScreen = (SlideScreen) getActivity().findViewById(R.id.person_content);
+
+                if (!itsMe) {
+                    ((PersonMessagesSlide) slideScreen.getSlideFragment(1)).setMessagePrefill("Hey!");
+                }
+
+                slideScreen.setSlide(1);
+            }
+        });
+
         return view;
     }
 
@@ -127,11 +144,14 @@ public class PersonUptoSlide extends Fragment {
         if(mPerson == null || getActivity() == null)
             return;
 
-        RealmResults<Offer> offers = team.realm.where(Offer.class).equalTo("person.id", mPerson.getId()).findAllSorted("price", Sort.ASCENDING);
+        RealmResults<DynamicRealmObject> offers = team.realm.where("Thing")
+                .equalTo(Thing.KIND, "offer")
+                .equalTo("source.id", mPerson.getString(Thing.ID))
+                .findAllSorted("price", Sort.ASCENDING);
 
         View offersView = personAbout.findViewById(R.id.offers);
 
-        boolean itsMe = team.auth.getUser().equals(mPerson.getId());
+        boolean itsMe = team.auth.getUser().equals(mPerson.getString(Thing.ID));
 
         if(offers.size() < 1 && !itsMe) {
             if(offersView.getVisibility() != View.GONE) {
@@ -159,7 +179,7 @@ public class PersonUptoSlide extends Fragment {
         if(getActivity() == null || mPerson == null)
             return;
 
-        team.api.get(String.format(Config.PATH_PEOPLE_ID, mPerson.getId()), new Api.Callback() {
+        team.api.get(Config.PATH_EARTH + "/" + mPerson.getString(Thing.ID), new Api.Callback() {
             @Override
             public void success(String response) {
                 if (response == null) {
@@ -170,9 +190,12 @@ public class PersonUptoSlide extends Fragment {
                     return;
                 }
 
-                List<Offer> previousOffers = team.realm.where(Offer.class).equalTo("person.id", mPerson.getId()).findAll();
-                Person add = team.things.put(com.queatz.snappy.things.Person.class, response);
-                team.things.diff(previousOffers, add.getOffers());
+                List<DynamicRealmObject> previousOffers = team.realm.where("Thing")
+                        .equalTo(Thing.KIND, "offer")
+                        .equalTo("source.id", mPerson.getString(Thing.ID))
+                        .findAll();
+                DynamicRealmObject add = team.things.put(response);
+                team.things.diff(previousOffers, add.getList(Thing.OFFERS));
 
                 update();
 
@@ -217,19 +240,19 @@ public class PersonUptoSlide extends Fragment {
             }
             
             Picasso.with(getActivity())
-                    .load(mPerson.getImageUrlForSize((int) Util.px(512)))
+                    .load(Functions.getImageUrlForSize(mPerson, (int) Util.px(512)))
                     .placeholder(R.color.deepdarkred)
                     .into(profile);
 
-            ((TextView) personAbout.findViewById(R.id.info_followers)).setText(Long.toString(mPerson.getInfoFollowers()));
-            ((TextView) personAbout.findViewById(R.id.info_following)).setText(Long.toString(mPerson.getInfoFollowing()));
+            ((TextView) personAbout.findViewById(R.id.info_followers)).setText(Long.toString(mPerson.getInt(Thing.INFO_FOLLOWERS)));
+            ((TextView) personAbout.findViewById(R.id.info_following)).setText(Long.toString(mPerson.getInt(Thing.INFO_FOLLOWING)));
 
-            personAbout.findViewById(R.id.hosted_button).setVisibility(mPerson.getCreated() != null ? View.VISIBLE : View.GONE);
+            personAbout.findViewById(R.id.hosted_button).setVisibility(mPerson.getDate(Thing.CREATED_ON) != null ? View.VISIBLE : View.GONE);
 
             TextView created = (TextView) personAbout.findViewById(R.id.info_hosted);
 
-            if (mPerson.getCreated() != null) {
-                created.setText(TimeUtil.agoDate(mPerson.getCreated(), false));
+            if (mPerson.getDate(Thing.CREATED_ON) != null) {
+                created.setText(TimeUtil.agoDate(mPerson.getDate(Thing.CREATED_ON), false));
                 created.setVisibility(View.VISIBLE);
             } else {
                 created.setVisibility(View.GONE);
@@ -251,7 +274,7 @@ public class PersonUptoSlide extends Fragment {
 
             TextView about = (TextView) personAbout.findViewById(R.id.about);
 
-            if(team.auth.getUser() != null && team.auth.getUser().equals(mPerson.getId())) {
+            if(team.auth.getUser() != null && team.auth.getUser().equals(mPerson.getString(Thing.ID))) {
                 about.setTextIsSelectable(false);
 
                 about.setOnClickListener(new View.OnClickListener() {
@@ -265,8 +288,8 @@ public class PersonUptoSlide extends Fragment {
                 about.setTextIsSelectable(true);
             }
 
-            if(mPerson.getAbout() == null || mPerson.getAbout().isEmpty()) {
-                if(team.auth.getUser().equals(mPerson.getId())) {
+            if(mPerson.getString(Thing.ABOUT) == null || mPerson.getString(Thing.ABOUT).isEmpty()) {
+                if(team.auth.getUser().equals(mPerson.getString(Thing.ID))) {
                     about.setVisibility(View.VISIBLE);
                     about.setTextColor(getResources().getColor(R.color.clickable));
                     about.setText(R.string.what_are_you_into);
@@ -278,26 +301,27 @@ public class PersonUptoSlide extends Fragment {
             else {
                 about.setVisibility(View.VISIBLE);
                 about.setTextColor(getResources().getColor(R.color.text));
-                about.setText(mPerson.getAbout());
+                about.setText(mPerson.getString(Thing.ABOUT));
             }
 
             Button actionButton = (Button) personAbout.findViewById(R.id.action_button);
 
-            Follow follow = null;
+            DynamicRealmObject follow = null;
 
             if(team.auth.getUser() != null) {
-                follow = team.realm.where(Follow.class)
+                follow = team.realm.where("Thing")
+                        .equalTo(Thing.KIND, "follow")
                         .equalTo("source.id", team.auth.getUser())
-                        .equalTo("target.id", mPerson.getId())
+                        .equalTo("target.id", mPerson.getString(Thing.ID))
                         .findFirst();
             }
 
-            if(follow != null || mPerson.getId().equals(team.auth.getUser())) {
+            if(follow != null || mPerson.getString(Thing.ID).equals(team.auth.getUser())) {
                 actionButton.setVisibility(View.GONE);
             }
             else {
                 actionButton.setVisibility(View.VISIBLE);
-                actionButton.setText(String.format(getActivity().getString(R.string.follow_person), mPerson.getFirstName()));
+                actionButton.setText(String.format(getActivity().getString(R.string.follow_person), mPerson.getString(Thing.FIRST_NAME)));
                 actionButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

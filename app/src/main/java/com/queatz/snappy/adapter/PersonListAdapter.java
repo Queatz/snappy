@@ -9,28 +9,29 @@ import android.widget.TextView;
 
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
-import com.queatz.snappy.things.Follow;
-import com.queatz.snappy.things.Person;
+import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.util.Functions;
 import com.squareup.picasso.Picasso;
 
+import io.realm.DynamicRealmObject;
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;
 
 /**
  * Created by jacob on 2/19/15.
  */
-public class PersonListAdapter extends RealmBaseAdapter<Follow> {
+public class PersonListAdapter extends RealmBaseAdapter<DynamicRealmObject> {
     boolean showFollowing;
 
-    public PersonListAdapter(Context context, RealmResults<Follow> realmResults, boolean showFollowing) {
-        super(context, realmResults, true);
+    public PersonListAdapter(Context context, RealmResults<DynamicRealmObject> realmResults, boolean showFollowing) {
+        super(context, realmResults);
         this.showFollowing = showFollowing;
     }
 
-    public Person getPerson(int position) {
-        Follow follow = realmResults.get(position);
+    public DynamicRealmObject getPerson(int position) {
+        DynamicRealmObject follow = getItem(position);
 
-        return showFollowing ? follow.getTarget() : follow.getSource();
+        return showFollowing ? follow.getObject(Thing.TARGET) : follow.getObject(Thing.SOURCE);
     }
 
     @Override
@@ -45,15 +46,15 @@ public class PersonListAdapter extends RealmBaseAdapter<Follow> {
             view = inflater.inflate(R.layout.person_list_item, parent, false);
         }
 
-        Person person = getPerson(position);
+        DynamicRealmObject person = getPerson(position);
 
         if(person != null) {
             Picasso.with(context)
-                    .load(person.getImageUrlForSize((int) Util.px(64)))
+                    .load(Functions.getImageUrlForSize(person, (int) Util.px(64)))
                     .placeholder(R.color.spacer)
                     .into((ImageView) view.findViewById(R.id.profile));
 
-            ((TextView) view.findViewById(R.id.person)).setText(person.getName());
+            ((TextView) view.findViewById(R.id.person)).setText(Functions.getFullName(person));
         }
 
         return view;

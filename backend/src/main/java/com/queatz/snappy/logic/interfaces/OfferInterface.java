@@ -9,13 +9,13 @@ import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
-import com.queatz.snappy.logic.editors.EndorsementEditor;
+import com.queatz.snappy.logic.editors.LikeEditor;
 import com.queatz.snappy.logic.editors.OfferEditor;
-import com.queatz.snappy.logic.eventables.OfferEndorsementEvent;
+import com.queatz.snappy.logic.eventables.OfferLikeEvent;
 import com.queatz.snappy.logic.exceptions.LogicException;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
-import com.queatz.snappy.logic.views.EndorsementView;
 import com.queatz.snappy.logic.views.EntityListView;
+import com.queatz.snappy.logic.views.LikeView;
 import com.queatz.snappy.logic.views.OfferView;
 import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.service.Buy;
@@ -34,8 +34,8 @@ public class OfferInterface implements Interfaceable {
     public String get(EarthAs as) {
         switch (as.getRoute().size()) {
             case 2:
-                if (Config.PATH_ENDORSERS.equals(as.getRoute().get(1))) {
-                    return getEndorsers(as, as.getRoute().get(0));
+                if (Config.PATH_LIKERS.equals(as.getRoute().get(1))) {
+                    return getLikers(as, as.getRoute().get(0));
                 } else if (Config.PATH_PHOTO.equals(as.getRoute().get(1))) {
                     return getPhoto(as, as.getRoute().get(0));
                 }
@@ -54,8 +54,8 @@ public class OfferInterface implements Interfaceable {
                     case Config.PATH_DELETE:
                         new EarthStore(as).conclude(as.getRoute().get(0));
                         return new SuccessView(true).toJson();
-                    case Config.PATH_ENDORSE:
-                        return endorse(as, as.getRoute().get(0));
+                    case Config.PATH_LIKE:
+                        return like(as, as.getRoute().get(0));
                     case Config.PATH_PHOTO:
                         return addPhoto(as, as.getRoute().get(0));
                     case Config.PATH_EDIT:
@@ -153,29 +153,24 @@ public class OfferInterface implements Interfaceable {
         return new SuccessView(true).toJson();
     }
 
-    private String getEndorsers(EarthAs as, String offerId) {
+    private String getLikers(EarthAs as, String offerId) {
         Entity offer = new EarthStore(as).get(offerId);
 
-        List<Entity> endorsers = new EarthStore(as).find(EarthKind.ENDORSEMENT_KIND, EarthField.TARGET, offer.key());
+        List<Entity> likers = new EarthStore(as).find(EarthKind.LIKE_KIND, EarthField.TARGET, offer.key());
 
-        return new EntityListView(as, endorsers).toJson();
+        return new EntityListView(as, likers).toJson();
     }
 
-    private String endorse(EarthAs as, String offerId) {
+    private String like(EarthAs as, String offerId) {
         Entity offer = new EarthStore(as).get(offerId);
 
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
-        if (as.getUser().key().equals(offer.getKey(EarthField.SOURCE))) {
-            throw new NothingLogicResponse("offer - you can't endorse yourself");
-        }
+        Entity like = new LikeEditor(as).newLike(offer, as.getUser());
 
-        // XXX TODO don't allow endorse self
-        Entity endorsement = new EndorsementEditor(as).newEndorsement(offer, as.getUser());
-
-        new EarthUpdate(as).send(new OfferEndorsementEvent(endorsement))
+        new EarthUpdate(as).send(new OfferLikeEvent(like))
                 .to(offer.getKey(EarthField.SOURCE));
 
-        return new EndorsementView(as, endorsement).setLocalId(localId).toJson();
+        return new LikeView(as, like).setLocalId(localId).toJson();
     }
 }

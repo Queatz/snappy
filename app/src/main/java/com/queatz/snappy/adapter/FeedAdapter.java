@@ -7,16 +7,16 @@ import android.widget.BaseAdapter;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Offer;
-import com.queatz.snappy.things.Party;
-import com.queatz.snappy.things.Quest;
+import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.card.OfferCard;
 import com.queatz.snappy.ui.card.PartyCard;
-import com.queatz.snappy.ui.card.QuestCard;
 
 import java.util.List;
 
+import io.realm.DynamicRealm;
+import io.realm.DynamicRealmObject;
 import io.realm.RealmChangeListener;
+import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 
@@ -26,9 +26,8 @@ import io.realm.RealmResults;
 public class FeedAdapter extends BaseAdapter {
     protected List<RealmResults> results;
     protected Context context;
-    private final RealmChangeListener listener;
+    private final RealmChangeListener<DynamicRealm> listener;
 
-    private QuestCard questCard = new QuestCard();
     private PartyCard partyCard = new PartyCard();
     private OfferCard offerCard = new OfferCard();
 
@@ -40,9 +39,9 @@ public class FeedAdapter extends BaseAdapter {
         this.context = context;
         this.results = results;
 
-        this.listener = new RealmChangeListener() {
+        this.listener = new RealmChangeListener<DynamicRealm>() {
             @Override
-            public void onChange() {
+            public void onChange(DynamicRealm realm) {
                 notifyDataSetChanged();
             }
         };
@@ -64,7 +63,7 @@ public class FeedAdapter extends BaseAdapter {
     }
 
     @Override
-    public RealmObject getItem(int i) {
+    public RealmModel getItem(int i) {
         for (RealmResults realmResults : results) {
             if (i < realmResults.size()) {
                 return realmResults.get(i);
@@ -85,16 +84,14 @@ public class FeedAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view;
-        RealmObject realmObject = getItem(position);
+        DynamicRealmObject thing = (DynamicRealmObject) getItem(position);
 
-        if (realmObject instanceof Quest) {
-            view = questCard.getCard(context, (Quest) realmObject, convertView != null && convertView.getTag() instanceof Quest ? convertView : null, parent);
-        } else if (realmObject instanceof Party) {
-            view = partyCard.getCard(context, (Party) realmObject, convertView != null && convertView.getTag() instanceof Party ? convertView : null, parent);
-        }  else if (realmObject instanceof Offer) {
-            view = offerCard.getCard(context, (Offer) realmObject, convertView != null && convertView.getTag() instanceof Offer ? convertView : null, parent);
+        if ("party".equals(thing.getString(Thing.KIND))) {
+            view = partyCard.getCard(context, thing, convertView != null && "party".equals(thing.getString(Thing.KIND)) ? convertView : null, parent);
+        }  else if ("offer".equals(thing.getString(Thing.KIND))) {
+            view = offerCard.getCard(context, thing, convertView != null && "offer".equals(thing.getString(Thing.KIND)) ? convertView : null, parent);
         } else {
-            throw new IllegalStateException("Invalid object found: " + realmObject);
+            throw new IllegalStateException("Invalid object found: " + thing);
         }
 
         return view;

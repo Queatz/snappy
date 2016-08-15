@@ -10,19 +10,23 @@ import android.widget.TextView;
 
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
-import com.queatz.snappy.things.Person;
+import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.util.Functions;
 import com.squareup.picasso.Picasso;
 
+import io.realm.DynamicRealmObject;
 import io.realm.RealmList;
+
+import static com.queatz.snappy.util.Functions.getImageUrlForSize;
 
 /**
  * Created by jacob on 8/21/15.
  */
 public class PeopleNearHereAdapter extends BaseAdapter {
-    RealmList<Person> mRealmList;
+    RealmList<DynamicRealmObject> mRealmList;
     Context mContext;
 
-    public PeopleNearHereAdapter(Context context, RealmList<Person> realmList) {
+    public PeopleNearHereAdapter(Context context, RealmList<DynamicRealmObject> realmList) {
         mRealmList = realmList;
         mContext = context;
     }
@@ -36,7 +40,7 @@ public class PeopleNearHereAdapter extends BaseAdapter {
     }
 
     @Override
-    public Person getItem(int i) {
+    public DynamicRealmObject getItem(int i) {
         if (mRealmList == null) {
             return null;
         }
@@ -60,17 +64,17 @@ public class PeopleNearHereAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.person_here_item, parent, false);
         }
 
-        Person person = mRealmList.get(position);
+        DynamicRealmObject person = mRealmList.get(position);
 
         TextView name = (TextView) view.findViewById(R.id.name);
         ImageView profile = (ImageView) view.findViewById(R.id.profile);
 
         Picasso.with(mContext)
-                .load(person.getImageUrlForSize((int) Util.px(48)))
+                .load(Functions.getImageUrlForSize(person, (int) Util.px(48)))
                 .placeholder(R.color.darkenedblue)
                 .into(profile);
 
-        name.setText(person.getFirstName());
+        name.setText(person.getShort(Thing.FIRST_NAME));
 
         return view;
     }

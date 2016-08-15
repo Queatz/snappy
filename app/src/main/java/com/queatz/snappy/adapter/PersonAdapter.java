@@ -5,17 +5,18 @@ import android.app.FragmentManager;
 
 import com.queatz.snappy.fragment.PersonMessagesSlide;
 import com.queatz.snappy.fragment.PersonUptoSlide;
-import com.queatz.snappy.things.Person;
 import com.queatz.snappy.ui.SlideScreen;
+
+import io.realm.DynamicRealmObject;
 
 /**
  * Created by jacob on 10/23/14.
  */
 public class PersonAdapter extends SlideScreen.SlideScreenAdapter {
-    Person mPerson;
+    DynamicRealmObject mPerson;
     String messagePrefill;
 
-    public PersonAdapter(FragmentManager fragmentManager, Person person) {
+    public PersonAdapter(FragmentManager fragmentManager, DynamicRealmObject person) {
         super(fragmentManager);
 
         mPerson = person;

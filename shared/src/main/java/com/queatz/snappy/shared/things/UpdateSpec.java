@@ -6,7 +6,6 @@ import com.googlecode.objectify.annotation.Ignore;
 import com.googlecode.objectify.annotation.Index;
 import com.queatz.snappy.shared.Hide;
 import com.queatz.snappy.shared.Push;
-import com.queatz.snappy.shared.Shallow;
 import com.queatz.snappy.shared.ThingSpec;
 
 import java.util.Date;

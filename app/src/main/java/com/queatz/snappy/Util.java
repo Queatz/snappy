@@ -16,15 +16,14 @@ import android.text.style.ForegroundColorSpan;
 
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Endorsement;
-import com.queatz.snappy.things.Like;
-import com.queatz.snappy.things.Offer;
-import com.queatz.snappy.things.Person;
-import com.queatz.snappy.things.Update;
+import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
 
 import java.io.IOException;
 import java.util.UUID;
+
+import io.realm.DynamicRealmObject;
 
 /**
  * Created by jacob on 10/31/14.
@@ -37,12 +36,12 @@ public class Util {
         return Html.fromHtml(String.format(context.getString(resId), params));
     }
 
-    public static CharSequence fancyName(Person person) {
-        final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(person.getName());
+    public static CharSequence fancyName(DynamicRealmObject person) {
+        final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(Functions.getFullName(person));
         final ForegroundColorSpan colorSpan = new ForegroundColorSpan(context.getResources().getColor(R.color.spacer));
 
-        int start = person.getFirstName().length() + 1;
-        stringBuilder.setSpan(colorSpan, start, start + person.getLastName().length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        int start = person.getString(Thing.FIRST_NAME).length() + 1;
+        stringBuilder.setSpan(colorSpan, start, start + person.getString(Thing.LAST_NAME).length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 
         return stringBuilder;
     }
@@ -63,60 +62,64 @@ public class Util {
         return px / context.getResources().getDisplayMetrics().density;
     }
 
-    public static String offerAmount(@NonNull final Offer offer) {
-        if (offer.getPrice() == null) {
+    public static String offerAmount(@NonNull final DynamicRealmObject offer) {
+        if (offer.hasField(Thing.PRICE)) {
             return team.context.getString(R.string.ask);
         } else {
-            return "$" + Math.abs(offer.getPrice()) + (offer.getUnit() == null || offer.getUnit().isEmpty() ? "" : "/" + offer.getUnit());
+            return "$" + Math.abs(offer.getDouble(Thing.PRICE)) +
+                    (!offer.hasField(Thing.UNIT) ||
+                            offer.getString(Thing.UNIT) == null ||
+                            offer.getString(Thing.UNIT).isEmpty() ? "" :
+                            "/" + offer.getString(Thing.UNIT));
         }
     }
 
-    public static boolean offerIsRequest(@NonNull final Offer offer) {
-        return offer.getPrice() != null && offer.getPrice() < 0;
+    public static boolean offerIsRequest(@NonNull final DynamicRealmObject offer) {
+        return offer.hasField(Thing.PRICE) && offer.getDouble(Thing.PRICE) < 0;
     }
 
-    public static String offerPriceText(@NonNull final Offer offer, boolean isShorthand) {
+    public static String offerPriceText(@NonNull final DynamicRealmObject offer, boolean isShorthand) {
         if (!isShorthand) {
             return offerPriceText(offer);
         }
 
-        return offer.getPrice() == null ? context.getString(R.string.ask) : offer.getPrice() > 0
-                ? Util.offerAmount(offer) : offer.getPrice() < 0 ? "+" + Util.offerAmount(offer)
+        return offer.hasField(Thing.PRICE) ? context.getString(R.string.ask) : offer.getDouble(Thing.PRICE) > 0
+                ? Util.offerAmount(offer) : offer.getDouble(Thing.PRICE) < 0 ? "+" + Util.offerAmount(offer)
                 : context.getString(R.string.free);
     }
 
-    public static String offerPriceText(@NonNull final Offer offer) {
-        return offer.getPrice() == null ? context.getString(R.string.ask) : offer.getPrice() > 0 ?
-                context.getString(R.string.for_amount, Util.offerAmount(offer)) : offer.getPrice() < 0 ?
+    public static String offerPriceText(@NonNull final DynamicRealmObject offer) {
+        return offer.hasField(Thing.PRICE) ? context.getString(R.string.ask) : offer.getDouble(Thing.PRICE) > 0 ?
+                context.getString(R.string.for_amount, Util.offerAmount(offer)) : offer.getDouble(Thing.PRICE) < 0 ?
                 context.getString(R.string.make_amount, Util.offerAmount(offer)) :
                 context.getString(R.string.for_free);
     }
 
-    public static String offerMessagePrefill(@NonNull final Offer offer) {
-        return context.getString(offerIsRequest(offer) ? R.string.ive_got_offer : R.string.id_like_offer, offer.getDetails());
+    public static String offerMessagePrefill(@NonNull final DynamicRealmObject offer) {
+        return context.getString(offerIsRequest(offer) ? R.string.ive_got_offer : R.string.id_like_offer, offer.getShort(Thing.ABOUT));
     }
 
-    public static Spanned getUpdateText(Update update) {
+    public static Spanned getUpdateText(DynamicRealmObject update) {
         boolean past;
         Spanned string;
 
-        switch (update.getAction()) {
+        switch (update.getString(Thing.ACTION)) {
             case Config.UPDATE_ACTION_HOST_PARTY:
-                if(update.getParty() == null || update.getPerson() == null)
+                if(update.getObject(Thing.TARGET) == null || update.getObject(Thing.SOURCE) == null)
                     return null;
 
-                past = TimeUtil.isPartyPast(update.getParty());
+                past = TimeUtil.isPartyPast(update.getObject(Thing.TARGET));
 
-                string = Html.fromHtml(String.format(context.getString(past ? R.string.update_text_hosted : R.string.update_text_is_hosting), update.getPerson().getFirstName(), update.getParty().getName(), TimeUtil.agoDate(update.getParty().getDate())));
+                string = Html.fromHtml(String.format(context.getString(past ? R.string.update_text_hosted : R.string.update_text_is_hosting), update.getObject(Thing.SOURCE).getString(Thing.FIRST_NAME), update.getObject(Thing.TARGET).getString(Thing.NAME), TimeUtil.agoDate(update.getObject(Thing.TARGET).getDate(Thing.DATE))));
                 break;
             case Config.UPDATE_ACTION_JOIN_PARTY:
-                past = TimeUtil.isPartyPast(update.getParty());
+                past = TimeUtil.isPartyPast(update.getObject(Thing.TARGET));
 
-                string = Html.fromHtml(String.format(context.getString(past ? R.string.update_text_went_to : R.string.update_text_is_going_to), update.getPerson().getFirstName(), update.getParty().getName(), TimeUtil.agoDate(update.getParty().getDate())));
+                string = Html.fromHtml(String.format(context.getString(past ? R.string.update_text_went_to : R.string.update_text_is_going_to), update.getObject(Thing.SOURCE).getString(Thing.FIRST_NAME), update.getObject(Thing.TARGET).getString(Thing.NAME), TimeUtil.agoDate(update.getObject(Thing.TARGET).getDate(Thing.DATE))));
                 break;
             case Config.UPDATE_ACTION_UPTO:
             default:
-                string = new SpannableString(update.getMessage());
+                string = new SpannableString(update.getString(Thing.MESSAGE));
                 break;
         }
 
@@ -139,16 +142,16 @@ public class Util {
         }
     }
 
-    public static String locationPhoto(com.queatz.snappy.things.Location location, int s) {
-        return Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getId());
+    public static String locationPhoto(DynamicRealmObject location, int s) {
+        return Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getString(Thing.ID));
     }
 
     public static String photoUrl(String path, int s) {
         return Config.API_URL + path + "?s=" + s + "&auth=" + team.auth.getAuthParam();
     }
 
-    public static boolean liked(@NonNull Update update, @NonNull Person person) {
-        return team.realm.where(Like.class).equalTo("source.id", person.getId()).equalTo("target.id", update.getId()).count() != 0;
+    public static boolean liked(@NonNull DynamicRealmObject update, @NonNull DynamicRealmObject person) {
+        return team.realm.where("Thing").equalTo("source.id", person.getString(Thing.ID)).equalTo("target.id", update.getString(Thing.ID)).count() != 0;
     }
 
     public static Matrix transformationFromExif(Uri uri) {
@@ -223,9 +226,5 @@ public class Util {
                 translation = 1;
         }
         return translation;
-    }
-
-    public static boolean endorsed(@NonNull Offer offer, @NonNull Person person) {
-        return team.realm.where(Endorsement.class).equalTo("source.id", person.getId()).equalTo("target.id", offer.getId()).count() != 0;
     }
 }

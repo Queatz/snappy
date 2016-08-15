@@ -9,25 +9,26 @@ import android.widget.TextView;
 
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
-import com.queatz.snappy.things.Like;
-import com.queatz.snappy.things.Person;
+import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.util.Functions;
 import com.squareup.picasso.Picasso;
 
+import io.realm.DynamicRealmObject;
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;
 
 /**
  * Created by jacob on 12/6/15.
  */
-public class LikerAdapter extends RealmBaseAdapter<Like> {
-        public LikerAdapter(Context context, RealmResults<Like> realmResults) {
-            super(context, realmResults, true);
+public class LikerAdapter extends RealmBaseAdapter<DynamicRealmObject> {
+        public LikerAdapter(Context context, RealmResults<DynamicRealmObject> realmResults) {
+            super(context, realmResults);
         }
 
-        public Person getPerson(int position) {
-            Like like = realmResults.get(position);
+        public DynamicRealmObject getPerson(int position) {
+            DynamicRealmObject like = getItem(position);
 
-            return like.getSource();
+            return like.getObject(Thing.SOURCE);
         }
 
         @Override
@@ -42,15 +43,15 @@ public class LikerAdapter extends RealmBaseAdapter<Like> {
                 view = inflater.inflate(R.layout.person_list_item, parent, false);
             }
 
-            Person person = getPerson(position);
+            DynamicRealmObject person = getPerson(position);
 
             if(person != null) {
                 Picasso.with(context)
-                        .load(person.getImageUrlForSize((int) Util.px(64)))
+                        .load(Functions.getImageUrlForSize(person, (int) Util.px(64)))
                         .placeholder(R.color.spacer)
                         .into((ImageView) view.findViewById(R.id.profile));
 
-                ((TextView) view.findViewById(R.id.person)).setText(person.getName());
+                ((TextView) view.findViewById(R.id.person)).setText(Functions.getFullName(person));
             }
 
             return view;

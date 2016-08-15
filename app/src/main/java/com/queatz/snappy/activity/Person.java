@@ -21,9 +21,13 @@ import com.queatz.snappy.adapter.ProfileAdapter;
 import com.queatz.snappy.adapter.ProfileTabAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.ActionBar;
 import com.queatz.snappy.ui.SlideScreen;
+import com.queatz.snappy.util.Functions;
 import com.squareup.picasso.Picasso;
+
+import io.realm.DynamicRealmObject;
 
 /**
  * Created by jacob on 10/19/14.
@@ -31,7 +35,7 @@ import com.squareup.picasso.Picasso;
 public class Person extends Activity {
     private ActionBar mActionBar;
     private SlideScreen mSlideScreen;
-    private com.queatz.snappy.things.Person mPerson;
+    private DynamicRealmObject mPerson;
     private boolean mIsActive;
     public Team team;
     private Object mContextObject;
@@ -57,14 +61,14 @@ public class Person extends Activity {
             return;
         }
 
-        mPerson = team.realm.where(com.queatz.snappy.things.Person.class).equalTo("id", id).findFirst();
+        mPerson = team.realm.where("Thing").equalTo("id", id).findFirst();
         // Else load person and wait
 
         setContentView(R.layout.person);
 
         mActionBar = (ActionBar) findViewById(R.id.actionBar);
 
-        boolean itsMe = team.auth.getUser() != null && team.auth.getUser().equals(mPerson.getId());
+        boolean itsMe = team.auth.getUser() != null && team.auth.getUser().equals(mPerson.getString(Thing.ID));
 
         if (itsMe) {
             mActionBar.setAdapter(new ProfileTabAdapter(this));
@@ -80,11 +84,11 @@ public class Person extends Activity {
         });
 
         if(mPerson != null) {
-            mActionBar.setTitle(mPerson.getName());
+            mActionBar.setTitle(Functions.getFullName(mPerson));
 
             ImageView profile = ((ImageView) mActionBar.getLeftContent().getChildAt(0));
             Picasso.with(this)
-                    .load(mPerson.getImageUrlForSize((int) Util.px(64)))
+                    .load(Functions.getImageUrlForSize(mPerson, (int) Util.px(64)))
                     .placeholder(R.color.spacer)
                     .into(profile);
         }
@@ -117,9 +121,9 @@ public class Person extends Activity {
                     if (slide == 1 && mIsActive) {
                         team.action.setSeen(mPerson);
                         team.push.clear("messages");
-                        team.view.setTop("person/" + mPerson.getId() + "/messages");
+                        team.view.setTop("person/" + mPerson.getString(Thing.ID) + "/messages");
                     } else {
-                        team.view.clearTop("person/" + mPerson.getId() + "/messages");
+                        team.view.clearTop("person/" + mPerson.getString(Thing.ID) + "/messages");
                     }
                 }
 
@@ -161,7 +165,7 @@ public class Person extends Activity {
         mIsActive = true;
 
         if(mPerson != null && mSlideScreen.getSlide() == 1) {
-            team.view.setTop("person/" + mPerson.getId() + "/messages");
+            team.view.setTop("person/" + mPerson.getString(Thing.ID) + "/messages");
         }
     }
 
@@ -172,7 +176,7 @@ public class Person extends Activity {
         mIsActive = false;
 
         if (mPerson != null) {
-            team.view.clearTop("person/" + mPerson.getId() + "/messages");
+            team.view.clearTop("person/" + mPerson.getString(Thing.ID) + "/messages");
         }
     }
 

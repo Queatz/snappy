@@ -17,34 +17,34 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Like;
-import com.queatz.snappy.things.Location;
-import com.queatz.snappy.things.Person;
-import com.queatz.snappy.things.Update;
+import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.util.Functions;
 import com.squareup.picasso.Picasso;
 
+import io.realm.DynamicRealmObject;
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;
 
 /**
  * Created by jacob on 2/18/15.
  */
-public class PersonUptoAdapter extends RealmBaseAdapter<Update> {
-    public PersonUptoAdapter(Context context, RealmResults<Update> realmResults) {
-        super(context, realmResults, true);
+public class PersonUptoAdapter extends RealmBaseAdapter<DynamicRealmObject> {
+    public PersonUptoAdapter(Context context, RealmResults<DynamicRealmObject> realmResults) {
+        super(context, realmResults);
     }
 
-    public void updateLikes(View view, final Update update) {
+    public void updateLikes(View view, final DynamicRealmObject update) {
         final Team team = ((MainApplication) context.getApplicationContext()).team;
 
         final Button likers = (Button) view.findViewById(R.id.likers);
 
-        int likersCount = (int) team.realm.where(Like.class)
-                .equalTo("target.id", update.getId())
+        int likersCount = (int) team.realm.where("Thing")
+                .equalTo(Thing.KIND, "like")
+                .equalTo("target.id", update.getString(Thing.ID))
                 .count();
 
-        if (update.getLikers() > likersCount) {
-            likersCount = update.getLikers();
+        if (update.getInt(Thing.LIKERS) > likersCount) {
+            likersCount = update.getInt(Thing.LIKERS);
         }
 
         boolean byMe = Util.liked(update, team.auth.me());
@@ -90,23 +90,24 @@ public class PersonUptoAdapter extends RealmBaseAdapter<Update> {
 
         final Team team = ((MainApplication) context.getApplicationContext()).team;
 
-        final Update update = realmResults.get(position);
-        final Person person = update.getPerson();
-        final Location location = update.getParty() != null ? update.getParty().getLocation() : null;
+        final DynamicRealmObject update = getItem(position);
+        final DynamicRealmObject person = update.getObject(Thing.SOURCE);
+        final DynamicRealmObject location = update.getObject(Thing.TARGET).hasField(Thing.LOCATION) ?
+                update.getObject(Thing.TARGET).getObject(Thing.LOCATION) : null;
 
         if(person != null) {
             int s = (int) Util.px(64);
 
             Picasso.with(context)
-                    .load(location == null ? person.getImageUrlForSize(s) : Util.locationPhoto(location, s))
+                    .load(location == null ? Functions.getImageUrlForSize(person, s) : Util.locationPhoto(location, s))
                     .placeholder(location == null ? R.color.spacer : R.drawable.location)
                     .into((ImageView) view.findViewById(R.id.profile));
         }
 
         ImageView photo = (ImageView) view.findViewById(R.id.photo);
 
-        if (Config.UPDATE_ACTION_UPTO.equals(update.getAction())) {
-            String photoUrl = Util.photoUrl(String.format(Config.PATH_UPDATE_PHOTO, update.getId()), parent.getMeasuredWidth() / 2);
+        if (Config.UPDATE_ACTION_UPTO.equals(update.getString(Thing.ACTION))) {
+            String photoUrl = Util.photoUrl(String.format(Config.PATH_UPDATE_PHOTO, update.getString(Thing.ID)), parent.getMeasuredWidth() / 2);
 
             photo.setVisibility(View.VISIBLE);
             photo.setImageDrawable(null);
@@ -118,7 +119,7 @@ public class PersonUptoAdapter extends RealmBaseAdapter<Update> {
                     .placeholder(R.color.spacer)
                     .into(photo);
 
-            if(update.getMessage() == null || update.getMessage().isEmpty()) {
+            if(!update.hasField(Thing.MESSAGE) || update.getString(Thing.MESSAGE).isEmpty()) {
                 view.findViewById(R.id.details).setVisibility(View.GONE);
             }
             else {

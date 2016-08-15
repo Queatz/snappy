@@ -16,10 +16,10 @@ import com.queatz.snappy.adapter.ContactAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Contact;
-import com.queatz.snappy.things.Message;
+import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.util.Json;
 
+import io.realm.DynamicRealmObject;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -60,7 +60,7 @@ public class MessagesSlide extends Fragment {
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                team.action.openMessages(getActivity(), ((Contact) mList.getAdapter().getItem(position)).getContact());
+                team.action.openMessages(getActivity(), ((DynamicRealmObject) mList.getAdapter().getItem(position)).getObject(Thing.TARGET));
             }
         });
 
@@ -73,9 +73,10 @@ public class MessagesSlide extends Fragment {
     private void update() {
         if(team.auth.getUser() != null) {
             if(mList.getAdapter() == null) {
-                RealmResults<Contact> contacts = team.realm.where(Contact.class)
-                        .equalTo("person.id", team.auth.getUser())
-                        .findAllSorted("updated", Sort.DESCENDING);
+                RealmResults<DynamicRealmObject> contacts = team.realm.where("Thing")
+                        .equalTo(Thing.KIND, "recent")
+                        .equalTo("source.id", team.auth.getUser())
+                        .findAllSorted(Thing.UPDATED, Sort.DESCENDING);
 
                 mList.setAdapter(new ContactAdapter(getActivity(), contacts));
             }
@@ -88,7 +89,7 @@ public class MessagesSlide extends Fragment {
         if(getActivity() == null)
             return;
 
-        team.api.get(Config.PATH_MESSAGES, new Api.Callback() {
+        team.api.get(Config.PATH_EARTH + "/" + Config.PATH_ME + "/" + Config.PATH_MESSAGES, new Api.Callback() {
             @Override
             public void success(String response) {
                 mRefresh.setRefreshing(false);
@@ -96,10 +97,10 @@ public class MessagesSlide extends Fragment {
                 JsonObject o = Json.from(response, JsonObject.class);
 
                 if(o.has("messages"))
-                    team.things.putAll(Message.class, o.getAsJsonArray("messages"));
+                    team.things.putAll(o.getAsJsonArray("messages"));
 
                 if(o.has("contacts"))
-                    team.things.putAll(Contact.class, o.getAsJsonArray("contacts"));
+                    team.things.putAll(o.getAsJsonArray("contacts"));
 
                 update();
             }

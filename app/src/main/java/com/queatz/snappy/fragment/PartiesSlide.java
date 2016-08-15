@@ -18,18 +18,15 @@ import com.queatz.snappy.adapter.PeopleNearHereAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Here;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Bounty;
-import com.queatz.snappy.things.Location;
-import com.queatz.snappy.things.Offer;
-import com.queatz.snappy.things.Party;
-import com.queatz.snappy.things.Person;
-import com.queatz.snappy.things.Quest;
+import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.RevealAnimation;
 import com.queatz.snappy.ui.TextView;
 
 import java.util.ArrayList;
 import java.util.Date;
 
+import io.realm.DynamicRealm;
+import io.realm.DynamicRealmObject;
 import io.realm.RealmChangeListener;
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -38,13 +35,12 @@ import io.realm.Sort;
 /**
  * Created by jacob on 10/19/14.
  */
-public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Location.LocationAvailabilityCallback, RealmChangeListener {
+public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Location.LocationAvailabilityCallback, RealmChangeListener<DynamicRealm> {
     Team team;
 
     SwipeRefreshLayout mRefresh;
     ListView mList;
     View emptyView;
-    Object mContextObject;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,7 +112,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
     }
 
     @Override
-    public void onChange() {
+    public void onChange(DynamicRealm realm) {
         if(getView() != null) {
             getView().postDelayed(new Runnable() {
                 @Override
@@ -147,7 +143,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         return (int) ((percent * 5) + 1) * 10;
     }
 
-    private void updateBanner(RealmList<Person> people, RealmList<com.queatz.snappy.things.Location> locations) {
+    private void updateBanner(RealmList<DynamicRealmObject> people, RealmList<DynamicRealmObject> locations) {
         if(getActivity() == null)
             return;
 
@@ -164,7 +160,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         String locationName = null;
 
         if(locations.size() > 0) {
-            locationName = locations.get(0).getName();
+            locationName = locations.get(0).getString(Thing.NAME);
         }
         else {
             locationName = getString(R.string.here);
@@ -180,7 +176,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         peopleNearbyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Person person = ((PeopleNearHereAdapter) parent.getAdapter()).getItem(position);
+                DynamicRealmObject person = ((PeopleNearHereAdapter) parent.getAdapter()).getItem(position);
 
                 if (person != null) {
                     team.action.openProfile(getActivity(), person);
@@ -205,22 +201,25 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         if(mList.getAdapter() == null) {
             String me = team.auth.getUser();
 
-            RealmResults<Party> queryParties = team.realm.where(Party.class)
+            RealmResults<DynamicRealmObject> queryParties = team.realm.where("Thing")
+                    .equalTo(Thing.KIND, "party")
                         .greaterThan("date", new Date(new Date().getTime() - 1000 * 60 * 60))
                     .beginGroup()
                         .equalTo("full", false).or()
-                        .equalTo("people.person.id", me).or()
+                        .equalTo("joins.source.id", me).or()
                         .equalTo("host.id", me)
                     .endGroup()
                     .findAllSorted("date", Sort.ASCENDING);
 
-            RealmResults<Offer> queryOffers = team.realm.where(Offer.class)
-                    .notEqualTo("person.id", team.auth.getUser())
+            RealmResults<DynamicRealmObject> queryOffers = team.realm.where("Thing")
+                    .equalTo(Thing.KIND, "offer")
+                    .notEqualTo("source.id", team.auth.getUser())
                     .isNotNull("price")
                     .findAllSorted("price", Sort.ASCENDING);
 
-            RealmResults<Offer> queryOffersUpmarket = team.realm.where(Offer.class)
-                    .notEqualTo("person.id", team.auth.getUser())
+            RealmResults<DynamicRealmObject> queryOffersUpmarket = team.realm.where("Thing")
+                    .equalTo(Thing.KIND, "offer")
+                    .notEqualTo("source.id", team.auth.getUser())
                     .isNull("price")
                     .findAll();
 
@@ -246,14 +245,20 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
 
         team.here.update(getActivity(), mRefresh, new Here.Callback() {
             @Override
-            public void onSuccess(RealmList<Person> people, RealmList<Location> locations, RealmList<Party> parties, RealmList<Bounty> bounties, RealmList<Quest> quests, RealmList<Offer> offers) {
-                if (locations != null && people != null) {
-                    updateBanner(people, locations);
+            public void onSuccess(RealmList<DynamicRealmObject> things) {
+                RealmList<DynamicRealmObject> people = new RealmList<>();
+                RealmList<DynamicRealmObject> locations = new RealmList<>();
+
+                for (DynamicRealmObject thing : things) {
+                    if ("person".equals(thing.getString(Thing.KIND))) {
+                        people.add(thing);
+                    } else if ("location".equals(thing.getString(Thing.KIND))) {
+                        locations.add(thing);
+                    }
                 }
 
-                if (parties != null) {
-                    update();
-                }
+                updateBanner(people, locations);
+                update();
             }
         });
     }

@@ -12,20 +12,21 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Location;
+import com.queatz.snappy.team.Thing;
 import com.squareup.picasso.Picasso;
 
+import io.realm.DynamicRealmObject;
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;
 
 /**
  * Created by jacob on 2/25/15.
  */
-public class LocationAdapter extends RealmBaseAdapter<Location> {
+public class LocationAdapter extends RealmBaseAdapter<DynamicRealmObject> {
     private int mLimit = -1;
 
-    public LocationAdapter(Context context, RealmResults<Location> realmResults, int limit) {
-        super(context, realmResults, true);
+    public LocationAdapter(Context context, RealmResults<DynamicRealmObject> realmResults, int limit) {
+        super(context, realmResults);
         mLimit = limit;
     }
 
@@ -51,17 +52,17 @@ public class LocationAdapter extends RealmBaseAdapter<Location> {
             view = inflater.inflate(R.layout.location_item, parent, false);
         }
 
-        Location location = realmResults.get(position);
+        DynamicRealmObject location = getItem(position);
 
         TextView name = (TextView) view.findViewById(R.id.name);
         ImageView profile = (ImageView) view.findViewById(R.id.profile);
 
         int s = (int) Util.px(128);
-        String photoUrl = Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getId());
+        String photoUrl = Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getString(Thing.NAME));
 
         Picasso.with(context).load(photoUrl).placeholder(R.drawable.location).into(profile);
 
-        name.setText(location.getName());
+        name.setText(location.getString(Thing.NAME));
 
         return view;
     }

@@ -38,6 +38,7 @@ import com.queatz.snappy.AdvertiseBroadcastReceiver;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.util.Functions;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,6 +49,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import io.realm.DynamicRealmObject;
 
 /**
  * Created by jacob on 12/3/15.
@@ -131,7 +134,7 @@ public class Advertise {
             return false;
         }
 
-        com.queatz.snappy.things.Person me = team.auth.me();
+        DynamicRealmObject me = team.auth.me();
 
         if (me == null) {
             return false;
@@ -151,15 +154,15 @@ public class Advertise {
                     Config.UUID_CHARACTERISTIC_PROFILE_ID,
                     BluetoothGattCharacteristic.PROPERTY_READ,
                     BluetoothGattCharacteristic.PERMISSION_READ);
-            mPersonIdCharacteristic.setValue(me.getId());
+            mPersonIdCharacteristic.setValue(me.getString(Thing.ID));
         }
 
-        if (mPersonFirstNameCharacteristic == null && me.getFirstName() != null) {
+        if (mPersonFirstNameCharacteristic == null && me.getString(Thing.FIRST_NAME) != null) {
             mPersonFirstNameCharacteristic = new BluetoothGattCharacteristic(
                     Config.UUID_CHARACTERISTIC_PROFILE_FIRST_NAME,
                     BluetoothGattCharacteristic.PROPERTY_READ,
                     BluetoothGattCharacteristic.PERMISSION_READ);
-            mPersonFirstNameCharacteristic.setValue(me.getFirstName());
+            mPersonFirstNameCharacteristic.setValue(me.getString(Thing.FIRST_NAME));
         }
 
         if (mService == null) {
@@ -170,7 +173,7 @@ public class Advertise {
         }
 
         if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-            mBluetoothAdapter.setName(team.auth.me().getName());
+            mBluetoothAdapter.setName(Functions.getFullName(team.auth.me()));
 
             if (activity == null) {
                 return false;
@@ -195,7 +198,7 @@ public class Advertise {
             return;
         }
 
-        com.queatz.snappy.things.Person me = team.auth.me();
+        DynamicRealmObject me = team.auth.me();
 
         if (me == null) {
             return;

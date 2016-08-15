@@ -51,6 +51,11 @@ public class Buy {
     }
 
     public String hostingEnabled() {
+        // XXX TODO remove buy stuff
+        if (true) {
+            return Config.HOSTING_ENABLED_TRUE;
+        }
+
         if(mHostingEnabled == null) {
             mHostingEnabled = team.preferences.getString(Config.PREFERENCE_HOSTING_ENABLED, null);
         }
@@ -74,7 +79,7 @@ public class Buy {
     }
 
     public void pullPerson() {
-        team.api.get(Config.PATH_ME_BUY, new Api.Callback() {
+        team.api.get(Config.PATH_EARTH + "/" + Config.PATH_ME_BUY, new Api.Callback() {
             @Override
             public void success(String response) {
                 if(response == null) {
@@ -263,7 +268,7 @@ public class Buy {
     private void send(String purchaseData) {
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_PURCHASE_DATA, purchaseData);
-        team.api.post(Config.PATH_ME_BUY, params);
+        team.api.post(Config.PATH_EARTH + "/" + Config.PATH_ME_BUY, params);
     }
 
     private void callbacks(boolean succeeded) {

@@ -1,9 +1,12 @@
-package com.queatz.snappy.logic;
+package com.queatz.snappy.team;
 
 /**
- * Created by jacob on 4/3/16.
+ * Created by jacob on 8/14/16.
  */
-public class EarthField {
+
+public class Thing {
+    public static final String ID = "id";
+    public static final String LOCATION = "location";
 
     /**
      * The kind of the thing.
@@ -87,7 +90,7 @@ public class EarthField {
     /**
      * The last time something was updated.
      */
-    public static final String UPDATED_ON = "updated_on";
+    public static final String UPDATED = "updated";
 
     /**
      * Whether or not this object was seen by the recipient.
@@ -151,4 +154,13 @@ public class EarthField {
     public static final String GENDER = "gender";
     public static final String LANGUAGE = "language";
     public static final String GOOGLE_ID = "google_id";
+
+
+    // From views
+    public static final String LIKERS = "likers";
+    public static final String JOINS = "joins";
+    public static final String OFFERS = "offers";
+    public static final String INFO_FOLLOWERS = "infoFollowers";
+    public static final String INFO_FOLLOWING = "infoFollowing";
+    public static final String PERSON = "person";
 }

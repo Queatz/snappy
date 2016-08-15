@@ -11,17 +11,20 @@ import android.support.annotation.NonNull;
 import com.queatz.snappy.shared.Config;
 
 import java.io.Closeable;
+import java.util.Date;
 
+import io.realm.DynamicRealm;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.exceptions.RealmMigrationNeededException;
+import io.realm.RealmMigration;
+import io.realm.RealmObjectSchema;
 
 /**
  * Created by jacob on 10/19/14.
  */
 public class Team implements Closeable {
     public Context context;
-    public Realm realm;
+    public DynamicRealm realm;
     public SharedPreferences preferences;
     public View view;
     public Auth auth;
@@ -62,7 +65,7 @@ public class Team implements Closeable {
         Realm.deleteRealm(new RealmConfiguration.Builder(context).build());
     }
 
-    public Realm realm() {
+    public DynamicRealm realm() {
         try {
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             int prefAppVersion = preferences.getInt(Config.PREFERENCE_APP_VERSION, -1);
@@ -80,12 +83,72 @@ public class Team implements Closeable {
             e.printStackTrace();
         }
 
-        try {
-            return Realm.getInstance(context);
-        } catch (RealmMigrationNeededException e) {
-            wipe();
-            return Realm.getInstance(context);
+        DynamicRealm dynamicRealm = DynamicRealm.getInstance(new RealmConfiguration.Builder(context)
+            .migration(new RealmMigration() {
+                @Override
+                public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
+
+                }
+            })
+            .deleteRealmIfMigrationNeeded().build());
+
+        if (dynamicRealm.getSchema().contains("Thing")) {
+            return dynamicRealm;
         }
+
+        dynamicRealm.beginTransaction();
+
+        RealmObjectSchema schema = dynamicRealm.getSchema().create("Thing");
+
+        // String
+        schema.addField(Thing.ID, String.class);
+        schema.addField(Thing.NAME, String.class);
+        schema.addField(Thing.ABOUT, String.class);
+        schema.addField(Thing.KIND, String.class);
+        schema.addField(Thing.ADDRESS, String.class);
+        schema.addField(Thing.UNIT, String.class);
+        schema.addField(Thing.STATUS, String.class);
+        schema.addField(Thing.ACTION, String.class);
+        schema.addField(Thing.FIRST_NAME, String.class);
+        schema.addField(Thing.LAST_NAME, String.class);
+        schema.addField(Thing.IMAGE_URL, String.class);
+        schema.addField(Thing.MESSAGE, String.class);
+
+        // Object
+        schema.addRealmObjectField(Thing.LOCATION, schema);
+        schema.addRealmObjectField(Thing.SOURCE, schema);
+        schema.addRealmObjectField(Thing.TARGET, schema);
+        schema.addRealmObjectField(Thing.PERSON, schema);
+        schema.addRealmObjectField(Thing.LATEST, schema);
+        schema.addRealmObjectField(Thing.HOST, schema);
+
+        // Date
+        schema.addField(Thing.CREATED_ON, Date.class);
+        schema.addField(Thing.UPDATED, Date.class);
+        schema.addField(Thing.DATE, Date.class);
+
+        // Boolean
+        schema.addField(Thing.PHOTO, Boolean.class);
+        schema.addField(Thing.SEEN, Boolean.class);
+        schema.addField(Thing.FULL, Boolean.class);
+
+        // Double
+        schema.addField(Thing.LATITUDE, Double.class);
+        schema.addField(Thing.LONGITUDE, Double.class);
+
+        // Integer
+        schema.addField(Thing.PRICE, Integer.class);
+        schema.addField(Thing.INFO_FOLLOWERS, Integer.class);
+        schema.addField(Thing.INFO_FOLLOWING, Integer.class);
+        schema.addField(Thing.LIKERS, Integer.class);
+
+        // List
+        schema.addRealmListField(Thing.OFFERS, schema);
+        schema.addRealmListField(Thing.JOINS, schema);
+
+        dynamicRealm.commitTransaction();
+
+        return dynamicRealm;
     }
 
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {

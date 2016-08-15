@@ -13,14 +13,16 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.ui.TextView;
 
+import io.realm.DynamicRealmObject;
+
 /**
  * Created by jacob on 12/6/15.
  */
 public class SettingsSlide extends Fragment {
-    com.queatz.snappy.things.Person mPerson;
+    DynamicRealmObject mPerson;
     Team team;
 
-    public void setPerson(com.queatz.snappy.things.Person person) {
+    public void setPerson(DynamicRealmObject person) {
         mPerson = person;
     }
 

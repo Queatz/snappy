@@ -15,15 +15,18 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Offer;
+import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.util.Functions;
 import com.squareup.picasso.Picasso;
+
+import io.realm.DynamicRealmObject;
 
 /**
  * Created by jacob on 11/12/15.
  */
-public class OfferCard implements Card<Offer> {
+public class OfferCard implements Card<DynamicRealmObject> {
     @Override
-    public View getCard(final Context context, final Offer offer, View convertView, ViewGroup parent) {
+    public View getCard(final Context context, final DynamicRealmObject offer, View convertView, ViewGroup parent) {
         View view;
 
         if (convertView != null) {
@@ -39,22 +42,22 @@ public class OfferCard implements Card<Offer> {
         TextView details = (TextView) view.findViewById(R.id.details);
         Button takeOffer = (Button) view.findViewById(R.id.takeOffer);
 
-        details.setText(offer.getDetails());
+        details.setText(offer.getString(Thing.ABOUT));
         takeOffer.setText(Util.offerPriceText(offer));
 
         final Team team = ((MainApplication) context.getApplicationContext()).team;
 
-        if(team.auth.getUser() != null && team.auth.getUser().equals(offer.getPerson().getId())) {
+        if(team.auth.getUser() != null && team.auth.getUser().equals(offer.getObject(Thing.PERSON).getString(Thing.ID))) {
             view.setTag(offer);
             ((Activity) context).registerForContextMenu(view);
         }
 
         ImageView profile = (ImageView) view.findViewById(R.id.profile);
-        Picasso.with(context).load(offer.getPerson().getImageUrlForSize((int) Util.px(64))).placeholder(R.color.spacer).into(profile);
+        Picasso.with(context).load(Functions.getImageUrlForSize(offer.getObject(Thing.PERSON), (int) Util.px(64))).placeholder(R.color.spacer).into(profile);
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.openProfile((Activity) context, offer.getPerson());
+                team.action.openProfile((Activity) context, offer.getObject(Thing.PERSON));
             }
         });
 
@@ -62,7 +65,7 @@ public class OfferCard implements Card<Offer> {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, team.context.getString(R.string.opening_conversation), Toast.LENGTH_SHORT).show();
-                team.action.openMessages((Activity) context, offer.getPerson(), Util.offerMessagePrefill(offer));
+                team.action.openMessages((Activity) context, offer.getObject(Thing.PERSON), Util.offerMessagePrefill(offer));
             }
         };
 
@@ -72,10 +75,10 @@ public class OfferCard implements Card<Offer> {
         TextView type = (TextView) view.findViewById(R.id.type);
 
         if (Util.offerIsRequest(offer)) {
-            type.setText(context.getString(R.string.person_wants, offer.getPerson().getFirstName()));
+            type.setText(context.getString(R.string.person_wants, offer.getObject(Thing.PERSON).getString(Thing.FIRST_NAME)));
             type.setTextColor(context.getResources().getColor(R.color.purple));
         } else {
-            type.setText(context.getString(R.string.person_offers, offer.getPerson().getFirstName()));
+            type.setText(context.getString(R.string.person_offers, offer.getObject(Thing.PERSON).getString(Thing.FIRST_NAME)));
             type.setTextColor(context.getResources().getColor(R.color.green));
         }
 
@@ -85,8 +88,8 @@ public class OfferCard implements Card<Offer> {
 
         ImageView photo = (ImageView) view.findViewById(R.id.photo);
 
-        if (offer.isHasPhoto()) {
-            String photoUrl = Util.photoUrl(String.format(Config.PATH_OFFER_PHOTO, offer.getId()), parent.getMeasuredWidth() / 2);
+        if (offer.getBoolean(Thing.PHOTO)) {
+            String photoUrl = Util.photoUrl(String.format(Config.PATH_OFFER_PHOTO, offer.getString(Thing.ID)), parent.getMeasuredWidth() / 2);
 
             photo.setVisibility(View.VISIBLE);
             photo.setImageDrawable(null);
@@ -100,6 +103,30 @@ public class OfferCard implements Card<Offer> {
         } else {
             photo.setVisibility(View.GONE);
         }
+
+        TextView likers = (TextView) view.findViewById(R.id.likers);
+
+        int likersCount = (int) team.realm.where("Thing")
+                .equalTo("target.id", offer.getString(Thing.ID))
+                .count();
+
+        // XXX How to do dees
+        if (offer.getInt(Thing.LIKERS) > likersCount) {
+            likersCount = offer.getInt(Thing.LIKERS);
+        }
+
+        likers.setText(team.context.getResources().getQuantityString(R.plurals.likes_count_me, likersCount, likersCount));
+        likers.setVisibility(likersCount > 0 ? View.VISIBLE : View.GONE);
+
+        if (likersCount > 0) {
+            likers.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                //    team.action.showLikers((Activity) context, offer);
+                }
+            });
+        }
+
 
         return view;
     }

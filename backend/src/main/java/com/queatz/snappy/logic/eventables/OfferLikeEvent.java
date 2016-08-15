@@ -12,54 +12,54 @@ import com.queatz.snappy.shared.PushSpec;
 /**
  * Created by jacob on 6/19/16.
  */
-public class OfferEndorsementEvent implements Eventable {
+public class OfferLikeEvent implements Eventable {
 
     EarthStore earthStore = new EarthStore(new EarthAs());
 
-    Entity endorsement;
+    Entity like;
 
     // Serialization
 
-    public OfferEndorsementEvent() {}
+    public OfferLikeEvent() {}
 
-    public OfferEndorsementEvent fromData(String data) {
-        endorsement = earthStore.get(data);
+    public OfferLikeEvent fromData(String data) {
+        like = earthStore.get(data);
         return this;
     }
 
     public String toData() {
-        return endorsement.key().name();
+        return like.key().name();
     }
 
     // End Serialization
 
-    public OfferEndorsementEvent(Entity endorsement) {
-        this.endorsement = endorsement;
+    public OfferLikeEvent(Entity like) {
+        this.like = like;
     }
 
     @Override
     public Object makePush() {
         return new PushSpec<>(
-                Config.PUSH_ACTION_OFFER_ENDORSEMENT,
+                Config.PUSH_ACTION_OFFER_LIKED,
                 ImmutableMap.of(
-                        "id", endorsement.key().name(),
-                        "source", endorsement.getKey(EarthField.SOURCE).name(), // go deeper {name: ...}
-                        "target", endorsement.getKey(EarthField.TARGET).name() // go deeper {name: ...}
+                        "id", like.key().name(),
+                        "source", like.getKey(EarthField.SOURCE).name(), // go deeper {name: ...}
+                        "target", like.getKey(EarthField.TARGET).name() // go deeper {name: ...}
                 )
         );
     }
 
     @Override
     public String makeSubject() {
-        Entity person = earthStore.get(endorsement.getKey(EarthField.SOURCE));
-        Entity offer = earthStore.get(endorsement.getKey(EarthField.TARGET));
+        Entity person = earthStore.get(like.getKey(EarthField.SOURCE));
+        Entity offer = earthStore.get(like.getKey(EarthField.TARGET));
 
-        return person.getString(EarthField.FIRST_NAME) + " endorsed you for " + offer.getString(EarthField.NAME);
+        return person.getString(EarthField.FIRST_NAME) + " liked you for " + offer.getString(EarthField.NAME);
     }
 
     @Override
     public String makeEmail() {
-        Entity person = earthStore.get(endorsement.getKey(EarthField.SOURCE));
+        Entity person = earthStore.get(like.getKey(EarthField.SOURCE));
 
         return "<span style=\"color: #757575;\">View their profile at " + Config.VILLAGE_WEBSITE + person.getString(EarthField.GOOGLE_URL) + "</span>";
     }

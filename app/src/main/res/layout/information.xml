@@ -82,28 +82,13 @@
                 android:layout_marginBottom="8dp"
                 android:textStyle="bold"
                 android:textColor="@color/text"
-                android:text="How does payment work?" />
+                android:text="How does payment for offers work?" />
 
             <com.queatz.snappy.ui.TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text"
                 android:text="Payment is handled outside of Village.  If you don't get paid in full for something you did, please contact us right away." />
-
-            <com.queatz.snappy.ui.TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:textStyle="bold"
-                android:textColor="@color/text"
-                android:text="What are endorsements?" />
-
-            <com.queatz.snappy.ui.TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text"
-                android:text="People can endorse you for offers.  Give them your best and you might just get an endorsement!" />
 
             <com.queatz.snappy.ui.TextView
                 android:layout_width="match_parent"
@@ -134,21 +119,6 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text"
                 android:text="You can change them in your Google Account settings, and they will update in Village." />
-
-            <com.queatz.snappy.ui.TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:textStyle="bold"
-                android:textColor="@color/text"
-                android:text="What if I want to offer more than $100?" />
-
-            <com.queatz.snappy.ui.TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text"
-                android:text="You'll need to buy a monthly membership to Village by long-pressing on your profile picture in the top right corner of the main screen." />
 
             <com.queatz.snappy.ui.TextView
                 android:layout_width="match_parent"

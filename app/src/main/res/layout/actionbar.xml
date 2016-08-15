@@ -75,6 +75,18 @@
                 android:layout_marginRight="4dp"
                 android:layout_marginBottom="2dp" />
 
+            <ImageView
+                android:contentDescription="@string/app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="22sp"
+                android:id="@+id/img"
+                android:src="@drawable/village"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="4dp"
+                android:adjustViewBounds="true"
+                android:layout_marginBottom="2dp"/>
+
             <LinearLayout
                 android:id="@+id/tabbar"
                 android:layout_width="match_parent"

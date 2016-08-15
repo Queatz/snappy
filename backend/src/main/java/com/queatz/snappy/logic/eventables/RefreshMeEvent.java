@@ -24,7 +24,7 @@ public class RefreshMeEvent implements Eventable {
     // End Serialization
     @Override
     public Object makePush() {
-        return new PushSpec<>(Config.PUSH_ACTION_OFFER_ENDORSEMENT);
+        return new PushSpec<>(Config.PUSH_ACTION_REFRESH_ME);
     }
 
     @Override

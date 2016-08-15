@@ -125,7 +125,7 @@ public class EarthSearcher extends EarthControl {
 
     private Entity thingFromDocument(Document document) {
         final EarthStore earthStore = use(EarthStore.class);
-        return earthStore.get(document.getId());
+        return earthStore.get(document.getString(Thing.ID));
     }
 
     private Document build(Entity object) {
@@ -204,7 +204,7 @@ public class EarthSearcher extends EarthControl {
         String queryString = "source = \"" + id + "\" OR target = \"" + id + "\"";
 
         for(ScoredDocument document : index.search(Query.newBuilder().build(queryString))) {
-            updateGeo(earthStore.get(document.getId())); // XXX TODO sadly, cascading dependencies will not be updated
+            updateGeo(earthStore.get(document.getString(Thing.ID))); // XXX TODO sadly, cascading dependencies will not be updated
         }
     }
 

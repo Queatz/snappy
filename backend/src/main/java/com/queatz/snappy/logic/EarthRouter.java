@@ -4,7 +4,6 @@ import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.interfaces.ByNameInterface;
 import com.queatz.snappy.logic.interfaces.ContactInterface;
-import com.queatz.snappy.logic.interfaces.EndorsementInterface;
 import com.queatz.snappy.logic.interfaces.FeedbackInterface;
 import com.queatz.snappy.logic.interfaces.FollowerInterface;
 import com.queatz.snappy.logic.interfaces.HereInterface;
@@ -53,7 +52,6 @@ public class EarthRouter extends EarthControl {
         mapping.put(EarthKind.RECENT_KIND, new RecentInterface());
         mapping.put(EarthKind.UPDATE_KIND, new UpdateInterface());
         mapping.put(EarthKind.JOIN_KIND, new JoinInterface());
-        mapping.put(EarthKind.ENDORSEMENT_KIND, new EndorsementInterface());
         mapping.put(EarthKind.RESOURCE_KIND, new ResourceInterface());
         mapping.put(EarthKind.PROJECT_KIND, new ProjectInterface());
 

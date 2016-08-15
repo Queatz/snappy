@@ -21,6 +21,24 @@
 
     </com.queatz.snappy.ui.SwipeRefreshLayout>
 
+    <com.queatz.snappy.ui.TextView
+        android:id="@+id/socialMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:textAllCaps="true"
+        android:background="@drawable/white_rounded_ripple"
+        android:textColor="@color/green"
+        android:textStyle="bold"
+        android:elevation="4dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:paddingRight="6dp"
+        android:paddingLeft="6dp"
+        android:layout_margin="6dp"
+        android:text="Social Mode On"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingAction"
         android:layout_width="wrap_content"
@@ -29,6 +47,7 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add_white_24dp"
+
         app:elevation="4dp" />
 
 </RelativeLayout>

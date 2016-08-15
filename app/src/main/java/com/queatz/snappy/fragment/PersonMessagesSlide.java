@@ -15,8 +15,9 @@ import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.adapter.PersonMessagesAdapter;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Message;
+import com.queatz.snappy.team.Thing;
 
+import io.realm.DynamicRealmObject;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -24,11 +25,11 @@ import io.realm.Sort;
  * Created by jacob on 10/26/14.
  */
 public class PersonMessagesSlide extends Fragment {
-    com.queatz.snappy.things.Person mPerson;
+    DynamicRealmObject mPerson;
     String messagePrefill;
     Team team;
 
-    public void setPerson(com.queatz.snappy.things.Person person) {
+    public void setPerson(DynamicRealmObject person) {
         mPerson = person;
     }
 
@@ -51,14 +52,14 @@ public class PersonMessagesSlide extends Fragment {
         final ListView list = (ListView) view.findViewById(R.id.messagesList);
 
         if(mPerson != null) {
-            RealmResults<Message> messages = team.realm.where(Message.class)
+            RealmResults<DynamicRealmObject> messages = team.realm.where("Thing")
                     .beginGroup()
                         .equalTo("from.id", team.auth.getUser())
-                        .equalTo("to.id", mPerson.getId())
+                        .equalTo("to.id", mPerson.getString(Thing.ID))
                     .endGroup()
                     .or()
                     .beginGroup()
-                        .equalTo("from.id", mPerson.getId())
+                        .equalTo("from.id", mPerson.getString(Thing.ID))
                         .equalTo("to.id", team.auth.getUser())
                     .endGroup()
                     .findAllSorted("date", Sort.ASCENDING);

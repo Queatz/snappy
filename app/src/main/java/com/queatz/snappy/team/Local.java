@@ -2,9 +2,7 @@ package com.queatz.snappy.team;
 
 import android.support.annotation.NonNull;
 
-import com.queatz.snappy.things.Contact;
-import com.queatz.snappy.things.Message;
-
+import io.realm.DynamicRealmObject;
 import io.realm.RealmResults;
 
 /**
@@ -17,27 +15,27 @@ public class Local {
         team = t;
     }
 
-    public void updateContactsForMessage(@NonNull Message message) {
-        RealmResults<Contact> contacts = team.realm.where(Contact.class)
+    public void updateContactsForMessage(@NonNull DynamicRealmObject message) {
+        RealmResults<DynamicRealmObject> contacts = team.realm.where("Thing")
                 .beginGroup()
-                .equalTo("person.id", message.getFrom().getId())
-                .equalTo("contact.id", message.getTo().getId())
+                    .equalTo("source.id", message.getObject(Thing.SOURCE).getString(Thing.ID))
+                    .equalTo("target.id", message.getObject(Thing.TARGET).getString(Thing.ID))
                 .endGroup()
                 .or()
                 .beginGroup()
-                .equalTo("contact.id", message.getFrom().getId())
-                .equalTo("person.id", message.getTo().getId())
+                    .equalTo("target.id", message.getObject(Thing.SOURCE).getString(Thing.ID))
+                    .equalTo("source.id", message.getObject(Thing.TARGET).getString(Thing.ID))
                 .endGroup()
                 .findAll();
 
         team.realm.beginTransaction();
 
         for(int i = 0; i < contacts.size(); i++) {
-            Contact contact = contacts.get(i);
-            contact.setLast(message);
+            DynamicRealmObject contact = contacts.get(i);
+            contact.setObject(Thing.LATEST, message);
 
-            if(!team.auth.getUser().equals(contact.getPerson().getId())) {
-                contact.setSeen(false);
+            if(!team.auth.getUser().equals(contact.getObject(Thing.SOURCE).getString(Thing.ID))) {
+                contact.setBoolean(Thing.SEEN, false);
             }
         }
 

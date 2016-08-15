@@ -14,22 +14,23 @@ import android.widget.Toast;
 
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
-import com.queatz.snappy.things.Message;
-import com.queatz.snappy.things.Person;
+import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 
+import io.realm.DynamicRealmObject;
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;
 
 /**
  * Created by jacob on 2/21/15.
  */
-public class PersonMessagesAdapter extends RealmBaseAdapter<Message> {
-    Person mToPerson;
+public class PersonMessagesAdapter extends RealmBaseAdapter<DynamicRealmObject> {
+    DynamicRealmObject mToPerson;
 
-    public PersonMessagesAdapter(Context context, RealmResults<Message> realmResults, @NonNull Person to) {
-        super(context, realmResults, true);
+    public PersonMessagesAdapter(Context context, RealmResults<DynamicRealmObject> realmResults, @NonNull DynamicRealmObject to) {
+        super(context, realmResults);
         mToPerson = to;
     }
 
@@ -45,10 +46,10 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<Message> {
             view = inflater.inflate(R.layout.person_messages_item, parent, false);
         }
 
-        final Message message = realmResults.get(position);
-        final Person person = message.getFrom();
+        final DynamicRealmObject message = getItem(position);
+        final DynamicRealmObject person = message.getObject(Thing.SOURCE);
 
-        boolean isOwn = mToPerson.getId().equals(person.getId());
+        boolean isOwn = mToPerson.getString(Thing.ID).equals(person.getString(Thing.ID));
 
         RelativeLayout wrapper = ((RelativeLayout) view.findViewById(R.id.wrapper));
         wrapper.setGravity(isOwn ? Gravity.RIGHT : Gravity.LEFT);
@@ -56,25 +57,23 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<Message> {
         TextView textView = (TextView) view.findViewById(R.id.message);
         ImageView profile = (ImageView) view.findViewById(R.id.profile);
 
-
-
         if(isOwn)
             profile.bringToFront();
         else
             wrapper.bringToFront();
 
         Picasso.with(context)
-                .load(person.getImageUrlForSize((int) Util.px(32)))
+                .load(Functions.getImageUrlForSize(person, (int) Util.px(32)))
                 .placeholder(R.color.spacer)
                 .into(profile);
 
-        textView.setText(message.getMessage());
+        textView.setText(message.getString(Thing.MESSAGE));
 
         textView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    Toast.makeText(context, TimeUtil.agoDate(message.getDate()), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, TimeUtil.agoDate(message.getDate(Thing.DATE)), Toast.LENGTH_SHORT).show();
                 }
 
                 return false;

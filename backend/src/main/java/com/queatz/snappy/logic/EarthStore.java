@@ -38,9 +38,9 @@ public class EarthStore extends EarthControl {
     }
 
     private static final String DEFAULT_KIND = "Thing";
-    public static final String DEFAULT_FIELD_KIND = EarthField.KIND;
-    public static final String DEFAULT_FIELD_CREATED = EarthField.CREATED_ON;
-    public static final String DEFAULT_FIELD_CONCLUDED = "concluded_on";
+    private static final String DEFAULT_FIELD_KIND = EarthField.KIND;
+    private static final String DEFAULT_FIELD_CREATED = EarthField.CREATED_ON;
+    private static final String DEFAULT_FIELD_CONCLUDED = "concluded_on";
 
     private final Datastore datastore = DatastoreOptions.defaultInstance().service();
     private final KeyFactory keyFactory = datastore.newKeyFactory().kind(DEFAULT_KIND);

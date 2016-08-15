@@ -12,29 +12,23 @@ import android.widget.ListView;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
-import com.queatz.snappy.adapter.EndorserAdapter;
 import com.queatz.snappy.adapter.LikerAdapter;
 import com.queatz.snappy.adapter.PersonListAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Endorsement;
-import com.queatz.snappy.things.Follow;
-import com.queatz.snappy.things.Like;
-import com.queatz.snappy.things.Offer;
-import com.queatz.snappy.things.Person;
-import com.queatz.snappy.things.Update;
+import com.queatz.snappy.team.Thing;
 
-import io.realm.RealmChangeListener;
+import io.realm.DynamicRealmObject;
 import io.realm.RealmResults;
 
 /**
  * Created by jacob on 1/4/15.
  */
-public class PersonList extends Activity implements RealmChangeListener {
-    com.queatz.snappy.things.Person mPerson;
-    Update mUpdate;
-    Offer mOffer;
+public class PersonList extends Activity {
+    DynamicRealmObject mPerson;
+    DynamicRealmObject mUpdate;
+    DynamicRealmObject mOffer;
     boolean mShowFollowing;
     Team team;
 
@@ -54,37 +48,8 @@ public class PersonList extends Activity implements RealmChangeListener {
         final ListView personAdapter = (ListView) findViewById(R.id.personList);
 
         boolean showLikers = intent.getBooleanExtra("showLikers", false);
-        boolean showEndorsers = intent.getBooleanExtra("showEndorsers", false);
 
-        if (showEndorsers) {
-            String id = intent.getStringExtra("offer");
-
-            if (id == null) {
-                Log.w(Config.LOG_TAG, "No offer specified");
-                return;
-            }
-
-            mOffer = team.realm.where(Offer.class).equalTo("id", id).findFirst();
-
-            if(mOffer != null && personAdapter != null) {
-                RealmResults<Endorsement> results = team.realm.where(Endorsement.class)
-                        .equalTo("target.id", mOffer.getId())
-                        .findAll();
-
-                final EndorserAdapter adapter = new EndorserAdapter(this, results);
-
-                personAdapter.setAdapter(adapter);
-
-                personAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        team.action.openProfile(PersonList.this, adapter.getPerson(position));
-                    }
-                });
-            }
-
-            fetchEndorsers();
-        } else if (showLikers) {
+        if (showLikers) {
             String id = intent.getStringExtra("update");
 
             if (id == null) {
@@ -92,11 +57,15 @@ public class PersonList extends Activity implements RealmChangeListener {
                 return;
             }
 
-            mUpdate = team.realm.where(Update.class).equalTo("id", id).findFirst();
+            mUpdate = team.realm.where("Thing")
+                    .equalTo(Thing.KIND, "update")
+                    .equalTo(Thing.ID, id)
+                    .findFirst();
 
             if(mUpdate != null && personAdapter != null) {
-                RealmResults<Like> results = team.realm.where(Like.class)
-                        .equalTo("target.id", mUpdate.getId())
+                RealmResults<DynamicRealmObject> results = team.realm.where("Thing")
+                        .equalTo(Thing.KIND, "like")
+                        .equalTo("target.id", mUpdate.getString(Thing.ID))
                         .findAll();
 
                 final LikerAdapter adapter = new LikerAdapter(this, results);
@@ -121,11 +90,15 @@ public class PersonList extends Activity implements RealmChangeListener {
                 return;
             }
 
-            mPerson = team.realm.where(Person.class).equalTo("id", id).findFirst();
+            mPerson = team.realm.where("Thing")
+                    .equalTo(Thing.KIND, "person")
+                    .equalTo("id", id)
+                    .findFirst();
 
             if(mPerson != null && personAdapter != null) {
-                RealmResults<Follow> results = team.realm.where(Follow.class)
-                        .equalTo(mShowFollowing ? "source.id" : "target.id", mPerson.getId())
+                RealmResults<DynamicRealmObject> results = team.realm.where("Thing")
+                        .equalTo(Thing.KIND, "follow")
+                        .equalTo(mShowFollowing ? "source.id" : "target.id", mPerson.getString(Thing.ID))
                         .findAll();
 
                 final PersonListAdapter adapter = new PersonListAdapter(this, results, mShowFollowing);
@@ -142,34 +115,13 @@ public class PersonList extends Activity implements RealmChangeListener {
 
             fetchList();
         }
-
-
-        team.realm.addChangeListener(this);
     }
 
-    @Override
-    public void onChange() {
-
-    }
-
-    private void fetchEndorsers() {
-        team.api.get(String.format(Config.PATH_OFFER_ID_ENDORSERS, mOffer.getId()), null, new Api.Callback() {
-            @Override
-            public void success(String response) {
-                team.things.putAll(Endorsement.class, response);
-            }
-
-            @Override
-            public void fail(String response) {
-
-            }
-        });
-    }
     private void fetchLikers() {
-        team.api.get(String.format(Config.PATH_UPDATE_LIKERS, mUpdate.getId()), null, new Api.Callback() {
+        team.api.get(Config.PATH_EARTH + "/" + mUpdate.getString(Thing.ID) + "/" + Config.PATH_LIKERS, null, new Api.Callback() {
             @Override
             public void success(String response) {
-                team.things.putAll(Like.class, response);
+                team.things.putAll(response);
             }
 
             @Override
@@ -180,10 +132,10 @@ public class PersonList extends Activity implements RealmChangeListener {
     }
 
     private void fetchList() {
-        team.api.get(String.format(mShowFollowing ? Config.PATH_PEOPLE_FOLLOWING : Config.PATH_PEOPLE_FOLLOWERS, mPerson.getId()), null, new Api.Callback() {
+        team.api.get(Config.PATH_EARTH + "/" + String.format(mShowFollowing ? Config.PATH_PEOPLE_FOLLOWING : Config.PATH_PEOPLE_FOLLOWERS, mPerson.getString(Thing.ID)), null, new Api.Callback() {
             @Override
             public void success(String response) {
-                team.things.putAll(Follow.class, response);
+                team.things.putAll(response);
             }
 
             @Override
@@ -195,7 +147,6 @@ public class PersonList extends Activity implements RealmChangeListener {
 
     @Override
     public void onDestroy() {
-        team.realm.removeChangeListener(this);
         super.onDestroy();
     }
 

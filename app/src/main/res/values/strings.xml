@@ -81,14 +81,8 @@
     <string name="start_a_quest">New side quest</string>
     <string name="start_quest">Start quest</string>
     <string name="describe_the_quest">Describe the side quest</string>
-    <string name="claim">Claim</string>
-    <string name="claim_this_bounty">Claim this bounty?</string>
     <string name="message">Message</string>
-    <string name="you_claimed_this_bounty">You already claimed this bounty</string>
-    <string name="cancel_bounty">Cancel bounty</string>
-    <string name="your_bounty_was_finished">Your bounty was finished</string>
     <string name="finish">Finish</string>
-    <string name="you_finished_this_bounty">You already finished this bounty</string>
     <string name="post">Post</string>
     <string name="you_started_this_quest">You already started this side quest</string>
     <string name="start_this_quest">Do you want to start this side quest?</string>
@@ -127,21 +121,15 @@
     <string name="for_price">for %1$s</string>
     <string name="person_offers">%1$s offers</string>
     <string name="person_wants">%1$s wants</string>
-    <string name="endorse">Endorse</string>
     <string name="nope">Nope</string>
-    <string name="endorse_person">Endorse %1$s</string>
-    <string name="endorse_offer"><![CDATA[Endorse <b>%1$s</b> for <b>%2$s</b>?]]></string>
-    <string name="person_endorsed_you">%1$s endorsed you</string>
-    <string name="youve_already_endorsed_person">You\'ve already endorsed %1$s for %2$s</string>
     <string name="opening_conversation">Opening conversation…</string>
-    <string name="you_endorsed_person">You endorsed %1$s</string>
     <string name="couldnt_set_photo">Couldn\'t set photo</string>
     <string name="changing_photo">Changing photo</string>
-    <string name="couldnt_endorse">Couldn\'t endorse</string>
     <string name="ask">Ask</string>
     <string name="id_like_offer">I\'d like %1$s</string>
     <string name="ive_got_offer">I\'ve got %1$s</string>
     <string name="map">Map</string>
+    <string name="like">Like</string>
 
     <plurals name="likes">
         <item quantity="one">♡ %1$s Liker</item>
@@ -151,6 +139,16 @@
     <plurals name="likes_me">
         <item quantity="one">♥ %1$s Liker</item>
         <item quantity="other">♥ %1$s Likers</item>
+    </plurals>
+
+    <plurals name="likes_count">
+        <item quantity="one">♡ %1$s</item>
+        <item quantity="other">♡ %1$s</item>
+    </plurals>
+
+    <plurals name="likes_count_me">
+        <item quantity="one">♥ %1$s</item>
+        <item quantity="other">♥ %1$s</item>
     </plurals>
 
     <plurals name="people_near_place">

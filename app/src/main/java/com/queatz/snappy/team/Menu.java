@@ -8,12 +8,8 @@ import android.widget.Toast;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.HostParty;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.things.Bounty;
-import com.queatz.snappy.things.Follow;
-import com.queatz.snappy.things.Location;
-import com.queatz.snappy.things.Offer;
-import com.queatz.snappy.things.Person;
-import com.queatz.snappy.things.Quest;
+
+import io.realm.DynamicRealmObject;
 
 /**
  * Created by jacob on 8/20/15.
@@ -26,6 +22,12 @@ public class Menu {
     }
 
     public void make(Object object, ContextMenu menu, ContextMenu.ContextMenuInfo info) {
+        String kind = null;
+
+        if (object instanceof DynamicRealmObject) {
+            kind = ((DynamicRealmObject) object).getString(Thing.KIND);
+        }
+
         if (object instanceof String) {
             switch ((String) object) {
                 case "profile menu":
@@ -40,27 +42,25 @@ public class Menu {
                     break;
             }
         }
-        else if (object instanceof Location) {
+        else if ("location".equals(kind)) {
             menu.add(R.string.change_photo);
         }
-        else if (object instanceof Person) {
-            Person person = (Person) object;
-
-            if (!person.getId().equals(team.auth.me().getId())) {
+        else if ("person".equals(kind)) {
+            if (!((DynamicRealmObject) object).getString(Thing.ID).equals(team.auth.me().getString(Thing.ID))) {
                 //TODO make sure follow for you -> them is leaded when loading profile...
 
-                Follow follow = team.realm.where(Follow.class)
+                DynamicRealmObject follow = team.realm.where("Thing")
                         .equalTo("source.id", team.auth.getUser())
-                        .equalTo("target.id", person.getId())
+                        .equalTo("target.id", ((DynamicRealmObject) object).getString(Thing.ID))
                         .findFirst();
 
                 menu.add(follow == null ? R.string.follow : R.string.stop_following);
             }
         }
-        else if (object instanceof Offer) {
-            Offer offer = (Offer) object;
+        else if ("offer".equals(kind)) {
+            DynamicRealmObject offer = (DynamicRealmObject) object;
 
-            if (offer.isHasPhoto()) {
+            if (offer.getBoolean(Thing.PHOTO)) {
                 menu.add(R.string.change_photo);
                 menu.add(R.string.remove_photo);
             } else {
@@ -69,15 +69,15 @@ public class Menu {
 
             menu.add(R.string.stop_offering);
         }
-        else if (object instanceof Bounty) {
-            menu.add(R.string.cancel_bounty);
-        }
-        else if (object instanceof Quest) {
-            menu.add(R.string.view_contact);
-        }
     }
 
     public boolean choose(final Activity activity, Object object, final MenuItem item) {
+        String kind = null;
+
+        if (object instanceof DynamicRealmObject) {
+            kind = ((DynamicRealmObject) object).getString(Thing.KIND);
+        }
+
         if(object instanceof String) {
             switch ((String) object) {
                 case "profile menu":
@@ -107,36 +107,26 @@ public class Menu {
                     break;
             }
         }
-        else if(object instanceof com.queatz.snappy.things.Location) {
+        else if("location".equals(kind)) {
             if(team.context.getString(R.string.change_photo).equals(item.getTitle())) {
-                team.action.changeLocationPhoto(activity, (com.queatz.snappy.things.Location) object);
+                team.action.changeLocationPhoto(activity, ((DynamicRealmObject) object));
             }
         }
-        else if(object instanceof Person) {
+        else if("person".equals(kind)) {
             if(team.context.getString(R.string.follow).equals(item.getTitle())) {
-                team.action.followPerson((Person) object);
+                team.action.followPerson(((DynamicRealmObject) object));
             }
             else if(team.context.getString(R.string.stop_following).equals(item.getTitle())) {
-                team.action.stopFollowingPerson((Person) object);
+                team.action.stopFollowingPerson(((DynamicRealmObject) object));
             }
         }
-        else if(object instanceof Offer) {
+        else if("offer".equals(kind)) {
             if(team.context.getString(R.string.stop_offering).equals(item.getTitle())) {
-                team.action.deleteOffer((Offer) object);
+                team.action.deleteOffer(((DynamicRealmObject) object));
             } else if(team.context.getString(R.string.add_photo).equals(item.getTitle()) || team.context.getString(R.string.change_photo).equals(item.getTitle())) {
-                team.action.addPhotoToOffer(activity, (Offer) object);
+                team.action.addPhotoToOffer(activity, ((DynamicRealmObject) object));
             } else if(team.context.getString(R.string.remove_photo).equals(item.getTitle())) {
-                team.action.removePhotoFromOffer((Offer) object);
-            }
-        }
-        else if(object instanceof Bounty) {
-            if(team.context.getString(R.string.cancel_bounty).equals(item.getTitle())) {
-                team.action.deleteBounty((Bounty) object);
-            }
-        }
-        else if(object instanceof Quest) {
-            if(team.context.getString(R.string.view_contact).equals(item.getTitle())) {
-                team.action.openProfile(activity, ((Quest) object).getHost());
+                team.action.removePhotoFromOffer(((DynamicRealmObject) object));
             }
         }
 

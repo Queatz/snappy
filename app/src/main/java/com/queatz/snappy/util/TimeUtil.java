@@ -6,7 +6,7 @@ import com.luckycatlabs.sunrisesunset.Zenith;
 import com.luckycatlabs.sunrisesunset.calculator.SolarEventCalculator;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
-import com.queatz.snappy.things.Party;
+import com.queatz.snappy.team.Thing;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
+
+import io.realm.DynamicRealmObject;
 
 /**
  * Created by jacob on 10/14/15.
@@ -200,7 +202,7 @@ public class TimeUtil {
         return String.format(Util.context.getResources().getString(day), time);
     }
 
-    public static boolean isPartyPast(Party party) {
-        return party.getDate().before(new Date(new Date().getTime() - 1000 * 60 * 60));
+    public static boolean isPartyPast(DynamicRealmObject party) {
+        return party.getDate(Thing.DATE).before(new Date(new Date().getTime() - 1000 * 60 * 60));
     }
 }

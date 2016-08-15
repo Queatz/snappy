@@ -10,7 +10,6 @@ import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
@@ -19,24 +18,13 @@ import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.Main;
+import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.activity.PersonList;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.things.Bounty;
-import com.queatz.snappy.things.Contact;
-import com.queatz.snappy.things.Endorsement;
-import com.queatz.snappy.things.Follow;
-import com.queatz.snappy.things.Join;
-import com.queatz.snappy.things.Like;
-import com.queatz.snappy.things.Location;
-import com.queatz.snappy.things.Message;
-import com.queatz.snappy.things.Offer;
-import com.queatz.snappy.things.Party;
-import com.queatz.snappy.things.Person;
-import com.queatz.snappy.things.Quest;
-import com.queatz.snappy.things.Update;
 import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.ui.MiniMenu;
 import com.queatz.snappy.ui.TimeSlider;
+import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.ResponseUtil;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
@@ -44,6 +32,7 @@ import com.squareup.picasso.Picasso;
 import java.io.FileNotFoundException;
 import java.util.Date;
 
+import io.realm.DynamicRealmObject;
 import io.realm.RealmResults;
 
 /**
@@ -57,13 +46,13 @@ public class Action {
         team = t;
     }
 
-    public void setSeen(@NonNull final Person person) {
+    public void setSeen(@NonNull final DynamicRealmObject person) {
         if(team.auth.getUser() == null)
             return;
 
-        RealmResults<Contact> contacts = team.realm.where(Contact.class)
-                .equalTo("person.id", team.auth.getUser())
-                .equalTo("contact.id", person.getId())
+        RealmResults<DynamicRealmObject> contacts = team.realm.where("Thing")
+                .equalTo("source.id", team.auth.getUser())
+                .equalTo("target.id", person.getString(Thing.ID))
                 .findAll();
 
         boolean changed = false;
@@ -71,10 +60,10 @@ public class Action {
         team.realm.beginTransaction();
 
         for(int i = 0; i < contacts.size(); i++) {
-            Contact contact = contacts.get(i);
+            DynamicRealmObject contact = contacts.get(i);
 
-            if(!contact.isSeen()) {
-                contact.setSeen(true);
+            if(!contact.getBoolean(Thing.SEEN)) {
+                contact.setBoolean(Thing.SEEN, true);
                 changed = true;
             }
         }
@@ -85,50 +74,40 @@ public class Action {
             RequestParams params = new RequestParams();
             params.put(Config.PARAM_SEEN, true);
 
-            team.api.post(String.format(Config.PATH_PEOPLE_ID, person.getId()), params);
+            team.api.post(Config.PATH_EARTH + "/" + person.getString(Thing.ID), params);
         }
         else {
             team.realm.cancelTransaction();
         }
     }
 
-    public void openBounties(@NonNull Activity from) {
-        team.view.show(from, com.queatz.snappy.activity.Bounties.class, null);
-    }
-
-    /**
-     * @deprecated See {@code Offer}
-     */
-    public void openQuests(@NonNull Activity from) {
-        team.view.show(from, com.queatz.snappy.activity.Quests.class, null);
-    }
-
-    public void openMessages(@NonNull Activity from, @NonNull final Person person) {
+    public void openMessages(@NonNull Activity from, @NonNull final DynamicRealmObject person) {
         openMessages(from, person, null);
     }
 
-    public void openMessages(@NonNull Activity from, @NonNull final Person person, @Nullable String message) {
+    public void openMessages(@NonNull Activity from, @NonNull final DynamicRealmObject person, @Nullable String message) {
         Bundle bundle = new Bundle();
-        bundle.putString("person", person.getId());
+        bundle.putString("person", person.getString(Thing.ID));
         bundle.putString("show", "messages");
 
         if (message != null) {
             bundle.putString("message", message);
         }
 
-        team.view.show(from, com.queatz.snappy.activity.Person.class, bundle);
+        team.view.show(from, Person.class, bundle);
     }
 
-    public void sendMessage(@NonNull final Person to, @NonNull final String message) {
+    public void sendMessage(@NonNull final DynamicRealmObject to, @NonNull final String message) {
         final String localId = Util.createLocalId();
 
         team.realm.beginTransaction();
-        Message o = team.realm.createObject(Message.class);
-        o.setId(localId);
-        o.setFrom(team.auth.me());
-        o.setTo(to);
-        o.setMessage(message);
-        o.setDate(new Date());
+        DynamicRealmObject o = team.realm.createObject("Thing");
+        o.setString(Thing.KIND, "message");
+        o.setString(Thing.ID, localId);
+        o.setObject(Thing.SOURCE, team.auth.me());
+        o.setObject(Thing.TARGET, to);
+        o.setString(Thing.MESSAGE, message);
+        o.setDate(Thing.DATE, new Date());
 
         team.realm.commitTransaction();
 
@@ -138,10 +117,10 @@ public class Action {
         params.put(Config.PARAM_LOCAL_ID, localId);
         params.put(Config.PARAM_MESSAGE, message);
 
-        team.api.post(String.format(Config.PATH_PEOPLE_ID, to.getId()), params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH + "/" + to.getString(Thing.ID), params, new Api.Callback() {
             @Override
             public void success(String response) {
-                team.things.put(Message.class, response);
+                team.things.put(response);
             }
 
             @Override
@@ -152,74 +131,76 @@ public class Action {
         });
     }
 
-    public void showFollowers(@NonNull Activity from, @NonNull final Person person) {
+    public void showFollowers(@NonNull Activity from, @NonNull final DynamicRealmObject person) {
         Bundle bundle = new Bundle();
-        bundle.putString("person", person.getId());
+        bundle.putString("person", person.getString(Thing.ID));
         bundle.putBoolean("showFollowing", false);
 
         team.view.show(from, PersonList.class, bundle);
     }
 
-    public void showFollowing(@NonNull Activity from, @NonNull final Person person) {
+    public void showFollowing(@NonNull Activity from, @NonNull final DynamicRealmObject person) {
         Bundle bundle = new Bundle();
-        bundle.putString("person", person.getId());
+        bundle.putString("person", person.getString(Thing.ID));
         bundle.putBoolean("showFollowing", true);
 
         team.view.show(from, PersonList.class, bundle);
     }
 
-    public void showLikers(@NonNull Activity from, @NonNull final Update update) {
+    public void showLikers(@NonNull Activity from, @NonNull final DynamicRealmObject update) {
         Bundle bundle = new Bundle();
-        bundle.putString("update", update.getId());
+        bundle.putString("update", update.getString(Thing.ID));
         bundle.putBoolean("showLikers", true);
 
         team.view.show(from, PersonList.class, bundle);
     }
 
-    public void followPerson(@NonNull final Person person) {
+    public void followPerson(@NonNull final DynamicRealmObject person) {
         final String localId = Util.createLocalId();
 
         team.realm.beginTransaction();
-        Follow o = team.realm.createObject(Follow.class);
-        o.setId(localId);
-        o.setSource(team.auth.me());
-        o.setTarget(person);
+        DynamicRealmObject o = team.realm.createObject("Thing");
+        o.setString(Thing.KIND, "follow");
+        o.setString(Thing.ID, localId);
+        o.setObject(Thing.SOURCE, team.auth.me());
+        o.setObject(Thing.TARGET, person);
         team.realm.commitTransaction();
 
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_LOCAL_ID, localId);
-        params.put(Config.PARAM_FOLLOW, true);
+        params.put(Config.PARAM_KIND, "follow");
+        params.put(Config.PARAM_THING, person.getString(Thing.ID));
 
-        team.api.post(String.format(Config.PATH_PEOPLE_ID, person.getId()), params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH, params, new Api.Callback() {
             @Override
             public void success(String response) {
-                team.things.put(Follow.class, response);
+                team.things.put(response);
             }
 
             @Override
             public void fail(String response) {
                 // Reverse local modifications after retrying
-                Toast.makeText(team.context, "Follow failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(team.context, "DynamicRealmObject failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public void stopFollowingPerson(@NonNull Person person) {
-        Follow follow = team.realm.where(Follow.class)
+    public void stopFollowingPerson(@NonNull DynamicRealmObject person) {
+        DynamicRealmObject follow = team.realm.where("Thing")
                 .equalTo("source.id", team.auth.getUser())
-                .equalTo("target.id", person.getId())
+                .equalTo("target.id", person.getString(Thing.ID))
                 .findFirst();
 
         if(follow != null) {
             team.realm.beginTransaction();
-            follow.removeFromRealm();
+            follow.deleteFromRealm();
             team.realm.commitTransaction();
         }
 
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_FOLLOW, false);
 
-        team.api.post(String.format(Config.PATH_PEOPLE_ID, person.getId()), params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH + "/" + person.getString(Thing.ID) + "/" + Config.PATH_DELETE, params, new Api.Callback() {
             @Override
             public void success(String response) {
             }
@@ -232,45 +213,45 @@ public class Action {
         });
     }
 
-    public void openDate(@NonNull Activity from, @NonNull final Party party) {
+    public void openDate(@NonNull Activity from, @NonNull final DynamicRealmObject party) {
         Intent intent = new Intent(Intent.ACTION_INSERT, CalendarContract.Events.CONTENT_URI);
         intent.setType("vnd.android.cursor.dir/event");
-        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, party.getDate().getTime());
-        intent.putExtra(CalendarContract.Events.TITLE, party.getName());
-        intent.putExtra(CalendarContract.Events.DESCRIPTION, party.getDetails());
-        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, party.getLocation().getText());
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, party.getDate(Thing.DATE).getTime());
+        intent.putExtra(CalendarContract.Events.TITLE, party.getString(Thing.NAME));
+        intent.putExtra(CalendarContract.Events.DESCRIPTION, party.getString(Thing.ABOUT));
+        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, party.getObject(Thing.LOCATION).getString(Thing.NAME));
 
         from.startActivity(intent);
     }
 
-    public void openLocation(@NonNull Activity from, com.queatz.snappy.things.Location location) {
+    public void openLocation(@NonNull Activity from, DynamicRealmObject location) {
         if(location == null)
             return;
 
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + location.getText()));
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + Functions.getLocationText(location)));
 
         from.startActivity(intent);
     }
 
-    public void openProfile(Activity from, @NonNull final Person person) {
+    public void openProfile(Activity from, @NonNull final DynamicRealmObject person) {
         Bundle bundle = new Bundle();
-        bundle.putString("person", person.getId());
-        team.view.show(from, com.queatz.snappy.activity.Person.class, bundle);
+        bundle.putString("person", person.getString(Thing.ID));
+        team.view.show(from, Person.class, bundle);
     }
 
     public void openMinimenu(Activity in, View source) {
         ((MiniMenu) in.findViewById(R.id.miniMenu)).show();
     }
 
-    public void markPartyFull(@NonNull final Party party) {
+    public void markPartyFull(@NonNull final DynamicRealmObject party) {
         team.realm.beginTransaction();
-        party.setFull(true);
+        party.setBoolean(Thing.FULL, true);
         team.realm.commitTransaction();
 
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_FULL, true);
 
-        team.api.post(String.format(Config.PATH_PARTY_ID, party.getId()), params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH + "/" + party.getString(Thing.ID), params, new Api.Callback() {
             @Override
             public void success(String response) {
             }
@@ -284,35 +265,37 @@ public class Action {
     }
 
     public void joinParty(final Activity activity, @NonNull final String partyId) {
-        Party party = team.realm.where(Party.class).equalTo("id", partyId).findFirst();
+        DynamicRealmObject party = team.realm.where("Thing").equalTo("id", partyId).findFirst();
 
         if(party == null) {
             team.realm.beginTransaction();
-            party = team.realm.createObject(Party.class);
-            party.setId(partyId);
+            party = team.realm.createObject("Thing");
+            party.setString(Thing.KIND, "join");
+            party.setString(Thing.ID, partyId);
             team.realm.commitTransaction();
         }
 
         joinParty(activity, party);
     }
 
-    public void joinParty(final Activity activity, @NonNull final Party party) {
+    public void joinParty(final Activity activity, @NonNull final DynamicRealmObject party) {
         String localId = null;
 
-        Join o = team.realm.where(Join.class)
-                .equalTo("party.id", party.getId())
-                .equalTo("person.id", team.auth.getUser())
+        DynamicRealmObject o = team.realm.where("Thing")
+                .equalTo("target.id", party.getString(Thing.ID))
+                .equalTo("source.id", team.auth.getUser())
                 .findFirst();
 
         if(o == null) {
             localId = Util.createLocalId();
 
             team.realm.beginTransaction();
-            o = team.realm.createObject(Join.class);
-            o.setId(localId);
-            o.setPerson(team.auth.me());
-            o.setParty(party);
-            o.setStatus(Config.JOIN_STATUS_REQUESTED);
+            o = team.realm.createObject("Thing");
+            o.setString(Thing.KIND, "join");
+            o.setString(Thing.ID, localId);
+            o.setObject(Thing.SOURCE, team.auth.me());
+            o.setObject(Thing.TARGET, party);
+            o.setString(Thing.STATUS, Config.JOIN_STATUS_REQUESTED);
             team.realm.commitTransaction();
         }
 
@@ -323,35 +306,35 @@ public class Action {
 
         params.put(Config.PARAM_JOIN, true);
 
-        team.api.post(String.format(Config.PATH_PARTY_ID, party.getId()), params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH + "/" + party.getString(Thing.ID), params, new Api.Callback() {
             @Override
             public void success(String response) {
                 if (response == null) {
                     return;
                 }
 
-                team.things.put(Join.class, response);
+                team.things.put(response);
             }
 
             @Override
             public void fail(String response) {
                 // Reverse local modifications after retrying
-                Toast.makeText(team.context, "Join failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(team.context, "DynamicRealmObject failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public void cancelJoin(@NonNull final Party party) {
-        RealmResults<Join> joins = team.realm.where(Join.class)
-                .equalTo("person.id", team.auth.getUser())
-                .equalTo("party.id", party.getId())
+    public void cancelJoin(@NonNull final DynamicRealmObject party) {
+        RealmResults<DynamicRealmObject> joins = team.realm.where("Thing")
+                .equalTo("source.id", team.auth.getUser())
+                .equalTo("target.id", party.getString(Thing.ID))
                 .findAll();
 
         team.realm.beginTransaction();
 
         for(int i = 0; i < joins.size(); i++) {
-            Join join = joins.get(i);
-            join.setStatus(Config.JOIN_STATUS_WITHDRAWN);
+            DynamicRealmObject join = joins.get(i);
+            join.setString(Thing.STATUS, Config.JOIN_STATUS_WITHDRAWN);
         }
 
         team.realm.commitTransaction();
@@ -359,7 +342,7 @@ public class Action {
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_CANCEL_JOIN, true);
 
-        team.api.post(String.format(Config.PATH_PARTY_ID, party.getId()), params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH + "/" + party.getString(Thing.ID), params, new Api.Callback() {
             @Override
             public void success(String response) {
             }
@@ -367,37 +350,38 @@ public class Action {
             @Override
             public void fail(String response) {
                 // Reverse local modifications after retrying
-                Toast.makeText(team.context, "Join cancel failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(team.context, "DynamicRealmObject cancel failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     public void acceptJoin(@NonNull final String joinId) {
-        Join join = team.realm.where(Join.class).equalTo("id", joinId).findFirst();
+        DynamicRealmObject join = team.realm.where("Thing").equalTo("id", joinId).findFirst();
 
         if(join == null) {
             team.realm.beginTransaction();
-            join = team.realm.createObject(Join.class);
-            join.setId(joinId);
-            join.setStatus(Config.JOIN_STATUS_REQUESTED);
+            join = team.realm.createObject("Thing");
+            join.setString(Thing.KIND, "join");
+            join.setString(Thing.ID, joinId);
+            join.setString(Thing.SOURCE, Config.JOIN_STATUS_REQUESTED);
             team.realm.commitTransaction();
         }
 
         acceptJoin(join);
     }
 
-    public void acceptJoin(@NonNull final Join join) {
+    public void acceptJoin(@NonNull final DynamicRealmObject join) {
         team.realm.beginTransaction();
-        join.setStatus(Config.JOIN_STATUS_IN);
+        join.setString(Thing.STATUS, Config.JOIN_STATUS_IN);
         team.realm.commitTransaction();
 
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_ACCEPT, true);
 
-        team.api.post(String.format(Config.PATH_JOIN_ID, join.getId()), params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH + "/" + join.getString(Thing.ID), params, new Api.Callback() {
             @Override
             public void success(String response) {
-                team.push.clear("join/" + join.getId() + "/request");
+                team.push.clear("join/" + join.getString(Thing.ID) + "/request");
             }
 
             @Override
@@ -408,15 +392,15 @@ public class Action {
         });
     }
 
-    public void hideJoin(@NonNull final Join join) {
+    public void hideJoin(@NonNull final DynamicRealmObject join) {
         team.realm.beginTransaction();
-        join.setStatus(Config.JOIN_STATUS_OUT);
+        join.setString(Thing.STATUS, Config.JOIN_STATUS_OUT);
         team.realm.commitTransaction();
 
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_HIDE, true);
 
-        team.api.post(String.format(Config.PATH_JOIN_ID, join.getId()), params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH + "/" + join.getString(Thing.ID), params, new Api.Callback() {
             @Override
             public void success(String response) {
                 if (!ResponseUtil.isSuccess(response)) {
@@ -432,21 +416,22 @@ public class Action {
         });
     }
 
-    public void hostParty(@NonNull final Activity activity, final String group, final String name, final Date date, final com.queatz.snappy.things.Location location, final String details) {
+    public void hostParty(@NonNull final Activity activity, final String group, final String name, final Date date, final DynamicRealmObject location, final String details) {
         RequestParams params = new RequestParams();
 
         if(group != null && !group.isEmpty())
             params.put("id", group);
 
+        params.put(Config.PARAM_KIND, "party");
         params.put(Config.PARAM_NAME, name);
         params.put(Config.PARAM_DATE, TimeUtil.dateToString(date));
-        params.put(Config.PARAM_LOCATION, location.getId() == null ? location.getJson() : location.getId());
+        params.put(Config.PARAM_LOCATION, location.getString(Thing.ID) == null ? Functions.getLocationJson(location) : location.getString(Thing.ID));
         params.put(Config.PARAM_DETAILS, details);
 
-        team.api.post(Config.PATH_PARTIES, params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH, params, new Api.Callback() {
             @Override
             public void success(String response) {
-                team.things.put(Party.class, response);
+                team.things.put(response);
             }
 
             @Override
@@ -470,6 +455,8 @@ public class Action {
         RequestParams params = new RequestParams();
 
         try {
+            params.put(Config.PARAM_KIND, "update");
+            params.put(Config.PARAM_THING, team.auth.getUser());
             params.put(Config.PARAM_PHOTO, team.context.getContentResolver().openInputStream(photo));
             params.put(Config.PARAM_MESSAGE, message);
         }
@@ -478,10 +465,10 @@ public class Action {
             return false;
         }
 
-        team.api.post(Config.PATH_ME_UPTO, params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH, params, new Api.Callback() {
             @Override
             public void success(String response) {
-                team.things.put(Update.class, response);
+                team.things.put(response);
                 openProfile(null, team.auth.me());
             }
 
@@ -494,13 +481,13 @@ public class Action {
         return true;
     }
 
-    public void deleteOffer(@NonNull Offer offer) {
+    public void deleteOffer(@NonNull DynamicRealmObject offer) {
         // TODO keep until delete is in place
         try {
-            team.api.delete(String.format(Config.PATH_ME_OFFERS_ID, offer.getId()));
+            team.api.post(Config.PATH_EARTH + "/" + offer.getString(Thing.ID) + "/" + Config.PATH_DELETE);
 
             team.realm.beginTransaction();
-            offer.removeFromRealm();
+            offer.deleteFromRealm();
             team.realm.commitTransaction();
         }
         catch (IllegalStateException e) {
@@ -508,9 +495,9 @@ public class Action {
         }
     }
 
-    Offer nPendingOfferPhotoChange;
+    DynamicRealmObject nPendingOfferPhotoChange;
 
-    public void addPhotoToOffer(@NonNull Activity activity, @NonNull Offer offer) {
+    public void addPhotoToOffer(@NonNull Activity activity, @NonNull DynamicRealmObject offer) {
         nPendingOfferPhotoChange = offer;
 
         Intent intent = new Intent();
@@ -519,12 +506,12 @@ public class Action {
         activity.startActivityForResult(intent, Config.REQUEST_CODE_CHOOSER);
     }
 
-    public void removePhotoFromOffer(@NonNull Offer offer) {
+    public void removePhotoFromOffer(@NonNull DynamicRealmObject offer) {
         team.realm.beginTransaction();
-        offer.setHasPhoto(false);
+        offer.setBoolean(Thing.PHOTO, false);
         team.realm.commitTransaction();
 
-        team.api.delete(String.format(Config.PATH_OFFER_PHOTO, offer.getId()));
+        team.api.post(Config.PATH_EARTH + "/" + offer.getString(Thing.ID) + "/" + Config.PATH_PHOTO);
     }
 
     public void addOffer(@NonNull String details, Integer price, @Nullable String unit) {
@@ -533,323 +520,32 @@ public class Action {
         }
 
         team.realm.beginTransaction();
-        Offer offer = team.realm.createObject(Offer.class);
-        offer.setId(Util.createLocalId());
-        offer.setDetails(details.trim());
-        offer.setPrice(price);
-        offer.setUnit(unit);
-        offer.setPerson(team.auth.me());
+        DynamicRealmObject offer = team.realm.createObject("Thing");
+        offer.setString(Thing.KIND, "offer");
+        offer.setString(Thing.ID, Util.createLocalId());
+        offer.setString(Thing.ABOUT, details.trim());
+        offer.setDouble(Thing.PRICE, price);
+        offer.setString(Thing.UNIT, unit);
+        offer.setObject(Thing.SOURCE, team.auth.me());
         team.realm.commitTransaction();
 
         RequestParams params = new RequestParams();
-        params.put(Config.PARAM_LOCAL_ID, offer.getId());
+        params.put(Config.PARAM_KIND, "offer");
+        params.put(Config.PARAM_LOCAL_ID, offer.getString(Thing.ID));
         params.put(Config.PARAM_DETAILS, details);
         params.put(Config.PARAM_UNIT, unit);
         params.put(Config.PARAM_PRICE, price);
 
-        team.api.post(Config.PATH_ME_OFFERS, params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH, params, new Api.Callback() {
             @Override
             public void success(String response) {
-                team.things.put(Offer.class, response);
-                Toast.makeText(team.context, "Offer added", Toast.LENGTH_SHORT).show();
+                team.things.put(response);
+                Toast.makeText(team.context, "DynamicRealmObject added", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void fail(String response) {
                 Toast.makeText(team.context, "Couldn't add offer", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /**
-     * @deprecated See {@code Offer}
-     */
-    public void deleteBounty(@NonNull Bounty bounty) {
-        try {
-            team.api.delete(String.format(Config.PATH_BOUNTY_ID, bounty.getId()), new Api.Callback() {
-                @Override
-                public void success(String response) {
-                    if(!ResponseUtil.isSuccess(response)) {
-                        Toast.makeText(team.context, "Couldn't cancel bounty", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void fail(String response) {
-                    Toast.makeText(team.context, "Couldn't cancel bounty", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            team.realm.beginTransaction();
-            bounty.removeFromRealm();
-            team.realm.commitTransaction();
-        }
-        catch (IllegalStateException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * @deprecated See {@code Offer}
-     */
-    public void postBounty(@NonNull String details, int price) {
-        if(details.isEmpty()) {
-            return;
-        }
-
-        team.realm.beginTransaction();
-        Bounty bounty = team.realm.createObject(Bounty.class);
-        bounty.setId(Util.createLocalId());
-        bounty.setDetails(details);
-        bounty.setPrice(price);
-        bounty.setStatus(Config.BOUNTY_STATUS_OPEN);
-        bounty.setPosted(new Date());
-        bounty.setPoster(team.auth.me());
-        team.realm.commitTransaction();
-
-        RequestParams params = new RequestParams();
-        params.put(Config.PARAM_LOCAL_ID, bounty.getId());
-        params.put(Config.PARAM_DETAILS, details);
-        params.put(Config.PARAM_PRICE, price);
-
-        team.api.post(Config.PATH_BOUNTIES, params, new Api.Callback() {
-            @Override
-            public void success(String response) {
-                team.things.put(Bounty.class, response);
-            }
-
-            @Override
-            public void fail(String response) {
-                Toast.makeText(team.context, "Couldn't post bounty", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /**
-     * @deprecated See {@code Offer}
-     */
-    public void finishBounty(@NonNull final Activity activity, @NonNull final Bounty bounty) {
-        team.realm.beginTransaction();
-        bounty.setStatus(Config.BOUNTY_STATUS_FINISHED);
-        team.realm.commitTransaction();
-
-        RequestParams params = new RequestParams();
-        params.put(Config.PARAM_FINISH, true);
-
-        team.api.post(String.format(Config.PATH_BOUNTY_ID, bounty.getId()), params, new Api.Callback() {
-            @Override
-            public void success(String response) {
-                if (ResponseUtil.isSuccess(response)) {
-                    Toast.makeText(team.context, "Bounty finished", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(team.context, "Bounty couldn't be finished", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void fail(String response) {
-                // TODO revert claimed state
-                Toast.makeText(team.context, "Bounty couldn't be finished", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /**
-     * @deprecated See {@code Offer}
-     */
-    public void claimBounty(@NonNull final Activity activity, @NonNull final Bounty bounty) {
-        boolean isMine = false;
-
-        for (Person person : bounty.getPeople()) {
-            if(team.auth.me().getId().equals(person.getId())) {
-                isMine = true;
-                break;
-            }
-        }
-
-        if(isMine) {
-            if(Config.BOUNTY_STATUS_FINISHED.equals(bounty.getStatus())) {
-                new AlertDialog.Builder(activity)
-                        .setMessage(R.string.you_finished_this_bounty)
-                        .setPositiveButton(R.string.message, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                openMessages(activity, bounty.getPoster());
-                            }
-                        })
-                        .show();
-            }
-            else {
-                new AlertDialog.Builder(activity)
-                        .setMessage(R.string.you_claimed_this_bounty)
-                        .setNegativeButton(R.string.message, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                openMessages(activity, bounty.getPoster());
-                            }
-                        })
-                        .setPositiveButton(R.string.finish, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                finishBounty(activity, bounty);
-                            }
-                        })
-                        .show();
-            }
-
-            return;
-        }
-
-        new AlertDialog.Builder(activity)
-                .setMessage(R.string.claim_this_bounty)
-                .setNeutralButton(R.string.message, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        openMessages(activity, bounty.getPoster());
-                    }
-                })
-                .setPositiveButton(R.string.claim, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        team.realm.beginTransaction();
-                        bounty.setStatus(Config.BOUNTY_STATUS_CLAIMED);
-                        bounty.getPeople().add(team.auth.me());
-                        team.realm.commitTransaction();
-
-                        RequestParams params = new RequestParams();
-                        params.put(Config.PARAM_CLAIM, true);
-
-                        team.api.post(String.format(Config.PATH_BOUNTY_ID, bounty.getId()), params, new Api.Callback() {
-                            @Override
-                            public void success(String response) {
-                                if (ResponseUtil.isSuccess(response)) {
-                                    Toast.makeText(team.context, "Bounty claimed", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(team.context, "Bounty couldn't be claimed", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            @Override
-                            public void fail(String response) {
-                                // TODO revert claimed state
-                                Toast.makeText(team.context, "Bounty couldn't be claimed", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                        openMessages(activity, bounty.getPoster());
-                    }
-                })
-                .show();
-    }
-
-    /**
-     * @deprecated See {@code Offer}
-     */
-    public boolean newQuest(@NonNull String name, @NonNull String details, @NonNull String reward, String time, int teamSize) {
-        if (name.trim().isEmpty()) {
-            Toast.makeText(team.context, team.context.getString(R.string.enter_quest_name), Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if (details.trim().isEmpty()) {
-            Toast.makeText(team.context, team.context.getString(R.string.describe_the_quest), Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if (reward.trim().isEmpty()) {
-            Toast.makeText(team.context, team.context.getString(R.string.specify_reward), Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        team.realm.beginTransaction();
-        Quest quest = team.realm.createObject(Quest.class);
-        quest.setId(Util.createLocalId());
-        quest.setName(name);
-        quest.setDetails(details);
-        quest.setReward(reward);
-        quest.setStatus(Config.QUEST_STATUS_OPEN);
-        quest.setOpened(new Date());
-        quest.setHost(team.auth.me());
-        quest.setTeamSize(teamSize);
-        quest.setTime(time);
-        team.realm.commitTransaction();
-
-        RequestParams params = new RequestParams();
-        params.put(Config.PARAM_LOCAL_ID, quest.getId());
-        params.put(Config.PARAM_NAME, name);
-        params.put(Config.PARAM_DETAILS, details);
-        params.put(Config.PARAM_REWARD, reward);
-        params.put(Config.PARAM_TEAM_SIZE, teamSize);
-        params.put(Config.PARAM_TIME, time);
-
-        team.api.post(Config.PATH_QUEST, params, new Api.Callback() {
-            @Override
-            public void success(String response) {
-                team.things.put(Quest.class, response);
-            }
-
-            @Override
-            public void fail(String response) {
-                Toast.makeText(team.context, "Couldn't open new quest", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        return true;
-    }
-
-    /**
-     * @deprecated See {@code Offer}
-     */
-    public void startQuest(@NonNull final Activity activity, @NonNull final Quest quest) {
-        team.realm.beginTransaction();
-        quest.setStatus(Config.QUEST_STATUS_STARTED);
-        quest.getTeam().add(team.auth.me());
-        team.realm.commitTransaction();
-
-        RequestParams params = new RequestParams();
-        params.put(Config.PARAM_START, true);
-
-        team.api.post(String.format(Config.PATH_QUEST_ID, quest.getId()), params, new Api.Callback() {
-            @Override
-            public void success(String response) {
-                if (!ResponseUtil.isSuccess(response)) {
-                    Toast.makeText(team.context, "Quest couldn't be started", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void fail(String response) {
-                // TODO revert started state
-                Toast.makeText(team.context, "Quest couldn't be started", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /**
-     * @deprecated See {@code Offer}
-     */
-    public void markQuestComplete(@NonNull Quest quest) {
-        team.realm.beginTransaction();
-        quest.setStatus(Config.QUEST_STATUS_COMPLETE);
-        team.realm.commitTransaction();
-
-        RequestParams params = new RequestParams();
-        params.put(Config.PARAM_COMPLETE, true);
-
-        team.api.post(String.format(Config.PATH_QUEST_ID, quest.getId()), params, new Api.Callback() {
-            @Override
-            public void success(String response) {
-                if (ResponseUtil.isSuccess(response)) {
-                    Toast.makeText(team.context, "Quest completed", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(team.context, "Quest couldn't be completed", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void fail(String response) {
-                // TODO revert started state
-                Toast.makeText(team.context, "Quest couldn't be completed", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -863,7 +559,7 @@ public class Action {
         editText.setSingleLine(false);
         editText.setHint(R.string.what_are_you_into);
 
-        String about = team.auth.me().getAbout();
+        String about = team.auth.me().getString(Thing.ABOUT);
 
         if(about == null || about.isEmpty()) {
             about = "";
@@ -879,7 +575,7 @@ public class Action {
                         String about = editText.getText().toString();
 
                         team.realm.beginTransaction();
-                        team.auth.me().setAbout(about);
+                        team.auth.me().setString(Thing.ABOUT, about);
                         team.realm.commitTransaction();
 
                         RequestParams params = new RequestParams();
@@ -909,9 +605,9 @@ public class Action {
     }
 
 
-    Location nPendingLocationPhotoChange;
+    DynamicRealmObject nPendingLocationPhotoChange;
 
-    public void changeLocationPhoto(Activity activity, Location location) {
+    public void changeLocationPhoto(Activity activity, DynamicRealmObject location) {
         nPendingLocationPhotoChange = location;
 
         Intent intent = new Intent();
@@ -929,7 +625,7 @@ public class Action {
                 .show();
     }
 
-    public void likeUpdate(Update update) {
+    public void likeUpdate(DynamicRealmObject update) {
         if (Util.liked(update, team.auth.me())) {
             return;
         }
@@ -937,20 +633,22 @@ public class Action {
         String localId = Util.createLocalId();
 
         team.realm.beginTransaction();
-        Like o = team.realm.createObject(Like.class);
-        o.setId(localId);
-        o.setSource(team.auth.me());
-        o.setTarget(update);
+        DynamicRealmObject o = team.realm.createObject("Thing");
+        o.setString(Thing.KIND, "like");
+        o.setString(Thing.ID, localId);
+        o.setObject(Thing.SOURCE, team.auth.me());
+        o.setObject(Thing.TARGET, update);
         team.realm.commitTransaction();
 
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_LOCAL_ID, localId);
-        params.put(Config.PARAM_LIKE, true);
+        params.put(Config.PARAM_KIND, "like");
+        params.put(Config.PARAM_THING, update.getString(Thing.ID));
 
-        team.api.post(String.format(Config.PATH_UPDATE_ID, update.getId()), params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH, params, new Api.Callback() {
             @Override
             public void success(String response) {
-                team.things.put(Like.class, response);
+                team.things.put(response);
             }
 
             @Override
@@ -958,70 +656,6 @@ public class Action {
                 Toast.makeText(team.context, "Couldn't like update", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    public void endorse(@NonNull final Activity activity, @NonNull final Offer offer) {
-        if (offer.getPerson() == null) {
-            Log.w(Config.LOG_TAG, "Offer has no person!");
-            return;
-        }
-
-        if (Util.endorsed(offer, team.auth.me())) {
-            new AlertDialog.Builder(activity)
-                    .setMessage(Util.fancyFormat(R.string.youve_already_endorsed_person, offer.getPerson().getFirstName(), offer.getDetails()))
-                    .setCancelable(true)
-                    .setPositiveButton(team.context.getString(R.string.ok), null)
-                    .show().setCanceledOnTouchOutside(true);
-
-            return;
-        }
-
-        new AlertDialog.Builder(activity)
-                .setMessage(Util.fancyFormat(R.string.endorse_offer, offer.getPerson().getFirstName(), offer.getDetails()))
-                .setNegativeButton(R.string.nope, null)
-                .setCancelable(true)
-                .setPositiveButton(team.context.getString(R.string.endorse), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        doEndorse(offer);
-                    }
-                })
-                .show().setCanceledOnTouchOutside(true);
-    }
-
-    private void doEndorse(@NonNull final Offer offer) {
-        String localId = Util.createLocalId();
-
-        team.realm.beginTransaction();
-        Endorsement o = team.realm.createObject(Endorsement.class);
-        o.setId(localId);
-        o.setSource(team.auth.me());
-        o.setTarget(offer);
-        team.realm.commitTransaction();
-
-        RequestParams params = new RequestParams();
-        params.put(Config.PARAM_LOCAL_ID, localId);
-
-        team.api.post(String.format(Config.PATH_OFFER_ID_ENDORSE, offer.getId()), params, new Api.Callback() {
-            @Override
-            public void success(String response) {
-                team.things.put(Offer.class, response);
-                Toast.makeText(team.context, team.context.getString(R.string.you_endorsed_person, offer.getPerson().getFirstName()), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void fail(String response) {
-                Toast.makeText(team.context, R.string.couldnt_endorse, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void showEndorsers(@NonNull final Activity activity, @NonNull final Offer offer) {
-        Bundle bundle = new Bundle();
-        bundle.putString("offer", offer.getId());
-        bundle.putBoolean("showEndorsers", true);
-
-        team.view.show(activity, PersonList.class, bundle);
     }
 
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
@@ -1035,9 +669,9 @@ public class Action {
                     }
 
                     if(nPendingLocationPhotoChange != null) {
-                        uploadPhoto(String.format(Config.PATH_LOCATION_PHOTO, nPendingLocationPhotoChange.getId()), photo);
+                        uploadPhoto(String.format(Config.PATH_LOCATION_PHOTO, nPendingLocationPhotoChange.getString(Thing.ID)), photo);
                     } else if(nPendingOfferPhotoChange != null) {
-                        uploadPhoto(String.format(Config.PATH_OFFER_PHOTO, nPendingOfferPhotoChange.getId()), photo);
+                        uploadPhoto(String.format(Config.PATH_OFFER_PHOTO, nPendingOfferPhotoChange.getString(Thing.ID)), photo);
                     }
                 }
 
@@ -1062,14 +696,14 @@ public class Action {
         final String id;
 
         if (nPendingLocationPhotoChange != null) {
-            id = nPendingLocationPhotoChange.getId();
+            id = nPendingLocationPhotoChange.getString(Thing.ID);
         } else if (nPendingOfferPhotoChange != null) {
-            id = nPendingOfferPhotoChange.getId();
+            id = nPendingOfferPhotoChange.getString(Thing.ID);
         } else {
             id = null;
         }
 
-        team.api.put(path, params, new Api.Callback() {
+        team.api.post(path, params, new Api.Callback() {
             @Override
             public void success(String response) {
                 if (id != null) {

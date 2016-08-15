@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.queatz.snappy.R;
@@ -32,6 +33,7 @@ public class ActionBar extends FrameLayout {
     private ViewGroup mTabBar;
 
     private TextView mTitle;
+    private ImageView mImg;
     private View mUpButton;
     private FrameLayout mLeftContent;
     private FrameLayout mRightContent;
@@ -63,6 +65,7 @@ public class ActionBar extends FrameLayout {
         inflater.inflate(R.layout.actionbar, this, true);
 
         mTitle = (TextView) findViewById(R.id.title);
+        mImg = (ImageView) findViewById(R.id.img);
         mTabBar = (ViewGroup) findViewById(R.id.tabbar);
         mUpButton = findViewById(R.id.upButton);
         mLeftContent = (FrameLayout) findViewById(R.id.leftContent);
@@ -93,6 +96,12 @@ public class ActionBar extends FrameLayout {
 
     public void setTitle(String title) {
         mTitle.setText(title);
+        mImg.setVisibility(View.GONE);
+    }
+
+    public void showImg() {
+        mTitle.setVisibility(View.GONE);
+        mImg.setVisibility(View.VISIBLE);
     }
 
     public FrameLayout getLeftContent() {

@@ -11,19 +11,20 @@ import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.things.Party;
+import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 
+import io.realm.DynamicRealmObject;
 import io.realm.RealmBaseAdapter;
 import io.realm.RealmResults;
 
 /**
  * Created by jacob on 2/16/15.
  */
-public class HostPartyAdapter extends RealmBaseAdapter<Party> {
-    public HostPartyAdapter(Context context, RealmResults<Party> realmResults) {
-        super(context, realmResults, true);
+public class HostPartyAdapter extends RealmBaseAdapter<DynamicRealmObject> {
+    public HostPartyAdapter(Context context, RealmResults<DynamicRealmObject> realmResults) {
+        super(context, realmResults);
     }
 
     @Override
@@ -38,13 +39,13 @@ public class HostPartyAdapter extends RealmBaseAdapter<Party> {
             view = inflater.inflate(R.layout.host_party_item, parent, false);
         }
 
-        Party party = realmResults.get(position);
+        DynamicRealmObject party = getItem(position);
 
-        ((TextView) view.findViewById(R.id.name)).setText(party.getName());
-        ((TextView) view.findViewById(R.id.ago)).setText(TimeUtil.agoDate(party.getDate()));
+        ((TextView) view.findViewById(R.id.name)).setText(party.getString(Thing.NAME));
+        ((TextView) view.findViewById(R.id.ago)).setText(TimeUtil.agoDate(party.getDate(Thing.DATE)));
 
         int s = (int) Util.px(128);
-        String photoUrl = Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=" + s + "&auth=" + ((MainApplication) context.getApplicationContext()).team.auth.getAuthParam(), party.getLocation().getId());
+        String photoUrl = Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=" + s + "&auth=" + ((MainApplication) context.getApplicationContext()).team.auth.getAuthParam(), party.getObject(Thing.LOCATION).getString(Thing.ID));
 
         ImageView locationIcon = (ImageView) view.findViewById(R.id.location_icon);
         Picasso.with(context).load(photoUrl).placeholder(R.drawable.location).into(locationIcon);

@@ -41,7 +41,7 @@ import com.queatz.snappy.adapter.LocationAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Party;
+import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.TextView;
 import com.queatz.snappy.ui.TimeSlider;
 import com.queatz.snappy.util.TimeUtil;
@@ -50,6 +50,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Date;
 
 import io.realm.Case;
+import io.realm.DynamicRealmObject;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -62,7 +63,7 @@ public class HostParty extends Activity {
     private Date mDate;
     private View mNewParty;
     private MapView mLocationMap;
-    private com.queatz.snappy.things.Location mLocation;
+    private DynamicRealmObject mLocation;
     private ListView mSuggestedLocationsList;
     private Marker mMapMarker;
     private GoogleMap mGoogleMap;
@@ -125,7 +126,7 @@ public class HostParty extends Activity {
         partyList.addHeaderView(mNewParty);
         partyList.addFooterView(new View(this));
 
-        RealmResults<Party> recentParties = team.realm.where(Party.class)
+        RealmResults<DynamicRealmObject> recentParties = team.realm.where("Thing")
                 .equalTo("host.id", team.auth.getUser())
                 .findAllSorted("date", Sort.DESCENDING);
         partyList.setAdapter(new HostPartyAdapter(this, recentParties));
@@ -221,7 +222,7 @@ public class HostParty extends Activity {
         mSuggestedLocationsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                setLocation((com.queatz.snappy.things.Location) mSuggestedLocationsList.getAdapter().getItem(position));
+                setLocation((DynamicRealmObject) mSuggestedLocationsList.getAdapter().getItem(position));
             }
         });
 
@@ -231,13 +232,13 @@ public class HostParty extends Activity {
                 if(mGoogleMap == null)
                     return;
 
-                com.queatz.snappy.things.Location location = new com.queatz.snappy.things.Location();
-
                 final EditText locationName = (EditText) mNewParty.findViewById(R.id.location);
 
-                location.setName(locationName.getText().toString());
-                location.setLatitude(mGoogleMap.getCameraPosition().target.latitude);
-                location.setLongitude(mGoogleMap.getCameraPosition().target.longitude);
+                DynamicRealmObject location = team.realm.createObject("Thing");
+                location.setString(Thing.KIND, "location");
+                location.setString(Thing.NAME, locationName.getText().toString());
+                location.setDouble(Thing.LATITUDE, mGoogleMap.getCameraPosition().target.latitude);
+                location.setDouble(Thing.LONGITUDE, mGoogleMap.getCameraPosition().target.longitude);
 
                 setLocation(location);
             }
@@ -246,7 +247,7 @@ public class HostParty extends Activity {
         partyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                setParty((Party) partyList.getItemAtPosition(position));
+                setParty((DynamicRealmObject) partyList.getItemAtPosition(position));
             }
         });
 
@@ -330,14 +331,14 @@ public class HostParty extends Activity {
                         googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                             @Override
                             public void onInfoWindowClick(Marker marker) {
-                                com.queatz.snappy.things.Location location = new com.queatz.snappy.things.Location();
-
                                 final EditText locationName = (EditText) mNewParty.findViewById(R.id.location);
 
-                                location.setName(locationName.getText().toString());
-                                location.setLatitude(mMapMarker.getPosition().latitude);
-                                location.setLongitude(mMapMarker.getPosition().longitude);
-                                location.setAddress(address);
+                                DynamicRealmObject location = team.realm.createObject("Thing");
+                                location.setString(Thing.KIND, "location");
+                                location.setString(Thing.NAME, locationName.getText().toString());
+                                location.setDouble(Thing.LATITUDE, mMapMarker.getPosition().latitude);
+                                location.setDouble(Thing.LONGITUDE, mMapMarker.getPosition().longitude);
+                                location.setString(Thing.ADDRESS, address);
 
                                 setLocation(location);
                             }
@@ -392,10 +393,10 @@ public class HostParty extends Activity {
     }
 
     private void fetchParties() {
-        team.api.get(String.format(Config.PATH_PEOPLE_PARTIES, team.auth.getUser()), null, new Api.Callback() {
+        team.api.get(Config.PATH_EARTH + "/" + team.auth.getUser() + Config.PATH_PARTIES, null, new Api.Callback() {
             @Override
             public void success(String response) {
-                team.things.putAll(Party.class, response);
+                team.things.putAll(response);
             }
 
             @Override
@@ -422,7 +423,7 @@ public class HostParty extends Activity {
             return;
         }
 
-        RealmResults<com.queatz.snappy.things.Location> results = team.realm.where(com.queatz.snappy.things.Location.class)
+        RealmResults<DynamicRealmObject> results = team.realm.where("Thing")
                 .beginsWith("name", q, Case.INSENSITIVE)
                 .findAllSorted("name", Sort.ASCENDING);
 
@@ -440,10 +441,10 @@ public class HostParty extends Activity {
         params.put(Config.PARAM_LONGITUDE, location.getLongitude());
         params.put(Config.PARAM_NAME, q);
 
-        team.api.get(Config.PATH_LOCATIONS, params, new Api.Callback() {
+        team.api.get(Config.PATH_EARTH + "/" + Config.PATH_LOCATIONS, params, new Api.Callback() {
             @Override
             public void success(String response) {
-                team.things.putAll(com.queatz.snappy.things.Location.class, response);
+                team.things.putAll(response);
 
                 EditText location = ((EditText) mNewParty.findViewById(R.id.location));
 
@@ -472,25 +473,25 @@ public class HostParty extends Activity {
         ((EditText) mNewParty.findViewById(R.id.location)).selectAll();
     }
 
-    public void setLocation(com.queatz.snappy.things.Location location) {
+    public void setLocation(DynamicRealmObject location) {
         EditText loc = ((EditText) mNewParty.findViewById(R.id.location));
 
         team.view.keyboard(loc, false);
 
         mLocation = location;
         mNewParty.findViewById(R.id.selectedLocation).setVisibility(View.VISIBLE);
-        ((TextView) mNewParty.findViewById(R.id.selectedLocationName)).setText(mLocation.getName());
+        ((TextView) mNewParty.findViewById(R.id.selectedLocationName)).setText(mLocation.getString(Thing.NAME));
 
         ImageView locationProfile = ((ImageView) mNewParty.findViewById(R.id.selectedLocationProfile));
 
         int s = (int) Util.px(128);
-        String photoUrl = Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getId());
+        String photoUrl = Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getString(Thing.ID));
 
         Picasso.with(team.context).load(photoUrl).placeholder(R.drawable.location).into(locationProfile);
 
         mNewParty.findViewById(R.id.locationDetailsLayout).setVisibility(View.GONE);
 
-        loc.setText(location.getName());
+        loc.setText(location.getString(Thing.NAME));
 
         EditText details = (EditText) mNewParty.findViewById(R.id.details);
 
@@ -502,27 +503,27 @@ public class HostParty extends Activity {
         setMapLocation(location);
     }
 
-    protected void setMapLocation(com.queatz.snappy.things.Location l) {
+    protected void setMapLocation(DynamicRealmObject l) {
         if(mGoogleMap == null || l == null)
             return;
 
-        LatLng latLng = new LatLng(l.getLatitude(), l.getLongitude());
+        LatLng latLng = new LatLng(l.getDouble(Thing.LATITUDE), l.getDouble(Thing.LONGITUDE));
         CameraUpdate center = CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(latLng, Config.defaultMapZoom));
         mGoogleMap.animateCamera(center);
     }
 
-    public void setParty(Party party) {
-        mGroup = party.getId();
+    public void setParty(DynamicRealmObject party) {
+        mGroup = party.getString(Thing.ID);
 
         EditText name;
 
         name = ((EditText) mNewParty.findViewById(R.id.name));
-        name.setText(party.getName());
+        name.setText(party.getString(Thing.NAME));
         name.setEnabled(false);
 
         TimeSlider date = ((TimeSlider) mNewParty.findViewById(R.id.timeSlider));
 
-        Date newDate = TimeUtil.matchDateHour(party.getDate());
+        Date newDate = TimeUtil.matchDateHour(party.getDate(Thing.DATE));
         float percent = dateToPercent(newDate);
 
         Log.e(Config.LOG_TAG, newDate + " • " + percent);
@@ -530,9 +531,9 @@ public class HostParty extends Activity {
         date.setPercent(percent);
 
         name = ((EditText) mNewParty.findViewById(R.id.details));
-        name.setText(party.getDetails());
+        name.setText(party.getString(Thing.ABOUT));
 
-        setLocation(party.getLocation());
+        setLocation(party.getObject(Thing.LOCATION));
 
         ((ListView) findViewById(R.id.partyList)).smoothScrollToPosition(0);
     }

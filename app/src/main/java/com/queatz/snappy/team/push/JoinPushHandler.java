@@ -15,7 +15,6 @@ import com.queatz.snappy.shared.PushSpec;
 import com.queatz.snappy.shared.things.JoinLinkSpec;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Join;
 import com.queatz.snappy.util.TimeUtil;
 
 /**
@@ -90,10 +89,10 @@ public class JoinPushHandler extends PushHandler {
     private void fetch(PushSpec<JoinLinkSpec> push) {
         switch (push.action) {
             case Config.PUSH_ACTION_JOIN_REQUEST:
-                team.api.get(String.format(Config.PATH_JOIN_ID, push.body.id), new Api.Callback() {
+                team.api.get(Config.PATH_EARTH + "/" +  push.body.id, new Api.Callback() {
                     @Override
                     public void success(String response) {
-                        team.things.put(Join.class, response);
+                        team.things.put(response);
                     }
 
                     @Override
@@ -104,10 +103,10 @@ public class JoinPushHandler extends PushHandler {
 
                 break;
             case Config.PUSH_ACTION_JOIN_ACCEPTED:
-                team.api.get(String.format(Config.PATH_JOIN_ID, push.body.id), new Api.Callback() {
+                team.api.get(Config.PATH_EARTH + "/" + push.body.id, new Api.Callback() {
                     @Override
                     public void success(String response) {
-                        team.things.put(Join.class, response);
+                        team.things.put(response);
                     }
 
                     @Override

@@ -3,6 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
     android:minHeight="32dp">
 
     <ImageView
@@ -19,7 +20,7 @@
         android:orientation="horizontal">
 
         <Button style="@style/Widget.AppCompat.Button"
-            android:id="@+id/endorsements"
+            android:id="@+id/likers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1"

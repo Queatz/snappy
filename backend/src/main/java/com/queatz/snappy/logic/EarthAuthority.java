@@ -35,7 +35,7 @@ public class EarthAuthority extends EarthControl {
 
     public boolean authorize(Entity entity, EarthRule rule) {
         // Internal access
-        if (as == null) {
+        if (as == null || getUser() == null) {
             return true;
         }
 

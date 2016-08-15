@@ -13,7 +13,8 @@ import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.HostParty;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
-import com.queatz.snappy.things.Person;
+
+import io.realm.DynamicRealmObject;
 
 /**
  * Created by jacob on 1/3/15.
@@ -68,7 +69,7 @@ public class MiniMenu extends FrameLayout {
         findViewById(R.id.action_profile).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Person person = team.things.get(Person.class, team.auth.getUser());
+                DynamicRealmObject person = team.things.get(team.auth.getUser());
 
                 team.action.openProfile((Activity) getContext(), person);
 
@@ -95,14 +96,6 @@ public class MiniMenu extends FrameLayout {
 
                 team.auth.updateSocialMode(socialMode);
                 updateSocialModeText(socialMode);
-            }
-        });
-
-        findViewById(R.id.action_quests).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                team.action.openQuests((Activity) getContext());
-                show(false);
             }
         });
     }
