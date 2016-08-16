@@ -146,7 +146,7 @@ public class PersonUptoSlide extends Fragment {
 
         RealmResults<DynamicRealmObject> offers = team.realm.where("Thing")
                 .equalTo(Thing.KIND, "offer")
-                .equalTo("source.id", mPerson.getString(Thing.ID))
+                .equalTo("person.id", mPerson.getString(Thing.ID))
                 .findAllSorted("price", Sort.ASCENDING);
 
         View offersView = personAbout.findViewById(R.id.offers);

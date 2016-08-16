@@ -18,13 +18,13 @@ public class Local {
     public void updateRecentsForMessage(@NonNull DynamicRealmObject message) {
         RealmResults<DynamicRealmObject> recents = team.realm.where("Thing")
                 .beginGroup()
-                    .equalTo("source.id", message.getObject(Thing.SOURCE).getString(Thing.ID))
-                    .equalTo("target.id", message.getObject(Thing.TARGET).getString(Thing.ID))
+                    .equalTo("from.id", message.getObject(Thing.FROM).getString(Thing.ID))
+                    .equalTo("to.id", message.getObject(Thing.TO).getString(Thing.ID))
                 .endGroup()
                 .or()
                 .beginGroup()
-                    .equalTo("target.id", message.getObject(Thing.SOURCE).getString(Thing.ID))
-                    .equalTo("source.id", message.getObject(Thing.TARGET).getString(Thing.ID))
+                    .equalTo("to.id", message.getObject(Thing.FROM).getString(Thing.ID))
+                    .equalTo("from.id", message.getObject(Thing.TO).getString(Thing.ID))
                 .endGroup()
                 .findAll();
 

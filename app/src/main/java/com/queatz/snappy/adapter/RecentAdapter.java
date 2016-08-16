@@ -47,7 +47,7 @@ public class RecentAdapter extends RealmBaseAdapter<DynamicRealmObject> {
         final DynamicRealmObject person = recent.getObject(Thing.TARGET);
         DynamicRealmObject message = recent.getObject(Thing.LATEST);
 
-        boolean isOwn = message != null && team.auth.getUser() != null && team.auth.getUser().equals(message.getObject(Thing.SOURCE).getString(Thing.ID));
+        boolean isOwn = message != null && team.auth.getUser() != null && team.auth.getUser().equals(message.getObject(Thing.FROM).getString(Thing.ID));
 
         TextView name = (TextView) view.findViewById(R.id.name);
         TextView lastMessage = (TextView) view.findViewById(R.id.lastMessage);

@@ -47,7 +47,7 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<DynamicRealmObject> 
         }
 
         final DynamicRealmObject message = getItem(position);
-        final DynamicRealmObject person = message.getObject(Thing.SOURCE);
+        final DynamicRealmObject person = message.getObject(Thing.FROM);
 
         boolean isOwn = mToPerson.getString(Thing.ID).equals(person.getString(Thing.ID));
 

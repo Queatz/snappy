@@ -75,7 +75,11 @@ public class MessagesSlide extends Fragment {
             if(mList.getAdapter() == null) {
                 RealmResults<DynamicRealmObject> recents = team.realm.where("Thing")
                         .equalTo(Thing.KIND, "recent")
-                        .equalTo("source.id", team.auth.getUser())
+                        .beginGroup()
+                            .equalTo("latest.to.id", team.auth.getUser())
+                            .or()
+                            .equalTo("latest.from.id", team.auth.getUser())
+                        .endGroup()
                         .findAllSorted(Thing.UPDATED, Sort.DESCENDING);
 
                 mList.setAdapter(new RecentAdapter(getActivity(), recents));
