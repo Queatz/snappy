@@ -33,7 +33,7 @@ import java.util.Date;
  *
  * Created by jacob on 5/22/16.
  */
-public abstract class CommonThingInterface implements Interfaceable {
+public abstract class wCommonThingInterface implements Interfaceable {
     /**
      * Implement this method to create new things of this kind.
      *

@@ -16,7 +16,7 @@ public class Thing {
     /**
      * The time it was when the thing was created.
      */
-    public static final String CREATED_ON = "created_on";
+    public static final String CREATED_ON = "createdOn";
 
     /**
      * A name for the thing.
@@ -145,22 +145,26 @@ public class Thing {
     /**
      * Other, less generic fields.
      */
-    public static final String FIRST_NAME = "first_name";
-    public static final String LAST_NAME = "last_name";
-    public static final String IMAGE_URL = "image_url";
-    public static final String GOOGLE_URL = "google_url";
+    public static final String FIRST_NAME = "firstName";
+    public static final String LAST_NAME = "lastName";
+    public static final String IMAGE_URL = "imageUrl";
+    public static final String GOOGLE_URL = "googleUrl";
     public static final String TOKEN = "token";
     public static final String EMAIL = "email";
     public static final String GENDER = "gender";
     public static final String LANGUAGE = "language";
-    public static final String GOOGLE_ID = "google_id";
+    public static final String GOOGLE_ID = "googleId";
 
 
     // From views
     public static final String LIKERS = "likers";
     public static final String JOINS = "joins";
     public static final String OFFERS = "offers";
+    public static final String UPDATES = "updates";
     public static final String INFO_FOLLOWERS = "infoFollowers";
     public static final String INFO_FOLLOWING = "infoFollowing";
     public static final String PERSON = "person";
+    public static final String TO = "to";
+    public static final String FROM = "from";
+    public static final String AUTH = "auth";
 }

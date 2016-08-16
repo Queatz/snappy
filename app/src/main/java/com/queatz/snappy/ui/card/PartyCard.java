@@ -80,7 +80,7 @@ public class PartyCard implements Card<DynamicRealmObject> {
             }
         });
 
-        final DynamicRealmObject location = party.hasField(Thing.LOCATION) ? party.getObject(Thing.LOCATION) : null;
+        final DynamicRealmObject location = !party.isNull(Thing.LOCATION) ? party.getObject(Thing.LOCATION) : null;
 
         if (location != null) {
             view.findViewById(R.id.location_button).setOnClickListener(new View.OnClickListener() {

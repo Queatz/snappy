@@ -74,7 +74,7 @@ public class PeopleNearHereAdapter extends BaseAdapter {
                 .placeholder(R.color.darkenedblue)
                 .into(profile);
 
-        name.setText(person.getShort(Thing.FIRST_NAME));
+        name.setText(person.getString(Thing.FIRST_NAME));
 
         return view;
     }

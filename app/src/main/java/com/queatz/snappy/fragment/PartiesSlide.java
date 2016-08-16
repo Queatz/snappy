@@ -157,7 +157,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
             return;
         }
 
-        String locationName = null;
+        String locationName;
 
         if(locations.size() > 0) {
             locationName = locations.get(0).getString(Thing.NAME);
@@ -252,7 +252,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
                 for (DynamicRealmObject thing : things) {
                     if ("person".equals(thing.getString(Thing.KIND))) {
                         people.add(thing);
-                    } else if ("location".equals(thing.getString(Thing.KIND))) {
+                    } else if ("hub".equals(thing.getString(Thing.KIND))) {
                         locations.add(thing);
                     }
                 }

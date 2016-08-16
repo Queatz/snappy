@@ -35,7 +35,7 @@ public class Here {
                 params.put("latitude", location.getLatitude());
                 params.put("longitude", location.getLongitude());
 
-                team.api.get(Config.PATH_EARTH + "/" + Config.PATH_HERE, params, new Api.Callback() {
+                team.api.get(Config.PATH_EARTH + "/" + Config.PATH_HERE + "/offer|hub|person", params, new Api.Callback() {
                     @Override
                     public void success(String response) {
                         if(refresher != null) {
@@ -51,11 +51,7 @@ public class Here {
                                         .findAll();
 
                         team.realm.beginTransaction();
-
-                        while (removeOffers.size() > 0) {
-                            removeOffers.last().deleteFromRealm();
-                        }
-
+                        removeOffers.deleteAllFromRealm();
                         team.realm.commitTransaction();
 
                         RealmList<DynamicRealmObject> things = team.things.putAll(jsonArray);

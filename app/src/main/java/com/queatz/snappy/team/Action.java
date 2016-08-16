@@ -50,7 +50,7 @@ public class Action {
         if(team.auth.getUser() == null)
             return;
 
-        RealmResults<DynamicRealmObject> contacts = team.realm.where("Thing")
+        RealmResults<DynamicRealmObject> recents = team.realm.where("Thing")
                 .equalTo("source.id", team.auth.getUser())
                 .equalTo("target.id", person.getString(Thing.ID))
                 .findAll();
@@ -59,11 +59,11 @@ public class Action {
 
         team.realm.beginTransaction();
 
-        for(int i = 0; i < contacts.size(); i++) {
-            DynamicRealmObject contact = contacts.get(i);
+        for(int i = 0; i < recents.size(); i++) {
+            DynamicRealmObject recent = recents.get(i);
 
-            if(!contact.getBoolean(Thing.SEEN)) {
-                contact.setBoolean(Thing.SEEN, true);
+            if(!recent.getBoolean(Thing.SEEN)) {
+                recent.setBoolean(Thing.SEEN, true);
                 changed = true;
             }
         }
@@ -104,14 +104,14 @@ public class Action {
         DynamicRealmObject o = team.realm.createObject("Thing");
         o.setString(Thing.KIND, "message");
         o.setString(Thing.ID, localId);
-        o.setObject(Thing.SOURCE, team.auth.me());
-        o.setObject(Thing.TARGET, to);
+        o.setObject(Thing.FROM, team.auth.me());
+        o.setObject(Thing.TO, to);
         o.setString(Thing.MESSAGE, message);
         o.setDate(Thing.DATE, new Date());
 
         team.realm.commitTransaction();
 
-        team.local.updateContactsForMessage(o);
+        team.local.updateRecentsForMessage(o);
 
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_LOCAL_ID, localId);
@@ -180,7 +180,7 @@ public class Action {
             @Override
             public void fail(String response) {
                 // Reverse local modifications after retrying
-                Toast.makeText(team.context, "DynamicRealmObject failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(team.context, "Follow failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -319,7 +319,7 @@ public class Action {
             @Override
             public void fail(String response) {
                 // Reverse local modifications after retrying
-                Toast.makeText(team.context, "DynamicRealmObject failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(team.context, "Join failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -524,7 +524,7 @@ public class Action {
         offer.setString(Thing.KIND, "offer");
         offer.setString(Thing.ID, Util.createLocalId());
         offer.setString(Thing.ABOUT, details.trim());
-        offer.setDouble(Thing.PRICE, price);
+        offer.setInt(Thing.PRICE, price);
         offer.setString(Thing.UNIT, unit);
         offer.setObject(Thing.SOURCE, team.auth.me());
         team.realm.commitTransaction();

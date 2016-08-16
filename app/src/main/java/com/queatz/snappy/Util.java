@@ -63,11 +63,11 @@ public class Util {
     }
 
     public static String offerAmount(@NonNull final DynamicRealmObject offer) {
-        if (offer.hasField(Thing.PRICE)) {
+        if (offer.isNull(Thing.PRICE)) {
             return team.context.getString(R.string.ask);
         } else {
-            return "$" + Math.abs(offer.getDouble(Thing.PRICE)) +
-                    (!offer.hasField(Thing.UNIT) ||
+            return "$" + Math.abs(offer.getInt(Thing.PRICE)) +
+                    (offer.isNull(Thing.UNIT) ||
                             offer.getString(Thing.UNIT) == null ||
                             offer.getString(Thing.UNIT).isEmpty() ? "" :
                             "/" + offer.getString(Thing.UNIT));
@@ -75,7 +75,7 @@ public class Util {
     }
 
     public static boolean offerIsRequest(@NonNull final DynamicRealmObject offer) {
-        return offer.hasField(Thing.PRICE) && offer.getDouble(Thing.PRICE) < 0;
+        return !offer.isNull(Thing.PRICE) && offer.getInt(Thing.PRICE) < 0;
     }
 
     public static String offerPriceText(@NonNull final DynamicRealmObject offer, boolean isShorthand) {
@@ -83,20 +83,20 @@ public class Util {
             return offerPriceText(offer);
         }
 
-        return offer.hasField(Thing.PRICE) ? context.getString(R.string.ask) : offer.getDouble(Thing.PRICE) > 0
-                ? Util.offerAmount(offer) : offer.getDouble(Thing.PRICE) < 0 ? "+" + Util.offerAmount(offer)
+        return offer.isNull(Thing.PRICE) ? context.getString(R.string.ask) : offer.getInt(Thing.PRICE) > 0
+                ? Util.offerAmount(offer) : offer.getInt(Thing.PRICE) < 0 ? "+" + Util.offerAmount(offer)
                 : context.getString(R.string.free);
     }
 
     public static String offerPriceText(@NonNull final DynamicRealmObject offer) {
-        return offer.hasField(Thing.PRICE) ? context.getString(R.string.ask) : offer.getDouble(Thing.PRICE) > 0 ?
-                context.getString(R.string.for_amount, Util.offerAmount(offer)) : offer.getDouble(Thing.PRICE) < 0 ?
+        return offer.isNull(Thing.PRICE) ? context.getString(R.string.ask) : offer.getInt(Thing.PRICE) > 0 ?
+                context.getString(R.string.for_amount, Util.offerAmount(offer)) : offer.getInt(Thing.PRICE) < 0 ?
                 context.getString(R.string.make_amount, Util.offerAmount(offer)) :
                 context.getString(R.string.for_free);
     }
 
     public static String offerMessagePrefill(@NonNull final DynamicRealmObject offer) {
-        return context.getString(offerIsRequest(offer) ? R.string.ive_got_offer : R.string.id_like_offer, offer.getShort(Thing.ABOUT));
+        return context.getString(offerIsRequest(offer) ? R.string.ive_got_offer : R.string.id_like_offer, offer.getString(Thing.ABOUT));
     }
 
     public static Spanned getUpdateText(DynamicRealmObject update) {

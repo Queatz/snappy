@@ -92,7 +92,7 @@ public class PersonUptoAdapter extends RealmBaseAdapter<DynamicRealmObject> {
 
         final DynamicRealmObject update = getItem(position);
         final DynamicRealmObject person = update.getObject(Thing.SOURCE);
-        final DynamicRealmObject location = update.getObject(Thing.TARGET).hasField(Thing.LOCATION) ?
+        final DynamicRealmObject location = !update.getObject(Thing.TARGET).isNull(Thing.LOCATION) ?
                 update.getObject(Thing.TARGET).getObject(Thing.LOCATION) : null;
 
         if(person != null) {
@@ -119,7 +119,7 @@ public class PersonUptoAdapter extends RealmBaseAdapter<DynamicRealmObject> {
                     .placeholder(R.color.spacer)
                     .into(photo);
 
-            if(!update.hasField(Thing.MESSAGE) || update.getString(Thing.MESSAGE).isEmpty()) {
+            if(update.isNull(Thing.MESSAGE) || update.getString(Thing.MESSAGE).isEmpty()) {
                 view.findViewById(R.id.details).setVisibility(View.GONE);
             }
             else {

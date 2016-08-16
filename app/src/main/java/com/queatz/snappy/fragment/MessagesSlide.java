@@ -12,7 +12,7 @@ import android.widget.ListView;
 import com.google.gson.JsonObject;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
-import com.queatz.snappy.adapter.ContactAdapter;
+import com.queatz.snappy.adapter.RecentAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
@@ -73,12 +73,12 @@ public class MessagesSlide extends Fragment {
     private void update() {
         if(team.auth.getUser() != null) {
             if(mList.getAdapter() == null) {
-                RealmResults<DynamicRealmObject> contacts = team.realm.where("Thing")
+                RealmResults<DynamicRealmObject> recents = team.realm.where("Thing")
                         .equalTo(Thing.KIND, "recent")
                         .equalTo("source.id", team.auth.getUser())
                         .findAllSorted(Thing.UPDATED, Sort.DESCENDING);
 
-                mList.setAdapter(new ContactAdapter(getActivity(), contacts));
+                mList.setAdapter(new RecentAdapter(getActivity(), recents));
             }
 
             ((ViewGroup) emptyView).getChildAt(0).setVisibility(mList.getAdapter().getCount() < 1 ? View.VISIBLE : View.GONE);

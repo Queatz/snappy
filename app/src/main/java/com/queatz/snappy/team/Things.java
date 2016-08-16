@@ -44,6 +44,8 @@ public class Things {
                 case Thing.FIRST_NAME:
                 case Thing.LAST_NAME:
                 case Thing.IMAGE_URL:
+                case Thing.AUTH:
+                case Thing.GOOGLE_URL:
                 case Thing.MESSAGE:
                     thing.setString(entry.getKey(), entry.getValue().getAsString());
                     break;
@@ -55,6 +57,8 @@ public class Things {
                 case Thing.PERSON:
                 case Thing.LATEST:
                 case Thing.HOST:
+                case Thing.FROM:
+                case Thing.TO:
                     thing.setObject(entry.getKey(), put(realm, entry.getValue().getAsJsonObject()));
                     break;
 
@@ -97,6 +101,7 @@ public class Things {
                 // List
                 case Thing.JOINS:
                 case Thing.OFFERS:
+                case Thing.UPDATES:
                     thing.setList(entry.getKey(), putAll(realm, entry.getValue().getAsJsonArray()));
                     break;
 

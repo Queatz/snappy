@@ -64,6 +64,11 @@ public class OfferCard implements Card<DynamicRealmObject> {
         View.OnClickListener onClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Messages are settings for the active person, so skip
+                if (offer.getObject(Thing.PERSON).equals(team.auth.me())) {
+                    return;
+                }
+
                 Toast.makeText(context, team.context.getString(R.string.opening_conversation), Toast.LENGTH_SHORT).show();
                 team.action.openMessages((Activity) context, offer.getObject(Thing.PERSON), Util.offerMessagePrefill(offer));
             }
@@ -89,7 +94,7 @@ public class OfferCard implements Card<DynamicRealmObject> {
         ImageView photo = (ImageView) view.findViewById(R.id.photo);
 
         if (offer.getBoolean(Thing.PHOTO)) {
-            String photoUrl = Util.photoUrl(String.format(Config.PATH_OFFER_PHOTO, offer.getString(Thing.ID)), parent.getMeasuredWidth() / 2);
+            String photoUrl = Util.photoUrl(Config.PATH_EARTH + "/" + offer.getString(Thing.ID) + "/" + Config.PATH_PHOTO, parent.getMeasuredWidth() / 2);
 
             photo.setVisibility(View.VISIBLE);
             photo.setImageDrawable(null);

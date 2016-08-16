@@ -17,7 +17,9 @@ import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -91,7 +93,13 @@ public class Api {
     }
 
     public void call(Entity user, HTTPMethod method, HttpServletRequest request, HttpServletResponse response) {
-        String[] path = request.getRequestURI().split("/");
+        String[] path;
+
+        try {
+            path = URLDecoder.decode(request.getRequestURI(), "UTF-8").split("/");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
 
         if(path.length < 3) {
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "bad request length");

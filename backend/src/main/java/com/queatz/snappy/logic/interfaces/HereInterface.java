@@ -10,6 +10,9 @@ import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.EntityListView;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 /**
  * Created by jacob on 4/9/16.
  */

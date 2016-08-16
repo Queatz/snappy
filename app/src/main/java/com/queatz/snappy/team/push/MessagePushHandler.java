@@ -38,7 +38,7 @@ public class MessagePushHandler extends PushHandler {
                 if(("person/" + push.body.from.id + "/messages").equals(team.view.getTop()))
                     break;
 
-                RealmResults<DynamicRealmObject> contacts = team.realm.where("Thing")
+                RealmResults<DynamicRealmObject> recents = team.realm.where("Thing")
                         .equalTo("source.id", team.auth.getUser())
                         .equalTo("seen", false)
                         .findAllSorted("updated");
@@ -46,9 +46,9 @@ public class MessagePushHandler extends PushHandler {
                 int count = 1;
                 String summary = "";
 
-                if(contacts.size() > 1) {
-                    for (int i = 0; i < contacts.size() && i < 3; i++) {
-                        if(contacts.get(i).getObject(Thing.TARGET).getString(Thing.ID).equals(push.body.from.id))
+                if(recents.size() > 1) {
+                    for (int i = 0; i < recents.size() && i < 3; i++) {
+                        if(recents.get(i).getObject(Thing.TARGET).getString(Thing.ID).equals(push.body.from.id))
                             continue;
 
                         count++;
@@ -56,7 +56,7 @@ public class MessagePushHandler extends PushHandler {
                         if(!summary.isEmpty())
                             summary += ", ";
 
-                        summary += contacts.get(i).getObject(Thing.TARGET).getString(Thing.FIRST_NAME);
+                        summary += recents.get(i).getObject(Thing.TARGET).getString(Thing.FIRST_NAME);
                     }
                 }
 
@@ -118,7 +118,7 @@ public class MessagePushHandler extends PushHandler {
                         DynamicRealmObject m = team.things.put(response);
 
                         if(m != null)
-                            team.local.updateContactsForMessage(m);
+                            team.local.updateRecentsForMessage(m);
                     }
 
                     @Override

@@ -112,6 +112,8 @@ public class Team implements Closeable {
         schema.addField(Thing.FIRST_NAME, String.class);
         schema.addField(Thing.LAST_NAME, String.class);
         schema.addField(Thing.IMAGE_URL, String.class);
+        schema.addField(Thing.GOOGLE_URL, String.class);
+        schema.addField(Thing.AUTH, String.class);
         schema.addField(Thing.MESSAGE, String.class);
 
         // Object
@@ -121,6 +123,8 @@ public class Team implements Closeable {
         schema.addRealmObjectField(Thing.PERSON, schema);
         schema.addRealmObjectField(Thing.LATEST, schema);
         schema.addRealmObjectField(Thing.HOST, schema);
+        schema.addRealmObjectField(Thing.FROM, schema);
+        schema.addRealmObjectField(Thing.TO, schema);
 
         // Date
         schema.addField(Thing.CREATED_ON, Date.class);
@@ -145,6 +149,7 @@ public class Team implements Closeable {
         // List
         schema.addRealmListField(Thing.OFFERS, schema);
         schema.addRealmListField(Thing.JOINS, schema);
+        schema.addRealmListField(Thing.UPDATES, schema);
 
         dynamicRealm.commitTransaction();
 

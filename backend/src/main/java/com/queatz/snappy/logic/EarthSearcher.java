@@ -18,6 +18,7 @@ import com.queatz.snappy.shared.Config;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by jacob on 11/17/14.
@@ -83,7 +84,20 @@ public class EarthSearcher extends EarthControl {
 
         queryString += ")";
 
-        queryString += " AND kind = \"" + kind + "\"";
+        if (kind != null) {
+            String kinds[] = kind.split(Pattern.quote("|"));
+            queryString += " AND (";
+
+            for (int i = 0; i < kinds.length; i++) {
+                if (i > 0) {
+                    queryString += " OR ";
+                }
+
+                queryString += "kind = \"" + kinds[i] + "\"";
+            }
+
+            queryString += ")";
+        }
 
         if (q != null) {
             String[] qs = q.split("\\s+");
@@ -125,7 +139,7 @@ public class EarthSearcher extends EarthControl {
 
     private Entity thingFromDocument(Document document) {
         final EarthStore earthStore = use(EarthStore.class);
-        return earthStore.get(document.getString(Thing.ID));
+        return earthStore.get(document.getId());
     }
 
     private Document build(Entity object) {
@@ -204,7 +218,7 @@ public class EarthSearcher extends EarthControl {
         String queryString = "source = \"" + id + "\" OR target = \"" + id + "\"";
 
         for(ScoredDocument document : index.search(Query.newBuilder().build(queryString))) {
-            updateGeo(earthStore.get(document.getString(Thing.ID))); // XXX TODO sadly, cascading dependencies will not be updated
+            updateGeo(earthStore.get(document.getId())); // XXX TODO sadly, cascading dependencies will not be updated
         }
     }
 

@@ -24,8 +24,8 @@ import io.realm.RealmResults;
 /**
  * Created by jacob on 2/21/15.
  */
-public class ContactAdapter extends RealmBaseAdapter<DynamicRealmObject> {
-    public ContactAdapter(Activity context, RealmResults<DynamicRealmObject> realmResults) {
+public class RecentAdapter extends RealmBaseAdapter<DynamicRealmObject> {
+    public RecentAdapter(Activity context, RealmResults<DynamicRealmObject> realmResults) {
         super(context, realmResults);
     }
 
@@ -43,9 +43,9 @@ public class ContactAdapter extends RealmBaseAdapter<DynamicRealmObject> {
             view = inflater.inflate(R.layout.messages_item, parent, false);
         }
 
-        DynamicRealmObject contact = getItem(position);
-        final DynamicRealmObject person = contact.getObject(Thing.TARGET);
-        DynamicRealmObject message = contact.getObject(Thing.LATEST);
+        DynamicRealmObject recent = getItem(position);
+        final DynamicRealmObject person = recent.getObject(Thing.TARGET);
+        DynamicRealmObject message = recent.getObject(Thing.LATEST);
 
         boolean isOwn = message != null && team.auth.getUser() != null && team.auth.getUser().equals(message.getObject(Thing.SOURCE).getString(Thing.ID));
 
@@ -66,7 +66,7 @@ public class ContactAdapter extends RealmBaseAdapter<DynamicRealmObject> {
         });
 
         name.setText(Functions.getFullName(person));
-        name.setTypeface(null, !contact.getBoolean(Thing.SEEN) ? Typeface.BOLD : Typeface.NORMAL);
+        name.setTypeface(null, !recent.getBoolean(Thing.SEEN) ? Typeface.BOLD : Typeface.NORMAL);
 
         if(message == null)
             lastMessage.setText("");

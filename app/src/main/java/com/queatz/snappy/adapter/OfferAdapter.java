@@ -127,7 +127,7 @@ public class OfferAdapter extends RealmBaseAdapter<DynamicRealmObject> {
         ImageView photo = (ImageView) view.findViewById(R.id.photo);
 
         if (offer.getBoolean(Thing.PHOTO)) {
-            String photoUrl = Util.photoUrl(String.format(Config.PATH_OFFER_PHOTO, offer.getString(Thing.ID)), parent.getMeasuredWidth() / 2);
+            String photoUrl = Util.photoUrl(Config.PATH_EARTH + "/" + offer.getString(Thing.ID) + "/" + Config.PATH_PHOTO, parent.getMeasuredWidth() / 2);
 
             photo.setVisibility(View.VISIBLE);
             photo.setImageDrawable(null);

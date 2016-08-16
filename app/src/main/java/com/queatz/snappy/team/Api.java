@@ -153,6 +153,7 @@ public class Api {
 
         mHandler = new Handler(Looper.getMainLooper());
         mClient = new AsyncHttpClient();
+        mClient.setTimeout(30000);
     }
 
     public AsyncHttpClient client() {

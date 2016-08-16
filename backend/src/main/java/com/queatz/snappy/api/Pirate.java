@@ -45,7 +45,7 @@ public class Pirate extends Api.Path {
                 break;
             }
 
-            s += document.getString(Thing.ID) + '\n';
+            s += document.getId() + '\n';
 
             num++;
         }

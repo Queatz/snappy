@@ -15,8 +15,8 @@ public class Local {
         team = t;
     }
 
-    public void updateContactsForMessage(@NonNull DynamicRealmObject message) {
-        RealmResults<DynamicRealmObject> contacts = team.realm.where("Thing")
+    public void updateRecentsForMessage(@NonNull DynamicRealmObject message) {
+        RealmResults<DynamicRealmObject> recents = team.realm.where("Thing")
                 .beginGroup()
                     .equalTo("source.id", message.getObject(Thing.SOURCE).getString(Thing.ID))
                     .equalTo("target.id", message.getObject(Thing.TARGET).getString(Thing.ID))
@@ -30,12 +30,12 @@ public class Local {
 
         team.realm.beginTransaction();
 
-        for(int i = 0; i < contacts.size(); i++) {
-            DynamicRealmObject contact = contacts.get(i);
-            contact.setObject(Thing.LATEST, message);
+        for(int i = 0; i < recents.size(); i++) {
+            DynamicRealmObject recent = recents.get(i);
+            recent.setObject(Thing.LATEST, message);
 
-            if(!team.auth.getUser().equals(contact.getObject(Thing.SOURCE).getString(Thing.ID))) {
-                contact.setBoolean(Thing.SEEN, false);
+            if(!team.auth.getUser().equals(recent.getObject(Thing.SOURCE).getString(Thing.ID))) {
+                recent.setBoolean(Thing.SEEN, false);
             }
         }
 
