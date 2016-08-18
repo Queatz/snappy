@@ -166,7 +166,7 @@ public class OfferInterface implements Interfaceable {
 
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
-        Entity like = new LikeEditor(as).newLike(offer, as.getUser());
+        Entity like = new LikeEditor(as).newLike(as.getUser(), offer);
 
         new EarthUpdate(as).send(new OfferLikeEvent(like))
                 .to(offer.getKey(EarthField.SOURCE));

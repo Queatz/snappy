@@ -58,7 +58,6 @@ public class PersonList extends Activity {
             }
 
             mUpdate = team.realm.where("Thing")
-                    .equalTo(Thing.KIND, "update")
                     .equalTo(Thing.ID, id)
                     .findFirst();
 

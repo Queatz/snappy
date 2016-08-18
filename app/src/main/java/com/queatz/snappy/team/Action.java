@@ -105,7 +105,7 @@ public class Action {
         o.setString(Thing.KIND, "message");
         o.setString(Thing.ID, localId);
         o.setObject(Thing.FROM, team.auth.me());
-        o.setObject(Thing.TARGET, to);
+        o.setObject(Thing.TO, to);
         o.setString(Thing.MESSAGE, message);
         o.setDate(Thing.DATE, new Date());
 
@@ -624,7 +624,7 @@ public class Action {
                 .show();
     }
 
-    public void likeUpdate(DynamicRealmObject update) {
+    public void likeUpdate(final DynamicRealmObject update) {
         if (Util.liked(update, team.auth.me())) {
             return;
         }
@@ -641,10 +641,8 @@ public class Action {
 
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_LOCAL_ID, localId);
-        params.put(Config.PARAM_KIND, "like");
-        params.put(Config.PARAM_THING, update.getString(Thing.ID));
 
-        team.api.post(Config.PATH_EARTH, params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH + "/" + update.getString(Thing.ID) + "/" + Config.PATH_LIKE, params, new Api.Callback() {
             @Override
             public void success(String response) {
                 team.things.put(response);
@@ -652,7 +650,7 @@ public class Action {
 
             @Override
             public void fail(String response) {
-                Toast.makeText(team.context, "Couldn't like update", Toast.LENGTH_SHORT).show();
+                Toast.makeText(team.context, "Couldn't like " + update.getString(Thing.KIND), Toast.LENGTH_SHORT).show();
             }
         });
     }

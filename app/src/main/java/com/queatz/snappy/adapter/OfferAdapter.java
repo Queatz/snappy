@@ -102,14 +102,14 @@ public class OfferAdapter extends RealmBaseAdapter<DynamicRealmObject> {
                 likesButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //team.action.like((Activity) context, offer);
+                        team.action.likeUpdate(offer);
                     }
                 });
             } else {
                 likesButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                       // team.action.showLikers((Activity) context, offer);
+                        team.action.showLikers((Activity) context, offer);
                     }
                 });
             }
@@ -118,7 +118,7 @@ public class OfferAdapter extends RealmBaseAdapter<DynamicRealmObject> {
         likesButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-               // team.action.like((Activity) context, offer);
+                team.action.likeUpdate(offer);
 
                 return true;
             }

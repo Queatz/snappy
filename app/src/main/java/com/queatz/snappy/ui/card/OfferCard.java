@@ -127,7 +127,7 @@ public class OfferCard implements Card<DynamicRealmObject> {
             likers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                //    team.action.showLikers((Activity) context, offer);
+                    team.action.showLikers((Activity) context, offer);
                 }
             });
         }
