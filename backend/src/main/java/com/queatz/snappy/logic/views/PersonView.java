@@ -48,8 +48,11 @@ public class PersonView extends ExistenceView {
         imageUrl = person.getString(EarthField.IMAGE_URL);
         googleUrl = person.getString(EarthField.GOOGLE_URL);
 
-        // XXX TODO only if it's us
-        auth = person.getString(EarthField.TOKEN);
+        if (person.key().equals(as.getUser().key())) {
+            auth = person.getString(EarthField.TOKEN);
+        } else {
+            auth = null;
+        }
 
         infoAvailability = true;
         infoDistance = 0;
