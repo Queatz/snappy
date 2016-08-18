@@ -7,6 +7,7 @@ import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthUpdate;
+import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.FollowerEditor;
@@ -92,7 +93,7 @@ public class PersonInterface implements Interfaceable {
                 followers ? EarthField.TARGET : EarthField.SOURCE,
                 person.key());
 
-        return new EntityListView(as, follows).toJson();
+        return new EntityListView(as, follows, EarthView.SHALLOW).toJson();
     }
 
     private String getParties(EarthAs as, String personId) {
@@ -102,7 +103,7 @@ public class PersonInterface implements Interfaceable {
                 EarthField.HOST,
                 person.key());
 
-        return new EntityListView(as, follows).toJson();
+        return new EntityListView(as, follows, EarthView.SHALLOW).toJson();
     }
 
     private String getMessages(EarthAs as, String personId) {

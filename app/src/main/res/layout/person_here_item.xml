@@ -20,7 +20,7 @@
         android:layout_gravity="center_horizontal"
         android:textAlignment="center"
         android:gravity="center_horizontal"
-        android:textColor="@color/white"
+        android:textColor="@color/text"
         android:textSize="16sp"
         android:paddingTop="8dp"
         android:paddingLeft="8dp"

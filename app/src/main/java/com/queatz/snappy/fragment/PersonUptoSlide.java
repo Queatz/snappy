@@ -90,7 +90,7 @@ public class PersonUptoSlide extends Fragment {
         if(mPerson != null) {
             RealmResults<DynamicRealmObject> recentUpdates = team.realm.where("Thing")
                     .equalTo(Thing.KIND, "update")
-                    .equalTo("source.id", mPerson.getString(Thing.ID))
+                    .equalTo("person.id", mPerson.getString(Thing.ID))
                     .findAllSorted("date", Sort.DESCENDING);
             updateList.setAdapter(new PersonUptoAdapter(getActivity(), recentUpdates));
         }
@@ -310,7 +310,7 @@ public class PersonUptoSlide extends Fragment {
 
             if(team.auth.getUser() != null) {
                 follow = team.realm.where("Thing")
-                        .equalTo(Thing.KIND, "follow")
+                        .equalTo(Thing.KIND, "follower")
                         .equalTo("source.id", team.auth.getUser())
                         .equalTo("target.id", mPerson.getString(Thing.ID))
                         .findFirst();

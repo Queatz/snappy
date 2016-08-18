@@ -91,7 +91,7 @@ public class PersonUptoAdapter extends RealmBaseAdapter<DynamicRealmObject> {
         final Team team = ((MainApplication) context.getApplicationContext()).team;
 
         final DynamicRealmObject update = getItem(position);
-        final DynamicRealmObject person = update.getObject(Thing.SOURCE);
+        final DynamicRealmObject person = update.getObject(Thing.PERSON);
         final DynamicRealmObject location = !update.getObject(Thing.TARGET).isNull(Thing.LOCATION) ?
                 update.getObject(Thing.TARGET).getObject(Thing.LOCATION) : null;
 
@@ -107,10 +107,10 @@ public class PersonUptoAdapter extends RealmBaseAdapter<DynamicRealmObject> {
         ImageView photo = (ImageView) view.findViewById(R.id.photo);
 
         if (Config.UPDATE_ACTION_UPTO.equals(update.getString(Thing.ACTION))) {
-            String photoUrl = Util.photoUrl(String.format(Config.PATH_UPDATE_PHOTO, update.getString(Thing.ID)), parent.getMeasuredWidth() / 2);
+            String photoUrl = Util.photoUrl(String.format(Config.PATH_EARTH_PHOTO, update.getString(Thing.ID)), parent.getMeasuredWidth() / 2);
 
-            photo.setVisibility(View.VISIBLE);
             photo.setImageDrawable(null);
+            photo.setVisibility(View.VISIBLE);
 
             Picasso.with(context).cancelRequest(photo);
 
@@ -119,7 +119,7 @@ public class PersonUptoAdapter extends RealmBaseAdapter<DynamicRealmObject> {
                     .placeholder(R.color.spacer)
                     .into(photo);
 
-            if(update.isNull(Thing.MESSAGE) || update.getString(Thing.MESSAGE).isEmpty()) {
+            if(update.isNull(Thing.ABOUT) || update.getString(Thing.ABOUT).isEmpty()) {
                 view.findViewById(R.id.details).setVisibility(View.GONE);
             }
             else {

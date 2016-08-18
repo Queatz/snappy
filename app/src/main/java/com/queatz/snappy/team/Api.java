@@ -177,7 +177,7 @@ public class Api {
     }
 
     private String makeUrl(String url, RequestParams params) {
-        return Config.API_URL + url + "?" + auth(params).toString();
+        return Config.API_URL + url + (url.contains("?") ? "&" : "?") + auth(params).toString();
     }
 
     public RequestHandle get(String url) {

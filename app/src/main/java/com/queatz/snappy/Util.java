@@ -105,21 +105,21 @@ public class Util {
 
         switch (update.getString(Thing.ACTION)) {
             case Config.UPDATE_ACTION_HOST_PARTY:
-                if(update.getObject(Thing.TARGET) == null || update.getObject(Thing.SOURCE) == null)
+                if(update.getObject(Thing.TARGET) == null || update.getObject(Thing.PERSON) == null)
                     return null;
 
                 past = TimeUtil.isPartyPast(update.getObject(Thing.TARGET));
 
-                string = Html.fromHtml(String.format(context.getString(past ? R.string.update_text_hosted : R.string.update_text_is_hosting), update.getObject(Thing.SOURCE).getString(Thing.FIRST_NAME), update.getObject(Thing.TARGET).getString(Thing.NAME), TimeUtil.agoDate(update.getObject(Thing.TARGET).getDate(Thing.DATE))));
+                string = Html.fromHtml(String.format(context.getString(past ? R.string.update_text_hosted : R.string.update_text_is_hosting), update.getObject(Thing.PERSON).getString(Thing.FIRST_NAME), update.getObject(Thing.TARGET).getString(Thing.NAME), TimeUtil.agoDate(update.getObject(Thing.TARGET).getDate(Thing.DATE))));
                 break;
             case Config.UPDATE_ACTION_JOIN_PARTY:
                 past = TimeUtil.isPartyPast(update.getObject(Thing.TARGET));
 
-                string = Html.fromHtml(String.format(context.getString(past ? R.string.update_text_went_to : R.string.update_text_is_going_to), update.getObject(Thing.SOURCE).getString(Thing.FIRST_NAME), update.getObject(Thing.TARGET).getString(Thing.NAME), TimeUtil.agoDate(update.getObject(Thing.TARGET).getDate(Thing.DATE))));
+                string = Html.fromHtml(String.format(context.getString(past ? R.string.update_text_went_to : R.string.update_text_is_going_to), update.getObject(Thing.PERSON).getString(Thing.FIRST_NAME), update.getObject(Thing.TARGET).getString(Thing.NAME), TimeUtil.agoDate(update.getObject(Thing.TARGET).getDate(Thing.DATE))));
                 break;
             case Config.UPDATE_ACTION_UPTO:
             default:
-                string = new SpannableString(update.getString(Thing.MESSAGE));
+                string = new SpannableString(update.getString(Thing.ABOUT));
                 break;
         }
 

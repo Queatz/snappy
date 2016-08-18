@@ -71,6 +71,7 @@ public class Config {
     public static final String PATH_UPDATE_PHOTO = "update/%s/photo";
     public static final String PATH_LOCATION_PHOTO = "location/%s/photo";
     public static final String PATH_OFFER_PHOTO = "offer/%s/photo";
+    public static final String PATH_EARTH_PHOTO = "earth/%s/photo";
     public static final String PATH_MESSAGES_ID = "messages/%s";
     public static final String PATH_ME_OFFERS= "me/offers";
     public static final String PATH_ME_OFFERS_ID= "me/offers/%s";

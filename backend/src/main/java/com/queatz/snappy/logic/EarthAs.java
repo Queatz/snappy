@@ -1,6 +1,7 @@
 package com.queatz.snappy.logic;
 
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.Key;
 import com.queatz.snappy.service.Api;
 
 import java.lang.reflect.InvocationTargetException;
@@ -22,6 +23,8 @@ public class EarthAs {
     private final HttpServletResponse response;
     private final List<String> route;
     private final Entity user;
+
+    protected final Map<Key, Entity> __entityCache = new HashMap<>();
 
     private Map<Class, Object> singletons;
 

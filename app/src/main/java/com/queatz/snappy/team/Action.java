@@ -105,7 +105,7 @@ public class Action {
         o.setString(Thing.KIND, "message");
         o.setString(Thing.ID, localId);
         o.setObject(Thing.FROM, team.auth.me());
-        o.setObject(Thing.TO, to);
+        o.setObject(Thing.TARGET, to);
         o.setString(Thing.MESSAGE, message);
         o.setDate(Thing.DATE, new Date());
 
@@ -160,7 +160,7 @@ public class Action {
 
         team.realm.beginTransaction();
         DynamicRealmObject o = team.realm.createObject("Thing");
-        o.setString(Thing.KIND, "follow");
+        o.setString(Thing.KIND, "follower");
         o.setString(Thing.ID, localId);
         o.setObject(Thing.SOURCE, team.auth.me());
         o.setObject(Thing.TARGET, person);
@@ -168,10 +168,9 @@ public class Action {
 
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_LOCAL_ID, localId);
-        params.put(Config.PARAM_KIND, "follow");
-        params.put(Config.PARAM_THING, person.getString(Thing.ID));
+        params.put(Config.PARAM_FOLLOW, true);
 
-        team.api.post(Config.PATH_EARTH, params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH + "/" + person.getString(Thing.ID), params, new Api.Callback() {
             @Override
             public void success(String response) {
                 team.things.put(response);
@@ -187,6 +186,7 @@ public class Action {
 
     public void stopFollowingPerson(@NonNull DynamicRealmObject person) {
         DynamicRealmObject follow = team.realm.where("Thing")
+                .equalTo(Thing.KIND, "follower")
                 .equalTo("source.id", team.auth.getUser())
                 .equalTo("target.id", person.getString(Thing.ID))
                 .findFirst();
@@ -200,7 +200,7 @@ public class Action {
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_FOLLOW, false);
 
-        team.api.post(Config.PATH_EARTH + "/" + person.getString(Thing.ID) + "/" + Config.PATH_DELETE, params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH + "/" + person.getString(Thing.ID), params, new Api.Callback() {
             @Override
             public void success(String response) {
             }
@@ -350,7 +350,7 @@ public class Action {
             @Override
             public void fail(String response) {
                 // Reverse local modifications after retrying
-                Toast.makeText(team.context, "DynamicRealmObject cancel failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(team.context, R.string.offer_cancel_failed, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -455,9 +455,8 @@ public class Action {
         RequestParams params = new RequestParams();
 
         try {
-            params.put(Config.PARAM_KIND, "update");
             params.put(Config.PARAM_THING, team.auth.getUser());
-            params.put(Config.PARAM_PHOTO, team.context.getContentResolver().openInputStream(photo));
+            params.put(Config.PARAM_PHOTO, team.context.getContentResolver().openInputStream(photo), photo.getPath());
             params.put(Config.PARAM_MESSAGE, message);
         }
         catch (FileNotFoundException e) {
@@ -465,7 +464,7 @@ public class Action {
             return false;
         }
 
-        team.api.post(Config.PATH_EARTH, params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH + "?kind=update", params, new Api.Callback() {
             @Override
             public void success(String response) {
                 team.things.put(response);
@@ -511,7 +510,7 @@ public class Action {
         offer.setBoolean(Thing.PHOTO, false);
         team.realm.commitTransaction();
 
-        team.api.post(Config.PATH_EARTH + "/" + offer.getString(Thing.ID) + "/" + Config.PATH_PHOTO);
+        team.api.post(Config.PATH_EARTH + "/" + offer.getString(Thing.ID) + "/" + Config.PATH_PHOTO + "/" + Config.PATH_DELETE);
     }
 
     public void addOffer(@NonNull String details, Integer price, @Nullable String unit) {
@@ -536,16 +535,16 @@ public class Action {
         params.put(Config.PARAM_UNIT, unit);
         params.put(Config.PARAM_PRICE, price);
 
-        team.api.post(Config.PATH_EARTH, params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH + "/" + Config.PATH_ME_OFFERS, params, new Api.Callback() {
             @Override
             public void success(String response) {
                 team.things.put(response);
-                Toast.makeText(team.context, "DynamicRealmObject added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(team.context, R.string.offer_added, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void fail(String response) {
-                Toast.makeText(team.context, "Couldn't add offer", Toast.LENGTH_SHORT).show();
+                Toast.makeText(team.context, R.string.couldnt_add_offer, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -581,7 +580,7 @@ public class Action {
                         RequestParams params = new RequestParams();
                         params.put(Config.PARAM_ABOUT, about);
 
-                        team.api.post(Config.PATH_ME, params, new Api.Callback() {
+                        team.api.post(Config.PATH_EARTH + "/" + Config.PATH_ME, params, new Api.Callback() {
                             @Override
                             public void success(String response) {
 
@@ -669,9 +668,9 @@ public class Action {
                     }
 
                     if(nPendingLocationPhotoChange != null) {
-                        uploadPhoto(String.format(Config.PATH_LOCATION_PHOTO, nPendingLocationPhotoChange.getString(Thing.ID)), photo);
+                        uploadPhoto(String.format(Config.PATH_EARTH_PHOTO, nPendingLocationPhotoChange.getString(Thing.ID)), photo);
                     } else if(nPendingOfferPhotoChange != null) {
-                        uploadPhoto(String.format(Config.PATH_OFFER_PHOTO, nPendingOfferPhotoChange.getString(Thing.ID)), photo);
+                        uploadPhoto(String.format(Config.PATH_EARTH_PHOTO, nPendingOfferPhotoChange.getString(Thing.ID)), photo);
                     }
                 }
 
@@ -719,7 +718,7 @@ public class Action {
         });
     }
 
-    public void offerSomething(Activity activity) {
+    public void offerSomething(final Activity activity) {
         final View newOffer = View.inflate(activity, R.layout.new_offer, null);
 
         final EditText experienceDetails = (EditText) newOffer.findViewById(R.id.details);
@@ -740,9 +739,11 @@ public class Action {
                 if (price < 0) {
                     highlight.setBackgroundResource(R.color.purple);
                     priceSlider.setTextColor(R.color.purple);
+                    experienceDetails.setHint(activity.getResources().getString(R.string.new_request));
                 } else {
                     highlight.setBackgroundResource(R.color.green);
                     priceSlider.setTextColor(R.color.green);
+                    experienceDetails.setHint(activity.getResources().getString(R.string.new_offer));
                 }
 
                 if (price == 0) {

@@ -5,6 +5,7 @@ import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthJson;
+import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Viewable;
 
@@ -24,6 +25,8 @@ public class MessagesAndContactsView extends EarthControl implements Viewable {
         this.messages = Lists.newArrayList();
         this.contacts = Lists.newArrayList();
 
+        use(EarthStore.class).transact();
+
         for (Entity message : messages) {
             this.messages.add(new MessageView(as, message, EarthView.SHALLOW));
         }
@@ -31,6 +34,8 @@ public class MessagesAndContactsView extends EarthControl implements Viewable {
         for (Entity contact : contacts) {
             this.contacts.add(new RecentView(as, contact, EarthView.SHALLOW));
         }
+
+        use(EarthStore.class).commit();
     }
 
     @Override

@@ -49,6 +49,17 @@ public class EarthStore extends EarthControl {
         return get(keyFactory.newKey(id));
     }
 
+    private Transaction transaction = null;
+
+    public void transact() {
+        transaction = getDatastore().newTransaction();
+    }
+
+    public void commit() {
+        transaction.commit();
+        transaction = null;
+    }
+
     /**
      * Get a thing from the store.
      *
@@ -57,7 +68,14 @@ public class EarthStore extends EarthControl {
      * @return The thing, or null if it could not be found
      */
     public Entity get(@Nonnull Key key) {
-        Entity entity = datastore.get(key);
+        final Entity entity;
+
+        if (as.__entityCache.containsKey(key)) {
+            entity = as.__entityCache.get(key);
+        } else {
+            entity = (transaction != null ? transaction.get(key) : datastore.get(key));
+            as.__entityCache.put(key, entity);
+        }
 
         if (entity == null) {
             return null;
@@ -237,6 +255,8 @@ public class EarthStore extends EarthControl {
             transaction.put(entity);
             transaction.commit();
             earthSearcher.update(entity);
+
+            as.__entityCache.put(entity.key(), entity);
         } finally {
             if (transaction.active()) {
                 transaction.rollback();

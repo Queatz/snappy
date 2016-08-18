@@ -28,6 +28,7 @@ public class LinkView extends ExistenceView {
 
         switch (view) {
             case DEEP:
+            case SHALLOW:
                 source = earthViewer.getViewForEntityOrThrow(earthStore.get(link.getKey(EarthField.SOURCE)), view);
                 break;
             default:

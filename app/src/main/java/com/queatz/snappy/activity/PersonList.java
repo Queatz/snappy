@@ -97,7 +97,7 @@ public class PersonList extends Activity {
 
             if(mPerson != null && personAdapter != null) {
                 RealmResults<DynamicRealmObject> results = team.realm.where("Thing")
-                        .equalTo(Thing.KIND, "follow")
+                        .equalTo(Thing.KIND, "follower")
                         .equalTo(mShowFollowing ? "source.id" : "target.id", mPerson.getString(Thing.ID))
                         .findAll();
 

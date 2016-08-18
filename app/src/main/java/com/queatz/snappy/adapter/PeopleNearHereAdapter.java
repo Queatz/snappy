@@ -71,7 +71,7 @@ public class PeopleNearHereAdapter extends BaseAdapter {
 
         Picasso.with(mContext)
                 .load(Functions.getImageUrlForSize(person, (int) Util.px(48)))
-                .placeholder(R.color.darkenedblue)
+                .placeholder(R.color.spacer)
                 .into(profile);
 
         name.setText(person.getString(Thing.FIRST_NAME));

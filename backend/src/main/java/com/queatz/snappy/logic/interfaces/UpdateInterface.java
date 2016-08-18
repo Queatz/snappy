@@ -10,6 +10,7 @@ import com.google.appengine.tools.cloudstorage.ListItem;
 import com.google.appengine.tools.cloudstorage.ListOptions;
 import com.google.appengine.tools.cloudstorage.ListResult;
 import com.google.cloud.datastore.Entity;
+import com.queatz.snappy.backend.ApiUtil;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
@@ -120,6 +121,7 @@ public class UpdateInterface implements Interfaceable {
             size = 200;
         }
 
+        // XXX TODO Make this use ApiUtil.getPhoto
         try {
             ListOptions options = new ListOptions.Builder().setPrefix("earth/thing/photo/" + updateId + "/").setRecursive(false).build();
             ListResult list = as.getApi().mGCS.list(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), options);
@@ -140,7 +142,7 @@ public class UpdateInterface implements Interfaceable {
 
             ImagesService imagesService = ImagesServiceFactory.getImagesService();
             ServingUrlOptions servingUrlOptions = ServingUrlOptions.Builder.withGoogleStorageFileName(
-                    "/gs/" + as.getApi().mAppIdentityService.getDefaultGcsBucketName() + "/" + fileName).imageSize(size);
+                    "/gs/" + as.getApi().mAppIdentityService.getDefaultGcsBucketName() + "/" + fileName).imageSize(size).secureUrl(true);
             String photoUrl = imagesService.getServingUrl(servingUrlOptions);
 
             as.getResponse().sendRedirect(photoUrl);
@@ -159,6 +161,7 @@ public class UpdateInterface implements Interfaceable {
         boolean photoUploaded = false;
         String thingId = null;
 
+        // XXX TODO Make this use ApiUtil.putPhoto (with support for reading other params)
         try {
             ServletFileUpload upload = new ServletFileUpload();
             FileItemIterator iterator = upload.getItemIterator(as.getRequest());
@@ -212,11 +215,20 @@ public class UpdateInterface implements Interfaceable {
     private String editUpdate(EarthAs as, String updateId) {
         Entity update = new EarthStore(as).get(updateId);
 
+        try {
+            if (!ApiUtil.putPhoto("update/photo/" + update.key().name() + "/" + new Date().getTime(), as.getApi(), as.getRequest())) {
+                throw new LogicException("update photo - not all good");
+            }
+        } catch (IOException e) {
+            throw new LogicException("update photo - not all good");
+        }
+
         GcsFilename photoName = new GcsFilename(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), "earth/thing/photo/" + update.key().name() + "/" + new Date().getTime());
 
         String message = null;
         boolean photoUploaded = update.getBoolean(EarthField.PHOTO);
 
+        // XXX TODO Make this use ApiUtil.putPhoto (with support for reading other params)
         try {
             ServletFileUpload upload = new ServletFileUpload();
             FileItemIterator iterator = upload.getItemIterator(as.getRequest());
