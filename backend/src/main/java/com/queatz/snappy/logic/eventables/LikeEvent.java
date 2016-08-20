@@ -39,7 +39,7 @@ public class LikeEvent implements Eventable {
 
     @Override
     public Object makePush() {
-        return new PushSpec<>(
+        return new PushSpec(
                 Config.PUSH_ACTION_LIKE_UPDATE,
                 ImmutableMap.of(
                         "id", like.key().name(),

@@ -39,7 +39,7 @@ public class FollowEvent implements Eventable {
 
     @Override
     public Object makePush() {
-        return new PushSpec<>(
+        return new PushSpec(
                 Config.PUSH_ACTION_CLEAR_NOTIFICATION,
                 ImmutableMap.of(
                         "id", follow.key().name(),

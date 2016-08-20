@@ -45,7 +45,7 @@ public class HostPartyAdapter extends RealmBaseAdapter<DynamicRealmObject> {
         ((TextView) view.findViewById(R.id.ago)).setText(TimeUtil.agoDate(party.getDate(Thing.DATE)));
 
         int s = (int) Util.px(128);
-        String photoUrl = Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=" + s + "&auth=" + ((MainApplication) context.getApplicationContext()).team.auth.getAuthParam(), party.getObject(Thing.LOCATION).getString(Thing.ID));
+        String photoUrl = Config.API_URL + String.format(Config.PATH_EARTH_PHOTO + "?s=" + s + "&auth=" + ((MainApplication) context.getApplicationContext()).team.auth.getAuthParam(), party.getObject(Thing.LOCATION).getString(Thing.ID));
 
         ImageView locationIcon = (ImageView) view.findViewById(R.id.location_icon);
         Picasso.with(context).load(photoUrl).placeholder(R.drawable.location).into(locationIcon);

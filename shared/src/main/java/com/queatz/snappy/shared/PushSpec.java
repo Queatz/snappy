@@ -1,11 +1,13 @@
 package com.queatz.snappy.shared;
 
+import java.util.Map;
+
 /**
  * Created by jacob on 10/14/15.
  */
-public class PushSpec<T> {
-    public @Push String action;
-    public @Push T body;
+public class PushSpec {
+    public String action;
+    public Map body;
 
     public PushSpec() {
 
@@ -15,7 +17,7 @@ public class PushSpec<T> {
         this.action = action;
     }
 
-    public PushSpec(String action, T body) {
+    public PushSpec(String action, Map body) {
         this.action = action;
         this.body = body;
     }

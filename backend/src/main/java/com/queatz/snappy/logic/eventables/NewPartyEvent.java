@@ -39,7 +39,7 @@ public class NewPartyEvent implements Eventable {
 
     @Override
     public Object makePush() {
-        return new PushSpec<>(
+        return new PushSpec(
                 Config.PUSH_ACTION_NEW_PARTY,
                 ImmutableMap.of(
                         "id", party.key().name(),

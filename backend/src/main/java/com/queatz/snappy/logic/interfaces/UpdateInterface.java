@@ -215,14 +215,6 @@ public class UpdateInterface implements Interfaceable {
     private String editUpdate(EarthAs as, String updateId) {
         Entity update = new EarthStore(as).get(updateId);
 
-        try {
-            if (!ApiUtil.putPhoto("update/photo/" + update.key().name() + "/" + new Date().getTime(), as.getApi(), as.getRequest())) {
-                throw new LogicException("update photo - not all good");
-            }
-        } catch (IOException e) {
-            throw new LogicException("update photo - not all good");
-        }
-
         GcsFilename photoName = new GcsFilename(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), "earth/thing/photo/" + update.key().name() + "/" + new Date().getTime());
 
         String message = null;

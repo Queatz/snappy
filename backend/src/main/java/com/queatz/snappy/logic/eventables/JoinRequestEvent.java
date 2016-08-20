@@ -39,7 +39,7 @@ public class JoinRequestEvent implements Eventable {
 
     @Override
     public Object makePush() {
-        return new PushSpec<>(
+        return new PushSpec(
                 Config.PUSH_ACTION_JOIN_REQUEST,
                 ImmutableMap.of(
                         "id", join.key().name(),

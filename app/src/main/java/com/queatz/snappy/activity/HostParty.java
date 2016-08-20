@@ -127,6 +127,7 @@ public class HostParty extends Activity {
         partyList.addFooterView(new View(this));
 
         RealmResults<DynamicRealmObject> recentParties = team.realm.where("Thing")
+                .equalTo(Thing.KIND, "party")
                 .equalTo("host.id", team.auth.getUser())
                 .findAllSorted("date", Sort.DESCENDING);
         partyList.setAdapter(new HostPartyAdapter(this, recentParties));
@@ -424,6 +425,7 @@ public class HostParty extends Activity {
         }
 
         RealmResults<DynamicRealmObject> results = team.realm.where("Thing")
+                .equalTo(Thing.KIND, "hub")
                 .beginsWith("name", q, Case.INSENSITIVE)
                 .findAllSorted("name", Sort.ASCENDING);
 

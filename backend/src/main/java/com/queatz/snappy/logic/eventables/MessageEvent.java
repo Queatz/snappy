@@ -39,7 +39,7 @@ public class MessageEvent implements Eventable {
 
     @Override
     public Object makePush() {
-        return new PushSpec<>(
+        return new PushSpec(
                 Config.PUSH_ACTION_MESSAGE,
                 ImmutableMap.of(
                         "id", message.key().name(),

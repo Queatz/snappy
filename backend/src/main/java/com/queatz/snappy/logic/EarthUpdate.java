@@ -5,6 +5,7 @@ import com.google.cloud.datastore.Key;
 import com.google.common.collect.HashBiMap;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.logic.eventables.ClearNotificationEvent;
+import com.queatz.snappy.logic.eventables.FollowEvent;
 import com.queatz.snappy.logic.eventables.JoinRequestEvent;
 import com.queatz.snappy.logic.eventables.LikeEvent;
 import com.queatz.snappy.logic.eventables.MessageEvent;
@@ -14,6 +15,7 @@ import com.queatz.snappy.logic.eventables.NewPartyEvent;
 import com.queatz.snappy.logic.eventables.NewThingEvent;
 import com.queatz.snappy.logic.eventables.NewUpdateEvent;
 import com.queatz.snappy.logic.eventables.OfferLikeEvent;
+import com.queatz.snappy.logic.eventables.RefreshMeEvent;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.service.Queue;
 import com.queatz.snappy.shared.Config;
@@ -43,7 +45,8 @@ public class EarthUpdate extends EarthControl {
         eventableMap.put(Config.PUSH_ACTION_LIKE_UPDATE, LikeEvent.class);
         eventableMap.put(Config.PUSH_ACTION_NEW_THING, NewThingEvent.class);
         eventableMap.put(Config.PUSH_ACTION_NEW_CONTACT, NewContactEvent.class);
-        eventableMap.put(Config.PUSH_ACTION_OFFER_LIKED, OfferLikeEvent.class);
+        eventableMap.put(Config.PUSH_ACTION_FOLLOW, FollowEvent.class);
+        eventableMap.put(Config.PUSH_ACTION_REFRESH_ME, RefreshMeEvent.class);
 
         actionMap = HashBiMap.create(eventableMap).inverse();
     }
@@ -96,6 +99,10 @@ public class EarthUpdate extends EarthControl {
     }
 
     public EventableWrapper send(Eventable event) {
+        if (!actionMap.containsKey(event.getClass())) {
+            throw new RuntimeException("Unknown push action for class : " + event.getClass().getSimpleName());
+        }
+
         return new EventableWrapper(actionMap.get(event.getClass()), event);
     }
 }

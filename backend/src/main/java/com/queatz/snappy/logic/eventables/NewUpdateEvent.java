@@ -39,7 +39,7 @@ public class NewUpdateEvent implements Eventable {
 
     @Override
     public Object makePush() {
-        return new PushSpec<>(
+        return new PushSpec(
                 Config.PUSH_ACTION_NEW_UPTO,
                 ImmutableMap.of(
                         "id", update.key().name(),
