@@ -99,7 +99,7 @@ public class PartyCard implements Card<DynamicRealmObject> {
             Picasso.with(context).load(photoUrl).placeholder(R.drawable.location).into(locationIcon);
 
             ((TextView) view.findViewById(R.id.location_text)).setText(location.getString(Thing.NAME));
-            ((TextView) view.findViewById(R.id.time_text)).setText(party.getDate(Thing.DATE) == null ? context.getString(R.string.hidden) : TimeUtil.cuteDate(party.getDate(Thing.DATE)));
+            ((TextView) view.findViewById(R.id.time_text)).setText(party.isNull(Thing.DATE) ? context.getString(R.string.hidden) : TimeUtil.cuteDate(party.getDate(Thing.DATE)));
         }
 
         String details = party.getString(Thing.ABOUT);

@@ -126,16 +126,22 @@ public class PersonInterface implements Interfaceable {
     private String postFollow(EarthAs as, Entity person) {
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
-        Entity follow = new FollowerEditor(as).newFollower(as.getUser(), person);
+        Entity follow;
 
-        new EarthUpdate(as).send(new FollowEvent(follow))
-                .to(follow.getKey(EarthField.TARGET));
+        follow = new FollowerMine(as).getFollower(as.getUser(), person);
+
+        if (follow == null) {
+            follow = new FollowerEditor(as).newFollower(as.getUser(), person);
+
+            new EarthUpdate(as).send(new FollowEvent(follow))
+                    .to(follow.getKey(EarthField.TARGET));
+        }
 
         return new FollowerView(as, follow).setLocalId(localId).toJson();
     }
 
     private String postStopFollowing(EarthAs as, Entity person) {
-        Entity follower = new FollowerMine(as).forPerson(as.getUser(), person);
+        Entity follower = new FollowerMine(as).getFollower(as.getUser(), person);
         new EarthStore(as).conclude(follower);
 
         return new SuccessView(true).toJson();

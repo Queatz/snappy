@@ -71,17 +71,22 @@ public class EarthViewer extends EarthControl {
                     + entity.getString(EarthField.KIND));
         }
 
+        Exception error = null;
+
         try {
             return constructor.newInstance(as, entity, view);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+            error = e;
         } catch (InvocationTargetException e) {
             e.printStackTrace();
+            error = e;
         } catch (InstantiationException e) {
             e.printStackTrace();
+            error = e;
         }
 
         throw new NothingLogicResponse("earth viewer - failed to create view for kind: "
-                + entity.getString(EarthField.KIND));
+                + entity.getString(EarthField.KIND) + "\n\n" + error.getLocalizedMessage());
     }
 }

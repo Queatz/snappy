@@ -1,5 +1,8 @@
 package com.queatz.snappy.backend;
 
+import com.google.cloud.datastore.LatLng;
+import com.queatz.snappy.shared.Config;
+
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,14 +14,33 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 
+import static java.lang.Math.atan2;
+import static java.lang.Math.cos;
+import static java.lang.Math.pow;
+import static java.lang.Math.sin;
+import static java.lang.Math.sqrt;
+
 /**
  * A bunch of unused functions...
  *
  * Created by jacob on 2/16/15.
  */
 public class Util {
-    public static double distance(double x1, double y1, double x2, double y2) {
-        return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+    public static double distance(double lat1, double long1, double lat2, double long2) {
+        double d2r = (Math.PI / 180.0);
+        double dlong = (long2 - long1) * d2r;
+        double dlat = (lat2 - lat1) * d2r;
+        double a = pow(sin(dlat/2.0), 2) + cos(lat1*d2r) * cos(lat2*d2r) * pow(sin(dlong/2.0), 2);
+        double c = 2 * atan2(sqrt(a), sqrt(1-a));
+        return 3956 * c; // miles
+    }
+
+    public static double quantizedDistance(double distance) {
+        return Math.floor(distance / Config.personLocationAccuracy) * Config.personLocationAccuracy;
+    }
+
+    public static double distance(LatLng a, LatLng b) {
+        return quantizedDistance(distance(a.latitude(), a.longitude(), b.latitude(), b.longitude()));
     }
 
     public static String genToken() {

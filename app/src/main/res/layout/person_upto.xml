@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:visibility="gone"
         android:textAllCaps="true"
         android:background="@drawable/white_rounded_ripple"
         android:textColor="@color/green"
@@ -36,8 +37,7 @@
         android:paddingBottom="3dp"
         android:paddingRight="6dp"
         android:paddingLeft="6dp"
-        android:layout_margin="6dp"
-        android:text="Social Mode On"/>
+        android:layout_margin="6dp"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingAction"

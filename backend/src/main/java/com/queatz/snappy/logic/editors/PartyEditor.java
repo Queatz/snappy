@@ -61,8 +61,10 @@ public class PartyEditor extends EarthControl {
                 .set(EarthField.DATE, DateTime.copyFrom(date))
                 .set(EarthField.ABOUT, details)
                 .set(EarthField.FULL, false)
-                .set(EarthField.HOST, person)
-                .set(EarthField.GEO, location.key());
+                .set(EarthField.PHOTO, false)
+                .set(EarthField.HOST, person.key())
+                .set(EarthField.TARGET, location.key()) // Also setting this so that it shows up in location searches
+                .set(EarthField.LOCATION, location.key());
 
 
         if (original != null) {

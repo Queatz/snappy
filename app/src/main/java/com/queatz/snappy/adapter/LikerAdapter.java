@@ -51,6 +51,7 @@ public class LikerAdapter extends RealmBaseAdapter<DynamicRealmObject> {
                         .placeholder(R.color.spacer)
                         .into((ImageView) view.findViewById(R.id.profile));
 
+                ((TextView) view.findViewById(R.id.proximity)).setText(Util.getDistanceText(person.getDouble(Thing.INFO_DISTANCE)));
                 ((TextView) view.findViewById(R.id.person)).setText(Functions.getFullName(person));
             }
 

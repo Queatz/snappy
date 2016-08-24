@@ -100,7 +100,6 @@
                     android:id="@+id/time_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:textSize="18sp"
                     android:gravity="center_horizontal"
                     android:textColor="@color/clickable" />
@@ -133,7 +132,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
-                    android:textStyle="bold"
                     android:gravity="center_horizontal"
                     android:textColor="@color/clickable" />
 

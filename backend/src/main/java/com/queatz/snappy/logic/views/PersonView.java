@@ -1,13 +1,17 @@
 package com.queatz.snappy.logic.views;
 
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.NullValue;
+import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Viewable;
+import com.queatz.snappy.service.Push;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,8 +28,9 @@ public class PersonView extends ExistenceView {
     final Integer infoFollowers;
     final Integer infoFollowing;
     final Integer infoOffers;
-    final boolean infoAvailability;
-    final double infoDistance;
+    final String socialMode;
+    final Double infoDistance;
+    final Date createdOn;
     final List<Viewable> updates;
     final List<Viewable> offers;
     final List<Viewable> resources;
@@ -54,11 +59,17 @@ public class PersonView extends ExistenceView {
             auth = null;
         }
 
-        infoAvailability = true;
-        infoDistance = 0;
+        if (as.getUser().contains(EarthField.GEO) && person.contains(EarthField.GEO)) {
+            infoDistance = Util.distance(as.getUser().getLatLng(EarthField.GEO), person.getLatLng(EarthField.GEO));
+        } else {
+            infoDistance = null;
+        }
 
         switch (view) {
             case DEEP:
+                createdOn = person.getDateTime(EarthField.CREATED_ON).toDate();
+                socialMode = Push.getService().getSocialMode(person.key().name());
+
                 List<Entity> updatesList = earthStore.find(EarthKind.UPDATE_KIND, EarthField.TARGET, person.key());
                 List<Entity> offersList = earthStore.find(EarthKind.OFFER_KIND, EarthField.SOURCE, person.key());
                 List<Entity> resourcesList = earthStore.find(EarthKind.RESOURCE_KIND, EarthField.SOURCE, person.key());
@@ -79,6 +90,7 @@ public class PersonView extends ExistenceView {
 
                 break;
             default:
+                socialMode = null;
                 updates = null;
                 offers = null;
                 resources = null;
@@ -87,6 +99,7 @@ public class PersonView extends ExistenceView {
                 clubs = null;
                 infoFollowers = null;
                 infoFollowing = null;
+                createdOn = null;
                 infoOffers = earthStore.count(EarthKind.OFFER_KIND, EarthField.SOURCE, person.key());
 
         }

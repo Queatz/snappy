@@ -46,6 +46,7 @@ public class Things {
                 case Thing.IMAGE_URL:
                 case Thing.AUTH:
                 case Thing.GOOGLE_URL:
+                case Thing.SOCIAL_MODE:
                 case Thing.MESSAGE:
                     thing.setString(entry.getKey(), entry.getValue().getAsString());
                     break;
@@ -79,6 +80,7 @@ public class Things {
                 // Double
                 case Thing.LATITUDE:
                 case Thing.LONGITUDE:
+                case Thing.INFO_DISTANCE:
                     thing.setDouble(entry.getKey(), entry.getValue().getAsDouble());
                     break;
 

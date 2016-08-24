@@ -130,9 +130,12 @@
     <string name="map">Map</string>
     <string name="like">Like</string>
     <string name="new_request">New request</string>
-    <string name="offer_cancel_failed">Offer cancel failed</string>
     <string name="offer_added">Offer added</string>
+    <string name="offer_cancel_failed">Offer cancel failed</string>
     <string name="couldnt_add_offer">Couldn\'t add offer</string>
+    <string name="social_mode_set">Social Mode %1$s</string>
+    <string name="right_here">Right here</string>
+    <string name="person_posted">%1$s posted</string>
 
     <plurals name="likes">
         <item quantity="one">♡ %1$s Liker</item>
@@ -207,6 +210,16 @@
     <plurals name="quests">
         <item quantity="one">%1$s side quest</item>
         <item quantity="other">%1$s side quests</item>
+    </plurals>
+
+    <plurals name="num_miles">
+        <item quantity="one">%1$s mile</item>
+        <item quantity="other">%1$s miles</item>
+    </plurals>
+
+    <plurals name="num_feet">
+        <item quantity="one">%1$s foot</item>
+        <item quantity="other">%1$s feet</item>
     </plurals>
 
 </resources>

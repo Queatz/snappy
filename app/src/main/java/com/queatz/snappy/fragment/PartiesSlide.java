@@ -2,6 +2,7 @@ package com.queatz.snappy.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,9 +14,11 @@ import android.widget.ListView;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
+import com.queatz.snappy.Util;
 import com.queatz.snappy.adapter.FeedAdapter;
 import com.queatz.snappy.adapter.PeopleNearHereAdapter;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Here;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
@@ -39,6 +42,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
     Team team;
 
     SwipeRefreshLayout mRefresh;
+    FloatingActionButton mFloatingAction;
     ListView mList;
     View emptyView;
 
@@ -81,13 +85,15 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
             }
         });
 
-        View floatingAction = view.findViewById(R.id.floatingAction);
-        floatingAction.setOnClickListener(new View.OnClickListener() {
+        mFloatingAction = (FloatingActionButton) view.findViewById(R.id.floatingAction);
+        mFloatingAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 team.action.offerSomething(getActivity());
             }
         });
+
+        Util.attachFAB(mFloatingAction, mList);
 
         update();
 
@@ -137,10 +143,6 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         else {
             emptyView.findViewById(R.id.enableLocation).setVisibility(View.GONE);
         }
-    }
-
-    private int getPrice(float percent) {
-        return (int) ((percent * 5) + 1) * 10;
     }
 
     private void updateBanner(RealmList<DynamicRealmObject> people, RealmList<DynamicRealmObject> locations) {
@@ -254,6 +256,19 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
                         people.add(thing);
                     } else if ("hub".equals(thing.getString(Thing.KIND))) {
                         locations.add(thing);
+                    } else if("party".equals(thing.getString(Thing.KIND))) {
+                        team.api.get(Config.PATH_EARTH + "/" + thing.getString(Thing.ID), new Api.Callback() {
+                            @Override
+                            public void success(String response) {
+                                // Do this to update party joins
+                                team.things.put(response);
+                            }
+
+                            @Override
+                            public void fail(String response) {
+
+                            }
+                        });
                     }
                 }
 

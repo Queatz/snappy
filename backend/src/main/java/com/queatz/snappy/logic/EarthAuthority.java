@@ -4,6 +4,7 @@ import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.authorities.HubAuthority;
 import com.queatz.snappy.logic.authorities.MessageAuthority;
 import com.queatz.snappy.logic.authorities.OfferAuthority;
+import com.queatz.snappy.logic.authorities.PartyAuthority;
 import com.queatz.snappy.logic.authorities.PersonAuthority;
 import com.queatz.snappy.logic.authorities.ProjectAuthority;
 import com.queatz.snappy.logic.authorities.ResourceAuthority;
@@ -31,6 +32,7 @@ public class EarthAuthority extends EarthControl {
         mapping.put(EarthKind.RESOURCE_KIND, new ResourceAuthority());
         mapping.put(EarthKind.UPDATE_KIND, new UpdateAuthority());
         mapping.put(EarthKind.OFFER_KIND, new OfferAuthority());
+        mapping.put(EarthKind.PARTY_KIND, new PartyAuthority());
     }
 
     public boolean authorize(Entity entity, EarthRule rule) {

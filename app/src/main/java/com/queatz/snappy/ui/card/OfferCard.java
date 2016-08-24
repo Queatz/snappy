@@ -2,7 +2,9 @@ package com.queatz.snappy.ui.card;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -76,6 +78,22 @@ public class OfferCard implements Card<DynamicRealmObject> {
 
         view.findViewById(R.id.takeOffer).setOnClickListener(onClick);
         view.setOnClickListener(onClick);
+
+        view.setClickable(true);
+        view.setOnTouchListener(new View.OnTouchListener() {
+            private GestureDetector gestureDetector = new GestureDetector(team.context, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onDoubleTap(MotionEvent e) {
+                    team.action.likeUpdate(offer);
+                    return true;
+                }
+            });
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        });
 
         TextView type = (TextView) view.findViewById(R.id.type);
 

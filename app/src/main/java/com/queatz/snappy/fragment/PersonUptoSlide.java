@@ -14,6 +14,7 @@ import android.widget.ListView;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.adapter.FeedAdapter;
 import com.queatz.snappy.adapter.OfferAdapter;
 import com.queatz.snappy.adapter.PersonUptoAdapter;
 import com.queatz.snappy.shared.Config;
@@ -27,6 +28,7 @@ import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.DynamicRealmObject;
@@ -41,9 +43,9 @@ public class PersonUptoSlide extends Fragment {
     Team team;
     DynamicRealmObject mPerson;
     View personAbout;
+    TextView socialMode;
     FloatingActionButton mFloatingAction;
     RealmChangeListener<DynamicRealmObject> mChangeListener = null;
-    boolean mShowOffers;
 
     public void setPerson(DynamicRealmObject person) {
         mPerson = person;
@@ -78,24 +80,34 @@ public class PersonUptoSlide extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.person_upto, container, false);
-
         final ListView updateList = ((ListView) view.findViewById(R.id.updateList));
 
+        socialMode = (TextView) view.findViewById(R.id.socialMode);
+
         personAbout = View.inflate(getActivity(), R.layout.person_upto_about, null);
-        personAbout.findViewById(R.id.offers).setVisibility(View.GONE);
 
         updateList.addHeaderView(personAbout);
         updateList.addFooterView(new View(getActivity()));
 
         if(mPerson != null) {
+            RealmResults<DynamicRealmObject> offers = team.realm.where("Thing")
+                    .equalTo(Thing.KIND, "offer")
+                    .equalTo("person.id", mPerson.getString(Thing.ID))
+                    .findAllSorted("price", Sort.ASCENDING);
+
             RealmResults<DynamicRealmObject> recentUpdates = team.realm.where("Thing")
                     .equalTo(Thing.KIND, "update")
                     .equalTo("person.id", mPerson.getString(Thing.ID))
                     .findAllSorted("date", Sort.DESCENDING);
-            updateList.setAdapter(new PersonUptoAdapter(getActivity(), recentUpdates));
+
+            final ArrayList<RealmResults> list = new ArrayList<>();
+            list.add(offers);
+            list.add(recentUpdates);
+
+            updateList.setAdapter(new FeedAdapter(getActivity(), list));
         }
 
-        update(true);
+        update();
 
         mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         mRefresh.setColorSchemeResources(R.color.red);
@@ -119,12 +131,15 @@ public class PersonUptoSlide extends Fragment {
                     team.action.offerSomething(getActivity());
                 }
             });
+
+            Util.attachFAB(mFloatingAction, updateList);
         } else {
             mFloatingAction.setVisibility(View.GONE);
         }
 
+        TextView socialMode = (TextView) view.findViewById(R.id.socialMode);
 
-        view.findViewById(R.id.socialMode).setOnClickListener(new View.OnClickListener() {
+        socialMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SlideScreen slideScreen = (SlideScreen) getActivity().findViewById(R.id.person_content);
@@ -138,41 +153,6 @@ public class PersonUptoSlide extends Fragment {
         });
 
         return view;
-    }
-
-    private void updateBanner() {
-        if(mPerson == null || getActivity() == null)
-            return;
-
-        RealmResults<DynamicRealmObject> offers = team.realm.where("Thing")
-                .equalTo(Thing.KIND, "offer")
-                .equalTo("person.id", mPerson.getString(Thing.ID))
-                .findAllSorted("price", Sort.ASCENDING);
-
-        View offersView = personAbout.findViewById(R.id.offers);
-
-        boolean itsMe = team.auth.getUser().equals(mPerson.getString(Thing.ID));
-
-        if(offers.size() < 1 && !itsMe) {
-            if(offersView.getVisibility() != View.GONE) {
-                RevealAnimation.collapse(offersView);
-            }
-
-            return;
-        }
-
-        // TODO find better way to sort with "Ask for price" offers appearing at the end
-
-
-        ListView offersList = (ListView) offersView.findViewById(R.id.offersList);
-
-        OfferAdapter offersAdapter = new OfferAdapter(getActivity(), offers);
-
-        offersList.setAdapter(offersAdapter);
-
-        if(offersView.getVisibility() == View.GONE) {
-            RevealAnimation.expand(offersView);
-        }
     }
 
     public void refresh() {
@@ -209,36 +189,41 @@ public class PersonUptoSlide extends Fragment {
         });
     }
 
-    public void update() {
-        update(false);
-    }
-
-    private void update(boolean initial) {
+    private void update() {
         if(getActivity() == null) {
             return;
         }
-
-        personAbout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                updateBanner();
-
-                if (mShowOffers) {
-                    mShowOffers = false;
-                    personAbout.findViewById(R.id.offers).callOnClick();
-                }
-            }
-        }, initial ? 500 : 0);
 
         ImageView profile = (ImageView) personAbout.findViewById(R.id.profile);
 
         if(mPerson != null) {
             profile.setTag(mPerson);
 
+            if (socialMode != null) {
+                String social = mPerson.getString(Thing.SOCIAL_MODE);
+
+                if (social != null) {
+                    socialMode.setVisibility(View.VISIBLE);
+                    socialMode.setText(getString(R.string.social_mode_set, social));
+
+                    switch (social) {
+                        case Config.SOCIAL_MODE_ON:
+                        case Config.SOCIAL_MODE_FRIENDS:
+                            socialMode.setTextColor(getResources().getColor(R.color.green));
+                            break;
+                        case Config.SOCIAL_MODE_OFF:
+                            socialMode.setTextColor(getResources().getColor(R.color.gray));
+                            break;
+                    }
+                } else {
+                    socialMode.setVisibility(View.GONE);
+                }
+            }
+
             if(getActivity() != null) {
                 getActivity().registerForContextMenu(profile);
             }
-            
+
             Picasso.with(getActivity())
                     .load(Functions.getImageUrlForSize(mPerson, (int) Util.px(512)))
                     .placeholder(R.color.deepdarkred)
@@ -302,6 +287,15 @@ public class PersonUptoSlide extends Fragment {
                 about.setVisibility(View.VISIBLE);
                 about.setTextColor(getResources().getColor(R.color.text));
                 about.setText(mPerson.getString(Thing.ABOUT));
+            }
+
+            TextView proximity = (TextView) personAbout.findViewById(R.id.proximity);
+
+            if (!mPerson.isNull(Thing.INFO_DISTANCE)) {
+                proximity.setText(Util.getDistanceText(mPerson.getDouble(Thing.INFO_DISTANCE)));
+                proximity.setVisibility(View.VISIBLE);
+            } else {
+                proximity.setVisibility(View.GONE);
             }
 
             Button actionButton = (Button) personAbout.findViewById(R.id.action_button);

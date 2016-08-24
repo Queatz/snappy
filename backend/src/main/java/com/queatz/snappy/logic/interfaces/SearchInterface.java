@@ -24,7 +24,14 @@ public class SearchInterface implements Interfaceable {
         String latitudeParam = as.getParameters().get(Config.PARAM_LATITUDE)[0];
         String longitudeParam = as.getParameters().get(Config.PARAM_LONGITUDE)[0];
 
-        String qParam = as.getParameters().get(Config.PARAM_Q)[0];
+        String qParam;
+
+        if (as.getParameters().containsKey(Config.PARAM_Q)) {
+            qParam = as.getParameters().get(Config.PARAM_Q)[0];
+        } else {
+            qParam = null;
+        }
+
         float latitude = Float.valueOf(latitudeParam);
         float longitude = Float.valueOf(longitudeParam);
 

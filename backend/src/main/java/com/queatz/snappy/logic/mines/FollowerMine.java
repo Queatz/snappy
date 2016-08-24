@@ -17,7 +17,7 @@ public class FollowerMine extends EarthControl {
         super(as);
     }
 
-    public Entity forPerson(Entity person, Entity isFollowingPerson) {
+    public Entity getFollower(Entity person, Entity isFollowingPerson) {
         QueryResults<Entity> results = use(EarthStore.class).query(
                 StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.FOLLOWER_KIND),
                 StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, person.key()),

@@ -163,8 +163,11 @@ public class Thing {
     public static final String UPDATES = "updates";
     public static final String INFO_FOLLOWERS = "infoFollowers";
     public static final String INFO_FOLLOWING = "infoFollowing";
+    public static final String INFO_DISTANCE = "infoDistance";
+    public static final String SOCIAL_MODE = "socialMode";
     public static final String PERSON = "person";
     public static final String TO = "to";
     public static final String FROM = "from";
+
     public static final String AUTH = "auth";
 }

@@ -73,18 +73,17 @@ public class UpdateInterface implements Interfaceable {
             case 1:
                 String updateId = as.getRoute().get(0);
 
-                String like = as.getRequest().getParameter(Config.PARAM_LIKE);
                 String edit = as.getRequest().getParameter(Config.PARAM_EDIT);
 
-                if (Boolean.toString(true).equals(like)) {
-                    return likeUpdate(as, updateId);
-                }
-                else if (Boolean.toString(true).equals(edit)) {
+                if (Boolean.toString(true).equals(edit)) {
                     return editUpdate(as, updateId);
                 }
                 break;
             case 2:
-                if (Config.PATH_DELETE.equals(as.getRoute().get(1))) {
+                if (Config.PATH_LIKE.equals(as.getRoute().get(1))) {
+                    return likeUpdate(as, as.getRoute().get(0));
+                }
+                else if (Config.PATH_DELETE.equals(as.getRoute().get(1))) {
                     new EarthStore(as).conclude(as.getRoute().get(0));
 
                     return new SuccessView(true).toJson();

@@ -10,6 +10,7 @@ import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.card.OfferCard;
 import com.queatz.snappy.ui.card.PartyCard;
+import com.queatz.snappy.ui.card.UpdateCard;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class FeedAdapter extends BaseAdapter {
     protected Context context;
     private final RealmChangeListener<DynamicRealm> listener;
 
+    private UpdateCard updateCard = new UpdateCard();
     private PartyCard partyCard = new PartyCard();
     private OfferCard offerCard = new OfferCard();
 
@@ -86,10 +88,19 @@ public class FeedAdapter extends BaseAdapter {
         View view;
         DynamicRealmObject thing = (DynamicRealmObject) getItem(position);
 
+        boolean isSameKind = convertView != null &&
+                ((DynamicRealmObject) convertView.getTag()).isValid() &&
+                thing.getString(Thing.KIND).equals(((DynamicRealmObject) convertView.getTag()).getString(Thing.KIND));
+
         if ("party".equals(thing.getString(Thing.KIND))) {
-            view = partyCard.getCard(context, thing, convertView != null && "party".equals(thing.getString(Thing.KIND)) ? convertView : null, parent);
+            view = partyCard.getCard(context, thing, isSameKind ? convertView : null, parent);
+            view.setTag(thing);
         }  else if ("offer".equals(thing.getString(Thing.KIND))) {
-            view = offerCard.getCard(context, thing, convertView != null && "offer".equals(thing.getString(Thing.KIND)) ? convertView : null, parent);
+            view = offerCard.getCard(context, thing, isSameKind ? convertView : null, parent);
+            view.setTag(thing);
+        }  else if ("update".equals(thing.getString(Thing.KIND))) {
+            view = updateCard.getCard(context, thing, isSameKind ? convertView : null, parent);
+            view.setTag(thing);
         } else {
             throw new IllegalStateException("Invalid object found: " + thing);
         }

@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.util.Functions;
 import com.squareup.picasso.Picasso;
@@ -54,6 +56,7 @@ public class PersonListAdapter extends RealmBaseAdapter<DynamicRealmObject> {
                     .placeholder(R.color.spacer)
                     .into((ImageView) view.findViewById(R.id.profile));
 
+            ((TextView) view.findViewById(R.id.proximity)).setText(Util.getDistanceText(person.getDouble(Thing.INFO_DISTANCE)));
             ((TextView) view.findViewById(R.id.person)).setText(Functions.getFullName(person));
         }
 

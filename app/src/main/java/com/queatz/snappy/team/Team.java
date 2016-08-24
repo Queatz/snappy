@@ -115,6 +115,7 @@ public class Team implements Closeable {
         schema.addField(Thing.GOOGLE_URL, String.class);
         schema.addField(Thing.AUTH, String.class);
         schema.addField(Thing.MESSAGE, String.class);
+        schema.addField(Thing.SOCIAL_MODE, String.class);
 
         // Object
         schema.addRealmObjectField(Thing.LOCATION, schema);
@@ -128,8 +129,8 @@ public class Team implements Closeable {
 
         // Date
         schema.addField(Thing.CREATED_ON, Date.class);
-        schema.addField(Thing.UPDATED, Date.class);
         schema.addField(Thing.DATE, Date.class);
+        schema.addField(Thing.UPDATED, Date.class);
 
         // Boolean
         schema.addField(Thing.PHOTO, Boolean.class);
@@ -139,6 +140,7 @@ public class Team implements Closeable {
         // Double
         schema.addField(Thing.LATITUDE, Double.class);
         schema.addField(Thing.LONGITUDE, Double.class);
+        schema.addField(Thing.INFO_DISTANCE, Double.class);
 
         // Integer
         schema.addField(Thing.PRICE, Integer.class);

@@ -14,6 +14,7 @@ import com.queatz.snappy.logic.interfaces.LocationInterface;
 import com.queatz.snappy.logic.interfaces.MeInterface;
 import com.queatz.snappy.logic.interfaces.MessageInterface;
 import com.queatz.snappy.logic.interfaces.OfferInterface;
+import com.queatz.snappy.logic.interfaces.PartyInterface;
 import com.queatz.snappy.logic.interfaces.PersonInterface;
 import com.queatz.snappy.logic.interfaces.ProjectInterface;
 import com.queatz.snappy.logic.interfaces.RecentInterface;
@@ -54,6 +55,7 @@ public class EarthRouter extends EarthControl {
         mapping.put(EarthKind.JOIN_KIND, new JoinInterface());
         mapping.put(EarthKind.RESOURCE_KIND, new ResourceInterface());
         mapping.put(EarthKind.PROJECT_KIND, new ProjectInterface());
+        mapping.put(EarthKind.PARTY_KIND, new PartyInterface());
 
         /**
          * This is the mapping for special routes, such as /here and /me.

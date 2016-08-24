@@ -235,11 +235,13 @@ public class HostParty extends Activity {
 
                 final EditText locationName = (EditText) mNewParty.findViewById(R.id.location);
 
+                team.realm.beginTransaction();
                 DynamicRealmObject location = team.realm.createObject("Thing");
                 location.setString(Thing.KIND, "location");
                 location.setString(Thing.NAME, locationName.getText().toString());
                 location.setDouble(Thing.LATITUDE, mGoogleMap.getCameraPosition().target.latitude);
                 location.setDouble(Thing.LONGITUDE, mGoogleMap.getCameraPosition().target.longitude);
+                team.realm.commitTransaction();
 
                 setLocation(location);
             }
@@ -334,12 +336,14 @@ public class HostParty extends Activity {
                             public void onInfoWindowClick(Marker marker) {
                                 final EditText locationName = (EditText) mNewParty.findViewById(R.id.location);
 
+                                team.realm.beginTransaction();
                                 DynamicRealmObject location = team.realm.createObject("Thing");
                                 location.setString(Thing.KIND, "location");
                                 location.setString(Thing.NAME, locationName.getText().toString());
                                 location.setDouble(Thing.LATITUDE, mMapMarker.getPosition().latitude);
                                 location.setDouble(Thing.LONGITUDE, mMapMarker.getPosition().longitude);
                                 location.setString(Thing.ADDRESS, address);
+                                team.realm.commitTransaction();
 
                                 setLocation(location);
                             }
@@ -425,7 +429,11 @@ public class HostParty extends Activity {
         }
 
         RealmResults<DynamicRealmObject> results = team.realm.where("Thing")
-                .equalTo(Thing.KIND, "hub")
+                .beginGroup()
+                    .equalTo(Thing.KIND, "hub")
+                    .or()
+                    .equalTo(Thing.KIND, "location")
+                .endGroup()
                 .beginsWith("name", q, Case.INSENSITIVE)
                 .findAllSorted("name", Sort.ASCENDING);
 
@@ -443,7 +451,7 @@ public class HostParty extends Activity {
         params.put(Config.PARAM_LONGITUDE, location.getLongitude());
         params.put(Config.PARAM_NAME, q);
 
-        team.api.get(Config.PATH_EARTH + "/" + Config.PATH_LOCATIONS, params, new Api.Callback() {
+        team.api.get(Config.PATH_EARTH + "/" + Config.PATH_SEARCH + "/location", params, new Api.Callback() {
             @Override
             public void success(String response) {
                 team.things.putAll(response);
@@ -487,7 +495,7 @@ public class HostParty extends Activity {
         ImageView locationProfile = ((ImageView) mNewParty.findViewById(R.id.selectedLocationProfile));
 
         int s = (int) Util.px(128);
-        String photoUrl = Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getString(Thing.ID));
+        String photoUrl = Config.API_URL + String.format(Config.PATH_EARTH_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getString(Thing.ID));
 
         Picasso.with(team.context).load(photoUrl).placeholder(R.drawable.location).into(locationProfile);
 
@@ -527,8 +535,6 @@ public class HostParty extends Activity {
 
         Date newDate = TimeUtil.matchDateHour(party.getDate(Thing.DATE));
         float percent = dateToPercent(newDate);
-
-        Log.e(Config.LOG_TAG, newDate + " • " + percent);
 
         date.setPercent(percent);
 

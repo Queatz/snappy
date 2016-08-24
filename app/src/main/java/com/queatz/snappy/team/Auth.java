@@ -343,6 +343,11 @@ public class Auth {
 
     private void setSocialMode(String socialMode) {
         mSocialMode = socialMode;
+
+        team.realm.beginTransaction();
+        me().setString(Thing.SOCIAL_MODE, socialMode);
+        team.realm.commitTransaction();
+
         save();
     }
 

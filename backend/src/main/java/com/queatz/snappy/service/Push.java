@@ -2,8 +2,10 @@ package com.queatz.snappy.service;
 
 import com.googlecode.objectify.ObjectifyService;
 import com.queatz.snappy.backend.RegistrationRecord;
+import com.queatz.snappy.shared.Config;
 
 import java.util.Date;
+import java.util.List;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -61,5 +63,24 @@ public class Push {
 
     private RegistrationRecord findRecord(String userId, String regId) {
         return ofy().load().type(RegistrationRecord.class).filter("regId", regId).filter("userId", userId).first().now();
+    }
+
+    public String getSocialMode(String userId) {
+        return findHighestSocialMode(ofy().load().type(RegistrationRecord.class)
+                .filter("userId", userId).list());
+    }
+
+    private String findHighestSocialMode(List<RegistrationRecord> devices) {
+        String socialMode = Config.SOCIAL_MODE_OFF;
+
+        for (RegistrationRecord device : devices) {
+            if (Config.SOCIAL_MODE_ON.equals(device.getSocialMode())) {
+                return Config.SOCIAL_MODE_ON;
+            } else if (Config.SOCIAL_MODE_FRIENDS.equals(device.getSocialMode())) {
+                socialMode = Config.SOCIAL_MODE_FRIENDS;
+            }
+        }
+
+        return socialMode;
     }
 }

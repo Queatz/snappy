@@ -14,7 +14,7 @@ import io.realm.DynamicRealmObject;
 public class Functions {
 
     public static String getLocationText(DynamicRealmObject location) {
-        return location.getDate(Thing.LATITUDE) +
+        return location.getDouble(Thing.LATITUDE) +
                 "," +
                 location.getDouble(Thing.LONGITUDE) +
                 "(" +

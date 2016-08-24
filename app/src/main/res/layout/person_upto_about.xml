@@ -142,6 +142,19 @@
             android:textColor="@color/text"
             android:textSize="18sp" />
 
+        <com.queatz.snappy.ui.TextView
+            android:id="@+id/proximity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_horizontal"
+            android:autoLink="web"
+            android:paddingLeft="16dp"
+            android:paddingBottom="16dp"
+            android:paddingRight="16dp"
+            android:textColor="@color/gray"
+            android:textSize="14sp" />
+
 
         <Button style="@style/Widget.AppCompat.Button"
             android:id="@+id/action_button"
@@ -155,30 +168,6 @@
             android:padding="8dp"
             android:text="@string/follow_person"
             android:textColor="@color/white" />
-
-        <LinearLayout
-            android:id="@+id/offers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:isScrollContainer="true">
-
-            <FrameLayout
-                android:id="@+id/offersListHolder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.queatz.snappy.ui.ExpandedListView
-                    android:id="@+id/offersList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:dividerHeight="0dp"
-                    android:divider="@null"
-                    android:scrollbars="none" />
-
-            </FrameLayout>
-
-        </LinearLayout>
 
     </LinearLayout>
 

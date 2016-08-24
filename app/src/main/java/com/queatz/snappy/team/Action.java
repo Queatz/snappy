@@ -219,7 +219,10 @@ public class Action {
         intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, party.getDate(Thing.DATE).getTime());
         intent.putExtra(CalendarContract.Events.TITLE, party.getString(Thing.NAME));
         intent.putExtra(CalendarContract.Events.DESCRIPTION, party.getString(Thing.ABOUT));
-        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, party.getObject(Thing.LOCATION).getString(Thing.NAME));
+
+        if (!party.isNull(Thing.LOCATION)) {
+            intent.putExtra(CalendarContract.Events.EVENT_LOCATION, party.getObject(Thing.LOCATION).getString(Thing.NAME));
+        }
 
         from.startActivity(intent);
     }
@@ -704,7 +707,7 @@ public class Action {
             @Override
             public void success(String response) {
                 if (id != null) {
-                    String photoUrl = Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=64&auth=" + team.auth.getAuthParam(), id);
+                    String photoUrl = Config.API_URL + String.format(Config.PATH_EARTH_PHOTO + "?s=64&auth=" + team.auth.getAuthParam(), id);
                     Picasso.with(team.context).invalidate(photoUrl);
                 }
             }
@@ -789,9 +792,9 @@ public class Action {
     // TODO move to util
     private float getFreePercent() {
         if (Config.HOSTING_ENABLED_TRUE.equals(team.buy.hostingEnabled())) {
-            return (float) -Config.PAID_OFFER_PRICE_MIN / (float) (-Config.PAID_OFFER_PRICE_MIN + Config.PAID_OFFER_PRICE_MAX);
+            return (float) (-Config.PAID_OFFER_PRICE_MIN / (float) (-Config.PAID_OFFER_PRICE_MIN + Config.PAID_OFFER_PRICE_MAX)) * 0.9f;
         } else {
-            return (float) -Config.FREE_OFFER_PRICE_MIN / (float) (-Config.FREE_OFFER_PRICE_MIN + Config.FREE_OFFER_PRICE_MAX);
+            return (float) (-Config.FREE_OFFER_PRICE_MIN / (float) (-Config.FREE_OFFER_PRICE_MIN + Config.FREE_OFFER_PRICE_MAX)) * 0.9f;
         }
     }
 

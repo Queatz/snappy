@@ -130,6 +130,11 @@ public class EarthField {
     public static final String HOST = "host";
 
     /**
+     * The location of something.
+     */
+    public static final String LOCATION = "location";
+
+    /**
      * The action that was taken.
      */
     public static final String ACTION = "action";

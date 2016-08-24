@@ -7,12 +7,16 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ListView;
 
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
@@ -25,12 +29,37 @@ import java.util.UUID;
 
 import io.realm.DynamicRealmObject;
 
+import static java.lang.Math.atan2;
+import static java.lang.Math.cos;
+import static java.lang.Math.pow;
+import static java.lang.Math.sin;
+import static java.lang.Math.sqrt;
+
 /**
  * Created by jacob on 10/31/14.
  */
 public class Util {
     public static Context context;
     public static Team team;
+
+    public static String getDistanceText(double distance) {
+        if (distance < 1) {
+            int ft = ((int) distance * 5280);
+
+            if (ft < 250) {
+                return context.getString(R.string.right_here);
+            } else if (ft <= 1000) {
+                ft = (ft / 250) * 250;
+            } else {
+                ft = (ft / 500) * 500;
+            }
+
+            return context.getResources().getQuantityString(R.plurals.num_feet, ft, ft);
+        } else {
+            int mi = (int) distance;
+            return context.getResources().getQuantityString(R.plurals.num_miles, mi, mi);
+        }
+    }
 
     public static CharSequence fancyFormat(int resId, Object... params) {
         return Html.fromHtml(String.format(context.getString(resId), params));
@@ -143,7 +172,7 @@ public class Util {
     }
 
     public static String locationPhoto(DynamicRealmObject location, int s) {
-        return Config.API_URL + String.format(Config.PATH_LOCATION_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getString(Thing.ID));
+        return Config.API_URL + String.format(Config.PATH_EARTH_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getString(Thing.ID));
     }
 
     public static String photoUrl(String path, int s) {
@@ -226,5 +255,26 @@ public class Util {
                 translation = 1;
         }
         return translation;
+    }
+
+    public static void attachFAB(final FloatingActionButton floatingAction, final ListView list) {
+        list.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() != MotionEvent.ACTION_MOVE ||
+                        event.getHistorySize() < 1 ||
+                        event.getHistoricalY(0) == event.getY()) {
+                    return false;
+                }
+
+                if (event.getY() > event.getHistoricalY(0)) {
+                    floatingAction.show();
+                } else {
+                    floatingAction.hide();
+                }
+
+                return false;
+            }
+        });
     }
 }

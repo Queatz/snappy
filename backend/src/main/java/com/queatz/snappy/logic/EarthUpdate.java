@@ -43,6 +43,7 @@ public class EarthUpdate extends EarthControl {
         eventableMap.put(Config.PUSH_ACTION_NEW_UPTO, NewUpdateEvent.class);
         eventableMap.put(Config.PUSH_ACTION_NEW_OFFER, NewOfferEvent.class);
         eventableMap.put(Config.PUSH_ACTION_LIKE_UPDATE, LikeEvent.class);
+        eventableMap.put(Config.PUSH_ACTION_OFFER_LIKED, OfferLikeEvent.class);
         eventableMap.put(Config.PUSH_ACTION_NEW_THING, NewThingEvent.class);
         eventableMap.put(Config.PUSH_ACTION_NEW_CONTACT, NewContactEvent.class);
         eventableMap.put(Config.PUSH_ACTION_FOLLOW, FollowEvent.class);

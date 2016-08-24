@@ -57,13 +57,6 @@ public class MessagesSlide extends Fragment {
         mList.addHeaderView(emptyView);
         mList.setSelectionAfterHeaderView();
 
-        mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                team.action.openMessages(getActivity(), ((DynamicRealmObject) mList.getAdapter().getItem(position)).getObject(Thing.TARGET));
-            }
-        });
-
         refresh();
         update();
 
@@ -85,7 +78,20 @@ public class MessagesSlide extends Fragment {
                 mList.setAdapter(new RecentAdapter(getActivity(), recents));
             }
 
-            ((ViewGroup) emptyView).getChildAt(0).setVisibility(mList.getAdapter().getCount() < 1 ? View.VISIBLE : View.GONE);
+            boolean noMessages = mList.getAdapter().getCount() < 2;
+
+            ((ViewGroup) emptyView).getChildAt(0).setVisibility(noMessages ? View.VISIBLE : View.GONE);
+
+            if (noMessages) {
+                mList.setOnItemClickListener(null);
+            } else {
+                mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        team.action.openMessages(getActivity(), ((DynamicRealmObject) mList.getAdapter().getItem(position)).getObject(Thing.TARGET));
+                    }
+                });
+            }
         }
     }
 
