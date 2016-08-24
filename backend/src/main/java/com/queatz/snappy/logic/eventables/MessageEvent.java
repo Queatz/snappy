@@ -3,6 +3,7 @@ package com.queatz.snappy.logic.eventables;
 import com.google.cloud.datastore.Entity;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.html.HtmlEscapers;
+import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
@@ -39,12 +40,17 @@ public class MessageEvent implements Eventable {
 
     @Override
     public Object makePush() {
+        Entity person = earthStore.get(message.getKey(EarthField.SOURCE));
+
         return new PushSpec(
                 Config.PUSH_ACTION_MESSAGE,
                 ImmutableMap.of(
                         "id", message.key().name(),
-                        "from", message.getKey(EarthField.SOURCE).name(), // go deeper {name: ...}
-                        "message", message.getString(EarthField.MESSAGE)
+                        "from", ImmutableMap.of(
+                                "id", person.key().name(),
+                                "firstName", person.getString(EarthField.FIRST_NAME)
+                        ),
+                        "message", Util.clip(message.getString(EarthField.MESSAGE))
                 )
         );
     }

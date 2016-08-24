@@ -12,45 +12,48 @@ import com.queatz.snappy.shared.PushSpec;
 /**
  * Created by jacob on 6/19/16.
  */
-public class LikeEvent implements Eventable {
+public abstract class JoinEvent implements Eventable {
 
     EarthStore earthStore = new EarthStore(new EarthAs());
 
-    Entity like;
+    Entity join;
 
     // Serialization
 
-    public LikeEvent() {}
+    public JoinEvent() {}
 
-    public LikeEvent fromData(String data) {
-        like = earthStore.get(data);
+    public JoinEvent fromData(String data) {
+        join = earthStore.get(data);
         return this;
     }
 
     public String toData() {
-        return like.key().name();
+        return join.key().name();
     }
 
     // End Serialization
 
-    public LikeEvent(Entity like) {
-        this.like = like;
+    public JoinEvent(Entity join) {
+        this.join = join;
     }
 
-    @Override
-    public Object makePush() {
-        Entity person = earthStore.get(like.getKey(EarthField.SOURCE));
-        Entity update = earthStore.get(like.getKey(EarthField.TARGET));
+    public Object makePush(String action) {
+        Entity person = earthStore.get(join.getKey(EarthField.SOURCE));
+        Entity party = earthStore.get(join.getKey(EarthField.TARGET));
 
         return new PushSpec(
-                Config.PUSH_ACTION_LIKE_UPDATE,
+                action,
                 ImmutableMap.of(
-                        "id", like.key().name(),
-                        "source", ImmutableMap.of(
+                        "id", join.key().name(),
+                        "person", ImmutableMap.of(
                                 "id", person.key().name(),
                                 "firstName", person.getString(EarthField.FIRST_NAME)
                         ),
-                        "photo", update.getBoolean(EarthField.PHOTO)
+                        "party", ImmutableMap.of(
+                                "id", party.key().name(),
+                                "name", party.getString(EarthField.NAME),
+                                "date", party.getDateTime(EarthField.DATE).toDate()
+                        )
                 )
         );
     }

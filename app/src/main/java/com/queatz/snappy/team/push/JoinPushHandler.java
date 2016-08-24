@@ -7,15 +7,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
+import com.google.gson.JsonObject;
 import com.queatz.snappy.Background;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.PushSpec;
-import com.queatz.snappy.shared.things.JoinLinkSpec;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.util.Json;
 import com.queatz.snappy.util.TimeUtil;
+
+import java.util.Date;
 
 /**
  * Created by jacob on 10/18/15.
@@ -25,16 +27,21 @@ public class JoinPushHandler extends PushHandler {
         super(team);
     }
 
-    public void got(PushSpec<JoinLinkSpec> push) {
+    public void got(String action, JsonObject push) {
         NotificationCompat.Builder builder;
         PendingIntent pendingIntent;
         Intent resultIntent;
 
-        switch (push.action) {
+        String id = push.get("id").getAsString();
+        String personName = push.getAsJsonObject("person").get("firstName").getAsString();
+        String partyName = push.getAsJsonObject("party").get("name").getAsString();
+        Date date = Json.from(push.getAsJsonObject("party").get("date").getAsString(), Date.class);
+
+        switch (action) {
             case Config.PUSH_ACTION_JOIN_REQUEST:
                 builder = team.push.newNotification()
-                        .setContentTitle(push.body.person.firstName)
-                        .setContentText(String.format(team.context.getString(R.string.requested_to_join_party), push.body.party.name));
+                        .setContentTitle(personName)
+                        .setContentText(String.format(team.context.getString(R.string.requested_to_join_party), partyName));
 
                 resultIntent = new Intent(team.context, Main.class);
                 pendingIntent = PendingIntent.getActivity(team.context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -45,7 +52,7 @@ public class JoinPushHandler extends PushHandler {
                     resultIntent = new Intent(team.context, Background.class);
                     Bundle extras = new Bundle();
                     extras.putString(Config.EXTRA_ACTION, Config.EXTRA_ACTION_JOIN_ACCEPT);
-                    extras.putString(Config.EXTRA_JOIN_ID, push.body.id);
+                    extras.putString(Config.EXTRA_JOIN_ID, id);
                     resultIntent.putExtras(extras);
 
                     pendingIntent = PendingIntent.getService(team.context, 0, resultIntent, 0);
@@ -59,13 +66,13 @@ public class JoinPushHandler extends PushHandler {
                             .setCategory(Notification.CATEGORY_EVENT);
                 }
 
-                team.push.show("join/" + push.body.id + "/request", builder.build());
+                team.push.show("join/" + id + "/request", builder.build());
 
                 break;
             case Config.PUSH_ACTION_JOIN_ACCEPTED:
                 builder = team.push.newNotification()
-                        .setContentTitle(push.body.party.name)
-                        .setContentText(String.format(team.context.getString(R.string.request_accepted), TimeUtil.relDate(push.body.party.date)));
+                        .setContentTitle(partyName)
+                        .setContentText(String.format(team.context.getString(R.string.request_accepted), TimeUtil.relDate(date)));
 
                 resultIntent = new Intent(team.context, Main.class);
                 pendingIntent = PendingIntent.getActivity(team.context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -78,7 +85,7 @@ public class JoinPushHandler extends PushHandler {
                             .setCategory(Notification.CATEGORY_EVENT);
                 }
 
-                team.push.show("join/" + push.body.id + "/accept", builder.build());
+                team.push.show("join/" + id + "/accept", builder.build());
 
                 break;
         }
@@ -86,36 +93,17 @@ public class JoinPushHandler extends PushHandler {
         fetch(push);
     }
 
-    private void fetch(PushSpec<JoinLinkSpec> push) {
-        switch (push.action) {
-            case Config.PUSH_ACTION_JOIN_REQUEST:
-                team.api.get(Config.PATH_EARTH + "/" +  push.body.id, new Api.Callback() {
-                    @Override
-                    public void success(String response) {
-                        team.things.put(response);
-                    }
+    private void fetch(JsonObject push) {
+        team.api.get(Config.PATH_EARTH + "/" +  push.get("id").getAsString(), new Api.Callback() {
+            @Override
+            public void success(String response) {
+                team.things.put(response);
+            }
 
-                    @Override
-                    public void fail(String response) {
+            @Override
+            public void fail(String response) {
 
-                    }
-                });
-
-                break;
-            case Config.PUSH_ACTION_JOIN_ACCEPTED:
-                team.api.get(Config.PATH_EARTH + "/" + push.body.id, new Api.Callback() {
-                    @Override
-                    public void success(String response) {
-                        team.things.put(response);
-                    }
-
-                    @Override
-                    public void fail(String response) {
-
-                    }
-                });
-
-                break;
-        }
+            }
+        });
     }
 }

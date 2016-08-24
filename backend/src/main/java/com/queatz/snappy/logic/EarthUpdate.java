@@ -6,6 +6,8 @@ import com.google.common.collect.HashBiMap;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.logic.eventables.ClearNotificationEvent;
 import com.queatz.snappy.logic.eventables.FollowEvent;
+import com.queatz.snappy.logic.eventables.JoinAcceptedEvent;
+import com.queatz.snappy.logic.eventables.JoinEvent;
 import com.queatz.snappy.logic.eventables.JoinRequestEvent;
 import com.queatz.snappy.logic.eventables.LikeEvent;
 import com.queatz.snappy.logic.eventables.MessageEvent;
@@ -36,6 +38,7 @@ public class EarthUpdate extends EarthControl {
     public static final Map<Class<? extends Eventable>, String> actionMap;
 
     static {
+        eventableMap.put(Config.PUSH_ACTION_JOIN_ACCEPTED, JoinAcceptedEvent.class);
         eventableMap.put(Config.PUSH_ACTION_JOIN_REQUEST, JoinRequestEvent.class);
         eventableMap.put(Config.PUSH_ACTION_MESSAGE, MessageEvent.class);
         eventableMap.put(Config.PUSH_ACTION_NEW_PARTY, NewPartyEvent.class);

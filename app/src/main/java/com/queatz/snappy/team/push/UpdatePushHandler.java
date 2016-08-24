@@ -7,11 +7,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
+import com.google.gson.JsonObject;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Person;
-import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.PushSpec;
-import com.queatz.snappy.shared.things.UpdateSpec;
 import com.queatz.snappy.team.Team;
 
 /**
@@ -22,32 +20,34 @@ public class UpdatePushHandler extends PushHandler {
         super(team);
     }
 
-    public void got(PushSpec<UpdateSpec> push) {
+    public void got(JsonObject push) {
         NotificationCompat.Builder builder;
         PendingIntent pendingIntent;
         Intent resultIntent;
 
-        switch (push.action) {
-            case Config.PUSH_ACTION_NEW_UPTO:
-                builder = team.push.newNotification()
-                        .setContentTitle(push.body.person.firstName)
-                        .setContentText(team.context.getString(R.string.added_a_new_photo));
+        boolean photo = push.get("photo").getAsBoolean();
+        String firstName = push.getAsJsonObject("person").get("firstName").getAsString();
+        String personId = push.getAsJsonObject("person").get("id").getAsString();
 
-                resultIntent = new Intent(team.context, Person.class);
-                Bundle extras = new Bundle();
-                extras.putString("person", push.body.person.id);
-                resultIntent.putExtras(extras);
-                builder.setContentIntent(team.push.newIntentWithStack(resultIntent));
+        String message = photo ? team.context.getString(R.string.added_a_new_photo) :
+                team.context.getString(R.string.posted_an_update);
 
-                if(Build.VERSION.SDK_INT >= 21) {
-                    builder
-                            .setColor(team.context.getResources().getColor(R.color.red))
-                            .setCategory(Notification.CATEGORY_SOCIAL);
-                }
+        builder = team.push.newNotification()
+                .setContentTitle(firstName)
+                .setContentText(message);
 
-                team.push.show("person/" + push.body.person.id + "/upto", builder.build());
+        resultIntent = new Intent(team.context, Person.class);
+        Bundle extras = new Bundle();
+        extras.putString("person", personId);
+        resultIntent.putExtras(extras);
+        builder.setContentIntent(team.push.newIntentWithStack(resultIntent));
 
-                break;
+        if(Build.VERSION.SDK_INT >= 21) {
+            builder
+                    .setColor(team.context.getResources().getColor(R.color.red))
+                    .setCategory(Notification.CATEGORY_SOCIAL);
         }
+
+        team.push.show("person/" + personId + "/upto", builder.build());
     }
 }

@@ -6,11 +6,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
+import com.google.gson.JsonObject;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Person;
-import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.PushSpec;
-import com.queatz.snappy.shared.things.OfferSpec;
 import com.queatz.snappy.team.Team;
 
 /**
@@ -21,32 +19,32 @@ public class OfferPushHandler extends PushHandler {
         super(team);
     }
 
-    public void got(PushSpec<OfferSpec> push) {
+    public void got(JsonObject push) {
         NotificationCompat.Builder builder;
         Intent resultIntent;
         Bundle extras;
 
-        switch (push.action) {
-            case Config.PUSH_ACTION_NEW_OFFER:
-                builder = team.push.newNotification()
-                        .setContentTitle(team.context.getString(R.string.new_offer))
-                        .setContentText(team.context.getString(R.string.offer_by_person, push.body.details, push.body.person.firstName));
+        String id = push.get("id").getAsString();
+        String details = push.get("details").getAsString();
+        String firstName = push.getAsJsonObject("person").get("firstName").getAsString();
+        String personId = push.getAsJsonObject("person").get("id").getAsString();
 
-                resultIntent = new Intent(team.context, Person.class);
-                extras = new Bundle();
-                extras.putString("person", push.body.person.id);
-                resultIntent.putExtras(extras);
-                builder.setContentIntent(team.push.newIntentWithStack(resultIntent));
+        builder = team.push.newNotification()
+                .setContentTitle(team.context.getString(R.string.new_offer))
+                .setContentText(team.context.getString(R.string.offer_by_person, details, firstName));
 
-                if(Build.VERSION.SDK_INT >= 21) {
-                    builder
-                            .setColor(team.context.getResources().getColor(R.color.red))
-                            .setCategory(Notification.CATEGORY_PROMO);
-                }
+        resultIntent = new Intent(team.context, Person.class);
+        extras = new Bundle();
+        extras.putString("person", personId);
+        resultIntent.putExtras(extras);
+        builder.setContentIntent(team.push.newIntentWithStack(resultIntent));
 
-                team.push.show("offer/" + push.body.id + "/new", builder.build());
-
-                break;
+        if(Build.VERSION.SDK_INT >= 21) {
+            builder
+                    .setColor(team.context.getResources().getColor(R.color.red))
+                    .setCategory(Notification.CATEGORY_PROMO);
         }
+
+        team.push.show("offer/" + id + "/new", builder.build());
     }
 }

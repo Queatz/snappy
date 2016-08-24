@@ -39,13 +39,18 @@ public class NewPartyEvent implements Eventable {
 
     @Override
     public Object makePush() {
+        Entity host = earthStore.get(party.getKey(EarthField.HOST));
+
         return new PushSpec(
                 Config.PUSH_ACTION_NEW_PARTY,
                 ImmutableMap.of(
                         "id", party.key().name(),
                         "name", party.getString(EarthField.NAME),
                         "date", party.getDateTime(EarthField.DATE),
-                        "host", party.getKey(EarthField.HOST).name() // go deeper {name: ...}
+                        "host", ImmutableMap.of(
+                                "id", host.key().name(),
+                                "firstName", host.getString(EarthField.FIRST_NAME)
+                        )
                 )
         );
     }

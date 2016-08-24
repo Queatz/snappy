@@ -9,6 +9,8 @@ import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.PushSpec;
 
+import java.util.Map;
+
 /**
  * Created by jacob on 6/19/16.
  */
@@ -39,11 +41,16 @@ public class FollowEvent implements Eventable {
 
     @Override
     public Object makePush() {
+        Entity person = earthStore.get(follow.getKey(EarthField.SOURCE));
+
         return new PushSpec(
                 Config.PUSH_ACTION_CLEAR_NOTIFICATION,
                 ImmutableMap.of(
                         "id", follow.key().name(),
-                        "source", follow.getKey(EarthField.SOURCE).name() // go deeper {name: ...}
+                        "source", ImmutableMap.of(
+                                "id", person.key().name(),
+                                "firstName", person.getString(EarthField.FIRST_NAME)
+                        )
                 )
         );
     }

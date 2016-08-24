@@ -7,12 +7,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
+import com.google.gson.JsonObject;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.PushSpec;
-import com.queatz.snappy.shared.things.MessageSpec;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
@@ -28,106 +27,100 @@ public class MessagePushHandler extends PushHandler {
         super(team);
     }
 
-    public void got(PushSpec<MessageSpec> push) {
+    public void got(JsonObject push) {
         NotificationCompat.Builder builder;
         PendingIntent pendingIntent;
         Intent resultIntent;
 
-        switch (push.action) {
-            case Config.PUSH_ACTION_MESSAGE:
-                if(("person/" + push.body.from.id + "/messages").equals(team.view.getTop()))
-                    break;
+        JsonObject from = push.getAsJsonObject("from");
+        String fromId = from.get("id").getAsString();
 
-                RealmResults<DynamicRealmObject> recents = team.realm.where("Thing")
-                        .equalTo("source.id", team.auth.getUser())
-                        .equalTo("seen", false)
-                        .findAllSorted("updated");
-
-                int count = 1;
-                String summary = "";
-
-                if(recents.size() > 1) {
-                    for (int i = 0; i < recents.size() && i < 3; i++) {
-                        if(recents.get(i).getObject(Thing.TARGET).getString(Thing.ID).equals(push.body.from.id))
-                            continue;
-
-                        count++;
-
-                        if(!summary.isEmpty())
-                            summary += ", ";
-
-                        summary += recents.get(i).getObject(Thing.TARGET).getString(Thing.FIRST_NAME);
-                    }
-                }
-
-                String title;
-                String message;
-
-                if(count > 1) {
-                    title = String.format(team.context.getString(R.string.new_messages), Integer.toString(count));
-                    message = summary;
-                } else {
-                    title = push.body.from.firstName;
-                    message = push.body.message;
-                }
-
-                builder = team.push.newNotification()
-                        .setContentTitle(title)
-                        .setContentText(message);
-
-                if(count > 1) {
-                    resultIntent = new Intent(team.context, Main.class);
-                    Bundle extras = new Bundle();
-                    extras.putString("show", "messages");
-                    resultIntent.putExtras(extras);
-                    pendingIntent = PendingIntent.getActivity(team.context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                    builder.setContentIntent(pendingIntent);
-                }
-                else {
-                    resultIntent = new Intent(team.context, Person.class);
-                    Bundle extras = new Bundle();
-                    extras.putString("person", push.body.from.id);
-                    extras.putString("show", "messages");
-                    resultIntent.putExtras(extras);
-                    pendingIntent = team.push.newIntentWithStack(resultIntent);
-
-                    builder.setContentIntent(pendingIntent);
-                }
-
-                if(Build.VERSION.SDK_INT >= 21) {
-                    builder
-                            .setColor(team.context.getResources().getColor(R.color.red))
-                            .setCategory(Notification.CATEGORY_MESSAGE);
-                }
-
-                team.push.show("messages", builder.build());
-
-                break;
+        if(("person/" + fromId + "/messages").equals(team.view.getTop())) {
+            return;
         }
+
+        RealmResults<DynamicRealmObject> recents = team.realm.where("Thing")
+                .equalTo("source.id", team.auth.getUser())
+                .equalTo("seen", false)
+                .findAllSorted("updated");
+
+        int count = 1;
+        String summary = "";
+
+        if(recents.size() > 1) {
+            for (int i = 0; i < recents.size() && i < 3; i++) {
+                if(recents.get(i).getObject(Thing.TARGET).getString(Thing.ID).equals(fromId))
+                    continue;
+
+                count++;
+
+                if(!summary.isEmpty())
+                    summary += ", ";
+
+                summary += recents.get(i).getObject(Thing.TARGET).getString(Thing.FIRST_NAME);
+            }
+        }
+
+        String title;
+        String message;
+
+        if(count > 1) {
+            title = String.format(team.context.getString(R.string.new_messages), Integer.toString(count));
+            message = summary;
+        } else {
+            title = from.get("firstName").getAsString();
+            message = push.get("message").getAsString();
+        }
+
+        builder = team.push.newNotification()
+                .setContentTitle(title)
+                .setContentText(message);
+
+        if(count > 1) {
+            resultIntent = new Intent(team.context, Main.class);
+            Bundle extras = new Bundle();
+            extras.putString("show", "messages");
+            resultIntent.putExtras(extras);
+            pendingIntent = PendingIntent.getActivity(team.context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            builder.setContentIntent(pendingIntent);
+        }
+        else {
+            resultIntent = new Intent(team.context, Person.class);
+            Bundle extras = new Bundle();
+            extras.putString("person", fromId);
+            extras.putString("show", "messages");
+            resultIntent.putExtras(extras);
+            pendingIntent = team.push.newIntentWithStack(resultIntent);
+
+            builder.setContentIntent(pendingIntent);
+        }
+
+        if(Build.VERSION.SDK_INT >= 21) {
+            builder
+                    .setColor(team.context.getResources().getColor(R.color.red))
+                    .setCategory(Notification.CATEGORY_MESSAGE);
+        }
+
+        team.push.show("messages", builder.build());
 
         fetch(push);
     }
 
-    private void fetch(PushSpec<MessageSpec> push) {
-        switch (push.action) {
-            case Config.PUSH_ACTION_MESSAGE:
-                team.api.get(Config.PATH_EARTH + "/" + push.body.id, new Api.Callback() {
-                    @Override
-                    public void success(String response) {
-                        DynamicRealmObject m = team.things.put(response);
+    private void fetch(JsonObject push) {
+        team.api.get(Config.PATH_EARTH + "/" + push.get("id").getAsString(), new Api.Callback() {
+            @Override
+            public void success(String response) {
+                DynamicRealmObject m = team.things.put(response);
 
-                        if(m != null)
-                            team.local.updateRecentsForMessage(m);
-                    }
+                if(m != null)
+                    team.local.updateRecentsForMessage(m);
+            }
 
-                    @Override
-                    public void fail(String response) {
+            @Override
+            public void fail(String response) {
 
-                    }
-                });
-
-                break;
-        }
+            }
+        });
     }
 }

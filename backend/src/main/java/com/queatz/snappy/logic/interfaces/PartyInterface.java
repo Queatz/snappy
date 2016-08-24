@@ -10,6 +10,7 @@ import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.JoinEditor;
 import com.queatz.snappy.logic.editors.PartyEditor;
+import com.queatz.snappy.logic.eventables.JoinEvent;
 import com.queatz.snappy.logic.eventables.JoinRequestEvent;
 import com.queatz.snappy.logic.eventables.NewPartyEvent;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;

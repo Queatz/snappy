@@ -97,4 +97,8 @@ public class Util {
     public static String googleUrl(String url) throws MalformedURLException {
         return new URL(url).getPath().substring(2);
     }
+
+    public static String clip(String string) {
+        return string.substring(0, 100);
+    }
 }

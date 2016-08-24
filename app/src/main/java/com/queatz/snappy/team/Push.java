@@ -17,13 +17,6 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.PushSpec;
-import com.queatz.snappy.shared.things.FollowLinkSpec;
-import com.queatz.snappy.shared.things.JoinLinkSpec;
-import com.queatz.snappy.shared.things.MessageSpec;
-import com.queatz.snappy.shared.things.OfferSpec;
-import com.queatz.snappy.shared.things.PartySpec;
-import com.queatz.snappy.shared.things.UpdateLikeSpec;
-import com.queatz.snappy.shared.things.UpdateSpec;
 import com.queatz.snappy.team.push.DefaultPushHandler;
 import com.queatz.snappy.team.push.FollowPushHandler;
 import com.queatz.snappy.team.push.JoinPushHandler;
@@ -82,10 +75,6 @@ public class Push {
         }
     }
 
-    private <T> PushSpec<T> gen(String action, JsonObject json, Class<T> clazz) {
-        return new PushSpec<>(action, Json.from(json.get("body").getAsJsonObject(), clazz));
-    }
-
     public void got(String message) {
         JsonObject json;
 
@@ -102,35 +91,34 @@ public class Push {
         }
 
         String action = json.get("action").getAsString();
+        JsonObject body = json.get("body").getAsJsonObject();
         switch (action) {
             case Config.PUSH_ACTION_MESSAGE:
-                messagePushHandler.got(gen(action, json, MessageSpec.class));
+                messagePushHandler.got(body);
                 break;
             case Config.PUSH_ACTION_FOLLOW:
-                followPushHandler.got(gen(action, json, FollowLinkSpec.class));
+                followPushHandler.got(body);
                 break;
             case Config.PUSH_ACTION_REFRESH_ME:
             case Config.PUSH_ACTION_CLEAR_NOTIFICATION:
-                defaultPushHandler.got(new PushSpec<>(action, json.get("body")));
+                defaultPushHandler.got(action, body);
                 break;
             case Config.PUSH_ACTION_NEW_PARTY:
-                partyPushHandler.got(gen(action, json, PartySpec.class));
+                partyPushHandler.got(body);
                 break;
-            case Config.PUSH_ACTION_JOIN_PARTY:
             case Config.PUSH_ACTION_JOIN_REQUEST:
             case Config.PUSH_ACTION_JOIN_ACCEPTED:
-                joinPushHandler.got(gen(action, json, JoinLinkSpec.class));
+                joinPushHandler.got(action, body);
                 break;
             case Config.PUSH_ACTION_NEW_UPTO:
-                updatePushHandler.got(gen(action, json, UpdateSpec.class));
+                updatePushHandler.got(body);
                 break;
             case Config.PUSH_ACTION_NEW_OFFER:
-                offerPushHandler.got(gen(action, json, OfferSpec.class));
+                offerPushHandler.got(body);
                 break;
             case Config.PUSH_ACTION_LIKE_UPDATE:
-                likePushHandler.got(gen(action, json, UpdateLikeSpec.class));
+                likePushHandler.got(body);
                 break;
-            case Config.PUSH_ACTION_HOSTING_REMINDER:
             default:
                 Log.w(Config.LOG_TAG, "Push received with no action: " + action);
                 break;

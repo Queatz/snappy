@@ -33,6 +33,7 @@ import io.realm.DynamicRealmObject;
  * Created by jacob on 10/19/14.
  */
 public class Auth {
+
     public enum Step {
         AUTHENTICATION_CANCELED,
         AUTHENTICATION_FAILED,
@@ -438,5 +439,19 @@ public class Auth {
                 }
             });
         }
+    }
+
+    public void loadMe() {
+        team.api.get(Config.PATH_EARTH + "/" + Config.PATH_ME, new Api.Callback() {
+            @Override
+            public void success(String response) {
+                team.things.put(response);
+            }
+
+            @Override
+            public void fail(String response) {
+                // Couldn't refresh yourself
+            }
+        });
     }
 }

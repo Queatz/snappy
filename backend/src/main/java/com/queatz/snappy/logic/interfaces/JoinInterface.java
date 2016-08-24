@@ -2,10 +2,14 @@ package com.queatz.snappy.logic.interfaces;
 
 import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.JoinEditor;
+import com.queatz.snappy.logic.eventables.JoinAcceptedEvent;
+import com.queatz.snappy.logic.eventables.JoinRequestEvent;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.shared.Config;
@@ -31,6 +35,9 @@ public class JoinInterface implements Interfaceable {
                     new JoinEditor(as).hide(join);
                 } else if (Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_ACCEPT))) {
                     new JoinEditor(as).accept(join);
+
+                    new EarthUpdate(as).send(new JoinAcceptedEvent(join))
+                            .to(join.getKey(EarthField.SOURCE));
                 } else {
                     throw new NothingLogicResponse("join - bad path");
                 }

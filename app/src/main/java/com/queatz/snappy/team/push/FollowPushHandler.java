@@ -7,11 +7,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
+import com.google.gson.JsonObject;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.PushSpec;
-import com.queatz.snappy.shared.things.FollowLinkSpec;
 import com.queatz.snappy.team.Team;
 
 /**
@@ -22,34 +21,31 @@ public class FollowPushHandler extends PushHandler {
         super(team);
     }
 
-    public void got(PushSpec<FollowLinkSpec> push) {
+    public void got(JsonObject push) {
         NotificationCompat.Builder builder;
         PendingIntent pendingIntent;
         Intent resultIntent;
 
-        switch (push.action) {
-            case Config.PUSH_ACTION_FOLLOW:
-                builder = team.push.newNotification()
-                        .setContentTitle(push.body.source.firstName)
-                        .setContentText(team.context.getString(R.string.started_following_you));
+        JsonObject source = push.get("source").getAsJsonObject();
 
-                resultIntent = new Intent(team.context, Person.class);
-                Bundle extras = new Bundle();
-                extras.putString(Config.EXTRA_PERSON_ID, push.body.source.id);
-                resultIntent.putExtras(extras);
-                pendingIntent = team.push.newIntentWithStack(resultIntent);
+        builder = team.push.newNotification()
+                .setContentTitle(source.get("firstName").getAsString())
+                .setContentText(team.context.getString(R.string.started_following_you));
 
-                builder.setContentIntent(pendingIntent);
+        resultIntent = new Intent(team.context, Person.class);
+        Bundle extras = new Bundle();
+        extras.putString(Config.EXTRA_PERSON_ID, source.get("id").getAsString());
+        resultIntent.putExtras(extras);
+        pendingIntent = team.push.newIntentWithStack(resultIntent);
 
-                if(Build.VERSION.SDK_INT >= 21) {
-                    builder
-                            .setColor(team.context.getResources().getColor(R.color.red))
-                            .setCategory(Notification.CATEGORY_SOCIAL);
-                }
+        builder.setContentIntent(pendingIntent);
 
-                team.push.show("follow", builder.build());
-
-                break;
+        if(Build.VERSION.SDK_INT >= 21) {
+            builder
+                    .setColor(team.context.getResources().getColor(R.color.red))
+                    .setCategory(Notification.CATEGORY_SOCIAL);
         }
+
+        team.push.show("follow", builder.build());
     }
 }

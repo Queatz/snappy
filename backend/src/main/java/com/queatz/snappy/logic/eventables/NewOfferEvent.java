@@ -39,12 +39,17 @@ public class NewOfferEvent implements Eventable {
 
     @Override
     public Object makePush() {
+        Entity person = earthStore.get(offer.getKey(EarthField.SOURCE));
+
         return new PushSpec(
                 Config.PUSH_ACTION_NEW_OFFER,
                 ImmutableMap.of(
                         "id", offer.key().name(),
                         "details", offer.getString(EarthField.ABOUT),
-                        "person", offer.getKey(EarthField.SOURCE).name() // go deeper {name: ...}
+                        "person", ImmutableMap.of(
+                                "id", person.key().name(),
+                                "firstName", person.getString(EarthField.FIRST_NAME)
+                        )
                 )
         );
     }
