@@ -29,7 +29,7 @@ import io.realm.DynamicRealmObject;
 public class OfferCard implements Card<DynamicRealmObject> {
     @Override
     public View getCard(final Context context, final DynamicRealmObject offer, View convertView, ViewGroup parent) {
-        View view;
+        final View view;
 
         if (convertView != null) {
             view = convertView;
@@ -63,7 +63,7 @@ public class OfferCard implements Card<DynamicRealmObject> {
             }
         });
 
-        View.OnClickListener onClick = new View.OnClickListener() {
+        final View.OnClickListener onClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Messages are settings for the active person, so skip
@@ -73,11 +73,12 @@ public class OfferCard implements Card<DynamicRealmObject> {
 
                 Toast.makeText(context, team.context.getString(R.string.opening_conversation), Toast.LENGTH_SHORT).show();
                 team.action.openMessages((Activity) context, offer.getObject(Thing.PERSON), Util.offerMessagePrefill(offer));
+
+                return;
             }
         };
 
         view.findViewById(R.id.takeOffer).setOnClickListener(onClick);
-        view.setOnClickListener(onClick);
 
         view.setClickable(true);
         view.setOnTouchListener(new View.OnTouchListener() {

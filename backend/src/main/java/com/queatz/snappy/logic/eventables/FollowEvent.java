@@ -42,7 +42,7 @@ public class FollowEvent implements Eventable {
         Entity person = earthStore.get(follow.getKey(EarthField.SOURCE));
 
         return new PushSpec(
-                Config.PUSH_ACTION_CLEAR_NOTIFICATION,
+                Config.PUSH_ACTION_FOLLOW,
                 ImmutableMap.of(
                         "id", follow.key().name(),
                         "source", ImmutableMap.of(

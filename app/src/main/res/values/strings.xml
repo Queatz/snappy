@@ -138,6 +138,7 @@
     <string name="person_posted">%1$s posted</string>
     <string name="posted_an_update">posted an update</string>
     <string name="liked_your_update">liked your update</string>
+    <string name="liked_your_offer">liked your offer</string>
 
     <plurals name="likes">
         <item quantity="one">♡ %1$s Liker</item>

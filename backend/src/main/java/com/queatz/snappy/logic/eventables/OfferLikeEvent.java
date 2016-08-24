@@ -39,12 +39,21 @@ public class OfferLikeEvent implements Eventable {
 
     @Override
     public Object makePush() {
+        Entity source = earthStore.get(like.getKey(EarthField.SOURCE));
+        Entity target = earthStore.get(like.getKey(EarthField.TARGET));
+
         return new PushSpec(
                 Config.PUSH_ACTION_OFFER_LIKED,
                 ImmutableMap.of(
                         "id", like.key().name(),
-                        "source", like.getKey(EarthField.SOURCE).name(), // go deeper {name: ...}
-                        "target", like.getKey(EarthField.TARGET).name() // go deeper {name: ...}
+                        "source", ImmutableMap.of(
+                                "id", source.key().name(),
+                                "firstName", source.getString(EarthField.FIRST_NAME)
+                        ),
+                        "target", ImmutableMap.of(
+                                "id", target.key().name(),
+                                "name", target.getString(EarthField.ABOUT)
+                        )
                 )
         );
     }
@@ -52,16 +61,18 @@ public class OfferLikeEvent implements Eventable {
     @Override
     public String makeSubject() {
         Entity person = earthStore.get(like.getKey(EarthField.SOURCE));
-        Entity offer = earthStore.get(like.getKey(EarthField.TARGET));
 
-        return person.getString(EarthField.FIRST_NAME) + " liked you for " + offer.getString(EarthField.NAME);
+        return person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME) + " liked your offer";
     }
 
     @Override
     public String makeEmail() {
         Entity person = earthStore.get(like.getKey(EarthField.SOURCE));
+        Entity offer = earthStore.get(like.getKey(EarthField.TARGET));
 
-        return "<span style=\"color: #757575;\">View their profile at " + Config.VILLAGE_WEBSITE + person.getString(EarthField.GOOGLE_URL) + "</span>";
+        return offer.getString(EarthField.NAME) +
+                "<span style=\"color: #757575;\">View their profile at " +
+                Config.VILLAGE_WEBSITE + person.getString(EarthField.GOOGLE_URL) + "</span>";
     }
 
     @Override

@@ -46,6 +46,7 @@ public class LikeEvent implements Eventable {
                 Config.PUSH_ACTION_LIKE_UPDATE,
                 ImmutableMap.of(
                         "id", like.key().name(),
+                        "kind", update.getString(EarthField.KIND),
                         "source", ImmutableMap.of(
                                 "id", person.key().name(),
                                 "firstName", person.getString(EarthField.FIRST_NAME)
@@ -55,18 +56,25 @@ public class LikeEvent implements Eventable {
         );
     }
 
+
     @Override
     public String makeSubject() {
-        return null;
+        Entity person = earthStore.get(like.getKey(EarthField.SOURCE));
+        Entity update = earthStore.get(like.getKey(EarthField.TARGET));
+
+        return person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME) + " liked your " + (
+                update.getBoolean(EarthField.PHOTO) ? "photo" : "update");
     }
 
     @Override
     public String makeEmail() {
-        return null;
+        Entity person = earthStore.get(like.getKey(EarthField.SOURCE));
+
+        return "<span style=\"color: #757575;\">View their profile at " + Config.VILLAGE_WEBSITE + person.getString(EarthField.GOOGLE_URL) + "</span>";
     }
 
     @Override
     public int emailDelay() {
-        return 0;
+        return 120;
     }
 }

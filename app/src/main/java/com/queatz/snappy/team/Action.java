@@ -526,7 +526,11 @@ public class Action {
         offer.setString(Thing.KIND, "offer");
         offer.setString(Thing.ID, Util.createLocalId());
         offer.setString(Thing.ABOUT, details.trim());
-        offer.setInt(Thing.PRICE, price);
+
+        if (price != null) {
+            offer.setInt(Thing.PRICE, price);
+        }
+        
         offer.setString(Thing.UNIT, unit);
         offer.setObject(Thing.SOURCE, team.auth.me());
         team.realm.commitTransaction();

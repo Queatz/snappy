@@ -22,6 +22,7 @@ import com.queatz.snappy.team.push.FollowPushHandler;
 import com.queatz.snappy.team.push.JoinPushHandler;
 import com.queatz.snappy.team.push.LikePushHandler;
 import com.queatz.snappy.team.push.MessagePushHandler;
+import com.queatz.snappy.team.push.OfferLikePushHandler;
 import com.queatz.snappy.team.push.OfferPushHandler;
 import com.queatz.snappy.team.push.PartyPushHandler;
 import com.queatz.snappy.team.push.UpdatePushHandler;
@@ -42,6 +43,7 @@ public class Push {
     private UpdatePushHandler updatePushHandler;
     private OfferPushHandler offerPushHandler;
     private LikePushHandler likePushHandler;
+    private OfferLikePushHandler offerLikePushHandler;
 
     public Push(Team t) {
         team = t;
@@ -55,6 +57,7 @@ public class Push {
         updatePushHandler = new UpdatePushHandler(team);
         offerPushHandler = new OfferPushHandler(team);
         likePushHandler = new LikePushHandler(team);
+        offerLikePushHandler = new OfferLikePushHandler(team);
     }
 
     public void show(String push, Notification notification) {
@@ -118,6 +121,9 @@ public class Push {
                 break;
             case Config.PUSH_ACTION_LIKE_UPDATE:
                 likePushHandler.got(body);
+                break;
+            case Config.PUSH_ACTION_OFFER_LIKED:
+                offerLikePushHandler.got(body);
                 break;
             default:
                 Log.w(Config.LOG_TAG, "Push received with no action: " + action);

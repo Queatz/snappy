@@ -14,10 +14,10 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 
 /**
- * Created by jacob on 12/5/15.
+ * Created by jacob on 8/2416.
  */
-public class LikePushHandler extends PushHandler {
-    public LikePushHandler(Team team) {
+public class OfferLikePushHandler extends PushHandler {
+    public OfferLikePushHandler(Team team) {
         super(team);
     }
 
@@ -26,12 +26,10 @@ public class LikePushHandler extends PushHandler {
         PendingIntent pendingIntent;
         Intent resultIntent;
 
-        boolean photo = push.get("photo").getAsBoolean();
         String firstName = push.getAsJsonObject("source").get("firstName").getAsString();
         String personId = push.getAsJsonObject("source").get("id").getAsString();
 
-        String message = photo ? team.context.getString(R.string.liked_your_photo) :
-                team.context.getString(R.string.liked_your_update);
+        String message = team.context.getString(R.string.liked_your_offer);
 
         builder = team.push.newNotification()
                 .setContentTitle(firstName)
@@ -51,6 +49,6 @@ public class LikePushHandler extends PushHandler {
                     .setCategory(Notification.CATEGORY_SOCIAL);
         }
 
-        team.push.show("liker/" + personId + "/update", builder.build());
+        team.push.show("liker/" + personId + "/offer", builder.build());
     }
 }
