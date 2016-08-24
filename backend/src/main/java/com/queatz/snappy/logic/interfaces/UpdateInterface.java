@@ -24,6 +24,7 @@ import com.queatz.snappy.logic.eventables.LikeEvent;
 import com.queatz.snappy.logic.eventables.NewUpdateEvent;
 import com.queatz.snappy.logic.exceptions.LogicException;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.logic.mines.LikeMine;
 import com.queatz.snappy.logic.views.EntityListView;
 import com.queatz.snappy.logic.views.LikeView;
 import com.queatz.snappy.logic.views.SuccessView;
@@ -97,7 +98,14 @@ public class UpdateInterface implements Interfaceable {
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
         Entity poster = new EarthStore(as).get(updateId);
-        Entity like = new LikeEditor(as).newLike(as.getUser(), poster);
+
+        Entity like = new LikeMine(as).getLike(as.getUser(), poster);
+
+        if (like != null) {
+            return new SuccessView(false).toJson();
+        }
+
+        like = new LikeEditor(as).newLike(as.getUser(), poster);
 
         new EarthUpdate(as).send(new LikeEvent(like))
                 .to(poster.getKey(EarthField.SOURCE));

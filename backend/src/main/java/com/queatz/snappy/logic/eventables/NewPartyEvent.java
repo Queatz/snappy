@@ -7,7 +7,7 @@ import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.PushSpec;
+import com.queatz.snappy.backend.PushSpec;
 
 /**
  * Created by jacob on 6/19/16.
@@ -46,7 +46,7 @@ public class NewPartyEvent implements Eventable {
                 ImmutableMap.of(
                         "id", party.key().name(),
                         "name", party.getString(EarthField.NAME),
-                        "date", party.getDateTime(EarthField.DATE),
+                        "date", party.getDateTime(EarthField.DATE).toDate(),
                         "host", ImmutableMap.of(
                                 "id", host.key().name(),
                                 "firstName", host.getString(EarthField.FIRST_NAME)

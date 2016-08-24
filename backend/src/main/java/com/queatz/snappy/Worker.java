@@ -8,6 +8,7 @@ import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.LatLng;
 import com.googlecode.objectify.ObjectifyService;
 import com.queatz.snappy.backend.RegistrationRecord;
+import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthEmail;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthJson;
@@ -66,7 +67,9 @@ public class Worker extends HttpServlet {
         String fromUser = req.getParameter("fromUser");
         String data = req.getParameter("message");
 
-        Eventable eventable = new EarthUpdate(null).from(action, data);
+        EarthAs as = new EarthAs();
+
+        Eventable eventable = new EarthUpdate(as).from(action, data);
 
         HashSet<SendInstance> toUsers = new HashSet<>();
 
@@ -79,7 +82,7 @@ public class Worker extends HttpServlet {
         // Social Mode: Friends
 
         if(fromUser != null) {
-            final EarthStore earthStore = new EarthStore(null);
+            final EarthStore earthStore = new EarthStore(as);
 
             for(Entity follow : earthStore.find(EarthKind.FOLLOWER_KIND, EarthField.TARGET, earthStore.key(fromUser))) {
                 toUsers.add(new SendInstance(follow.getKey(EarthField.SOURCE).name(), Config.SOCIAL_MODE_FRIENDS));
@@ -98,7 +101,7 @@ public class Worker extends HttpServlet {
                 latLng = earthStore.get(source.getKey(EarthField.SOURCE)).getLatLng(EarthField.GEO);
             }
 
-            for (Entity person : new EarthSearcher(null).getNearby(EarthKind.PERSON_KIND, null, latLng, 300)) {
+            for (Entity person : new EarthSearcher(as).getNearby(EarthKind.PERSON_KIND, null, latLng, 300)) {
                 if(fromUser.equals(person.key().name())) {
                     continue;
                 }
@@ -115,13 +118,12 @@ public class Worker extends HttpServlet {
         for(SendInstance sendInstance : toUsers) {
             List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).filter("userId", sendInstance.userId).list();
 
-
             if (records.isEmpty()) {
 //                        if (!passesSocialMode(sendInstance, Config.SOCIAL_MODE_FRIENDS)) {
 //                            continue;
 //                        }
 
-                sendEmail(eventable, sendInstance.userId);
+                sendEmail(as, eventable, sendInstance.userId);
                 continue;
             }
 
@@ -157,7 +159,7 @@ public class Worker extends HttpServlet {
             }
 
             if (!didSendPush) {
-                sendEmail(eventable, sendInstance.userId);
+                sendEmail(as, eventable, sendInstance.userId);
             }
         }
     }
@@ -174,14 +176,14 @@ public class Worker extends HttpServlet {
                                             (sendInstance.lowestRequiredSocialMode.equals(Config.SOCIAL_MODE_ON))
                             )
                     ) {
-                return true;
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
-    private void sendEmail(Eventable eventable, String toUser) {
+    private void sendEmail(EarthAs as, Eventable eventable, String toUser) {
         final String subject = eventable.makeSubject();
 
         // Not an email-able notification
@@ -190,7 +192,7 @@ public class Worker extends HttpServlet {
         }
 
         new EarthEmail().sendRawEmail(
-                new EarthStore(null).get(toUser).getString(EarthField.EMAIL),
+                new EarthStore(as).get(toUser).getString(EarthField.EMAIL),
                 subject,
                 eventable.makeEmail());
     }

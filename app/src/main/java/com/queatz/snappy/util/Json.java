@@ -12,7 +12,7 @@ import java.text.DateFormat;
 public class Json {
     static public <T> T from(String json, Class<T> clazz) {
         try {
-            return new GsonBuilder().setDateFormat(DateFormat.LONG, DateFormat.LONG).create().fromJson(json, clazz);
+            return new GsonBuilder().setDateFormat(DateFormat.FULL, DateFormat.FULL).create().fromJson(json, clazz);
         } catch (JsonSyntaxException e) {
             return null;
         }
@@ -20,7 +20,7 @@ public class Json {
 
     static public <T> T from(JsonElement json, Class<T> clazz) {
         try {
-            return new GsonBuilder().setDateFormat(DateFormat.LONG, DateFormat.LONG).create().fromJson(json, clazz);
+            return new GsonBuilder().setDateFormat(DateFormat.FULL, DateFormat.FULL).create().fromJson(json, clazz);
         } catch (JsonSyntaxException e) {
             return null;
         }

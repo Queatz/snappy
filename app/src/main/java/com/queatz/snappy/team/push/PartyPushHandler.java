@@ -33,7 +33,7 @@ public class PartyPushHandler extends PushHandler {
 
         String name = push.get("name").getAsString();
         String id = push.get("id").getAsString();
-        Date date = Json.from(push.get("date").getAsString(), Date.class);
+        Date date = Json.from(push.get("date"), Date.class);
         String firstName = push.getAsJsonObject("host").get("firstName").getAsString();
 
         builder = team.push.newNotification()

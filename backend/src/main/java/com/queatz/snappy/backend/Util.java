@@ -99,6 +99,6 @@ public class Util {
     }
 
     public static String clip(String string) {
-        return string.substring(0, 100);
+        return string.length() > 100 ? string.substring(0, 100) : string;
     }
 }

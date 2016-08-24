@@ -6,8 +6,7 @@ import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.concepts.Eventable;
-import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.PushSpec;
+import com.queatz.snappy.backend.PushSpec;
 
 /**
  * Created by jacob on 6/19/16.

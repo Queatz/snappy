@@ -35,7 +35,7 @@ public class JoinPushHandler extends PushHandler {
         String id = push.get("id").getAsString();
         String personName = push.getAsJsonObject("person").get("firstName").getAsString();
         String partyName = push.getAsJsonObject("party").get("name").getAsString();
-        Date date = Json.from(push.getAsJsonObject("party").get("date").getAsString(), Date.class);
+        Date date = Json.from(push.getAsJsonObject("party").get("date"), Date.class);
 
         switch (action) {
             case Config.PUSH_ACTION_JOIN_REQUEST:

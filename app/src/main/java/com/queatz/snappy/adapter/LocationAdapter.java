@@ -58,7 +58,7 @@ public class LocationAdapter extends RealmBaseAdapter<DynamicRealmObject> {
         ImageView profile = (ImageView) view.findViewById(R.id.profile);
 
         int s = (int) Util.px(128);
-        String photoUrl = Config.API_URL + String.format(Config.PATH_EARTH_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getString(Thing.NAME));
+        String photoUrl = Config.API_URL + String.format(Config.PATH_EARTH_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getString(Thing.ID));
 
         Picasso.with(context).load(photoUrl).placeholder(R.drawable.location).into(profile);
 

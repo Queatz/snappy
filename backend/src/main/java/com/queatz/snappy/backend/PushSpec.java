@@ -1,4 +1,4 @@
-package com.queatz.snappy.shared;
+package com.queatz.snappy.backend;
 
 import java.util.Map;
 

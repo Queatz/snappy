@@ -12,7 +12,7 @@ import java.text.DateFormat;
 public class EarthJson {
 
     private final static Gson gson = new GsonBuilder()
-            .setDateFormat(DateFormat.LONG, DateFormat.LONG)
+            .setDateFormat(DateFormat.FULL, DateFormat.FULL)
             .create();
 
     public String toJson(Object object) {
