@@ -23,7 +23,7 @@ public class Config {
     public static final int maxRequestRetries = 4;
     public static final int maxHoursInFuture = 18;
     public static final float locationAccuracy = 100;
-    public static final float defaultMapZoom = 18;
+    public static final float defaultMapZoom = 16;
     public static final double personLocationAccuracy = 0.0473485;
 
     public static final String PREFERENCE_USER = "auth.user";

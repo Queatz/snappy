@@ -139,6 +139,7 @@
     <string name="posted_an_update">posted an update</string>
     <string name="liked_your_update">liked your update</string>
     <string name="liked_your_offer">liked your offer</string>
+    <string name="what_are_you_doing">What are you doing?</string>
 
     <plurals name="likes">
         <item quantity="one">♡ %1$s Liker</item>

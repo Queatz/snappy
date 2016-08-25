@@ -12,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.queatz.snappy.MainApplication;
+import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 
 import java.util.Date;
@@ -170,6 +172,9 @@ public class SlideScreen extends ViewGroup {
     }
 
     public void setSlide(int slide) {
+        // When setting slide, close any keyboards that are open
+        ((MainApplication) getContext().getApplicationContext()).team.view.keyboard(getWindowToken());
+
         smoothSlideTo(slide);
     }
 
@@ -181,7 +186,7 @@ public class SlideScreen extends ViewGroup {
         return mSlides.get(slide).fragment;
     }
 
-    public void smoothSlideTo(int slide) {
+    private void smoothSlideTo(int slide) {
         if(mAnimation != null) {
             mAnimation.stop();
         }

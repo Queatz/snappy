@@ -10,6 +10,7 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.queatz.snappy.MainApplication;
@@ -111,6 +112,9 @@ public class Main extends Activity {
             @Override
             public void onSlideChange(int slide) {
                 mActionBar.selectPage(slide);
+
+                getWindow().setSoftInputMode(slide == 1 ? WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE: WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+
             }
         });
 

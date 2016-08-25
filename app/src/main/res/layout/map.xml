@@ -17,4 +17,39 @@
         android:layout_height="match_parent"
         android:clickable="false"></RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="@drawable/white_rounded"
+        android:elevation="4dp"
+        android:fitsSystemWindows="true"
+        android:layout_margin="8dp">
+
+        <com.queatz.snappy.ui.EditText
+            android:id="@+id/whatsUp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:background="@null"
+            android:hint="@string/what_are_you_doing"
+            android:imeOptions="actionGo"
+            android:inputType="textCapSentences|textShortMessage"
+            android:textColorHint="@color/gray" />
+
+        <ImageButton style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:layout_marginLeft="8dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:minWidth="0dp"
+            android:tint="@color/gray"
+            android:src="@drawable/ic_photo_camera_white_24dp" />
+
+    </LinearLayout>
+
 </RelativeLayout>

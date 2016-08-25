@@ -37,21 +37,12 @@
             android:theme="@style/LoadingTheme"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustNothing" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".fragment.MapSlide"
-            android:alwaysRetainTaskState="true"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan" >
         </activity>
 
         <activity
@@ -61,7 +52,7 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:theme="@style/WelcomeTheme"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustNothing" />
 
         <activity
             android:name=".activity.Main"
@@ -69,7 +60,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustNothing" />
 
         <activity
             android:name=".activity.Person"
@@ -77,7 +68,7 @@
             android:label="@string/app_name"
             android:launchMode="standard"
             android:parentActivityName=".activity.Main"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustNothing" />
 
         <activity
             android:name=".activity.PersonList"
@@ -86,7 +77,7 @@
             android:label="@string/app_name"
             android:launchMode="standard"
             android:theme="@style/DialogTheme"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustNothing" />
 
         <activity
             android:name=".activity.HostParty"
@@ -95,27 +86,7 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:parentActivityName=".activity.Main"
-            android:windowSoftInputMode="adjustPan" />
-
-        <activity
-            android:name=".activity.Bounties"
-            android:alwaysRetainTaskState="true"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:parentActivityName=".activity.Main"
-            android:theme="@style/BountiesTheme"
-            android:windowSoftInputMode="adjustPan" />
-
-        <activity
-            android:name=".activity.Quests"
-            android:alwaysRetainTaskState="true"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:parentActivityName=".activity.Main"
-            android:theme="@style/QuestsTheme"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustNothing" />
 
         <activity
             android:name=".activity.NewUpto"
@@ -125,7 +96,7 @@
             android:label="@string/app_name"
             android:launchMode="standard"
             android:theme="@style/DialogTheme"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustNothing" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
