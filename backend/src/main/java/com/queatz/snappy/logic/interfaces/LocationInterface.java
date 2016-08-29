@@ -48,7 +48,7 @@ public class LocationInterface implements Interfaceable {
 
     private void getPhoto(EarthAs as, String locationId) {
         try {
-            if (!ApiUtil.getPhoto("location/photo/" + locationId + "/", as.getApi(), as.getRequest(), as.getResponse())) {
+            if (!ApiUtil.getPhoto(locationId, as.getApi(), as.getRequest(), as.getResponse())) {
                 throw new NothingLogicResponse("location photo - not found");
             }
         } catch (IOException e) {
@@ -60,7 +60,7 @@ public class LocationInterface implements Interfaceable {
         Entity location = new EarthStore(as).get(locationId);
 
         try {
-            if (!ApiUtil.putPhoto("location/photo/" + location.key().name() + "/" + new Date().getTime(), as.getApi(), as.getRequest())) {
+            if (!ApiUtil.putPhoto(location.key().name(), as.getApi(), as.getRequest())) {
                 throw new LogicException("location photo - not all good");
             }
         } catch (IOException e) {

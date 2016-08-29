@@ -1,6 +1,8 @@
 package com.queatz.snappy.logic.editors;
 
+import com.google.appengine.api.datastore.GeoPt;
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.LatLng;
 import com.google.cloud.datastore.NullValue;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
@@ -47,7 +49,7 @@ public class UpdateEditor extends EarthControl {
                 .set(EarthField.TARGET, target.key()));
     }
 
-    public Entity updateWith(Entity update, Entity thing, String message, boolean photo) {
+    public Entity updateWith(Entity update, Entity thing, String message, boolean photo, LatLng geo) {
         Entity.Builder edit = earthStore.edit(update)
                 .set(EarthField.TARGET, thing.key())
                 .set(EarthField.ACTION, Config.UPDATE_ACTION_UPTO)
@@ -57,6 +59,10 @@ public class UpdateEditor extends EarthControl {
             edit.set(EarthField.ABOUT, NullValue.of());
         } else {
             edit.set(EarthField.ABOUT, message);
+        }
+
+        if (geo != null) {
+            edit.set(EarthField.GEO, geo);
         }
 
         return earthStore.save(edit);

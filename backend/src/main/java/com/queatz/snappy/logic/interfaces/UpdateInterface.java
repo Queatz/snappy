@@ -1,5 +1,6 @@
 package com.queatz.snappy.logic.interfaces;
 
+import com.google.appengine.api.datastore.GeoPt;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
@@ -10,6 +11,7 @@ import com.google.appengine.tools.cloudstorage.ListItem;
 import com.google.appengine.tools.cloudstorage.ListOptions;
 import com.google.appengine.tools.cloudstorage.ListResult;
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.LatLng;
 import com.queatz.snappy.backend.ApiUtil;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
@@ -168,6 +170,9 @@ public class UpdateInterface implements Interfaceable {
         boolean photoUploaded = false;
         String thingId = null;
 
+        Double latitude = null;
+        Double longitude = null;
+
         // XXX TODO Make this use ApiUtil.putPhoto (with support for reading other params)
         try {
             ServletFileUpload upload = new ServletFileUpload();
@@ -196,6 +201,12 @@ public class UpdateInterface implements Interfaceable {
                 else if (Config.PARAM_THING.equals(item.getFieldName())) {
                     thingId = Streams.asString(stream, "UTF-8");
                 }
+                else if (Config.PARAM_LATITUDE.equals(item.getFieldName())) {
+                    latitude = Double.parseDouble(Streams.asString(stream, "UTF-8"));
+                }
+                else if (Config.PARAM_LONGITUDE.equals(item.getFieldName())) {
+                    longitude = Double.parseDouble(Streams.asString(stream, "UTF-8"));
+                }
             }
         }
         catch (FileUploadException | IOException e) {
@@ -213,12 +224,19 @@ public class UpdateInterface implements Interfaceable {
 
         Entity thing = new EarthStore(as).get(thingId);
 
-        update = new UpdateEditor(as).updateWith(update, thing, message, photoUploaded);
+        LatLng geo = null;
+
+        if (latitude != null && longitude != null) {
+            geo = LatLng.of(latitude, longitude);
+        }
+
+        update = new UpdateEditor(as).updateWith(update, thing, message, photoUploaded, geo);
 
         new EarthUpdate(as).send(new NewUpdateEvent(update)).toFollowersOf(thing);
 
         return new EarthViewer(as).getViewForEntityOrThrow(update).toJson();
     }
+
     private String editUpdate(EarthAs as, String updateId) {
         Entity update = new EarthStore(as).get(updateId);
 

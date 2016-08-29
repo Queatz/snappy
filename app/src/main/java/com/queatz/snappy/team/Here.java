@@ -27,6 +27,32 @@ public class Here {
         void onSuccess(RealmList<DynamicRealmObject> things);
     }
 
+    public void getRecentUpdates(Activity activity) {
+        team.location.get(activity, new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
+            @Override
+            public void onLocationFound(final android.location.Location location) {
+                final RequestParams params = new RequestParams();
+                params.put("latitude", location.getLatitude());
+                params.put("longitude", location.getLongitude());
+
+                team.api.get(Config.PATH_EARTH + "/" + Config.PATH_HERE + "/update?recent=true", params, new Api.Callback() {
+                    @Override
+                    public void success(String response) {
+                        team.things.putAll(response);
+                    }
+
+                    @Override
+                    public void fail(String response) {
+                    }
+                });
+            }
+
+            @Override
+            public void onLocationUnavailable() {
+            }
+        });
+    }
+
     public void update(final Activity activity, final SwipeRefreshLayout refresher, final Callback callback) {
         team.location.get(activity, new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
             @Override

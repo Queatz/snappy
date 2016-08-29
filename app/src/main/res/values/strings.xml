@@ -140,6 +140,15 @@
     <string name="liked_your_update">liked your update</string>
     <string name="liked_your_offer">liked your offer</string>
     <string name="what_are_you_doing">What are you doing?</string>
+    <string name="hub">Hub</string>
+    <string name="contacts">Contacts</string>
+    <string name="report_this_person">Report this person</string>
+    <string name="report">Report</string>
+    <string name="what_went_wrong">What went wrong?</string>
+    <string name="thanks_for_report">Thanks! We\'ve received your report.</string>
+    <string name="use_photo">Use photo</string>
+    <string name="take_another_photo">Take another photo</string>
+    <string name="photo_removed">Photo removed</string>
 
     <plurals name="likes">
         <item quantity="one">♡ %1$s Liker</item>

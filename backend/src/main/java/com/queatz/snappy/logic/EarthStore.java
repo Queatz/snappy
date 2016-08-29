@@ -18,6 +18,7 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -315,11 +316,15 @@ public class EarthStore extends EarthControl {
     }
 
     public List<Entity> getNearby(LatLng center, String kind) {
-        return earthSearcher.getNearby(kind, null, center, 100);
+        return earthSearcher.getNearby(kind, null, center, null, 100);
     }
 
     public List<Entity> getNearby(LatLng center, String kind, String q) {
-        return earthSearcher.getNearby(kind, q, center, 100);
+        return earthSearcher.getNearby(kind, q, center, null, 100);
+    }
+
+    public List<Entity> getNearby(LatLng center, String kind, boolean recent, String q) {
+        return earthSearcher.getNearby(kind, q, center, recent ? new Date(new Date().getTime() - 1000 * 60 * 60) : null , 100);
     }
 
     public QueryResults<Entity> query(StructuredQuery.Filter... filters) {

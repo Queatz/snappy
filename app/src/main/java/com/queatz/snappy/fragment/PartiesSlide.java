@@ -175,17 +175,6 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
 
         peopleNearbyList.setAdapter(peopleNearHereAdapter);
 
-        peopleNearbyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DynamicRealmObject person = ((PeopleNearHereAdapter) parent.getAdapter()).getItem(position);
-
-                if (person != null) {
-                    team.action.openProfile(getActivity(), person);
-                }
-            }
-        });
-
         if(peopleNearby.getVisibility() == View.GONE) {
             peopleNearbyListHolder.setVisibility(View.GONE);
             RevealAnimation.expand(peopleNearby, 500);

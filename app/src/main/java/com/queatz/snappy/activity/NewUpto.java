@@ -92,7 +92,7 @@ public class NewUpto extends Activity {
     }
 
     private void save() {
-        team.action.postUpto(mPhoto, ((EditText) findViewById(R.id.message)).getText().toString());
+        team.action.postSelfUpdate(mPhoto, ((EditText) findViewById(R.id.message)).getText().toString());
     }
 
     @Override

@@ -30,6 +30,10 @@ import io.realm.DynamicRealmObject;
 public class UpdateCard implements Card<DynamicRealmObject> {
     @Override
     public View getCard(final Context context, final DynamicRealmObject update, View convertView, ViewGroup parent) {
+        return getCard(context, update, convertView, parent, false);
+    }
+
+    public View getCard(final Context context, final DynamicRealmObject update, View convertView, ViewGroup parent, boolean isFloating) {
         final View view;
 
         if (convertView != null) {
@@ -38,6 +42,16 @@ public class UpdateCard implements Card<DynamicRealmObject> {
         else {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.person_upto_item, parent, false);
+        }
+
+        if (isFloating) {
+            view.setBackgroundResource(R.drawable.white_rounded);
+            view.findViewById(R.id.highlight).setBackgroundResource(R.drawable.blue_rounded_top);
+            view.setElevation(0);
+        } else {
+            view.setBackgroundResource(R.color.white);
+            view.findViewById(R.id.highlight).setBackgroundResource(R.color.blue);
+            view.setElevation(Util.px(2));
         }
 
         final Team team = ((MainApplication) context.getApplicationContext()).team;
@@ -49,10 +63,19 @@ public class UpdateCard implements Card<DynamicRealmObject> {
         if(person != null) {
             int s = (int) Util.px(64);
 
+            ImageView profile = (ImageView) view.findViewById(R.id.profile);
+
             Picasso.with(context)
                     .load(location == null ? Functions.getImageUrlForSize(person, s) : Util.locationPhoto(location, s))
                     .placeholder(location == null ? R.color.spacer : R.drawable.location)
-                    .into((ImageView) view.findViewById(R.id.profile));
+                    .into(profile);
+
+            profile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    team.action.openProfile((Activity) context, person);
+                }
+            });
 
             TextView type = (TextView) view.findViewById(R.id.type);
             type.setText(context.getString(R.string.person_posted, person.getString(Thing.FIRST_NAME)));
@@ -78,23 +101,15 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             }
         });
 
+        updateLikes(view, update, context);
+
         ImageView photo = (ImageView) view.findViewById(R.id.photo);
 
         if (Config.UPDATE_ACTION_UPTO.equals(update.getString(Thing.ACTION))) {
             if (update.getBoolean(Thing.PHOTO)) {
-                String photoUrl = Util.photoUrl(String.format(Config.PATH_EARTH_PHOTO, update.getString(Thing.ID)), parent.getMeasuredWidth() / 2);
-
-                photo.setImageDrawable(null);
                 photo.setVisibility(View.VISIBLE);
 
-                Picasso.with(context).cancelRequest(photo);
-
-                Picasso.with(context)
-                        .load(photoUrl)
-                        .placeholder(R.color.spacer)
-                        .into(photo);
-
-                photo.setVisibility(View.VISIBLE);
+                Util.setPhotoWithPicasso(update, parent.getMeasuredWidth(), photo);
             } else {
                 photo.setVisibility(View.GONE);
             }
@@ -105,8 +120,6 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             else {
                 view.findViewById(R.id.details).setVisibility(View.VISIBLE);
             }
-
-            updateLikes(view, update, context);
         }
         else {
             view.findViewById(R.id.details).setVisibility(View.VISIBLE);
@@ -149,18 +162,18 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             });
         }
 
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) likers.getLayoutParams();
+//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) likers.getLayoutParams();
+//
+//        if (params == null) {
+//            params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        }
+//
+//        if (View.GONE == view.findViewById(R.id.details).getVisibility()) {
+//            params.bottomMargin = 0;
+//        } else {
+//            params.bottomMargin = (int) Util.px(-8);
+//        }
 
-        if (params == null) {
-            params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
-
-        if (View.GONE == view.findViewById(R.id.details).getVisibility()) {
-            params.bottomMargin = 0;
-        } else {
-            params.bottomMargin = (int) Util.px(-8);
-        }
-
-        likers.setLayoutParams(params);
+//        likers.setLayoutParams(params);
     }
 }

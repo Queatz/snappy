@@ -101,7 +101,7 @@ public class Worker extends HttpServlet {
                 latLng = earthStore.get(source.getKey(EarthField.SOURCE)).getLatLng(EarthField.GEO);
             }
 
-            for (Entity person : new EarthSearcher(as).getNearby(EarthKind.PERSON_KIND, null, latLng, 300)) {
+            for (Entity person : new EarthSearcher(as).getNearby(EarthKind.PERSON_KIND, null, latLng, null, 300)) {
                 if(fromUser.equals(person.key().name())) {
                     continue;
                 }

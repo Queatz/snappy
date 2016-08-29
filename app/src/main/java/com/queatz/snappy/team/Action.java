@@ -22,7 +22,6 @@ import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.activity.PersonList;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.ui.EditText;
-import com.queatz.snappy.ui.MiniMenu;
 import com.queatz.snappy.ui.TimeSlider;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.ResponseUtil;
@@ -242,10 +241,6 @@ public class Action {
         team.view.show(from, Person.class, bundle);
     }
 
-    public void openMinimenu(Activity in, View source) {
-        ((MiniMenu) in.findViewById(R.id.miniMenu)).show();
-    }
-
     public void markPartyFull(@NonNull final DynamicRealmObject party) {
         team.realm.beginTransaction();
         party.setBoolean(Thing.FULL, true);
@@ -454,24 +449,46 @@ public class Action {
         team.view.show(activity, Main.class, bundle);
     }
 
-    public boolean postUpto(final Uri photo, final String message) {
+    public boolean postSelfUpdate(final Uri photo, final String message) {
+        return postSelfUpdate(photo, message, null);
+    }
+
+    public boolean postSelfUpdate(@Nullable  final Uri photo, @Nullable  final String message, @Nullable final android.location.Location location) {
         RequestParams params = new RequestParams();
 
         try {
             params.put(Config.PARAM_THING, team.auth.getUser());
-            params.put(Config.PARAM_PHOTO, team.context.getContentResolver().openInputStream(photo), photo.getPath());
-            params.put(Config.PARAM_MESSAGE, message);
+
+            if (photo != null) {
+                params.put(Config.PARAM_PHOTO, team.context.getContentResolver().openInputStream(photo), photo.getPath());
+            }
+
+            if (message != null) {
+                params.put(Config.PARAM_MESSAGE, message);
+            }
+
+            if (location != null) {
+                params.put(Config.PARAM_LATITUDE, location.getLatitude());
+                params.put(Config.PARAM_LONGITUDE, location.getLongitude());
+            }
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
             return false;
         }
 
+        // The server expects this whether or not there is an image being uploaded
+        params.setForceMultipartEntityContentType(true);
+
         team.api.post(Config.PATH_EARTH + "?kind=update", params, new Api.Callback() {
             @Override
             public void success(String response) {
                 team.things.put(response);
-                openProfile(null, team.auth.me());
+
+                // If location is null, then probably shared to Village from an external source
+                if (location == null) {
+                    openProfile(null, team.auth.me());
+                }
             }
 
             @Override
@@ -827,5 +844,47 @@ public class Action {
         }
 
         return price;
+    }
+
+    public void report(Activity activity, final DynamicRealmObject person) {
+        final EditText editText = new EditText(activity);
+        int p = (int) Util.px(16);
+        editText.setPadding(p, p, p, p);
+        editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        editText.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+        editText.setHint(R.string.what_went_wrong);
+        editText.setSingleLine(false);
+
+        new AlertDialog.Builder(activity).setView(editText)
+                .setNegativeButton(R.string.nope, null)
+                .setPositiveButton(R.string.report, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String report = editText.getText().toString();
+
+                        RequestParams params = new RequestParams();
+                        params.put(Config.PARAM_MESSAGE, report);
+
+                        team.api.post(Config.PATH_EARTH + "/" + Config.PATH_ME + "/report/" + person.getString(Thing.ID), params, new Api.Callback() {
+                            @Override
+                            public void success(String response) {
+                                Toast.makeText(team.context, R.string.thanks_for_report, Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void fail(String response) {
+                                Toast.makeText(team.context, "Failed to report this person", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                })
+                .show();
+
+        editText.post(new Runnable() {
+            @Override
+            public void run() {
+                team.view.keyboard(editText);
+            }
+        });
     }
 }

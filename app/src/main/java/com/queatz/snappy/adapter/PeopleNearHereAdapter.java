@@ -1,5 +1,6 @@
 package com.queatz.snappy.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,16 +9,16 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.util.Functions;
 import com.squareup.picasso.Picasso;
 
 import io.realm.DynamicRealmObject;
 import io.realm.RealmList;
-
-import static com.queatz.snappy.util.Functions.getImageUrlForSize;
 
 /**
  * Created by jacob on 8/21/15.
@@ -53,7 +54,7 @@ public class PeopleNearHereAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         View view;
 
         if (convertView != null) {
@@ -64,7 +65,7 @@ public class PeopleNearHereAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.person_here_item, parent, false);
         }
 
-        DynamicRealmObject person = mRealmList.get(position);
+        final DynamicRealmObject person = mRealmList.get(position);
 
         TextView name = (TextView) view.findViewById(R.id.name);
         ImageView profile = (ImageView) view.findViewById(R.id.profile);
@@ -75,6 +76,17 @@ public class PeopleNearHereAdapter extends BaseAdapter {
                 .into(profile);
 
         name.setText(person.getString(Thing.FIRST_NAME));
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Team team = ((MainApplication) mContext.getApplicationContext()).team;
+                team.action.openProfile((Activity) mContext, person);
+            }
+        });
+
+        view.setTag(person);
+        ((Activity) mContext).registerForContextMenu(view);
 
         return view;
     }

@@ -125,7 +125,7 @@ public abstract class CommonThingInterface implements Interfaceable {
         }
 
         try {
-            if(!ApiUtil.getPhoto("earth/thing/photo/" + thing.key().name() + "/", as.getApi(), as.getRequest(), as.getResponse())) {
+            if(!ApiUtil.getPhoto(thing.key().name(), as.getApi(), as.getRequest(), as.getResponse())) {
                 throw new PrintingError(Api.Error.NOT_FOUND, "thing - no photo");
             }
         } catch (IOException e) {
@@ -136,7 +136,7 @@ public abstract class CommonThingInterface implements Interfaceable {
 
     protected Entity postPhoto(Entity thing, EarthAs as) {
         try {
-            boolean photo = ApiUtil.putPhoto("earth/thing/photo/" + thing.key().name() + "/" + new Date().getTime(), as.getApi(), as.getRequest());
+            boolean photo = ApiUtil.putPhoto(thing.key().name(), as.getApi(), as.getRequest());
 
             EarthStore earthStore = new EarthStore(as);
             return earthStore.save(earthStore.edit(thing).set(EarthField.PHOTO, photo));

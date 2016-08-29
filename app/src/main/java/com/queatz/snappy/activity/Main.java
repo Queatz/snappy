@@ -178,4 +178,13 @@ public class Main extends Activity {
     public void onContextMenuClosed(Menu menu) {
         super.onContextMenuClosed(menu);
     }
+
+    @Override
+    public void onBackPressed() {
+        if (team.camera.isOpen()) {
+            team.camera.close();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

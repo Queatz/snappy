@@ -18,6 +18,8 @@ import com.queatz.snappy.logic.views.RecentView;
 import com.queatz.snappy.logic.views.ResourceView;
 import com.queatz.snappy.logic.views.UpdateView;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -87,6 +89,6 @@ public class EarthViewer extends EarthControl {
         }
 
         throw new NothingLogicResponse("earth viewer - failed to create view for kind: "
-                + entity.getString(EarthField.KIND) + "\n\n" + error.getLocalizedMessage());
+                + entity.getString(EarthField.KIND) + "\n\n" + ExceptionUtils.getStackTrace(error));
     }
 }

@@ -113,6 +113,9 @@ public class Config {
     public static final String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
     public static final String QUEUE_WORKER_URL = "/worker";
     public static final String QUEUE_WORKER_NAME = "pushes";
+    public static final String QUEUE_IMAGE_WORKER_NAME = "images";
+    public static final String QUEUE_IMAGE_WORKER_URL = "/image-worker";
+
 
     public static final boolean IN_BETA = false;
     public static final boolean PUBLIC_BUY = true;
@@ -222,6 +225,7 @@ public class Config {
     public static final String PARAM_PERSON = "person";
     public static final String PARAM_KIND = "kind";
     public static final String PARAM_Q = "q";
+    public static final String PARAM_RECENT = "recent";
 
     public static final String GOOGLE_PLUS_PROFILE_URL = "https://www.googleapis.com/plus/v1/people/me";
     public static final String GOOGLE_PLUS_TOKENINFO_URL = "https://www.googleapis.com/oauth2/v1/tokeninfo";
@@ -263,4 +267,5 @@ public class Config {
     public static final String PATH_EARTH = "earth";
     public static final String PATH_EDIT = "edit";
     public static final String PATH_LIKE = "like";
+    public static final String PATH_REPORT = "report";
 }

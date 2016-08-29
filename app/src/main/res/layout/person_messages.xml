@@ -24,6 +24,17 @@
         android:background="@color/white"
         android:elevation="8dp">
 
+        <ImageButton style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/cameraButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:minWidth="0dp"
+            android:tint="@color/gray"
+            android:src="@drawable/ic_photo_camera_white_24dp" />
+
         <com.queatz.snappy.ui.EditText
             android:id="@+id/writeMessage"
             android:layout_weight="1"
@@ -40,13 +51,14 @@
 
         <ImageView
             android:clickable="true"
-            android:background="@drawable/softclick"
+            android:background="?android:selectableItemBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
             android:padding="8dp"
-            android:src="@android:drawable/ic_menu_send"
+            android:tint="@color/gray"
+            android:src="@drawable/ic_send_white_24dp"
             android:id="@+id/sendButton" />
     </LinearLayout>
 </LinearLayout>

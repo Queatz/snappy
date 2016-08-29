@@ -1,9 +1,20 @@
 package com.queatz.snappy;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.media.ExifInterface;
+import android.media.Image;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -14,17 +25,24 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.util.Base64;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.ui.camera.CameraImageSaver;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 import io.realm.DynamicRealmObject;
@@ -44,7 +62,7 @@ public class Util {
 
     public static String getDistanceText(double distance) {
         if (distance < 1) {
-            int ft = ((int) distance * 5280);
+            int ft = ((int) (distance * 5280f));
 
             if (ft < 250) {
                 return context.getString(R.string.right_here);
@@ -276,5 +294,52 @@ public class Util {
                 return false;
             }
         });
+    }
+
+    public static void setPhotoWithPicasso(DynamicRealmObject thing, int s, ImageView photo) {
+        photo.setImageDrawable(null);
+        Picasso.with(context).cancelRequest(photo);
+
+        String photoUrl = Util.photoUrl(Config.PATH_EARTH + "/" + thing.getString(Thing.ID) + "/" + Config.PATH_PHOTO, s / 2);
+
+        if (thing.isNull(Thing.PLACEHOLDER)) {
+            Picasso.with(context)
+                    .load(photoUrl)
+                    .placeholder(R.color.spacer)
+                    .into(photo);
+        } else {
+            Picasso.with(context)
+                    .load(photoUrl)
+                    .placeholder(placeholder(context.getResources(), thing.getString(Thing.PLACEHOLDER)))
+                    .into(photo);
+
+            if (!thing.isNull(Thing.ASPECT)) {
+                final float aspect = (float) thing.getDouble(Thing.ASPECT);
+                photo.getLayoutParams().height = (int) (s / aspect);
+            }
+        }
+    }
+
+    private static BitmapDrawable placeholder(Resources resources, String image) {
+        byte bytes[] = Base64.decode(image, Base64.DEFAULT);
+
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        return new BitmapDrawable(resources, bitmap);
+    }
+
+    public static Bitmap tint(int color) {
+        int s = (int) px(16);
+        Paint paint = new Paint();
+        paint.setColor(color);
+        Bitmap bitmapResult = Bitmap.createBitmap(s, s, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmapResult);
+        canvas.drawOval(0, 0, s, s, paint);
+        return bitmapResult;
+    }
+
+    public static Uri uriFromImage(Image image) {
+        File file = new File(context.getExternalFilesDir(null), "village-capture-" + new Date() + "jpg");
+        new CameraImageSaver(image, file).run();
+        return Uri.fromFile(file);
     }
 }

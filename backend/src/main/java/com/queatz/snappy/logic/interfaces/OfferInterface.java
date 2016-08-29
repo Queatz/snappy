@@ -86,7 +86,7 @@ public class OfferInterface implements Interfaceable {
         Entity offer = new EarthStore(as).get(offerId);
 
         try {
-            if (!ApiUtil.putPhoto("offer/photo/" + offer.key().name() + "/" + new Date().getTime(), as.getApi(), as.getRequest())) {
+            if (!ApiUtil.putPhoto(offer.key().name(), as.getApi(), as.getRequest())) {
                 throw new LogicException("offer photo - not all good");
             }
         } catch (IOException e) {
@@ -100,7 +100,7 @@ public class OfferInterface implements Interfaceable {
 
     private String getPhoto(EarthAs as, String offerId) {
         try {
-            if (!ApiUtil.getPhoto("offer/photo/" + offerId + "/", as.getApi(), as.getRequest(), as.getResponse())) {
+            if (!ApiUtil.getPhoto(offerId, as.getApi(), as.getRequest(), as.getResponse())) {
                 throw new NothingLogicResponse("offer photo - not found");
             }
         } catch (IOException e) {

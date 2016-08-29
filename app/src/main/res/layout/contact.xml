@@ -6,10 +6,10 @@
 
     <com.makeramen.RoundedImageView
         android:id="@+id/profile"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_margin="8dp"
         android:scaleType="centerCrop"
-        app:riv_corner_radius="48dp" />
+        app:riv_corner_radius="24dp" />
 
 </FrameLayout>

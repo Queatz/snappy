@@ -48,6 +48,7 @@ public class Things {
                 case Thing.GOOGLE_URL:
                 case Thing.SOCIAL_MODE:
                 case Thing.MESSAGE:
+                case Thing.PLACEHOLDER:
                     thing.setString(entry.getKey(), entry.getValue().getAsString());
                     break;
 
@@ -81,6 +82,7 @@ public class Things {
                 case Thing.LATITUDE:
                 case Thing.LONGITUDE:
                 case Thing.INFO_DISTANCE:
+                case Thing.ASPECT:
                     thing.setDouble(entry.getKey(), entry.getValue().getAsDouble());
                     break;
 
@@ -104,6 +106,7 @@ public class Things {
                 case Thing.JOINS:
                 case Thing.OFFERS:
                 case Thing.UPDATES:
+                case Thing.CONTACTS:
                     thing.setList(entry.getKey(), putAll(realm, entry.getValue().getAsJsonArray()));
                     break;
 

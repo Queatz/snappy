@@ -1,11 +1,13 @@
 package com.queatz.snappy.backend;
 
+import com.google.appengine.api.appidentity.AppIdentityService;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
+import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.ListItem;
 import com.google.appengine.tools.cloudstorage.ListOptions;
 import com.google.appengine.tools.cloudstorage.ListResult;
@@ -35,15 +37,17 @@ public class ApiUtil {
     /**
      * Function to read a photo from a GCS instance.
      *
-     * @param prefix Filename
+     * @param thingId Filename
      * @param api Api object with the GCS instance
      * @param request The raw request
      * @param response The raw response
      * @return If the get was successful
      * @throws IOException
      */
-    public static boolean getPhoto(String prefix, Api api, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public static boolean getPhoto(String thingId, Api api, HttpServletRequest request, HttpServletResponse response) throws IOException {
         int size;
+
+        thingId = "earth/thing/photo/" + thingId + "/";
 
         try {
             size = Integer.parseInt(request.getParameter(Config.PARAM_SIZE));
@@ -51,8 +55,27 @@ public class ApiUtil {
             size = 200;
         }
 
+        String fileName = getFileNameFull(api.mGCS, api.mAppIdentityService, thingId);
+
+        if (fileName == null) {
+            return false;
+        }
+
+        ImagesService imagesService = ImagesServiceFactory.getImagesService();
+        ServingUrlOptions servingUrlOptions = ServingUrlOptions.Builder
+                .withGoogleStorageFileName(fileName)
+                .imageSize(size)
+                .secureUrl(true);
+        String photoUrl = imagesService.getServingUrl(servingUrlOptions);
+
+        response.sendRedirect(photoUrl);
+
+        return true;
+    }
+
+    public static String getFileName(GcsService gcsService, AppIdentityService identityService, String prefix) throws IOException {
         ListOptions options = new ListOptions.Builder().setPrefix(prefix).setRecursive(false).build();
-        ListResult list = api.mGCS.list(api.mAppIdentityService.getDefaultGcsBucketName(), options);
+        ListResult list = gcsService.list(identityService.getDefaultGcsBucketName(), options);
 
         Date lastModified = new Date(0);
         String fileName = null;
@@ -64,32 +87,25 @@ public class ApiUtil {
             }
         }
 
-        if (fileName == null) {
-            return false;
-        }
+        return fileName;
+    }
 
-        ImagesService imagesService = ImagesServiceFactory.getImagesService();
-        ServingUrlOptions servingUrlOptions = ServingUrlOptions.Builder.withGoogleStorageFileName(
-                "/gs/" + api.mAppIdentityService.getDefaultGcsBucketName() + "/" + fileName).imageSize(size)
-                .secureUrl(true);
-        String photoUrl = imagesService.getServingUrl(servingUrlOptions);
-
-        response.sendRedirect(photoUrl);
-
-        return true;
+    public static String getFileNameFull(GcsService gcsService, AppIdentityService identityService, String prefix) throws IOException {
+        return "/gs/" + identityService.getDefaultGcsBucketName() + "/" + getFileName(gcsService, identityService, prefix);
     }
 
     /**
      * Function to put a photo in a GCS instance.
      *
-     * @param name The file name
+     * @param thingId The file name
      * @param api The Api with the GCS instance
      * @param request The request object
      * @return If the save was successful
      * @throws IOException
      */
-    public static boolean putPhoto(String name, Api api, HttpServletRequest request) throws IOException {
-        GcsFilename photoName = new GcsFilename(api.mAppIdentityService.getDefaultGcsBucketName(), name);
+    public static boolean putPhoto(String thingId, Api api, HttpServletRequest request) throws IOException {
+        thingId = "earth/thing/photo/" + thingId + "/" + new Date().getTime();
+        GcsFilename photoName = new GcsFilename(api.mAppIdentityService.getDefaultGcsBucketName(), thingId);
 
         try {
             ServletFileUpload upload = new ServletFileUpload();

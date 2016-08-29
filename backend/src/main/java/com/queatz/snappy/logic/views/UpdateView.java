@@ -1,5 +1,6 @@
 package com.queatz.snappy.logic.views;
 
+import com.google.appengine.api.datastore.GeoPt;
 import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
@@ -21,6 +22,7 @@ public class UpdateView extends ThingView {
     final long likers;
     final String action;
     final Viewable target;
+    final GeoPt geo;
 
     public UpdateView(EarthAs as, Entity update) {
         this(as, update, EarthView.DEEP);
@@ -35,6 +37,15 @@ public class UpdateView extends ThingView {
         date = update.getDateTime(EarthField.CREATED_ON).toDate();
         person = new PersonView(as, earthStore.get(update.getKey(EarthField.SOURCE)), EarthView.SHALLOW);
         likers = earthStore.count(EarthKind.LIKE_KIND, EarthField.TARGET, update.key());
+
+        if (update.contains(EarthField.GEO)) {
+            geo = new GeoPt(
+                    (float) update.getLatLng(EarthField.GEO).latitude(),
+                    (float) update.getLatLng(EarthField.GEO).longitude()
+            );
+        } else {
+            geo = null;
+        }
 
         if (update.contains(EarthField.TARGET)) {
             target = earthViewer.getViewForEntityOrThrow(earthStore.get(update.getKey(EarthField.TARGET)), EarthView.SHALLOW);

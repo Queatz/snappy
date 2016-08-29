@@ -2,6 +2,11 @@ package com.queatz.snappy.ui.card;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.util.Base64;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -55,7 +60,10 @@ public class OfferCard implements Card<DynamicRealmObject> {
         }
 
         ImageView profile = (ImageView) view.findViewById(R.id.profile);
-        Picasso.with(context).load(Functions.getImageUrlForSize(offer.getObject(Thing.PERSON), (int) Util.px(64))).placeholder(R.color.spacer).into(profile);
+        Picasso.with(context)
+                .load(Functions.getImageUrlForSize(offer.getObject(Thing.PERSON), (int) Util.px(64)))
+                .placeholder(R.color.spacer)
+                .into(profile);
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,20 +118,11 @@ public class OfferCard implements Card<DynamicRealmObject> {
         view.findViewById(R.id.highlight).setBackgroundResource(colorResource);
         ((Button) view.findViewById(R.id.takeOffer)).setTextColor(context.getResources().getColor(colorResource));
 
-        ImageView photo = (ImageView) view.findViewById(R.id.photo);
+        final ImageView photo = (ImageView) view.findViewById(R.id.photo);
 
         if (offer.getBoolean(Thing.PHOTO)) {
-            String photoUrl = Util.photoUrl(Config.PATH_EARTH + "/" + offer.getString(Thing.ID) + "/" + Config.PATH_PHOTO, parent.getMeasuredWidth() / 2);
-
             photo.setVisibility(View.VISIBLE);
-            photo.setImageDrawable(null);
-
-            Picasso.with(context).cancelRequest(photo);
-
-            Picasso.with(context)
-                    .load(photoUrl)
-                    .placeholder(R.color.spacer)
-                    .into(photo);
+            Util.setPhotoWithPicasso(offer, parent.getMeasuredWidth(), photo);
         } else {
             photo.setVisibility(View.GONE);
         }
@@ -150,7 +149,6 @@ public class OfferCard implements Card<DynamicRealmObject> {
                 }
             });
         }
-
 
         return view;
     }

@@ -13,15 +13,13 @@
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/actionBar"/>
+        android:layout_below="@id/actionBar" />
 
-    <com.queatz.snappy.ui.MiniMenu
-        android:id="@+id/miniMenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/actionBar"
-        android:background="@color/white"
-        android:elevation="2dp"/>
+    <RelativeLayout
+        android:id="@+id/cameraLayout"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="8dp" />
 
 </RelativeLayout>

@@ -17,6 +17,7 @@ import com.google.cloud.datastore.LatLng;
 import com.queatz.snappy.shared.Config;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -68,7 +69,7 @@ public class EarthSearcher extends EarthControl {
         return object.key().name();
     }
 
-    public List<Entity> getNearby(String kind, String q, LatLng location, int count) {
+    public List<Entity> getNearby(String kind, String q, LatLng location, Date afterDate, int count) {
         String queryString = "(";
 
         final String geoString = "geopoint(" + location.latitude() + ", " + location.longitude() + ")";
@@ -83,6 +84,10 @@ public class EarthSearcher extends EarthControl {
         }
 
         queryString += ")";
+
+        if (afterDate != null) {
+            queryString += " AND created_on >= " + (afterDate.getTime() / 1000);
+        }
 
         if (kind != null) {
             String kinds[] = kind.split(Pattern.quote("|"));
@@ -161,6 +166,12 @@ public class EarthSearcher extends EarthControl {
 
         builder.addField(kindField);
         builder.setId(getId(object));
+
+        Field createdField = Field.newBuilder().setName(EarthField.CREATED_ON)
+                .setNumber(object.getDateTime(EarthField.CREATED_ON).toDate().getTime() / 1000)
+                .build();
+
+        builder.addField(createdField);
 
         if (object.contains(EarthField.NAME) && object.getString(EarthField.NAME) != null) {
             Field nameField = Field.newBuilder().setName(EarthField.NAME)

@@ -51,6 +51,7 @@ public class RecentAdapter extends RealmBaseAdapter<DynamicRealmObject> {
 
         TextView name = (TextView) view.findViewById(R.id.name);
         TextView lastMessage = (TextView) view.findViewById(R.id.lastMessage);
+        TextView proximity = (TextView) view.findViewById(R.id.proximity);
         ImageView profile = (ImageView) view.findViewById(R.id.profile);
 
         Picasso.with(context)
@@ -67,6 +68,8 @@ public class RecentAdapter extends RealmBaseAdapter<DynamicRealmObject> {
 
         name.setText(Functions.getFullName(person));
         name.setTypeface(null, !recent.getBoolean(Thing.SEEN) ? Typeface.BOLD : Typeface.NORMAL);
+
+        proximity.setText(Util.getDistanceText(person.getDouble(Thing.INFO_DISTANCE)));
 
         if(message == null)
             lastMessage.setText("");

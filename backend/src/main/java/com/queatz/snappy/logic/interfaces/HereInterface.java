@@ -9,6 +9,7 @@ import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.EntityListView;
+import com.queatz.snappy.shared.Config;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -20,13 +21,20 @@ public class HereInterface implements Interfaceable {
 
     @Override
     public String get(EarthAs as) {
-        if (!as.getParameters().containsKey(EarthField.LATITUDE)
-                || !as.getParameters().containsKey(EarthField.LONGITUDE)) {
+        if (!as.getParameters().containsKey(Config.PARAM_LATITUDE)
+                || !as.getParameters().containsKey(Config.PARAM_LONGITUDE)) {
             throw new NothingLogicResponse("here - no latitude and longitude");
         }
 
-        String latitudeParam = as.getParameters().get(EarthField.LATITUDE)[0];
-        String longitudeParam = as.getParameters().get(EarthField.LONGITUDE)[0];
+        String latitudeParam = as.getParameters().get(Config.PARAM_LATITUDE)[0];
+        String longitudeParam = as.getParameters().get(Config.PARAM_LONGITUDE)[0];
+
+        boolean recent = false;
+
+
+        if (as.getParameters().containsKey(Config.PARAM_RECENT)) {
+            recent = Boolean.valueOf(as.getParameters().get(Config.PARAM_RECENT)[0]);
+        }
 
         float latitude = Float.valueOf(latitudeParam);
         float longitude = Float.valueOf(longitudeParam);
@@ -41,7 +49,8 @@ public class HereInterface implements Interfaceable {
 
         new PersonEditor(as).updateLocation(as.getUser(), latLng);
 
-        return new EntityListView(as, new EarthStore(as).getNearby(latLng, kindFilter), EarthView.SHALLOW).toJson();
+        return new EntityListView(as, new EarthStore(as)
+                .getNearby(latLng, kindFilter, recent, null), EarthView.SHALLOW).toJson();
     }
 
     @Override

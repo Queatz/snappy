@@ -18,28 +18,23 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:scaleType="fitXY"
         android:adjustViewBounds="true" />
-
-    <Button style="@style/Widget.AppCompat.Button.Borderless"
-        android:id="@+id/likers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:textColor="@color/red" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp">
 
         <com.makeramen.RoundedImageView
             android:id="@+id/profile"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_weight="0"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="8dp"
             app:riv_corner_radius="48dp" />
 
         <LinearLayout
@@ -48,16 +43,14 @@
             android:layout_gravity="top|right"
             android:gravity="top|right"
             android:layout_weight="0"
+            android:layout_marginLeft="16dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_weight="1"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp">
+                android:layout_weight="1">
 
                 <com.queatz.snappy.ui.TextView
                     android:id="@+id/type"
@@ -83,14 +76,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="16dp"
                 android:textColor="@color/text"
                 android:textSize="18sp" />
 
         </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <Button style="?android:attr/borderlessButtonStyle"
+            android:id="@+id/likers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-8dp"
+            android:layout_marginBottom="-8dp"
+            android:paddingTop="-8dp"
+            android:paddingBottom="-8dp"
+            android:layout_marginLeft="8dp"
+            android:textColor="@color/red" />
 
     </LinearLayout>
 

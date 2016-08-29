@@ -7,8 +7,10 @@ import com.google.cloud.datastore.Entity;
 import com.google.common.collect.Lists;
 import com.queatz.snappy.backend.GooglePurchaseDataSpec;
 import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.EarthEmail;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthJson;
+import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
@@ -96,9 +98,30 @@ public class MeInterface implements Interfaceable {
                     default:
                         throw new NothingLogicResponse("me - bad path");
                 }
+            case 3:
+                switch (as.getRoute().get(1)){
+                    case Config.PATH_REPORT:
+                        return postReport(as, as.getRoute().get(2));
+                    default:
+                        throw new NothingLogicResponse("me - bad path");
+                }
             default:
                 throw new NothingLogicResponse("me - bad path");
         }
+    }
+
+    private String postReport(EarthAs as, String personId) {
+        Entity jacob = new EarthStore(as).get("-697803823443327660");
+        Entity person = new EarthStore(as).get(personId);
+        String feedback = as.getRequest().getParameter(Config.PARAM_MESSAGE);
+
+        String report = "reported person with email " +
+                person.getString(EarthField.EMAIL) +
+                " with the following message:<br /><br />";
+
+        new EarthEmail().sendRawEmail(as.getUser(), jacob, "Village person reported", report + feedback);
+
+        return new SuccessView(true).toJson();
     }
 
     private String getMessages(EarthAs as) {

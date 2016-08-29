@@ -50,10 +50,12 @@ public class Menu {
                 //TODO make sure follow for you -> them is leaded when loading profile...
 
                 DynamicRealmObject follow = team.realm.where("Thing")
+                        .equalTo(Thing.KIND, "follower")
                         .equalTo("source.id", team.auth.getUser())
                         .equalTo("target.id", ((DynamicRealmObject) object).getString(Thing.ID))
                         .findFirst();
 
+                menu.add(R.string.report_this_person);
                 menu.add(follow == null ? R.string.follow : R.string.stop_following);
             }
         }
@@ -118,6 +120,8 @@ public class Menu {
             }
             else if(team.context.getString(R.string.stop_following).equals(item.getTitle())) {
                 team.action.stopFollowingPerson(((DynamicRealmObject) object));
+            } else if (team.context.getString(R.string.report_this_person).equals(item.getTitle())) {
+                team.action.report(activity, (DynamicRealmObject) object);
             }
         }
         else if("offer".equals(kind)) {

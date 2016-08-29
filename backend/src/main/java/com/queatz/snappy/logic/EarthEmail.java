@@ -23,7 +23,7 @@ public class EarthEmail {
                              String subject,
                              String message) {
 
-        message = fromPerson.getString(EarthField.EMAIL) + " says " + message;
+        message = fromPerson.getString(EarthField.EMAIL) + " " + message;
 
         sendRawEmail(
                 toPerson.getString(EarthField.EMAIL),

@@ -168,6 +168,9 @@ public class Thing {
     public static final String PERSON = "person";
     public static final String TO = "to";
     public static final String FROM = "from";
+    public static final String CONTACTS = "contacts";
 
     public static final String AUTH = "auth";
+    public static final String PLACEHOLDER = "placeholder";
+    public static final String ASPECT = "aspect";
 }

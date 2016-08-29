@@ -38,6 +38,7 @@ public class Team implements Closeable {
     public Menu menu;
     public Here here;
     public Advertise advertise;
+    public Camera camera;
 
     public Team(Context c) {
         context = c;
@@ -55,6 +56,7 @@ public class Team implements Closeable {
         menu = new Menu(this);
         here = new Here(this);
         advertise = new Advertise(this);
+        camera = new Camera(this);
     }
 
     public void close() {
@@ -116,6 +118,7 @@ public class Team implements Closeable {
         schema.addField(Thing.AUTH, String.class);
         schema.addField(Thing.MESSAGE, String.class);
         schema.addField(Thing.SOCIAL_MODE, String.class);
+        schema.addField(Thing.PLACEHOLDER, String.class);
 
         // Object
         schema.addRealmObjectField(Thing.LOCATION, schema);
@@ -141,6 +144,7 @@ public class Team implements Closeable {
         schema.addField(Thing.LATITUDE, Double.class);
         schema.addField(Thing.LONGITUDE, Double.class);
         schema.addField(Thing.INFO_DISTANCE, Double.class);
+        schema.addField(Thing.ASPECT, Double.class);
 
         // Integer
         schema.addField(Thing.PRICE, Integer.class);
@@ -152,6 +156,7 @@ public class Team implements Closeable {
         schema.addRealmListField(Thing.OFFERS, schema);
         schema.addRealmListField(Thing.JOINS, schema);
         schema.addRealmListField(Thing.UPDATES, schema);
+        schema.addRealmListField(Thing.CONTACTS, schema);
 
         dynamicRealm.commitTransaction();
 
