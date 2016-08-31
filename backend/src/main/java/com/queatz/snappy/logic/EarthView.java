@@ -9,7 +9,7 @@ public enum EarthView {
      */
     DEEP,
 
-    /**
+    IDENTITY, /**
      * Do not follow links.
      */
     SHALLOW

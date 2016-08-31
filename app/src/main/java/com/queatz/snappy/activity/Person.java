@@ -1,6 +1,7 @@
 package com.queatz.snappy.activity;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.ActionBar;
+import com.queatz.snappy.ui.OnBackPressed;
 import com.queatz.snappy.ui.SlideScreen;
 import com.queatz.snappy.util.Functions;
 import com.squareup.picasso.Picasso;
@@ -201,5 +203,17 @@ public class Person extends Activity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         return team.menu.choose(this, mContextObject, item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (team.camera.isOpen()) {
+            team.camera.close();
+        } else {
+            Fragment slide = mSlideScreen.getSlideFragment(mSlideScreen.getSlide());
+            if (!(slide instanceof OnBackPressed) || !((OnBackPressed) slide).onBackPressed()) {
+                super.onBackPressed();
+            }
+        }
     }
 }

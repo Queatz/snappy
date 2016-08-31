@@ -15,7 +15,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 /**
- * Created by jacob on 5/29/16.
+ * Created by jacob on
+ * 5/29/16.
  */
 public class EarthEmail {
     public void sendRawEmail(Entity fromPerson,

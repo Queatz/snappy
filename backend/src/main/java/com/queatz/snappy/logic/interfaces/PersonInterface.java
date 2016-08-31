@@ -1,9 +1,15 @@
 package com.queatz.snappy.logic.interfaces;
 
+import com.google.appengine.tools.cloudstorage.GcsFileOptions;
+import com.google.appengine.tools.cloudstorage.GcsFilename;
+import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.LatLng;
 import com.google.common.collect.Lists;
+import com.google.gson.JsonArray;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthUpdate;
@@ -13,8 +19,10 @@ import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.FollowerEditor;
 import com.queatz.snappy.logic.editors.MessageEditor;
 import com.queatz.snappy.logic.editors.RecentEditor;
+import com.queatz.snappy.logic.editors.UpdateEditor;
 import com.queatz.snappy.logic.eventables.FollowEvent;
 import com.queatz.snappy.logic.eventables.MessageEvent;
+import com.queatz.snappy.logic.eventables.NewUpdateEvent;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.mines.FollowerMine;
 import com.queatz.snappy.logic.mines.MessageMine;
@@ -25,7 +33,18 @@ import com.queatz.snappy.logic.views.MessageView;
 import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.shared.Config;
 
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by jacob on 5/9/16.
@@ -77,6 +96,15 @@ public class PersonInterface implements Interfaceable {
                         return postMessage(as, person, message);
                     }
                 }
+
+                break;
+            case 2:
+                switch (as.getRoute().get(1)) {
+                    case Config.PATH_MESSAGE:
+                        postMessage(as, new EarthStore(as).get(as.getRoute().get(0)));
+                        return null;
+                }
+                break;
         }
 
         throw new NothingLogicResponse("people - bad path");
@@ -149,7 +177,7 @@ public class PersonInterface implements Interfaceable {
 
     private String postMessage(EarthAs as, Entity person, String message) {
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
-        Entity sent = new MessageEditor(as).newMessage(as.getUser(), person, message);
+        Entity sent = new MessageEditor(as).newMessage(as.getUser(), person, message, false);
 
         new RecentEditor(as).updateWithMessage(sent);
 
@@ -157,4 +185,62 @@ public class PersonInterface implements Interfaceable {
 
         return new MessageView(as, sent).setLocalId(localId).toJson();
     }
+
+
+    private String postMessage(EarthAs as, Entity person)  {
+        Entity sent = new MessageEditor(as).stageMessage(as.getUser(), person);
+        GcsFilename photoName = new GcsFilename(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), "earth/thing/photo/" + sent.key().name() + "/" + new Date().getTime());
+
+        String message = null;
+        boolean photoUploaded = false;
+        String localId = null;
+
+        // XXX TODO Make this use ApiUtil.putPhoto (with support for reading other params)
+        try {
+            ServletFileUpload upload = new ServletFileUpload();
+            FileItemIterator iterator = upload.getItemIterator(as.getRequest());
+            while (iterator.hasNext()) {
+                FileItemStream item = iterator.next();
+                InputStream stream = item.openStream();
+
+                if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
+                    int len;
+                    byte[] buffer = new byte[8192];
+
+                    GcsOutputChannel outputChannel = as.getApi().mGCS.createOrReplace(photoName, GcsFileOptions.getDefaultInstance());
+
+                    while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
+                        outputChannel.write(ByteBuffer.wrap(buffer, 0, len));
+                    }
+
+                    outputChannel.close();
+
+                    photoUploaded = true;
+                }
+                else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {
+                    message = Streams.asString(stream, "UTF-8");
+                }
+                else if (Config.PARAM_LOCAL_ID.equals(item.getFieldName())) {
+                    localId = Streams.asString(stream, "UTF-8");
+                }
+            }
+        }
+        catch (FileUploadException | IOException e) {
+            Logger.getLogger(Config.NAME).severe(e.toString());
+            throw new NothingLogicResponse("message photo - couldn't upload because: " + e);
+        }
+
+        if (message == null && !photoUploaded) {
+            throw new NothingLogicResponse("message - nothing to post");
+        }
+
+        sent = new MessageEditor(as).setMessage(sent, message, photoUploaded);
+
+        new RecentEditor(as).updateWithMessage(sent);
+
+        new EarthUpdate(as).send(new MessageEvent(sent)).to(person);
+
+        return new MessageView(as, sent).setLocalId(localId).toJson();
+    }
+
 }

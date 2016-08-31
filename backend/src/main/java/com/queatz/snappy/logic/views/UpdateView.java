@@ -11,6 +11,7 @@ import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Viewable;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by jacob on 5/8/16.
@@ -23,6 +24,7 @@ public class UpdateView extends ThingView {
     final String action;
     final Viewable target;
     final GeoPt geo;
+    final List<Viewable> with;
 
     public UpdateView(EarthAs as, Entity update) {
         this(as, update, EarthView.DEEP);
@@ -37,6 +39,9 @@ public class UpdateView extends ThingView {
         date = update.getDateTime(EarthField.CREATED_ON).toDate();
         person = new PersonView(as, earthStore.get(update.getKey(EarthField.SOURCE)), EarthView.SHALLOW);
         likers = earthStore.count(EarthKind.LIKE_KIND, EarthField.TARGET, update.key());
+
+        List<Entity> joinList = earthStore.find(EarthKind.JOIN_KIND, EarthField.TARGET, update.key());
+        with = new EntityListView(as, joinList, EarthView.IDENTITY).asList();
 
         if (update.contains(EarthField.GEO)) {
             geo = new GeoPt(

@@ -71,6 +71,11 @@ public class Menu {
 
             menu.add(R.string.stop_offering);
         }
+        else if ("recent".equals(kind)) {
+            DynamicRealmObject recent = (DynamicRealmObject) object;
+
+            menu.add(R.string.remove);
+        }
     }
 
     public boolean choose(final Activity activity, Object object, final MenuItem item) {
@@ -126,11 +131,16 @@ public class Menu {
         }
         else if("offer".equals(kind)) {
             if(team.context.getString(R.string.stop_offering).equals(item.getTitle())) {
-                team.action.deleteOffer(((DynamicRealmObject) object));
+                team.action.deleteThing(((DynamicRealmObject) object));
             } else if(team.context.getString(R.string.add_photo).equals(item.getTitle()) || team.context.getString(R.string.change_photo).equals(item.getTitle())) {
                 team.action.addPhotoToOffer(activity, ((DynamicRealmObject) object));
             } else if(team.context.getString(R.string.remove_photo).equals(item.getTitle())) {
                 team.action.removePhotoFromOffer(((DynamicRealmObject) object));
+            }
+        }
+        else if("recent".equals(kind)) {
+            if(team.context.getString(R.string.remove).equals(item.getTitle())) {
+                team.action.deleteThing(((DynamicRealmObject) object));
             }
         }
 

@@ -43,11 +43,22 @@ public class RecentAdapter extends RealmBaseAdapter<DynamicRealmObject> {
             view = inflater.inflate(R.layout.messages_item, parent, false);
         }
 
-        DynamicRealmObject recent = getItem(position);
+
+        final DynamicRealmObject recent = getItem(position);
         final DynamicRealmObject person = recent.getObject(Thing.TARGET);
         DynamicRealmObject message = recent.getObject(Thing.LATEST);
 
         boolean isOwn = message != null && team.auth.getUser() != null && team.auth.getUser().equals(message.getObject(Thing.FROM).getString(Thing.ID));
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.action.openMessages((Activity) context, recent.getObject(Thing.TARGET));
+            }
+        });
+
+        view.setTag(recent);
+        ((Activity) context).registerForContextMenu(view);
 
         TextView name = (TextView) view.findViewById(R.id.name);
         TextView lastMessage = (TextView) view.findViewById(R.id.lastMessage);
@@ -65,6 +76,9 @@ public class RecentAdapter extends RealmBaseAdapter<DynamicRealmObject> {
                 team.action.openProfile((Activity) context, person);
             }
         });
+
+        profile.setTag(person);
+        ((Activity) context).registerForContextMenu(profile);
 
         name.setText(Functions.getFullName(person));
         name.setTypeface(null, !recent.getBoolean(Thing.SEEN) ? Typeface.BOLD : Typeface.NORMAL);

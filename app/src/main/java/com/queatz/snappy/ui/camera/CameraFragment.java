@@ -5,11 +5,17 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorEventListener2;
+import android.hardware.SensorManager;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -29,16 +35,23 @@ import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
+import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
+import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
+import com.squareup.picasso.Picasso;
 
+import java.io.BufferedInputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -91,6 +104,8 @@ public class CameraFragment extends Fragment {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             mCameraManager = (CameraManager) getActivity().getSystemService(Context.CAMERA_SERVICE);
         }
+
+        mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
 
         setCamera(CameraCharacteristics.LENS_FACING_BACK);
     }
@@ -180,6 +195,13 @@ public class CameraFragment extends Fragment {
             });
         }
 
+        if (mDeviceOrientation == null) {
+            mDeviceOrientation = new DeviceOrientation();
+            mSensorManager.registerListener(mDeviceOrientation.getEventListener(),
+                    mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
+                    SensorManager.SENSOR_DELAY_UI);
+        }
+
         if (mCamera != null) try {
             if (mSurface != null) {
                 CaptureRequest.Builder builder = mCamera.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
@@ -216,6 +238,8 @@ public class CameraFragment extends Fragment {
     private StreamConfigurationMap mStreamConfigurationMap;
     private ImageReader mImageReader;
     private CameraManager mCameraManager;
+    private SensorManager mSensorManager;
+    private DeviceOrientation mDeviceOrientation;
 
     private void initCamera() {
         if (mCamera == null) {
@@ -242,8 +266,15 @@ public class CameraFragment extends Fragment {
 
         mImageReader.setOnImageAvailableListener(new ImageReader.OnImageAvailableListener() {
             @Override
-            public void onImageAvailable(ImageReader reader) {
-                // XXX TODO Do we need to wait before allowing send?
+            public void onImageAvailable(final ImageReader reader) {
+//                final ImageView examplePhoto = (ImageView) getView().findViewById(R.id.examplePhoto);
+//                examplePhoto.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Picasso.with(getActivity()).load(Util.uriFromImage(reader.acquireLatestImage()))
+//                                .into(examplePhoto);
+//                    }
+//                });
             }
         }, mBackgroundHandler);
 
@@ -272,14 +303,19 @@ public class CameraFragment extends Fragment {
             builder.addTarget(mImageReader.getSurface());
 
             // Orientation
-            int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
-            builder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation(rotation));
+            final int deviceRotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
+            final int orientation = mDeviceOrientation.getOrientation();
+            final int rotation = getCombinedRotation(deviceRotation, orientation);
+
+            int jpeg = getOrientation((getRotation(deviceRotation) - rotation + 360) % 360);
+
+            builder.set(CaptureRequest.JPEG_ORIENTATION, jpeg);
 
             mSession.stopRepeating();
             mSession.capture(builder.build(), new CameraCaptureSession.CaptureCallback() {
                 @Override
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
-                    showCaptureActions();
+                    showCaptureActions(rotation);
                 }
             }, null);
         } catch (CameraAccessException e) {
@@ -287,15 +323,38 @@ public class CameraFragment extends Fragment {
         }
     }
 
-    private void showCaptureActions() {
+    private int getCombinedRotation(int deviceRotation, int orientation) {
+        return orientation + getRotation(deviceRotation);
+    }
+
+    private int getRotation(int orientation) {
+        switch (orientation) {
+            case Surface.ROTATION_0:
+                return 0;
+            case Surface.ROTATION_90:
+                return 90;
+            case Surface.ROTATION_180:
+                return 180;
+            case Surface.ROTATION_270:
+                return 270;
+            default:
+                return 0;
+        }
+    }
+
+    private void showCaptureActions(int orientation) {
         mActionsView.setVisibility(View.VISIBLE);
 
-        mActionsView.findViewById(R.id.usePhoto).setOnClickListener(new View.OnClickListener() {
+        ImageView usePhoto = (ImageView) mActionsView.findViewById(R.id.usePhoto);
+
+        usePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 team.camera.supplyPhoto(mImageReader.acquireLatestImage());
             }
         });
+
+        usePhoto.setRotation(-orientation);
     }
 
     private void switchCamera() {
@@ -379,6 +438,11 @@ public class CameraFragment extends Fragment {
             mSession.close();
             mSession = null;
         }
+
+        if (mDeviceOrientation != null) {
+            mSensorManager.unregisterListener(mDeviceOrientation.getEventListener());
+            mDeviceOrientation = null;
+        }
     }
 
     private void setupTexture() {
@@ -425,23 +489,7 @@ public class CameraFragment extends Fragment {
      * Utilities
      */
 
-    private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private int mSensorOrientation;
-
-    static {
-        ORIENTATIONS.append(Surface.ROTATION_0, 90);
-        ORIENTATIONS.append(Surface.ROTATION_90, 0);
-        ORIENTATIONS.append(Surface.ROTATION_180, 270);
-        ORIENTATIONS.append(Surface.ROTATION_270, 180);
-    }
-
-    private int getOrientation(int rotation) {
-        // Sensor orientation is 90 for most devices, or 270 for some devices (eg. Nexus 5X)
-        // We have to take that into account and rotate JPEG properly.
-        // For devices with orientation of 90, we simply return our mapping from ORIENTATIONS.
-        // For devices with orientation of 270, we need to rotate the JPEG 180 degrees.
-        return (ORIENTATIONS.get(rotation) + mSensorOrientation + 270) % 360;
-    }
 
     private static Size chooseOptimalSize(Size[] choices,
                                           int textureViewWidth,
@@ -525,13 +573,13 @@ public class CameraFragment extends Fragment {
                 maxPreviewHeight, new Size(viewWidth, viewHeight));
 
         int orientation = getResources().getConfiguration().orientation;
+        float aspect = (float) mPreviewSize.getWidth() / (float) mPreviewSize.getHeight();
+
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            ((AspectView) getView().findViewById(R.id.cameraBoxing)).setAspect(
-                    (float) mPreviewSize.getHeight() / (float) mPreviewSize.getWidth());
-        } else {
-            ((AspectView) getView().findViewById(R.id.cameraBoxing)).setAspect(
-                    (float) mPreviewSize.getWidth() / (float) mPreviewSize.getHeight());
+            aspect = 1f / aspect;
         }
+
+        ((AspectView) getView().findViewById(R.id.cameraBoxing)).setAspect(aspect);
 
         Activity activity = getActivity();
 
@@ -560,8 +608,30 @@ public class CameraFragment extends Fragment {
         mTextureView.setTransform(matrix);
     }
 
-    static class CompareSizesByArea implements Comparator<Size> {
+    private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
+    static {
+        ORIENTATIONS.append(0, 90);
+        ORIENTATIONS.append(90, 0);
+        ORIENTATIONS.append(180, 270);
+        ORIENTATIONS.append(270, 180);
+    }
+
+    /**
+     * Retrieves the JPEG orientation from the specified screen rotation.
+     *
+     * @param rotation The screen rotation.
+     * @return The JPEG orientation (one of 0, 90, 270, and 360)
+     */
+    private int getOrientation(int rotation) {
+        // Sensor orientation is 90 for most devices, or 270 for some devices (eg. Nexus 5X)
+        // We have to take that into account and rotate JPEG properly.
+        // For devices with orientation of 90, we simply return our mapping from ORIENTATIONS.
+        // For devices with orientation of 270, we need to rotate the JPEG 180 degrees.
+        return (ORIENTATIONS.get(rotation) + mSensorOrientation + 270) % 360;
+    }
+
+    static class CompareSizesByArea implements Comparator<Size> {
         @Override
         public int compare(Size lhs, Size rhs) {
             // We cast here to ensure the multiplications won't overflow

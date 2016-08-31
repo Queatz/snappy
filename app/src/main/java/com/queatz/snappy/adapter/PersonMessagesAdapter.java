@@ -56,6 +56,7 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<DynamicRealmObject> 
 
         TextView textView = (TextView) view.findViewById(R.id.message);
         ImageView profile = (ImageView) view.findViewById(R.id.profile);
+        ImageView photo = (ImageView) view.findViewById(R.id.photo);
 
         if(isOwn)
             profile.bringToFront();
@@ -66,6 +67,16 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<DynamicRealmObject> 
                 .load(Functions.getImageUrlForSize(person, (int) Util.px(32)))
                 .placeholder(R.color.spacer)
                 .into(profile);
+
+        if (!message.isNull(Thing.PHOTO) && message.getBoolean(Thing.PHOTO)) {
+            photo.setVisibility(View.VISIBLE);
+            Picasso.with(context)
+                    .load(Util.locationPhoto(message, parent.getMeasuredWidth()))
+                    .placeholder(R.color.spacer)
+                    .into(profile);
+        } else {
+            photo.setVisibility(View.GONE);
+        }
 
         textView.setText(message.getString(Thing.MESSAGE));
 

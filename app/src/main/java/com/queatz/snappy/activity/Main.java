@@ -1,6 +1,7 @@
 package com.queatz.snappy.activity;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Buy;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.ui.ActionBar;
+import com.queatz.snappy.ui.OnBackPressed;
 import com.queatz.snappy.ui.SlideScreen;
 import com.queatz.snappy.util.Functions;
 import com.squareup.picasso.Picasso;
@@ -184,7 +186,10 @@ public class Main extends Activity {
         if (team.camera.isOpen()) {
             team.camera.close();
         } else {
-            super.onBackPressed();
+            Fragment slide = mSlideScreen.getSlideFragment(mSlideScreen.getSlide());
+            if (!(slide instanceof OnBackPressed) || !((OnBackPressed) slide).onBackPressed()) {
+                super.onBackPressed();
+            }
         }
     }
 }

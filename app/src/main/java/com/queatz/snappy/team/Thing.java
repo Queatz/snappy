@@ -173,4 +173,5 @@ public class Thing {
     public static final String AUTH = "auth";
     public static final String PLACEHOLDER = "placeholder";
     public static final String ASPECT = "aspect";
+    public static final String WITH = "with";
 }

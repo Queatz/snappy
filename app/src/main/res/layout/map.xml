@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,6 +14,17 @@
         android:name="com.google.android.gms.maps.MapFragment" />
 
     <LinearLayout
+        android:id="@+id/withLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomLayout"
+        android:orientation="horizontal"
+        android:layout_marginRight="4dp"
+        android:gravity="right">
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,29 +32,41 @@
         android:orientation="vertical"
         android:fitsSystemWindows="true">
 
-        <FrameLayout
+        <ScrollView
             android:id="@+id/info"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:background="@drawable/white_rounded"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:visibility="gone"
             android:elevation="4dp"
-            android:isScrollContainer="true"
+            android:fillViewport="true"
             android:orientation="vertical">
-        </FrameLayout>
+        </ScrollView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="horizontal"
             android:background="@drawable/white_rounded"
             android:elevation="4dp"
             android:layout_margin="8dp">
+
+            <com.makeramen.RoundedImageView
+                android:id="@+id/at"
+                android:visibility="gone"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:scaleType="centerCrop"
+                android:layout_weight="0"
+                android:minWidth="0dp"
+                app:riv_corner_radius="32dp" />
 
             <com.queatz.snappy.ui.EditText
                 android:id="@+id/whatsUp"

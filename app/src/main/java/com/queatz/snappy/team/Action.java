@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -24,12 +25,15 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.ui.TimeSlider;
 import com.queatz.snappy.util.Functions;
+import com.queatz.snappy.util.Json;
 import com.queatz.snappy.util.ResponseUtil;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import io.realm.DynamicRealmObject;
 import io.realm.RealmResults;
@@ -96,7 +100,11 @@ public class Action {
         team.view.show(from, Person.class, bundle);
     }
 
-    public void sendMessage(@NonNull final DynamicRealmObject to, @NonNull final String message) {
+    public void sendMessage(@NonNull final DynamicRealmObject to, @Nullable final String message, @Nullable final Image image) {
+        if (image == null && message == null) {
+            return;
+        }
+
         final String localId = Util.createLocalId();
 
         team.realm.beginTransaction();
@@ -105,7 +113,11 @@ public class Action {
         o.setString(Thing.ID, localId);
         o.setObject(Thing.FROM, team.auth.me());
         o.setObject(Thing.TO, to);
-        o.setString(Thing.MESSAGE, message);
+
+        if (message != null) {
+            o.setString(Thing.MESSAGE, message);
+        }
+
         o.setDate(Thing.DATE, new Date());
 
         team.realm.commitTransaction();
@@ -114,9 +126,18 @@ public class Action {
 
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_LOCAL_ID, localId);
-        params.put(Config.PARAM_MESSAGE, message);
 
-        team.api.post(Config.PATH_EARTH + "/" + to.getString(Thing.ID), params, new Api.Callback() {
+        if (message != null) {
+            params.put(Config.PARAM_MESSAGE, message);
+        }
+
+        if (image != null) {
+            params.put(Config.PARAM_PHOTO, Util.uriFromImage(image));
+        }
+
+        params.setForceMultipartEntityContentType(true);
+
+        team.api.post(Config.PATH_EARTH + "/" + to.getString(Thing.ID) + "/" + Config.PATH_MESSAGE, params, new Api.Callback() {
             @Override
             public void success(String response) {
                 team.things.put(response);
@@ -450,11 +471,15 @@ public class Action {
     }
 
     public boolean postSelfUpdate(final Uri photo, final String message) {
-        return postSelfUpdate(photo, message, null);
+        return postSelfUpdate(photo, message, null, null);
     }
 
-    public boolean postSelfUpdate(@Nullable  final Uri photo, @Nullable  final String message, @Nullable final android.location.Location location) {
+    public boolean postSelfUpdate(@Nullable  final Uri photo, @Nullable  final String message, @Nullable final android.location.Location location, @Nullable List<DynamicRealmObject> with) {
         RequestParams params = new RequestParams();
+
+        if (photo == null && message == null) {
+            return false;
+        }
 
         try {
             params.put(Config.PARAM_THING, team.auth.getUser());
@@ -470,6 +495,16 @@ public class Action {
             if (location != null) {
                 params.put(Config.PARAM_LATITUDE, location.getLatitude());
                 params.put(Config.PARAM_LONGITUDE, location.getLongitude());
+            }
+
+            if (with != null) {
+                List<String> withIds = new ArrayList<>();
+
+                for (DynamicRealmObject person : with) {
+                    withIds.add(person.getString(Thing.ID));
+                }
+
+                params.put(Config.PARAM_WITH, Json.to(withIds));
             }
         }
         catch (FileNotFoundException e) {
@@ -500,13 +535,13 @@ public class Action {
         return true;
     }
 
-    public void deleteOffer(@NonNull DynamicRealmObject offer) {
+    public void deleteThing(@NonNull DynamicRealmObject thing) {
         // TODO keep until delete is in place
         try {
-            team.api.post(Config.PATH_EARTH + "/" + offer.getString(Thing.ID) + "/" + Config.PATH_DELETE);
+            team.api.post(Config.PATH_EARTH + "/" + thing.getString(Thing.ID) + "/" + Config.PATH_DELETE);
 
             team.realm.beginTransaction();
-            offer.deleteFromRealm();
+            thing.deleteFromRealm();
             team.realm.commitTransaction();
         }
         catch (IllegalStateException e) {

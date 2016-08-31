@@ -149,6 +149,11 @@
     <string name="use_photo">Use photo</string>
     <string name="take_another_photo">Take another photo</string>
     <string name="photo_removed">Photo removed</string>
+    <string name="with">with</string>
+    <string name="remove">Remove</string>
+    <string name="at">at</string>
+    <string name="check_in">Check in</string>
+    <string name="location_removed">Location removed</string>
 
     <plurals name="likes">
         <item quantity="one">♡ %1$s Liker</item>

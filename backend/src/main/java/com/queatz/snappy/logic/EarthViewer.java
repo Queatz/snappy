@@ -4,6 +4,7 @@ import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.concepts.Viewable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.ContactView;
+import com.queatz.snappy.logic.views.ExistenceView;
 import com.queatz.snappy.logic.views.FollowerView;
 import com.queatz.snappy.logic.views.HubView;
 import com.queatz.snappy.logic.views.JoinView;
@@ -59,6 +60,8 @@ public class EarthViewer extends EarthControl {
         mapping.put(EarthKind.JOIN_KIND, getConstructor(JoinView.class));
         mapping.put(EarthKind.RESOURCE_KIND, getConstructor(ResourceView.class));
         mapping.put(EarthKind.PROJECT_KIND, getConstructor(ProjectView.class));
+
+        Constructor<? extends Viewable> identity = getConstructor(ExistenceView.class);
     }
 
     public Viewable getViewForEntityOrThrow(Entity entity) {

@@ -80,8 +80,7 @@
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:id="@+id/contacts"
@@ -92,6 +91,28 @@
             </HorizontalScrollView>
 
         </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="right">
+
+        <Button style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/checkIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="0dp"
+            android:layout_marginTop="-8dp"
+            android:layout_marginBottom="-8dp"
+            android:paddingTop="-8dp"
+            android:paddingBottom="-8dp"
+            android:text="@string/check_in"
+            android:textColor="@color/orange" />
 
     </LinearLayout>
 

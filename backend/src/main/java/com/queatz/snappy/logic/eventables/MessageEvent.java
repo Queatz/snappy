@@ -50,7 +50,8 @@ public class MessageEvent implements Eventable {
                                 "id", person.key().name(),
                                 "firstName", person.getString(EarthField.FIRST_NAME)
                         ),
-                        "message", Util.clip(message.getString(EarthField.MESSAGE))
+                        "message", Util.clip(message.getString(EarthField.MESSAGE)),
+                        "photo", message.getBoolean(EarthField.PHOTO)
                 )
         );
     }

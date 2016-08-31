@@ -12,9 +12,11 @@ import com.google.appengine.tools.cloudstorage.ListOptions;
 import com.google.appengine.tools.cloudstorage.ListResult;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.LatLng;
+import com.google.gson.JsonArray;
 import com.queatz.snappy.backend.ApiUtil;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthUpdate;
@@ -173,6 +175,8 @@ public class UpdateInterface implements Interfaceable {
         Double latitude = null;
         Double longitude = null;
 
+        JsonArray with = null;
+
         // XXX TODO Make this use ApiUtil.putPhoto (with support for reading other params)
         try {
             ServletFileUpload upload = new ServletFileUpload();
@@ -207,11 +211,14 @@ public class UpdateInterface implements Interfaceable {
                 else if (Config.PARAM_LONGITUDE.equals(item.getFieldName())) {
                     longitude = Double.parseDouble(Streams.asString(stream, "UTF-8"));
                 }
+                else if (Config.PARAM_WITH.equals(item.getFieldName())) {
+                    with = new EarthJson().fromJson(Streams.asString(stream, "UTF-8"), JsonArray.class);
+                }
             }
         }
         catch (FileUploadException | IOException e) {
             Logger.getLogger(Config.NAME).severe(e.toString());
-            throw new NothingLogicResponse("upto photo - couldn't upload because: " + e);
+            throw new NothingLogicResponse("post photo - couldn't upload because: " + e);
         }
 
         if (thingId == null) {
@@ -230,7 +237,7 @@ public class UpdateInterface implements Interfaceable {
             geo = LatLng.of(latitude, longitude);
         }
 
-        update = new UpdateEditor(as).updateWith(update, thing, message, photoUploaded, geo);
+        update = new UpdateEditor(as).updateWith(update, thing, message, photoUploaded, geo, with);
 
         new EarthUpdate(as).send(new NewUpdateEvent(update)).toFollowersOf(thing);
 

@@ -157,6 +157,7 @@ public class Team implements Closeable {
         schema.addRealmListField(Thing.JOINS, schema);
         schema.addRealmListField(Thing.UPDATES, schema);
         schema.addRealmListField(Thing.CONTACTS, schema);
+        schema.addRealmListField(Thing.WITH, schema);
 
         dynamicRealm.commitTransaction();
 

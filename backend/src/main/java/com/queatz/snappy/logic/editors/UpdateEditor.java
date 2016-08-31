@@ -4,6 +4,8 @@ import com.google.appengine.api.datastore.GeoPt;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.LatLng;
 import com.google.cloud.datastore.NullValue;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
@@ -16,11 +18,13 @@ import com.queatz.snappy.shared.Config;
  */
 public class UpdateEditor extends EarthControl {
     private final EarthStore earthStore;
+    private final JoinEditor joinEditor;
 
     public UpdateEditor(final EarthAs as) {
         super(as);
 
         earthStore = use(EarthStore.class);
+        joinEditor = use(JoinEditor.class);
     }
 
     public Entity newUpdate(Entity person) {
@@ -49,7 +53,7 @@ public class UpdateEditor extends EarthControl {
                 .set(EarthField.TARGET, target.key()));
     }
 
-    public Entity updateWith(Entity update, Entity thing, String message, boolean photo, LatLng geo) {
+    public Entity updateWith(Entity update, Entity thing, String message, boolean photo, LatLng geo, JsonArray with) {
         Entity.Builder edit = earthStore.edit(update)
                 .set(EarthField.TARGET, thing.key())
                 .set(EarthField.ACTION, Config.UPDATE_ACTION_UPTO)
@@ -65,7 +69,16 @@ public class UpdateEditor extends EarthControl {
             edit.set(EarthField.GEO, geo);
         }
 
-        return earthStore.save(edit);
+        Entity saved = earthStore.save(edit);
+
+        if (with != null && with.size() > 0) {
+            for (JsonElement peep : with) {
+                Entity person = earthStore.get(peep.getAsString());
+                joinEditor.newJoin(person, saved);
+            }
+        }
+
+        return saved;
     }
 
     public Entity updateWith(Entity update, String message, boolean photo) {

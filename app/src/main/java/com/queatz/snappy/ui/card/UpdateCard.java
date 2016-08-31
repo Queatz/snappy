@@ -23,6 +23,8 @@ import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 
 import io.realm.DynamicRealmObject;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 
 /**
  * Created by jacob on 8/22/16.
@@ -125,6 +127,69 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             view.findViewById(R.id.details).setVisibility(View.VISIBLE);
             view.findViewById(R.id.likers).setVisibility(View.GONE);
             photo.setVisibility(View.GONE);
+        }
+
+        if (!update.isNull(Thing.WITH)) {
+            RealmList<DynamicRealmObject> withThings = update.getList(Thing.WITH);
+
+            RealmList<DynamicRealmObject> people = new RealmList<>();
+            RealmList<DynamicRealmObject> hubs = new RealmList<>();
+
+            for (DynamicRealmObject withThing : withThings) {
+                if ("person".equals(withThing.getObject(Thing.SOURCE).getString(Thing.KIND))) {
+                    people.add(withThing);
+                } else if ("hub".equals(withThing.getObject(Thing.SOURCE).getString(Thing.KIND))) {
+                    hubs.add(withThing);
+                }
+            }
+
+            if (people.size() > 0) {
+                view.findViewById(R.id.withLayout).setVisibility(View.VISIBLE);
+
+                LinearLayout withThesePeople = (LinearLayout) view.findViewById(R.id.withThesePeople);
+
+                withThesePeople.removeAllViews();
+
+                int z = 0;
+                for (final DynamicRealmObject with : people) {
+                    View profile = LayoutInflater.from(context).inflate(R.layout.update_with_person, withThesePeople, false);
+
+                    view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            team.action.openProfile((Activity) context, with.getObject(Thing.SOURCE));
+                        }
+                    });
+
+                    TextView name = (TextView) profile.findViewById(R.id.name);
+                    name.setText(Functions.getFullName(with.getObject(Thing.SOURCE)));
+
+                    withThesePeople.addView(profile, 0);
+                    profile.setZ(z++);
+                }
+            } else {
+                view.findViewById(R.id.withLayout).setVisibility(View.GONE);
+            }
+
+            if (hubs.size() > 0) {
+                view.findViewById(R.id.atLayout).setVisibility(View.VISIBLE);
+
+                LinearLayout at = (LinearLayout) view.findViewById(R.id.at);
+
+                at.removeAllViews();
+
+                int z = 0;
+                for (final DynamicRealmObject with : hubs) {
+                    View profile = LayoutInflater.from(context).inflate(R.layout.update_with_person, at, false);
+                    TextView name = (TextView) profile.findViewById(R.id.name);
+                    name.setText(with.getObject(Thing.SOURCE).getString(Thing.NAME));
+
+                    at.addView(profile, 0);
+                    profile.setZ(z++);
+                }
+            } else {
+                view.findViewById(R.id.atLayout).setVisibility(View.GONE);
+            }
         }
 
         ((TextView) view.findViewById(R.id.details)).setText(

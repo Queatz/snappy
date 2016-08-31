@@ -60,6 +60,15 @@ public class Util {
     public static Context context;
     public static Team team;
 
+    public static double distance(double lat1, double long1, double lat2, double long2) {
+        double d2r = (Math.PI / 180.0);
+        double dlong = (long2 - long1) * d2r;
+        double dlat = (lat2 - lat1) * d2r;
+        double a = pow(sin(dlat/2.0), 2) + cos(lat1*d2r) * cos(lat2*d2r) * pow(sin(dlong/2.0), 2);
+        double c = 2 * atan2(sqrt(a), sqrt(1-a));
+        return 3956 * c; // miles
+    }
+
     public static String getDistanceText(double distance) {
         if (distance < 1) {
             int ft = ((int) (distance * 5280f));

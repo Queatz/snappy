@@ -1,24 +1,28 @@
 package com.queatz.snappy.fragment;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.media.Image;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,6 +38,8 @@ import com.makeramen.RoundedImageView;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.adapter.PersonListAdapter;
+import com.queatz.snappy.adapter.SuggestionAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Camera;
@@ -41,29 +47,35 @@ import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.CircleTransform;
 import com.queatz.snappy.ui.EditText;
+import com.queatz.snappy.ui.OnBackPressed;
 import com.queatz.snappy.ui.TextView;
-import com.queatz.snappy.ui.camera.CameraFragment;
 import com.queatz.snappy.ui.card.UpdateCard;
 import com.queatz.snappy.util.Functions;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.Case;
 import io.realm.DynamicRealmObject;
 import io.realm.RealmChangeListener;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by jacob on 8/7/16.
  */
 
-public class MapSlide extends Fragment implements OnMapReadyCallback {
+public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPressed {
 
     private GoogleMap mMap;
     private ViewGroup info;
     private Image image;
+    private List<DynamicRealmObject> imWith = new ArrayList<>();
+    private DynamicRealmObject imAt;
 
     Team team;
 
@@ -86,7 +98,7 @@ public class MapSlide extends Fragment implements OnMapReadyCallback {
                 } else {
                     image = null;
                     Toast.makeText(getActivity(), getString(R.string.photo_removed), Toast.LENGTH_SHORT).show();
-                    setImageActive();
+                    updateImageButton();
                 }
             }
         });
@@ -97,15 +109,116 @@ public class MapSlide extends Fragment implements OnMapReadyCallback {
             @Override
             public boolean onEditorAction(android.widget.TextView v, int actionId, KeyEvent event) {
                 if (EditorInfo.IME_ACTION_GO == actionId) {
-                    team.action.postSelfUpdate(Util.uriFromImage(image), whatsUp.getText().toString(), team.location.get());
+                    if (imAt != null) {
+                        imWith.add(imAt);
+                    }
+
+                    team.action.postSelfUpdate(image != null ? Util.uriFromImage(image) : null, whatsUp.getText().toString(), team.location.get(), imWith);
                     whatsUp.setText("");
+                    image = null;
+                    imAt = null;
+                    imWith.clear();
+                    updateImageButton();
+                    updateAtIndicator();
                 }
 
                 return false;
             }
         });
 
+        whatsUp.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int startName = 0;
+
+                if (s.length() < 1) {
+                    imWith.clear();
+                    showImWith();
+                    return;
+                }
+
+                for (int i = start + count - 1; i >= 0; i--) {
+                    if (!Character.isLetter(s.charAt(i))) {
+                        startName = i + 1;
+                        break;
+                    }
+                }
+
+                if (startName >= start + count) {
+                    showImWith();
+                    return;
+                }
+
+                String possibleName = s.subSequence(startName, start + count).toString();
+
+                suggest(possibleName);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         return view;
+    }
+
+    private void suggest(String possibleName) {
+        RealmQuery<DynamicRealmObject> query = team.realm.where("Thing")
+                .equalTo(Thing.KIND, "person")
+                .notEqualTo(Thing.ID, team.auth.getUser())
+                .beginsWith(Thing.FIRST_NAME, possibleName, Case.SENSITIVE);
+
+        for (DynamicRealmObject with : imWith) {
+            query.notEqualTo(Thing.ID, with.getString(Thing.ID));
+        }
+
+        final RealmResults<DynamicRealmObject> suggestions = query.findAllSorted(Thing.INFO_DISTANCE, Sort.ASCENDING);
+
+        if (suggestions.size() > 0) {
+            showInfo(true);
+
+            ListView personList = (ListView) LayoutInflater.from(getActivity()).inflate(R.layout.suggestion_list, info, false);
+            personList.setAdapter(new SuggestionAdapter(getActivity(), suggestions));
+            personList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    imWith.add(suggestions.get(position));
+                    showImWith();
+                }
+            });
+            info.addView(personList);
+        } else {
+            showImWith();
+        }
+    }
+
+    private void showImWith() {
+        showInfo(false);
+
+        LinearLayout withLayout = (LinearLayout) getView().findViewById(R.id.withLayout);
+        withLayout.removeAllViews();
+
+        if (imWith.isEmpty()) {
+            return;
+        }
+
+        int z = 0;
+        for (DynamicRealmObject with : imWith) {
+            View profile = LayoutInflater.from(getActivity()).inflate(R.layout.with_person, withLayout, false);
+            Picasso.with(getActivity())
+                    .load(Functions.getImageUrlForSize(with, (int) Util.px(48)))
+                    .placeholder(R.color.spacer)
+                    .into((ImageView) profile.findViewById(R.id.profile));
+
+            withLayout.addView(profile, 0);
+            profile.setZ(z++);
+        }
     }
 
     @Override
@@ -194,7 +307,7 @@ public class MapSlide extends Fragment implements OnMapReadyCallback {
             @Override
             public void onPhoto(Image image) {
                 MapSlide.this.image = image;
-                setImageActive();
+                updateImageButton();
             }
 
             @Override
@@ -204,17 +317,31 @@ public class MapSlide extends Fragment implements OnMapReadyCallback {
         });
     }
 
+    private void showInfo(boolean show) {
+        info.removeAllViews();
+
+        if (!show) {
+            info.setVisibility(View.GONE);
+            setMapPadding();
+        } else {
+            info.setVisibility(View.VISIBLE);
+
+            // Need to do this or else the photos of updates will load with 0 width
+            View bottomLayout = getView().findViewById(R.id.bottomLayout);
+            info.measure(
+                    View.MeasureSpec.makeMeasureSpec(bottomLayout.getMeasuredWidth(), View.MeasureSpec.EXACTLY),
+                    View.MeasureSpec.UNSPECIFIED
+            );
+        }
+    }
+
     private void showInfo(final DynamicRealmObject thing) {
         final Team team = ((MainApplication) getActivity().getApplication()).team;
 
-        info.removeAllViews();
+        showInfo(thing != null);
 
         if (thing == null) {
-            info.setVisibility(View.GONE);
-            setMapPadding();
             return;
-        } else {
-            info.setVisibility(View.VISIBLE);
         }
 
         if ("hub".equals(thing.getString(Thing.KIND))) {
@@ -235,7 +362,7 @@ public class MapSlide extends Fragment implements OnMapReadyCallback {
 
             Picasso.with(getActivity())
                     .load(photoUrl)
-                    .placeholder(R.color.spacer)
+                    .placeholder(R.drawable.location)
                     .into(photo);
 
             RealmChangeListener<DynamicRealmObject> changeListener = new RealmChangeListener<DynamicRealmObject>() {
@@ -299,12 +426,43 @@ public class MapSlide extends Fragment implements OnMapReadyCallback {
                 }
             });
 
+            Location location = team.location.get();
+
+            Button checkIn = (Button) view.findViewById(R.id.checkIn);
+            if (location != null && Util.distance(location.getLatitude(), location.getLongitude(), thing.getDouble(Thing.LATITUDE), thing.getDouble(Thing.LONGITUDE)) < 0.189394 /* 1000ft */) {
+                checkIn.setVisibility(View.VISIBLE);
+                checkIn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        imAt = thing;
+
+                        if (getView() != null) {
+                            EditText whatsUp = (EditText) getView().findViewById(R.id.whatsUp);
+                            team.view.keyboard(whatsUp, true);
+                            whatsUp.requestFocus();
+                        }
+
+                        updateAtIndicator();
+                        showInfo(false);
+                    }
+                });
+            } else {
+                checkIn.setVisibility(View.GONE);
+            }
+
             info.addView(view);
 
             setMapPadding();
         } else if ("update".equals(thing.getString(Thing.KIND))) {
             info.addView(new UpdateCard().getCard(getActivity(), thing, null, info, true));
         }
+
+        info.post(new Runnable() {
+            @Override
+            public void run() {
+                ((ScrollView) info).fullScroll(View.FOCUS_DOWN);
+            }
+        });
     }
 
     private void myLocationFound(Location location) {
@@ -440,7 +598,31 @@ public class MapSlide extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    public void setImageActive() {
+    private void updateAtIndicator() {
+        if (getView() != null) {
+            ImageView at = (ImageView) getView().findViewById(R.id.at);
+
+            if (imAt != null) {
+                at.setVisibility(View.VISIBLE);
+                Picasso.with(getActivity()).load(Util.locationPhoto(imAt, (int) Util.px(48)))
+                        .placeholder(R.drawable.location)
+                        .into(at);
+
+                at.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        imAt = null;
+                        updateAtIndicator();
+                        Toast.makeText(getActivity(), getString(R.string.location_removed), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                at.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public void updateImageButton() {
         if (getView() == null) {
             return;
         }
@@ -453,5 +635,15 @@ public class MapSlide extends Fragment implements OnMapReadyCallback {
 
         ((ImageButton) getView().findViewById(R.id.cameraButton))
                 .setImageTintList(ColorStateList.valueOf(getResources().getColor(color)));
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (info.getVisibility() == View.VISIBLE) {
+             showInfo(null);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

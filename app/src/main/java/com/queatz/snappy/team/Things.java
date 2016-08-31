@@ -107,6 +107,7 @@ public class Things {
                 case Thing.OFFERS:
                 case Thing.UPDATES:
                 case Thing.CONTACTS:
+                case Thing.WITH:
                     thing.setList(entry.getKey(), putAll(realm, entry.getValue().getAsJsonArray()));
                     break;
 

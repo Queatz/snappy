@@ -243,6 +243,7 @@ public class Config {
     public static final String PATH_QUEST = "quest";
     public static final String PATH_JOIN = "join";
     public static final String PATH_MESSAGES = "messages";
+    public static final String PATH_MESSAGE= "message";
     public static final String PATH_PEOPLE = "people";
     public static final String PATH_FOLLOW = "follow";
     public static final String PATH_LOCATIONS = "locations";
@@ -268,4 +269,5 @@ public class Config {
     public static final String PATH_EDIT = "edit";
     public static final String PATH_LIKE = "like";
     public static final String PATH_REPORT = "report";
+    public static final String PARAM_WITH = "with";
 }

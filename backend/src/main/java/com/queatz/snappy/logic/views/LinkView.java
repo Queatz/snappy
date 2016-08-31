@@ -29,12 +29,13 @@ public class LinkView extends ExistenceView {
         switch (view) {
             case DEEP:
             case SHALLOW:
-                source = earthViewer.getViewForEntityOrThrow(earthStore.get(link.getKey(EarthField.SOURCE)), view);
+                target = earthViewer.getViewForEntityOrThrow(earthStore.get(link.getKey(EarthField.TARGET)), view);
                 break;
+            case IDENTITY:
             default:
-                source = null;
+                target = null;
         }
 
-        target = earthViewer.getViewForEntityOrThrow(earthStore.get(link.getKey(EarthField.TARGET)), view);
+        source = earthViewer.getViewForEntityOrThrow(earthStore.get(link.getKey(EarthField.SOURCE)), view);
     }
 }
