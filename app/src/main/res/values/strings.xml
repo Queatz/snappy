@@ -154,6 +154,7 @@
     <string name="at">at</string>
     <string name="check_in">Check in</string>
     <string name="location_removed">Location removed</string>
+    <string name="sent_a_photo">sent a photo</string>
 
     <plurals name="likes">
         <item quantity="one">♡ %1$s Liker</item>

@@ -70,6 +70,10 @@ public class MessagePushHandler extends PushHandler {
         } else {
             title = from.get("firstName").getAsString();
             message = push.get("message").getAsString();
+
+            if (message == null || message.isEmpty() && push.get("photo").getAsBoolean()) {
+                message = team.context.getString(R.string.sent_a_photo);
+            }
         }
 
         builder = team.push.newNotification()

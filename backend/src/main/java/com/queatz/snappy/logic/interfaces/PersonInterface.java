@@ -101,8 +101,7 @@ public class PersonInterface implements Interfaceable {
             case 2:
                 switch (as.getRoute().get(1)) {
                     case Config.PATH_MESSAGE:
-                        postMessage(as, new EarthStore(as).get(as.getRoute().get(0)));
-                        return null;
+                        return postMessage(as, new EarthStore(as).get(as.getRoute().get(0)));
                 }
                 break;
         }
@@ -192,8 +191,8 @@ public class PersonInterface implements Interfaceable {
         GcsFilename photoName = new GcsFilename(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), "earth/thing/photo/" + sent.key().name() + "/" + new Date().getTime());
 
         String message = null;
-        boolean photoUploaded = false;
         String localId = null;
+        boolean photoUploaded = false;
 
         // XXX TODO Make this use ApiUtil.putPhoto (with support for reading other params)
         try {

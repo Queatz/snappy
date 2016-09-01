@@ -85,10 +85,17 @@ public class RecentAdapter extends RealmBaseAdapter<DynamicRealmObject> {
 
         proximity.setText(Util.getDistanceText(person.getDouble(Thing.INFO_DISTANCE)));
 
-        if(message == null)
+        if(message == null) {
             lastMessage.setText("");
-        else
-            lastMessage.setText(isOwn ? String.format(context.getString(R.string.me_message), message.getString(Thing.MESSAGE)) : message.getString(Thing.MESSAGE));
+        } else {
+            String msg = message.getString(Thing.MESSAGE);
+
+            if (msg == null || msg.isEmpty() && message.getBoolean(Thing.PHOTO)) {
+                msg = context.getString(R.string.sent_a_photo);
+            }
+
+            lastMessage.setText(isOwn ? String.format(context.getString(R.string.me_message), msg) : msg);
+        }
 
         return view;
     }

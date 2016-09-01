@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
+import com.queatz.snappy.Util;
 import com.queatz.snappy.adapter.PersonMessagesAdapter;
 import com.queatz.snappy.team.Camera;
 import com.queatz.snappy.team.Team;
@@ -98,7 +99,7 @@ public class PersonMessagesSlide extends Fragment {
                     if (mPerson == null || (message.trim().isEmpty() && image == null))
                         return;
 
-                    team.action.sendMessage(mPerson, message, image);
+                    team.action.sendMessage(mPerson, message, image != null ? Util.uriFromImage(image) : null);
 
                     writeMessage.setText("");
                     image = null;

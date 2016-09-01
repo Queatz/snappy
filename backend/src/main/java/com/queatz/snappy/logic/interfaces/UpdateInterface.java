@@ -20,6 +20,7 @@ import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthUpdate;
+import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.LikeEditor;
@@ -120,7 +121,7 @@ public class UpdateInterface implements Interfaceable {
     private String getLikers(EarthAs as, String updateId) {
         List<Entity> likers = new EarthStore(as).find(EarthKind.LIKE_KIND, EarthField.TARGET, new EarthStore(as).key(updateId));
 
-        return new EntityListView(as, likers).toJson();
+        return new EntityListView(as, likers, EarthView.SHALLOW).toJson();
     }
 
     private String getPhoto(EarthAs as, String updateId) {

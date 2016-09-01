@@ -100,12 +100,28 @@ public class Action {
         team.view.show(from, Person.class, bundle);
     }
 
-    public void sendMessage(@NonNull final DynamicRealmObject to, @Nullable final String message, @Nullable final Image image) {
-        if (image == null && message == null) {
+    public void sendMessage(@NonNull final DynamicRealmObject to, @Nullable final String message, @Nullable final Uri photo) {
+        if (photo == null && message == null) {
             return;
         }
 
         final String localId = Util.createLocalId();
+
+        RequestParams params = new RequestParams();
+        params.put(Config.PARAM_LOCAL_ID, localId);
+
+        if (message != null) {
+            params.put(Config.PARAM_MESSAGE, message);
+        }
+
+        if (photo != null) try {
+            params.put(Config.PARAM_PHOTO, team.context.getContentResolver().openInputStream(photo), photo.getPath());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        params.setForceMultipartEntityContentType(true);
 
         team.realm.beginTransaction();
         DynamicRealmObject o = team.realm.createObject("Thing");
@@ -123,19 +139,6 @@ public class Action {
         team.realm.commitTransaction();
 
         team.local.updateRecentsForMessage(o);
-
-        RequestParams params = new RequestParams();
-        params.put(Config.PARAM_LOCAL_ID, localId);
-
-        if (message != null) {
-            params.put(Config.PARAM_MESSAGE, message);
-        }
-
-        if (image != null) {
-            params.put(Config.PARAM_PHOTO, Util.uriFromImage(image));
-        }
-
-        params.setForceMultipartEntityContentType(true);
 
         team.api.post(Config.PATH_EARTH + "/" + to.getString(Thing.ID) + "/" + Config.PATH_MESSAGE, params, new Api.Callback() {
             @Override

@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,12 +52,12 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<DynamicRealmObject> 
 
         boolean isOwn = mToPerson.getString(Thing.ID).equals(person.getString(Thing.ID));
 
-        RelativeLayout wrapper = ((RelativeLayout) view.findViewById(R.id.wrapper));
+        LinearLayout wrapper = ((LinearLayout) view.findViewById(R.id.wrapper));
         wrapper.setGravity(isOwn ? Gravity.RIGHT : Gravity.LEFT);
 
         TextView textView = (TextView) view.findViewById(R.id.message);
-        ImageView profile = (ImageView) view.findViewById(R.id.profile);
         ImageView photo = (ImageView) view.findViewById(R.id.photo);
+        ImageView profile = (ImageView) view.findViewById(R.id.profile);
 
         if(isOwn)
             profile.bringToFront();
@@ -73,7 +74,7 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<DynamicRealmObject> 
             Picasso.with(context)
                     .load(Util.locationPhoto(message, parent.getMeasuredWidth()))
                     .placeholder(R.color.spacer)
-                    .into(profile);
+                    .into(photo);
         } else {
             photo.setVisibility(View.GONE);
         }
