@@ -124,7 +124,6 @@ public class SlideScreen extends ViewGroup {
         }
     }
 
-    private Context mContext;
     private SparseArray<SlideAsChild> mSlides;
     private int mSlide;
     private float mOffset;
@@ -152,7 +151,6 @@ public class SlideScreen extends ViewGroup {
     }
 
     private void init(Context context) {
-        mContext = context;
         mSlides = new SparseArray<>();
         mSnatched = false;
         mUnsnatchable = false;

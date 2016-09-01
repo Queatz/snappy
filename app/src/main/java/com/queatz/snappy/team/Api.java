@@ -30,7 +30,7 @@ public class Api {
         PUT,
         DELETE,
         PATCH,
-    };
+    }
 
     private static class RequestObject {
         public HTTPMethod method;

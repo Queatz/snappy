@@ -1,9 +1,12 @@
 package com.queatz.snappy.activity;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -80,7 +83,7 @@ public class HostParty extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(mLocationMap != null) {
+        if (mLocationMap != null) {
             mLocationMap.onCreate(savedInstanceState);
         }
 
@@ -104,12 +107,12 @@ public class HostParty extends Activity {
                 Date date = percentToDate(((TimeSlider) mNewParty.findViewById(R.id.timeSlider)).getPercent());
                 String details = ((EditText) mNewParty.findViewById(R.id.details)).getText().toString();
 
-                if(name.isEmpty()) {
+                if (name.isEmpty()) {
                     Toast.makeText(HostParty.this, ((EditText) mNewParty.findViewById(R.id.name)).getHint().toString(), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if(mLocation == null) {
+                if (mLocation == null) {
                     Toast.makeText(HostParty.this, getString(R.string.enter_location), Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -197,7 +200,7 @@ public class HostParty extends Activity {
             public void onFocusChange(View v, boolean hasFocus) {
                 lazyLoadMap();
 
-                if(locationMapLayout.getVisibility() == View.GONE && hasFocus)
+                if (locationMapLayout.getVisibility() == View.GONE && hasFocus)
                     locationMapLayout.setVisibility(View.VISIBLE);
             }
         });
@@ -206,7 +209,7 @@ public class HostParty extends Activity {
 
         float p = .25f;
 
-        if(TimeUtil.everybodyIsSleeping(percentToDate(p)))
+        if (TimeUtil.everybodyIsSleeping(percentToDate(p)))
             p = .75f;
 
         timeSlider.setPercent(p);
@@ -230,7 +233,7 @@ public class HostParty extends Activity {
         locationMapLayout.findViewById(R.id.locationMapMarker).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mGoogleMap == null)
+                if (mGoogleMap == null)
                     return;
 
                 final EditText locationName = (EditText) mNewParty.findViewById(R.id.location);
@@ -259,7 +262,7 @@ public class HostParty extends Activity {
 
     @Override
     public void onDestroy() {
-        if(mLocationMap != null) {
+        if (mLocationMap != null) {
             mLocationMap.onDestroy();
         }
 
@@ -270,14 +273,14 @@ public class HostParty extends Activity {
     public void onResume() {
         super.onResume();
 
-        if(mLocationMap != null) {
+        if (mLocationMap != null) {
             mLocationMap.onResume();
         }
     }
 
     @Override
     public void onPause() {
-        if(mLocationMap != null) {
+        if (mLocationMap != null) {
             mLocationMap.onPause();
         }
 
@@ -286,7 +289,7 @@ public class HostParty extends Activity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if(mLocationMap != null) {
+        if (mLocationMap != null) {
             mLocationMap.onSaveInstanceState(outState);
         }
 
@@ -295,7 +298,7 @@ public class HostParty extends Activity {
 
     @Override
     public void onLowMemory() {
-        if(mLocationMap != null) {
+        if (mLocationMap != null) {
             mLocationMap.onLowMemory();
         }
 
@@ -303,7 +306,7 @@ public class HostParty extends Activity {
     }
 
     private void recenterMapWithInput(String q) {
-        if(mLocationMap == null)
+        if (mLocationMap == null)
             return;
 
         team.location.getTopGoogleLocationForInput(q, new com.queatz.snappy.team.Location.AutocompleteCallback() {
@@ -355,7 +358,7 @@ public class HostParty extends Activity {
     }
 
     private void lazyLoadMap() {
-        if(mLocationMap != null)
+        if (mLocationMap != null)
             return;
 
         ViewGroup locationMapLayout = (ViewGroup) mNewParty.findViewById(R.id.locationMapLayout);
@@ -366,7 +369,7 @@ public class HostParty extends Activity {
 
         Location l = team.location.get();
 
-        if(l != null) {
+        if (l != null) {
             LatLng latLng = new LatLng(l.getLatitude(), l.getLongitude());
 
             googleMapOptions.camera(new CameraPosition(latLng, Config.defaultMapZoom, 0, 0));
@@ -379,10 +382,31 @@ public class HostParty extends Activity {
 
         mLocationMap.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onMapReady(GoogleMap googleMap) {
+            public void onMapReady(final GoogleMap googleMap) {
                 mGoogleMap = googleMap;
 
-                googleMap.setMyLocationEnabled(true);
+                if (!team.location.isPermissionGranted()) {
+                    team.location.get(HostParty.this, new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
+                        @Override
+                        public void onLocationFound(Location location) {
+                            try {
+                                mGoogleMap.setMyLocationEnabled(true);
+                            } catch (SecurityException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onLocationUnavailable() {}
+                    });
+                } else {
+                    try {
+                        mGoogleMap.setMyLocationEnabled(true);
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 googleMap.setBuildingsEnabled(true);
                 googleMap.setIndoorEnabled(true);
 

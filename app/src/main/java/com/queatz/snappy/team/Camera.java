@@ -1,15 +1,21 @@
 package com.queatz.snappy.team;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.Image;
 import android.media.ImageReader;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 
 import com.queatz.snappy.R;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.ui.camera.CameraFragment;
+
+import java.util.ArrayList;
 
 /**
  * Created by jacob on 8/28/16.
@@ -20,6 +26,7 @@ public class Camera {
     private Callback mCallback;
     private CameraFragment mCameraFragment;
     private Activity mActivity;
+    final private ArrayList<Runnable> mRunWhenConnected = new ArrayList<>();
 
     public interface Callback {
         void onPhoto(Image image);
@@ -33,6 +40,28 @@ public class Camera {
     public boolean isOpen() {
         return mActivity != null &&
                 mActivity.findViewById(R.id.cameraLayout).getVisibility() == View.VISIBLE;
+    }
+
+    public void onPermissionGranted(String permission) {
+        if (Manifest.permission.CAMERA.equals(permission)) {
+            cameraAvailable();
+        }
+    }
+
+    private void cameraAvailable() {
+        synchronized (mRunWhenConnected) {
+            while (!mRunWhenConnected.isEmpty()) {
+                mRunWhenConnected.remove(0).run();
+            }
+        }
+    }
+
+    public boolean isPermissionGranted() {
+        return team.auth.checkPermission(mActivity, Manifest.permission.CAMERA);
+    }
+
+    public void whenAvailable(Runnable runnable) {
+        mRunWhenConnected.add(runnable);
     }
 
     public void getPhoto(Activity activity, Callback callback) {

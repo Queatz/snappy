@@ -4,10 +4,12 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -23,6 +25,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.queatz.snappy.R;
+import com.queatz.snappy.activity.HostParty;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.util.Json;
 
@@ -93,13 +96,17 @@ public class Location implements
     }
 
     private void ensureConnected(Runnable runnable) {
-        if(team.auth.checkPermission(mActivity, Manifest.permission.ACCESS_FINE_LOCATION) && mGoogleApiClient.isConnected())
+        if(isPermissionGranted() && mGoogleApiClient.isConnected()) {
             runnable.run();
-        else
+        } else {
+            mLocationIsAvailable = false;
             mRunWhenConnected.add(runnable);
+        }
     }
 
     public void get(Activity activity, @NonNull OnLocationFoundCallback callback) {
+        mActivity = activity;
+
         android.location.Location location = get();
 
         if(location != null) {
@@ -112,8 +119,13 @@ public class Location implements
     }
 
     public android.location.Location get() {
-        if(mGoogleApiClient.isConnected())
-            mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if(isPermissionGranted() && mGoogleApiClient.isConnected()) {
+            try {
+                mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
+        }
 
         return mLocation;
     }
@@ -126,9 +138,21 @@ public class Location implements
             public void run() {
                 turnOnLocationServices();
 
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, Location.this);
+                if (isPermissionGranted()) {
+                    try {
+                        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, Location.this);
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    mLocationIsAvailable = false;
+                }
             }
         });
+    }
+
+    public boolean isPermissionGranted() {
+        return team.auth.checkPermission(mActivity == null ? team.context : mActivity, Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
     private void locationNotAvailable() {
@@ -176,13 +200,14 @@ public class Location implements
     public void onResult(LocationSettingsResult locationSettingsResult) {
         switch (locationSettingsResult.getStatus().getStatusCode()) {
             case LocationSettingsStatusCodes.SUCCESS:
-                locationAvailable(true);
+                locationAvailable(isPermissionGranted());
                 break;
             case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                 locationAvailable(false);
                 locationNotAvailable();
 
                 try {
+                    mLocationIsAvailable = false;
                     locationSettingsResult.getStatus().startResolutionForResult(mActivity, Config.REQUEST_CODE_CHECK_SETTINGS);
                 }
                 catch (IntentSender.SendIntentException e) {

@@ -112,7 +112,7 @@ public class MessagePushHandler extends PushHandler {
     }
 
     private void fetch(JsonObject push) {
-        team.api.get(Config.PATH_EARTH + "/" + push.get("id").getAsString() + "/" + Config.PATH_MESSAGES, new Api.Callback() {
+        team.api.get(Config.PATH_EARTH + "/" + push.get("id").getAsString(), new Api.Callback() {
             @Override
             public void success(String response) {
                 DynamicRealmObject m = team.things.put(response);

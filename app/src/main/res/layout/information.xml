@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/whiteout"
                 android:gravity="center_horizontal"
-                android:textSize="11sp"
+                android:textSize="12sp"
                 android:textAlignment="center"
                 android:text="village dynamics in the city" />
 

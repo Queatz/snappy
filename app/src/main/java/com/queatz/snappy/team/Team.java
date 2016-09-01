@@ -172,12 +172,13 @@ public class Team implements Closeable {
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == Config.REQUEST_CODE_REQUEST_PERMISSION) {
-            for (String permission : permissions) {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    location.onPermissionGranted(permission);
-                }
-            }
-        }
+       if (requestCode == Config.REQUEST_CODE_REQUEST_PERMISSION) {
+           for (String permission : permissions) {
+               if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                   location.onPermissionGranted(permission);
+                   camera.onPermissionGranted(permission);
+               }
+           }
+       }
     }
 }

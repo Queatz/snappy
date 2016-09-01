@@ -29,7 +29,8 @@ public class MessageMine extends EarthControl {
                         StructuredQuery.PropertyFilter.eq(EarthField.TARGET, target)
                 )
         );
-    };
+    }
+
     public List<Entity> messagesFrom(Key source) {
         return Lists.newArrayList(
                 use(EarthStore.class).queryLimited(Config.SEARCH_MAXIMUM,
@@ -37,7 +38,8 @@ public class MessageMine extends EarthControl {
                         StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, source)
                 )
         );
-    };
+    }
+
     public List<Entity> messagesTo(Key target) {
         return Lists.newArrayList(
                 use(EarthStore.class).queryLimited(Config.SEARCH_MAXIMUM,
@@ -45,5 +47,5 @@ public class MessageMine extends EarthControl {
                         StructuredQuery.PropertyFilter.eq(EarthField.TARGET, target)
                 )
         );
-    };
+    }
 }

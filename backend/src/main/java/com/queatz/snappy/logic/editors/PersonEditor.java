@@ -54,13 +54,13 @@ public class PersonEditor extends EarthControl {
                                String about,
                                String subscription) {
         Entity.Builder update = earthStore.edit(person)
-                .set(EarthField.FIRST_NAME, firstName)
-                .set(EarthField.LAST_NAME, lastName)
-                .set(EarthField.GENDER, gender)
-                .set(EarthField.LANGUAGE, language)
-                .set(EarthField.IMAGE_URL, imageUrl)
-                .set(EarthField.GOOGLE_ID, googleId)
-                .set(EarthField.GOOGLE_URL, googleUrl);
+                .set(EarthField.FIRST_NAME, nullableString(firstName))
+                .set(EarthField.LAST_NAME, nullableString(lastName))
+                .set(EarthField.GENDER, nullableString(gender))
+                .set(EarthField.LANGUAGE, nullableString(language))
+                .set(EarthField.IMAGE_URL, nullableString(imageUrl))
+                .set(EarthField.GOOGLE_ID, nullableString(googleId))
+                .set(EarthField.GOOGLE_URL, nullableString(googleUrl));
 
         if (StringUtils.isBlank(person.getString(EarthField.TOKEN))) {
             update.set(EarthField.TOKEN, token);
@@ -85,6 +85,14 @@ public class PersonEditor extends EarthControl {
         }
 
         return earthStore.save(update);
+    }
+
+    public String nullableString(String string) {
+        if (string == null) {
+            return "";
+        }
+
+        return string;
     }
 
     public void updateSubscription(Entity person, String subscription) {

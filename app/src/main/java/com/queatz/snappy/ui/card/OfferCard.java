@@ -81,8 +81,6 @@ public class OfferCard implements Card<DynamicRealmObject> {
 
                 Toast.makeText(context, team.context.getString(R.string.opening_conversation), Toast.LENGTH_SHORT).show();
                 team.action.openMessages((Activity) context, offer.getObject(Thing.PERSON), Util.offerMessagePrefill(offer));
-
-                return;
             }
         };
 

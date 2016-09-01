@@ -154,7 +154,7 @@ public class UpdateCard implements Card<DynamicRealmObject> {
                 for (final DynamicRealmObject with : people) {
                     View profile = LayoutInflater.from(context).inflate(R.layout.update_with_person, withThesePeople, false);
 
-                    view.setOnClickListener(new View.OnClickListener() {
+                    profile.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             team.action.openProfile((Activity) context, with.getObject(Thing.SOURCE));

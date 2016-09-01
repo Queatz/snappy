@@ -20,6 +20,7 @@ import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.util.Json;
 
 import io.realm.DynamicRealmObject;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -74,6 +75,13 @@ public class MessagesSlide extends Fragment {
                             .equalTo("latest.from.id", team.auth.getUser())
                         .endGroup()
                         .findAllSorted(Thing.UPDATED, Sort.DESCENDING);
+
+                recents.addChangeListener(new RealmChangeListener<RealmResults<DynamicRealmObject>>() {
+                    @Override
+                    public void onChange(RealmResults<DynamicRealmObject> element) {
+                        update();
+                    }
+                });
 
                 mList.setAdapter(new RecentAdapter(getActivity(), recents));
             }

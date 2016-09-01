@@ -1,5 +1,6 @@
 package com.queatz.snappy.ui.camera;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -31,6 +32,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -106,8 +108,6 @@ public class CameraFragment extends Fragment {
         }
 
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-
-        setCamera(CameraCharacteristics.LENS_FACING_BACK);
     }
 
     @Override
@@ -298,6 +298,10 @@ public class CameraFragment extends Fragment {
     }
 
     private void capture() {
+        if (mCamera == null) {
+            return;
+        }
+
         try {
             CaptureRequest.Builder builder = mCamera.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             builder.addTarget(mImageReader.getSurface());
@@ -365,7 +369,17 @@ public class CameraFragment extends Fragment {
         }
     }
 
-    private void setCamera(Integer facing) {
+    private void setCamera(final Integer facing) {
+        if (!team.camera.isPermissionGranted()) {
+            team.camera.whenAvailable(new Runnable() {
+                @Override
+                public void run() {
+                    setCamera(facing);
+                }
+            });
+            return;
+        }
+
         try {
             String cam = null;
 
@@ -446,6 +460,8 @@ public class CameraFragment extends Fragment {
     }
 
     private void setupTexture() {
+        final boolean isInit;
+
         if (mTextureView.isAvailable()) {
             mTextureView.post(new Runnable() {
                 @Override
@@ -453,12 +469,16 @@ public class CameraFragment extends Fragment {
                     initCamera();
                 }
             });
+
+            isInit = true;
+        } else {
+            isInit = false;
         }
 
         mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                if (mSurface == null) {
+                if (!isInit && mSurface == null) {
                     initCamera();
                 }
             }

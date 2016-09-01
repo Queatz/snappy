@@ -134,7 +134,6 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                int startName = 0;
 
                 if (s.length() < 1) {
                     imWith.clear();
@@ -142,19 +141,12 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
                     return;
                 }
 
-                for (int i = start + count - 1; i >= 0; i--) {
-                    if (!Character.isLetter(s.charAt(i))) {
-                        startName = i + 1;
-                        break;
-                    }
-                }
+                String possibleName = fetchPossibleName(s, start + count);
 
-                if (startName >= start + count) {
+                if (possibleName == null) {
                     showImWith();
                     return;
                 }
-
-                String possibleName = s.subSequence(startName, start + count).toString();
 
                 suggest(possibleName);
             }
@@ -166,6 +158,35 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
         });
 
         return view;
+    }
+
+    private String fetchPossibleName(CharSequence s, int caretPosition) {
+        int startName = 0;
+
+        for (int i = caretPosition - 1; i >= 0; i--) {
+            if (!Character.isLetter(s.charAt(i))) {
+                startName = i + 1;
+                break;
+            }
+        }
+
+        if (startName >= caretPosition) {
+            return null;
+        }
+
+        return s.subSequence(startName, caretPosition).toString();
+    }
+
+    private void completeName(DynamicRealmObject person) {
+        String name = person.getString(Thing.FIRST_NAME);
+
+        EditText whatsUp = (EditText) getView().findViewById(R.id.whatsUp);
+        int caret = whatsUp.getSelectionStart();
+        String possibleName = fetchPossibleName(whatsUp.getText(), caret);
+
+        if (possibleName != null && name.length() > possibleName.length()) {
+            whatsUp.getText().insert(caret, name.substring(possibleName.length()));
+        }
     }
 
     private void suggest(String possibleName) {
@@ -188,7 +209,11 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
             personList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    imWith.add(suggestions.get(position));
+                    DynamicRealmObject person = suggestions.get(position);
+                    imWith.add(person);
+
+                    completeName(person);
+
                     showImWith();
                 }
             });
@@ -241,6 +266,21 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
             mMap.setMyLocationEnabled(true);
         } catch (SecurityException e) {
             e.printStackTrace();
+            team.location.get(getActivity(), new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
+                @Override
+                public void onLocationFound(Location location) {
+                    try {
+                        mMap.setMyLocationEnabled(true);
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onLocationUnavailable() {
+
+                }
+            });
         }
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {

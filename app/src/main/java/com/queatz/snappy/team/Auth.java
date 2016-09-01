@@ -1,8 +1,10 @@
 package com.queatz.snappy.team;
 
 import android.Manifest;
+import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -145,9 +147,9 @@ public class Auth {
             }
         }
 
-        protected String fetchToken() throws IOException {
+        String fetchToken() throws IOException {
             try {
-                return GoogleAuthUtil.getToken(mAuth.mActivity, mAuth.mEmail, SCOPE);
+                return GoogleAuthUtil.getToken(mAuth.mActivity, new Account(mAuth.mEmail, GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE), SCOPE);
             } catch (UserRecoverableAuthException e) {
                 mAuth.mActivity.startActivityForResult(e.getIntent(), Config.REQUEST_CODE_AUTH_RESOLUTION);
             } catch (GoogleAuthException | IOException e) {
@@ -222,7 +224,11 @@ public class Auth {
         unregisterDevice();
 
         if(mGoogleAuthToken != null && mActivity != null) {
-            GoogleAuthUtil.invalidateToken(mActivity, mGoogleAuthToken);
+            try {
+                GoogleAuthUtil.clearToken(mActivity, mGoogleAuthToken);
+            } catch (GoogleAuthException | IOException e) {
+                e.printStackTrace();
+            }
         }
 
         boolean isLogout = (mUser != null);
@@ -382,9 +388,11 @@ public class Auth {
      *
      * @return if the permission is already granted
      */
-    public boolean checkPermission(@NonNull final Activity activity, @NonNull final String permission) {
+    public boolean checkPermission(@NonNull final Context activity, @NonNull final String permission) {
         if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, Config.REQUEST_CODE_REQUEST_PERMISSION);
+            if (Activity.class.isAssignableFrom(activity.getClass())) {
+                ActivityCompat.requestPermissions((Activity) activity, new String[]{permission}, Config.REQUEST_CODE_REQUEST_PERMISSION);
+            }
 
             return false;
         }

@@ -37,7 +37,6 @@ public class ActionBar extends FrameLayout {
     private View mUpButton;
     private FrameLayout mLeftContent;
     private FrameLayout mRightContent;
-    private View mUnderline;
     private View mSlider;
 
     private float mSlidePosition;
@@ -70,7 +69,6 @@ public class ActionBar extends FrameLayout {
         mUpButton = findViewById(R.id.upButton);
         mLeftContent = (FrameLayout) findViewById(R.id.leftContent);
         mRightContent = (FrameLayout) findViewById(R.id.rightContent);
-        mUnderline = findViewById(R.id.underline);
         mSlider = findViewById(R.id.slider);
 
         if(Build.VERSION.SDK_INT >= 21) {

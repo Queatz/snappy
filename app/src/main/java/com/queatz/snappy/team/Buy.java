@@ -14,6 +14,7 @@ import android.os.RemoteException;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.RequestParams;
@@ -212,10 +213,10 @@ public class Buy {
     }
 
     private boolean checkPlayServices(final Activity activity) {
-        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
+        int status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity);
         if (status != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
-                GooglePlayServicesUtil.getErrorDialog(status, activity, Config.REQUEST_CODE_PLAY_SERVICES).show();
+            if (GoogleApiAvailability.getInstance().isUserResolvableError(status)) {
+                GoogleApiAvailability.getInstance().getErrorDialog(activity, status, Config.REQUEST_CODE_PLAY_SERVICES).show();
             }
             return false;
         }

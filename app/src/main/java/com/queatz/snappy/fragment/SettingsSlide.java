@@ -71,6 +71,6 @@ public class SettingsSlide extends Fragment {
         TextView socialModeState = (TextView) view.findViewById(R.id.social_mode);
 
         socialModeState.setText(team.auth.getSocialMode());
-        socialModeState.setTextColor(getResources().getColor(Config.SOCIAL_MODE_OFF.equals(team.auth.getSocialMode()) ? R.color.red : R.color.green));
+        socialModeState.setTextColor(getResources().getColor(Config.SOCIAL_MODE_OFF.equals(team.auth.getSocialMode()) ? R.color.gray : R.color.green));
     }
 }

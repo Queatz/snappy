@@ -4,33 +4,19 @@ package com.queatz.snappy;
  * Created by jacob on 9/27/14.
  */
 
-import android.app.IntentService;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.gcm.GcmListenerService;
 
-public class GCMIntentService extends IntentService {
-
-    public GCMIntentService() {
-        super("GCMIntentService");
-    }
+public class GCMIntentService extends GcmListenerService {
 
     @Override
-    protected void onHandleIntent(Intent intent) {
-        Bundle extras = intent.getExtras();
-        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
-        String messageType = gcm.getMessageType(intent);
-
-        if (extras != null && !extras.isEmpty()) {
-            if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                handle(extras.getString("message"));
-            }
+    public void onMessageReceived(String s, Bundle bundle) {
+        if (bundle != null && !bundle.isEmpty()) {
+            handle(bundle.getString("message"));
         }
-
-        GCMBroadcastReceiver.completeWakefulIntent(intent);
     }
 
     protected void handle(final String message) {

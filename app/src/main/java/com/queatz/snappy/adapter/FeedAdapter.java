@@ -27,7 +27,6 @@ import io.realm.RealmResults;
 public class FeedAdapter extends BaseAdapter {
     protected List<RealmResults> results;
     protected Context context;
-    private final RealmChangeListener<DynamicRealm> listener;
 
     private UpdateCard updateCard = new UpdateCard();
     private PartyCard partyCard = new PartyCard();
@@ -41,16 +40,14 @@ public class FeedAdapter extends BaseAdapter {
         this.context = context;
         this.results = results;
 
-        this.listener = new RealmChangeListener<DynamicRealm>() {
+        final Team team = ((MainApplication) context.getApplicationContext()).team;
+
+        team.realm.addChangeListener(new RealmChangeListener<DynamicRealm>() {
             @Override
             public void onChange(DynamicRealm realm) {
                 notifyDataSetChanged();
             }
-        };
-
-        final Team team = ((MainApplication) context.getApplicationContext()).team;
-
-        team.realm.addChangeListener(listener);
+        });
     }
 
     @Override
