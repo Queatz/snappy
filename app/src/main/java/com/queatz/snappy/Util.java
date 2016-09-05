@@ -347,7 +347,7 @@ public class Util {
     }
 
     public static Uri uriFromImage(Image image) {
-        File file = new File(context.getExternalFilesDir(null), "village-capture-" + new Date() + "jpg");
+        File file = new File(context.getExternalFilesDir(null), "village-capture-" + new Date() + ".jpg");
         new CameraImageSaver(image, file).run();
         return Uri.fromFile(file);
     }

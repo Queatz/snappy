@@ -2,6 +2,15 @@ package com.queatz.snappy.ui.card;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ClickableSpan;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -11,10 +20,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
@@ -143,52 +154,82 @@ public class UpdateCard implements Card<DynamicRealmObject> {
                 }
             }
 
-            if (people.size() > 0) {
-                view.findViewById(R.id.withLayout).setVisibility(View.VISIBLE);
+            TextView withAt = (TextView) view.findViewById(R.id.withAt);
+            if (people.size() > 0 || hubs.size() > 0) {
+                withAt.setVisibility(View.VISIBLE);
 
-                LinearLayout withThesePeople = (LinearLayout) view.findViewById(R.id.withThesePeople);
+                SpannableStringBuilder builder = new SpannableStringBuilder();
 
-                withThesePeople.removeAllViews();
+                if (people.size() > 0) {
+                    builder.append("with");
 
-                int z = 0;
-                for (final DynamicRealmObject with : people) {
-                    View profile = LayoutInflater.from(context).inflate(R.layout.update_with_person, withThesePeople, false);
+                    int added = 0;
+                    for (final DynamicRealmObject with : people) {
+                        String prefix = (added > 0 ? (added == people.size() - 1 ? " and " : ", ") : " ");
+                        SpannableString ss = new SpannableString(prefix + Functions.getFullName(with.getObject(Thing.SOURCE)));
 
-                    profile.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            team.action.openProfile((Activity) context, with.getObject(Thing.SOURCE));
-                        }
-                    });
+                        ClickableSpan clickableSpan = new ClickableSpan() {
+                            @Override
+                            public void onClick(View textView) {
+                                team.action.openProfile((Activity) context, with.getObject(Thing.SOURCE));
+                            }
 
-                    TextView name = (TextView) profile.findViewById(R.id.name);
-                    name.setText(Functions.getFullName(with.getObject(Thing.SOURCE)));
+                            @Override
+                            public void updateDrawState(TextPaint ds) {
+                                super.updateDrawState(ds);
+                                ds.setUnderlineText(false);
+                            }
+                        };
 
-                    withThesePeople.addView(profile, 0);
-                    profile.setZ(z++);
+                        ss.setSpan(new AbsoluteSizeSpan(16, true), prefix.length(), ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ss.setSpan(clickableSpan, prefix.length(), ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                        builder.append(ss);
+                        added++;
+                    }
                 }
-            } else {
-                view.findViewById(R.id.withLayout).setVisibility(View.GONE);
-            }
 
-            if (hubs.size() > 0) {
-                view.findViewById(R.id.atLayout).setVisibility(View.VISIBLE);
+                if (hubs.size() > 0) {
+                    if (people.size() > 0) {
+                        builder.append(" ");
+                    }
 
-                LinearLayout at = (LinearLayout) view.findViewById(R.id.at);
+                    builder.append("at");
 
-                at.removeAllViews();
+                    for (final DynamicRealmObject with : hubs) {
+                        SpannableString ss = new SpannableString(" " + with.getObject(Thing.SOURCE).getString(Thing.NAME));
 
-                int z = 0;
-                for (final DynamicRealmObject with : hubs) {
-                    View profile = LayoutInflater.from(context).inflate(R.layout.update_with_person, at, false);
-                    TextView name = (TextView) profile.findViewById(R.id.name);
-                    name.setText(with.getObject(Thing.SOURCE).getString(Thing.NAME));
+                        ClickableSpan clickableSpan = new ClickableSpan() {
+                            @Override
+                            public void onClick(View textView) {
+                                // XXX Show on map
+                                Bundle extras = new Bundle();
+                                extras.putString("show", "map");
+                                extras.putString("mapFocusId", with.getObject(Thing.SOURCE).getString(Thing.ID));
+                                team.view.show((Activity) context, Main.class, extras);
+                            }
 
-                    at.addView(profile, 0);
-                    profile.setZ(z++);
+                            @Override
+                            public void updateDrawState(TextPaint ds) {
+                                super.updateDrawState(ds);
+                                ds.setUnderlineText(false);
+                            }
+                        };
+
+                        ss.setSpan(new AbsoluteSizeSpan(16, true), 1, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ss.setSpan(clickableSpan, 1, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                        builder.append(ss);
+                    }
+
+                    withAt.setMovementMethod(LinkMovementMethod.getInstance());
+                    withAt.setText(builder);
                 }
+
+                withAt.setMovementMethod(LinkMovementMethod.getInstance());
+                withAt.setText(builder);
             } else {
-                view.findViewById(R.id.atLayout).setVisibility(View.GONE);
+                withAt.setVisibility(View.GONE);
             }
         }
 

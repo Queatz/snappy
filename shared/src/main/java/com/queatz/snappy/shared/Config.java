@@ -10,7 +10,7 @@ public class Config {
     // Android
 
     public static final boolean BETA_VERSION = true;
-    public static final int WIPE_VERSIONS_BELOW = 26;
+    public static final int WIPE_VERSIONS_BELOW = 37;
 
     // The email emails are sent from
     public static final String VILLAGE_EMAIL = "Village <my@village.city>";

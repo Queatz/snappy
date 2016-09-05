@@ -1,21 +1,16 @@
 package com.queatz.snappy.ui.camera;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorEventListener2;
 import android.hardware.SensorManager;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -25,6 +20,7 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.Image;
 import android.media.ImageReader;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,28 +28,22 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
-import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
-import com.squareup.picasso.Picasso;
 
-import java.io.BufferedInputStream;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -74,6 +64,7 @@ public class CameraFragment extends Fragment {
 
     private HandlerThread mBackgroundThread;
     private Handler mBackgroundHandler;
+    private boolean mCameraIsOpening;
 
     private void startBackgroundThread() {
         mBackgroundThread = new HandlerThread("CameraBackground");
@@ -248,9 +239,6 @@ public class CameraFragment extends Fragment {
 
         configureTransform(mCameraViewContainer.getMeasuredWidth(), mCameraViewContainer.getMeasuredHeight());
 
-        mTextureView.getSurfaceTexture()
-                .setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-
         if (mSurface != null) {
             mSurface.release();
         }
@@ -267,6 +255,8 @@ public class CameraFragment extends Fragment {
         mImageReader.setOnImageAvailableListener(new ImageReader.OnImageAvailableListener() {
             @Override
             public void onImageAvailable(final ImageReader reader) {
+//                Image image = reader.acquireLatestImage();
+//                image.getWidth();
 //                final ImageView examplePhoto = (ImageView) getView().findViewById(R.id.examplePhoto);
 //                examplePhoto.post(new Runnable() {
 //                    @Override
@@ -292,7 +282,7 @@ public class CameraFragment extends Fragment {
                 public void onConfigureFailed(CameraCaptureSession session) {
                 }
             }, mBackgroundHandler);
-        } catch (CameraAccessException e) {
+        } catch (SecurityException | CameraAccessException e) {
             e.printStackTrace();
         }
     }
@@ -354,7 +344,7 @@ public class CameraFragment extends Fragment {
         usePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.camera.supplyPhoto(mImageReader.acquireLatestImage());
+                team.camera.supplyPhoto(Util.uriFromImage(mImageReader.acquireLatestImage()));
             }
         });
 
@@ -379,6 +369,12 @@ public class CameraFragment extends Fragment {
             });
             return;
         }
+
+        if (mCameraIsOpening) {
+            return;
+        }
+
+        mCameraIsOpening = true;
 
         try {
             String cam = null;
@@ -409,17 +405,18 @@ public class CameraFragment extends Fragment {
                 @Override
                 public void onOpened(@NonNull CameraDevice camera) {
                     mCamera = camera;
+                    mCameraIsOpening = false;
                     setupTexture();
                 }
 
                 @Override
                 public void onDisconnected(@NonNull CameraDevice camera) {
-                    CameraFragment.this.onDestroy();
+                    endLastCamera();
                 }
 
                 @Override
                 public void onError(@NonNull CameraDevice camera, int error) {
-
+                    mCameraIsOpening = false;
                 }
             }, mBackgroundHandler);
         } catch (SecurityException | CameraAccessException e) {

@@ -155,6 +155,8 @@
     <string name="check_in">Check in</string>
     <string name="location_removed">Location removed</string>
     <string name="sent_a_photo">sent a photo</string>
+    <string name="and">%1$s and %2$s</string>
+    <string name="add">Add</string>
 
     <plurals name="likes">
         <item quantity="one">♡ %1$s Liker</item>
@@ -239,6 +241,11 @@
     <plurals name="num_feet">
         <item quantity="one">%1$s foot</item>
         <item quantity="other">%1$s feet</item>
+    </plurals>
+
+    <plurals name="is_are_at">
+        <item quantity="one">is at %1$s</item>
+        <item quantity="other">are at %1$s</item>
     </plurals>
 
 </resources>

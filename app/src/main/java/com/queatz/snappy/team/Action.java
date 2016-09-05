@@ -817,7 +817,7 @@ public class Action {
         final AlertDialog dialog = new AlertDialog.Builder(activity)
                 .setView(newOffer)
                 .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.add_experience, null)
+                .setPositiveButton(R.string.add, null)
                 .setCancelable(true)
                 .show();
 

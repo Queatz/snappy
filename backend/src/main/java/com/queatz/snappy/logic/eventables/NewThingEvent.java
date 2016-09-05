@@ -41,7 +41,7 @@ public class NewThingEvent implements Eventable {
     @Override
     public Object makePush() {
         return new PushSpec(
-                Config.PUSH_ACTION_NEW_PARTY,
+                Config.PUSH_ACTION_NEW_THING,
                 ImmutableMap.of(
                         "id", thing.key().name(),
                         "name", thing.getString(EarthField.NAME)

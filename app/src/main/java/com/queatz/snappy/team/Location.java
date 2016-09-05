@@ -207,7 +207,6 @@ public class Location implements
                 locationNotAvailable();
 
                 try {
-                    mLocationIsAvailable = false;
                     locationSettingsResult.getStatus().startResolutionForResult(mActivity, Config.REQUEST_CODE_CHECK_SETTINGS);
                 }
                 catch (IntentSender.SendIntentException e) {

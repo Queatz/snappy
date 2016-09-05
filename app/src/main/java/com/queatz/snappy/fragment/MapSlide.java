@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -38,7 +39,6 @@ import com.makeramen.RoundedImageView;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
-import com.queatz.snappy.adapter.PersonListAdapter;
 import com.queatz.snappy.adapter.SuggestionAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
@@ -73,9 +73,10 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
 
     private GoogleMap mMap;
     private ViewGroup info;
-    private Image image;
+    private Uri image;
     private List<DynamicRealmObject> imWith = new ArrayList<>();
     private DynamicRealmObject imAt;
+    private DynamicRealmObject mMapFocus;
 
     Team team;
 
@@ -113,7 +114,7 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
                         imWith.add(imAt);
                     }
 
-                    team.action.postSelfUpdate(image != null ? Util.uriFromImage(image) : null, whatsUp.getText().toString(), team.location.get(), imWith);
+                    team.action.postSelfUpdate(image, whatsUp.getText().toString(), team.location.get(), imWith);
                     whatsUp.setText("");
                     image = null;
                     imAt = null;
@@ -135,7 +136,8 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                if (s.length() < 1) {
+                // Need to get full length
+                if (whatsUp.getText().length() < 1) {
                     imWith.clear();
                     showImWith();
                     return;
@@ -323,20 +325,26 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
 //            }
 //        });
 
-        Location location = team.location.get();
-
-        if (location != null) {
-            myLocationFound(location);
+        if (mMapFocus != null) {
+            setMapFocus(mMapFocus);
+            showInfo(mMapFocus);
         } else {
-            team.location.get(getActivity(), new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
-                @Override
-                public void onLocationFound(Location location) {
-                    myLocationFound(location);
-                }
+            Location location = team.location.get();
 
-                @Override
-                public void onLocationUnavailable() {}
-            });
+            if (location != null) {
+                myLocationFound(location);
+            } else {
+                team.location.get(getActivity(), new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
+                    @Override
+                    public void onLocationFound(Location location) {
+                        myLocationFound(location);
+                    }
+
+                    @Override
+                    public void onLocationUnavailable() {
+                    }
+                });
+            }
         }
 
         setupMarkers();
@@ -345,8 +353,8 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
     private void getPhoto() {
         team.camera.getPhoto(getActivity(), new Camera.Callback() {
             @Override
-            public void onPhoto(Image image) {
-                MapSlide.this.image = image;
+            public void onPhoto(Uri uri) {
+                MapSlide.this.image = uri;
                 updateImageButton();
             }
 
@@ -389,7 +397,16 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
 
             TextView details = (TextView) view.findViewById(R.id.details);
             details.setMovementMethod(new ScrollingMovementMethod());
-            details.setText(thing.getString(Thing.ABOUT));
+
+            String about = thing.getString(Thing.ABOUT);
+
+            if (about.isEmpty()) {
+                details.setVisibility(View.GONE);
+            } else {
+                details.setVisibility(View.VISIBLE);
+                details.setText(about);
+            }
+            ((TextView) view.findViewById(R.id.name)).setText(thing.getString(Thing.NAME));
 
             ImageView photo = (ImageView) view.findViewById(R.id.profile);
 
@@ -506,7 +523,7 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
     }
 
     private void myLocationFound(Location location) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
                 location.getLatitude(),
                 location.getLongitude()
         ), Config.defaultMapZoom));
@@ -562,11 +579,6 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
             LatLng location = new LatLng(thing.getDouble(Thing.LATITUDE), thing.getDouble(Thing.LONGITUDE));
 
             MarkerOptions options = new MarkerOptions().position(location);
-
-            if ("hub".equals(thing.getString(Thing.KIND))) {
-                options.title(thing.getString(Thing.NAME));
-            }
-
             final Marker marker = mMap.addMarker(options);
 
             marker.setTag(thing);
@@ -684,6 +696,33 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
             return true;
         } else {
             return false;
+        }
+    }
+
+    public void setMapFocus(DynamicRealmObject mapFocus) {
+        mMapFocus = null;
+
+        if (mapFocus == null) {
+            return;
+        }
+
+        if (mapFocus.isNull(Thing.LONGITUDE) || mapFocus.isNull(Thing.LATITUDE)) {
+            return;
+        }
+
+        if (mMap != null) {
+            double latitude = mapFocus.getDouble(Thing.LATITUDE);
+            double longitude = mapFocus.getDouble(Thing.LONGITUDE);
+
+            Location location = new Location("Village");
+            location.setLatitude(latitude);
+            location.setLongitude(longitude);
+
+            myLocationFound(location);
+
+            showInfo(mapFocus);
+        } else {
+            mMapFocus = mapFocus;
         }
     }
 }

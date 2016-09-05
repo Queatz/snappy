@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.Image;
 import android.media.ImageReader;
+import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
@@ -29,7 +30,7 @@ public class Camera {
     final private ArrayList<Runnable> mRunWhenConnected = new ArrayList<>();
 
     public interface Callback {
-        void onPhoto(Image image);
+        void onPhoto(Uri uri);
         void onClosed();
     }
 
@@ -44,7 +45,14 @@ public class Camera {
 
     public void onPermissionGranted(String permission) {
         if (Manifest.permission.CAMERA.equals(permission)) {
-            cameraAvailable();
+            if (mActivity != null) {
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        cameraAvailable();
+                    }
+                });
+            }
         }
     }
 
@@ -103,9 +111,9 @@ public class Camera {
         mActivity = null;
     }
 
-    public void supplyPhoto(Image image) {
+    public void supplyPhoto(Uri uri) {
         if (mCallback != null) {
-            mCallback.onPhoto(image);
+            mCallback.onPhoto(uri);
         }
 
         close();

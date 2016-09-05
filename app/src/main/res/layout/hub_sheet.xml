@@ -51,6 +51,19 @@
                 android:textSize="14sp" />
 
             <com.queatz.snappy.ui.TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:scrollbars="vertical"
+                android:maxHeight="96dp"
+                android:textColor="@color/text"
+                android:textSize="18sp" />
+
+            <com.queatz.snappy.ui.TextView
                 android:id="@+id/details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -2,12 +2,19 @@ package com.queatz.snappy.logic.eventables;
 
 import com.google.cloud.datastore.Entity;
 import com.google.common.collect.ImmutableMap;
+import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.backend.PushSpec;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by jacob on 6/19/16.
@@ -37,6 +44,56 @@ public class NewUpdateEvent implements Eventable {
         this.update = update;
     }
 
+    private List<Map<String, String>> getWith(Entity thing) {
+        List<Entity> joins = earthStore.find(EarthKind.JOIN_KIND, EarthField.TARGET, thing.key());
+
+        List<Map<String, String>> results = new ArrayList<>();
+
+        Map<String, List<Map<String, String>>> resultsByKind = new HashMap<>();
+
+        if (joins.isEmpty()) {
+            return results;
+        }
+
+        for(Entity join : joins) {
+            Entity with = earthStore.get(join.getKey(EarthField.SOURCE));
+            String kind = with.getString(EarthField.KIND);
+            String name;
+
+            if (EarthKind.PERSON_KIND.equals(kind)) {
+                name = with.getString(EarthField.FIRST_NAME) + " " + with.getString(EarthField.LAST_NAME);
+            } else if (EarthKind.HUB_KIND.equals(kind)) {
+                name = with.getString(EarthField.NAME);
+            } else {
+                continue;
+            }
+
+            if (!resultsByKind.containsKey(kind)) {
+                resultsByKind.put(kind, new ArrayList<Map<String, String>>());
+            }
+
+            resultsByKind.get(kind).add(ImmutableMap.of(
+                    "kind", kind,
+                    "name", name
+            ));
+        }
+
+        for (Map.Entry<String, List<Map<String, String>>> entry : resultsByKind.entrySet()) {
+            int size = entry.getValue().size();
+
+            if (size == 1) {
+                results.add(entry.getValue().get(0));
+            } else if (size > 1) {
+                results.add(ImmutableMap.of(
+                        "kind", entry.getKey(),
+                        "name", size + " others"
+                ));
+            }
+        }
+
+        return results;
+    }
+
     @Override
     public Object makePush() {
         Entity person = earthStore.get(update.getKey(EarthField.SOURCE));
@@ -49,7 +106,8 @@ public class NewUpdateEvent implements Eventable {
                         "person", ImmutableMap.of(
                                 "id", person.key().name(),
                                 "firstName", person.getString(EarthField.FIRST_NAME)
-                        )
+                        ),
+                        "with", getWith(update)
                 )
         );
     }

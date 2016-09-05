@@ -19,9 +19,11 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.adapter.MainAdapter;
 import com.queatz.snappy.adapter.MainTabAdapter;
+import com.queatz.snappy.fragment.MapSlide;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Buy;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.ActionBar;
 import com.queatz.snappy.ui.OnBackPressed;
 import com.queatz.snappy.ui.SlideScreen;
@@ -148,10 +150,25 @@ public class Main extends Activity {
         String show = intent.getStringExtra("show");
 
         if(show != null) {
-            mActionBar.setPage("parties".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
+            mActionBar.setPage(
+                    "parties".equals(show) ? 0 :
+                    "map".equals(show) ? 1 :
+                    "messages".equals(show) ? 2 : 0
+            );
         }
         else  {
             mActionBar.resolve();
+        }
+
+
+        String mapFocusId = intent.getStringExtra("mapFocusId");
+
+        if (mapFocusId != null) {
+            DynamicRealmObject mapFocus = team.realm.where("Thing")
+                    .equalTo(Thing.ID, mapFocusId)
+                    .findFirst();
+
+            ((MapSlide) mSlideScreen.getSlideFragment(1)).setMapFocus(mapFocus);
         }
     }
 

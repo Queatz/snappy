@@ -3,6 +3,7 @@ package com.queatz.snappy.fragment;
 import android.app.Fragment;
 import android.content.res.ColorStateList;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -34,7 +35,7 @@ public class PersonMessagesSlide extends Fragment {
     DynamicRealmObject mPerson;
     String messagePrefill;
     Team team;
-    Image image;
+    Uri image;
 
     public void setPerson(DynamicRealmObject person) {
         mPerson = person;
@@ -99,7 +100,7 @@ public class PersonMessagesSlide extends Fragment {
                     if (mPerson == null || (message.trim().isEmpty() && image == null))
                         return;
 
-                    team.action.sendMessage(mPerson, message, image != null ? Util.uriFromImage(image) : null);
+                    team.action.sendMessage(mPerson, message, image);
 
                     writeMessage.setText("");
                     image = null;
@@ -162,8 +163,8 @@ public class PersonMessagesSlide extends Fragment {
     public void getPhoto() {
         team.camera.getPhoto(getActivity(), new Camera.Callback() {
             @Override
-            public void onPhoto(Image image) {
-                PersonMessagesSlide.this.image = image;
+            public void onPhoto(Uri uri) {
+                PersonMessagesSlide.this.image = uri;
                 updateImageButton();
             }
 
