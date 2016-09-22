@@ -12,6 +12,7 @@ import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthUpdate;
+import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.OfferEditor;
@@ -53,7 +54,7 @@ public class MeInterface implements Interfaceable {
     public String get(EarthAs as) {
         switch (as.getRoute().size()) {
             case 1:
-                return new EarthViewer(as).getViewForEntityOrThrow(as.getUser()).toJson();
+                return new EarthViewer(as).getViewForEntityOrThrow(as.getUser(), EarthView.SHALLOW).toJson();
             case 2:
                 switch (as.getRoute().get(1)) {
                     case Config.PATH_BUY:

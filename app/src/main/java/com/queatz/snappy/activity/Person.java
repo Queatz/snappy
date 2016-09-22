@@ -66,6 +66,11 @@ public class Person extends Activity {
         mPerson = team.realm.where("Thing").equalTo("id", id).findFirst();
         // Else load person and wait
 
+        if(mPerson == null) {
+            Log.w(Config.LOG_TAG, "Person with id wasn't found in local database");
+            return;
+        }
+
         setContentView(R.layout.person);
 
         mActionBar = (ActionBar) findViewById(R.id.actionBar);
