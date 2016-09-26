@@ -9,6 +9,8 @@ import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 
+import java.util.List;
+
 /**
  * Created by jacob on 5/14/16.
  */
@@ -22,41 +24,41 @@ public class PersonMine extends EarthControl {
     }
 
     public Entity byEmail(String email) {
-        QueryResults<Entity> results = earthStore.query(
+        List<Entity> results = earthStore.queryLimited(1,
                 StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.PERSON_KIND),
                 StructuredQuery.PropertyFilter.eq(EarthField.EMAIL, email)
         );
 
-        if (results.hasNext()) {
-            return results.next();
-        } else {
+        if (results.isEmpty()) {
             return null;
+        } else {
+            return results.get(0);
         }
     }
 
     public Entity byToken(String token) {
-        QueryResults<Entity> results = earthStore.query(
+        List<Entity> results = earthStore.query(
                 StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.PERSON_KIND),
                 StructuredQuery.PropertyFilter.eq(EarthField.TOKEN, token)
         );
 
-        if (results.hasNext()) {
-            return results.next();
-        } else {
+        if (results.isEmpty()) {
             return null;
+        } else {
+            return results.get(0);
         }
     }
 
     public Entity byGoogleUrl(String googleUrl) {
-        QueryResults<Entity> results = earthStore.query(
+        List<Entity> results = earthStore.queryLimited(1,
                 StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.PERSON_KIND),
                 StructuredQuery.PropertyFilter.eq(EarthField.GOOGLE_URL, googleUrl)
         );
 
-        if (results.hasNext()) {
-            return results.next();
-        } else {
+        if (results.isEmpty()) {
             return null;
+        } else {
+            return results.get(0);
         }
     }
 
@@ -64,6 +66,6 @@ public class PersonMine extends EarthControl {
         return earthStore.count(earthStore.query(
                 StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.PERSON_KIND),
                 StructuredQuery.PropertyFilter.eq(EarthField.SUBSCRIPTION, subscription)
-        ));
+        ).iterator());
     }
 }

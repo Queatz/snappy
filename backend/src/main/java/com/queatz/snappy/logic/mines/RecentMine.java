@@ -33,16 +33,16 @@ public class RecentMine extends EarthControl {
     }
 
     public Entity byPerson(Key person, Key contact) {
-        QueryResults<Entity> results = use(EarthStore.class).query(
+        List<Entity> results = use(EarthStore.class).queryLimited(1,
                 StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.RECENT_KIND),
                 StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, person),
                 StructuredQuery.PropertyFilter.eq(EarthField.TARGET, contact)
         );
 
-        if (results.hasNext()) {
-            return results.next();
-        } else {
+        if (results.isEmpty()) {
             return null;
+        } else {
+            return results.get(0);
         }
     }
 }

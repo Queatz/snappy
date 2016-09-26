@@ -9,6 +9,8 @@ import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 
+import java.util.List;
+
 /**
  * Created by jacob on 8/24/16.
  */
@@ -19,16 +21,16 @@ public class LikeMine extends EarthControl {
     }
 
     public Entity getLike(Entity person, Entity thing) {
-        QueryResults<Entity> results = use(EarthStore.class).query(
+        List<Entity> results = use(EarthStore.class).query(
                 StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.LIKE_KIND),
                 StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, person.key()),
                 StructuredQuery.PropertyFilter.eq(EarthField.TARGET, thing.key())
         );
 
-        if (results.hasNext()) {
-            return results.next();
-        } else {
+        if (results.isEmpty()) {
             return null;
+        } else {
+            return results.get(0);
         }
     }
 

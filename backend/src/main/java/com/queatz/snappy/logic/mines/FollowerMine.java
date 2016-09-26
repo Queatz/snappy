@@ -9,6 +9,8 @@ import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 
+import java.util.List;
+
 /**
  * Created by jacob on 5/14/16.
  */
@@ -18,16 +20,16 @@ public class FollowerMine extends EarthControl {
     }
 
     public Entity getFollower(Entity person, Entity isFollowingPerson) {
-        QueryResults<Entity> results = use(EarthStore.class).query(
+        List<Entity> results = use(EarthStore.class).queryLimited(1,
                 StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.FOLLOWER_KIND),
                 StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, person.key()),
                 StructuredQuery.PropertyFilter.eq(EarthField.TARGET, isFollowingPerson.key())
         );
 
-        if (results.hasNext()) {
-            return results.next();
-        } else {
+        if (results.isEmpty()) {
             return null;
+        } else {
+            return results.get(0);
         }
     }
 

@@ -37,7 +37,7 @@ public class Local {
             DynamicRealmObject recent = recents.get(i);
             recent.setObject(Thing.LATEST, message);
 
-            if(!team.auth.getUser().equals(recent.getObject(Thing.SOURCE).getString(Thing.ID))) {
+            if(!team.auth.getUser().equals(recent.getObject(Thing.FROM).getString(Thing.ID))) {
                 recent.setBoolean(Thing.SEEN, false);
             }
         }

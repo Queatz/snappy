@@ -25,8 +25,6 @@ public class MessagesAndContactsView extends EarthControl implements Viewable {
         this.messages = Lists.newArrayList();
         this.contacts = Lists.newArrayList();
 
-        use(EarthStore.class).transact();
-
         for (Entity message : messages) {
             this.messages.add(new MessageView(as, message, EarthView.SHALLOW));
         }
@@ -34,8 +32,6 @@ public class MessagesAndContactsView extends EarthControl implements Viewable {
         for (Entity contact : contacts) {
             this.contacts.add(new RecentView(as, contact, EarthView.SHALLOW));
         }
-
-        use(EarthStore.class).commit();
     }
 
     @Override

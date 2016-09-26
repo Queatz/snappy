@@ -19,8 +19,10 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -95,13 +97,17 @@ public class EarthStore extends EarthControl {
         if (as.__entityCache.containsKey(key)) {
             entity = as.__entityCache.get(key);
         } else {
-            entity = (Entity) cache.get(key);
-
-            if (entity == null) {
+            if (cache.containsKey(key)) {
+                entity = (Entity) cache.get(key);
+            } else {
                 entity = (transaction != null ? transaction.get(key) : datastore.get(key));
-                entity = (Entity) cache.put(key, entity);
+
+                if (entity != null) {
+                    cache.put(key, entity);
+                }
             }
 
+            // Can be null
             as.__entityCache.put(key, entity);
         }
 
@@ -322,7 +328,7 @@ public class EarthStore extends EarthControl {
         return count(datastore.run(query));
     }
 
-    public int count(QueryResults queryResults) {
+    public int count(Iterator queryResults) {
         return Iterators.size(queryResults);
     }
 
@@ -342,6 +348,7 @@ public class EarthStore extends EarthControl {
                         StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of())
                 ))
                 .limit(limit)
+                .orderBy(StructuredQuery.OrderBy.desc(EarthField.CREATED_ON))
                 .build();
 
         return Lists.newArrayList(datastore.run(query));
@@ -363,25 +370,34 @@ public class EarthStore extends EarthControl {
         return earthSearcher.getNearby(kind, q, center, recent ? new Date(new Date().getTime() - 1000 * 60 * 60) : null , 100);
     }
 
-    public QueryResults<Entity> query(StructuredQuery.Filter... filters) {
+    public List<Entity> query(StructuredQuery.Filter... filters) {
         StructuredQuery.Filter filter = StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of());
 
         StructuredQuery.Filter composite = StructuredQuery.CompositeFilter.and(filter, filters);
 
-        return datastore.run(StructuredQuery.entityQueryBuilder()
+//        XXX Can do this when invalidation is implemented for ket+val+limit+kind matches
+//        if (cache.containsKey(composite)) {
+//            return (ArrayList<Entity>) cache.get(composite);
+//        }
+
+        List<Entity> results = Lists.newArrayList(datastore.run(StructuredQuery.entityQueryBuilder()
                 .kind(DEFAULT_KIND)
-                .filter(composite).build());
+                .filter(composite).build()));
+
+//        cache.put(composite, results);
+
+        return results;
     }
 
-    public QueryResults<Entity> queryLimited(int limit, StructuredQuery.Filter... filters) {
+    public List<Entity> queryLimited(int limit, StructuredQuery.Filter... filters) {
         StructuredQuery.Filter filter = StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of());
 
         StructuredQuery.Filter composite = StructuredQuery.CompositeFilter.and(filter, filters);
 
-        return datastore.run(StructuredQuery.entityQueryBuilder()
+        return Lists.newArrayList(datastore.run(StructuredQuery.entityQueryBuilder()
                 .kind(DEFAULT_KIND)
                 .limit(limit)
-                .filter(composite).build());
+                .filter(composite).build()));
     }
 
     public Key key(String keyName) {
