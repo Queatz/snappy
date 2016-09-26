@@ -129,8 +129,6 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
 
                 // Need to get full length
                 if (whatsUp.getText().length() < 1) {
-                    imWith.clear();
-                    showImWith();
                     return;
                 }
 
@@ -154,6 +152,14 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
             @Override
             public void onClick(View v) {
                 postUpdate();
+            }
+        });
+
+        view.findViewById(R.id.withLayout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imWith.clear();
+                showImWith();
             }
         });
 
