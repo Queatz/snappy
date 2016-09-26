@@ -73,11 +73,12 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
 
     private GoogleMap mMap;
     private ViewGroup info;
+    private EditText whatsUp;
     private Uri image;
     private List<DynamicRealmObject> imWith = new ArrayList<>();
     private DynamicRealmObject imAt;
-    private DynamicRealmObject mMapFocus;
 
+    private DynamicRealmObject mMapFocus;
     Team team;
 
     @Override
@@ -104,23 +105,13 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
             }
         });
 
-        final EditText whatsUp = (EditText) view.findViewById(R.id.whatsUp);
+        whatsUp = (EditText) view.findViewById(R.id.whatsUp);
 
         whatsUp.setOnEditorActionListener(new android.widget.TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(android.widget.TextView v, int actionId, KeyEvent event) {
                 if (EditorInfo.IME_ACTION_GO == actionId) {
-                    if (imAt != null) {
-                        imWith.add(imAt);
-                    }
-
-                    team.action.postSelfUpdate(image, whatsUp.getText().toString(), team.location.get(), imWith);
-                    whatsUp.setText("");
-                    image = null;
-                    imAt = null;
-                    imWith.clear();
-                    updateImageButton();
-                    updateAtIndicator();
+                    postUpdate();
                 }
 
                 return false;
@@ -159,7 +150,30 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
             }
         });
 
+        view.findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postUpdate();
+            }
+        });
+
         return view;
+    }
+
+    private void postUpdate() {
+        if (imAt != null) {
+            imWith.add(imAt);
+        }
+
+        team.action.postSelfUpdate(image, whatsUp.getText().toString(), team.location.get(), imWith);
+        whatsUp.setText("");
+        image = null;
+        imAt = null;
+        imWith.clear();
+        updateImageButton();
+        updateAtIndicator();
+
+        team.view.keyboard(whatsUp, false);
     }
 
     private String fetchPossibleName(CharSequence s, int caretPosition) {
@@ -356,6 +370,15 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
             public void onPhoto(Uri uri) {
                 MapSlide.this.image = uri;
                 updateImageButton();
+                whatsUp.requestFocus();
+
+                whatsUp.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        team.view.keyboard(whatsUp);
+
+                    }
+                });
             }
 
             @Override

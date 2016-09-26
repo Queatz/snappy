@@ -142,10 +142,11 @@ public class Push {
         final Uri sound = Uri.parse("android.resource://" + team.context.getPackageName() + "/" + R.raw.completetask);
 
         return new NotificationCompat.Builder(team.context)
-                .setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS)
+                .setDefaults(Notification.DEFAULT_LIGHTS)
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.icon_system)
                 .setPriority(Notification.PRIORITY_DEFAULT)
+                .setVibrate(new long[] {0, 175, 175, 75})
                 .setSound(sound, AudioManager.STREAM_NOTIFICATION);
     }
 }

@@ -629,7 +629,7 @@ public class Action {
         editText.setText(about);
 
         new AlertDialog.Builder(activity).setView(editText)
-                .setNegativeButton(R.string.cancel, null)
+                .setNegativeButton(R.string.nope, null)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -816,7 +816,7 @@ public class Action {
 
         final AlertDialog dialog = new AlertDialog.Builder(activity)
                 .setView(newOffer)
-                .setNegativeButton(R.string.cancel, null)
+                .setNegativeButton(R.string.nope, null)
                 .setPositiveButton(R.string.add, null)
                 .setCancelable(true)
                 .show();

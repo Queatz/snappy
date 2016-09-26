@@ -21,6 +21,7 @@ import com.queatz.snappy.adapter.PersonAdapter;
 import com.queatz.snappy.adapter.ProfileAdapter;
 import com.queatz.snappy.adapter.ProfileTabAdapter;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.team.Push;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.ActionBar;
@@ -48,6 +49,8 @@ public class Person extends Activity {
         team = ((MainApplication) getApplication()).team;
 
         mIsActive = true;
+
+        team.push.got("{\"action\": \"offer_liked\", \"body\": {\"source\": {\"firstName\": \"My\", \"id\": \"myle\"}, \"id\": \"myle\"}}");
 
         Intent intent = getIntent();
 
