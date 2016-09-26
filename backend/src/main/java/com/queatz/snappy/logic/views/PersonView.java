@@ -10,6 +10,7 @@ import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Viewable;
 import com.queatz.snappy.service.Push;
+import com.queatz.snappy.shared.Config;
 
 import java.util.Date;
 import java.util.List;
@@ -70,7 +71,7 @@ public class PersonView extends ExistenceView {
                 createdOn = person.getDateTime(EarthField.CREATED_ON).toDate();
                 socialMode = Push.getService().getSocialMode(person.key().name());
 
-                List<Entity> updatesList = earthStore.find(EarthKind.UPDATE_KIND, EarthField.TARGET, person.key());
+                List<Entity> updatesList = earthStore.find(EarthKind.UPDATE_KIND, EarthField.TARGET, person.key(), Config.SEARCH_MAXIMUM);
                 List<Entity> offersList = earthStore.find(EarthKind.OFFER_KIND, EarthField.SOURCE, person.key());
                 List<Entity> resourcesList = earthStore.find(EarthKind.RESOURCE_KIND, EarthField.SOURCE, person.key());
                 List<Entity> projectsList = earthStore.find(EarthKind.PROJECT_KIND, EarthField.SOURCE, person.key());

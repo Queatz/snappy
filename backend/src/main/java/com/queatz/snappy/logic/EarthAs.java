@@ -24,7 +24,8 @@ public class EarthAs {
     private final List<String> route;
     private final Entity user;
 
-    protected final Map<Key, Entity> __entityCache = new HashMap<>();
+    // Per request cache
+    final Map<Key, Entity> __entityCache = new HashMap<>();
 
     private Map<Class, Object> singletons;
 

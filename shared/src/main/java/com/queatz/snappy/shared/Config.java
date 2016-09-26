@@ -128,7 +128,7 @@ public class Config {
 
     public static final int SEARCH_DISTANCE = 1609 * 7;
     public static final int SEARCH_MINIMUM = 10;
-    public static final int SEARCH_MAXIMUM = 100;
+    public static final int SEARCH_MAXIMUM = 10;
     public static final int SEARCH_MAX_VISIBILITY = 1609 * 20;
     public static final int NEARBY_MAX_VISIBILITY = 1609 * 2;
     public static final long QUESTS_MAX_AGE = 1000L * 60L * 60L * 24L * 30L;

@@ -50,8 +50,6 @@ public class Person extends Activity {
 
         mIsActive = true;
 
-        team.push.got("{\"action\": \"offer_liked\", \"body\": {\"source\": {\"firstName\": \"My\", \"id\": \"myle\"}, \"id\": \"myle\"}}");
-
         Intent intent = getIntent();
 
         if(intent == null) {
