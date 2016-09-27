@@ -132,6 +132,7 @@ public class Team implements Closeable {
 
         // Date
         schema.addField(Thing.CREATED_ON, Date.class);
+        schema.addField(Thing.INFO_UPDATED, Date.class);
         schema.addField(Thing.DATE, Date.class);
         schema.addField(Thing.UPDATED, Date.class);
 

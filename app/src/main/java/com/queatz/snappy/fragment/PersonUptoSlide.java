@@ -290,7 +290,7 @@ public class PersonUptoSlide extends Fragment {
             TextView proximity = (TextView) personAbout.findViewById(R.id.proximity);
 
             if (!mPerson.isNull(Thing.INFO_DISTANCE)) {
-                proximity.setText(Util.getDistanceText(mPerson.getDouble(Thing.INFO_DISTANCE)));
+                proximity.setText(Util.getProximityText(mPerson));
                 proximity.setVisibility(View.VISIBLE);
             } else {
                 proximity.setVisibility(View.GONE);

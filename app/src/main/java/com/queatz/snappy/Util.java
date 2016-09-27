@@ -351,4 +351,11 @@ public class Util {
         new CameraImageSaver(image, file).run();
         return Uri.fromFile(file);
     }
+
+    public static String getProximityText(DynamicRealmObject person) {
+        return getDistanceText(person.getDouble(Thing.INFO_DISTANCE)) + (
+                person.isNull(Thing.INFO_UPDATED) ? "" : " " +
+                        TimeUtil.agoDate(person.getDate(Thing.INFO_UPDATED))
+        );
+    }
 }

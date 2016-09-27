@@ -129,6 +129,7 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
 
                 // Need to get full length
                 if (whatsUp.getText().length() < 1) {
+                    showInfo(false);
                     return;
                 }
 

@@ -66,6 +66,7 @@ public class Things {
 
                 // Date
                 case Thing.CREATED_ON:
+                case Thing.INFO_UPDATED:
                 case Thing.UPDATED:
                 case Thing.DATE:
                     thing.setDate(entry.getKey(), Json.from(entry.getValue(), Date.class));

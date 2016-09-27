@@ -31,7 +31,6 @@ public class HereInterface implements Interfaceable {
 
         boolean recent = false;
 
-
         if (as.getParameters().containsKey(Config.PARAM_RECENT)) {
             recent = Boolean.valueOf(as.getParameters().get(Config.PARAM_RECENT)[0]);
         }

@@ -31,6 +31,7 @@ public class PersonView extends ExistenceView {
     final Integer infoOffers;
     final String socialMode;
     final Double infoDistance;
+    final Date infoUpdated;
     final Date createdOn;
     final List<Viewable> updates;
     final List<Viewable> offers;
@@ -64,6 +65,12 @@ public class PersonView extends ExistenceView {
             infoDistance = Util.distance(as.getUser().getLatLng(EarthField.GEO), person.getLatLng(EarthField.GEO));
         } else {
             infoDistance = null;
+        }
+
+        if (person.contains(EarthField.AROUND)) {
+            infoUpdated = person.getDateTime(EarthField.AROUND).toDate();
+        } else {
+            infoUpdated = null;
         }
 
         switch (view) {
