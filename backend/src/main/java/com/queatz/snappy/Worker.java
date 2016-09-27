@@ -1,12 +1,17 @@
 package com.queatz.snappy;
 
-import com.google.android.gcm.server.Constants;
-import com.google.android.gcm.server.Message;
-import com.google.android.gcm.server.Result;
-import com.google.android.gcm.server.Sender;
+import com.google.appengine.api.urlfetch.HTTPHeader;
+import com.google.appengine.api.urlfetch.HTTPMethod;
+import com.google.appengine.api.urlfetch.HTTPRequest;
+import com.google.appengine.api.urlfetch.HTTPResponse;
+import com.google.appengine.api.urlfetch.URLFetchService;
+import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.LatLng;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.googlecode.objectify.ObjectifyService;
+import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.backend.RegistrationRecord;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthEmail;
@@ -17,11 +22,14 @@ import com.queatz.snappy.logic.EarthSearcher;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.concepts.Eventable;
+import com.queatz.snappy.service.Api;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServlet;
@@ -112,13 +120,25 @@ public class Worker extends HttpServlet {
 
         // Send
 
-        final Sender sender = new Sender(Config.GCM_KEY);
-        final Message msg = new Message.Builder().addData("message", new EarthJson().toJson(eventable.makePush())).build();
+        Object pushObject = eventable.makePush();
+
+        final JsonObject push;
+
+        if (pushObject != null) {
+            push = new JsonObject();
+
+            JsonObject message = new JsonObject();
+            message.add("message", new EarthJson().toJsonTree(pushObject));
+            push.add("data", message);
+            push.add("priority", new JsonPrimitive("high"));
+        } else {
+            push = null;
+        }
 
         for(SendInstance sendInstance : toUsers) {
             List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).filter("userId", sendInstance.userId).list();
 
-            if (records.isEmpty()) {
+            if (push == null || records.isEmpty()) {
 //                        if (!passesSocialMode(sendInstance, Config.SOCIAL_MODE_FRIENDS)) {
 //                            continue;
 //                        }
@@ -135,32 +155,58 @@ public class Worker extends HttpServlet {
                     continue;
                 }
 
-                try {
-                    Result result = sender.send(msg, record.getRegId(), 5);
+                // XXX TODO RETRIES
+                JsonObject results = send(push, record.getRegId());
 
-                    if (result.getMessageId() != null) {
-                        didSendPush = true;
+                if (results.has("results") && results.getAsJsonArray("results").size() > 0) {
+                    JsonObject result = results.getAsJsonArray("results").get(0).getAsJsonObject();
 
-                        String canonicalRegId = result.getCanonicalRegistrationId();
-                        if (canonicalRegId != null) {
-                            record.setRegId(canonicalRegId);
-                            ofy().save().entity(record).now();
-                        }
-                    } else {
-                        String error = result.getErrorCodeName();
-                        if (error.equals(Constants.ERROR_NOT_REGISTERED) || error.equals(Constants.ERROR_MISMATCH_SENDER_ID)) {
+                    if (result.has("registration_id")) {
+                        String canonicalRegId = result.get("registration_id").getAsString();
+                        record.setRegId(canonicalRegId);
+                        ofy().save().entity(record).now();
+                    }
+
+                    if (result.has("error")) {
+                        if ("MismatchSenderId".equals(result.get("error").getAsString()) ||
+                                "NotRegistered".equals(result.get("error").getAsString())) {
                             ofy().delete().entity(record).now();
                         }
+                    } else {
+                        didSendPush = true;
                     }
-                } catch (IOException e) {
-                    Logger.getLogger("push").warning("error sending, trying email fallback " + e);
-                    e.printStackTrace();
                 }
             }
 
             if (!didSendPush) {
                 sendEmail(as, eventable, sendInstance.userId);
             }
+        }
+    }
+
+    private JsonObject send(JsonObject push, String regId) {
+        EarthJson earthJson = new EarthJson();
+        push = (JsonObject) earthJson.toJsonTree(push);
+
+        // Add device reg id to payload
+        push.add("to", new JsonPrimitive(regId));
+
+        try {
+            URL url = new URL(Config.FCM_ENDPOINT);
+
+            URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
+            HTTPRequest httpRequest = new HTTPRequest(url, HTTPMethod.POST);
+            httpRequest.getFetchOptions().allowTruncate().doNotFollowRedirects();
+            httpRequest.setPayload(earthJson.toJson(push).getBytes("UTF-8"));
+            httpRequest.addHeader(new HTTPHeader("Content-Type", "application/json; charset=UTF-8"));
+            httpRequest.addHeader(new HTTPHeader("Authorization", "key=" + Config.GCM_KEY));
+            HTTPResponse resp = urlFetchService.fetch(httpRequest);
+            String s = new String(resp.getContent(), "UTF-8");
+            Logger.getLogger(Config.NAME).log(Level.INFO, s);
+            return earthJson.fromJson(s, JsonObject.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

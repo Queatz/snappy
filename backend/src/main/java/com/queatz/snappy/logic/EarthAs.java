@@ -3,6 +3,7 @@ package com.queatz.snappy.logic;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.queatz.snappy.service.Api;
+import com.queatz.snappy.shared.Config;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -49,16 +50,16 @@ public class EarthAs {
             try {
                 singletons.put(clazz, clazz.getConstructor(EarthAs.class).newInstance(this));
             } catch (InstantiationException e) {
-                Logger.getGlobal().log(Level.SEVERE, "Singleton said nope for " + clazz.getSimpleName(), e);
+                Logger.getLogger(Config.NAME).log(Level.SEVERE, "Singleton said nope for " + clazz.getSimpleName(), e);
                 throw new RuntimeException(e);
             } catch (IllegalAccessException e) {
-                Logger.getGlobal().log(Level.SEVERE, "Singleton said nope for " + clazz.getSimpleName(), e);
+                Logger.getLogger(Config.NAME).log(Level.SEVERE, "Singleton said nope for " + clazz.getSimpleName(), e);
                 throw new RuntimeException(e);
             } catch (NoSuchMethodException e) {
-                Logger.getGlobal().log(Level.SEVERE, "Singleton said nope for " + clazz.getSimpleName(), e);
+                Logger.getLogger(Config.NAME).log(Level.SEVERE, "Singleton said nope for " + clazz.getSimpleName(), e);
                 throw new RuntimeException(e);
             } catch (InvocationTargetException e) {
-                Logger.getGlobal().log(Level.SEVERE, "Singleton said nope for " + clazz.getSimpleName(), e);
+                Logger.getLogger(Config.NAME).log(Level.SEVERE, "Singleton said nope for " + clazz.getSimpleName(), e);
                 throw new RuntimeException(e);
             }
         }

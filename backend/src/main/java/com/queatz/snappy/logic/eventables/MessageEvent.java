@@ -61,7 +61,7 @@ public class MessageEvent implements Eventable {
         Entity person = earthStore.get(message.getKey(EarthField.SOURCE));
 
         return person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME)  + " sent you a " +
-                (person.getBoolean(EarthField.PHOTO) ? "photo" : "message");
+                (message.getBoolean(EarthField.PHOTO) ? "photo" : "message");
     }
 
     @Override

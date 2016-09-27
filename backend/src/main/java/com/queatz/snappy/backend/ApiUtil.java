@@ -55,6 +55,9 @@ public class ApiUtil {
             size = 200;
         }
 
+        // Maximum supported by GCE
+        size = Math.min(1600, size);
+
         String fileName = getFileNameFull(api.mGCS, api.mAppIdentityService, thingId);
 
         if (fileName == null) {
