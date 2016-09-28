@@ -36,4 +36,11 @@
         <property name="created_on" direction="desc" />
     </datastore-index>
 
+    <datastore-index kind="Thing" ancestor="false">
+        <property name="concluded_on" />
+        <property name="kind" />
+        <property name="google_url" />
+        <property name="created_on" direction="desc" />
+    </datastore-index>
+
 </datastore-indexes>

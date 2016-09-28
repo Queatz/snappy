@@ -396,6 +396,7 @@ public class EarthStore extends EarthControl {
 
         return Lists.newArrayList(datastore.run(StructuredQuery.entityQueryBuilder()
                 .kind(DEFAULT_KIND)
+                .orderBy(StructuredQuery.OrderBy.desc(EarthField.CREATED_ON))
                 .limit(limit)
                 .filter(composite).build()));
     }

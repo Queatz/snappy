@@ -208,6 +208,7 @@ public class Config {
     public static final String PARAM_LONGITUDE = "longitude";
     public static final String PARAM_SEEN = "seen";
     public static final String PARAM_SOCIAL_MODE = "social_mode";
+    public static final String PARAM_FEEDBACK = "feedback";
     public static final String PARAM_LOCAL_ID = "local_id";
     public static final String PARAM_DEVICE_ID = "device_id";
     public static final String PARAM_PURCHASE_DATA = "purchase_data";

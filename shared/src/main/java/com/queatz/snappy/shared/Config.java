@@ -117,7 +117,6 @@ public class Config {
     public static final String QUEUE_IMAGE_WORKER_NAME = "images";
     public static final String QUEUE_IMAGE_WORKER_URL = "/image-worker";
 
-
     public static final boolean IN_BETA = false;
     public static final boolean PUBLIC_BUY = true;
     public static final int TEMPORARY_API_LIMIT = 100;
@@ -222,6 +221,7 @@ public class Config {
     public static final String PARAM_LIKE = "like";
     public static final String PARAM_THING = "thing";
     public static final String PARAM_EDIT = "edit";
+    public static final String PARAM_FEEDBACK = "feedback";
     public static final String PARAM_ROLE = "role";
     public static final String PARAM_PERSON = "person";
     public static final String PARAM_KIND = "kind";

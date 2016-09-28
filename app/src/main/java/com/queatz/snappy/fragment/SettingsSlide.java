@@ -55,6 +55,13 @@ public class SettingsSlide extends Fragment {
 
         updateSettings(view);
 
+        view.findViewById(R.id.action_send_feedback).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.action.sendFeedback(getActivity());
+            }
+        });
+
         return view;
     }
 

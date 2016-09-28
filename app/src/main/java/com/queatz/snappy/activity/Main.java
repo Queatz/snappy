@@ -184,6 +184,10 @@ public class Main extends Activity {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+        if (menu.hasVisibleItems()) {
+            return;
+        }
+
         mContextObject = view.getTag();
         team.menu.make(mContextObject, menu, menuInfo);
     }
