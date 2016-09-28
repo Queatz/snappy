@@ -168,6 +168,10 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
     }
 
     private void postUpdate() {
+        if (imAt == null && imWith.isEmpty() && image == null) {
+            return;
+        }
+
         if (imAt != null) {
             imWith.add(imAt);
         }
