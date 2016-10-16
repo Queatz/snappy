@@ -205,23 +205,27 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
             RealmResults<DynamicRealmObject> queryOffers = team.realm.where("Thing")
                     .equalTo(Thing.KIND, "offer")
                     .notEqualTo("source.id", team.auth.getUser())
-                    .isNotNull("price")
-                    .findAllSorted("price", Sort.ASCENDING);
+                    .isNotNull(Thing.PRICE)
+                    .findAllSorted(Thing.PRICE, Sort.ASCENDING);
 
             RealmResults<DynamicRealmObject> queryOffersUpmarket = team.realm.where("Thing")
                     .equalTo(Thing.KIND, "offer")
                     .notEqualTo("source.id", team.auth.getUser())
-                    .isNull("price")
+                    .isNull(Thing.PRICE)
                     .findAll();
+
+            RealmResults<DynamicRealmObject> queryUpdates = team.realm.where("Thing")
+                    .equalTo(Thing.KIND, "update")
+                    .notEqualTo("source.id", team.auth.getUser())
+                    .findAllSorted(Thing.DATE, Sort.DESCENDING);
 
             final ArrayList<RealmResults> list = new ArrayList<>();
             list.add(queryParties);
             list.add(queryOffers);
             list.add(queryOffersUpmarket);
+            list.add(queryUpdates);
             mList.setAdapter(new FeedAdapter(getActivity(), list));
         }
-
-        Log.w(Config.LOG_TAG, "parties count = " + mList.getAdapter().getCount());
 
         updateNullState();
     }

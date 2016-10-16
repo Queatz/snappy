@@ -10,7 +10,7 @@ public class Config {
     // Android
 
     public static final boolean BETA_VERSION = true;
-    public static final int WIPE_VERSIONS_BELOW = 37;
+    public static final int WIPE_VERSIONS_BELOW = 38;
 
     // The email emails are sent from
     public static final String VILLAGE_EMAIL = "Village <my@village.city>";
@@ -168,7 +168,8 @@ public class Config {
     public static final String PUSH_ACTION_LIKE_UPDATE = "like_update";
     public static final String PUSH_ACTION_NEW_THING = "new_thing";
     public static final String PUSH_ACTION_NEW_CONTACT = "new_contact";
-    public static final java.lang.String PUSH_ACTION_OFFER_LIKED = "offer_liked";
+    public static final String PUSH_ACTION_OFFER_LIKED = "offer_liked";
+    public static final String PUSH_ACTION_NEW_COMMENT = "new_comment";
 
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";
     public static final String UPDATE_ACTION_HOST_PARTY = "host_party";

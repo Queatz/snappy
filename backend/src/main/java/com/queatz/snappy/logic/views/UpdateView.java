@@ -25,6 +25,7 @@ public class UpdateView extends ThingView {
     final Viewable target;
     final GeoPt geo;
     final List<Viewable> with;
+    final List<Viewable> updates;
 
     public UpdateView(EarthAs as, Entity update) {
         this(as, update, EarthView.DEEP);
@@ -62,6 +63,15 @@ public class UpdateView extends ThingView {
             action = update.getString(EarthField.ACTION);
         } else {
             action = null;
+        }
+
+        switch (view) {
+            case DEEP:
+                List<Entity> commentList = earthStore.find(EarthKind.UPDATE_KIND, EarthField.TARGET, update.key());
+                updates = new EntityListView(as, commentList, EarthView.SHALLOW).asList();
+                break;
+            default:
+                updates = null;
         }
     }
 }

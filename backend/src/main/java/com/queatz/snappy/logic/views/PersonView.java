@@ -85,7 +85,7 @@ public class PersonView extends ExistenceView {
                 List<Entity> hubsList = earthStore.find(EarthKind.HUB_KIND, EarthField.SOURCE, person.key());
                 List<Entity> clubsList = earthStore.find(EarthKind.CLUB_KIND, EarthField.SOURCE, person.key());
 
-                updates = new EntityListView(as, updatesList, EarthView.SHALLOW).asList();
+                updates = new EntityListView(as, updatesList, EarthView.DEEP).asList();
                 offers = new EntityListView(as, offersList, EarthView.SHALLOW).asList();
                 resources = new EntityListView(as, resourcesList, EarthView.SHALLOW).asList();
                 projects = new EntityListView(as, projectsList, EarthView.SHALLOW).asList();

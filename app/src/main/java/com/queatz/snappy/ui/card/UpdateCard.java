@@ -2,7 +2,6 @@ package com.queatz.snappy.ui.card;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -12,20 +11,23 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ClickableSpan;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.Main;
+import com.queatz.snappy.adapter.CommentAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
@@ -35,7 +37,7 @@ import com.squareup.picasso.Picasso;
 
 import io.realm.DynamicRealmObject;
 import io.realm.RealmList;
-import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by jacob on 8/22/16.
@@ -237,7 +239,44 @@ public class UpdateCard implements Card<DynamicRealmObject> {
                 Util.getUpdateText(update)
         );
 
+        view.findViewById(R.id.shareButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.action.share((Activity) view.getContext(), update);
+            }
+        });
+
+        CommentAdapter commentsAdapter = new CommentAdapter(context, update.getList(Thing.UPDATES).sort(Thing.DATE, Sort.ASCENDING));
+
+        ((ListView) view.findViewById(R.id.commentsList)).setAdapter(commentsAdapter);
+
+        final EditText writeComment = (EditText) view.findViewById(R.id.writeComment);
+
+        view.findViewById(R.id.sendCommentButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postComment(team, update, writeComment);
+            }
+        });
+
+        writeComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (EditorInfo.IME_ACTION_GO == actionId) {
+                    postComment(team, update, writeComment);
+                }
+
+                return false;
+            }
+        });
+
         return view;
+    }
+
+    private void postComment(Team team, DynamicRealmObject update, EditText comment) {
+        team.action.postCommentOn(update, comment.getText().toString());
+        comment.setText("");
+        team.view.keyboard(comment, false);
     }
 
     private void updateLikes(final View view, final DynamicRealmObject update, final Context context) {
@@ -256,14 +295,25 @@ public class UpdateCard implements Card<DynamicRealmObject> {
 
         boolean byMe = Util.liked(update, team.auth.me());
 
-        likers.setText(team.context.getResources().getQuantityString(byMe ? R.plurals.likes_me : R.plurals.likes, likersCount, likersCount));
-        likers.setVisibility(likersCount > 0 ? View.VISIBLE : View.GONE);
+        likers.setCompoundDrawablesWithIntrinsicBounds(byMe ? R.drawable.ic_favorite_white_24dp : R.drawable.ic_favorite_border_white_24dp, 0, 0, 0);
+        likers.getCompoundDrawables()[0].setTint(context.getResources().getColor(R.color.red));
+        likers.setVisibility(View.VISIBLE);
 
         if (likersCount > 0) {
+            likers.setText(team.context.getResources().getQuantityString(R.plurals.likes, likersCount, likersCount));
             likers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     team.action.showLikers((Activity) context, update);
+                }
+            });
+        } else {
+            likers.setText("");
+            likers.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    team.action.likeUpdate(update);
+                    updateLikes(view, update, context);
                 }
             });
         }

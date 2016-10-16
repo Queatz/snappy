@@ -123,8 +123,6 @@ public class Person extends Activity {
 
             @Override
             public void onSlideChange(int slide) {
-                getWindow().setSoftInputMode(slide == 1 ? WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE : WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-
                 if(mPerson != null) {
                     if (slide == 1 && mIsActive) {
                         team.action.setSeen(mPerson);

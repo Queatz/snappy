@@ -79,7 +79,6 @@ public class Config {
     public static final String PATH_OFFER_ID = "offer/%s";
     public static final String PATH_ME_UPTO= "me/upto";
     public static final String PATH_ME_BUY= "me/buy";
-    public static final String PATH_MESSAGE= "message";
     public static final String PATH_ME_REGISTER_DEVICE = "me/register_device";
     public static final String PATH_ME_UNREGISTER_DEVICE = "me/unregister_device";
     public static final String PATH_ME_CLEAR_NOTIFICATION = "me/clear_notification";
@@ -111,12 +110,12 @@ public class Config {
     public static final String PROJECT_ID = Gateway.projectId;
     public static final String CLIENT_ID = Gateway.clientId;
     public static final String GCM_KEY = Gateway.gcmKey;
+    public static final String FCM_ENDPOINT = "https://fcm.googleapis.com/fcm/send";
     public static final String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
     public static final String QUEUE_WORKER_URL = "/worker";
     public static final String QUEUE_WORKER_NAME = "pushes";
     public static final String QUEUE_IMAGE_WORKER_NAME = "images";
     public static final String QUEUE_IMAGE_WORKER_URL = "/image-worker";
-
 
     public static final boolean IN_BETA = false;
     public static final boolean PUBLIC_BUY = true;
@@ -129,7 +128,7 @@ public class Config {
 
     public static final int SEARCH_DISTANCE = 1609 * 7;
     public static final int SEARCH_MINIMUM = 10;
-    public static final int SEARCH_MAXIMUM = 100;
+    public static final int SEARCH_MAXIMUM = 10;
     public static final int SEARCH_MAX_VISIBILITY = 1609 * 20;
     public static final int NEARBY_MAX_VISIBILITY = 1609 * 2;
     public static final long QUESTS_MAX_AGE = 1000L * 60L * 60L * 24L * 30L;
@@ -169,7 +168,8 @@ public class Config {
     public static final String PUSH_ACTION_LIKE_UPDATE = "like_update";
     public static final String PUSH_ACTION_NEW_THING = "new_thing";
     public static final String PUSH_ACTION_NEW_CONTACT = "new_contact";
-    public static final java.lang.String PUSH_ACTION_OFFER_LIKED = "offer_liked";
+    public static final String PUSH_ACTION_OFFER_LIKED = "offer_liked";
+    public static final String PUSH_ACTION_NEW_COMMENT = "new_comment";
 
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";
     public static final String UPDATE_ACTION_HOST_PARTY = "host_party";
@@ -208,7 +208,6 @@ public class Config {
     public static final String PARAM_LONGITUDE = "longitude";
     public static final String PARAM_SEEN = "seen";
     public static final String PARAM_SOCIAL_MODE = "social_mode";
-    public static final String PARAM_FEEDBACK = "feedback";
     public static final String PARAM_LOCAL_ID = "local_id";
     public static final String PARAM_DEVICE_ID = "device_id";
     public static final String PARAM_PURCHASE_DATA = "purchase_data";
@@ -223,6 +222,7 @@ public class Config {
     public static final String PARAM_LIKE = "like";
     public static final String PARAM_THING = "thing";
     public static final String PARAM_EDIT = "edit";
+    public static final String PARAM_FEEDBACK = "feedback";
     public static final String PARAM_ROLE = "role";
     public static final String PARAM_PERSON = "person";
     public static final String PARAM_KIND = "kind";
@@ -245,6 +245,7 @@ public class Config {
     public static final String PATH_QUEST = "quest";
     public static final String PATH_JOIN = "join";
     public static final String PATH_MESSAGES = "messages";
+    public static final String PATH_MESSAGE= "message";
     public static final String PATH_PEOPLE = "people";
     public static final String PATH_FOLLOW = "follow";
     public static final String PATH_LOCATIONS = "locations";

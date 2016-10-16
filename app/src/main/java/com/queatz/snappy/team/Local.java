@@ -20,13 +20,13 @@ public class Local {
                 .equalTo(Thing.KIND, "recent")
                 .beginGroup()
                     .beginGroup()
-                        .equalTo("from.id", message.getObject(Thing.FROM).getString(Thing.ID))
-                        .equalTo("to.id", message.getObject(Thing.TO).getString(Thing.ID))
+                        .equalTo("latest.from.id", message.getObject(Thing.FROM).getString(Thing.ID))
+                        .equalTo("latest.to.id", message.getObject(Thing.TO).getString(Thing.ID))
                     .endGroup()
                     .or()
                     .beginGroup()
-                        .equalTo("to.id", message.getObject(Thing.FROM).getString(Thing.ID))
-                        .equalTo("from.id", message.getObject(Thing.TO).getString(Thing.ID))
+                        .equalTo("latest.to.id", message.getObject(Thing.FROM).getString(Thing.ID))
+                        .equalTo("latest.from.id", message.getObject(Thing.TO).getString(Thing.ID))
                     .endGroup()
                 .endGroup()
                 .findAll();
@@ -37,7 +37,7 @@ public class Local {
             DynamicRealmObject recent = recents.get(i);
             recent.setObject(Thing.LATEST, message);
 
-            if(!team.auth.getUser().equals(recent.getObject(Thing.FROM).getString(Thing.ID))) {
+            if(!team.auth.getUser().equals(message.getObject(Thing.FROM).getString(Thing.ID))) {
                 recent.setBoolean(Thing.SEEN, false);
             }
         }

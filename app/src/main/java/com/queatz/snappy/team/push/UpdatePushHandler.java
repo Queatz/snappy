@@ -25,7 +25,6 @@ public class UpdatePushHandler extends PushHandler {
 
     public void got(JsonObject push) {
         NotificationCompat.Builder builder;
-        PendingIntent pendingIntent;
         Intent resultIntent;
 
         boolean photo = push.get("photo").getAsBoolean();

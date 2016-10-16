@@ -159,26 +159,29 @@
     <string name="add">Add</string>
     <string name="send_feedback">Send feedback</string>
     <string name="thanks">Thanks!</string>
-    <string name="write_feedback_here">Write feedback here...</string>
+    <string name="write_feedback_here">Write feedback here…</string>
+    <string name="write_comment">Add a comment…</string>
+    <string name="choose_application">Choose...</string>
+    <string name="commented_on_your_update">commented on your update</string>
 
     <plurals name="likes">
-        <item quantity="one">♡ %1$s Liker</item>
-        <item quantity="other">♡ %1$s Likers</item>
+        <item quantity="one">%1$s Liker</item>
+        <item quantity="other">%1$s Likers</item>
     </plurals>
 
     <plurals name="likes_me">
-        <item quantity="one">♥ %1$s Liker</item>
-        <item quantity="other">♥ %1$s Likers</item>
+        <item quantity="one">%1$s Liker</item>
+        <item quantity="other">%1$s Likers</item>
     </plurals>
 
     <plurals name="likes_count">
-        <item quantity="one">♡ %1$s</item>
-        <item quantity="other">♡ %1$s</item>
+        <item quantity="one">%1$s</item>
+        <item quantity="other">%1$s</item>
     </plurals>
 
     <plurals name="likes_count_me">
-        <item quantity="one">♥ %1$s</item>
-        <item quantity="other">♥ %1$s</item>
+        <item quantity="one">%1$s</item>
+        <item quantity="other">%1$s</item>
     </plurals>
 
     <plurals name="people_near_place">

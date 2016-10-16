@@ -17,6 +17,7 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.PushSpec;
+import com.queatz.snappy.team.push.CommentPushHandler;
 import com.queatz.snappy.team.push.DefaultPushHandler;
 import com.queatz.snappy.team.push.FollowPushHandler;
 import com.queatz.snappy.team.push.JoinPushHandler;
@@ -44,6 +45,7 @@ public class Push {
     private OfferPushHandler offerPushHandler;
     private LikePushHandler likePushHandler;
     private OfferLikePushHandler offerLikePushHandler;
+    private CommentPushHandler newCommentPushHandler;
 
     public Push(Team t) {
         team = t;
@@ -55,6 +57,7 @@ public class Push {
         messagePushHandler = new MessagePushHandler(team);
         partyPushHandler = new PartyPushHandler(team);
         updatePushHandler = new UpdatePushHandler(team);
+        newCommentPushHandler = new CommentPushHandler(team);
         offerPushHandler = new OfferPushHandler(team);
         likePushHandler = new LikePushHandler(team);
         offerLikePushHandler = new OfferLikePushHandler(team);
@@ -125,6 +128,9 @@ public class Push {
             case Config.PUSH_ACTION_OFFER_LIKED:
                 offerLikePushHandler.got(body);
                 break;
+            case Config.PUSH_ACTION_NEW_COMMENT:
+                newCommentPushHandler.got(body);
+                break;
             default:
                 Log.w(Config.LOG_TAG, "Push received with no action: " + action);
                 break;
@@ -134,7 +140,7 @@ public class Push {
     public PendingIntent newIntentWithStack(Intent resultIntent) {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(team.context);
         stackBuilder.addParentStack(Main.class);
-        stackBuilder.addNextIntent(resultIntent);
+        stackBuilder.addNextIntentWithParentStack(resultIntent);
         return stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 

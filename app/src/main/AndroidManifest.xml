@@ -63,7 +63,7 @@
             android:alwaysRetainTaskState="true"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:windowSoftInputMode="adjustNothing" />
 
         <activity
@@ -72,7 +72,7 @@
             android:label="@string/app_name"
             android:launchMode="standard"
             android:parentActivityName=".activity.Main"
-            android:windowSoftInputMode="adjustNothing" />
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".activity.PersonList"

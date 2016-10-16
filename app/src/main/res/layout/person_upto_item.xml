@@ -106,10 +106,68 @@
             android:layout_marginTop="-8dp"
             android:layout_marginBottom="-8dp"
             android:paddingTop="-8dp"
+            android:minWidth="0dp"
             android:paddingBottom="-8dp"
+            android:drawableLeft="@drawable/ic_favorite_border_white_24dp"
             android:layout_marginLeft="8dp"
+            android:drawableTint="@color/red"
+            android:drawablePadding="4dp"
             android:textColor="@color/red" />
 
+        <Button style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/shareButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-8dp"
+            android:layout_marginBottom="-8dp"
+            android:layout_marginLeft="-8dp"
+            android:text="Share"
+            android:minWidth="0dp"
+            android:drawableLeft="@drawable/ic_share_white_24dp"
+            android:drawablePadding="4dp"
+            android:drawableTint="@color/red"
+            android:textColor="@color/red" />
+    </LinearLayout>
+
+    <com.queatz.snappy.ui.ExpandedListView
+        android:id="@+id/commentsList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@null"
+        android:dividerHeight="0dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="8dp"
+        android:paddingRight="4dp">
+
+        <com.queatz.snappy.ui.EditText
+            android:id="@+id/writeComment"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            android:hint="@string/write_comment"
+            android:textSize="18sp"
+            android:imeOptions="actionGo"
+            android:lineSpacingMultiplier="1.25"
+            android:textColorHint="@color/gray"
+            android:inputType="textMultiLine|textShortMessage|textCapSentences" />
+
+        <ImageView
+            android:clickable="true"
+            android:background="?android:selectableItemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="8dp"
+            android:tint="@color/gray"
+            android:src="@drawable/ic_send_white_24dp"
+            android:id="@+id/sendCommentButton" />
     </LinearLayout>
 
 </LinearLayout>

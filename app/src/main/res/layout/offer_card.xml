@@ -89,6 +89,21 @@
                 android:layout_height="wrap_content"
                 android:text="Likers"
                 android:minWidth="0dp"
+                android:drawableLeft="@drawable/ic_favorite_border_white_24dp"
+                android:drawablePadding="4dp"
+                android:drawableTint="@color/red"
+                android:textColor="@color/red" />
+
+            <Button style="@style/Widget.AppCompat.Button.Borderless"
+                android:id="@+id/shareButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="-8dp"
+                android:text="Share"
+                android:minWidth="0dp"
+                android:drawableLeft="@drawable/ic_share_white_24dp"
+                android:drawablePadding="4dp"
+                android:drawableTint="@color/red"
                 android:textColor="@color/red" />
 
         </LinearLayout>

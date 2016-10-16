@@ -136,18 +136,38 @@ public class OfferCard implements Card<DynamicRealmObject> {
             likersCount = offer.getInt(Thing.LIKERS);
         }
 
-        likers.setText(team.context.getResources().getQuantityString(R.plurals.likes_count_me, likersCount, likersCount));
-        likers.setVisibility(likersCount > 0 ? View.VISIBLE : View.GONE);
-
         if (likersCount > 0) {
+            likers.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_favorite_white_24dp, 0, 0, 0);
+            likers.setText(team.context.getResources().getQuantityString(R.plurals.likes_count_me, likersCount, likersCount));
             likers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     team.action.showLikers((Activity) context, offer);
                 }
             });
+        } else {
+            likers.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_favorite_border_white_24dp, 0, 0, 0);
+            likers.setText("");
+            likers.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    team.action.likeUpdate(offer);
+                }
+            });
         }
 
+        likers.getCompoundDrawables()[0].setTint(context.getResources().getColor(R.color.red));
+
+        Button shareButton = (Button) view.findViewById(R.id.shareButton);
+
+        shareButton.getCompoundDrawables()[0].setTint(context.getResources().getColor(R.color.red));
+
+        view.findViewById(R.id.shareButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.action.share((Activity) view.getContext(), offer);
+            }
+        });
         return view;
     }
 }

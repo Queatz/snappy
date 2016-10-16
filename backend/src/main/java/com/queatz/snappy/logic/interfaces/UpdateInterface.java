@@ -26,6 +26,7 @@ import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.LikeEditor;
 import com.queatz.snappy.logic.editors.UpdateEditor;
 import com.queatz.snappy.logic.eventables.LikeEvent;
+import com.queatz.snappy.logic.eventables.NewCommentEvent;
 import com.queatz.snappy.logic.eventables.NewUpdateEvent;
 import com.queatz.snappy.logic.exceptions.LogicException;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
@@ -240,7 +241,11 @@ public class UpdateInterface implements Interfaceable {
 
         update = new UpdateEditor(as).updateWith(update, thing, message, photoUploaded, geo, with);
 
-        new EarthUpdate(as).send(new NewUpdateEvent(update)).toFollowersOf(thing);
+        if (EarthKind.UPDATE_KIND.equals(thing.getString(EarthField.KIND))) {
+            new EarthUpdate(as).send(new NewCommentEvent(update)).to(thing.getKey(EarthField.SOURCE));
+        } else {
+            new EarthUpdate(as).send(new NewUpdateEvent(update)).toFollowersOf(thing);
+        }
 
         return new EarthViewer(as).getViewForEntityOrThrow(update).toJson();
     }
