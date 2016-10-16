@@ -552,6 +552,7 @@ public class Action {
         o.setObject(Thing.PERSON, team.auth.me());
         o.setObject(Thing.TARGET, update);
         o.setString(Thing.ABOUT, message);
+        o.setString(Thing.ACTION, Config.UPDATE_ACTION_UPTO);
         o.setDate(Thing.DATE, new Date());
         update.getList(Thing.UPDATES).add(o);
         team.realm.commitTransaction();

@@ -23,30 +23,30 @@
     </datastore-index>
 
     <datastore-index kind="Thing" ancestor="false">
-        <property name="concluded_on" />
-        <property name="kind" />
-        <property name="target" />
+        <property name="concluded_on" direction="asc" />
+        <property name="kind" direction="asc" />
+        <property name="target" direction="asc" />
         <property name="created_on" direction="desc" />
     </datastore-index>
 
     <datastore-index kind="Thing" ancestor="false">
-        <property name="concluded_on" />
-        <property name="kind" />
-        <property name="source" />
+        <property name="concluded_on" direction="asc" />
+        <property name="kind" direction="asc" />
+        <property name="source" direction="asc" />
         <property name="created_on" direction="desc" />
     </datastore-index>
 
     <datastore-index kind="Thing" ancestor="false">
-        <property name="concluded_on" />
-        <property name="kind" />
-        <property name="google_url" />
+        <property name="concluded_on" direction="asc" />
+        <property name="kind" direction="asc" />
+        <property name="google_url" direction="asc" />
         <property name="created_on" direction="desc" />
     </datastore-index>
 
     <datastore-index kind="Thing" ancestor="false">
-        <property name="concluded_on" />
-        <property name="kind" />
-        <property name="email" />
+        <property name="concluded_on" direction="asc" />
+        <property name="kind" direction="asc" />
+        <property name="email" direction="asc" />
         <property name="created_on" direction="desc" />
     </datastore-index>
 

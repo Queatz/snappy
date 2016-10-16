@@ -96,7 +96,10 @@ public class PersonUptoSlide extends Fragment {
             RealmResults<DynamicRealmObject> recentUpdates = team.realm.where("Thing")
                     .equalTo(Thing.KIND, "update")
                     .equalTo("person.id", mPerson.getString(Thing.ID))
+                    .equalTo("target.id", mPerson.getString(Thing.ID))
                     .findAllSorted("date", Sort.DESCENDING);
+
+    SwipeRefreshLayout mRefresh;
 
             final ArrayList<RealmResults> list = new ArrayList<>();
             list.add(offers);

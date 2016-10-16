@@ -159,7 +159,13 @@ public class Util {
         boolean past;
         Spanned string;
 
-        switch (update.getString(Thing.ACTION)) {
+        String action = update.getString(Thing.ACTION);
+
+        if (action == null) {
+            return new SpannableString(update.getString(Thing.ABOUT));
+        }
+
+        switch (action) {
             case Config.UPDATE_ACTION_HOST_PARTY:
                 if(update.getObject(Thing.TARGET) == null || update.getObject(Thing.PERSON) == null)
                     return null;
