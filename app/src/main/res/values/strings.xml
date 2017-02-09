@@ -161,8 +161,10 @@
     <string name="thanks">Thanks!</string>
     <string name="write_feedback_here">Write feedback here…</string>
     <string name="write_comment">Add a comment…</string>
-    <string name="choose_application">Choose...</string>
+    <string name="choose_application">Choose…</string>
     <string name="commented_on_your_update">commented on your update</string>
+    <string name="welcome_to_the_village">Welcome to the VILLAGE</string>
+    <string name="made_with_love">Made with love in Austin, TX</string>
 
     <plurals name="likes">
         <item quantity="one">%1$s Liker</item>

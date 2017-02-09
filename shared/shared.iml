@@ -38,8 +38,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="appengine-gcs-client-0.4.4" level="project" />
     <orderEntry type="library" exported="" name="objectify-5.1.8" level="project" />
-    <orderEntry type="library" exported="" name="gson-2.4" level="project" />
-    <orderEntry type="library" exported="" name="appengine-api-1.0-sdk-1.9.48" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.7" level="project" />
+    <orderEntry type="library" exported="" name="appengine-api-1.0-sdk-1.9.49" level="project" />
     <orderEntry type="library" exported="" name="guava-20.0" level="project" />
     <orderEntry type="library" exported="" name="joda-time-2.3" level="project" />
     <orderEntry type="library" exported="" name="google-api-services-storage-v1-rev15-1.19.0" level="project" />

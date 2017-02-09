@@ -205,7 +205,7 @@ public class Util {
     }
 
     public static String locationPhoto(DynamicRealmObject location, int s) {
-        return Config.API_URL + String.format(Config.PATH_EARTH_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getString(Thing.ID));
+        return Config.API_URL + String.format(Config.PATH_EARTH_PHOTO + "?s=" + (s > 0 ? s : 64) + "&auth=" + team.auth.getAuthParam(), location.getString(Thing.ID));
     }
 
     public static String photoUrl(String path, int s) {

@@ -26,6 +26,7 @@ import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.ui.TimeSlider;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.Json;
+import com.queatz.snappy.util.LocalState;
 import com.queatz.snappy.util.ResponseUtil;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
@@ -150,6 +151,16 @@ public class Action {
             public void fail(String response) {
                 // Reverse local modifications after retrying
                 Toast.makeText(team.context, "Message not sent", Toast.LENGTH_SHORT).show();
+
+                DynamicRealmObject message = team.realm.where("Thing")
+                        .equalTo(Thing.ID, localId)
+                        .findFirst();
+
+                if (message != null) {
+                    team.realm.beginTransaction();
+                    message.set(Thing.LOCAL_STATE, LocalState.UNSYNCED);
+                    team.realm.commitTransaction();
+                }
             }
         });
     }

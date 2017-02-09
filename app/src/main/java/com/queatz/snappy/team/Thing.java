@@ -175,4 +175,7 @@ public class Thing {
     public static final String PLACEHOLDER = "placeholder";
     public static final String ASPECT = "aspect";
     public static final String WITH = "with";
+
+    // Local only
+    public static final String LOCAL_STATE = "localState";
 }
