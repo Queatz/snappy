@@ -9,7 +9,7 @@ public class Config {
 
     // Android
 
-    public static final boolean BETA_VERSION = true;
+    public static final boolean BETA_VERSION = false;
     public static final int WIPE_VERSIONS_BELOW = 38;
 
     // The email emails are sent from

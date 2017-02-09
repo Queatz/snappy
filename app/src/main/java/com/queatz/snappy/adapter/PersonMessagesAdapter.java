@@ -59,29 +59,18 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<DynamicRealmObject> 
         ImageView photo = (ImageView) view.findViewById(R.id.photo);
         ImageView profile = (ImageView) view.findViewById(R.id.profile);
 
-        if(isOwn)
+        if(isOwn) {
             profile.bringToFront();
-        else
+        } else {
             wrapper.bringToFront();
+        }
 
         Picasso.with(context)
                 .load(Functions.getImageUrlForSize(person, (int) Util.px(32)))
                 .placeholder(R.color.spacer)
                 .into(profile);
 
-        if (!message.isNull(Thing.PHOTO) && message.getBoolean(Thing.PHOTO)) {
-            photo.setVisibility(View.VISIBLE);
-            Picasso.with(context)
-                    .load(Util.locationPhoto(message, parent.getMeasuredWidth()))
-                    .placeholder(R.color.spacer)
-                    .into(photo);
-        } else {
-            photo.setVisibility(View.GONE);
-        }
-
-        textView.setText(message.getString(Thing.MESSAGE));
-
-        textView.setOnTouchListener(new View.OnTouchListener() {
+        View.OnTouchListener timeTap = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -90,7 +79,24 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<DynamicRealmObject> 
 
                 return false;
             }
-        });
+        };
+
+        if (!message.isNull(Thing.PHOTO) && message.getBoolean(Thing.PHOTO)) {
+            photo.setVisibility(View.VISIBLE);
+            Picasso.with(context)
+                    .load(Util.locationPhoto(message, parent.getMeasuredWidth()))
+                    .placeholder(R.color.spacer)
+                    .into(photo);
+
+            photo.setClickable(true);
+            photo.setOnTouchListener(timeTap);
+        } else {
+            photo.setVisibility(View.GONE);
+        }
+
+        textView.setText(message.getString(Thing.MESSAGE));
+
+        textView.setOnTouchListener(timeTap);
 
         return view;
     }

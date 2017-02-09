@@ -183,6 +183,7 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
         imWith.clear();
         updateImageButton();
         updateAtIndicator();
+        showImWith();
 
         team.view.keyboard(whatsUp, false);
     }

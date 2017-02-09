@@ -270,6 +270,8 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             }
         });
 
+        writeComment.setText("");
+
         return view;
     }
 

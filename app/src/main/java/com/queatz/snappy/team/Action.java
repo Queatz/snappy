@@ -539,7 +539,7 @@ public class Action {
     }
 
     public boolean postCommentOn(final DynamicRealmObject update, final String message) {
-        if (update == null || message == null) {
+        if (update == null || message == null || message.trim().length() < 1) {
             return false;
         }
 

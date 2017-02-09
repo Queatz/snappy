@@ -6,5 +6,5 @@ targetCompatibility = JavaVersion.VERSION_1_7
 dependencies {
     compile 'com.google.appengine.tools:appengine-gcs-client:0.4.4'
     compile 'com.googlecode.objectify:objectify:5.1.8'
-    compile 'com.google.code.gson:gson:2.4'
+    compile 'com.google.code.gson:gson:2.7'
 }
