@@ -10,14 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
-import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.util.Functions;

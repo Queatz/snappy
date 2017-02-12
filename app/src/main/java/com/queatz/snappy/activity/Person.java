@@ -64,7 +64,7 @@ public class Person extends Activity {
             return;
         }
 
-        mPerson = team.realm.where("Thing").equalTo("id", id).findFirst();
+        mPerson = team.realm.where("Thing").equalTo(Thing.ID, id).findFirst();
         // Else load person and wait
 
         if(mPerson == null) {

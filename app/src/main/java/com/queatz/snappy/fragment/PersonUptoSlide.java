@@ -49,12 +49,28 @@ public class PersonUptoSlide extends Fragment {
         mPerson = person;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(Config.EXTRA_PERSON_ID, mPerson.getString(Thing.ID));
+    }
+
     SwipeRefreshLayout mRefresh;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         team = ((MainApplication) getActivity().getApplication()).team;
+
+        if (mPerson == null && savedInstanceState != null && savedInstanceState.containsKey(Config.EXTRA_PERSON_ID)) {
+            String personId = savedInstanceState.getString(Config.EXTRA_PERSON_ID);
+
+            mPerson = team.realm.where("Thing").equalTo(Thing.ID, personId).findFirst();
+
+            if (mPerson == null) {
+                return;
+            }
+        }
 
         mChangeListener = new RealmChangeListener<DynamicRealmObject>() {
             @Override

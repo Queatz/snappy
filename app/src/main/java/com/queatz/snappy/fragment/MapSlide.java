@@ -168,7 +168,9 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
     }
 
     private void postUpdate() {
-        if (imAt == null && imWith.isEmpty() && image == null) {
+        String text = whatsUp.getText().toString().trim();
+
+        if (imAt == null && imWith.isEmpty() && image == null && text.isEmpty()) {
             return;
         }
 
@@ -176,7 +178,7 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
             imWith.add(imAt);
         }
 
-        team.action.postSelfUpdate(image, whatsUp.getText().toString(), team.location.get(), imWith);
+        team.action.postSelfUpdate(image, text, team.location.get(), imWith);
         whatsUp.setText("");
         image = null;
         imAt = null;

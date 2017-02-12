@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.support.v4.widget.SwipeRefreshLayout;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.util.Json;

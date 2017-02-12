@@ -11,6 +11,7 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.TextView;
 
 import io.realm.DynamicRealmObject;
@@ -24,6 +25,11 @@ public class SettingsSlide extends Fragment {
 
     public void setPerson(DynamicRealmObject person) {
         mPerson = person;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(Config.EXTRA_PERSON_ID, mPerson.getString(Thing.ID));
     }
 
     @Override

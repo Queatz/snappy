@@ -389,7 +389,7 @@ public class Action {
     }
 
     public void acceptJoin(@NonNull final String joinId) {
-        DynamicRealmObject join = team.realm.where("Thing").equalTo("id", joinId).findFirst();
+        DynamicRealmObject join = team.realm.where("Thing").equalTo(Thing.ID, joinId).findFirst();
 
         if(join == null) {
             team.realm.beginTransaction();

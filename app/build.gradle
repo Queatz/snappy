@@ -11,6 +11,7 @@ android {
         applicationId "com.queatz.snappy"
         minSdkVersion 16
         targetSdkVersion 25
+
         versionCode 40
         versionName "0.4"
     }
