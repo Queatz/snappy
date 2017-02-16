@@ -59,6 +59,21 @@
                 android:text="Village is a marketplace where people share their skills, knowledge, time, and more.  You will only see offers from people within a 3 mile radius of where you are at." />
 
             <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:textStyle="bold"
+                android:textColor="@color/text"
+                android:text="What is Social Mode?" />
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text"
+                android:text="Social Mode lets you set how often you will sent updates via Village, either through push notifications on your phone, or by email." />
+
+            <com.queatz.snappy.ui.TextView
                 android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

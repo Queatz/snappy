@@ -76,6 +76,7 @@ public class Things {
                 case Thing.PHOTO:
                 case Thing.SEEN:
                 case Thing.FULL:
+                case Thing.GOING:
                     thing.setBoolean(entry.getKey(), entry.getValue().getAsBoolean());
                     break;
 

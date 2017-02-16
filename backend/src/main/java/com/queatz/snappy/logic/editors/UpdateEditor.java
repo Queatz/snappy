@@ -53,10 +53,11 @@ public class UpdateEditor extends EarthControl {
                 .set(EarthField.TARGET, target.key()));
     }
 
-    public Entity updateWith(Entity update, Entity thing, String message, boolean photo, LatLng geo, JsonArray with) {
+    public Entity updateWith(Entity update, Entity thing, String message, boolean photo, LatLng geo, JsonArray with, boolean going) {
         Entity.Builder edit = earthStore.edit(update)
                 .set(EarthField.TARGET, thing.key())
                 .set(EarthField.ACTION, Config.UPDATE_ACTION_UPTO)
+                .set(EarthField.GOING, going)
                 .set(EarthField.PHOTO, photo);
 
         if (message == null) {

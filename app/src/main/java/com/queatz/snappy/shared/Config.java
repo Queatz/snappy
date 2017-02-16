@@ -272,4 +272,5 @@ public class Config {
     public static final String PATH_LIKE = "like";
     public static final String PATH_REPORT = "report";
     public static final String PARAM_WITH = "with";
+    public static final String PARAM_GOING = "going";
 }

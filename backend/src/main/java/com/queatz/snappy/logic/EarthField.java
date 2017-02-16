@@ -158,4 +158,5 @@ public class EarthField {
     public static final String GOOGLE_ID = "google_id";
     public static final String PLACEHOLDER = "placeholder";
     public static final String ASPECT_RATIO = "aspect_ratio";
+    public static final String GOING = "going";
 }

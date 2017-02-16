@@ -196,7 +196,9 @@ public class UpdateCard implements Card<DynamicRealmObject> {
                         builder.append(" ");
                     }
 
-                    builder.append("at");
+                    boolean isGoing = update.getBoolean(Thing.GOING);
+
+                    builder.append(isGoing ? "going to" : "at");
 
                     for (final DynamicRealmObject with : hubs) {
                         SpannableString ss = new SpannableString(" " + with.getObject(Thing.SOURCE).getString(Thing.NAME));

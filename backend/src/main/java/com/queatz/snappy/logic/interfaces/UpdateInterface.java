@@ -10,6 +10,7 @@ import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.appengine.tools.cloudstorage.ListItem;
 import com.google.appengine.tools.cloudstorage.ListOptions;
 import com.google.appengine.tools.cloudstorage.ListResult;
+import com.google.cloud.datastore.BooleanValue;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.LatLng;
 import com.google.gson.JsonArray;
@@ -178,6 +179,7 @@ public class UpdateInterface implements Interfaceable {
         Double longitude = null;
 
         JsonArray with = null;
+        boolean going = false;
 
         // XXX TODO Make this use ApiUtil.putPhoto (with support for reading other params)
         try {
@@ -216,6 +218,9 @@ public class UpdateInterface implements Interfaceable {
                 else if (Config.PARAM_WITH.equals(item.getFieldName())) {
                     with = new EarthJson().fromJson(Streams.asString(stream, "UTF-8"), JsonArray.class);
                 }
+                else if (Config.PARAM_GOING.equals(item.getFieldName())) {
+                    going = Boolean.getBoolean(Streams.asString(stream, "UTF-8"));
+                }
             }
         }
         catch (FileUploadException | IOException e) {
@@ -239,7 +244,7 @@ public class UpdateInterface implements Interfaceable {
             geo = LatLng.of(latitude, longitude);
         }
 
-        update = new UpdateEditor(as).updateWith(update, thing, message, photoUploaded, geo, with);
+        update = new UpdateEditor(as).updateWith(update, thing, message, photoUploaded, geo, with, going);
 
         if (EarthKind.UPDATE_KIND.equals(thing.getString(EarthField.KIND))) {
             new EarthUpdate(as).send(new NewCommentEvent(update)).to(thing.getKey(EarthField.SOURCE));

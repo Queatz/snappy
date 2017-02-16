@@ -5,7 +5,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -76,7 +75,9 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
     private EditText whatsUp;
     private Uri image;
     private List<DynamicRealmObject> imWith = new ArrayList<>();
+
     private DynamicRealmObject imAt;
+    private boolean isGoing;
 
     private DynamicRealmObject mMapFocus;
     Team team;
@@ -178,7 +179,7 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
             imWith.add(imAt);
         }
 
-        team.action.postSelfUpdate(image, text, team.location.get(), imWith);
+        team.action.postSelfUpdate(image, text, team.location.get(), imWith, isGoing);
         whatsUp.setText("");
         image = null;
         imAt = null;
@@ -524,11 +525,12 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
 
             Button checkIn = (Button) view.findViewById(R.id.checkIn);
             if (location != null && Util.distance(location.getLatitude(), location.getLongitude(), thing.getDouble(Thing.LATITUDE), thing.getDouble(Thing.LONGITUDE)) < 0.189394 /* 1000ft */) {
-                checkIn.setVisibility(View.VISIBLE);
+                checkIn.setText(R.string.check_in);
                 checkIn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         imAt = thing;
+                        isGoing = false;
 
                         if (getView() != null) {
                             EditText whatsUp = (EditText) getView().findViewById(R.id.whatsUp);
@@ -541,7 +543,23 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
                     }
                 });
             } else {
-                checkIn.setVisibility(View.GONE);
+                checkIn.setText(R.string.going_here);
+                checkIn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        imAt = thing;
+                        isGoing = true;
+
+                        if (getView() != null) {
+                            EditText whatsUp = (EditText) getView().findViewById(R.id.whatsUp);
+                            team.view.keyboard(whatsUp, true);
+                            whatsUp.requestFocus();
+                        }
+
+                        updateAtIndicator();
+                        showInfo(false);
+                    }
+                });
             }
 
             info.addView(view);
@@ -624,7 +642,7 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(Util.tint(getResources().getColor(R.color.blue))));
 
             if ("hub".equals(thing.getString(Thing.KIND))) {
-                Picasso.with(getActivity()).load(Util.photoUrl(String.format(Config.PATH_EARTH_PHOTO, thing.getString(Thing.ID)), (int) Util.px(64)))
+                Picasso.with(getActivity()).load(Util.photoUrl(String.format(Config.PATH_EARTH_PHOTO, thing.getString(Thing.ID)), (int) Util.px(48)))
                         .transform(new CircleTransform())
                         .into(new Target() {
                             @Override

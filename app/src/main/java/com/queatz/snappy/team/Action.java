@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -303,7 +302,7 @@ public class Action {
         if(party == null) {
             team.realm.beginTransaction();
             party = team.realm.createObject("Thing");
-            party.setString(Thing.KIND, "join");
+            party.setString(Thing.KIND, "party");
             party.setString(Thing.ID, partyId);
             team.realm.commitTransaction();
         }
@@ -352,7 +351,7 @@ public class Action {
             @Override
             public void fail(String response) {
                 // Reverse local modifications after retrying
-                Toast.makeText(team.context, "Join failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(team.context, R.string.join_failed, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -437,14 +436,14 @@ public class Action {
             @Override
             public void success(String response) {
                 if (!ResponseUtil.isSuccess(response)) {
-                    Toast.makeText(team.context, "Hide join failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(team.context, R.string.hide_join_failed, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void fail(String response) {
                 // Reverse local modifications after retrying
-                Toast.makeText(team.context, "Hide join failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(team.context, R.string.hide_join_failed, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -485,10 +484,10 @@ public class Action {
     }
 
     public boolean postSelfUpdate(final Uri photo, final String message) {
-        return postSelfUpdate(photo, message, null, null);
+        return postSelfUpdate(photo, message, null, null, false);
     }
 
-    public boolean postSelfUpdate(@Nullable  final Uri photo, @Nullable  final String message, @Nullable final android.location.Location location, @Nullable List<DynamicRealmObject> with) {
+    public boolean postSelfUpdate(@Nullable final Uri photo, @Nullable final String message, @Nullable final android.location.Location location, @Nullable List<DynamicRealmObject> with, boolean isGoing) {
         RequestParams params = new RequestParams();
 
         if (photo == null && message == null) {
@@ -519,6 +518,7 @@ public class Action {
                 }
 
                 params.put(Config.PARAM_WITH, Json.to(withIds));
+                params.put(Config.PARAM_GOING, isGoing);
             }
         }
         catch (FileNotFoundException e) {
@@ -1056,5 +1056,23 @@ public class Action {
         catch(Exception e)
         { //e.toString();
         }
+    }
+
+    public void showPrivacyPolicy(Activity activity) {
+        View view = View.inflate(activity, R.layout.privacy_policy, null);
+
+        new AlertDialog.Builder(activity)
+                .setView(view)
+                .setPositiveButton(R.string.ok, null)
+                .show();
+    }
+
+    public void showTermsOfService(Activity activity) {
+        View view = View.inflate(activity, R.layout.terms_of_service, null);
+
+        new AlertDialog.Builder(activity)
+                .setView(view)
+                .setPositiveButton(R.string.ok, null)
+                .show();
     }
 }

@@ -140,6 +140,7 @@ public class Team implements Closeable {
         schema.addField(Thing.PHOTO, Boolean.class);
         schema.addField(Thing.SEEN, Boolean.class);
         schema.addField(Thing.FULL, Boolean.class);
+        schema.addField(Thing.GOING, Boolean.class);
 
         // Double
         schema.addField(Thing.LATITUDE, Double.class);

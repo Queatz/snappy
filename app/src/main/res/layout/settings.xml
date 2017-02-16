@@ -55,6 +55,44 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/action_privacy_policy"
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.queatz.snappy.ui.TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="32dp"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textColor="@color/clickable"
+            android:text="@string/privacy_policy" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/action_terms_of_service"
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.queatz.snappy.ui.TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="32dp"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textColor="@color/clickable"
+            android:text="@string/terms_of_service" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/action_send_feedback"
         android:background="?android:attr/selectableItemBackground"
         android:orientation="horizontal"

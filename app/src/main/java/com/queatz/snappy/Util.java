@@ -141,14 +141,14 @@ public class Util {
 
         return offer.isNull(Thing.PRICE) ? context.getString(R.string.ask) : offer.getInt(Thing.PRICE) > 0
                 ? Util.offerAmount(offer) : offer.getInt(Thing.PRICE) < 0 ? "+" + Util.offerAmount(offer)
-                : context.getString(R.string.free);
+                : context.getString(R.string.do_this);
     }
 
     public static String offerPriceText(@NonNull final DynamicRealmObject offer) {
         return offer.isNull(Thing.PRICE) ? context.getString(R.string.ask) : offer.getInt(Thing.PRICE) > 0 ?
                 context.getString(R.string.for_amount, Util.offerAmount(offer)) : offer.getInt(Thing.PRICE) < 0 ?
                 context.getString(R.string.make_amount, Util.offerAmount(offer)) :
-                context.getString(R.string.for_free);
+                context.getString(R.string.do_this);
     }
 
     public static String offerMessagePrefill(@NonNull final DynamicRealmObject offer) {

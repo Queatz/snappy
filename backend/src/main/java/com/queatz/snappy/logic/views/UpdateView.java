@@ -26,6 +26,7 @@ public class UpdateView extends ThingView {
     final GeoPt geo;
     final List<Viewable> with;
     final List<Viewable> updates;
+    final Boolean going;
 
     public UpdateView(EarthAs as, Entity update) {
         this(as, update, EarthView.DEEP);
@@ -43,6 +44,12 @@ public class UpdateView extends ThingView {
 
         List<Entity> joinList = earthStore.find(EarthKind.JOIN_KIND, EarthField.TARGET, update.key());
         with = new EntityListView(as, joinList, EarthView.IDENTITY).asList();
+
+        if (update.contains(EarthField.GOING)) {
+            going = update.getBoolean(EarthField.GOING);
+        } else {
+            going = null;
+        }
 
         if (update.contains(EarthField.GEO)) {
             geo = new GeoPt(

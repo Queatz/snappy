@@ -128,6 +128,11 @@ public class Thing {
     public static final String FULL = "full";
 
     /**
+     * If the person is going to or is at a location.
+     */
+    public static final String GOING = "going";
+
+    /**
      * The host of something.
      */
     public static final String HOST = "host";

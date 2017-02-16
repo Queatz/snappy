@@ -44,6 +44,8 @@ public class SettingsSlide extends Fragment {
 
         View socialMode = view.findViewById(R.id.action_socialmode);
         View halp = view.findViewById(R.id.action_info);
+        View privacyPolicy = view.findViewById(R.id.action_privacy_policy);
+        View termsOfService = view.findViewById(R.id.action_terms_of_service);
 
         socialMode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +58,20 @@ public class SettingsSlide extends Fragment {
             @Override
             public void onClick(View v) {
                 team.action.showAbout(getActivity());
+            }
+        });
+
+        privacyPolicy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.action.showPrivacyPolicy(getActivity());
+            }
+        });
+
+        termsOfService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.action.showTermsOfService(getActivity());
             }
         });
 
