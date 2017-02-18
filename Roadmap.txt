@@ -1,5 +1,15 @@
 
 
+adb stop kill-server
+adb stop start-server
+adb shell netcfg | grep wlan0
+adb tcpip 5555
+adb connect <ip>:5555
+
+
+
+
+wlan0    UP                                192.168.1.72/24  0x00001043 a0:8d:16:f4:88:3f
 
 
 
