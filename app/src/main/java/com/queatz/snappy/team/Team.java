@@ -64,10 +64,12 @@ public class Team implements Closeable {
     }
 
     public void wipe() {
-        Realm.deleteRealm(new RealmConfiguration.Builder(context).build());
+        Realm.deleteRealm(new RealmConfiguration.Builder().build());
     }
 
     public DynamicRealm realm() {
+        Realm.init(context);
+
         try {
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             int prefAppVersion = preferences.getInt(Config.PREFERENCE_APP_VERSION, -1);
@@ -85,7 +87,7 @@ public class Team implements Closeable {
             e.printStackTrace();
         }
 
-        DynamicRealm dynamicRealm = DynamicRealm.getInstance(new RealmConfiguration.Builder(context)
+        DynamicRealm dynamicRealm = DynamicRealm.getInstance(new RealmConfiguration.Builder()
             .migration(new RealmMigration() {
                 @Override
                 public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {

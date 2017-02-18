@@ -26,9 +26,9 @@
     <string name="host_a_party">Throw a party</string>
     <string name="accept_person"><![CDATA[Accept <b>%1$s</b>]]></string>
     <string name="hosted">Hosted</string>
-    <string name="Following">Following</string>
-    <string name="Followers">Followers</string>
-    <string name="follow_person">Follow %1$s</string>
+    <string name="Following">Backing</string>
+    <string name="Followers">Backers</string>
+    <string name="follow_person">Back %1$s\'s adventures</string>
     <string name="me_message">Me: %1$s</string>
     <string name="time_in">in %1$s</string>
     <string name="time_ago">%1$s ago</string>
@@ -45,7 +45,7 @@
     <string name="party_starts_at">starts at %1$s</string>
     <string name="party_by_person">%1$s by %2$s</string>
     <string name="request_accepted">starts %1$s</string>
-    <string name="started_following_you">started following you</string>
+    <string name="started_following_you">started backing you</string>
     <string name="buy_didnt_work">Buy didn\'t work</string>
     <string name="buy_and_host">Buy Village</string>
     <string name="accept">Accept</string>
@@ -60,8 +60,8 @@
     <string name="change_photo">Change photo</string>
     <string name="remove_photo">Remove photo</string>
     <string name="add_photo">Add photo</string>
-    <string name="stop_following">Stop following</string>
-    <string name="follow">Follow</string>
+    <string name="stop_following">Stop backing</string>
+    <string name="follow">Back</string>
     <string name="update_text_is_hosting"><![CDATA[%1$s is hosting <b>%2$s</b> %3$s]]></string>
     <string name="update_text_hosted"><![CDATA[%1$s hosted <b>%2$s</b> %3$s]]></string>
     <string name="update_text_is_going_to"><![CDATA[%1$s is going to <b>%2$s</b> %3$s]]></string>
