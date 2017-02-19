@@ -1,0 +1,10 @@
+if [ "$1" == "-h" ]; then
+  echo "Plug in device with USB, run this script, disconnect device from USB."
+  exit 0
+fi
+
+adb kill-server
+adb start-server
+IP="$(adb shell netcfg | grep wlan0 | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+')"
+adb tcpip 5555
+adb connect $IP:5555
