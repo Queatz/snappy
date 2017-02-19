@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -29,6 +31,7 @@ import com.queatz.snappy.util.LocalState;
 import com.queatz.snappy.util.ResponseUtil;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -1074,5 +1077,38 @@ public class Action {
                 .setView(view)
                 .setPositiveButton(R.string.ok, null)
                 .show();
+    }
+
+    public void addToHomeScreen(final Activity activity, final DynamicRealmObject person) {
+        Picasso.with(activity)
+                .load(Functions.getImageUrlForSize(person, (int) Util.px(64)))
+                .placeholder(R.color.spacer)
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        Intent shortcutIntent = new Intent(activity, Person.class);
+                        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        shortcutIntent.putExtra(Config.EXTRA_PERSON_ID, person.getString(Thing.ID));
+                        shortcutIntent.putExtra(Config.EXTRA_SHOW, "messages");
+
+                        Intent addIntent = new Intent();
+                        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+                        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, person.getString(Thing.FIRST_NAME));
+                        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON, bitmap);
+
+                        addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+                        activity.sendBroadcast(addIntent);
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {
+
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+                });
     }
 }

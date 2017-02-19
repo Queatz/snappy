@@ -54,6 +54,7 @@ public class Menu {
                         .equalTo("target.id", ((DynamicRealmObject) object).getString(Thing.ID))
                         .findFirst();
 
+                menu.add(R.string.add_to_home_screen);
                 menu.add(R.string.report_this_person);
                 menu.add(follow == null ? R.string.follow : R.string.stop_following);
             }
@@ -124,6 +125,8 @@ public class Menu {
                 team.action.stopFollowingPerson(((DynamicRealmObject) object));
             } else if (team.context.getString(R.string.report_this_person).equals(item.getTitle())) {
                 team.action.report(activity, (DynamicRealmObject) object);
+            } else if (team.context.getString(R.string.add_to_home_screen).equals(item.getTitle())) {
+                team.action.addToHomeScreen(activity, (DynamicRealmObject) object);
             }
         }
         else if("offer".equals(kind)) {

@@ -171,6 +171,7 @@
     <string name="privacy_policy">Privacy policy</string>
     <string name="terms_of_service">Terms of service</string>
     <string name="do_this">Do this</string>
+    <string name="add_to_home_screen">Add to home screen</string>
 
     <plurals name="likes">
         <item quantity="one">%1$s Liker</item>

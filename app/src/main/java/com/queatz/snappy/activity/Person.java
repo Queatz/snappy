@@ -57,7 +57,7 @@ public class Person extends Activity {
             return;
         }
 
-        String id = intent.getStringExtra("person");
+        String id = intent.getStringExtra(Config.EXTRA_PERSON_ID);
 
         if(id == null) {
             Log.w(Config.LOG_TAG, "No person specified");
@@ -154,7 +154,7 @@ public class Person extends Activity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        String show = intent.getStringExtra("show");
+        String show = intent.getStringExtra(Config.EXTRA_SHOW);
 
         if(show == null) {
             mActionBar.resolve();

@@ -58,6 +58,7 @@ public class Config {
     public static final String EXTRA_ACTION_JOIN_ACCEPT = "join.accept";
     public static final String EXTRA_ACTION_JOIN_REQUEST = "join.request";
     public static final String EXTRA_ACTION_HIDE = "hide";
+    public static final String EXTRA_SHOW = "show";
 
     public static final String PATH_QUEST_ID = "quest/%s";
     public static final String PATH_PARTY_ID = "party/%s";

@@ -12,6 +12,7 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.team.Thing;
 
 /**
  * Created by jacob on 10/18/15.
@@ -34,7 +35,7 @@ public class FollowPushHandler extends PushHandler {
 
         resultIntent = new Intent(team.context, Person.class);
         Bundle extras = new Bundle();
-        extras.putString(Config.EXTRA_PERSON_ID, source.get("id").getAsString());
+        extras.putString(Config.EXTRA_PERSON_ID, source.get(Thing.ID).getAsString());
         resultIntent.putExtras(extras);
         pendingIntent = team.push.newIntentWithStack(resultIntent);
 
