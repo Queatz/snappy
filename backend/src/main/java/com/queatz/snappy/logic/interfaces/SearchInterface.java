@@ -1,13 +1,20 @@
 package com.queatz.snappy.logic.interfaces;
 
+import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.LatLng;
 import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.logic.mines.RecentMine;
 import com.queatz.snappy.logic.views.EntityListView;
 import com.queatz.snappy.shared.Config;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jacob on 7/9/16.
@@ -43,8 +50,31 @@ public class SearchInterface implements Interfaceable {
 
         final LatLng latLng = LatLng.of(latitude, longitude);
 
+        List<Entity> results = new EarthStore(as).getNearby(latLng, kindFilter, qParam);
+
+        // Hack to include recents for now...need to find a better way to "pick people" that are not nearby
+        if (kindFilter != null && kindFilter.contains(EarthKind.PERSON_KIND)) {
+            List<Entity> recents = new RecentMine(as).forPerson(as.getUser());
+
+            if (qParam == null) {
+                results.addAll(recents);
+            } else {
+                EarthStore earthStore = new EarthStore(as);
+
+                for (Entity recent : recents) {
+                    Entity with = earthStore.get(recent.getKey(EarthField.TARGET));
+                    if (with != null && (
+                            with.getString(EarthField.FIRST_NAME).toLowerCase().startsWith(qParam.toLowerCase()) ||
+                                    with.getString(EarthField.LAST_NAME).toLowerCase().startsWith(qParam.toLowerCase())
+                    )) {
+                        results.add(with);
+                    }
+                }
+            }
+        }
+
         return new EntityListView(as,
-                new EarthStore(as).getNearby(latLng, kindFilter, qParam), EarthView.SHALLOW).toJson();
+                results, EarthView.SHALLOW).toJson();
     }
 
     @Override
