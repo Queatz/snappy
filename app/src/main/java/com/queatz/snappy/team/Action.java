@@ -17,6 +17,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
+import com.makeramen.RoundedTransformationBuilder;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.Main;
@@ -1085,6 +1086,7 @@ public class Action {
     public void addToHomeScreen(final Activity activity, final DynamicRealmObject person) {
         Picasso.with(activity)
                 .load(Functions.getImageUrlForSize(person, (int) Util.px(64)))
+                .transform(new RoundedTransformationBuilder().oval(true).build())
                 .placeholder(R.color.spacer)
                 .into(new Target() {
                     @Override

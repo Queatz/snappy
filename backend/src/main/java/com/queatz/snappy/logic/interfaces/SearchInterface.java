@@ -67,6 +67,18 @@ public class SearchInterface implements Interfaceable {
                             with.getString(EarthField.FIRST_NAME).toLowerCase().startsWith(qParam.toLowerCase()) ||
                                     with.getString(EarthField.LAST_NAME).toLowerCase().startsWith(qParam.toLowerCase())
                     )) {
+                        boolean duplicate = false;
+                        for (Entity result : results) {
+                            if (result.key().equals(with.key())) {
+                                duplicate = true;
+                                break;
+                            }
+                        }
+
+                        if (duplicate) {
+                            continue;
+                        }
+
                         results.add(with);
                     }
                 }
