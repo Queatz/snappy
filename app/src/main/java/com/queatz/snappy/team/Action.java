@@ -862,10 +862,10 @@ public class Action {
                 }
 
                 if (price == 0) {
-                    return team.context.getString(R.string.free);
+                    return team.context.getString(R.string.for_free);
                 }
 
-                return  (price < 0 ? "+" : "") + "$" + Integer.toString(Math.abs(price));
+                return  activity.getString(R.string.for_amount, "$" + Integer.toString(Math.abs(price)));
             }
         });
 
@@ -1034,7 +1034,10 @@ public class Action {
                         thing.getObject(Thing.PERSON).getString(Thing.LAST_NAME);
 
                 subject = "Offers by " + name;
-                text = thing.getString(Thing.ABOUT) + " — offered by " + name + "\n\n" +
+
+                String offerOrRequest = thing.getInt(Thing.PRICE) < 0 ? "requested" : "offered";
+
+                text = "Check out " + thing.getString(Thing.ABOUT) + " " + offerOrRequest + " by " + name + "\n\n" +
                     Config.VILLAGE_WEBSITE + thing.getObject(Thing.PERSON).getString(Thing.GOOGLE_URL);
                 break;
             case "update":
@@ -1042,7 +1045,7 @@ public class Action {
                         thing.getObject(Thing.PERSON).getString(Thing.LAST_NAME);
 
                 subject = "Updates from " + name;
-                text = thing.getString(Thing.ABOUT) + " — by " + name + "\n\n" +
+                text = thing.getString(Thing.ABOUT) + " — " + name + "\n\n" +
                         Config.VILLAGE_WEBSITE + thing.getObject(Thing.PERSON).getString(Thing.GOOGLE_URL);
                 break;
             default:

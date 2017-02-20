@@ -13,6 +13,7 @@ import com.google.appengine.api.search.SearchServiceFactory;
 import com.google.appengine.api.search.SortExpression;
 import com.google.appengine.api.search.SortOptions;
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.LatLng;
 import com.queatz.snappy.shared.Config;
 
@@ -196,11 +197,12 @@ public class EarthSearcher extends EarthControl {
         // Fields source, target, source_geo, target_geo
         for (String field : new String[] { EarthField.SOURCE, EarthField.TARGET }) {
             if (object.contains(field)) {
-                Entity linkedEntity = earthStore.get(object.getKey(field));
+                Key linkedEntityId = object.getKey(field);
+                Entity linkedEntity = earthStore.get(linkedEntityId);
 
                 if (linkedEntity != null) {
                     Field linkedId = Field.newBuilder().setName(field)
-                            .setAtom(object.key().name()).build();
+                            .setAtom(linkedEntityId.name()).build();
 
                     builder.addField(linkedId);
 

@@ -72,7 +72,7 @@
     <string name="offer_an_experience">Offer something</string>
     <string name="free">Free</string>
     <string name="price">Price</string>
-    <string name="describe_the_experience">New offer</string>
+    <string name="describe_the_experience">What do you offer?</string>
     <string name="add_experience">Offer</string>
     <string name="stop_offering">Stop offering</string>
     <string name="describe_another_experience">Describe another offer</string>
@@ -105,13 +105,13 @@
     <string name="added_a_new_photo">added a new photo</string>
     <string name="write_something">Write something…</string>
     <string name="explore">Explore</string>
-    <string name="for_free">Free</string>
-    <string name="for_amount">%1$s</string>
+    <string name="for_free">For Free</string>
+    <string name="for_amount">For %1$s</string>
     <string name="make_amount">Make %1$s</string>
     <string name="per_what">Per anything?</string>
     <string name="member_since">Member</string>
     <string name="is_here">is here</string>
-    <string name="new_offer">New offer</string>
+    <string name="new_offer">What do you offer?</string>
     <string name="offer_by_person">%1$s by %2$s</string>
     <string name="liked_your_photo">liked your photo</string>
     <string name="settings">Settings</string>
@@ -129,7 +129,7 @@
     <string name="ive_got_offer">I\'ve got %1$s</string>
     <string name="map">Map</string>
     <string name="like">Like</string>
-    <string name="new_request">New request</string>
+    <string name="new_request">What do you want?</string>
     <string name="offer_added">Offer added</string>
     <string name="offer_cancel_failed">Offer cancel failed</string>
     <string name="couldnt_add_offer">Couldn\'t add offer</string>
@@ -172,6 +172,7 @@
     <string name="terms_of_service">Terms of service</string>
     <string name="do_this">Do this</string>
     <string name="add_to_home_screen">Add to home screen</string>
+    <string name="suggest">Suggest</string>
 
     <plurals name="likes">
         <item quantity="one">%1$s Liker</item>

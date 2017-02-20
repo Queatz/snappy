@@ -241,12 +241,16 @@ public class UpdateCard implements Card<DynamicRealmObject> {
                 Util.getUpdateText(update)
         );
 
-        view.findViewById(R.id.shareButton).setOnClickListener(new View.OnClickListener() {
+        Button shareButton = (Button) view.findViewById(R.id.shareButton);
+
+        shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 team.action.share((Activity) view.getContext(), update);
             }
         });
+
+        shareButton.getCompoundDrawables()[0].setTint(context.getResources().getColor(R.color.red));
 
         CommentAdapter commentsAdapter = new CommentAdapter(context, update.getList(Thing.UPDATES).sort(Thing.DATE, Sort.ASCENDING));
 

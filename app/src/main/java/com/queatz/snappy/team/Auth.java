@@ -226,9 +226,9 @@ public class Auth {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                if(mGoogleAuthToken != null && mActivity != null) {
+                if(mGoogleAuthToken != null) {
                     try {
-                        GoogleAuthUtil.clearToken(mActivity, mGoogleAuthToken);
+                        GoogleAuthUtil.clearToken(team.context, mGoogleAuthToken);
                     } catch (GoogleAuthException | IOException e) {
                         e.printStackTrace();
                     }
@@ -238,6 +238,8 @@ public class Auth {
 
             @Override
             protected void onPostExecute(Void aVoid) {
+                boolean isLogout = mUser != null;
+
                 mUser = null;
                 mEmail = null;
                 mAuthToken = null;
@@ -245,8 +247,8 @@ public class Auth {
                 mSocialMode = Config.SOCIAL_MODE_ON;
                 save();
 
-                if(mUser != null) {
-                    team.view.showStartView(mActivity);
+                if(isLogout) {
+                    team.view.showStartView(null);
                 }
             }
         }.execute();
@@ -296,7 +298,6 @@ public class Auth {
     }
 
     public void logout(@NonNull final Activity activity) {
-        setActivity(activity);
         reauth();
         activity.finish();
     }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
@@ -24,7 +25,7 @@ public class View {
         team = t;
     }
 
-    public void show(Activity from, Class<? extends Activity> activity, Bundle bundle) {
+    public void show(@Nullable Activity from, Class<? extends Activity> activity, Bundle bundle) {
         Context context = from == null ? team.context : from;
 
         Intent intent = new Intent(context, activity);
@@ -39,7 +40,7 @@ public class View {
         context.startActivity(intent);
     }
 
-    public void showStartView(Activity from) {
+    public void showStartView(@Nullable Activity from) {
         team.view.show(from, team.auth.isAuthenticated() ? Main.class : Welcome.class, null);
     }
 

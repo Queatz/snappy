@@ -170,7 +170,7 @@ public class OfferCard implements Card<DynamicRealmObject> {
 
         Button shareButton = (Button) view.findViewById(R.id.shareButton);
 
-        shareButton.getCompoundDrawables()[0].setTint(context.getResources().getColor(R.color.red));
+        shareButton.getCompoundDrawables()[0].setTint(context.getResources().getColor(R.color.gray));
 
         view.findViewById(R.id.shareButton).setOnClickListener(new View.OnClickListener() {
             @Override
