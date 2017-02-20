@@ -223,26 +223,33 @@ public class Auth {
     public void reauth() {
         unregisterDevice();
 
-        if(mGoogleAuthToken != null && mActivity != null) {
-            try {
-                GoogleAuthUtil.clearToken(mActivity, mGoogleAuthToken);
-            } catch (GoogleAuthException | IOException e) {
-                e.printStackTrace();
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                if(mGoogleAuthToken != null && mActivity != null) {
+                    try {
+                        GoogleAuthUtil.clearToken(mActivity, mGoogleAuthToken);
+                    } catch (GoogleAuthException | IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
             }
-        }
 
-        boolean isLogout = (mUser != null);
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                mUser = null;
+                mEmail = null;
+                mAuthToken = null;
+                mGoogleAuthToken = null;
+                mSocialMode = Config.SOCIAL_MODE_ON;
+                save();
 
-
-        mUser = null;
-        mEmail = null;
-        mAuthToken = null;
-        mGoogleAuthToken = null;
-        mSocialMode = Config.SOCIAL_MODE_ON;
-        save();
-
-        if(isLogout)
-            team.view.showStartView(mActivity);
+                if(mUser != null) {
+                    team.view.showStartView(mActivity);
+                }
+            }
+        }.execute();
     }
 
     public void signin() {

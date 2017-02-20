@@ -6,5 +6,16 @@ fi
 adb kill-server
 adb start-server
 IP="$(adb shell netcfg | grep wlan0 | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+')"
+
+if [ ! $IP ]; then
+  echo "Error: Device not found"
+  exit 0
+fi
+
+if [ $IP == "0.0.0.0" ]; then
+  echo "Error: Device wifi is off"
+  exit 0
+fi
+
 adb tcpip 5555
 adb connect $IP:5555

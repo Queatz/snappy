@@ -24,6 +24,7 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.util.Functions;
+import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 
 import io.realm.DynamicRealmObject;
@@ -110,6 +111,15 @@ public class OfferCard implements Card<DynamicRealmObject> {
         } else {
             type.setText(context.getString(R.string.person_offers, offer.getObject(Thing.PERSON).getString(Thing.FIRST_NAME)));
             type.setTextColor(context.getResources().getColor(R.color.green));
+        }
+
+        TextView time = (TextView) view.findViewById(R.id.time);
+
+        if (!offer.isNull(Thing.DATE)) {
+            time.setVisibility(View.VISIBLE);
+            time.setText(TimeUtil.agoDate(offer.getDate(Thing.DATE)));
+        } else {
+            time.setVisibility(View.GONE);
         }
 
         int colorResource = (Util.offerIsRequest(offer) ? R.color.purple : R.color.green);

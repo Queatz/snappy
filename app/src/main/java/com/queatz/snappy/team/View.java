@@ -2,6 +2,7 @@ package com.queatz.snappy.team;
 
 import android.app.Activity;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -24,18 +25,18 @@ public class View {
     }
 
     public void show(Activity from, Class<? extends Activity> activity, Bundle bundle) {
-        Intent intent = new Intent(team.context, activity);
+        Context context = from == null ? team.context : from;
+
+        Intent intent = new Intent(context, activity);
 
         if(bundle != null)
             intent.putExtras(bundle);
 
         if(from == null) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            team.context.startActivity(intent);
         }
-        else {
-            from.startActivity(intent);
-        }
+
+        context.startActivity(intent);
     }
 
     public void showStartView(Activity from) {
