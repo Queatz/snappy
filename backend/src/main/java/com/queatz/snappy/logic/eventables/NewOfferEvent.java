@@ -58,7 +58,10 @@ public class NewOfferEvent implements Eventable {
     public String makeSubject() {
         Entity person = earthStore.get(offer.getKey(EarthField.SOURCE));
 
-        return person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME) + " added a new offer";
+        boolean want = offer.contains(EarthField.WANT) && offer.getBoolean(EarthField.WANT);
+
+        return person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME) + " added a new " +
+                (want ? "request" : "offer");
     }
 
     @Override

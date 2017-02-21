@@ -653,8 +653,8 @@ public class Action {
         params.put(Config.PARAM_KIND, "offer");
         params.put(Config.PARAM_LOCAL_ID, offer.getString(Thing.ID));
         params.put(Config.PARAM_DETAILS, details);
-        params.put(Config.PARAM_UNIT, unit);
         params.put(Config.PARAM_PRICE, price);
+        params.put(Config.PARAM_UNIT, unit);
 
         if (want != null) {
             params.put(Config.PARAM_WANT, want);
@@ -839,6 +839,10 @@ public class Action {
         });
     }
 
+    public void want(@NonNull String details) {
+        want(details, true);
+    }
+
     public void want(@NonNull String details, boolean want) {
         team.action.addOffer(
                 details,
@@ -873,7 +877,7 @@ public class Action {
                 } else {
                     highlight.setBackgroundResource(R.color.green);
                     priceSlider.setTextColor(R.color.green);
-                    experienceDetails.setHint(activity.getResources().getString(R.string.new_offer));
+                    experienceDetails.setHint(activity.getResources().getString(R.string.what_do_you_want));
                 }
 
                 if (price == 0) {

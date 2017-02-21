@@ -29,7 +29,27 @@ public class OfferLikePushHandler extends PushHandler {
         String firstName = push.getAsJsonObject("source").get("firstName").getAsString();
         String personId = push.getAsJsonObject("source").get("id").getAsString();
 
-        String message = team.context.getString(R.string.liked_your_offer);
+        boolean want = false;
+        String text = null;
+
+        if (push.has("target")) {
+            JsonObject wantJsonObject = push.getAsJsonObject("target");
+            want = wantJsonObject.has("want") && wantJsonObject.get("want").getAsBoolean();
+            text = wantJsonObject.get("name").getAsString();
+        }
+
+        String message;
+
+
+        if (text == null) {
+            // Deprecate
+            message = team.context.getString(R.string.liked_your_offer);
+        } else {
+            message = team.context.getString(
+                    want ? R.string.liked_that_you_want : R.string.liked_that_you_offer,
+                    text
+            );
+        }
 
         builder = team.push.newNotification()
                 .setContentTitle(firstName)

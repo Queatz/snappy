@@ -5,11 +5,17 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.queatz.snappy.MainApplication;
@@ -20,8 +26,10 @@ import com.queatz.snappy.adapter.PeopleNearHereAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Here;
+import com.queatz.snappy.team.OnScrollActions;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.ui.RevealAnimation;
 import com.queatz.snappy.ui.TextView;
 
@@ -42,7 +50,6 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
     Team team;
 
     SwipeRefreshLayout mRefresh;
-    FloatingActionButton mFloatingAction;
     ListView mList;
     View emptyView;
 
@@ -85,15 +92,7 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
             }
         });
 
-        mFloatingAction = (FloatingActionButton) view.findViewById(R.id.floatingAction);
-        mFloatingAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                team.action.offerSomething(getActivity());
-            }
-        });
-
-        Util.attachFAB(mFloatingAction, mList);
+        setupButtomLayout(view);
 
         update();
 
@@ -109,6 +108,65 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         team.location.addLocationAvailabilityCallback(this);
 
         return view;
+    }
+
+    private void setupButtomLayout(View view) {
+        final View bottomLayout = view.findViewById(R.id.bottomLayout);
+
+        Util.setOnScrollActions(mList, new OnScrollActions() {
+            @Override
+            public void up() {
+                bottomLayout.animate()
+                        .translationY(0)
+                        .setDuration(225)
+                        .setInterpolator(new AccelerateDecelerateInterpolator())
+                        .start();
+            }
+
+            @Override
+            public void down() {
+                bottomLayout.animate()
+                        .translationY(bottomLayout.getMeasuredHeight())
+                        .setDuration(195)
+                        .setInterpolator(new DecelerateInterpolator())
+                        .start();
+
+            }
+        });
+
+        final EditText whatsUp = (EditText) bottomLayout.findViewById(R.id.whatsUp);
+        ImageButton sendButton = (ImageButton) bottomLayout.findViewById(R.id.sendButton);
+
+
+        whatsUp.setOnEditorActionListener(new android.widget.TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(android.widget.TextView v, int actionId, KeyEvent event) {
+                if (EditorInfo.IME_ACTION_GO == actionId) {
+                    want(whatsUp);
+                }
+
+                return false;
+            }
+        });
+
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                want(whatsUp);
+            }
+        });
+    }
+
+    private void want(EditText whatsUp) {
+        String text = whatsUp.getText().toString().trim();
+
+        if (text.isEmpty()) {
+            return;
+        }
+
+        team.action.want(text);
+        whatsUp.setText("");
+        team.view.keyboard(whatsUp, false);
     }
 
     @Override

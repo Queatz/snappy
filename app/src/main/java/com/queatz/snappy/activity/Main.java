@@ -116,9 +116,6 @@ public class Main extends Activity {
             @Override
             public void onSlideChange(int slide) {
                 mActionBar.selectPage(slide);
-
-                getWindow().setSoftInputMode(slide == 1 ? WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE: WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-
             }
         });
 

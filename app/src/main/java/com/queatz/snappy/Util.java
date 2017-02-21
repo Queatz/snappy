@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.team.OnScrollActions;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.camera.CameraImageSaver;
@@ -304,6 +305,35 @@ public class Util {
                     floatingAction.show();
                 } else {
                     floatingAction.hide();
+                }
+
+                return false;
+            }
+        });
+    }
+
+    public static void setOnScrollActions(final View view, final OnScrollActions actions) {
+        view.setOnTouchListener(new View.OnTouchListener() {
+            private Boolean up;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() != MotionEvent.ACTION_MOVE ||
+                        event.getHistorySize() < 1 ||
+                        event.getHistoricalY(0) == event.getY()) {
+                    return false;
+                }
+
+                boolean up = event.getY() > event.getHistoricalY(0);
+
+                if (this.up == null || !this.up.equals(up)) {
+                    if (up) {
+                        actions.up();
+                    } else {
+                        actions.down();
+                    }
+
+                    this.up = up;
                 }
 
                 return false;

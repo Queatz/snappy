@@ -21,14 +21,44 @@
 
     </com.queatz.snappy.ui.SwipeRefreshLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingAction"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add_white_24dp"
-        app:elevation="4dp" />
+        android:orientation="horizontal"
+        android:background="@drawable/white_rounded"
+        android:elevation="4dp"
+        android:layout_margin="8dp"
+        android:fitsSystemWindows="true">
+
+        <com.queatz.snappy.ui.EditText
+            android:id="@+id/whatsUp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="12dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:background="@null"
+            android:minHeight="48dp"
+            android:hint="@string/new_request"
+            android:imeOptions="actionGo"
+            android:inputType="textCapSentences|textShortMessage"
+            android:textColorHint="@color/gray" />
+
+        <ImageButton style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/sendButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:layout_marginLeft="8dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:minWidth="0dp"
+            android:tint="@color/gray"
+            android:src="@drawable/ic_send_white_24dp" />
+
+    </LinearLayout>
 
 </RelativeLayout>

@@ -6,6 +6,7 @@ import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.concepts.Eventable;
+import com.queatz.snappy.logic.editors.OfferEditor;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.backend.PushSpec;
 
@@ -52,7 +53,8 @@ public class OfferLikeEvent implements Eventable {
                         ),
                         "target", ImmutableMap.of(
                                 "id", target.key().name(),
-                                "name", target.getString(EarthField.ABOUT)
+                                "name", target.getString(EarthField.ABOUT),
+                                "want", target.contains(EarthField.WANT) && target.getBoolean(EarthField.WANT)
                         )
                 )
         );
@@ -61,8 +63,12 @@ public class OfferLikeEvent implements Eventable {
     @Override
     public String makeSubject() {
         Entity person = earthStore.get(like.getKey(EarthField.SOURCE));
+        Entity offer = earthStore.get(like.getKey(EarthField.TARGET));
 
-        return person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME) + " liked your offer";
+        boolean want = offer.contains(EarthField.WANT) && offer.getBoolean(EarthField.WANT);
+
+        return person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME) + " liked your " +
+                (want ? "want" : "offer");
     }
 
     @Override

@@ -111,7 +111,8 @@
     <string name="per_what">Per anything?</string>
     <string name="member_since">Member</string>
     <string name="is_here">is here</string>
-    <string name="new_offer">What do you offer?</string>
+    <string name="what_do_you_want">What do you offer?</string>
+    <string name="new_offer">New offer</string>
     <string name="offer_by_person">%1$s by %2$s</string>
     <string name="liked_your_photo">liked your photo</string>
     <string name="settings">Settings</string>
@@ -138,7 +139,8 @@
     <string name="person_posted">%1$s posted</string>
     <string name="posted_an_update">posted an update</string>
     <string name="liked_your_update">liked your update</string>
-    <string name="liked_your_offer">liked your offer</string>
+    <string name="liked_that_you_offer">liked that you offer %1$s</string>
+    <string name="liked_that_you_want">liked that you want %1$s</string>
     <string name="what_are_you_doing">What are you doing?</string>
     <string name="hub">Hub</string>
     <string name="contacts">Contacts</string>
@@ -174,6 +176,7 @@
     <string name="add_to_home_screen">Add to home screen</string>
     <string name="suggest">Suggest</string>
     <string name="no_bounty">No bounty</string>
+    <string name="liked_your_offer">liked your offer</string>
 
     <plurals name="likes">
         <item quantity="one">%1$s Liker</item>
