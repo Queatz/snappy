@@ -162,7 +162,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
+                android:layout_marginRight="-8dp"
                 android:minWidth="0dp"
                 android:tint="@color/gray"
                 android:src="@drawable/ic_photo_camera_white_24dp" />
@@ -177,7 +177,7 @@
                 android:paddingBottom="12dp"
                 android:background="@null"
                 android:minHeight="48dp"
-                android:hint="@string/new_request"
+                android:hint="@string/what_do_you_want"
                 android:imeOptions="actionGo"
                 android:inputType="textCapSentences|textShortMessage"
                 android:textColorHint="@color/gray" />

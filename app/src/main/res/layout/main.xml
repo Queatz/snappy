@@ -4,17 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.queatz.snappy.ui.ActionBar
-        android:id="@+id/actionBar"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <com.queatz.snappy.ui.SlideScreen
         android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/actionBar" />
+        android:layout_height="match_parent" />
 
     <RelativeLayout
         android:id="@+id/cameraLayout"

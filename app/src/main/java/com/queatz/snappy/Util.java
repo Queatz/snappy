@@ -308,6 +308,7 @@ public class Util {
     }
 
     public static void setOnScrollActions(final View view, final OnScrollActions actions) {
+
         view.setOnTouchListener(new View.OnTouchListener() {
             private Boolean up;
 

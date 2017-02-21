@@ -11,24 +11,17 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.ImageView;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
-import com.queatz.snappy.Util;
 import com.queatz.snappy.adapter.MainAdapter;
-import com.queatz.snappy.adapter.MainTabAdapter;
 import com.queatz.snappy.fragment.MapSlide;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Buy;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
-import com.queatz.snappy.ui.ActionBar;
 import com.queatz.snappy.ui.OnBackPressed;
 import com.queatz.snappy.ui.SlideScreen;
-import com.queatz.snappy.util.Functions;
-import com.squareup.picasso.Picasso;
 
 import io.realm.DynamicRealmObject;
 
@@ -38,7 +31,6 @@ import io.realm.DynamicRealmObject;
 public class Main extends Activity {
     public Team team;
 
-    private ActionBar mActionBar;
     private SlideScreen mSlideScreen;
     private boolean mDestroyed = false;
 
@@ -55,10 +47,7 @@ public class Main extends Activity {
 
         setContentView(R.layout.main);
 
-        mActionBar = (ActionBar) findViewById(R.id.actionBar);
-        mActionBar.showImg();
-        mActionBar.setAdapter(new MainTabAdapter(this));
-        team.buy.callback(new Buy.PurchaseCallback() {
+       team.buy.callback(new Buy.PurchaseCallback() {
             @Override
             public void onSuccess() {
 
@@ -81,30 +70,8 @@ public class Main extends Activity {
         mSlideScreen = (SlideScreen) findViewById(R.id.main_content);
         mSlideScreen.setAdapter(new MainAdapter(getFragmentManager()));
 
-        mSlideScreen.setOnSlideCallback(new SlideScreen.OnSlideCallback() {
-            @Override
-            public void onSlide(int currentSlide, float offset) {
-                mActionBar.setSlide(offset);
-            }
-
-            @Override
-            public void onSlideChange(int slide) {
-                mActionBar.selectPage(slide);
-            }
-        });
-
-        mActionBar.setOnPageChangeListener(new ActionBar.OnPageChangeListener() {
-            @Override
-            public void onPageChange(int page) {
-                mSlideScreen.setSlide(page);
-            }
-        });
-
         if(getIntent() != null) {
             onNewIntent(getIntent());
-        }
-        else {
-            mActionBar.resolve();
         }
 
         team.advertise.enable(this);
@@ -121,14 +88,10 @@ public class Main extends Activity {
         String show = intent.getStringExtra("show");
 
         if(show != null) {
-            mActionBar.setPage(
+            mSlideScreen.setSlide(
                     "parties".equals(show) ? 0 :
-                    "map".equals(show) ? 1 :
-                    "messages".equals(show) ? 2 : 0
+                    "messages".equals(show) ? 1 : 0
             );
-        }
-        else  {
-            mActionBar.resolve();
         }
 
 
@@ -139,7 +102,7 @@ public class Main extends Activity {
                     .equalTo(Thing.ID, mapFocusId)
                     .findFirst();
 
-            ((MapSlide) mSlideScreen.getSlideFragment(1)).setMapFocus(mapFocus);
+            ((MapSlide) mSlideScreen.getSlideFragment(0)).setMapFocus(mapFocus);
         }
     }
 

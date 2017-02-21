@@ -873,11 +873,11 @@ public class Action {
                 if (price < 0) {
                     highlight.setBackgroundResource(R.color.purple);
                     priceSlider.setTextColor(R.color.purple);
-                    experienceDetails.setHint(activity.getResources().getString(R.string.new_request));
+                    experienceDetails.setHint(activity.getResources().getString(R.string.what_do_you_want));
                 } else {
                     highlight.setBackgroundResource(R.color.green);
                     priceSlider.setTextColor(R.color.green);
-                    experienceDetails.setHint(activity.getResources().getString(R.string.what_do_you_want));
+                    experienceDetails.setHint(activity.getResources().getString(R.string.what_do_you_offer));
                 }
 
                 if (price == 0) {

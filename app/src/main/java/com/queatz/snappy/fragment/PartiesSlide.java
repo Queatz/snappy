@@ -1,8 +1,6 @@
 package com.queatz.snappy.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -12,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -58,6 +57,8 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
     private boolean layoutsShown = true;
     private boolean peopleNearbyShown = false;
 
+    private boolean showingMapBottomLayout = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,14 +81,44 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
 
         setupTopLayout(view);
 
+        final View bottomLayout = view.findViewById(R.id.bottomLayout);
+
         mList = (ListView) view.findViewById(R.id.list);
         mList.addHeaderView(emptyView, null, false);
         mList.addFooterView(new View(getActivity()));
+
+        mList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+                if (info.getVisibility() == View.VISIBLE) {
+                    return;
+                }
+
+                if (showingMapBottomLayout) {
+                    removeContextualBottomLayout(bottomLayout);
+                    setContextualBottomLayoutForList(bottomLayout);
+
+                    showingMapBottomLayout = false;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+
+            }
+        });
 
         emptyView.setClickable(true);
         emptyView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (!showingMapBottomLayout) {
+                    removeContextualBottomLayoutForList(bottomLayout);
+                    setContextualBottomLayout(bottomLayout);
+
+                    showingMapBottomLayout = true;
+                }
+
                 getChildFragmentManager().findFragmentById(R.id.map).getView().dispatchTouchEvent(motionEvent);
                 return true;
             }
@@ -103,6 +134,7 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
         });
 
         setupButtomLayout(view);
+        setContextualBottomLayoutForList(view);
 
         update();
 
@@ -117,6 +149,8 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
 
         team.location.addLocationAvailabilityCallback(this);
 
+        initMap(view);
+
         view.post(new Runnable() {
             @Override
             public void run() {
@@ -124,9 +158,37 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
             }
         });
 
-        initMap(view);
-
         return view;
+    }
+
+    private void removeContextualBottomLayoutForList(View bottomLayout) {
+        final EditText whatsUp = (EditText) bottomLayout.findViewById(R.id.whatsUp);
+        whatsUp.setText("");
+    }
+
+    private void setContextualBottomLayoutForList(View bottomLayout) {
+        final EditText whatsUp = (EditText) bottomLayout.findViewById(R.id.whatsUp);
+        ImageButton sendButton = (ImageButton) bottomLayout.findViewById(R.id.sendButton);
+
+        whatsUp.setHint(R.string.what_do_you_want);
+
+        whatsUp.setOnEditorActionListener(new android.widget.TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(android.widget.TextView v, int actionId, KeyEvent event) {
+                if (EditorInfo.IME_ACTION_GO == actionId) {
+                    want(whatsUp);
+                }
+
+                return false;
+            }
+        });
+
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                want(whatsUp);
+            }
+        });
     }
 
     private void setupTopLayout(View view) {
@@ -188,27 +250,20 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
             }
         });
 
-        final EditText whatsUp = (EditText) bottomLayout.findViewById(R.id.whatsUp);
-        ImageButton sendButton = (ImageButton) bottomLayout.findViewById(R.id.sendButton);
-
-
-        whatsUp.setOnEditorActionListener(new android.widget.TextView.OnEditorActionListener() {
+        View.OnLayoutChangeListener lcl = new View.OnLayoutChangeListener() {
             @Override
-            public boolean onEditorAction(android.widget.TextView v, int actionId, KeyEvent event) {
-                if (EditorInfo.IME_ACTION_GO == actionId) {
-                    want(whatsUp);
+            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                if (i1 - i3 != i5 - i7) {
+                    toggleLayouts(layoutsShown);
                 }
-
-                return false;
             }
-        });
 
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                want(whatsUp);
-            }
-        });
+        };
+
+        final View topLayout = view.findViewById(R.id.topLayout);
+
+//        bottomLayout.addOnLayoutChangeListener(lcl);
+//        topLayout.addOnLayoutChangeListener(lcl);
     }
 
     private void toggleLayouts(boolean show) {
@@ -235,7 +290,7 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
                     .start();
         } else {
             bottomLayout.animate()
-                    .translationY(bottomLayout.getMeasuredHeight())
+                    .translationY(bottomLayout.getMeasuredHeight() - Util.px(16))
                     .setDuration(195)
                     .setInterpolator(new DecelerateInterpolator())
                     .start();

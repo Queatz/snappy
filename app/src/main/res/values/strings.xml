@@ -111,7 +111,7 @@
     <string name="per_what">Per anything?</string>
     <string name="member_since">Member</string>
     <string name="is_here">is here</string>
-    <string name="what_do_you_want">What do you offer?</string>
+    <string name="what_do_you_offer">What do you offer?</string>
     <string name="new_offer">New offer</string>
     <string name="offer_by_person">%1$s by %2$s</string>
     <string name="liked_your_photo">liked your photo</string>
@@ -130,7 +130,7 @@
     <string name="ive_got_offer">I\'ve got %1$s</string>
     <string name="map">Map</string>
     <string name="like">Like</string>
-    <string name="new_request">What do you want?</string>
+    <string name="what_do_you_want">What do you want?</string>
     <string name="offer_added">Offer added</string>
     <string name="offer_cancel_failed">Offer cancel failed</string>
     <string name="couldnt_add_offer">Couldn\'t add offer</string>

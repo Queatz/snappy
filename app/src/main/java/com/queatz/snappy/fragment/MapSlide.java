@@ -71,7 +71,7 @@ import io.realm.Sort;
 public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPressed {
 
     private GoogleMap mMap;
-    private ViewGroup info;
+    protected ViewGroup info;
     private EditText whatsUp;
     private Uri image;
     private List<DynamicRealmObject> imWith = new ArrayList<>();
@@ -81,17 +81,101 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
 
     private DynamicRealmObject mMapFocus;
     Team team;
+    private TextWatcher mTextWatcher;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         View view = inflater.inflate(R.layout.map, container, false);
 
         initMap(view);
+        setContextualBottomLayout(view);
+
+        // Note: could save marker thing ids and restore
+        if (mMap != null) {
+            setupMarkers();
+        }
 
         return view;
     }
 
+    protected void setContextualBottomLayout(View bottomLayout) {
+        whatsUp.setHint(R.string.what_are_you_doing);
+
+        whatsUp.setOnEditorActionListener(new android.widget.TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(android.widget.TextView v, int actionId, KeyEvent event) {
+                if (EditorInfo.IME_ACTION_GO == actionId) {
+                    postUpdate();
+                }
+
+                return false;
+            }
+        });
+
+        if (mTextWatcher == null) {
+            mTextWatcher = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    // Need to get full length
+                    if (whatsUp.getText().length() < 1) {
+                        showInfo(false);
+                        return;
+                    }
+
+                    String possibleName = fetchPossibleName(s, start + count);
+
+                    if (possibleName == null) {
+                        showImWith();
+                        return;
+                    }
+
+                    suggest(possibleName);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            };
+        }
+
+        whatsUp.addTextChangedListener(mTextWatcher);
+
+        bottomLayout.findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postUpdate();
+            }
+        });
+
+        bottomLayout.findViewById(R.id.cameraButton).setVisibility(View.VISIBLE);
+        bottomLayout.findViewById(R.id.info).setVisibility(View.VISIBLE);
+    }
+
+    protected void removeContextualBottomLayout(View bottomLayout) {
+        if (mTextWatcher != null) {
+            whatsUp.removeTextChangedListener(mTextWatcher);
+            mTextWatcher = null;
+        }
+
+        bottomLayout.findViewById(R.id.cameraButton).setVisibility(View.GONE);
+        bottomLayout.findViewById(R.id.info).setVisibility(View.GONE);
+
+        resetAll();
+    }
 
     protected void initMap(View view) {
         team = ((MainApplication) getActivity().getApplication()).team;
@@ -115,55 +199,6 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
 
         whatsUp = (EditText) view.findViewById(R.id.whatsUp);
 
-        whatsUp.setOnEditorActionListener(new android.widget.TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(android.widget.TextView v, int actionId, KeyEvent event) {
-                if (EditorInfo.IME_ACTION_GO == actionId) {
-                    postUpdate();
-                }
-
-                return false;
-            }
-        });
-
-        whatsUp.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                // Need to get full length
-                if (whatsUp.getText().length() < 1) {
-                    showInfo(false);
-                    return;
-                }
-
-                String possibleName = fetchPossibleName(s, start + count);
-
-                if (possibleName == null) {
-                    showImWith();
-                    return;
-                }
-
-                suggest(possibleName);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        view.findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                postUpdate();
-            }
-        });
-
         view.findViewById(R.id.withLayout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,6 +220,12 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
         }
 
         team.action.postSelfUpdate(image, text, team.location.get(), imWith, isGoing);
+        resetAll();
+
+        team.view.keyboard(whatsUp, false);
+    }
+
+    private void resetAll() {
         whatsUp.setText("");
         image = null;
         imAt = null;
@@ -192,8 +233,6 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
         updateImageButton();
         updateAtIndicator();
         showImWith();
-
-        team.view.keyboard(whatsUp, false);
     }
 
     private String fetchPossibleName(CharSequence s, int caretPosition) {
@@ -419,10 +458,13 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
 
             // Need to do this or else the photos of updates will load with 0 width
             View bottomLayout = getView().findViewById(R.id.bottomLayout);
-            info.measure(
-                    View.MeasureSpec.makeMeasureSpec(bottomLayout.getMeasuredWidth(), View.MeasureSpec.EXACTLY),
-                    View.MeasureSpec.UNSPECIFIED
-            );
+
+            if (bottomLayout.getMeasuredWidth() > 0) {
+                info.measure(
+                        View.MeasureSpec.makeMeasureSpec(bottomLayout.getMeasuredWidth(), View.MeasureSpec.EXACTLY),
+                        View.MeasureSpec.UNSPECIFIED
+                );
+            }
         }
     }
 
