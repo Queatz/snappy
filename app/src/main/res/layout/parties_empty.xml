@@ -1,54 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.queatz.snappy.ui.ScrollStopper xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:elevation="2dp">
-
-    <com.queatz.snappy.ui.SquareLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/blue"/>
-
-    <LinearLayout
-        android:id="@+id/peopleNearby"
-        android:visibility="gone"
-        android:clickable="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:isScrollContainer="true">
-
-        <com.queatz.snappy.ui.TextView
-            android:id="@+id/peopleNearbyText"
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:paddingTop="8dp"
-            android:gravity="center_horizontal"
-            android:textAlignment="center"
-            android:maxLines="1"
-            android:textColor="@color/clickable"
-            android:textSize="18sp"/>
-
-        <FrameLayout
-            android:id="@+id/peopleNearbyListHolder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <com.queatz.snappy.ui.ExpandedGridView
-                android:id="@+id/peopleNearbyList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:numColumns="3"
-                android:padding="8dp"
-                android:scrollbars="none" />
-
-        </FrameLayout>
-
-    </LinearLayout>
+    android:layout_height="wrap_content">
 
     <com.queatz.snappy.ui.TextView
         android:id="@+id/enableLocation"
@@ -77,4 +31,4 @@
         android:text="@string/parties_empty"
         android:textSize="18sp" />
 
-</LinearLayout>
+</com.queatz.snappy.ui.ScrollStopper>

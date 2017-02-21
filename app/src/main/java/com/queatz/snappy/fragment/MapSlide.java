@@ -87,6 +87,13 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.map, container, false);
 
+        initMap(view);
+
+        return view;
+    }
+
+
+    protected void initMap(View view) {
         team = ((MainApplication) getActivity().getApplication()).team;
 
         info = (ViewGroup) view.findViewById(R.id.info);
@@ -164,8 +171,6 @@ public class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPres
                 showImWith();
             }
         });
-
-        return view;
     }
 
     private void postUpdate() {

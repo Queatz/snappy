@@ -6,6 +6,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background">
 
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/map"
+        tools:context=".fragment.PartiesSlide"
+        android:name="com.google.android.gms.maps.MapFragment" />
+
     <com.queatz.snappy.ui.SwipeRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"
@@ -21,55 +29,183 @@
 
     </com.queatz.snappy.ui.SwipeRefreshLayout>
 
+
+    <LinearLayout
+        android:id="@+id/topLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="64dp"
+        android:orientation="vertical"
+        android:fitsSystemWindows="true"
+        android:background="@drawable/white_rounded"
+        android:elevation="4dp">
+
+        <LinearLayout
+            android:id="@+id/peopleNearby"
+            android:visibility="gone"
+            android:clickable="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:isScrollContainer="true">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.queatz.snappy.ui.TextView
+                        android:id="@+id/peopleNearbyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:paddingTop="8dp"
+                        android:gravity="center_horizontal"
+                        android:clickable="true"
+                        android:textAlignment="center"
+                        android:maxLines="1"
+                        android:textColor="@color/clickable"
+                        android:textSize="18sp"/>
+
+                    <FrameLayout
+                        android:id="@+id/peopleNearbyListHolder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:isScrollContainer="true">
+
+                        <com.queatz.snappy.ui.ExpandedGridView
+                            android:id="@+id/peopleNearbyList"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:numColumns="3"
+                            android:padding="8dp"
+                            android:scrollbars="none" />
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:background="@drawable/white_rounded"
-        android:elevation="4dp"
-        android:layout_margin="8dp"
+        android:orientation="vertical"
         android:fitsSystemWindows="true">
 
-        <com.makeramen.RoundedImageView
-            android:id="@+id/profile"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:scaleType="centerCrop"
-            android:layout_weight="0"
-            android:minWidth="0dp"
-            app:riv_corner_radius="32dp" />
-
-        <com.queatz.snappy.ui.EditText
-            android:id="@+id/whatsUp"
-            android:layout_width="0dp"
-            android:layout_marginLeft="8dp"
-            android:layout_height="wrap_content"
+        <ScrollView
+            android:id="@+id/info"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:background="@null"
-            android:minHeight="48dp"
-            android:hint="@string/new_request"
-            android:imeOptions="actionGo"
-            android:inputType="textCapSentences|textShortMessage"
-            android:textColorHint="@color/gray" />
-
-        <ImageButton style="?android:attr/buttonBarButtonStyle"
-            android:id="@+id/sendButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
+            android:background="@drawable/white_rounded"
             android:layout_marginLeft="8dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:minWidth="0dp"
-            android:tint="@color/gray"
-            android:src="@drawable/ic_send_white_24dp" />
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            android:elevation="4dp"
+            android:fillViewport="true"
+            android:orientation="vertical">
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/white_rounded"
+            android:elevation="4dp"
+            android:layout_margin="8dp">
+
+            <com.makeramen.RoundedImageView
+                android:id="@+id/profile"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:scaleType="centerCrop"
+                android:layout_weight="0"
+                android:minWidth="0dp"
+                app:riv_corner_radius="32dp" />
+
+            <com.makeramen.RoundedImageView
+                android:id="@+id/at"
+                android:visibility="gone"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:scaleType="centerCrop"
+                android:layout_weight="0"
+                android:minWidth="0dp"
+                app:riv_corner_radius="32dp" />
+
+            <ImageButton style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/cameraButton"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:minWidth="0dp"
+                android:tint="@color/gray"
+                android:src="@drawable/ic_photo_camera_white_24dp" />
+
+            <com.queatz.snappy.ui.EditText
+                android:id="@+id/whatsUp"
+                android:layout_width="0dp"
+                android:layout_marginLeft="8dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:background="@null"
+                android:minHeight="48dp"
+                android:hint="@string/new_request"
+                android:imeOptions="actionGo"
+                android:inputType="textCapSentences|textShortMessage"
+                android:textColorHint="@color/gray" />
+
+            <ImageButton style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/sendButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:layout_marginLeft="8dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:minWidth="0dp"
+                android:tint="@color/gray"
+                android:src="@drawable/ic_send_white_24dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/withLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomLayout"
+        android:orientation="horizontal"
+        android:layout_marginRight="4dp"
+        android:gravity="right">
 
     </LinearLayout>
 

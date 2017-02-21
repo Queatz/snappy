@@ -2,9 +2,11 @@ package com.queatz.snappy.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -27,6 +29,7 @@ import com.queatz.snappy.team.OnScrollActions;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.EditText;
+import com.queatz.snappy.ui.OnBackPressed;
 import com.queatz.snappy.ui.RevealAnimation;
 import com.queatz.snappy.ui.TextView;
 import com.queatz.snappy.util.Functions;
@@ -45,12 +48,15 @@ import io.realm.Sort;
 /**
  * Created by jacob on 10/19/14.
  */
-public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Location.LocationAvailabilityCallback, RealmChangeListener<DynamicRealm> {
+public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Location.LocationAvailabilityCallback, RealmChangeListener<DynamicRealm>, OnBackPressed {
     Team team;
 
     SwipeRefreshLayout mRefresh;
     ListView mList;
     View emptyView;
+
+    private boolean layoutsShown = true;
+    private boolean peopleNearbyShown = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,22 +71,27 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         View view = inflater.inflate(R.layout.parties, container, false);
         emptyView = View.inflate(getActivity(), R.layout.parties_empty, null);
 
-        emptyView.findViewById(R.id.peopleNearby).setVisibility(View.GONE);
-        emptyView.findViewById(R.id.peopleNearby).setOnClickListener(new View.OnClickListener() {
+        view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
-            public void onClick(View v) {
-                View view = emptyView.findViewById(R.id.peopleNearbyListHolder);
-
-                if (view.getVisibility() == View.GONE)
-                    RevealAnimation.expand(view);
-                else
-                    RevealAnimation.collapse(view);
+            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                emptyView.setMinimumHeight(view.getMeasuredHeight());
             }
         });
 
+        setupTopLayout(view);
+
         mList = (ListView) view.findViewById(R.id.list);
-        mList.addHeaderView(emptyView);
+        mList.addHeaderView(emptyView, null, false);
         mList.addFooterView(new View(getActivity()));
+
+        emptyView.setClickable(true);
+        emptyView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                getChildFragmentManager().findFragmentById(R.id.map).getView().dispatchTouchEvent(motionEvent);
+                return true;
+            }
+        });
 
         mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         mRefresh.setColorSchemeResources(R.color.red);
@@ -106,7 +117,37 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
 
         team.location.addLocationAvailabilityCallback(this);
 
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                scroll();
+            }
+        });
+
+        initMap(view);
+
         return view;
+    }
+
+    private void setupTopLayout(View view) {
+        final View topLayout = view.findViewById(R.id.topLayout);
+
+        topLayout.findViewById(R.id.peopleNearby).setVisibility(View.GONE);
+        topLayout.findViewById(R.id.peopleNearbyText).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View view = topLayout.findViewById(R.id.peopleNearbyListHolder);
+
+                if (view.getVisibility() == View.GONE) {
+                    RevealAnimation.expand(view);
+                    peopleNearbyShown = true;
+                } else {
+                    RevealAnimation.collapse(view);
+                    peopleNearbyShown = false;
+                }
+            }
+        });
+
     }
 
     private void setupButtomLayout(View view) {
@@ -137,20 +178,12 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
         Util.setOnScrollActions(mList, new OnScrollActions() {
             @Override
             public void up() {
-                bottomLayout.animate()
-                        .translationY(0)
-                        .setDuration(225)
-                        .setInterpolator(new AccelerateDecelerateInterpolator())
-                        .start();
+                toggleLayouts(true);
             }
 
             @Override
             public void down() {
-                bottomLayout.animate()
-                        .translationY(bottomLayout.getMeasuredHeight())
-                        .setDuration(195)
-                        .setInterpolator(new DecelerateInterpolator())
-                        .start();
+                toggleLayouts(false);
 
             }
         });
@@ -176,6 +209,43 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
                 want(whatsUp);
             }
         });
+    }
+
+    private void toggleLayouts(boolean show) {
+        layoutsShown = show;
+
+        if (getView() == null) {
+            return;
+        }
+
+        final View bottomLayout = getView().findViewById(R.id.bottomLayout);
+        final View topLayout = getView().findViewById(R.id.topLayout);
+
+        if (show) {
+            bottomLayout.animate()
+                    .translationY(0)
+                    .setDuration(225)
+                    .setInterpolator(new AccelerateDecelerateInterpolator())
+                    .start();
+
+            topLayout.animate()
+                    .translationY(0)
+                    .setDuration(225)
+                    .setInterpolator(new AccelerateDecelerateInterpolator())
+                    .start();
+        } else {
+            bottomLayout.animate()
+                    .translationY(bottomLayout.getMeasuredHeight())
+                    .setDuration(195)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+
+            topLayout.animate()
+                    .translationY(-topLayout.getMeasuredHeight())
+                    .setDuration(195)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+        }
     }
 
     private void want(EditText whatsUp) {
@@ -225,10 +295,10 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
     }
 
     private void updateBanner(RealmList<DynamicRealmObject> people, RealmList<DynamicRealmObject> locations) {
-        if(getActivity() == null)
+        if(getActivity() == null || getView() == null)
             return;
 
-        View peopleNearby = emptyView.findViewById(R.id.peopleNearby);
+        View peopleNearby = getView().findViewById(R.id.topLayout).findViewById(R.id.peopleNearby);
 
         if(people.size() < 1) {
             if(peopleNearby.getVisibility() != View.GONE) {
@@ -340,5 +410,33 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
                 update();
             }
         });
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (super.onBackPressed()) {
+            return true;
+        }
+
+        if (!layoutsShown) {
+            toggleLayouts(true);
+            return true;
+        }
+
+        if (peopleNearbyShown && getView() != null) {
+            getView().findViewById(R.id.topLayout).findViewById(R.id.peopleNearbyText).callOnClick();
+            return true;
+        }
+
+        if (mList.getFirstVisiblePosition() == 0 && mList.getChildAt(0).getTop() > -mList.getMeasuredHeight() / 4) {
+            scroll();
+            return true;
+        }
+
+        return false;
+    }
+
+    private void scroll() {
+        mList.smoothScrollToPositionFromTop(0, -mList.getMeasuredHeight() / 2);
     }
 }
