@@ -297,9 +297,9 @@ public class Auth {
         }
     }
 
-    public void logout(@NonNull final Activity activity) {
-        reauth();
+    public void signout(@NonNull final Activity activity) {
         activity.finish();
+        reauth();
     }
 
     public void callback(Callback callback) {

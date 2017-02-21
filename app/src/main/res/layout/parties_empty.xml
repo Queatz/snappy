@@ -7,6 +7,11 @@
     android:background="@color/white"
     android:elevation="2dp">
 
+    <com.queatz.snappy.ui.SquareLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/blue"/>
+
     <LinearLayout
         android:id="@+id/peopleNearby"
         android:visibility="gone"

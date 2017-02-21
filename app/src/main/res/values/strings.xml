@@ -56,7 +56,8 @@
     <string name="ok">OK</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="logout">Log out</string>
+    <string name="signout">Sign out</string>
+    <string name="signout_of">Sign out of Village?</string>
     <string name="change_photo">Change photo</string>
     <string name="remove_photo">Remove photo</string>
     <string name="add_photo">Add photo</string>
@@ -179,6 +180,7 @@
     <string name="suggest_me">Make suggestion</string>
     <string name="share">Share</string>
     <string name="interested_for">Hey! Count me in for %1$s</string>
+    <string name="yup">Yup</string>
 
     <plurals name="likes">
         <item quantity="one">%1$s Liker</item>

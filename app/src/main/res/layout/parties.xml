@@ -32,12 +32,24 @@
         android:layout_margin="8dp"
         android:fitsSystemWindows="true">
 
+        <com.makeramen.RoundedImageView
+            android:id="@+id/profile"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:scaleType="centerCrop"
+            android:layout_weight="0"
+            android:minWidth="0dp"
+            app:riv_corner_radius="32dp" />
+
         <com.queatz.snappy.ui.EditText
             android:id="@+id/whatsUp"
             android:layout_width="0dp"
+            android:layout_marginLeft="8dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginLeft="12dp"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
             android:background="@null"

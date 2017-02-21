@@ -1135,4 +1135,17 @@ public class Action {
                     }
                 });
     }
+
+    public void signout(@NonNull final Activity activity) {
+        new AlertDialog.Builder(activity)
+                .setMessage(R.string.signout_of)
+                .setNegativeButton(R.string.nope, null)
+                .setPositiveButton(R.string.signout, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        team.auth.signout(activity);
+                    }
+                })
+                .show();
+    }
 }

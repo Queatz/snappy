@@ -58,15 +58,6 @@ public class Main extends Activity {
         mActionBar = (ActionBar) findViewById(R.id.actionBar);
         mActionBar.showImg();
         mActionBar.setAdapter(new MainTabAdapter(this));
-        mActionBar.setRightContent(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                team.action.openProfile(Main.this, team.auth.me());
-            }
-        });
-
-        mActionBar.setRightContent("profile menu");
-
         team.buy.callback(new Buy.PurchaseCallback() {
             @Override
             public void onSuccess() {
@@ -86,23 +77,6 @@ public class Main extends Activity {
         });
 
         team.buy.pullPerson();
-
-        ImageView profile = ((ImageView) mActionBar.getRightContent().getChildAt(0));
-
-        if(profile != null) {
-            String usr = team.auth.getUser();
-
-            if(usr != null) {
-                DynamicRealmObject person = team.things.get(usr);
-
-                if(person != null) {
-                    Picasso.with(this)
-                            .load(Functions.getImageUrlForSize(person, (int) Util.px(64)))
-                            .placeholder(R.color.spacer)
-                            .into(profile);
-                }
-            }
-        }
 
         mSlideScreen = (SlideScreen) findViewById(R.id.main_content);
         mSlideScreen.setAdapter(new MainAdapter(getFragmentManager()));

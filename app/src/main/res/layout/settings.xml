@@ -1,114 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/action_socialmode"
-        android:background="?android:attr/selectableItemBackground"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <com.queatz.snappy.ui.TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="32dp"
-            android:layout_weight="1"
-            android:textSize="18sp"
-            android:textColor="@color/text"
-            android:text="@string/social_mode" />
+        <LinearLayout
+            android:id="@+id/action_socialmode"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="32dp"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:textColor="@color/text"
+                android:text="@string/social_mode" />
 
 
-        <com.queatz.snappy.ui.TextView
-            android:id="@+id/social_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:layout_margin="32dp"
-            android:textAllCaps="true"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/green"
-            android:text="@string/on" />
+            <com.queatz.snappy.ui.TextView
+                android:id="@+id/social_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:layout_margin="32dp"
+                android:textAllCaps="true"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/green"
+                android:text="@string/on" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/action_info"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="32dp"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:textColor="@color/clickable"
+                android:text="@string/halp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/action_privacy_policy"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="32dp"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:textColor="@color/clickable"
+                android:text="@string/privacy_policy" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/action_terms_of_service"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="32dp"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:textColor="@color/clickable"
+                android:text="@string/terms_of_service" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/action_send_feedback"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="32dp"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:textColor="@color/clickable"
+                android:text="@string/send_feedback" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/action_logout"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="32dp"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:textColor="@color/gray"
+                android:text="@string/signout" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/action_info"
-        android:background="?android:attr/selectableItemBackground"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.queatz.snappy.ui.TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="32dp"
-            android:layout_weight="1"
-            android:textSize="18sp"
-            android:textColor="@color/clickable"
-            android:text="@string/halp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/action_privacy_policy"
-        android:background="?android:attr/selectableItemBackground"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.queatz.snappy.ui.TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="32dp"
-            android:layout_weight="1"
-            android:textSize="18sp"
-            android:textColor="@color/clickable"
-            android:text="@string/privacy_policy" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/action_terms_of_service"
-        android:background="?android:attr/selectableItemBackground"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.queatz.snappy.ui.TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="32dp"
-            android:layout_weight="1"
-            android:textSize="18sp"
-            android:textColor="@color/clickable"
-            android:text="@string/terms_of_service" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/action_send_feedback"
-        android:background="?android:attr/selectableItemBackground"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.queatz.snappy.ui.TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="32dp"
-            android:layout_weight="1"
-            android:textSize="18sp"
-            android:textColor="@color/clickable"
-            android:text="@string/send_feedback" />
-
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

@@ -84,6 +84,13 @@ public class SettingsSlide extends Fragment {
             }
         });
 
+        view.findViewById(R.id.action_logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                team.action.signout(getActivity());
+            }
+        });
+
         return view;
     }
 

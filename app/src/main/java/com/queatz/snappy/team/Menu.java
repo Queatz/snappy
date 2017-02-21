@@ -37,7 +37,7 @@ public class Menu {
                         menu.add(R.string.buy_and_host);
                     }
 
-                    menu.add(R.string.logout);
+                    menu.add(R.string.signout);
                     break;
             }
         }
@@ -88,8 +88,8 @@ public class Menu {
         if(object instanceof String) {
             switch ((String) object) {
                 case "profile menu":
-                    if (team.context.getString(R.string.logout).equals(item.getTitle())) {
-                        team.auth.logout(activity);
+                    if (team.context.getString(R.string.signout).equals(item.getTitle())) {
+                        team.auth.signout(activity);
                     } else if (team.context.getString(R.string.host_a_party).equals(item.getTitle())) {
                         team.view.show(activity, HostParty.class, null);
                     }

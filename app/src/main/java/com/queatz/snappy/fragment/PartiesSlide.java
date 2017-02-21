@@ -12,6 +12,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.queatz.snappy.MainApplication;
@@ -28,6 +29,8 @@ import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.ui.RevealAnimation;
 import com.queatz.snappy.ui.TextView;
+import com.queatz.snappy.util.Functions;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -108,6 +111,28 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
 
     private void setupButtomLayout(View view) {
         final View bottomLayout = view.findViewById(R.id.bottomLayout);
+
+        DynamicRealmObject person = team.auth.me();
+
+        ImageView profile = (ImageView) bottomLayout.findViewById(R.id.profile);
+
+        if(person != null) {
+            Picasso.with(team.context)
+                    .load(Functions.getImageUrlForSize(person, (int) Util.px(64)))
+                    .placeholder(R.color.spacer)
+                    .into(profile);
+        }
+
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (team.auth.me() == null) {
+                    return;
+                }
+
+                team.action.openProfile(getActivity(), team.auth.me());
+            }
+        });
 
         Util.setOnScrollActions(mList, new OnScrollActions() {
             @Override
