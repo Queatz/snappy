@@ -1055,7 +1055,7 @@ public class Action {
 
                 subject = "Offers by " + name;
 
-                String offerOrRequest = thing.getInt(Thing.PRICE) < 0 ? "requested" : "offered";
+                String offerOrRequest = Util.offerIsRequest(thing) ? "wanted" : "offered";
 
                 text = "Check out " + thing.getString(Thing.ABOUT) + " " + offerOrRequest + " by " + name + "\n\n" +
                     Config.VILLAGE_WEBSITE + thing.getObject(Thing.PERSON).getString(Thing.GOOGLE_URL);

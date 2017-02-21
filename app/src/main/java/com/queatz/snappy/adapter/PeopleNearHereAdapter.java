@@ -24,12 +24,23 @@ import io.realm.RealmList;
  * Created by jacob on 8/21/15.
  */
 public class PeopleNearHereAdapter extends BaseAdapter {
-    RealmList<DynamicRealmObject> mRealmList;
-    Context mContext;
+    private RealmList<DynamicRealmObject> mRealmList;
+    private Context mContext;
 
     public PeopleNearHereAdapter(Context context, RealmList<DynamicRealmObject> realmList) {
-        mRealmList = realmList;
         mContext = context;
+        Team team = ((MainApplication) mContext.getApplicationContext()).team;
+        String me = team.auth.getUser();
+
+        // Remove myself.  Note: This should be a realm query once realm supports geospaital
+        for (DynamicRealmObject o : realmList) {
+            if (o.getString(Thing.ID).equals(me)) {
+                realmList.remove(o);
+                break;
+            }
+        }
+
+        mRealmList = realmList;
     }
 
     @Override

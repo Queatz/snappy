@@ -132,27 +132,22 @@ public class Util {
     }
 
     public static boolean offerIsRequest(@NonNull final DynamicRealmObject offer) {
-        return !offer.isNull(Thing.PRICE) && offer.getInt(Thing.PRICE) < 0;
-    }
-
-    public static String offerPriceText(@NonNull final DynamicRealmObject offer, boolean isShorthand) {
-        if (!isShorthand) {
-            return offerPriceText(offer);
-        }
-
-        return offer.isNull(Thing.PRICE) ? context.getString(R.string.ask) : offer.getInt(Thing.PRICE) > 0
-                ? Util.offerAmount(offer) : offer.getInt(Thing.PRICE) < 0 ? "+" + Util.offerAmount(offer)
-                : context.getString(R.string.do_this);
+        return (!offer.isNull(Thing.WANT) && offer.getBoolean(Thing.WANT)) ||
+                (!offer.isNull(Thing.PRICE) && offer.getInt(Thing.PRICE) < 0);
     }
 
     public static String offerPriceText(@NonNull final DynamicRealmObject offer) {
-        return offer.isNull(Thing.PRICE) ? context.getString(R.string.ask) : offer.getInt(Thing.PRICE) > 0 ?
+        return offer.isNull(Thing.PRICE) ? context.getString(R.string.interested) : offer.getInt(Thing.PRICE) > 0 ?
                 context.getString(R.string.for_amount, Util.offerAmount(offer)) : offer.getInt(Thing.PRICE) < 0 ?
                 context.getString(R.string.for_amount, Util.offerAmount(offer)) :
-                context.getString(R.string.for_free);
+                context.getString(R.string.interested);
     }
 
     public static String offerMessagePrefill(@NonNull final DynamicRealmObject offer) {
+        if (offer.isNull(Thing.PRICE) || offer.getInt(Thing.PRICE) == 0) {
+            return context.getString(R.string.interested_for, offer.getString(Thing.ABOUT));
+        }
+
         return context.getString(offerIsRequest(offer) ? R.string.ive_got_offer : R.string.id_like_offer, offer.getString(Thing.ABOUT));
     }
 

@@ -2,9 +2,7 @@ package com.queatz.snappy.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +10,6 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -262,15 +258,8 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
 
             RealmResults<DynamicRealmObject> queryOffers = team.realm.where("Thing")
                     .equalTo(Thing.KIND, "offer")
-                    .notEqualTo("source.id", team.auth.getUser())
-                    .isNotNull(Thing.PRICE)
+                    .notEqualTo("person.id", team.auth.getUser())
                     .findAllSorted(Thing.PRICE, Sort.ASCENDING);
-
-            RealmResults<DynamicRealmObject> queryOffersUpmarket = team.realm.where("Thing")
-                    .equalTo(Thing.KIND, "offer")
-                    .notEqualTo("source.id", team.auth.getUser())
-                    .isNull(Thing.PRICE)
-                    .findAll();
 
             RealmResults<DynamicRealmObject> queryUpdates = team.realm.where("Thing")
                     .equalTo(Thing.KIND, "update")
@@ -280,7 +269,6 @@ public class PartiesSlide extends Fragment implements com.queatz.snappy.team.Loc
             final ArrayList<RealmResults> list = new ArrayList<>();
             list.add(queryParties);
             list.add(queryOffers);
-            list.add(queryOffersUpmarket);
             list.add(queryUpdates);
             mList.setAdapter(new FeedAdapter(getActivity(), list));
         }
