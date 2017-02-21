@@ -173,6 +173,7 @@
     <string name="do_this">Do this</string>
     <string name="add_to_home_screen">Add to home screen</string>
     <string name="suggest">Suggest</string>
+    <string name="no_bounty">No bounty</string>
 
     <plurals name="likes">
         <item quantity="one">%1$s Liker</item>

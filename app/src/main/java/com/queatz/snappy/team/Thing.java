@@ -143,6 +143,11 @@ public class Thing {
     public static final String ACTION = "action";
 
     /**
+     * Whether this is a want or an offer.
+     */
+    public static final String WANT = "want";
+
+    /**
      * The role something plays in a relationship to something else.
      */
     public static final String ROLE = "role";

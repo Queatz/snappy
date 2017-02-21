@@ -20,11 +20,12 @@ public class OfferEditor extends EarthControl {
         earthStore = use(EarthStore.class);
     }
 
-    public Entity newOffer(Entity person, String about, Integer price, String unit) {
+    public Entity newOffer(Entity person, String about, boolean want, Integer price, String unit) {
         Entity.Builder edit = earthStore.edit(earthStore.create(EarthKind.OFFER_KIND))
                 .set(EarthField.SOURCE, person.key())
                 .set(EarthField.ABOUT, about)
                 .set(EarthField.PHOTO, false)
+                .set(EarthField.WANT, true)
                 .set(EarthField.NAME, NullValue.of())
                 .set(EarthField.UNIT, unit);
 

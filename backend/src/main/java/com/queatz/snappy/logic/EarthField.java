@@ -145,6 +145,11 @@ public class EarthField {
     public static final String ROLE = "role";
 
     /**
+     * Whether or  not this is a request or offer.
+     */
+    public static final String WANT = "want";
+
+    /**
      * Other, less generic fields.
      */
     public static final String FIRST_NAME = "first_name";

@@ -628,7 +628,9 @@ public class Action {
         team.api.post(Config.PATH_EARTH + "/" + offer.getString(Thing.ID) + "/" + Config.PATH_PHOTO + "/" + Config.PATH_DELETE);
     }
 
-    public void addOffer(@NonNull String details, Integer price, @Nullable String unit) {
+    public void addOffer(@NonNull String details, @Nullable Boolean want, @Nullable Integer price, @Nullable String unit) {
+        details = details.trim();
+
         if(details.isEmpty()) {
             return;
         }
@@ -637,7 +639,7 @@ public class Action {
         DynamicRealmObject offer = team.realm.createObject("Thing");
         offer.setString(Thing.KIND, "offer");
         offer.setString(Thing.ID, Util.createLocalId());
-        offer.setString(Thing.ABOUT, details.trim());
+        offer.setString(Thing.ABOUT, details);
 
         if (price != null) {
             offer.setInt(Thing.PRICE, price);
@@ -654,11 +656,14 @@ public class Action {
         params.put(Config.PARAM_UNIT, unit);
         params.put(Config.PARAM_PRICE, price);
 
+        if (want != null) {
+            params.put(Config.PARAM_WANT, want);
+        }
+
         team.api.post(Config.PATH_EARTH + "/" + Config.PATH_ME_OFFERS, params, new Api.Callback() {
             @Override
             public void success(String response) {
                 team.things.put(response);
-                Toast.makeText(team.context, R.string.offer_added, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -834,7 +839,16 @@ public class Action {
         });
     }
 
-    public void offerSomething(final Activity activity) {
+    public void want(@NonNull String details, boolean want) {
+        team.action.addOffer(
+                details,
+                want,
+                null,
+                ""
+        );
+    }
+
+    public void offerSomething(@NonNull final Activity activity) {
         final View newOffer = View.inflate(activity, R.layout.new_offer, null);
 
         final EditText experienceDetails = (EditText) newOffer.findViewById(R.id.details);
@@ -863,7 +877,7 @@ public class Action {
                 }
 
                 if (price == 0) {
-                    return team.context.getString(R.string.for_free);
+                    return team.context.getString(R.string.no_bounty);
                 }
 
                 return  activity.getString(R.string.for_amount, "$" + Integer.toString(Math.abs(price)));
@@ -886,9 +900,10 @@ public class Action {
                 }
 
                 team.action.addOffer(
-                    experienceDetails.getText().toString(),
-                    getPrice(priceSlider.getPercent()),
-                    perUnit.getText().toString()
+                        experienceDetails.getText().toString(),
+                        null,
+                        getPrice(priceSlider.getPercent()),
+                        perUnit.getText().toString()
                 );
 
                 dialog.dismiss();

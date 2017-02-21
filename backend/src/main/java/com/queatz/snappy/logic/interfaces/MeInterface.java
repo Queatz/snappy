@@ -174,7 +174,9 @@ public class MeInterface implements Interfaceable {
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
         String details = as.getRequest().getParameter(Config.PARAM_DETAILS);
         String unit = as.getRequest().getParameter(Config.PARAM_UNIT);
+        boolean want = Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_WANT));
 
+        // @deprecated
         Integer price = null;
 
         if (as.getRequest().getParameter(Config.PARAM_PRICE) != null) try {
@@ -202,7 +204,7 @@ public class MeInterface implements Interfaceable {
                 }
             }
 
-            Entity offer = new OfferEditor(as).newOffer(as.getUser(), details, price, unit);
+            Entity offer = new OfferEditor(as).newOffer(as.getUser(), details, want, price, unit);
 
             if (offer != null) {
                 new EarthUpdate(as).send(new NewOfferEvent(offer))

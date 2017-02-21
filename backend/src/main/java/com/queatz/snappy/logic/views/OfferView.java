@@ -18,6 +18,7 @@ public class OfferView extends ThingView {
     final PersonView person;
     final Date date;
     final int likers;
+    final Boolean want;
 
     public OfferView(EarthAs as, Entity offer) {
         this(as, offer, EarthView.DEEP);
@@ -33,5 +34,11 @@ public class OfferView extends ThingView {
         person = new PersonView(as, earthStore.get(offer.getKey(EarthField.SOURCE)), EarthView.SHALLOW);
         likers = earthStore.count(EarthKind.LIKE_KIND, EarthField.TARGET, offer.key());
         date = offer.getDateTime(EarthField.CREATED_ON).toDate();
+
+        if (offer.contains(EarthField.WANT)) {
+            want = offer.getBoolean(EarthField.WANT);
+        } else {
+            want = null;
+        }
     }
 }

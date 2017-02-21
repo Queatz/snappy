@@ -273,4 +273,5 @@ public class Config {
     public static final String PATH_REPORT = "report";
     public static final String PARAM_WITH = "with";
     public static final String PARAM_GOING = "going";
+    public static final String PARAM_WANT = "want";
 }
