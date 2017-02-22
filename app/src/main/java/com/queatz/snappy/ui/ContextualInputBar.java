@@ -29,6 +29,7 @@ import com.makeramen.RoundedImageView;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.activity.HostParty;
 import com.queatz.snappy.adapter.SuggestionAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
@@ -199,10 +200,12 @@ public class ContextualInputBar extends LinearLayout {
         mProfile.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                team.action.showPartiesPostHost((Activity) getContext());
+                team.view.show((Activity) getContext(), HostParty.class, null);
                 return true;
             }
         });
+
+        info = (ViewGroup) findViewById(R.id.info);
     }
 
 
@@ -593,7 +596,7 @@ public class ContextualInputBar extends LinearLayout {
         findViewById(R.id.cameraButton).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
-    public void enabmeAutocomplete(boolean enable) {
+    public void enableAutocomplete(boolean enable) {
         if (enable) {
             whatsUp.addTextChangedListener(mTextWatcher);
         } else {

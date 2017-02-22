@@ -20,13 +20,13 @@ public class DoingContextualBehavior implements ContextualBehavior {
             }
         });
 
-        contextualInputBar.enabmeAutocomplete(true);
+        contextualInputBar.enableAutocomplete(true);
         contextualInputBar.showCamera(true);
     }
 
     public void dispose(ContextualInputBar contextualInputBar) {
         contextualInputBar.showCamera(false);
-        contextualInputBar.enabmeAutocomplete(false);
+        contextualInputBar.enableAutocomplete(false);
         contextualInputBar.resetAll();
     }
 }
