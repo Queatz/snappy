@@ -22,11 +22,9 @@ public class DoingContextualBehavior implements ContextualBehavior {
 
         contextualInputBar.enabmeAutocomplete(true);
         contextualInputBar.showCamera(true);
-        contextualInputBar.showInfo(true);
     }
 
     public void dispose(ContextualInputBar contextualInputBar) {
-        contextualInputBar.showInfo(false);
         contextualInputBar.showCamera(false);
         contextualInputBar.enabmeAutocomplete(false);
         contextualInputBar.resetAll();

@@ -118,13 +118,20 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
         emptyView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+
                 if (!showingMapBottomLayout) {
                     getContextualInputBar().switchBehavior(new DoingContextualBehavior());
 
                     showingMapBottomLayout = true;
                 }
 
-                getChildFragmentManager().findFragmentById(R.id.map).getView().dispatchTouchEvent(motionEvent);
+                View mapView = getChildFragmentManager().findFragmentById(R.id.map).getView();
+
+                if (mapView == null) {
+                    return false;
+                }
+
+                mapView.dispatchTouchEvent(motionEvent);
                 return true;
             }
         });
@@ -224,7 +231,7 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
             return;
         }
 
-        final View bottomLayout = getView().findViewById(R.id.bottomLayout);
+        final View bottomLayout = getContextualInputBar();
         final View topLayout = getView().findViewById(R.id.topLayout);
 
         if (show) {

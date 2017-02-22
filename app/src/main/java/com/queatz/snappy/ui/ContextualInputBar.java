@@ -60,6 +60,7 @@ public class ContextualInputBar extends LinearLayout {
 
     private EditText whatsUp;
     private ViewGroup info;
+    private ImageView mProfile;
     private Uri image;
     private List<DynamicRealmObject> imWith = new ArrayList<>();
     private TextWatcher mTextWatcher;
@@ -175,16 +176,16 @@ public class ContextualInputBar extends LinearLayout {
 
         DynamicRealmObject person = team.auth.me();
 
-        ImageView profile = (ImageView) findViewById(R.id.profile);
+        mProfile = (ImageView) findViewById(R.id.profile);
 
         if(person != null) {
             Picasso.with(team.context)
                     .load(Functions.getImageUrlForSize(person, (int) Util.px(64)))
                     .placeholder(R.color.spacer)
-                    .into(profile);
+                    .into(mProfile);
         }
 
-        profile.setOnClickListener(new View.OnClickListener() {
+        mProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (team.auth.me() == null) {
@@ -195,7 +196,7 @@ public class ContextualInputBar extends LinearLayout {
             }
         });
 
-        profile.setOnLongClickListener(new View.OnLongClickListener() {
+        mProfile.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 team.action.showPartiesPostHost((Activity) getContext());
@@ -277,6 +278,7 @@ public class ContextualInputBar extends LinearLayout {
         updateImageButton();
         updateAtIndicator();
         showImWith();
+        showInfo(false);
     }
 
     private String fetchPossibleName(CharSequence s, int caretPosition) {
@@ -370,6 +372,7 @@ public class ContextualInputBar extends LinearLayout {
         ImageView at = (ImageView) findViewById(R.id.at);
 
         if (imAt != null) {
+            mProfile.setVisibility(View.GONE);
             at.setVisibility(View.VISIBLE);
             Picasso.with(getContext()).load(Util.locationPhoto(imAt, (int) Util.px(48)))
                     .placeholder(R.drawable.location)
@@ -384,6 +387,7 @@ public class ContextualInputBar extends LinearLayout {
                 }
             });
         } else {
+            mProfile.setVisibility(View.VISIBLE);
             at.setVisibility(View.GONE);
         }
     }
