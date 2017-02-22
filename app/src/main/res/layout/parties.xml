@@ -99,114 +99,11 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/bottomLayout"
+    <com.queatz.snappy.ui.ContextualInputBar
+        android:id="@+id/inputBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical"
-        android:fitsSystemWindows="true">
-
-        <ScrollView
-            android:id="@+id/info"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@drawable/white_rounded"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
-            android:elevation="4dp"
-            android:fillViewport="true"
-            android:orientation="vertical">
-        </ScrollView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/white_rounded"
-            android:elevation="4dp"
-            android:layout_margin="8dp">
-
-            <com.makeramen.RoundedImageView
-                android:id="@+id/profile"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:scaleType="centerCrop"
-                android:layout_weight="0"
-                android:minWidth="0dp"
-                app:riv_corner_radius="32dp" />
-
-            <com.makeramen.RoundedImageView
-                android:id="@+id/at"
-                android:visibility="gone"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:scaleType="centerCrop"
-                android:layout_weight="0"
-                android:minWidth="0dp"
-                app:riv_corner_radius="32dp" />
-
-            <ImageButton style="?android:attr/buttonBarButtonStyle"
-                android:id="@+id/cameraButton"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="-8dp"
-                android:minWidth="0dp"
-                android:tint="@color/gray"
-                android:src="@drawable/ic_photo_camera_white_24dp" />
-
-            <com.queatz.snappy.ui.EditText
-                android:id="@+id/whatsUp"
-                android:layout_width="0dp"
-                android:layout_marginLeft="8dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:background="@null"
-                android:minHeight="48dp"
-                android:hint="@string/what_do_you_want"
-                android:imeOptions="actionGo"
-                android:inputType="textCapSentences|textShortMessage"
-                android:textColorHint="@color/gray" />
-
-            <ImageButton style="?android:attr/buttonBarButtonStyle"
-                android:id="@+id/sendButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:layout_marginLeft="8dp"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:minWidth="0dp"
-                android:tint="@color/gray"
-                android:src="@drawable/ic_send_white_24dp" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/withLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/bottomLayout"
-        android:orientation="horizontal"
-        android:layout_marginRight="4dp"
-        android:gravity="right">
-
-    </LinearLayout>
+        android:fitsSystemWindows="true" />
 
 </RelativeLayout>

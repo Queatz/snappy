@@ -2,17 +2,14 @@ package com.queatz.snappy.fragment;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -27,11 +24,13 @@ import com.queatz.snappy.team.Here;
 import com.queatz.snappy.team.OnScrollActions;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
-import com.queatz.snappy.ui.EditText;
+import com.queatz.snappy.ui.ContextualInputBar;
 import com.queatz.snappy.ui.OnBackPressed;
 import com.queatz.snappy.ui.RevealAnimation;
 import com.queatz.snappy.ui.TextView;
+import com.queatz.snappy.util.WantContextualBehavior;
 import com.queatz.snappy.util.Functions;
+import com.queatz.snappy.util.DoingContextualBehavior;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -59,6 +58,13 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
 
     private boolean showingMapBottomLayout = false;
 
+    private ContextualInputBar contextualInputBar;
+
+    @Override
+    protected ContextualInputBar getContextualInputBar() {
+        return contextualInputBar;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +76,9 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.parties, container, false);
+
+        contextualInputBar = (ContextualInputBar) view.findViewById(R.id.inputBar);
+
         emptyView = View.inflate(getActivity(), R.layout.parties_empty, null);
 
         view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -81,8 +90,6 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
 
         setupTopLayout(view);
 
-        final View bottomLayout = view.findViewById(R.id.bottomLayout);
-
         mList = (ListView) view.findViewById(R.id.list);
         mList.addHeaderView(emptyView, null, false);
         mList.addFooterView(new View(getActivity()));
@@ -90,13 +97,12 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
         mList.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
-                if (info.getVisibility() == View.VISIBLE) {
+                if (getContextualInputBar().isInfoVisible()) {
                     return;
                 }
 
                 if (showingMapBottomLayout) {
-                    removeContextualBottomLayout(bottomLayout);
-                    setContextualBottomLayoutForList(bottomLayout);
+                    getContextualInputBar().switchBehavior(new WantContextualBehavior());
 
                     showingMapBottomLayout = false;
                 }
@@ -113,8 +119,7 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (!showingMapBottomLayout) {
-                    removeContextualBottomLayoutForList(bottomLayout);
-                    setContextualBottomLayout(bottomLayout);
+                    getContextualInputBar().switchBehavior(new DoingContextualBehavior());
 
                     showingMapBottomLayout = true;
                 }
@@ -133,8 +138,7 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
             }
         });
 
-        setupButtomLayout(view);
-        setContextualBottomLayoutForList(view);
+        getContextualInputBar().switchBehavior(new WantContextualBehavior());
 
         update();
 
@@ -151,6 +155,19 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
 
         initMap(view);
 
+        Util.setOnScrollActions(mList, new OnScrollActions() {
+            @Override
+            public void up() {
+                toggleLayouts(true);
+            }
+
+            @Override
+            public void down() {
+                toggleLayouts(false);
+
+            }
+        });
+
         view.post(new Runnable() {
             @Override
             public void run() {
@@ -159,36 +176,6 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
         });
 
         return view;
-    }
-
-    private void removeContextualBottomLayoutForList(View bottomLayout) {
-        final EditText whatsUp = (EditText) bottomLayout.findViewById(R.id.whatsUp);
-        whatsUp.setText("");
-    }
-
-    private void setContextualBottomLayoutForList(View bottomLayout) {
-        final EditText whatsUp = (EditText) bottomLayout.findViewById(R.id.whatsUp);
-        ImageButton sendButton = (ImageButton) bottomLayout.findViewById(R.id.sendButton);
-
-        whatsUp.setHint(R.string.what_do_you_want);
-
-        whatsUp.setOnEditorActionListener(new android.widget.TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(android.widget.TextView v, int actionId, KeyEvent event) {
-                if (EditorInfo.IME_ACTION_GO == actionId) {
-                    want(whatsUp);
-                }
-
-                return false;
-            }
-        });
-
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                want(whatsUp);
-            }
-        });
     }
 
     private void setupTopLayout(View view) {
@@ -212,55 +199,19 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
 
     }
 
-    private void setupButtomLayout(View view) {
-        final View bottomLayout = view.findViewById(R.id.bottomLayout);
+    private void setupBottomLayout(View view) {
 
-        DynamicRealmObject person = team.auth.me();
-
-        ImageView profile = (ImageView) bottomLayout.findViewById(R.id.profile);
-
-        if(person != null) {
-            Picasso.with(team.context)
-                    .load(Functions.getImageUrlForSize(person, (int) Util.px(64)))
-                    .placeholder(R.color.spacer)
-                    .into(profile);
-        }
-
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (team.auth.me() == null) {
-                    return;
-                }
-
-                team.action.openProfile(getActivity(), team.auth.me());
-            }
-        });
-
-        Util.setOnScrollActions(mList, new OnScrollActions() {
-            @Override
-            public void up() {
-                toggleLayouts(true);
-            }
-
-            @Override
-            public void down() {
-                toggleLayouts(false);
-
-            }
-        });
-
-        View.OnLayoutChangeListener lcl = new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
-                if (i1 - i3 != i5 - i7) {
-                    toggleLayouts(layoutsShown);
-                }
-            }
-
-        };
-
-        final View topLayout = view.findViewById(R.id.topLayout);
+//        View.OnLayoutChangeListener lcl = new View.OnLayoutChangeListener() {
+//            @Override
+//            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+//                if (i1 - i3 != i5 - i7) {
+//                    toggleLayouts(layoutsShown);
+//                }
+//            }
+//
+//        };
+//
+//        final View topLayout = view.findViewById(R.id.topLayout);
 
 //        bottomLayout.addOnLayoutChangeListener(lcl);
 //        topLayout.addOnLayoutChangeListener(lcl);
@@ -301,18 +252,6 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
                     .setInterpolator(new DecelerateInterpolator())
                     .start();
         }
-    }
-
-    private void want(EditText whatsUp) {
-        String text = whatsUp.getText().toString().trim();
-
-        if (text.isEmpty()) {
-            return;
-        }
-
-        team.action.want(text);
-        whatsUp.setText("");
-        team.view.keyboard(whatsUp, false);
     }
 
     @Override
