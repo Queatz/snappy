@@ -131,6 +131,10 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
                     return false;
                 }
 
+                if (mList.getFirstVisiblePosition() == 0) {
+                    motionEvent.offsetLocation(0, mList.getChildAt(0).getTop());
+                }
+
                 mapView.dispatchTouchEvent(motionEvent);
                 return true;
             }
@@ -159,8 +163,6 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
         refresh();
 
         team.location.addLocationAvailabilityCallback(this);
-
-        initMap(view);
 
         Util.setOnScrollActions(mList, new OnScrollActions() {
             @Override
@@ -206,23 +208,23 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
 
     }
 
-    private void setupBottomLayout(View view) {
-
-//        View.OnLayoutChangeListener lcl = new View.OnLayoutChangeListener() {
-//            @Override
-//            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
-//                if (i1 - i3 != i5 - i7) {
-//                    toggleLayouts(layoutsShown);
-//                }
-//            }
+//    private void setupBottomLayout(View view) {
 //
-//        };
+////        View.OnLayoutChangeListener lcl = new View.OnLayoutChangeListener() {
+////            @Override
+////            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+////                if (i1 - i3 != i5 - i7) {
+////                    toggleLayouts(layoutsShown);
+////                }
+////            }
+////
+////        };
+////
+////        final View topLayout = view.findViewById(R.id.topLayout);
 //
-//        final View topLayout = view.findViewById(R.id.topLayout);
-
-//        bottomLayout.addOnLayoutChangeListener(lcl);
-//        topLayout.addOnLayoutChangeListener(lcl);
-    }
+////        bottomLayout.addOnLayoutChangeListener(lcl);
+////        topLayout.addOnLayoutChangeListener(lcl);
+//    }
 
     private void toggleLayouts(boolean show) {
         layoutsShown = show;
@@ -429,7 +431,12 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
             return true;
         }
 
-        if (mList.getFirstVisiblePosition() == 0 && mList.getChildAt(0).getTop() > -mList.getMeasuredHeight() / 4) {
+        if (mList.getCount() <= 2) {
+            if (showingMapBottomLayout) {
+                scroll();
+                return true;
+            }
+        } else if (mList.getFirstVisiblePosition() == 0 && mList.getChildAt(0).getTop() > -mList.getMeasuredHeight() / 4) {
             scroll();
             return true;
         }

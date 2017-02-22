@@ -5,12 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -59,18 +54,12 @@ public abstract class MapSlide extends Fragment implements OnMapReadyCallback, O
         super.onSaveInstanceState(outState);
     }
 
-
-    protected void initMap(View view) {
-        team = ((MainApplication) getActivity().getApplication()).team;
-    }
-
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ((MapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
 
-        final Team team = ((MainApplication) getActivity().getApplication()).team;
+        team = ((MainApplication) getActivity().getApplication()).team;
         team.here.getRecentUpdates(getActivity());
 
         getContextualInputBar().addLayoutChangeListener(new Runnable() {
