@@ -158,7 +158,7 @@ public class Util {
         String action = update.getString(Thing.ACTION);
 
         if (action == null) {
-            return new SpannableString(update.getString(Thing.ABOUT));
+            return new SpannableString(!update.isNull(Thing.ABOUT) ? update.getString(Thing.ABOUT) : "");
         }
 
         switch (action) {

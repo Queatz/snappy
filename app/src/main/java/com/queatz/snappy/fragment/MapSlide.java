@@ -101,7 +101,18 @@ public abstract class MapSlide extends Fragment implements OnMapReadyCallback, O
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                getContextualInputBar().showInfo((DynamicRealmObject) marker.getTag());
+                DynamicRealmObject thing = (DynamicRealmObject) marker.getTag();
+
+                if (thing == null) {
+                    return false;
+                }
+
+                if ("person".equals(thing.getString(Thing.KIND))) {
+                    team.action.openProfile(getActivity(), thing);
+                } else {
+                    getContextualInputBar().showInfo(thing);
+                }
+
                 return false;
             }
         });
@@ -196,6 +207,12 @@ public abstract class MapSlide extends Fragment implements OnMapReadyCallback, O
                     .isNotNull(Thing.LATITUDE)
                     .isNotNull(Thing.LONGITUDE)
                 .endGroup()
+                .or()
+                .beginGroup()
+                    .equalTo(Thing.KIND, "person")
+                    .isNotNull(Thing.LATITUDE)
+                    .isNotNull(Thing.LONGITUDE)
+                .endGroup()
                 .findAll();
 
         things.addChangeListener(new RealmChangeListener<RealmResults<DynamicRealmObject>>() {
@@ -260,6 +277,34 @@ public abstract class MapSlide extends Fragment implements OnMapReadyCallback, O
                 } else {
                     photo = Functions.getImageUrlForSize(thing.getObject(Thing.PERSON), (int) Util.px(32));
                 }
+
+                Picasso.with(getActivity()).load(photo)
+                        .transform(new CircleTransform())
+                        .into(new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(bitmap);
+
+                                // Try / catch is because the marker may have been removed
+                                try {
+                                    marker.setIcon(icon);
+                                } catch (IllegalArgumentException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onBitmapFailed(Drawable errorDrawable) {
+
+                            }
+
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                            }
+                        });
+            } else if ("person".equals(thing.getString(Thing.KIND))) {
+                String photo = Functions.getImageUrlForSize(thing, (int) Util.px(32));
 
                 Picasso.with(getActivity()).load(photo)
                         .transform(new CircleTransform())

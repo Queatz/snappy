@@ -224,15 +224,18 @@ public class UpdateInterface implements Interfaceable {
             }
         }
         catch (FileUploadException | IOException e) {
+            new EarthStore(as).conclude(update);
             Logger.getLogger(Config.NAME).severe(e.toString());
             throw new NothingLogicResponse("post photo - couldn't upload because: " + e);
         }
 
         if (thingId == null) {
+            new EarthStore(as).conclude(update);
             throw new NothingLogicResponse("post update - no thing");
         }
 
-        if (message == null && !photoUploaded) {
+        if (message == null && !photoUploaded && with == null) {
+            new EarthStore(as).conclude(update);
             throw new NothingLogicResponse("post update - nothing to post");
         }
 

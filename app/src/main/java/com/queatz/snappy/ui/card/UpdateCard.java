@@ -72,7 +72,7 @@ public class UpdateCard implements Card<DynamicRealmObject> {
         final Team team = ((MainApplication) context.getApplicationContext()).team;
 
         final DynamicRealmObject person = update.getObject(Thing.PERSON);
-        final DynamicRealmObject location = !update.getObject(Thing.TARGET).isNull(Thing.LOCATION) ?
+        final DynamicRealmObject location = !update.isNull(Thing.TARGET) && !update.getObject(Thing.TARGET).isNull(Thing.LOCATION) ?
                 update.getObject(Thing.TARGET).getObject(Thing.LOCATION) : null;
 
         if(person != null) {

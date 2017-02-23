@@ -1,6 +1,8 @@
 package com.queatz.snappy.logic.views;
 
+import com.google.appengine.api.datastore.GeoPt;
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.LatLng;
 import com.google.cloud.datastore.NullValue;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.logic.EarthAs;
@@ -9,6 +11,8 @@ import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Viewable;
+import com.queatz.snappy.logic.mines.FollowerMine;
+import com.queatz.snappy.logic.mines.JoinMine;
 import com.queatz.snappy.service.Push;
 import com.queatz.snappy.shared.Config;
 
@@ -39,6 +43,7 @@ public class PersonView extends ExistenceView {
     final List<Viewable> projects;
     final List<Viewable> hubs;
     final List<Viewable> clubs;
+    final GeoPt geo;
 
     public PersonView(EarthAs as, Entity person) {
         this(as, person, EarthView.DEEP);
@@ -63,8 +68,18 @@ public class PersonView extends ExistenceView {
 
         if (as.getUser().contains(EarthField.GEO) && person.contains(EarthField.GEO)) {
             infoDistance = Util.distance(as.getUser().getLatLng(EarthField.GEO), person.getLatLng(EarthField.GEO));
+
+            boolean isBacking = use(FollowerMine.class).getFollower(person, as.getUser()) != null;
+
+            if (isBacking) {
+                LatLng latLng = person.getLatLng(EarthField.GEO);
+                geo = new GeoPt((float) latLng.latitude(), (float) latLng.longitude());
+            } else {
+                geo = null;
+            }
         } else {
             infoDistance = null;
+            geo = null;
         }
 
         if (person.contains(EarthField.AROUND)) {
