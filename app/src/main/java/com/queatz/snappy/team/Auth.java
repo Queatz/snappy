@@ -470,4 +470,20 @@ public class Auth {
             }
         });
     }
+
+    public void sendMe() {
+        new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
+            @Override
+            public void onLocationFound(final android.location.Location location) {
+                final RequestParams params = new RequestParams();
+                params.put(Config.PARAM_LATITUDE, location.getLatitude());
+                params.put(Config.PARAM_LONGITUDE, location.getLongitude());
+                team.api.get(Config.PATH_EARTH + "/" + Config.PATH_ME + "/" + Config.PATH_INFO, params);
+            }
+
+            @Override
+            public void onLocationUnavailable() {
+            }
+        };
+    }
 }

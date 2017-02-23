@@ -2,7 +2,6 @@ package com.queatz.snappy.team.push;
 
 import com.google.gson.JsonObject;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.PushSpec;
 import com.queatz.snappy.team.Team;
 
 /**

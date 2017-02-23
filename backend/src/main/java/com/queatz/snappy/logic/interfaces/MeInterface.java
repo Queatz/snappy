@@ -4,6 +4,7 @@ import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.LatLng;
 import com.google.common.collect.Lists;
 import com.queatz.snappy.backend.GooglePurchaseDataSpec;
 import com.queatz.snappy.logic.EarthAs;
@@ -44,6 +45,8 @@ import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by jacob on 5/14/16.
@@ -87,6 +90,8 @@ public class MeInterface implements Interfaceable {
                         return postOffers(as);
                     case Config.PATH_BUY:
                         return postBuy(as, as.getRequest().getParameter(Config.PARAM_PURCHASE_DATA));
+                    case Config.PATH_INFO:
+                        return postInfo(as, as.getRequest());
                     case Config.PATH_REGISTER_DEVICE:
                         return postRegisterDevice(as,
                                 as.getRequest().getParameter(Config.PARAM_DEVICE_ID),
@@ -109,6 +114,18 @@ public class MeInterface implements Interfaceable {
             default:
                 throw new NothingLogicResponse("me - bad path");
         }
+    }
+
+    private String postInfo(EarthAs as, HttpServletRequest request) {
+        String latitudeParam = as.getParameters().get(Config.PARAM_LATITUDE)[0];
+        String longitudeParam = as.getParameters().get(Config.PARAM_LONGITUDE)[0];
+        float latitude = Float.valueOf(latitudeParam);
+        float longitude = Float.valueOf(longitudeParam);
+        final LatLng latLng = LatLng.of(latitude, longitude);
+
+        new PersonEditor(as).updateLocation(as.getUser(), latLng);
+
+        return new SuccessView(true).toJson();
     }
 
     private String postReport(EarthAs as, String personId) {

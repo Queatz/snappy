@@ -20,6 +20,7 @@ import com.queatz.snappy.shared.PushSpec;
 import com.queatz.snappy.team.push.CommentPushHandler;
 import com.queatz.snappy.team.push.DefaultPushHandler;
 import com.queatz.snappy.team.push.FollowPushHandler;
+import com.queatz.snappy.team.push.InformationPushHandler;
 import com.queatz.snappy.team.push.JoinPushHandler;
 import com.queatz.snappy.team.push.LikePushHandler;
 import com.queatz.snappy.team.push.MessagePushHandler;
@@ -46,6 +47,7 @@ public class Push {
     private LikePushHandler likePushHandler;
     private OfferLikePushHandler offerLikePushHandler;
     private CommentPushHandler newCommentPushHandler;
+    private InformationPushHandler informationPushHandler;
 
     public Push(Team t) {
         team = t;
@@ -61,6 +63,7 @@ public class Push {
         offerPushHandler = new OfferPushHandler(team);
         likePushHandler = new LikePushHandler(team);
         offerLikePushHandler = new OfferLikePushHandler(team);
+        informationPushHandler = new InformationPushHandler(team);
     }
 
     public void show(String push, Notification notification) {
@@ -108,6 +111,9 @@ public class Push {
             case Config.PUSH_ACTION_REFRESH_ME:
             case Config.PUSH_ACTION_CLEAR_NOTIFICATION:
                 defaultPushHandler.got(action, body);
+                break;
+            case Config.PUSH_ACTION_INFORMATION:
+                informationPushHandler.got(action, body);
                 break;
             case Config.PUSH_ACTION_NEW_PARTY:
                 partyPushHandler.got(body);

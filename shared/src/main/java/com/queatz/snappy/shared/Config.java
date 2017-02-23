@@ -170,6 +170,7 @@ public class Config {
     public static final String PUSH_ACTION_NEW_CONTACT = "new_contact";
     public static final String PUSH_ACTION_OFFER_LIKED = "offer_liked";
     public static final String PUSH_ACTION_NEW_COMMENT = "new_comment";
+    public static final String PUSH_ACTION_INFORMATION = "information";
 
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";
     public static final String UPDATE_ACTION_HOST_PARTY = "host_party";
@@ -274,4 +275,5 @@ public class Config {
     public static final String PARAM_WITH = "with";
     public static final String PARAM_GOING = "going";
     public static final String PARAM_WANT = "want";
+    public static final String PATH_INFO = "info";
 }

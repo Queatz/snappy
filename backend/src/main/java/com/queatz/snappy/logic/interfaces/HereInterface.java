@@ -28,6 +28,11 @@ public class HereInterface implements Interfaceable {
 
         String latitudeParam = as.getParameters().get(Config.PARAM_LATITUDE)[0];
         String longitudeParam = as.getParameters().get(Config.PARAM_LONGITUDE)[0];
+        float latitude = Float.valueOf(latitudeParam);
+        float longitude = Float.valueOf(longitudeParam);
+        final LatLng latLng = LatLng.of(latitude, longitude);
+
+        new PersonEditor(as).updateLocation(as.getUser(), latLng);
 
         boolean recent = false;
 
@@ -35,18 +40,11 @@ public class HereInterface implements Interfaceable {
             recent = Boolean.valueOf(as.getParameters().get(Config.PARAM_RECENT)[0]);
         }
 
-        float latitude = Float.valueOf(latitudeParam);
-        float longitude = Float.valueOf(longitudeParam);
-
         String kindFilter = null;
 
         if (as.getRoute().size() > 1) {
             kindFilter = as.getRoute().get(1);
         }
-
-        final LatLng latLng = LatLng.of(latitude, longitude);
-
-        new PersonEditor(as).updateLocation(as.getUser(), latLng);
 
         return new EntityListView(as, new EarthStore(as)
                 .getNearby(latLng, kindFilter, recent, null), EarthView.SHALLOW).toJson();

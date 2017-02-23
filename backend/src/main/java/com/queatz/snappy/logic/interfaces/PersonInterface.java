@@ -4,12 +4,10 @@ import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.LatLng;
+import com.google.cloud.datastore.Key;
 import com.google.common.collect.Lists;
-import com.google.gson.JsonArray;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthUpdate;
@@ -19,10 +17,9 @@ import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.FollowerEditor;
 import com.queatz.snappy.logic.editors.MessageEditor;
 import com.queatz.snappy.logic.editors.RecentEditor;
-import com.queatz.snappy.logic.editors.UpdateEditor;
 import com.queatz.snappy.logic.eventables.FollowEvent;
+import com.queatz.snappy.logic.eventables.InformationEvent;
 import com.queatz.snappy.logic.eventables.MessageEvent;
-import com.queatz.snappy.logic.eventables.NewUpdateEvent;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.mines.FollowerMine;
 import com.queatz.snappy.logic.mines.MessageMine;
@@ -110,7 +107,16 @@ public class PersonInterface implements Interfaceable {
     }
 
     private String getPerson(EarthAs as, String personId) {
-        return new EarthViewer(as).getViewForEntityOrThrow(new EarthStore(as).get(personId)).toJson();
+        Entity person = new EarthStore(as).get(personId);
+
+        // Update location of other person
+        if (person != null) {
+            if (!as.getUser().key().equals(person.key())) {
+                new EarthUpdate(as).send(new InformationEvent()).to(person);
+            }
+        }
+
+        return new EarthViewer(as).getViewForEntityOrThrow(person).toJson();
     }
 
     private String getFollows(EarthAs as, boolean followers, String personId) {
