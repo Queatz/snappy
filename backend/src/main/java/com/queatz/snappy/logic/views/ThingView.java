@@ -25,9 +25,19 @@ public class ThingView extends ExistenceView {
     public ThingView(EarthAs as, Entity thing, EarthView view) {
         super(as, thing, view);
 
-        name = thing.getString(EarthField.NAME);
-        about = thing.getString(EarthField.ABOUT);
-        photo = thing.getBoolean(EarthField.PHOTO);
+        if (thing.contains(EarthField.NAME)) {
+            name = thing.getString(EarthField.NAME);
+        } else {
+            name = null;
+        }
+
+        photo = thing.contains(EarthField.PHOTO) && thing.getBoolean(EarthField.PHOTO);
+
+        if (thing.contains(EarthField.ABOUT)) {
+            about = thing.getString(EarthField.ABOUT);
+        } else {
+            about = null;
+        }
 
         String spacer = null;
 

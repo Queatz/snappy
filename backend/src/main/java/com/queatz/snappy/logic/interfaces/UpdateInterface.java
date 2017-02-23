@@ -219,7 +219,7 @@ public class UpdateInterface implements Interfaceable {
                     with = new EarthJson().fromJson(Streams.asString(stream, "UTF-8"), JsonArray.class);
                 }
                 else if (Config.PARAM_GOING.equals(item.getFieldName())) {
-                    going = Boolean.getBoolean(Streams.asString(stream, "UTF-8"));
+                    going = Boolean.parseBoolean(Streams.asString(stream, "UTF-8"));
                 }
             }
         }
