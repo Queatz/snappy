@@ -250,8 +250,6 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             }
         });
 
-        shareButton.getCompoundDrawables()[0].setTint(context.getResources().getColor(R.color.red));
-
         CommentAdapter commentsAdapter = new CommentAdapter(context, update.getList(Thing.UPDATES).sort(Thing.DATE, Sort.ASCENDING));
 
         ((ListView) view.findViewById(R.id.commentsList)).setAdapter(commentsAdapter);

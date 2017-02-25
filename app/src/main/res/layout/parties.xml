@@ -3,7 +3,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/background">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,20 +13,13 @@
         tools:context=".fragment.PartiesSlide"
         android:name="com.google.android.gms.maps.MapFragment" />
 
-    <com.queatz.snappy.ui.SwipeRefreshLayout
-        android:id="@+id/refresh"
+    <ListView
+        android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ListView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:dividerHeight="@dimen/card_spacing"
-            android:descendantFocusability="afterDescendants"
-            android:divider="@android:color/transparent" />
-
-    </com.queatz.snappy.ui.SwipeRefreshLayout>
+        android:layout_height="match_parent"
+        android:dividerHeight="@dimen/card_spacing"
+        android:descendantFocusability="afterDescendants"
+        android:divider="@android:color/transparent" />
 
 
     <LinearLayout
@@ -40,7 +32,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="64dp"
         android:orientation="vertical"
-        android:fitsSystemWindows="true"
+        android:fitsSystemWindows="false"
         android:background="@drawable/white_rounded"
         android:elevation="4dp">
 
@@ -104,6 +96,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:fitsSystemWindows="true" />
+        android:fitsSystemWindows="false" />
 
 </RelativeLayout>

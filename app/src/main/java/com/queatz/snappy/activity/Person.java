@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -91,6 +92,8 @@ public class Person extends Activity {
             }
         });
 
+        mActionBar.setVisibility(View.GONE);
+
         if(mPerson != null) {
             mActionBar.setTitle(Functions.getFullName(mPerson));
 
@@ -173,6 +176,8 @@ public class Person extends Activity {
         if(mPerson != null && mSlideScreen.getSlide() == 1) {
             team.view.setTop("person/" + mPerson.getString(Thing.ID) + "/messages");
         }
+
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
     @Override

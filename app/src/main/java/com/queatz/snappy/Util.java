@@ -6,13 +6,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.media.ExifInterface;
 import android.media.Image;
 import android.net.Uri;
@@ -33,6 +29,7 @@ import android.widget.ListView;
 
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.OnScrollActions;
+import com.queatz.snappy.team.ScrollActionsTouchListener;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.camera.CameraImageSaver;
@@ -43,7 +40,6 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Random;
 import java.util.UUID;
 
 import io.realm.DynamicRealmObject;
@@ -307,34 +303,10 @@ public class Util {
         });
     }
 
-    public static void setOnScrollActions(final View view, final OnScrollActions actions) {
-
-        view.setOnTouchListener(new View.OnTouchListener() {
-            private Boolean up;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() != MotionEvent.ACTION_MOVE ||
-                        event.getHistorySize() < 1 ||
-                        event.getHistoricalY(0) == event.getY()) {
-                    return false;
-                }
-
-                boolean up = event.getY() > event.getHistoricalY(0);
-
-                if (this.up == null || !this.up.equals(up)) {
-                    if (up) {
-                        actions.up();
-                    } else {
-                        actions.down();
-                    }
-
-                    this.up = up;
-                }
-
-                return false;
-            }
-        });
+    public static ScrollActionsTouchListener setOnScrollActions(View view, OnScrollActions actions) {
+        ScrollActionsTouchListener listener = new ScrollActionsTouchListener(actions);
+        view.setOnTouchListener(listener);
+        return listener;
     }
 
     public static void setPhotoWithPicasso(DynamicRealmObject thing, int s, ImageView photo) {

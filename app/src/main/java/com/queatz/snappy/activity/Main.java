@@ -78,6 +78,12 @@ public class Main extends Activity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         mDestroyed = true;

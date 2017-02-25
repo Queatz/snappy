@@ -1,7 +1,6 @@
 package com.queatz.snappy.fragment;
 
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.queatz.snappy.MainApplication;
@@ -22,16 +20,15 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Here;
 import com.queatz.snappy.team.OnScrollActions;
+import com.queatz.snappy.team.ScrollActionsTouchListener;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.ContextualInputBar;
 import com.queatz.snappy.ui.OnBackPressed;
 import com.queatz.snappy.ui.RevealAnimation;
 import com.queatz.snappy.ui.TextView;
-import com.queatz.snappy.util.WantContextualBehavior;
-import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.DoingContextualBehavior;
-import com.squareup.picasso.Picasso;
+import com.queatz.snappy.util.WantContextualBehavior;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,11 +46,12 @@ import io.realm.Sort;
 public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Location.LocationAvailabilityCallback, RealmChangeListener<DynamicRealm>, OnBackPressed {
     Team team;
 
-    SwipeRefreshLayout mRefresh;
     ListView mList;
     View emptyView;
 
     private boolean layoutsShown = true;
+    private ScrollActionsTouchListener layoutsListener;
+
     private boolean peopleNearbyShown = false;
 
     private boolean showingMapBottomLayout = false;
@@ -140,31 +138,15 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
             }
         });
 
-        mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
-        mRefresh.setColorSchemeResources(R.color.red);
-        mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh();
-            }
-        });
-
         getContextualInputBar().switchBehavior(new WantContextualBehavior());
 
         update();
-
-        mRefresh.post(new Runnable() {
-            @Override
-            public void run() {
-                mRefresh.setRefreshing(true);
-            }
-        });
 
         refresh();
 
         team.location.addLocationAvailabilityCallback(this);
 
-        Util.setOnScrollActions(mList, new OnScrollActions() {
+        layoutsListener = Util.setOnScrollActions(mList, new OnScrollActions() {
             @Override
             public void up() {
                 toggleLayouts(true);
@@ -382,7 +364,7 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
         if(getActivity() == null)
             return;
 
-        team.here.update(getActivity(), mRefresh, new Here.Callback() {
+        team.here.update(getActivity(), null, new Here.Callback() {
             @Override
             public void onSuccess(RealmList<DynamicRealmObject> things) {
                 RealmList<DynamicRealmObject> people = new RealmList<>();
@@ -423,6 +405,7 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
 
         if (!layoutsShown) {
             toggleLayouts(true);
+            layoutsListener.reset();
             return true;
         }
 

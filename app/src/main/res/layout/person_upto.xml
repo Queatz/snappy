@@ -6,20 +6,25 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <com.queatz.snappy.ui.SwipeRefreshLayout
-        android:id="@+id/refresh"
+    <com.queatz.snappy.ui.SquareLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <ListView
-            android:id="@+id/updateList"
+        <ImageView
+            android:id="@+id/profile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:dividerHeight="@dimen/card_spacing"
-            android:divider="@android:color/transparent"
-            android:footerDividersEnabled="true" />
+            android:scaleType="centerCrop" />
 
-    </com.queatz.snappy.ui.SwipeRefreshLayout>
+    </com.queatz.snappy.ui.SquareLayout>
+
+    <ListView
+        android:id="@+id/updateList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:dividerHeight="@dimen/card_spacing"
+        android:divider="@android:color/transparent"
+        android:footerDividersEnabled="true" />
 
     <com.queatz.snappy.ui.TextView
         android:id="@+id/socialMode"

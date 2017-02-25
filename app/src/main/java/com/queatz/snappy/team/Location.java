@@ -104,8 +104,14 @@ public class Location implements
         }
     }
 
+    public void get(@NonNull OnLocationFoundCallback callback) {
+        get(null, callback);
+    }
+
     public void get(Activity activity, @NonNull OnLocationFoundCallback callback) {
-        mActivity = activity;
+        if (activity != null) {
+            mActivity = activity;
+        }
 
         android.location.Location location = get();
 

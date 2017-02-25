@@ -100,7 +100,7 @@ public class Push {
         }
 
         String action = json.get("action").getAsString();
-        JsonObject body = json.get("body").getAsJsonObject();
+        JsonObject body = json.has("body") ? json.get("body").getAsJsonObject() : null;
         switch (action) {
             case Config.PUSH_ACTION_MESSAGE:
                 messagePushHandler.got(body);

@@ -1,10 +1,8 @@
 package com.queatz.snappy.fragment;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,8 +52,6 @@ public class PersonUptoSlide extends Fragment {
         outState.putString(Config.EXTRA_PERSON_ID, mPerson.getString(Thing.ID));
     }
 
-    SwipeRefreshLayout mRefresh;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +71,7 @@ public class PersonUptoSlide extends Fragment {
         mChangeListener = new RealmChangeListener<DynamicRealmObject>() {
             @Override
             public void onChange(DynamicRealmObject object) {
-                update();
+                update(getView());
             }
         };
 
@@ -115,8 +111,6 @@ public class PersonUptoSlide extends Fragment {
                     .equalTo("target.id", mPerson.getString(Thing.ID))
                     .findAllSorted("date", Sort.DESCENDING);
 
-    SwipeRefreshLayout mRefresh;
-
             final ArrayList<RealmResults> list = new ArrayList<>();
             list.add(offers);
             list.add(recentUpdates);
@@ -124,17 +118,8 @@ public class PersonUptoSlide extends Fragment {
             updateList.setAdapter(new FeedAdapter(getActivity(), list));
         }
 
-        update();
+        update(view);
 
-        mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
-        mRefresh.setColorSchemeResources(R.color.red);
-        mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh();
-            }
-        });
-        mRefresh.setRefreshing(true);
         refresh();
 
         mFloatingAction = (FloatingActionButton) view.findViewById(R.id.floatingAction);
@@ -194,28 +179,22 @@ public class PersonUptoSlide extends Fragment {
                 DynamicRealmObject add = team.things.put(response);
                 team.things.diff(previousOffers, add.getList(Thing.OFFERS));
 
-                update();
-
-                mRefresh.setRefreshing(false);
+                update(getView());
             }
 
             @Override
             public void fail(String response) {
-                mRefresh.setRefreshing(false);
+
             }
         });
     }
 
-    private void update() {
+    private void update(View view) {
         if(getActivity() == null) {
             return;
         }
 
-        ImageView profile = (ImageView) personAbout.findViewById(R.id.profile);
-
         if(mPerson != null) {
-            profile.setTag(mPerson);
-
             if (socialMode != null) {
                 String social = mPerson.getString(Thing.SOCIAL_MODE);
 
@@ -236,6 +215,9 @@ public class PersonUptoSlide extends Fragment {
                     socialMode.setVisibility(View.GONE);
                 }
             }
+
+            ImageView profile = (ImageView) view.findViewById(R.id.profile);
+            profile.setTag(mPerson);
 
             if(getActivity() != null) {
                 getActivity().registerForContextMenu(profile);
