@@ -22,80 +22,92 @@
         android:divider="@android:color/transparent" />
 
 
-    <LinearLayout
-        android:id="@+id/topLayout"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="64dp"
-        android:orientation="vertical"
-        android:fitsSystemWindows="false"
-        android:background="@drawable/white_rounded"
-        android:elevation="4dp">
+        android:layout_alignParentTop="true">
 
         <LinearLayout
-            android:id="@+id/peopleNearby"
-            android:visibility="gone"
-            android:clickable="true"
+            android:id="@+id/topLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="64dp"
             android:orientation="vertical"
-            android:isScrollContainer="true">
+            android:background="@drawable/white_rounded"
+            android:elevation="4dp">
 
-            <ScrollView
+            <LinearLayout
+                android:id="@+id/peopleNearby"
+                android:visibility="gone"
+                android:clickable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="24dp">
+                android:orientation="vertical"
+                android:isScrollContainer="true">
 
-                <LinearLayout
+                <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:minHeight="24dp">
 
-                    <com.queatz.snappy.ui.TextView
-                        android:id="@+id/peopleNearbyText"
-                        android:layout_width="match_parent"
-                        android:layout_height="38dp"
-                        android:paddingTop="8dp"
-                        android:gravity="center_horizontal"
-                        android:clickable="true"
-                        android:textAlignment="center"
-                        android:maxLines="1"
-                        android:textColor="@color/clickable"
-                        android:textSize="18sp"/>
-
-                    <FrameLayout
-                        android:id="@+id/peopleNearbyListHolder"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:isScrollContainer="true">
+                        android:orientation="vertical">
 
-                        <com.queatz.snappy.ui.ExpandedGridView
-                            android:id="@+id/peopleNearbyList"
+                        <com.queatz.snappy.ui.TextView
+                            android:id="@+id/peopleNearbyText"
+                            android:layout_width="match_parent"
+                            android:layout_height="38dp"
+                            android:paddingTop="8dp"
+                            android:gravity="center_horizontal"
+                            android:clickable="true"
+                            android:textAlignment="center"
+                            android:maxLines="1"
+                            android:textColor="@color/clickable"
+                            android:textSize="18sp"/>
+
+                        <FrameLayout
+                            android:id="@+id/peopleNearbyListHolder"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:numColumns="3"
-                            android:padding="8dp"
-                            android:scrollbars="none" />
+                            android:isScrollContainer="true">
 
-                    </FrameLayout>
+                            <com.queatz.snappy.ui.ExpandedGridView
+                                android:id="@+id/peopleNearbyList"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:numColumns="3"
+                                android:padding="8dp"
+                                android:scrollbars="none" />
 
-                </LinearLayout>
+                        </FrameLayout>
 
-            </ScrollView>
+                    </LinearLayout>
+
+                </ScrollView>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+    </FrameLayout>
 
-    <com.queatz.snappy.ui.ContextualInputBar
-        android:id="@+id/inputBar"
+    <RelativeLayout
+        android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:fitsSystemWindows="false" />
+        android:fitsSystemWindows="true">
+
+        <com.queatz.snappy.ui.ContextualInputBar
+            android:id="@+id/inputBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

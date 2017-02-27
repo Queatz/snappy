@@ -33,6 +33,7 @@ public class Config {
     public static final String PREFERENCE_HOSTING_ENABLED = "other.hosting_enabled";
     public static final String PREFERENCE_SOCIAL_MODE = "other.social_mode";
     public static final String PREFERENCE_APP_VERSION = "app.version";
+    public static final String PREFERENCE_MAP_POSITION = "other.map.position";
 
     public static final int REQUEST_CODE_AUTH_RESOLUTION = 1;
     public static final int REQUEST_CODE_ACCOUNT_PICKER = 2;

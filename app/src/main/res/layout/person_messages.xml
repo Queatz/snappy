@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/background">
 
     <ListView
         android:id="@+id/messagesList"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="bottom"
         android:stackFromBottom="true"
         android:divider="@null"
+        android:fitsSystemWindows="true"
+        android:layout_above="@+id/bottomLayout"
+        android:background="@color/white"
         android:transcriptMode="normal" />
 
     <LinearLayout
+        android:id="@+id/bottomLayout"
         android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:fitsSystemWindows="true"
         android:elevation="8dp">
 
         <ImageButton style="?android:attr/buttonBarButtonStyle"
@@ -61,5 +62,7 @@
             android:tint="@color/gray"
             android:src="@drawable/ic_send_white_24dp"
             android:id="@+id/sendButton" />
+
     </LinearLayout>
-</LinearLayout>
+
+</RelativeLayout>

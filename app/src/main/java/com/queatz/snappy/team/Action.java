@@ -399,7 +399,7 @@ public class Action {
             join = team.realm.createObject("Thing");
             join.setString(Thing.KIND, "join");
             join.setString(Thing.ID, joinId);
-            join.setString(Thing.SOURCE, Config.JOIN_STATUS_REQUESTED);
+            join.setString(Thing.STATUS, Config.JOIN_STATUS_REQUESTED);
             team.realm.commitTransaction();
         }
 

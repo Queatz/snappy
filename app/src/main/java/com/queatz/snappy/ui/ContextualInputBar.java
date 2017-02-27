@@ -34,6 +34,7 @@ import com.queatz.snappy.adapter.SuggestionAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Camera;
+import com.queatz.snappy.team.OnInfoChangedListener;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.card.UpdateCard;
@@ -75,6 +76,7 @@ public class ContextualInputBar extends LinearLayout {
 
     private Collection<Runnable> resizeListeners = new HashSet<>();
     private ContextualBehavior lastBehavior;
+    private OnInfoChangedListener infoChangedListener;
 
     public ContextualInputBar(Context context) {
         super(context);
@@ -422,6 +424,10 @@ public class ContextualInputBar extends LinearLayout {
                 );
             }
         }
+
+        if (infoChangedListener != null) {
+            infoChangedListener.onInfoChanged(show);
+        }
     }
 
     private void layoutChange() {
@@ -579,6 +585,10 @@ public class ContextualInputBar extends LinearLayout {
         behavior.use(this);
     }
 
+    public ContextualBehavior getCurrentBehavior() {
+        return lastBehavior;
+    }
+
     public void setHint(int hint) {
         whatsUp.setHint(hint);
     }
@@ -602,6 +612,10 @@ public class ContextualInputBar extends LinearLayout {
         } else {
             whatsUp.removeTextChangedListener(mTextWatcher);
         }
+    }
+
+    public void setInfoChangedListener(OnInfoChangedListener infoChangedListener) {
+        this.infoChangedListener = infoChangedListener;
     }
 }
 

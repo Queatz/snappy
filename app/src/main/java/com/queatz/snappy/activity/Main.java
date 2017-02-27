@@ -28,7 +28,7 @@ import io.realm.DynamicRealmObject;
 /**
  * Created by jacob on 10/19/14.
  */
-public class Main extends Activity {
+public class Main extends FullscreenActivity {
     public Team team;
 
     private SlideScreen mSlideScreen;
@@ -75,12 +75,6 @@ public class Main extends Activity {
         }
 
         team.advertise.enable(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
     @Override

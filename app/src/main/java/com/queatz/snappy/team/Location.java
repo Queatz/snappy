@@ -4,12 +4,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -25,7 +23,6 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.queatz.snappy.R;
-import com.queatz.snappy.activity.HostParty;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.util.Json;
 

@@ -20,7 +20,6 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
-import android.media.Image;
 import android.media.ImageReader;
 import android.os.Build;
 import android.os.Bundle;
@@ -65,6 +64,7 @@ public class CameraFragment extends Fragment {
     private HandlerThread mBackgroundThread;
     private Handler mBackgroundHandler;
     private boolean mCameraIsOpening;
+    private int nextCamera = -1;
 
     private void startBackgroundThread() {
         mBackgroundThread = new HandlerThread("CameraBackground");
@@ -186,19 +186,22 @@ public class CameraFragment extends Fragment {
             });
         }
 
-        if (mDeviceOrientation == null) {
-            mDeviceOrientation = new DeviceOrientation();
-            mSensorManager.registerListener(mDeviceOrientation.getEventListener(),
-                    mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
-                    SensorManager.SENSOR_DELAY_UI);
-        }
+        setUpOrientation();
 
         if (mCamera != null) try {
             if (mSurface != null) {
                 CaptureRequest.Builder builder = mCamera.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
                 builder.addTarget(mSurface);
+
+                builder.set(CaptureRequest.FLASH_MODE,
+                        CaptureRequest.FLASH_MODE_OFF);
+
+                builder.set(CaptureRequest.CONTROL_AE_LOCK, false);
+                builder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON);
+
                 builder.set(CaptureRequest.CONTROL_AF_MODE,
                         CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+
                 mSession.stopRepeating();
                 mSession.setRepeatingRequest(builder.build(),
                         new CameraCaptureSession.CaptureCallback() {
@@ -208,6 +211,15 @@ public class CameraFragment extends Fragment {
             e.printStackTrace();
         } else {
             setCamera(CameraCharacteristics.LENS_FACING_BACK);
+        }
+    }
+
+    private void setUpOrientation() {
+        if (mDeviceOrientation == null) {
+            mDeviceOrientation = new DeviceOrientation();
+            mSensorManager.registerListener(mDeviceOrientation.getEventListener(),
+                    mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
+                    SensorManager.SENSOR_DELAY_UI);
         }
     }
 
@@ -281,6 +293,7 @@ public class CameraFragment extends Fragment {
                 @Override
                 public void onConfigureFailed(CameraCaptureSession session) {
                 }
+
             }, mBackgroundHandler);
         } catch (SecurityException | CameraAccessException e) {
             e.printStackTrace();
@@ -370,42 +383,61 @@ public class CameraFragment extends Fragment {
             return;
         }
 
+        if (mCamera != null) {
+            nextCamera = facing;
+            endLastCamera();
+            // Still try to open
+        }
+
+        if (mCameraManager == null) {
+            return;
+        }
+
         if (mCameraIsOpening) {
             return;
         }
 
-        mCameraIsOpening = true;
-
+        String cam = null;
         try {
-            String cam = null;
 
             String[] cameras = mCameraManager.getCameraIdList();
 
             for (String camera : cameras) {
-                cam = camera;
-                mCharacteristics = mCameraManager.getCameraCharacteristics(camera);
+                CameraCharacteristics characteristics = mCameraManager.getCameraCharacteristics(camera);
 
-                if (facing.equals(mCharacteristics.get(CameraCharacteristics.LENS_FACING))) {
-                    mStreamConfigurationMap = mCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+                if (characteristics == null) {
+                    continue;
+                }
+
+                if (facing.equals(characteristics.get(CameraCharacteristics.LENS_FACING))) {
+                    cam = camera;
+                    mStreamConfigurationMap = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+                    mCharacteristics = characteristics;
                     break;
                 }
             }
+        } catch (SecurityException | CameraAccessException e) {
+            e.printStackTrace();
+            return;
+        }
 
-            if (cam == null) {
-                return;
-            }
+        if (cam == null) {
+            return;
+        }
 
-            mSensorOrientation = mCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
+        mSensorOrientation = mCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
 
-            if (mCamera != null) {
-                endLastCamera();
-            }
+        setUpOrientation();
 
+        mCameraIsOpening = true;
+
+        try {
             mCameraManager.openCamera(cam, new CameraDevice.StateCallback() {
                 @Override
                 public void onOpened(@NonNull CameraDevice camera) {
                     mCamera = camera;
                     mCameraIsOpening = false;
+                    nextCamera = -1;
                     setupTexture();
                 }
 
@@ -418,6 +450,14 @@ public class CameraFragment extends Fragment {
                 public void onError(@NonNull CameraDevice camera, int error) {
                     mCameraIsOpening = false;
                 }
+
+                @Override
+                public void onClosed(@NonNull CameraDevice camera) {
+                    if (nextCamera != -1) {
+                        setCamera(nextCamera);
+                        nextCamera = -1;
+                    }
+                }
             }, mBackgroundHandler);
         } catch (SecurityException | CameraAccessException e) {
             e.printStackTrace();
@@ -425,14 +465,14 @@ public class CameraFragment extends Fragment {
     }
 
     private void endLastCamera() {
-        if (mCamera != null) {
-            mCamera.close();
-            mCamera = null;
-        }
-
         if (mSession != null) {
             mSession.close();
             mSession = null;
+        }
+
+        if (mCamera != null) {
+            mCamera.close();
+            mCamera = null;
         }
 
         if (mImageReader != null) {

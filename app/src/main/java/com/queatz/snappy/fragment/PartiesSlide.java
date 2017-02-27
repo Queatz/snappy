@@ -19,6 +19,7 @@ import com.queatz.snappy.adapter.PeopleNearHereAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Here;
+import com.queatz.snappy.team.OnInfoChangedListener;
 import com.queatz.snappy.team.OnScrollActions;
 import com.queatz.snappy.team.ScrollActionsTouchListener;
 import com.queatz.snappy.team.Team;
@@ -140,6 +141,19 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
 
         getContextualInputBar().switchBehavior(new WantContextualBehavior());
 
+        getContextualInputBar().setInfoChangedListener(new OnInfoChangedListener() {
+            @Override
+            public void onInfoChanged(boolean visible) {
+                if (visible && !layoutsShown) {
+                    toggleLayouts(true);
+                }
+
+                if (visible && !DoingContextualBehavior.class.isAssignableFrom(getContextualInputBar().getCurrentBehavior().getClass())) {
+                    getContextualInputBar().switchBehavior(new DoingContextualBehavior());
+                }
+            }
+        });
+
         update();
 
         refresh();
@@ -215,7 +229,7 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
             return;
         }
 
-        final View bottomLayout = getContextualInputBar();
+        final View bottomLayout = getView().findViewById(R.id.bottomLayout);
         final View topLayout = getView().findViewById(R.id.topLayout);
 
         if (show) {

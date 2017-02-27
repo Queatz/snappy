@@ -42,6 +42,7 @@ public class PersonUptoSlide extends Fragment {
     TextView socialMode;
     FloatingActionButton mFloatingAction;
     RealmChangeListener<DynamicRealmObject> mChangeListener = null;
+    ListView updateList;
 
     public void setPerson(DynamicRealmObject person) {
         mPerson = person;
@@ -90,11 +91,20 @@ public class PersonUptoSlide extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.person_upto, container, false);
-        final ListView updateList = ((ListView) view.findViewById(R.id.updateList));
+        updateList = ((ListView) view.findViewById(R.id.updateList));
 
         socialMode = (TextView) view.findViewById(R.id.socialMode);
 
         personAbout = View.inflate(getActivity(), R.layout.person_upto_about, null);
+
+        final View topGlass = personAbout.findViewById(R.id.topGlass);
+
+        view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                topGlass.setMinimumHeight(view.getMeasuredHeight());
+            }
+        });
 
         updateList.addHeaderView(personAbout);
         updateList.addFooterView(new View(getActivity()));
@@ -153,6 +163,15 @@ public class PersonUptoSlide extends Fragment {
                 slideScreen.setSlide(1);
             }
         });
+
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                scroll();
+            }
+        });
+
+        scroll();
 
         return view;
     }
@@ -216,17 +235,19 @@ public class PersonUptoSlide extends Fragment {
                 }
             }
 
-            ImageView profile = (ImageView) view.findViewById(R.id.profile);
-            profile.setTag(mPerson);
+            final View topGlass = personAbout.findViewById(R.id.topGlass);
+            topGlass.setClickable(true);
+            topGlass.setTag(mPerson);
+            getActivity().registerForContextMenu(topGlass);
 
-            if(getActivity() != null) {
-                getActivity().registerForContextMenu(profile);
-            }
+
+            ImageView profile = (ImageView) view.findViewById(R.id.profile);
 
             Picasso.with(getActivity())
                     .load(Functions.getImageUrlForSize(mPerson, (int) Util.px(512)))
-                    .placeholder(R.color.deepdarkred)
                     .into(profile);
+
+            ((TextView) personAbout.findViewById(R.id.name)).setText(Functions.getFullName(mPerson));
 
             ((TextView) personAbout.findViewById(R.id.info_followers)).setText(Long.toString(mPerson.getInt(Thing.INFO_FOLLOWERS)));
             ((TextView) personAbout.findViewById(R.id.info_following)).setText(Long.toString(mPerson.getInt(Thing.INFO_FOLLOWING)));
@@ -323,5 +344,9 @@ public class PersonUptoSlide extends Fragment {
                 });
             }
         }
+    }
+
+    private void scroll() {
+        updateList.smoothScrollToPositionFromTop(0, -updateList.getMeasuredHeight() / 2);
     }
 }

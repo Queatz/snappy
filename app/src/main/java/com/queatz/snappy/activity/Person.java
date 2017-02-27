@@ -1,43 +1,30 @@
 package com.queatz.snappy.activity;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.ImageView;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
-import com.queatz.snappy.Util;
-import com.queatz.snappy.adapter.PeopleTabAdapter;
 import com.queatz.snappy.adapter.PersonAdapter;
 import com.queatz.snappy.adapter.ProfileAdapter;
-import com.queatz.snappy.adapter.ProfileTabAdapter;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.team.Push;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
-import com.queatz.snappy.ui.ActionBar;
 import com.queatz.snappy.ui.OnBackPressed;
 import com.queatz.snappy.ui.SlideScreen;
-import com.queatz.snappy.util.Functions;
-import com.squareup.picasso.Picasso;
 
 import io.realm.DynamicRealmObject;
 
 /**
  * Created by jacob on 10/19/14.
  */
-public class Person extends Activity {
-    private ActionBar mActionBar;
+public class Person extends FullscreenActivity {
     private SlideScreen mSlideScreen;
     private DynamicRealmObject mPerson;
     private boolean mIsActive;
@@ -75,34 +62,7 @@ public class Person extends Activity {
 
         setContentView(R.layout.person);
 
-        mActionBar = (ActionBar) findViewById(R.id.actionBar);
-
         boolean itsMe = team.auth.getUser() != null && team.auth.getUser().equals(mPerson.getString(Thing.ID));
-
-        if (itsMe) {
-            mActionBar.setAdapter(new ProfileTabAdapter(this));
-        } else {
-            mActionBar.setAdapter(new PeopleTabAdapter(this));
-        }
-
-        mActionBar.setLeftContent(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavUtils.navigateUpFromSameTask(Person.this);
-            }
-        });
-
-        mActionBar.setVisibility(View.GONE);
-
-        if(mPerson != null) {
-            mActionBar.setTitle(Functions.getFullName(mPerson));
-
-            ImageView profile = ((ImageView) mActionBar.getLeftContent().getChildAt(0));
-            Picasso.with(this)
-                    .load(Functions.getImageUrlForSize(mPerson, (int) Util.px(64)))
-                    .placeholder(R.color.spacer)
-                    .into(profile);
-        }
 
         mSlideScreen = (SlideScreen) findViewById(R.id.person_content);
 
@@ -121,7 +81,6 @@ public class Person extends Activity {
         mSlideScreen.setOnSlideCallback(new SlideScreen.OnSlideCallback() {
             @Override
             public void onSlide(int currentSlide, float offset) {
-                mActionBar.setSlide(offset);
             }
 
             @Override
@@ -135,23 +94,11 @@ public class Person extends Activity {
                         team.view.clearTop("person/" + mPerson.getString(Thing.ID) + "/messages");
                     }
                 }
-
-                mActionBar.selectPage(slide);
-            }
-        });
-
-        mActionBar.setOnPageChangeListener(new ActionBar.OnPageChangeListener() {
-            @Override
-            public void onPageChange(int page) {
-                mSlideScreen.setSlide(page);
             }
         });
 
         if(getIntent() != null) {
             onNewIntent(getIntent());
-        }
-        else {
-            mActionBar.resolve();
         }
     }
 
@@ -160,11 +107,10 @@ public class Person extends Activity {
         String show = intent.getStringExtra(Config.EXTRA_SHOW);
 
         if(show == null) {
-            mActionBar.resolve();
             return;
         }
 
-        mActionBar.setPage("upto".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
+        mSlideScreen.setSlide("upto".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
     }
 
     @Override
@@ -176,8 +122,6 @@ public class Person extends Activity {
         if(mPerson != null && mSlideScreen.getSlide() == 1) {
             team.view.setTop("person/" + mPerson.getString(Thing.ID) + "/messages");
         }
-
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
     @Override

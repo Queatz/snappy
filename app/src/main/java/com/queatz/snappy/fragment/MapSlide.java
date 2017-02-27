@@ -7,12 +7,14 @@ import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -26,6 +28,7 @@ import com.queatz.snappy.ui.CircleTransform;
 import com.queatz.snappy.ui.ContextualInputBar;
 import com.queatz.snappy.ui.OnBackPressed;
 import com.queatz.snappy.util.Functions;
+import com.queatz.snappy.util.Json;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -76,6 +79,16 @@ public abstract class MapSlide extends Fragment implements OnMapReadyCallback, O
 
         mMap.setBuildingsEnabled(false);
         mMap.getUiSettings().setTiltGesturesEnabled(true);
+
+
+        if (team.preferences.contains(Config.PREFERENCE_MAP_POSITION)) {
+            String saved = team.preferences.getString(Config.PREFERENCE_MAP_POSITION, null);
+
+            if (saved != null) {
+                CameraPosition cameraPosition = Json.from(saved, CameraPosition.class);
+                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+        }
 
         try {
             mMap.setMyLocationEnabled(true);
@@ -131,6 +144,35 @@ public abstract class MapSlide extends Fragment implements OnMapReadyCallback, O
             }
         });
 
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                if (mMap.getCameraPosition().zoom >= Config.defaultMapZoom) {
+                    if (mMap.getMapType() != GoogleMap.MAP_TYPE_SATELLITE) {
+                        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                    }
+                } else if (mMap.getCameraPosition().zoom <= 3) {
+                    if (mMap.getMapType() != GoogleMap.MAP_TYPE_SATELLITE) {
+                        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                    }
+                } else {
+                    if (mMap.getMapType() != GoogleMap.MAP_TYPE_NORMAL) {
+                        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    }
+                }
+            }
+        });
+
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+
+            @Override
+            public void onCameraIdle() {
+                team.preferences.edit()
+                    .putString(Config.PREFERENCE_MAP_POSITION, Json.to(mMap.getCameraPosition()))
+                    .apply();
+            }
+        });
+
         setMapPadding();
 
 //        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
@@ -175,19 +217,25 @@ public abstract class MapSlide extends Fragment implements OnMapReadyCallback, O
     }
 
     private void myLocationFound(Location location) {
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+        LatLng latLng = new LatLng(
                 location.getLatitude(),
-                location.getLongitude()
-        ), Config.defaultMapZoom));
+                location.getLongitude());
+
+        if (mMap.getProjection().getVisibleRegion().latLngBounds.contains(latLng)) {
+            return;
+        }
+
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, Config.defaultMapZoom));
     }
 
     private void setMapPadding() {
-        if (mMap != null && getContextualInputBar() != null) {
+        if (mMap != null && getView() != null) {
 
-            getContextualInputBar().post(new Runnable() {
+            getView().post(new Runnable() {
                 @Override
                 public void run() {
-                    mMap.setPadding(0, 0, 0, ((int) Util.px(-8)) + getContextualInputBar().getMeasuredHeight());
+                    View bottomLayout = getView().findViewById(R.id.bottomLayout);
+                    mMap.setPadding(0, 0, 0, ((int) Util.px(-8)) + bottomLayout.getMeasuredHeight() - bottomLayout.getPaddingTop());
                 }
             });
         }
