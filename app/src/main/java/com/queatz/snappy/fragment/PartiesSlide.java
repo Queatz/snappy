@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
@@ -44,7 +46,11 @@ import io.realm.Sort;
 /**
  * Created by jacob on 10/19/14.
  */
-public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Location.LocationAvailabilityCallback, RealmChangeListener<DynamicRealm>, OnBackPressed {
+public class PartiesSlide extends MapSlide implements
+        com.queatz.snappy.team.Location.LocationAvailabilityCallback,
+        RealmChangeListener<DynamicRealm>,
+        OnBackPressed,
+        ViewTreeObserver.OnGlobalLayoutListener {
     Team team;
 
     ListView mList;
@@ -180,7 +186,33 @@ public class PartiesSlide extends MapSlide implements com.queatz.snappy.team.Loc
             }
         });
 
+        view.findViewById(R.id.bottomLayout).getViewTreeObserver().addOnGlobalLayoutListener(this);
+        onGlobalLayout();
+
         return view;
+    }
+
+    @Override
+    public void onGlobalLayout() {
+        if (getView() == null) {
+            return;
+        }
+
+        final RelativeLayout bottomLayout = (RelativeLayout) getView().findViewById(R.id.bottomLayout);
+
+        if (bottomLayout.getPaddingTop() == 0) {
+            return;
+        }
+
+        // Remove status bar padding added by fitsSystemWindows
+        bottomLayout.setPadding(
+                bottomLayout.getPaddingLeft(),
+                0,
+                bottomLayout.getPaddingRight(),
+                bottomLayout.getPaddingBottom()
+        );
+
+        bottomLayout.requestLayout();
     }
 
     private void setupTopLayout(View view) {

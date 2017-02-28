@@ -91,7 +91,7 @@ public class MeInterface implements Interfaceable {
                     case Config.PATH_BUY:
                         return postBuy(as, as.getRequest().getParameter(Config.PARAM_PURCHASE_DATA));
                     case Config.PATH_INFO:
-                        return postInfo(as, as.getRequest());
+                        return postInfo(as);
                     case Config.PATH_REGISTER_DEVICE:
                         return postRegisterDevice(as,
                                 as.getRequest().getParameter(Config.PARAM_DEVICE_ID),
@@ -116,11 +116,11 @@ public class MeInterface implements Interfaceable {
         }
     }
 
-    private String postInfo(EarthAs as, HttpServletRequest request) {
+    private String postInfo(EarthAs as) {
         String latitudeParam = as.getParameters().get(Config.PARAM_LATITUDE)[0];
         String longitudeParam = as.getParameters().get(Config.PARAM_LONGITUDE)[0];
-        float latitude = Float.valueOf(latitudeParam);
-        float longitude = Float.valueOf(longitudeParam);
+        double latitude = Double.valueOf(latitudeParam);
+        double longitude = Double.valueOf(longitudeParam);
         final LatLng latLng = LatLng.of(latitude, longitude);
 
         new PersonEditor(as).updateLocation(as.getUser(), latLng);

@@ -24,6 +24,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Base64;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -361,5 +362,27 @@ public class Util {
                 person.isNull(Thing.INFO_UPDATED) ? "" : " " +
                         TimeUtil.agoDate(person.getDate(Thing.INFO_UPDATED))
         );
+    }
+
+    private static final long GRACE_DELAY = 2000; // Toast.LENGTH_SHORT
+
+    public static void autoHideWindowUI(final Window window) {
+        final Runnable onSystemUiVisibilityChangeListener = new Runnable() {
+            @Override
+            public void run() {
+                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+            }
+        };
+
+        final View.OnSystemUiVisibilityChangeListener onUiChanged = new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int i) {
+                window.getDecorView().removeCallbacks(onSystemUiVisibilityChangeListener);
+                window.getDecorView().postDelayed(onSystemUiVisibilityChangeListener, GRACE_DELAY);
+            }
+        };
+
+        onUiChanged.onSystemUiVisibilityChange(window.getDecorView().getSystemUiVisibility());
+        window.getDecorView().setOnSystemUiVisibilityChangeListener(onUiChanged);
     }
 }

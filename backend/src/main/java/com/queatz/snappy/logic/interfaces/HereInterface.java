@@ -28,8 +28,8 @@ public class HereInterface implements Interfaceable {
 
         String latitudeParam = as.getParameters().get(Config.PARAM_LATITUDE)[0];
         String longitudeParam = as.getParameters().get(Config.PARAM_LONGITUDE)[0];
-        float latitude = Float.valueOf(latitudeParam);
-        float longitude = Float.valueOf(longitudeParam);
+        double latitude = Float.valueOf(latitudeParam);
+        double longitude = Float.valueOf(longitudeParam);
         final LatLng latLng = LatLng.of(latitude, longitude);
 
         new PersonEditor(as).updateLocation(as.getUser(), latLng);

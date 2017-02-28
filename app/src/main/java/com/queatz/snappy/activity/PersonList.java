@@ -1,6 +1,5 @@
 package com.queatz.snappy.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,10 +24,9 @@ import io.realm.RealmResults;
 /**
  * Created by jacob on 1/4/15.
  */
-public class PersonList extends Activity {
+public class PersonList extends FullscreenActivity {
     DynamicRealmObject mPerson;
     DynamicRealmObject mUpdate;
-    DynamicRealmObject mOffer;
     boolean mShowFollowing;
     Team team;
 

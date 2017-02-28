@@ -2,7 +2,6 @@
 <resources>
     <style name="WelcomeTheme" parent="AppTheme">
         <item name="android:windowTranslucentNavigation">false</item>
-        <item name="android:windowTranslucentStatus">false</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 </resources>

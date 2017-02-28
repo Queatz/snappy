@@ -2,13 +2,13 @@ package com.queatz.snappy.fragment;
 
 import android.app.Fragment;
 import android.content.res.ColorStateList;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
-import com.queatz.snappy.Util;
 import com.queatz.snappy.adapter.PersonMessagesAdapter;
 import com.queatz.snappy.team.Camera;
 import com.queatz.snappy.team.Team;
@@ -54,6 +53,8 @@ public class PersonMessagesSlide extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.person_messages, container, false);
+
+        view.setFitsSystemWindows(true);
 
         team = ((MainApplication) getActivity().getApplication()).team;
 

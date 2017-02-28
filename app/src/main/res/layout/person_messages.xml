@@ -3,66 +3,74 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@color/background">
 
-    <ListView
-        android:id="@+id/messagesList"
+    <RelativeLayout
+        android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:stackFromBottom="true"
-        android:divider="@null"
-        android:fitsSystemWindows="true"
-        android:layout_above="@+id/bottomLayout"
-        android:background="@color/white"
-        android:transcriptMode="normal" />
+        android:layout_alignParentBottom="true">
 
-    <LinearLayout
-        android:id="@+id/bottomLayout"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:elevation="8dp">
-
-        <ImageButton style="?android:attr/buttonBarButtonStyle"
-            android:id="@+id/cameraButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:minWidth="0dp"
-            android:tint="@color/gray"
-            android:src="@drawable/ic_photo_camera_white_24dp" />
-
-        <com.queatz.snappy.ui.EditText
-            android:id="@+id/writeMessage"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            android:padding="8dp"
+        <ListView
+            android:id="@+id/messagesList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:stackFromBottom="true"
+            android:divider="@null"
+            android:layout_above="@+id/bottomLayout"
             android:background="@color/white"
-            android:hint="@string/write_message"
-            android:textSize="18sp"
-            android:lineSpacingMultiplier="1.25"
-            android:textColorHint="@color/gray"
-            android:inputType="textMultiLine|textShortMessage|textCapSentences" />
+            android:transcriptMode="normal" />
 
-        <ImageView
-            android:clickable="true"
-            android:background="?android:selectableItemBackground"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/bottomLayout"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:padding="8dp"
-            android:tint="@color/gray"
-            android:src="@drawable/ic_send_white_24dp"
-            android:id="@+id/sendButton" />
+            android:background="@color/white"
+            android:elevation="8dp">
 
-    </LinearLayout>
+            <ImageButton style="?android:attr/buttonBarButtonStyle"
+                android:id="@+id/cameraButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:minWidth="0dp"
+                android:tint="@color/gray"
+                android:src="@drawable/ic_photo_camera_white_24dp" />
+
+            <com.queatz.snappy.ui.EditText
+                android:id="@+id/writeMessage"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:padding="8dp"
+                android:background="@color/white"
+                android:hint="@string/write_message"
+                android:textSize="18sp"
+                android:lineSpacingMultiplier="1.25"
+                android:textColorHint="@color/gray"
+                android:inputType="textMultiLine|textShortMessage|textCapSentences" />
+
+            <ImageView
+                android:clickable="true"
+                android:background="?android:selectableItemBackground"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="8dp"
+                android:tint="@color/gray"
+                android:src="@drawable/ic_send_white_24dp"
+                android:id="@+id/sendButton" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

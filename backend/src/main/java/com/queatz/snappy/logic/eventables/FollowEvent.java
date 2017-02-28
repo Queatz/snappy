@@ -59,7 +59,7 @@ public class FollowEvent implements Eventable {
 
         String name = person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME);
 
-        return name + " started following you"; // XXX TODO or your project?
+        return name + " started backing you on Village"; // XXX TODO or your project?
     }
 
     @Override

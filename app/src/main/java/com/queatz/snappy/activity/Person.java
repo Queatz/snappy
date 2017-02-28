@@ -1,5 +1,6 @@
 package com.queatz.snappy.activity;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,12 +25,24 @@ import io.realm.DynamicRealmObject;
 /**
  * Created by jacob on 10/19/14.
  */
-public class Person extends FullscreenActivity {
+public class Person extends Activity {
+
+    public static final int SLIDE_PROFILE = 0;
+    public static final int SLIDE_MESSAGES = 1;
+
     private SlideScreen mSlideScreen;
     private DynamicRealmObject mPerson;
     private boolean mIsActive;
     public Team team;
     private Object mContextObject;
+
+    public DynamicRealmObject getPerson() {
+        return mPerson;
+    }
+
+    public SlideScreen getSlideScreen() {
+        return mSlideScreen;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,7 +99,7 @@ public class Person extends FullscreenActivity {
             @Override
             public void onSlideChange(int slide) {
                 if(mPerson != null) {
-                    if (slide == 1 && mIsActive) {
+                    if (slide == SLIDE_MESSAGES && mIsActive) {
                         team.action.setSeen(mPerson);
                         team.push.clear("messages");
                         team.view.setTop("person/" + mPerson.getString(Thing.ID) + "/messages");
@@ -110,7 +123,7 @@ public class Person extends FullscreenActivity {
             return;
         }
 
-        mSlideScreen.setSlide("upto".equals(show) ? 0 : "messages".equals(show) ? 1 : 0);
+        mSlideScreen.setSlide("upto".equals(show) ? SLIDE_PROFILE : "messages".equals(show) ? SLIDE_MESSAGES : SLIDE_PROFILE);
     }
 
     @Override
@@ -119,7 +132,7 @@ public class Person extends FullscreenActivity {
 
         mIsActive = true;
 
-        if(mPerson != null && mSlideScreen.getSlide() == 1) {
+        if(mPerson != null && mSlideScreen.getSlide() == SLIDE_MESSAGES) {
             team.view.setTop("person/" + mPerson.getString(Thing.ID) + "/messages");
         }
     }

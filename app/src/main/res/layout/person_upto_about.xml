@@ -168,7 +168,6 @@
                 android:textColor="@color/gray"
                 android:textSize="14sp" />
 
-
             <Button style="@style/Widget.AppCompat.Button"
                 android:id="@+id/action_button"
                 android:layout_width="match_parent"
@@ -181,6 +180,25 @@
                 android:padding="8dp"
                 android:text="@string/follow_person"
                 android:textColor="@color/white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="right">
+
+                <Button style="@style/Widget.AppCompat.Button.Borderless"
+                    android:id="@+id/action_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:padding="8dp"
+                    android:text="@string/message_person"
+                    android:textColor="@color/red" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

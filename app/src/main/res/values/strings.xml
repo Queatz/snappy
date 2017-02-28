@@ -181,6 +181,9 @@
     <string name="share">Share</string>
     <string name="interested_for">Hey! Count me in for %1$s</string>
     <string name="yup">Yup</string>
+    <string name="message_person">Message %1$s</string>
+    <string name="view_settings">View settings</string>
+    <string name="hey_name">Hey %1$s!</string>
 
     <plurals name="likes">
         <item quantity="one">%1$s Liker</item>

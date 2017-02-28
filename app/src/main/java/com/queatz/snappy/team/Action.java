@@ -93,6 +93,16 @@ public class Action {
     }
 
     public void openMessages(@NonNull Activity from, @NonNull final DynamicRealmObject person, @Nullable String message) {
+        if (from instanceof Person) {
+            DynamicRealmObject activityPerson = ((Person) from).getPerson();
+
+            if (activityPerson != null && activityPerson.getString(Thing.ID).equals(person.getString(Thing.ID))) {
+                ((Person) from).getSlideScreen().setSlide(Person.SLIDE_MESSAGES);
+            }
+
+            return;
+        }
+
         Bundle bundle = new Bundle();
         bundle.putString("person", person.getString(Thing.ID));
         bundle.putString("show", "messages");

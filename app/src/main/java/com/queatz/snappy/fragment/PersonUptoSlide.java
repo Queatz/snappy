@@ -13,6 +13,7 @@ import android.widget.ListView;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.adapter.FeedAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
@@ -36,13 +37,13 @@ import io.realm.Sort;
  * Created by jacob on 10/23/14.
  */
 public class PersonUptoSlide extends Fragment {
-    Team team;
-    DynamicRealmObject mPerson;
-    View personAbout;
-    TextView socialMode;
-    FloatingActionButton mFloatingAction;
-    RealmChangeListener<DynamicRealmObject> mChangeListener = null;
-    ListView updateList;
+    private Team team;
+    private DynamicRealmObject mPerson;
+    private View personAbout;
+    private TextView socialMode;
+    private FloatingActionButton mFloatingAction;
+    private RealmChangeListener<DynamicRealmObject> mChangeListener = null;
+    private ListView updateList;
 
     public void setPerson(DynamicRealmObject person) {
         mPerson = person;
@@ -149,18 +150,20 @@ public class PersonUptoSlide extends Fragment {
             mFloatingAction.setVisibility(View.GONE);
         }
 
-        TextView socialMode = (TextView) view.findViewById(R.id.socialMode);
-
         socialMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SlideScreen slideScreen = (SlideScreen) getActivity().findViewById(R.id.person_content);
-
-                if (!itsMe) {
-                    ((PersonMessagesSlide) slideScreen.getSlideFragment(1)).setMessagePrefill("Hey!");
+                if (getActivity() == null || !(getActivity() instanceof Person)) {
+                    return;
                 }
 
-                slideScreen.setSlide(1);
+                SlideScreen slideScreen = ((Person) getActivity()).getSlideScreen();
+
+                if (!itsMe) {
+                    ((PersonMessagesSlide) slideScreen.getSlideFragment(Person.SLIDE_MESSAGES)).setMessagePrefill(getString(R.string.hey_name, mPerson.getString(Thing.FIRST_NAME)));
+                }
+
+                slideScreen.setSlide(Person.SLIDE_MESSAGES);
             }
         });
 
@@ -277,9 +280,19 @@ public class PersonUptoSlide extends Fragment {
                 }
             });
 
+            Button messageButton = ((Button) personAbout.findViewById(R.id.action_message));
+            messageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    team.action.openMessages(getActivity(), mPerson);
+                }
+            });
+
             TextView about = (TextView) personAbout.findViewById(R.id.about);
 
             if(team.auth.getUser() != null && team.auth.getUser().equals(mPerson.getString(Thing.ID))) {
+                messageButton.setText(getString(R.string.view_settings));
+
                 about.setTextIsSelectable(false);
 
                 about.setOnClickListener(new View.OnClickListener() {
@@ -290,6 +303,7 @@ public class PersonUptoSlide extends Fragment {
                 });
             }
             else {
+                messageButton.setText(getString(R.string.message_person, mPerson.getString(Thing.FIRST_NAME)));
                 about.setTextIsSelectable(true);
             }
 

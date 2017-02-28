@@ -18,6 +18,7 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.LocalState;
 import com.queatz.snappy.util.TimeUtil;
