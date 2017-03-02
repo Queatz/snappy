@@ -40,10 +40,6 @@ public class View {
         context.startActivity(intent);
     }
 
-    public void showStartView(@Nullable Activity from) {
-        team.view.show(from, team.auth.isAuthenticated() ? Main.class : Welcome.class, null);
-    }
-
     public void setTop(String top) {
         mTop = top;
     }

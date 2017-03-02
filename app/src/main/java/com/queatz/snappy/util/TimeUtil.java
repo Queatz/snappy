@@ -6,6 +6,7 @@ import com.luckycatlabs.sunrisesunset.Zenith;
 import com.luckycatlabs.sunrisesunset.calculator.SolarEventCalculator;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Thing;
 
 import java.text.DateFormat;
@@ -203,6 +204,10 @@ public class TimeUtil {
     }
 
     public static boolean isPartyPast(DynamicRealmObject party) {
-        return party.getDate(Thing.DATE).before(new Date(new Date().getTime() - 1000 * 60 * 60));
+        return party.getDate(Thing.DATE).before(new Date());
+    }
+
+    public static boolean isPartyRecentlyPast(DynamicRealmObject party) {
+        return isPartyPast(party) && !party.getDate(Thing.DATE).before(new Date(new Date().getTime() - Config.PARTY_DEFAULT_DURATION));
     }
 }

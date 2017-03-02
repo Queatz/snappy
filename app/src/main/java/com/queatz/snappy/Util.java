@@ -149,7 +149,7 @@ public class Util {
     }
 
     public static Spanned getUpdateText(DynamicRealmObject update) {
-        boolean past;
+        boolean past, recentlyPast;
         Spanned string;
 
         String action = update.getString(Thing.ACTION);
@@ -164,13 +164,15 @@ public class Util {
                     return null;
 
                 past = TimeUtil.isPartyPast(update.getObject(Thing.TARGET));
+                recentlyPast = TimeUtil.isPartyRecentlyPast(update.getObject(Thing.TARGET));
 
-                string = Html.fromHtml(String.format(context.getString(past ? R.string.update_text_hosted : R.string.update_text_is_hosting), update.getObject(Thing.PERSON).getString(Thing.FIRST_NAME), update.getObject(Thing.TARGET).getString(Thing.NAME), TimeUtil.agoDate(update.getObject(Thing.TARGET).getDate(Thing.DATE))));
+                string = Html.fromHtml(String.format(context.getString(recentlyPast ? R.string.update_text_is_hosting_as_of : past ? R.string.update_text_hosted : R.string.update_text_is_hosting), update.getObject(Thing.TARGET).getString(Thing.NAME), TimeUtil.agoDate(update.getObject(Thing.TARGET).getDate(Thing.DATE))));
                 break;
             case Config.UPDATE_ACTION_JOIN_PARTY:
                 past = TimeUtil.isPartyPast(update.getObject(Thing.TARGET));
+                recentlyPast = TimeUtil.isPartyRecentlyPast(update.getObject(Thing.TARGET));
 
-                string = Html.fromHtml(String.format(context.getString(past ? R.string.update_text_went_to : R.string.update_text_is_going_to), update.getObject(Thing.PERSON).getString(Thing.FIRST_NAME), update.getObject(Thing.TARGET).getString(Thing.NAME), TimeUtil.agoDate(update.getObject(Thing.TARGET).getDate(Thing.DATE))));
+                string = Html.fromHtml(String.format(context.getString(recentlyPast ? R.string.update_text_is_going_to_as_of : past ? R.string.update_text_went_to : R.string.update_text_is_going_to), update.getObject(Thing.TARGET).getString(Thing.NAME), TimeUtil.agoDate(update.getObject(Thing.TARGET).getDate(Thing.DATE))));
                 break;
             case Config.UPDATE_ACTION_UPTO:
             default:

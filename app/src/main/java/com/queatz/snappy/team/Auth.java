@@ -23,6 +23,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
+import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.util.Json;
 
@@ -217,7 +218,7 @@ public class Auth {
     }
 
     public void showMain() {
-        team.view.showStartView(mActivity);
+        team.view.show(mActivity, Main.class, null);
     }
 
     public void reauth() {
@@ -248,7 +249,7 @@ public class Auth {
                 save();
 
                 if(isLogout) {
-                    team.view.showStartView(null);
+                    team.view.show(null, Main.class, null);
                 }
             }
         }.execute();

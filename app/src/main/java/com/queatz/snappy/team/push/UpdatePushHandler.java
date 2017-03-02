@@ -39,6 +39,8 @@ public class UpdatePushHandler extends PushHandler {
             with = new JsonArray();
         }
 
+        boolean going = push.has("going") && push.get("going").getAsBoolean();
+
         String isAt = null;
         String isWith = null;
 
@@ -68,7 +70,8 @@ public class UpdatePushHandler extends PushHandler {
             message = photo ? team.context.getString(R.string.added_a_new_photo) :
                     team.context.getString(R.string.posted_an_update);
         } else {
-            message = team.context.getResources().getQuantityString(R.plurals.is_are_at, isWith == null ? 1 : 2, isAt);
+            int res = going ? R.plurals.is_are_going_to : R.plurals.is_are_at;
+            message = team.context.getResources().getQuantityString(res, isWith == null ? 1 : 2, isAt);
         }
 
         if (isWith != null) {

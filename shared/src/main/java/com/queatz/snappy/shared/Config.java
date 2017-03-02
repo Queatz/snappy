@@ -25,6 +25,8 @@ public class Config {
     public static final float locationAccuracy = 100;
     public static final float defaultMapZoom = 16;
     public static final double personLocationAccuracy = 0.0473485;
+    public static final long PARTY_DEFAULT_DURATION = 1000 * 60 * 60;
+
 
     public static final String PREFERENCE_USER = "auth.user";
     public static final String PREFERENCE_AUTH_TOKEN = "auth.auth_token";

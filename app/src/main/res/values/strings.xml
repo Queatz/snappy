@@ -63,10 +63,12 @@
     <string name="add_photo">Add photo</string>
     <string name="stop_following">Stop backing</string>
     <string name="follow">Back</string>
-    <string name="update_text_is_hosting"><![CDATA[%1$s is hosting <b>%2$s</b> %3$s]]></string>
-    <string name="update_text_hosted"><![CDATA[%1$s hosted <b>%2$s</b> %3$s]]></string>
-    <string name="update_text_is_going_to"><![CDATA[%1$s is going to <b>%2$s</b> %3$s]]></string>
-    <string name="update_text_went_to"><![CDATA[%1$s went to <b>%2$s</b> %3$s]]></string>
+    <string name="update_text_is_hosting"><![CDATA[is hosting <b>%1$s</b> %2$s]]></string>
+    <string name="update_text_is_hosting_as_of"><![CDATA[is hosting <b>%1$s</b> as of %2$s]]></string>
+    <string name="update_text_hosted"><![CDATA[hosted <b>%1$s</b> %2$s]]></string>
+    <string name="update_text_is_going_to"><![CDATA[is going to <b>%1$s</b> %2$s]]></string>
+    <string name="update_text_is_going_to_as_of"><![CDATA[is at <b>%1$s</b> as of %2$s]]></string>
+    <string name="update_text_went_to"><![CDATA[went to <b>%1$s</b> %2$s]]></string>
     <string name="friends">Friends</string>
     <string name="here">here</string>
     <string name="what_are_you_into">What are you into?</string>
@@ -273,6 +275,11 @@
     <plurals name="is_are_at">
         <item quantity="one">is at %1$s</item>
         <item quantity="other">are at %1$s</item>
+    </plurals>
+
+    <plurals name="is_are_going_to">
+        <item quantity="one">is going to %1$s</item>
+        <item quantity="other">are going to %1$s</item>
     </plurals>
 
 </resources>

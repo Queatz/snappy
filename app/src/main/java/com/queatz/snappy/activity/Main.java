@@ -35,6 +35,7 @@ public class Main extends FullscreenActivity {
     private boolean mDestroyed = false;
 
     private Object mContextObject;
+    private boolean isHome;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +95,8 @@ public class Main extends FullscreenActivity {
             );
         }
 
+        isHome = intent.getCategories().contains(Intent.CATEGORY_HOME);
+
 
         String mapFocusId = intent.getStringExtra("mapFocusId");
 
@@ -143,7 +146,10 @@ public class Main extends FullscreenActivity {
         } else {
             Fragment slide = mSlideScreen.getSlideFragment(mSlideScreen.getSlide());
             if (!(slide instanceof OnBackPressed) || !((OnBackPressed) slide).onBackPressed()) {
-                super.onBackPressed();
+
+                if (!isHome) {
+                    super.onBackPressed();
+                }
             }
         }
     }

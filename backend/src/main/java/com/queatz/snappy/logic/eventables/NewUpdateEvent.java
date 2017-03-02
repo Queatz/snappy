@@ -107,7 +107,8 @@ public class NewUpdateEvent implements Eventable {
                                 "id", person.key().name(),
                                 "firstName", person.getString(EarthField.FIRST_NAME)
                         ),
-                        "with", getWith(update)
+                        "with", getWith(update),
+                        "going", update.getBoolean(EarthField.GOING)
                 )
         );
     }

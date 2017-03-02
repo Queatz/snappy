@@ -93,7 +93,12 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             });
 
             TextView type = (TextView) view.findViewById(R.id.type);
-            type.setText(context.getString(R.string.person_posted, person.getString(Thing.FIRST_NAME)));
+
+            if (Config.UPDATE_ACTION_UPTO.equals(update.getString(Thing.ACTION))) {
+                type.setText(context.getString(R.string.person_posted, person.getString(Thing.FIRST_NAME)));
+            } else {
+                type.setText(person.getString(Thing.FIRST_NAME));
+            }
 
             TextView time = (TextView) view.findViewById(R.id.time);
             time.setText(TimeUtil.agoDate(update.getDate(Thing.DATE)));
