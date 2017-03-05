@@ -16,7 +16,6 @@ import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.PushSpec;
 import com.queatz.snappy.team.push.CommentPushHandler;
 import com.queatz.snappy.team.push.DefaultPushHandler;
 import com.queatz.snappy.team.push.FollowPushHandler;
