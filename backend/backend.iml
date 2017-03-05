@@ -49,7 +49,7 @@
     <orderEntry type="library" exported="" name="gson-2.7" level="project" />
     <orderEntry type="library" exported="" name="commons-lang3-3.0" level="project" />
     <orderEntry type="library" exported="" name="reflections-0.9.10" level="project" />
-    <orderEntry type="library" exported="" name="appengine-api-1.0-sdk-1.9.49" level="project" />
+    <orderEntry type="library" exported="" name="appengine-api-1.0-sdk-1.9.50" level="project" />
     <orderEntry type="library" exported="" name="google-api-services-storage-v1-rev68-1.21.0" level="project" />
     <orderEntry type="library" exported="" name="google-api-client-appengine-1.22.0" level="project" />
     <orderEntry type="library" exported="" name="google-http-client-1.22.0" level="project" />
