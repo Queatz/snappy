@@ -17,7 +17,7 @@ public class Config {
     public static final String VILLAGE_WEBSITE = "https://village.city/";
 
     public static final String LOG_TAG = "SNAPPY_LOG";
-    public static final String API_URL = (BETA_VERSION ? "https://beta-dot-queatz-snappy.appspot.com/api/" : "http://queatz-snappy.appspot.com/api/");
+    public static final String API_URL = (BETA_VERSION ? "https://beta-dot-queatz-snappy.appspot.com/api/" : "https://queatz-snappy.appspot.com/api/");
     public static final String GOOGLE_PLACES_AUTOCOMPLETE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?location=%f,%f&radius=1609&input=%s&key=%s";
     public static final String GOOGLE_PLACES_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?placeid=%s&key=%s";
     public static final int maxRequestRetries = 4;
@@ -35,6 +35,7 @@ public class Config {
     public static final String PREFERENCE_HOSTING_ENABLED = "other.hosting_enabled";
     public static final String PREFERENCE_SOCIAL_MODE = "other.social_mode";
     public static final String PREFERENCE_APP_VERSION = "app.version";
+    public static final String PREFERENCE_MAP_POSITION = "other.map.position";
 
     public static final int REQUEST_CODE_AUTH_RESOLUTION = 1;
     public static final int REQUEST_CODE_ACCOUNT_PICKER = 2;
@@ -60,6 +61,7 @@ public class Config {
     public static final String EXTRA_ACTION_JOIN_ACCEPT = "join.accept";
     public static final String EXTRA_ACTION_JOIN_REQUEST = "join.request";
     public static final String EXTRA_ACTION_HIDE = "hide";
+    public static final String EXTRA_SHOW = "show";
 
     public static final String PATH_QUEST_ID = "quest/%s";
     public static final String PATH_PARTY_ID = "party/%s";

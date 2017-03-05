@@ -10,7 +10,7 @@ public class Config {
     // Android
 
     public static final boolean BETA_VERSION = false;
-    public static final int WIPE_VERSIONS_BELOW = 40;
+    public static final int WIPE_VERSIONS_BELOW = 44;
 
     // The email emails are sent from
     public static final String VILLAGE_EMAIL = "Village <my@village.city>";
@@ -26,6 +26,7 @@ public class Config {
     public static final float defaultMapZoom = 16;
     public static final double personLocationAccuracy = 0.0473485;
     public static final long PARTY_DEFAULT_DURATION = 1000 * 60 * 60;
+
 
     public static final String PREFERENCE_USER = "auth.user";
     public static final String PREFERENCE_AUTH_TOKEN = "auth.auth_token";
