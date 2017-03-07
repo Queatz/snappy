@@ -6,6 +6,7 @@ import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
+import com.google.appengine.repackaged.com.google.common.collect.ImmutableMap;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.LatLng;
 import com.google.gson.JsonObject;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -139,9 +141,9 @@ public class Worker extends HttpServlet {
             List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).filter("userId", sendInstance.userId).list();
 
             if (push == null || records.isEmpty()) {
-//                        if (!passesSocialMode(sendInstance, Config.SOCIAL_MODE_FRIENDS)) {
-//                            continue;
-//                        }
+                if (!passesSocialMode(sendInstance, records.isEmpty() ? Config.SOCIAL_MODE_FRIENDS : pickHighestSocialMode(records))) {
+                    continue;
+                }
 
                 sendEmail(as, eventable, sendInstance.userId);
                 continue;
@@ -182,6 +184,28 @@ public class Worker extends HttpServlet {
                 sendEmail(as, eventable, sendInstance.userId);
             }
         }
+    }
+
+    private String pickHighestSocialMode(List<RegistrationRecord> records) {
+        String socialMode = null;
+
+        for (RegistrationRecord record : records) {
+            if (socialMode == null || compareSocialModes(record.getSocialMode(), socialMode)) {
+                socialMode = record.getSocialMode();
+            }
+        }
+
+        return socialMode;
+    }
+
+    private static Map<String, Integer> socialModeValue = ImmutableMap.of(
+            Config.SOCIAL_MODE_OFF, 0,
+            Config.SOCIAL_MODE_FRIENDS, 1,
+            Config.SOCIAL_MODE_ON, 2
+    );
+
+    private boolean compareSocialModes(String socialMode, String isGreaterThanSocialMode) {
+        return socialModeValue.get(socialMode) > socialModeValue.get(isGreaterThanSocialMode);
     }
 
     private JsonObject send(JsonObject push, String regId) {
