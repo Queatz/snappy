@@ -3,7 +3,6 @@ package com.queatz.snappy.logic.views;
 import com.google.appengine.api.datastore.GeoPt;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.LatLng;
-import com.google.cloud.datastore.NullValue;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
@@ -12,7 +11,6 @@ import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Viewable;
 import com.queatz.snappy.logic.mines.FollowerMine;
-import com.queatz.snappy.logic.mines.JoinMine;
 import com.queatz.snappy.service.Push;
 import com.queatz.snappy.shared.Config;
 

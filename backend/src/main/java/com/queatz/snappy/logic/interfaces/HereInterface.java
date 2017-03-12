@@ -2,7 +2,6 @@ package com.queatz.snappy.logic.interfaces;
 
 import com.google.cloud.datastore.LatLng;
 import com.queatz.snappy.logic.EarthAs;
-import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Interfaceable;
@@ -10,9 +9,6 @@ import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.EntityListView;
 import com.queatz.snappy.shared.Config;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 
 /**
  * Created by jacob on 4/9/16.

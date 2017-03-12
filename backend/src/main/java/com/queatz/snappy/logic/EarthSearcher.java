@@ -12,12 +12,14 @@ import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.search.SearchServiceFactory;
 import com.google.appengine.api.search.SortExpression;
 import com.google.appengine.api.search.SortOptions;
+import com.google.appengine.repackaged.com.google.common.collect.ImmutableSet;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.LatLng;
 import com.queatz.snappy.shared.Config;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -26,6 +28,11 @@ import java.util.regex.Pattern;
  * Created by jacob on 11/17/14.
  */
 public class EarthSearcher extends EarthControl {
+
+    // These kinds disappear from the searcher after the specified time of inactivity
+    private static final Collection TRANSIENT_KINDS = ImmutableSet.of(EarthKind.PERSON_KIND);
+    private static final long TRANSIENT_KIND_TIMEOUT_SECONDS = 60 * 60 * 24 * 5; // 5 days
+
     public EarthSearcher(final EarthAs as) {
         super(as);
 
@@ -99,7 +106,13 @@ public class EarthSearcher extends EarthControl {
                     queryString += " OR ";
                 }
 
-                queryString += "kind = \"" + kinds[i] + "\"";
+                if (TRANSIENT_KINDS.contains(kinds[i])) {
+                    queryString += "(";
+                    queryString += "kind = \"" + kinds[i] + "\"";
+                    queryString += " AND updated_on >= " + Long.toString(new Date().getTime() / 1000 - TRANSIENT_KIND_TIMEOUT_SECONDS) + ")";
+                } else {
+                    queryString += "kind = \"" + kinds[i] + "\"";
+                }
             }
 
             queryString += ")";
@@ -173,6 +186,14 @@ public class EarthSearcher extends EarthControl {
                 .build();
 
         builder.addField(createdField);
+
+        if (object.contains(EarthField.AROUND)) {
+            Field updatedField = Field.newBuilder().setName(EarthField.UPDATED_ON)
+                    .setNumber(object.getDateTime(EarthField.AROUND).toDate().getTime() / 1000)
+                    .build();
+
+            builder.addField(updatedField);
+        }
 
         if (object.contains(EarthField.NAME) && object.getString(EarthField.NAME) != null) {
             Field nameField = Field.newBuilder().setName(EarthField.NAME)
