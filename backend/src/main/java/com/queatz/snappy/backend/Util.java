@@ -1,6 +1,6 @@
 package com.queatz.snappy.backend;
 
-import com.google.cloud.datastore.LatLng;
+import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.shared.Config;
 
 import java.io.UnsupportedEncodingException;
@@ -39,8 +39,8 @@ public class Util {
         return Math.floor(distance / Config.personLocationAccuracy) * Config.personLocationAccuracy;
     }
 
-    public static double distance(LatLng a, LatLng b) {
-        return quantizedDistance(distance(a.latitude(), a.longitude(), b.latitude(), b.longitude()));
+    public static double distance(EarthGeo a, EarthGeo b) {
+        return quantizedDistance(distance(a.getLatitude(), a.getLongitude(), b.getLatitude(), b.getLongitude()));
     }
 
     public static String genToken() {

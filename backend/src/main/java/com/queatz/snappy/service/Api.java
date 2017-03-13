@@ -8,12 +8,12 @@ import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.appengine.tools.cloudstorage.RetryParams;
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.SnappyServlet;
 import com.queatz.snappy.api.Admin;
 import com.queatz.snappy.api.Logic;
 import com.queatz.snappy.api.Pirate;
 import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class Api {
 
     public abstract static class Path {
         protected ArrayList<String> path;
-        protected Entity user;
+        protected EarthThing user;
         protected HTTPMethod method;
         protected HttpServletRequest request;
         protected HttpServletResponse response;
@@ -60,7 +60,11 @@ public class Api {
             this.api = api;
         }
 
-        private void _call(ArrayList<String> path, Entity user, HTTPMethod method, HttpServletRequest request, HttpServletResponse response) throws IOException, PrintingError {
+        private void _call(ArrayList<String> path,
+                           EarthThing user,
+                           HTTPMethod method,
+                           HttpServletRequest request,
+                           HttpServletResponse response) throws IOException, PrintingError {
             this.path = path;
             this.user = user;
             this.method = method;
@@ -92,7 +96,7 @@ public class Api {
         mImagesService = ImagesServiceFactory.getImagesService();
     }
 
-    public void call(Entity user, HTTPMethod method, HttpServletRequest request, HttpServletResponse response) {
+    public void call(EarthThing user, HTTPMethod method, HttpServletRequest request, HttpServletResponse response) {
         String[] path;
 
         try {

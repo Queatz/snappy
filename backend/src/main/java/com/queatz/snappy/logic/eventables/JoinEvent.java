@@ -1,12 +1,12 @@
 package com.queatz.snappy.logic.eventables;
 
-import com.google.cloud.datastore.Entity;
 import com.google.common.collect.ImmutableMap;
+import com.queatz.snappy.backend.PushSpec;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.concepts.Eventable;
-import com.queatz.snappy.backend.PushSpec;
 
 /**
  * Created by jacob on 6/19/16.
@@ -15,7 +15,7 @@ public abstract class JoinEvent implements Eventable {
 
     EarthStore earthStore = new EarthStore(new EarthAs());
 
-    Entity join;
+    EarthThing join;
 
     // Serialization
 
@@ -32,13 +32,13 @@ public abstract class JoinEvent implements Eventable {
 
     // End Serialization
 
-    public JoinEvent(Entity join) {
+    public JoinEvent(EarthThing join) {
         this.join = join;
     }
 
     public Object makePush(String action) {
-        Entity person = earthStore.get(join.getKey(EarthField.SOURCE));
-        Entity party = earthStore.get(join.getKey(EarthField.TARGET));
+        EarthThing person = earthStore.get(join.getKey(EarthField.SOURCE));
+        EarthThing party = earthStore.get(join.getKey(EarthField.TARGET));
 
         return new PushSpec(
                 action,
@@ -51,7 +51,7 @@ public abstract class JoinEvent implements Eventable {
                         "party", ImmutableMap.of(
                                 "id", party.key().name(),
                                 "name", party.getString(EarthField.NAME),
-                                "date", party.getDateTime(EarthField.DATE).toDate()
+                                "date", party.getDate(EarthField.DATE)
                         )
                 )
         );

@@ -1,6 +1,5 @@
 package com.queatz.snappy.logic;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.concepts.Viewable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.ContactView;
@@ -38,7 +37,7 @@ public class EarthViewer extends EarthControl {
 
     private static <T> Constructor<T> getConstructor(Class<T> clazz) {
         try {
-            return clazz.getConstructor(EarthAs.class, Entity.class, EarthView.class);
+            return clazz.getConstructor(EarthAs.class, EarthThing.class, EarthView.class);
         } catch (NoSuchMethodException e) {
             return null;
         }
@@ -64,11 +63,11 @@ public class EarthViewer extends EarthControl {
         Constructor<? extends Viewable> identity = getConstructor(ExistenceView.class);
     }
 
-    public Viewable getViewForEntityOrThrow(Entity entity) {
+    public Viewable getViewForEntityOrThrow(EarthThing entity) {
         return getViewForEntityOrThrow(entity, EarthView.DEEP);
     }
 
-    public Viewable getViewForEntityOrThrow(Entity entity, EarthView view) {
+    public Viewable getViewForEntityOrThrow(EarthThing entity, EarthView view) {
         Constructor<? extends Viewable> constructor = mapping.get(entity.getString(EarthField.KIND));
 
         if (constructor == null) {

@@ -1,11 +1,11 @@
 package com.queatz.snappy.logic.mines;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class ResourceMine extends EarthControl {
         super(as);
     }
 
-    public List<Entity> resourcesOf(Entity entity) {
+    public List<EarthThing> resourcesOf(EarthThing entity) {
         return use(EarthStore.class).find(EarthKind.RESOURCE_KIND, EarthField.SOURCE, entity.key());
     }
 }

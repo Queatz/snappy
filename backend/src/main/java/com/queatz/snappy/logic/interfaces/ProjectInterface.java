@@ -1,8 +1,8 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.editors.ProjectEditor;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 
@@ -12,7 +12,7 @@ import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 public class ProjectInterface extends CommonThingInterface {
 
     @Override
-    public Entity createThing(EarthAs as) {
+    public EarthThing createThing(EarthAs as) {
         String[] name = as.getParameters().get(EarthField.NAME);
 
         if (name == null || name.length != 1) {
@@ -23,7 +23,7 @@ public class ProjectInterface extends CommonThingInterface {
     }
 
     @Override
-    public Entity editThing(EarthAs as, Entity resource) {
+    public EarthThing editThing(EarthAs as, EarthThing resource) {
         String[] name = as.getParameters().get(EarthField.NAME);
         String[] about = as.getParameters().get(EarthField.ABOUT);
 

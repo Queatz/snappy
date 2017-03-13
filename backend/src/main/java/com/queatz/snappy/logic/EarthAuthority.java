@@ -1,6 +1,5 @@
 package com.queatz.snappy.logic;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.authorities.HubAuthority;
 import com.queatz.snappy.logic.authorities.MessageAuthority;
 import com.queatz.snappy.logic.authorities.OfferAuthority;
@@ -35,7 +34,7 @@ public class EarthAuthority extends EarthControl {
         mapping.put(EarthKind.PARTY_KIND, new PartyAuthority());
     }
 
-    public boolean authorize(Entity entity, EarthRule rule) {
+    public boolean authorize(EarthThing entity, EarthRule rule) {
         // Internal access
         if (as == null || getUser() == null) {
             return true;

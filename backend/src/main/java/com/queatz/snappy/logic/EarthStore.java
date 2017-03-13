@@ -1,25 +1,10 @@
 package com.queatz.snappy.logic;
 
 import com.google.appengine.api.memcache.stdimpl.GCacheFactory;
-import com.google.cloud.datastore.Datastore;
-import com.google.cloud.datastore.DatastoreException;
-import com.google.cloud.datastore.DatastoreOptions;
-import com.google.cloud.datastore.DateTime;
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.Key;
-import com.google.cloud.datastore.KeyFactory;
-import com.google.cloud.datastore.LatLng;
-import com.google.cloud.datastore.NullValue;
-import com.google.cloud.datastore.Query;
-import com.google.cloud.datastore.QueryResults;
-import com.google.cloud.datastore.StringValue;
-import com.google.cloud.datastore.StructuredQuery;
-import com.google.cloud.datastore.Transaction;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,6 +21,8 @@ import javax.cache.CacheManager;
 
 /**
  * Created by jacob on 4/2/16.
+ *
+ * EarthStore + Mines are the only classes that access the raw underlying data store.
  */
 public class EarthStore extends EarthControl {
     private final EarthAuthority earthAuthority;
@@ -69,7 +56,11 @@ public class EarthStore extends EarthControl {
     private final KeyFactory keyFactory = datastore.newKeyFactory().kind(DEFAULT_KIND);
     private final Cache cache;
 
-    public Entity get(@Nonnull String id) {
+    public EarthThing get(@Nonnull String id) {
+        return get(keyFactory.newKey(id));
+    }
+
+    public EarthThing get(@Nonnull EarthRef ref) {
         return get(keyFactory.newKey(id));
     }
 
@@ -91,14 +82,14 @@ public class EarthStore extends EarthControl {
      *
      * @return The thing, or null if it could not be found
      */
-    public Entity get(@Nonnull Key key) {
-        Entity entity;
+    public EarthThing get(@Nonnull EarthRef key) {
+        EarthThing entity;
 
         if (as.__entityCache.containsKey(key)) {
             entity = as.__entityCache.get(key);
         } else {
             if (cache.containsKey(key)) {
-                entity = (Entity) cache.get(key);
+                entity = (EarthThing) cache.get(key);
             } else {
                 entity = (transaction != null ? transaction.get(key) : datastore.get(key));
 
@@ -164,7 +155,7 @@ public class EarthStore extends EarthControl {
      * - Fails if the thing doesn't have a creation date.
      * - Fails if the thing has already concluded
      */
-    public void put(@Nonnull Entity entity) {
+    public void put(@Nonnull EarthThing entity) {
         if (entity.key().name().isEmpty()) {
             return;
         }
@@ -194,9 +185,9 @@ public class EarthStore extends EarthControl {
      *
      * @return The new thing
      */
-    public Entity create(@Nonnull String kind) {
-        Key key = keyFactory.newKey(newRandomId());
-        Entity entity = Entity.builder(key)
+    public EarthThing create(@Nonnull String kind) {
+        EarthRef key = keyFactory.newKey(newRandomId());
+        EarthThing entity = EarthThing.builder(key)
                 .set(DEFAULT_FIELD_CREATED, DateTime.now())
                 .set(DEFAULT_FIELD_CONCLUDED, NullValue.of())
                 .set(DEFAULT_FIELD_KIND, StringValue.of(kind))
@@ -222,7 +213,7 @@ public class EarthStore extends EarthControl {
         Transaction transaction = datastore.newTransaction();
 
         try {
-            Entity entity = get(keyFactory.newKey(id));
+            EarthThing entity = get(keyFactory.newKey(id));
 
             // Don't allow concluding entities that have already concluded
             if (!entity.isNull(DEFAULT_FIELD_CONCLUDED)) {
@@ -231,7 +222,7 @@ public class EarthStore extends EarthControl {
 
             // XXX TODO Authorize
 
-            transaction.put(Entity.builder(entity).set(DEFAULT_FIELD_CONCLUDED, DateTime.now()).build());
+            transaction.put(EarthThing.builder(entity).set(DEFAULT_FIELD_CONCLUDED, new Date()).build());
             transaction.commit();
             earthSearcher.delete(id);
 
@@ -244,7 +235,7 @@ public class EarthStore extends EarthControl {
         }
     }
 
-    public void conclude(Entity entity) {
+    public void conclude(EarthThing entity) {
 
         if (!earthAuthority.authorize(entity, EarthRule.MODIFY)) {
             return;
@@ -259,13 +250,13 @@ public class EarthStore extends EarthControl {
      * - Assumes external validation happens.
      * - Fails if the thing already concluded.
      */
-    public Entity.Builder edit(@Nonnull Entity entity) {
+    public EarthThing.Builder edit(@Nonnull EarthThing entity) {
 
         if (!earthAuthority.authorize(entity, EarthRule.MODIFY)) {
             throw new NothingLogicResponse("unauthorized");
         }
 
-        return Entity.builder(entity);
+        return EarthThing.builder(entity);
     }
 
     /**
@@ -274,8 +265,8 @@ public class EarthStore extends EarthControl {
      * - Assumes external validation happens.
      * - Fails if the thing already concluded.
      */
-    public Entity save(@Nonnull Entity.Builder entityBuilder) {
-        Entity entity = entityBuilder.build();
+    public EarthThing save(@Nonnull EarthThing.Builder entityBuilder) {
+        EarthThing entity = entityBuilder.build();
 
         if (!earthAuthority.authorize(entity, EarthRule.MODIFY)) {
             throw new NothingLogicResponse("unauthorized");
@@ -316,12 +307,12 @@ public class EarthStore extends EarthControl {
      * @param key The value the field should be
      * @return Number of matching things
      */
-    public int count(String kind, String field, Key key) {
+    public int count(String kind, String field, EarthRef key) {
         Query query = Query.keyQueryBuilder().kind(DEFAULT_KIND)
                 .filter(StructuredQuery.CompositeFilter.and(
                         StructuredQuery.PropertyFilter.eq(EarthField.KIND, kind),
                         StructuredQuery.PropertyFilter.eq(field, key),
-                        StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of())
+                        StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, null)
                 ))
                 .build();
 
@@ -340,12 +331,12 @@ public class EarthStore extends EarthControl {
      * @param key The key the field should contain
      * @return All the things
      */
-    public List<Entity> find(String kind, String field, Key key, Integer limit) {
-        Query<Entity> query = Query.entityQueryBuilder().kind(DEFAULT_KIND)
+    public List<EarthThing> find(String kind, String field, EarthRef key, Integer limit) {
+        Query<EarthThing> query = Query.entityQueryBuilder().kind(DEFAULT_KIND)
                 .filter(StructuredQuery.CompositeFilter.and(
                         StructuredQuery.PropertyFilter.eq(EarthField.KIND, kind),
                         StructuredQuery.PropertyFilter.eq(field, key),
-                        StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of())
+                        StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, null)
                 ))
                 .limit(limit)
                 .orderBy(StructuredQuery.OrderBy.desc(EarthField.CREATED_ON))
@@ -354,24 +345,24 @@ public class EarthStore extends EarthControl {
         return Lists.newArrayList(datastore.run(query));
     }
 
-    public List<Entity> find(String kind, String field, Key key) {
+    public List<EarthThing> find(String kind, String field, EarthRef key) {
         return find(kind, field, key, null);
     }
 
-    public List<Entity> getNearby(LatLng center, String kind) {
+    public List<EarthThing> getNearby(EarthGeo center, String kind) {
         return earthSearcher.getNearby(kind, null, center, null, 100);
     }
 
-    public List<Entity> getNearby(LatLng center, String kind, String q) {
+    public List<EarthThing> getNearby(EarthGeo center, String kind, String q) {
         return earthSearcher.getNearby(kind, q, center, null, 100);
     }
 
-    public List<Entity> getNearby(LatLng center, String kind, boolean recent, String q) {
+    public List<EarthThing> getNearby(EarthGeo center, String kind, boolean recent, String q) {
         return earthSearcher.getNearby(kind, q, center, recent ? new Date(new Date().getTime() - 1000 * 60 * 60) : null , 100);
     }
 
-    public List<Entity> query(StructuredQuery.Filter... filters) {
-        StructuredQuery.Filter filter = StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of());
+    public List<EarthThing> query(StructuredQuery.Filter... filters) {
+        StructuredQuery.Filter filter = StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, null);
 
         StructuredQuery.Filter composite = StructuredQuery.CompositeFilter.and(filter, filters);
 
@@ -380,7 +371,7 @@ public class EarthStore extends EarthControl {
 //            return (ArrayList<Entity>) cache.get(composite);
 //        }
 
-        List<Entity> results = Lists.newArrayList(datastore.run(StructuredQuery.entityQueryBuilder()
+        List<EarthThing> results = Lists.newArrayList(datastore.run(StructuredQuery.entityQueryBuilder()
                 .kind(DEFAULT_KIND)
                 .filter(composite).build()));
 
@@ -389,8 +380,8 @@ public class EarthStore extends EarthControl {
         return results;
     }
 
-    public List<Entity> queryLimited(int limit, StructuredQuery.Filter... filters) {
-        StructuredQuery.Filter filter = StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, NullValue.of());
+    public List<EarthThing> queryLimited(int limit, StructuredQuery.Filter... filters) {
+        StructuredQuery.Filter filter = StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, null);
 
         StructuredQuery.Filter composite = StructuredQuery.CompositeFilter.and(filter, filters);
 
@@ -401,14 +392,11 @@ public class EarthStore extends EarthControl {
                 .filter(composite).build()));
     }
 
-    public Key key(String keyName) {
+    public EarthRef key(String keyName) {
         return keyFactory.newKey(keyName);
     }
 
-    public Datastore getDatastore() {
-        return datastore;
-    }
-
+    // !!!!!!!!!!!!!!!!!!!!!!
 // XXX TODO When datastore supports geo
 //    public List<Entity> queryNearToWithDatastore(GeoPt center, String kindFilter) {
 //        // XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX

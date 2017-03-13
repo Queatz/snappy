@@ -1,14 +1,13 @@
 package com.queatz.snappy.logic.eventables;
 
-import com.google.cloud.datastore.Entity;
 import com.google.common.collect.ImmutableMap;
+import com.queatz.snappy.backend.PushSpec;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.concepts.Eventable;
-import com.queatz.snappy.logic.editors.OfferEditor;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.backend.PushSpec;
 
 /**
  * Created by jacob on 6/19/16.
@@ -17,7 +16,7 @@ public class OfferLikeEvent implements Eventable {
 
     EarthStore earthStore = new EarthStore(new EarthAs());
 
-    Entity like;
+    EarthThing like;
 
     // Serialization
 
@@ -34,14 +33,14 @@ public class OfferLikeEvent implements Eventable {
 
     // End Serialization
 
-    public OfferLikeEvent(Entity like) {
+    public OfferLikeEvent(EarthThing like) {
         this.like = like;
     }
 
     @Override
     public Object makePush() {
-        Entity source = earthStore.get(like.getKey(EarthField.SOURCE));
-        Entity target = earthStore.get(like.getKey(EarthField.TARGET));
+        EarthThing source = earthStore.get(like.getKey(EarthField.SOURCE));
+        EarthThing target = earthStore.get(like.getKey(EarthField.TARGET));
 
         return new PushSpec(
                 Config.PUSH_ACTION_OFFER_LIKED,
@@ -54,7 +53,7 @@ public class OfferLikeEvent implements Eventable {
                         "target", ImmutableMap.of(
                                 "id", target.key().name(),
                                 "name", target.getString(EarthField.ABOUT),
-                                "want", target.contains(EarthField.WANT) && target.getBoolean(EarthField.WANT)
+                                "want", target.has(EarthField.WANT) && target.getBoolean(EarthField.WANT)
                         )
                 )
         );
@@ -62,10 +61,10 @@ public class OfferLikeEvent implements Eventable {
 
     @Override
     public String makeSubject() {
-        Entity person = earthStore.get(like.getKey(EarthField.SOURCE));
-        Entity offer = earthStore.get(like.getKey(EarthField.TARGET));
+        EarthThing person = earthStore.get(like.getKey(EarthField.SOURCE));
+        EarthThing offer = earthStore.get(like.getKey(EarthField.TARGET));
 
-        boolean want = offer.contains(EarthField.WANT) && offer.getBoolean(EarthField.WANT);
+        boolean want = offer.has(EarthField.WANT) && offer.getBoolean(EarthField.WANT);
 
         return person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME) + " liked your " +
                 (want ? "want" : "offer");
@@ -73,8 +72,8 @@ public class OfferLikeEvent implements Eventable {
 
     @Override
     public String makeEmail() {
-        Entity person = earthStore.get(like.getKey(EarthField.SOURCE));
-        Entity offer = earthStore.get(like.getKey(EarthField.TARGET));
+        EarthThing person = earthStore.get(like.getKey(EarthField.SOURCE));
+        EarthThing offer = earthStore.get(like.getKey(EarthField.TARGET));
 
         return offer.getString(EarthField.NAME) +
                 "<span style=\"color: #757575;\">View their profile at " +

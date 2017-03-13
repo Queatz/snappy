@@ -1,13 +1,13 @@
 package com.queatz.snappy.logic.eventables;
 
-import com.google.cloud.datastore.Entity;
 import com.google.common.collect.ImmutableMap;
+import com.queatz.snappy.backend.PushSpec;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.backend.PushSpec;
 
 /**
  * Created by jacob on 6/19/16.
@@ -16,7 +16,7 @@ public class NewPartyEvent implements Eventable {
 
     EarthStore earthStore = new EarthStore(new EarthAs());
 
-    Entity party;
+    EarthThing party;
 
     // Serialization
 
@@ -33,20 +33,20 @@ public class NewPartyEvent implements Eventable {
 
     // End Serialization
 
-    public NewPartyEvent(Entity party) {
+    public NewPartyEvent(EarthThing party) {
         this.party = party;
     }
 
     @Override
     public Object makePush() {
-        Entity host = earthStore.get(party.getKey(EarthField.HOST));
+        EarthThing host = earthStore.get(party.getKey(EarthField.HOST));
 
         return new PushSpec(
                 Config.PUSH_ACTION_NEW_PARTY,
                 ImmutableMap.of(
                         "id", party.key().name(),
                         "name", party.getString(EarthField.NAME),
-                        "date", party.getDateTime(EarthField.DATE).toDate(),
+                        "date", party.getDate(EarthField.DATE),
                         "host", ImmutableMap.of(
                                 "id", host.key().name(),
                                 "firstName", host.getString(EarthField.FIRST_NAME)

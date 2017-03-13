@@ -1,6 +1,5 @@
 package com.queatz.snappy.logic;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 
@@ -48,7 +47,7 @@ public class Earth extends EarthControl implements Interfaceable {
         } catch (NoSuchElementException ignored) {}
 
         // Otherwise assume it's an ID
-        final Entity entity = getEntityFromRoute(as.getRoute());
+        final EarthThing entity = getEntityFromRoute(as.getRoute());
         final Interfaceable interfaceable = getInterfacableFromEntity(entity);
 
         return interfaceable.get(as);
@@ -67,7 +66,7 @@ public class Earth extends EarthControl implements Interfaceable {
         if (as.getRoute().isEmpty()) {
             interfaceable = getInterfacableFromParameters(as.getParameters());
         } else {
-            Entity entity = getEntityFromRoute(as.getRoute());
+            EarthThing entity = getEntityFromRoute(as.getRoute());
             interfaceable = getInterfacableFromEntity(entity);
         }
 
@@ -75,7 +74,7 @@ public class Earth extends EarthControl implements Interfaceable {
     }
 
     @Nonnull
-    private Entity getEntityFromRoute(@Nonnull List<String> route) {
+    private EarthThing getEntityFromRoute(@Nonnull List<String> route) {
         if (route.isEmpty()) {
             throw new NothingLogicResponse("earth - route is empty");
         }
@@ -86,7 +85,7 @@ public class Earth extends EarthControl implements Interfaceable {
             throw new NothingLogicResponse("earth - id is empty");
         }
 
-        Entity entity = use(EarthStore.class).get(id);
+        EarthThing entity = use(EarthStore.class).get(id);
 
         if (entity == null) {
             throw new NothingLogicResponse("earth - no entity was found");
@@ -116,7 +115,7 @@ public class Earth extends EarthControl implements Interfaceable {
     }
 
     @Nonnull
-    private Interfaceable getInterfacableFromEntity(@Nonnull Entity entity) {
+    private Interfaceable getInterfacableFromEntity(@Nonnull EarthThing entity) {
         final String kind = entity.getString(EarthField.KIND);
 
         if (kind == null || kind.isEmpty()) {

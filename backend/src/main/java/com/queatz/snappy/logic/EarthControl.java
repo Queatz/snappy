@@ -1,7 +1,5 @@
 package com.queatz.snappy.logic;
 
-import com.google.cloud.datastore.Entity;
-
 import javax.annotation.Nonnull;
 
 /**
@@ -14,7 +12,7 @@ public class EarthControl {
         this.as = as;
     }
 
-    public Entity getUser() {
+    public EarthThing getUser() {
         return as.getUser();
     }
 

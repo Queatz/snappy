@@ -1,9 +1,9 @@
 package com.queatz.snappy.logic.eventables;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
 
@@ -14,8 +14,8 @@ public class NewContactEvent implements Eventable {
 
     EarthStore earthStore = new EarthStore(new EarthAs());
 
-    Entity person;
-    Entity contact;
+    EarthThing person;
+    EarthThing contact;
 
     // Serialization
 
@@ -34,7 +34,7 @@ public class NewContactEvent implements Eventable {
 
     // End Serialization
 
-    public NewContactEvent(Entity person, Entity contact) {
+    public NewContactEvent(EarthThing person, EarthThing contact) {
         this.person = person;
         this.contact = contact;
     }
@@ -46,7 +46,7 @@ public class NewContactEvent implements Eventable {
 
     @Override
     public String makeSubject() {
-        Entity thing = earthStore.get(contact.getKey(EarthField.SOURCE));
+        EarthThing thing = earthStore.get(contact.getKey(EarthField.SOURCE));
 
         String subject;
         String name = person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME);
@@ -58,7 +58,7 @@ public class NewContactEvent implements Eventable {
 
     @Override
     public String makeEmail() {
-        Entity thing = earthStore.get(contact.getKey(EarthField.SOURCE));
+        EarthThing thing = earthStore.get(contact.getKey(EarthField.SOURCE));
         String thingUrl = Config.VILLAGE_WEBSITE + thing.getString(EarthField.KIND) + "s/" + thing.key().name();
 
         String body;

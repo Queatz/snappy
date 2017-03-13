@@ -1,13 +1,12 @@
 package com.queatz.snappy.logic.mines;
 
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.StructuredQuery;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 
 import java.util.List;
 
@@ -20,8 +19,8 @@ public class LikeMine extends EarthControl {
         super(as);
     }
 
-    public Entity getLike(Entity person, Entity thing) {
-        List<Entity> results = use(EarthStore.class).query(
+    public EarthThing getLike(EarthThing person, EarthThing thing) {
+        List<EarthThing> results = use(EarthStore.class).query(
                 StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.LIKE_KIND),
                 StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, person.key()),
                 StructuredQuery.PropertyFilter.eq(EarthField.TARGET, thing.key())
@@ -34,7 +33,7 @@ public class LikeMine extends EarthControl {
         }
     }
 
-    public int countLikers(Entity entity) {
+    public int countLikers(EarthThing entity) {
         return use(EarthStore.class).count(EarthKind.LIKE_KIND, EarthField.TARGET, entity.key());
     }
 }

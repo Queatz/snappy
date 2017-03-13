@@ -1,7 +1,5 @@
 package com.queatz.snappy.logic;
 
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.Key;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.shared.Config;
 
@@ -23,14 +21,14 @@ public class EarthAs {
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private final List<String> route;
-    private final Entity user;
+    private final EarthThing user;
 
     // Per request cache
-    final Map<Key, Entity> __entityCache = new HashMap<>();
+    final Map<EarthRef, EarthThing> __entityCache = new HashMap<>();
 
     private Map<Class, Object> singletons;
 
-    public EarthAs(Api api, HttpServletRequest request, HttpServletResponse response, List<String> route, Entity user) {
+    public EarthAs(Api api, HttpServletRequest request, HttpServletResponse response, List<String> route, EarthThing user) {
         this.api = api;
         this.request = request;
         this.response = response;
@@ -83,7 +81,7 @@ public class EarthAs {
         return route;
     }
 
-    public Entity getUser() {
+    public EarthThing getUser() {
         return user;
     }
 

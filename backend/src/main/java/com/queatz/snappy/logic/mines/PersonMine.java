@@ -1,13 +1,12 @@
 package com.queatz.snappy.logic.mines;
 
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.StructuredQuery;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 
 import java.util.List;
 
@@ -23,8 +22,8 @@ public class PersonMine extends EarthControl {
         earthStore = use(EarthStore.class);
     }
 
-    public Entity byEmail(String email) {
-        List<Entity> results = earthStore.queryLimited(1,
+    public EarthThing byEmail(String email) {
+        List<EarthThing> results = earthStore.queryLimited(1,
                 StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.PERSON_KIND),
                 StructuredQuery.PropertyFilter.eq(EarthField.EMAIL, email)
         );
@@ -36,8 +35,8 @@ public class PersonMine extends EarthControl {
         }
     }
 
-    public Entity byToken(String token) {
-        List<Entity> results = earthStore.query(
+    public EarthThing byToken(String token) {
+        List<EarthThing> results = earthStore.query(
                 StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.PERSON_KIND),
                 StructuredQuery.PropertyFilter.eq(EarthField.TOKEN, token)
         );
@@ -49,8 +48,8 @@ public class PersonMine extends EarthControl {
         }
     }
 
-    public Entity byGoogleUrl(String googleUrl) {
-        List<Entity> results = earthStore.queryLimited(1,
+    public EarthThing byGoogleUrl(String googleUrl) {
+        List<EarthThing> results = earthStore.queryLimited(1,
                 StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.PERSON_KIND),
                 StructuredQuery.PropertyFilter.eq(EarthField.GOOGLE_URL, googleUrl)
         );

@@ -3,13 +3,12 @@ package com.queatz.snappy.logic.interfaces;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.Key;
 import com.google.common.collect.Lists;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.EarthViewer;
@@ -78,7 +77,7 @@ public class PersonInterface implements Interfaceable {
     public String post(EarthAs as) {
         switch (as.getRoute().size()) {
             case 1:
-                Entity person = new EarthStore(as).get(as.getRoute().get(0));
+                EarthThing person = new EarthStore(as).get(as.getRoute().get(0));
 
                 if (Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_SEEN))) {
                    return postSeen(as, person);
@@ -107,7 +106,7 @@ public class PersonInterface implements Interfaceable {
     }
 
     private String getPerson(EarthAs as, String personId) {
-        Entity person = new EarthStore(as).get(personId);
+        EarthThing person = new EarthStore(as).get(personId);
 
         // Update location of other person
         if (person != null) {
@@ -120,9 +119,9 @@ public class PersonInterface implements Interfaceable {
     }
 
     private String getFollows(EarthAs as, boolean followers, String personId) {
-        Entity person = new EarthStore(as).get(personId);
+        EarthThing person = new EarthStore(as).get(personId);
 
-        List<Entity> follows = new EarthStore(as).find(EarthKind.FOLLOWER_KIND,
+        List<EarthThing> follows = new EarthStore(as).find(EarthKind.FOLLOWER_KIND,
                 followers ? EarthField.TARGET : EarthField.SOURCE,
                 person.key());
 
@@ -130,9 +129,9 @@ public class PersonInterface implements Interfaceable {
     }
 
     private String getParties(EarthAs as, String personId) {
-        Entity person = new EarthStore(as).get(personId);
+        EarthThing person = new EarthStore(as).get(personId);
 
-        List<Entity> follows = new EarthStore(as).find(EarthKind.FOLLOWER_KIND,
+        List<EarthThing> follows = new EarthStore(as).find(EarthKind.FOLLOWER_KIND,
                 EarthField.HOST,
                 person.key());
 
@@ -141,25 +140,25 @@ public class PersonInterface implements Interfaceable {
 
     private String getMessages(EarthAs as, String personId) {
         // XXX TODO when Datastore supports OR expressions, combine these
-        List<Entity> messagesToMe = new MessageMine(as).messagesFromTo(as.getUser().key(), new EarthStore(as).key(personId));
-        List<Entity> messagesFromMe = new MessageMine(as).messagesFromTo(new EarthStore(as).key(personId), as.getUser().key());
+        List<EarthThing> messagesToMe = new MessageMine(as).messagesFromTo(as.getUser().key(), new EarthStore(as).key(personId));
+        List<EarthThing> messagesFromMe = new MessageMine(as).messagesFromTo(new EarthStore(as).key(personId), as.getUser().key());
 
-        List<Entity> messages = Lists.newArrayList();
+        List<EarthThing> messages = Lists.newArrayList();
         messages.addAll(messagesToMe);
         messages.addAll(messagesFromMe);
 
         return new EntityListView(as, messages).toJson();
     }
 
-    private String postSeen(EarthAs as, Entity personId) {
+    private String postSeen(EarthAs as, EarthThing personId) {
         new RecentEditor(as).markSeen(new RecentMine(as).byPerson(as.getUser(), personId));
         return new SuccessView(true).toJson();
     }
 
-    private String postFollow(EarthAs as, Entity person) {
+    private String postFollow(EarthAs as, EarthThing person) {
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
-        Entity follow;
+        EarthThing follow;
 
         follow = new FollowerMine(as).getFollower(as.getUser(), person);
 
@@ -173,16 +172,16 @@ public class PersonInterface implements Interfaceable {
         return new FollowerView(as, follow).setLocalId(localId).toJson();
     }
 
-    private String postStopFollowing(EarthAs as, Entity person) {
-        Entity follower = new FollowerMine(as).getFollower(as.getUser(), person);
+    private String postStopFollowing(EarthAs as, EarthThing person) {
+        EarthThing follower = new FollowerMine(as).getFollower(as.getUser(), person);
         new EarthStore(as).conclude(follower);
 
         return new SuccessView(true).toJson();
     }
 
-    private String postMessage(EarthAs as, Entity person, String message) {
+    private String postMessage(EarthAs as, EarthThing person, String message) {
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
-        Entity sent = new MessageEditor(as).newMessage(as.getUser(), person, message, false);
+        EarthThing sent = new MessageEditor(as).newMessage(as.getUser(), person, message, false);
 
         new RecentEditor(as).updateWithMessage(sent);
 
@@ -192,8 +191,8 @@ public class PersonInterface implements Interfaceable {
     }
 
 
-    private String postMessage(EarthAs as, Entity person)  {
-        Entity sent = new MessageEditor(as).stageMessage(as.getUser(), person);
+    private String postMessage(EarthAs as, EarthThing person)  {
+        EarthThing sent = new MessageEditor(as).stageMessage(as.getUser(), person);
         GcsFilename photoName = new GcsFilename(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), "earth/thing/photo/" + sent.key().name() + "/" + new Date().getTime());
 
         String message = null;

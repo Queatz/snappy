@@ -1,7 +1,7 @@
 package com.queatz.snappy.logic.views;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Viewable;
 import com.queatz.snappy.logic.mines.ContactMine;
@@ -18,11 +18,11 @@ public class CommonThingView extends ThingView {
     final List<Viewable> updates;
     final int followers;
 
-    public CommonThingView(EarthAs as, Entity thing) {
+    public CommonThingView(EarthAs as, EarthThing thing) {
         this(as, thing, EarthView.DEEP);
     }
 
-    public CommonThingView(EarthAs as, Entity thing, EarthView view) {
+    public CommonThingView(EarthAs as, EarthThing thing, EarthView view) {
         super(as, thing, view);
 
         followers = use(FollowerMine.class).countFollowers(thing);
@@ -31,8 +31,8 @@ public class CommonThingView extends ThingView {
             case DEEP:
                 final ContactMine contactMine = use(ContactMine.class);
                 final UpdateMine updateMine = use(UpdateMine.class);
-                final List<Entity> contacts = contactMine.getContacts(thing);
-                final List<Entity> updates = updateMine.updatesOf(thing);
+                final List<EarthThing> contacts = contactMine.getContacts(thing);
+                final List<EarthThing> updates = updateMine.updatesOf(thing);
 
                 if (contacts != null) {
                     this.contacts = new EntityListView(as, contacts, EarthView.SHALLOW).asList();

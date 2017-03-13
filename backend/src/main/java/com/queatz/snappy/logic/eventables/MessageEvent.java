@@ -1,15 +1,15 @@
 package com.queatz.snappy.logic.eventables;
 
-import com.google.cloud.datastore.Entity;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.html.HtmlEscapers;
+import com.queatz.snappy.backend.PushSpec;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.backend.PushSpec;
 
 /**
  * Created by jacob on 6/19/16.
@@ -17,7 +17,7 @@ import com.queatz.snappy.backend.PushSpec;
 public class MessageEvent implements Eventable {
     EarthStore earthStore = new EarthStore(new EarthAs());
 
-    Entity message;
+    EarthThing message;
 
     // Serialization
 
@@ -34,13 +34,13 @@ public class MessageEvent implements Eventable {
 
     // End Serialization
 
-    public MessageEvent(Entity message) {
+    public MessageEvent(EarthThing message) {
         this.message = message;
     }
 
     @Override
     public Object makePush() {
-        Entity person = earthStore.get(message.getKey(EarthField.SOURCE));
+        EarthThing person = earthStore.get(message.getKey(EarthField.SOURCE));
 
         return new PushSpec(
                 Config.PUSH_ACTION_MESSAGE,
@@ -58,7 +58,7 @@ public class MessageEvent implements Eventable {
 
     @Override
     public String makeSubject() {
-        Entity person = earthStore.get(message.getKey(EarthField.SOURCE));
+        EarthThing person = earthStore.get(message.getKey(EarthField.SOURCE));
 
         return person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME)  + " sent you a " +
                 (message.getBoolean(EarthField.PHOTO) ? "photo" : "message");

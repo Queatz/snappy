@@ -1,14 +1,11 @@
 package com.queatz.snappy.logic;
 
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.Key;
 import com.google.common.collect.HashBiMap;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.logic.eventables.ClearNotificationEvent;
 import com.queatz.snappy.logic.eventables.FollowEvent;
 import com.queatz.snappy.logic.eventables.InformationEvent;
 import com.queatz.snappy.logic.eventables.JoinAcceptedEvent;
-import com.queatz.snappy.logic.eventables.JoinEvent;
 import com.queatz.snappy.logic.eventables.JoinRequestEvent;
 import com.queatz.snappy.logic.eventables.LikeEvent;
 import com.queatz.snappy.logic.eventables.MessageEvent;
@@ -71,21 +68,21 @@ public class EarthUpdate extends EarthControl {
             this.action = action;
         }
 
-        public EventableWrapper to(Key key) {
+        public EventableWrapper to(EarthRef key) {
             Queue.getService().enqueuePushMessageToUser(key.name(), action, event.toData());
             return this;
         }
 
-        public EventableWrapper toFollowersOf(Key key) {
+        public EventableWrapper toFollowersOf(EarthRef key) {
             Queue.getService().enqueuePushMessageFromUser(key.name(), action, event.toData());
             return this;
         }
 
-        public EventableWrapper to(Entity entity) {
+        public EventableWrapper to(EarthThing entity) {
             return to(entity.key());
         }
 
-        public EventableWrapper toFollowersOf(Entity entity) {
+        public EventableWrapper toFollowersOf(EarthThing entity) {
             return toFollowersOf(entity.key());
         }
     }

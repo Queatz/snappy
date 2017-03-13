@@ -1,9 +1,9 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.backend.ApiUtil;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.exceptions.LogicException;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
@@ -11,7 +11,6 @@ import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
-import java.util.Date;
 
 /**
  * Created by jacob on 5/14/16.
@@ -57,7 +56,7 @@ public class LocationInterface implements Interfaceable {
     }
 
     private String putPhoto(EarthAs as, String locationId) {
-        Entity location = new EarthStore(as).get(locationId);
+        EarthThing location = new EarthStore(as).get(locationId);
 
         try {
             if (!ApiUtil.putPhoto(location.key().name(), as.getApi(), as.getRequest())) {

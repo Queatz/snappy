@@ -1,14 +1,14 @@
 package com.queatz.snappy.logic.authorities;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthRule;
+import com.queatz.snappy.logic.EarthThing;
 
 /**
  * Created by jacob on 7/19/16.
  */
 public class PersonAuthority extends CommonThingAuthority {
     @Override
-    public boolean authorize(Entity as, Entity entity, EarthRule rule) {
+    public boolean authorize(EarthThing as, EarthThing entity, EarthRule rule) {
         switch (rule) {
             case ACCESS:
                 // Anyone can see

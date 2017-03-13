@@ -1,7 +1,7 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.google.cloud.datastore.LatLng;
 import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Interfaceable;
@@ -26,7 +26,7 @@ public class HereInterface implements Interfaceable {
         String longitudeParam = as.getParameters().get(Config.PARAM_LONGITUDE)[0];
         double latitude = Float.valueOf(latitudeParam);
         double longitude = Float.valueOf(longitudeParam);
-        final LatLng latLng = LatLng.of(latitude, longitude);
+        final EarthGeo latLng = EarthGeo.of(latitude, longitude);
 
         new PersonEditor(as).updateLocation(as.getUser(), latLng);
 

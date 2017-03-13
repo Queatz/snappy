@@ -1,7 +1,7 @@
 package com.queatz.snappy.logic.views;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthView;
 
 /**
@@ -9,11 +9,11 @@ import com.queatz.snappy.logic.EarthView;
  */
 public class ContactView extends LinkView {
 
-    public ContactView(EarthAs as, Entity contact) {
+    public ContactView(EarthAs as, EarthThing contact) {
         this(as, contact, EarthView.DEEP);
     }
 
-    public ContactView(EarthAs as, Entity contact, EarthView view) {
+    public ContactView(EarthAs as, EarthThing contact, EarthView view) {
         super(as, contact, view);
     }
 }

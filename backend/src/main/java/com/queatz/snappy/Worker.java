@@ -7,23 +7,21 @@ import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import com.google.appengine.repackaged.com.google.common.collect.ImmutableMap;
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.LatLng;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.googlecode.objectify.ObjectifyService;
-import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.backend.RegistrationRecord;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthEmail;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthSearcher;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.concepts.Eventable;
-import com.queatz.snappy.service.Api;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
@@ -94,24 +92,24 @@ public class Worker extends HttpServlet {
         if(fromUser != null) {
             final EarthStore earthStore = new EarthStore(as);
 
-            for(Entity follow : earthStore.find(EarthKind.FOLLOWER_KIND, EarthField.TARGET, earthStore.key(fromUser))) {
+            for(EarthThing follow : earthStore.find(EarthKind.FOLLOWER_KIND, EarthField.TARGET, earthStore.key(fromUser))) {
                 toUsers.add(new SendInstance(follow.getKey(EarthField.SOURCE).name(), Config.SOCIAL_MODE_FRIENDS));
             }
 
             // Social Mode: On
             // Friends will have higher priority due to HashSet not overwriting existing elements
 
-            Entity source = earthStore.get(fromUser);
+            EarthThing source = earthStore.get(fromUser);
 
-            LatLng latLng;
+            EarthGeo latLng;
 
-            if (source.contains(EarthField.GEO)) {
-                latLng = source.getLatLng(EarthField.GEO);
+            if (source.has(EarthField.GEO)) {
+                latLng = source.getGeo(EarthField.GEO);
             } else {
-                latLng = earthStore.get(source.getKey(EarthField.SOURCE)).getLatLng(EarthField.GEO);
+                latLng = earthStore.get(source.getKey(EarthField.SOURCE)).getGeo(EarthField.GEO);
             }
 
-            for (Entity person : new EarthSearcher(as).getNearby(EarthKind.PERSON_KIND, null, latLng, null, 300)) {
+            for (EarthThing person : new EarthSearcher(as).getNearby(EarthKind.PERSON_KIND, null, latLng, null, 300)) {
                 if(fromUser.equals(person.key().name())) {
                     continue;
                 }

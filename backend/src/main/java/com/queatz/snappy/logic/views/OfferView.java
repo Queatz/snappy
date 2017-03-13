@@ -1,10 +1,10 @@
 package com.queatz.snappy.logic.views;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthView;
 
 import java.util.Date;
@@ -20,11 +20,11 @@ public class OfferView extends ThingView {
     final int likers;
     final Boolean want;
 
-    public OfferView(EarthAs as, Entity offer) {
+    public OfferView(EarthAs as, EarthThing offer) {
         this(as, offer, EarthView.DEEP);
     }
 
-    public OfferView(EarthAs as, Entity offer, EarthView view) {
+    public OfferView(EarthAs as, EarthThing offer, EarthView view) {
         super(as, offer, view);
 
         EarthStore earthStore = use(EarthStore.class);
@@ -33,7 +33,7 @@ public class OfferView extends ThingView {
         unit = offer.getString(EarthField.UNIT);
         person = new PersonView(as, earthStore.get(offer.getKey(EarthField.SOURCE)), EarthView.SHALLOW);
         likers = earthStore.count(EarthKind.LIKE_KIND, EarthField.TARGET, offer.key());
-        date = offer.getDateTime(EarthField.CREATED_ON).toDate();
+        date = offer.getDateTime(EarthField.CREATED_ON);
 
         if (offer.contains(EarthField.WANT)) {
             want = offer.getBoolean(EarthField.WANT);

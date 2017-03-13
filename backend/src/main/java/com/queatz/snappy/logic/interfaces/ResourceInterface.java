@@ -1,8 +1,8 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.editors.ResourceEditor;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 
@@ -12,21 +12,21 @@ import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 public class ResourceInterface extends CommonThingInterface {
 
     @Override
-    public Entity createThing(EarthAs as) {
+    public EarthThing createThing(EarthAs as) {
         String[] name = as.getParameters().get(EarthField.NAME);
 
         if (name == null || name.length != 1) {
             throw new NothingLogicResponse("resource - name parameter is expected");
         }
 
-        Entity resource = new ResourceEditor(as).newResource(name[0], as.getUser());
+        EarthThing resource = new ResourceEditor(as).newResource(name[0], as.getUser());
         resource = postPhoto(resource, as);
 
         return resource;
     }
 
     @Override
-    public Entity editThing(EarthAs as, Entity resource) {
+    public EarthThing editThing(EarthAs as, EarthThing resource) {
         String[] name = as.getParameters().get(EarthField.NAME);
         String[] about = as.getParameters().get(EarthField.ABOUT);
 

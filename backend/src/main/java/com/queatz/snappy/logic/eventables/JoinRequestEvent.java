@@ -1,6 +1,6 @@
 package com.queatz.snappy.logic.eventables;
 
-import com.google.cloud.datastore.Entity;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.shared.Config;
 
 /**
@@ -10,7 +10,7 @@ import com.queatz.snappy.shared.Config;
 public class JoinRequestEvent extends JoinEvent {
     public JoinRequestEvent() { super(); }
 
-    public JoinRequestEvent(Entity join) {
+    public JoinRequestEvent(EarthThing join) {
         super(join);
     }
 

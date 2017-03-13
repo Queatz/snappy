@@ -1,13 +1,13 @@
 package com.queatz.snappy.logic.views;
 
 import com.google.appengine.api.datastore.GeoPt;
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.LatLng;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Viewable;
 import com.queatz.snappy.logic.mines.FollowerMine;
@@ -43,11 +43,11 @@ public class PersonView extends ExistenceView {
     final List<Viewable> clubs;
     final GeoPt geo;
 
-    public PersonView(EarthAs as, Entity person) {
+    public PersonView(EarthAs as, EarthThing person) {
         this(as, person, EarthView.DEEP);
     }
 
-    public PersonView(EarthAs as, Entity person, EarthView view) {
+    public PersonView(EarthAs as, EarthThing person, EarthView view) {
         super(as, person, view);
 
         final EarthStore earthStore = use(EarthStore.class);
@@ -70,8 +70,8 @@ public class PersonView extends ExistenceView {
             boolean isBacking = use(FollowerMine.class).getFollower(person, as.getUser()) != null;
 
             if (isBacking) {
-                LatLng latLng = person.getLatLng(EarthField.GEO);
-                geo = new GeoPt((float) latLng.latitude(), (float) latLng.longitude());
+                EarthGeo latLng = person.getLatLng(EarthField.GEO);
+                geo = new GeoPt((float) latLng.getLatitude(), (float) latLng.getLongitude());
             } else {
                 geo = null;
             }
@@ -81,22 +81,22 @@ public class PersonView extends ExistenceView {
         }
 
         if (person.contains(EarthField.AROUND)) {
-            infoUpdated = person.getDateTime(EarthField.AROUND).toDate();
+            infoUpdated = person.getDateTime(EarthField.AROUND);
         } else {
             infoUpdated = null;
         }
 
         switch (view) {
             case DEEP:
-                createdOn = person.getDateTime(EarthField.CREATED_ON).toDate();
+                createdOn = person.getDateTime(EarthField.CREATED_ON);
                 socialMode = Push.getService().getSocialMode(person.key().name());
 
-                List<Entity> updatesList = earthStore.find(EarthKind.UPDATE_KIND, EarthField.TARGET, person.key(), Config.SEARCH_MAXIMUM);
-                List<Entity> offersList = earthStore.find(EarthKind.OFFER_KIND, EarthField.SOURCE, person.key());
-                List<Entity> resourcesList = earthStore.find(EarthKind.RESOURCE_KIND, EarthField.SOURCE, person.key());
-                List<Entity> projectsList = earthStore.find(EarthKind.PROJECT_KIND, EarthField.SOURCE, person.key());
-                List<Entity> hubsList = earthStore.find(EarthKind.HUB_KIND, EarthField.SOURCE, person.key());
-                List<Entity> clubsList = earthStore.find(EarthKind.CLUB_KIND, EarthField.SOURCE, person.key());
+                List<EarthThing> updatesList = earthStore.find(EarthKind.UPDATE_KIND, EarthField.TARGET, person.key(), Config.SEARCH_MAXIMUM);
+                List<EarthThing> offersList = earthStore.find(EarthKind.OFFER_KIND, EarthField.SOURCE, person.key());
+                List<EarthThing> resourcesList = earthStore.find(EarthKind.RESOURCE_KIND, EarthField.SOURCE, person.key());
+                List<EarthThing> projectsList = earthStore.find(EarthKind.PROJECT_KIND, EarthField.SOURCE, person.key());
+                List<EarthThing> hubsList = earthStore.find(EarthKind.HUB_KIND, EarthField.SOURCE, person.key());
+                List<EarthThing> clubsList = earthStore.find(EarthKind.CLUB_KIND, EarthField.SOURCE, person.key());
 
                 updates = new EntityListView(as, updatesList, EarthView.DEEP).asList();
                 offers = new EntityListView(as, offersList, EarthView.SHALLOW).asList();

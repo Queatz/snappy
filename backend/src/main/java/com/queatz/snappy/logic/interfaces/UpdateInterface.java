@@ -1,6 +1,5 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.google.appengine.api.datastore.GeoPt;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
@@ -10,16 +9,14 @@ import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.appengine.tools.cloudstorage.ListItem;
 import com.google.appengine.tools.cloudstorage.ListOptions;
 import com.google.appengine.tools.cloudstorage.ListResult;
-import com.google.cloud.datastore.BooleanValue;
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.LatLng;
 import com.google.gson.JsonArray;
-import com.queatz.snappy.backend.ApiUtil;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.EarthViewer;
@@ -104,9 +101,9 @@ public class UpdateInterface implements Interfaceable {
     private String likeUpdate(EarthAs as, String updateId) {
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
-        Entity poster = new EarthStore(as).get(updateId);
+        EarthThing poster = new EarthStore(as).get(updateId);
 
-        Entity like = new LikeMine(as).getLike(as.getUser(), poster);
+        EarthThing like = new LikeMine(as).getLike(as.getUser(), poster);
 
         if (like != null) {
             return new SuccessView(false).toJson();
@@ -121,7 +118,7 @@ public class UpdateInterface implements Interfaceable {
     }
 
     private String getLikers(EarthAs as, String updateId) {
-        List<Entity> likers = new EarthStore(as).find(EarthKind.LIKE_KIND, EarthField.TARGET, new EarthStore(as).key(updateId));
+        List<EarthThing> likers = new EarthStore(as).find(EarthKind.LIKE_KIND, EarthField.TARGET, new EarthStore(as).key(updateId));
 
         return new EntityListView(as, likers, EarthView.SHALLOW).toJson();
     }
@@ -168,7 +165,7 @@ public class UpdateInterface implements Interfaceable {
     }
 
     private String postUpdate(EarthAs as) {
-        Entity update = new UpdateEditor(as).stageUpdate(as.getUser());
+        EarthThing update = new UpdateEditor(as).stageUpdate(as.getUser());
         GcsFilename photoName = new GcsFilename(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), "earth/thing/photo/" + update.key().name() + "/" + new Date().getTime());
 
         String message = null;
@@ -239,12 +236,12 @@ public class UpdateInterface implements Interfaceable {
             throw new NothingLogicResponse("post update - nothing to post");
         }
 
-        Entity thing = new EarthStore(as).get(thingId);
+        EarthThing thing = new EarthStore(as).get(thingId);
 
-        LatLng geo = null;
+        EarthGeo geo = null;
 
         if (latitude != null && longitude != null) {
-            geo = LatLng.of(latitude, longitude);
+            geo = EarthGeo.of(latitude, longitude);
         }
 
         update = new UpdateEditor(as).updateWith(update, thing, message, photoUploaded, geo, with, going);
@@ -259,7 +256,7 @@ public class UpdateInterface implements Interfaceable {
     }
 
     private String editUpdate(EarthAs as, String updateId) {
-        Entity update = new EarthStore(as).get(updateId);
+        EarthThing update = new EarthStore(as).get(updateId);
 
         GcsFilename photoName = new GcsFilename(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), "earth/thing/photo/" + update.key().name() + "/" + new Date().getTime());
 

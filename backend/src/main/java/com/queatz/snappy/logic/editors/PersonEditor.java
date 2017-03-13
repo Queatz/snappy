@@ -1,18 +1,18 @@
 package com.queatz.snappy.logic.editors;
 
-import com.google.cloud.datastore.DateTime;
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.LatLng;
-import com.google.cloud.datastore.NullValue;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.shared.Config;
 
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Date;
 
 /**
  * Created by jacob on 5/8/16.
@@ -27,22 +27,22 @@ public class PersonEditor extends EarthControl {
     }
 
 
-    public Entity newPerson() {
+    public EarthThing newPerson() {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.PERSON_KIND))
                 .set(EarthField.TOKEN, Util.genToken())
-                .set(EarthField.ABOUT, NullValue.of())
-                .set(EarthField.SUBSCRIPTION, NullValue.of()));
+                .set(EarthField.ABOUT)
+                .set(EarthField.SUBSCRIPTION));
     }
 
-    public Entity newPerson(String email) {
+    public EarthThing newPerson(String email) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.PERSON_KIND))
                 .set(EarthField.TOKEN, Util.genToken())
                 .set(EarthField.EMAIL, email)
-                .set(EarthField.ABOUT, NullValue.of())
-                .set(EarthField.SUBSCRIPTION, NullValue.of()));
+                .set(EarthField.ABOUT)
+                .set(EarthField.SUBSCRIPTION));
     }
 
-    public Entity updatePerson(Entity person,
+    public EarthThing updatePerson(EarthThing person,
                                String token,
                                String firstName,
                                String lastName,
@@ -53,7 +53,7 @@ public class PersonEditor extends EarthControl {
                                String googleUrl,
                                String about,
                                String subscription) {
-        Entity.Builder update = earthStore.edit(person)
+        EarthThing.Builder update = earthStore.edit(person)
                 .set(EarthField.FIRST_NAME, nullableString(firstName))
                 .set(EarthField.LAST_NAME, nullableString(lastName))
                 .set(EarthField.GENDER, nullableString(gender))
@@ -95,17 +95,17 @@ public class PersonEditor extends EarthControl {
         return string;
     }
 
-    public void updateSubscription(Entity person, String subscription) {
+    public void updateSubscription(EarthThing person, String subscription) {
         earthStore.save(earthStore.edit(person).set(EarthField.SUBSCRIPTION, subscription));
     }
 
-    public void updateLocation(Entity person, LatLng latLng) {
+    public void updateLocation(EarthThing person, EarthGeo latLng) {
         earthStore.save(earthStore.edit(person)
                 .set(EarthField.GEO, latLng)
-                .set(EarthField.AROUND, DateTime.now()));
+                .set(EarthField.AROUND, new Date()));
     }
 
-    public void updateAbout(Entity person, String about) {
+    public void updateAbout(EarthThing person, String about) {
         earthStore.save(earthStore.edit(person).set(EarthField.ABOUT, about));
     }
 }

@@ -1,16 +1,15 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.JoinEditor;
 import com.queatz.snappy.logic.editors.PartyEditor;
-import com.queatz.snappy.logic.eventables.JoinEvent;
 import com.queatz.snappy.logic.eventables.JoinRequestEvent;
 import com.queatz.snappy.logic.eventables.NewPartyEvent;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
@@ -39,7 +38,7 @@ public class PartyInterface implements Interfaceable {
 
     @Override
     public String post(EarthAs as) {
-        Entity party;
+        EarthThing party;
 
         switch (as.getRoute().size()) {
             case 0:
@@ -81,8 +80,8 @@ public class PartyInterface implements Interfaceable {
         throw new NothingLogicResponse("party - bad path");
     }
 
-    private String postJoin(EarthAs as, Entity party) {
-        Entity join = new JoinEditor(as).newJoin(as.getUser(), party);
+    private String postJoin(EarthAs as, EarthThing party) {
+        EarthThing join = new JoinEditor(as).newJoin(as.getUser(), party);
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
         new EarthUpdate(as).send(new JoinRequestEvent(join))
@@ -91,8 +90,8 @@ public class PartyInterface implements Interfaceable {
         return new JoinView(as, join).setLocalId(localId).toJson();
     }
 
-    private String postCancelJoin(EarthAs as, Entity party) {
-        Entity join = new JoinMine(as).byPersonAndParty(as.getUser(), party);
+    private String postCancelJoin(EarthAs as, EarthThing party) {
+        EarthThing join = new JoinMine(as).byPersonAndParty(as.getUser(), party);
 
         new JoinEditor(as).setStatus(join, Config.JOIN_STATUS_WITHDRAWN);
         return null;

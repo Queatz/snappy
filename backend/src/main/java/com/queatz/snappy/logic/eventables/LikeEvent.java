@@ -1,13 +1,13 @@
 package com.queatz.snappy.logic.eventables;
 
-import com.google.cloud.datastore.Entity;
 import com.google.common.collect.ImmutableMap;
+import com.queatz.snappy.backend.PushSpec;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.backend.PushSpec;
 
 /**
  * Created by jacob on 6/19/16.
@@ -16,7 +16,7 @@ public class LikeEvent implements Eventable {
 
     EarthStore earthStore = new EarthStore(new EarthAs());
 
-    Entity like;
+    EarthThing like;
 
     // Serialization
 
@@ -33,14 +33,14 @@ public class LikeEvent implements Eventable {
 
     // End Serialization
 
-    public LikeEvent(Entity like) {
+    public LikeEvent(EarthThing like) {
         this.like = like;
     }
 
     @Override
     public Object makePush() {
-        Entity person = earthStore.get(like.getKey(EarthField.SOURCE));
-        Entity update = earthStore.get(like.getKey(EarthField.TARGET));
+        EarthThing person = earthStore.get(like.getKey(EarthField.SOURCE));
+        EarthThing update = earthStore.get(like.getKey(EarthField.TARGET));
 
         return new PushSpec(
                 Config.PUSH_ACTION_LIKE_UPDATE,
@@ -59,8 +59,8 @@ public class LikeEvent implements Eventable {
 
     @Override
     public String makeSubject() {
-        Entity person = earthStore.get(like.getKey(EarthField.SOURCE));
-        Entity update = earthStore.get(like.getKey(EarthField.TARGET));
+        EarthThing person = earthStore.get(like.getKey(EarthField.SOURCE));
+        EarthThing update = earthStore.get(like.getKey(EarthField.TARGET));
 
         return person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME) + " liked your " + (
                 update.getBoolean(EarthField.PHOTO) ? "photo" : "update");
@@ -68,7 +68,7 @@ public class LikeEvent implements Eventable {
 
     @Override
     public String makeEmail() {
-        Entity person = earthStore.get(like.getKey(EarthField.SOURCE));
+        EarthThing person = earthStore.get(like.getKey(EarthField.SOURCE));
 
         return "<span style=\"color: #757575;\">View their profile at " + Config.VILLAGE_WEBSITE + person.getString(EarthField.GOOGLE_URL) + "</span>";
     }

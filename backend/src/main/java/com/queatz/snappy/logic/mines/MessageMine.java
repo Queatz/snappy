@@ -1,14 +1,14 @@
 package com.queatz.snappy.logic.mines;
 
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.StructuredQuery;
 import com.google.common.collect.Lists;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
+import com.queatz.snappy.logic.EarthRef;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.shared.Config;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class MessageMine extends EarthControl {
         super(as);
     }
 
-    public List<Entity> messagesFromTo(Key source, Key target) {
+    public List<EarthThing> messagesFromTo(EarthRef source, EarthRef target) {
         return Lists.newArrayList(
                 use(EarthStore.class).queryLimited(Config.SEARCH_MAXIMUM,
                         StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.MESSAGE_KIND),
@@ -31,7 +31,7 @@ public class MessageMine extends EarthControl {
         );
     }
 
-    public List<Entity> messagesFrom(Key source) {
+    public List<EarthThing> messagesFrom(EarthRef source) {
         return Lists.newArrayList(
                 use(EarthStore.class).queryLimited(Config.SEARCH_MAXIMUM,
                         StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.MESSAGE_KIND),
@@ -40,7 +40,7 @@ public class MessageMine extends EarthControl {
         );
     }
 
-    public List<Entity> messagesTo(Key target) {
+    public List<EarthThing> messagesTo(EarthRef target) {
         return Lists.newArrayList(
                 use(EarthStore.class).queryLimited(Config.SEARCH_MAXIMUM,
                         StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.MESSAGE_KIND),

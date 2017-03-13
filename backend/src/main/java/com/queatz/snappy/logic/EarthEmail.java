@@ -1,6 +1,5 @@
 package com.queatz.snappy.logic;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.shared.Config;
 
 import java.util.Properties;
@@ -19,8 +18,8 @@ import javax.mail.internet.MimeMessage;
  * 5/29/16.
  */
 public class EarthEmail {
-    public void sendRawEmail(Entity fromPerson,
-                             Entity toPerson,
+    public void sendRawEmail(EarthThing fromPerson,
+                             EarthThing toPerson,
                              String subject,
                              String message) {
 

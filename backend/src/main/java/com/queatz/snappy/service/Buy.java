@@ -6,13 +6,13 @@ import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
-import com.google.cloud.datastore.Entity;
 import com.google.gson.JsonObject;
 import com.queatz.snappy.backend.GooglePurchaseDataSpec;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthJson;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.mines.PersonMine;
 import com.queatz.snappy.shared.Config;
@@ -75,7 +75,7 @@ public class Buy {
         }
     }
 
-    public boolean valid(Entity me) {
+    public boolean valid(EarthThing me) {
         if(me == null)
             return false;
 
@@ -85,7 +85,7 @@ public class Buy {
                 !Config.HOSTING_ENABLED_AVAILABLE.equals(subscription);
     }
 
-    public boolean validate(Entity me, GooglePurchaseDataSpec purchaseData) throws PrintingError {
+    public boolean validate(EarthThing me, GooglePurchaseDataSpec purchaseData) throws PrintingError {
         if(me == null)
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "not bought no user");
 

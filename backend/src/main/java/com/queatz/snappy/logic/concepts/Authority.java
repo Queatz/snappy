@@ -1,7 +1,7 @@
 package com.queatz.snappy.logic.concepts;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthRule;
+import com.queatz.snappy.logic.EarthThing;
 
 /**
  * Authorities allow kinds of things to allow or deny different kinds of access to the requesting
@@ -16,5 +16,5 @@ public interface Authority {
      * @param rule The rule in question
      * @return Whether or not to grant access to this user
      */
-    boolean authorize(Entity as, Entity entity, EarthRule rule);
+    boolean authorize(EarthThing as, EarthThing entity, EarthRule rule);
 }

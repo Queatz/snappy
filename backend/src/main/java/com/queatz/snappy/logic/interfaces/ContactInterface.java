@@ -1,8 +1,8 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
@@ -23,7 +23,7 @@ public class ContactInterface implements Interfaceable {
             case 0:
                 throw new NothingLogicResponse("contact - empty route");
             case 1:
-                Entity thing = new EarthStore(as).get(as.getRoute().get(0));
+                EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
 
                 return new EarthViewer(as).getViewForEntityOrThrow(thing).toJson();
             default:
@@ -37,11 +37,11 @@ public class ContactInterface implements Interfaceable {
 
         switch (as.getRoute().size()) {
             case 0: {
-                Entity thing = earthStore.get(as.getParameters().get(Config.PARAM_THING)[0]);
-                Entity person = earthStore.get(as.getParameters().get(Config.PARAM_PERSON)[0]);
+                EarthThing thing = earthStore.get(as.getParameters().get(Config.PARAM_THING)[0]);
+                EarthThing person = earthStore.get(as.getParameters().get(Config.PARAM_PERSON)[0]);
                 String role = extract(as.getParameters().get(Config.PARAM_ROLE));
 
-                Entity contact;
+                EarthThing contact;
 
                 if (role != null) {
                     contact = new ContactEditor(as).newContact(thing, person, role);
@@ -54,7 +54,7 @@ public class ContactInterface implements Interfaceable {
                 return new EarthViewer(as).getViewForEntityOrThrow(contact).toJson();
             }
             case 1: {
-                Entity thing = earthStore.get(as.getRoute().get(0));
+                EarthThing thing = earthStore.get(as.getRoute().get(0));
 
                 // todo edit role
 
@@ -63,7 +63,7 @@ public class ContactInterface implements Interfaceable {
 
             case 2: {
                 if (Config.PATH_DELETE.equals(as.getRoute().get(1))) {
-                    Entity thing = earthStore.get(as.getRoute().get(0));
+                    EarthThing thing = earthStore.get(as.getRoute().get(0));
                     earthStore.conclude(thing);
                     return new SuccessView(true).toJson();
                 }

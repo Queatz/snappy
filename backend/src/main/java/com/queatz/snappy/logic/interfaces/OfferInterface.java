@@ -1,11 +1,11 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.backend.ApiUtil;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.EarthViewer;
@@ -15,7 +15,6 @@ import com.queatz.snappy.logic.editors.OfferEditor;
 import com.queatz.snappy.logic.eventables.OfferLikeEvent;
 import com.queatz.snappy.logic.exceptions.LogicException;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
-import com.queatz.snappy.logic.mines.FollowerMine;
 import com.queatz.snappy.logic.mines.LikeMine;
 import com.queatz.snappy.logic.views.EntityListView;
 import com.queatz.snappy.logic.views.LikeView;
@@ -25,7 +24,6 @@ import com.queatz.snappy.service.Buy;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -84,7 +82,7 @@ public class OfferInterface implements Interfaceable {
 
 
     private String addPhoto(EarthAs as, String offerId) {
-        Entity offer = new EarthStore(as).get(offerId);
+        EarthThing offer = new EarthStore(as).get(offerId);
 
         try {
             if (!ApiUtil.putPhoto(offer.key().name(), as.getApi(), as.getRequest())) {
@@ -143,7 +141,7 @@ public class OfferInterface implements Interfaceable {
                 }
             }
 
-            Entity offer = new OfferEditor(as).edit(new EarthStore(as).get(offerId), details, price, unit);
+            EarthThing offer = new OfferEditor(as).edit(new EarthStore(as).get(offerId), details, price, unit);
 
             return new OfferView(as, offer).setLocalId(localId).toJson();
         }
@@ -157,19 +155,19 @@ public class OfferInterface implements Interfaceable {
     }
 
     private String getLikers(EarthAs as, String offerId) {
-        Entity offer = new EarthStore(as).get(offerId);
+        EarthThing offer = new EarthStore(as).get(offerId);
 
-        List<Entity> likers = new EarthStore(as).find(EarthKind.LIKE_KIND, EarthField.TARGET, offer.key());
+        List<EarthThing> likers = new EarthStore(as).find(EarthKind.LIKE_KIND, EarthField.TARGET, offer.key());
 
         return new EntityListView(as, likers, EarthView.SHALLOW).toJson();
     }
 
     private String like(EarthAs as, String offerId) {
-        Entity offer = new EarthStore(as).get(offerId);
+        EarthThing offer = new EarthStore(as).get(offerId);
 
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
-        Entity like = new LikeMine(as).getLike(as.getUser(), offer);
+        EarthThing like = new LikeMine(as).getLike(as.getUser(), offer);
 
         if (like != null) {
             return new SuccessView(false).toJson();

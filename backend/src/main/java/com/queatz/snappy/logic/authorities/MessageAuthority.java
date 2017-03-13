@@ -1,8 +1,8 @@
 package com.queatz.snappy.logic.authorities;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthRule;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.concepts.Authority;
 
 /**
@@ -10,16 +10,16 @@ import com.queatz.snappy.logic.concepts.Authority;
  */
 public class MessageAuthority implements Authority {
     @Override
-    public boolean authorize(Entity as, Entity entity, EarthRule rule) {
+    public boolean authorize(EarthThing as, EarthThing entity, EarthRule rule) {
         switch (rule) {
             case ACCESS:
                 // Only message senders / receivers can see message
-                return !entity.contains(EarthField.SOURCE) ||
+                return !entity.has(EarthField.SOURCE) ||
                         as.key().equals(entity.getKey(EarthField.SOURCE)) ||
                         as.key().equals(entity.getKey(EarthField.TARGET));
             case MODIFY:
                 // Only message senders can edit messages
-                return !entity.contains(EarthField.SOURCE) ||
+                return !entity.has(EarthField.SOURCE) ||
                         as.key().equals(entity.getKey(EarthField.SOURCE));
             default:
                 return true;

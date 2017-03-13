@@ -1,10 +1,10 @@
 package com.queatz.snappy.logic.views;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Viewable;
@@ -23,24 +23,24 @@ public class PartyView extends ThingView {
     final Viewable host;
     final Viewable location;
 
-    public PartyView(EarthAs as, Entity party) {
+    public PartyView(EarthAs as, EarthThing party) {
         this(as, party, EarthView.DEEP);
     }
 
-    public PartyView(EarthAs as, Entity party, EarthView view) {
+    public PartyView(EarthAs as, EarthThing party, EarthView view) {
         super(as, party, view);
 
         final EarthStore earthStore = use(EarthStore.class);
         final EarthViewer earthViewer = use(EarthViewer.class);
 
-        date = party.getDateTime(EarthField.DATE).toDate();
+        date = party.getDateTime(EarthField.DATE);
         full = party.getBoolean(EarthField.FULL);
         host = earthViewer.getViewForEntityOrThrow(earthStore.get(party.getKey(EarthField.HOST)), EarthView.SHALLOW);
         location = earthViewer.getViewForEntityOrThrow(earthStore.get(party.getKey(EarthField.LOCATION)), EarthView.SHALLOW);
 
         switch (view) {
             case DEEP:
-                List<Entity> joinsList = earthStore.find(EarthKind.JOIN_KIND, EarthField.TARGET, party.key());
+                List<EarthThing> joinsList = earthStore.find(EarthKind.JOIN_KIND, EarthField.TARGET, party.key());
                 joins = new EntityListView(as, joinsList, EarthView.SHALLOW).asList();
 
                 break;

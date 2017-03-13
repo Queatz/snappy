@@ -1,9 +1,9 @@
 package com.queatz.snappy.logic.views;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthView;
 
 import java.util.Date;
@@ -19,16 +19,16 @@ public class MessageView extends ExistenceView {
     final PersonView to;
     final boolean photo;
 
-    public MessageView(EarthAs as, Entity message) {
+    public MessageView(EarthAs as, EarthThing message) {
         this(as, message, EarthView.DEEP);
     }
 
-    public MessageView(EarthAs as, Entity message, EarthView view) {
+    public MessageView(EarthAs as, EarthThing message, EarthView view) {
         super(as, message, view);
 
         EarthStore earthStore = use(EarthStore.class);
 
-        date = message.getDateTime(EarthField.CREATED_ON).toDate();
+        date = message.getDateTime(EarthField.CREATED_ON);
 
         if (message.contains(EarthField.MESSAGE)) {
             this.message = message.getString(EarthField.MESSAGE);

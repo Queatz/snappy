@@ -1,14 +1,14 @@
 package com.queatz.snappy.logic.eventables;
 
-import com.google.cloud.datastore.Entity;
 import com.google.common.collect.ImmutableMap;
+import com.queatz.snappy.backend.PushSpec;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.logic.mines.ContactMine;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.backend.PushSpec;
 
 /**
  * Created by jacob on 6/26/16.
@@ -17,7 +17,7 @@ public class NewThingEvent implements Eventable {
     EarthStore earthStore = new EarthStore(new EarthAs());
     ContactMine contactMine = new ContactMine(new EarthAs());
 
-    Entity thing;
+    EarthThing thing;
 
     // Serialization
 
@@ -34,7 +34,7 @@ public class NewThingEvent implements Eventable {
 
     // End Serialization
 
-    public NewThingEvent(Entity thing) {
+    public NewThingEvent(EarthThing thing) {
         this.thing = thing;
     }
 
@@ -51,8 +51,8 @@ public class NewThingEvent implements Eventable {
 
     @Override
     public String makeSubject() {
-        Entity contact = contactMine.getContacts(thing).get(0);
-        Entity person = earthStore.get(contact.getKey(EarthField.TARGET));
+        EarthThing contact = contactMine.getContacts(thing).get(0);
+        EarthThing person = earthStore.get(contact.getKey(EarthField.TARGET));
 
         String name = person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME);
 
@@ -61,8 +61,8 @@ public class NewThingEvent implements Eventable {
 
     @Override
     public String makeEmail() {
-        Entity contact = contactMine.getContacts(thing).get(0);
-        Entity person = earthStore.get(contact.getKey(EarthField.TARGET));
+        EarthThing contact = contactMine.getContacts(thing).get(0);
+        EarthThing person = earthStore.get(contact.getKey(EarthField.TARGET));
 
         String thingUrl = Config.VILLAGE_WEBSITE + thing.getString(EarthField.KIND) + "s/" + thing.key().name();
 

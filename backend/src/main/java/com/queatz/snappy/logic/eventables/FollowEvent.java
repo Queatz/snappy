@@ -1,13 +1,13 @@
 package com.queatz.snappy.logic.eventables;
 
-import com.google.cloud.datastore.Entity;
 import com.google.common.collect.ImmutableMap;
+import com.queatz.snappy.backend.PushSpec;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.backend.PushSpec;
 
 /**
  * Created by jacob on 6/19/16.
@@ -16,7 +16,7 @@ public class FollowEvent implements Eventable {
 
     EarthStore earthStore = new EarthStore(new EarthAs());
 
-    Entity follow;
+    EarthThing follow;
 
     // Serialization
 
@@ -33,13 +33,13 @@ public class FollowEvent implements Eventable {
 
     // End Serialization
 
-    public FollowEvent(Entity follow) {
+    public FollowEvent(EarthThing follow) {
         this.follow = follow;
     }
 
     @Override
     public Object makePush() {
-        Entity person = earthStore.get(follow.getKey(EarthField.SOURCE));
+        EarthThing person = earthStore.get(follow.getKey(EarthField.SOURCE));
 
         return new PushSpec(
                 Config.PUSH_ACTION_FOLLOW,
@@ -55,7 +55,7 @@ public class FollowEvent implements Eventable {
 
     @Override
     public String makeSubject() {
-        Entity person = earthStore.get(follow.getKey(EarthField.SOURCE));
+        EarthThing person = earthStore.get(follow.getKey(EarthField.SOURCE));
 
         String name = person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME);
 
@@ -64,7 +64,7 @@ public class FollowEvent implements Eventable {
 
     @Override
     public String makeEmail() {
-        Entity person = earthStore.get(follow.getKey(EarthField.SOURCE));
+        EarthThing person = earthStore.get(follow.getKey(EarthField.SOURCE));
         String personUrl = Config.VILLAGE_WEBSITE + person.getString(EarthField.GOOGLE_URL);
 
         return "<span style=\"color: #757575;\">View their profile at " + personUrl + "</span>";

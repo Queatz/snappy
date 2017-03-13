@@ -1,19 +1,13 @@
 package com.queatz.snappy.logic.eventables;
 
-import com.google.cloud.datastore.Entity;
 import com.google.common.collect.ImmutableMap;
 import com.queatz.snappy.backend.PushSpec;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by jacob on 10/16/16.
@@ -22,7 +16,7 @@ public class NewCommentEvent implements Eventable {
 
     EarthStore earthStore = new EarthStore(new EarthAs());
 
-    Entity update;
+    EarthThing update;
 
     // Serialization
 
@@ -39,13 +33,13 @@ public class NewCommentEvent implements Eventable {
 
     // End Serialization
 
-    public NewCommentEvent(Entity update) {
+    public NewCommentEvent(EarthThing update) {
         this.update = update;
     }
 
     @Override
     public Object makePush() {
-        Entity person = earthStore.get(update.getKey(EarthField.SOURCE));
+        EarthThing person = earthStore.get(update.getKey(EarthField.SOURCE));
 
         return new PushSpec(
                 Config.PUSH_ACTION_NEW_COMMENT,
@@ -61,7 +55,7 @@ public class NewCommentEvent implements Eventable {
 
     @Override
     public String makeSubject() {
-        Entity person = earthStore.get(update.getKey(EarthField.SOURCE));
+        EarthThing person = earthStore.get(update.getKey(EarthField.SOURCE));
 
         String subject;
         String name = person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME);
@@ -72,8 +66,8 @@ public class NewCommentEvent implements Eventable {
 
     @Override
     public String makeEmail() {
-        Entity person = earthStore.get(update.getKey(EarthField.SOURCE));
-        Entity updatedThing = earthStore.get(update.getKey(EarthField.TARGET));
+        EarthThing person = earthStore.get(update.getKey(EarthField.SOURCE));
+        EarthThing updatedThing = earthStore.get(update.getKey(EarthField.TARGET));
 
         String personUrl = Config.VILLAGE_WEBSITE + person.getString(EarthField.GOOGLE_URL);
         String updateUrl = Config.VILLAGE_WEBSITE + updatedThing.getString(EarthField.KIND) + "s/" + updatedThing.key().name();

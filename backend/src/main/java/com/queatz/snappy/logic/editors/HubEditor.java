@@ -1,12 +1,12 @@
 package com.queatz.snappy.logic.editors;
 
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.LatLng;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,7 +23,7 @@ public class HubEditor extends EarthControl {
         earthStore = use(EarthStore.class);
     }
 
-    public Entity newHub(@Nonnull String name, @Nonnull String address, @Nonnull LatLng latLng) {
+    public EarthThing newHub(@Nonnull String name, @Nonnull String address, @Nonnull EarthGeo latLng) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.HUB_KIND))
                 .set(EarthField.PHOTO, false)
                 .set(EarthField.NAME, name)
@@ -32,12 +32,12 @@ public class HubEditor extends EarthControl {
                 .set(EarthField.ADDRESS, address));
     }
 
-    public Entity edit(@Nonnull Entity hub,
+    public EarthThing edit(@Nonnull EarthThing hub,
                        @Nullable String name,
                        @Nullable String address,
-                       @Nullable LatLng latLng,
+                       @Nullable EarthGeo latLng,
                        @Nullable String about) {
-        Entity.Builder edit = earthStore.edit(hub);
+        EarthThing.Builder edit = earthStore.edit(hub);
 
         if (name != null) {
             edit.set(EarthField.NAME, name);

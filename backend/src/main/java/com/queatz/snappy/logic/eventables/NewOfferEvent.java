@@ -1,13 +1,13 @@
 package com.queatz.snappy.logic.eventables;
 
-import com.google.cloud.datastore.Entity;
 import com.google.common.collect.ImmutableMap;
+import com.queatz.snappy.backend.PushSpec;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.backend.PushSpec;
 
 /**
  * Created by jacob on 6/19/16.
@@ -16,7 +16,7 @@ public class NewOfferEvent implements Eventable {
 
     EarthStore earthStore = new EarthStore(new EarthAs());
 
-    Entity offer;
+    EarthThing offer;
 
     // Serialization
 
@@ -33,13 +33,13 @@ public class NewOfferEvent implements Eventable {
 
     // End Serialization
 
-    public NewOfferEvent(Entity offer) {
+    public NewOfferEvent(EarthThing offer) {
         this.offer = offer;
     }
 
     @Override
     public Object makePush() {
-        Entity person = earthStore.get(offer.getKey(EarthField.SOURCE));
+        EarthThing person = earthStore.get(offer.getKey(EarthField.SOURCE));
 
         return new PushSpec(
                 Config.PUSH_ACTION_NEW_OFFER,
@@ -56,9 +56,9 @@ public class NewOfferEvent implements Eventable {
 
     @Override
     public String makeSubject() {
-        Entity person = earthStore.get(offer.getKey(EarthField.SOURCE));
+        EarthThing person = earthStore.get(offer.getKey(EarthField.SOURCE));
 
-        boolean want = offer.contains(EarthField.WANT) && offer.getBoolean(EarthField.WANT);
+        boolean want = offer.has(EarthField.WANT) && offer.getBoolean(EarthField.WANT);
 
         return person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME) + " added a new " +
                 (want ? "request" : "offer");
@@ -66,7 +66,7 @@ public class NewOfferEvent implements Eventable {
 
     @Override
     public String makeEmail() {
-        Entity person = earthStore.get(offer.getKey(EarthField.SOURCE));
+        EarthThing person = earthStore.get(offer.getKey(EarthField.SOURCE));
         String personUrl = Config.VILLAGE_WEBSITE + person.getString(EarthField.GOOGLE_URL);
 
         return offer.getString(EarthField.ABOUT) + "<br /><br /><span style=\"color: #757575;\">View their profile at " + personUrl + "</span>";

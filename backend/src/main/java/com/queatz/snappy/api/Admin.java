@@ -1,9 +1,9 @@
 package com.queatz.snappy.api;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.eventables.RefreshMeEvent;
@@ -67,7 +67,7 @@ public class Admin extends Api.Path {
     }
 
     private void getBetatester(String personEmail) {
-        Entity person = personMine.byEmail(personEmail);
+        EarthThing person = personMine.byEmail(personEmail);
 
         if (person != null) {
             if (StringUtils.isBlank(person.getString(EarthField.SUBSCRIPTION))) {
@@ -81,7 +81,7 @@ public class Admin extends Api.Path {
     }
 
     private void getEnableHosting(String personEmail) {
-        Entity person = personMine.byEmail(personEmail);
+        EarthThing person = personMine.byEmail(personEmail);
 
         if (person != null) {
             if (StringUtils.isBlank(person.getString(EarthField.SUBSCRIPTION))) {
@@ -95,7 +95,7 @@ public class Admin extends Api.Path {
     }
 
     private void getDisableHosting(String personEmail) {
-        Entity person = personMine.byEmail(personEmail);
+        EarthThing person = personMine.byEmail(personEmail);
 
         if (person != null) {
             if (StringUtils.isBlank(person.getString(EarthField.SUBSCRIPTION))) {

@@ -1,15 +1,14 @@
 package com.queatz.snappy.logic.eventables;
 
-import com.google.cloud.datastore.Entity;
 import com.google.common.collect.ImmutableMap;
-import com.queatz.snappy.backend.Util;
+import com.queatz.snappy.backend.PushSpec;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.backend.PushSpec;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +22,7 @@ public class NewUpdateEvent implements Eventable {
 
     EarthStore earthStore = new EarthStore(new EarthAs());
 
-    Entity update;
+    EarthThing update;
 
     // Serialization
 
@@ -40,12 +39,12 @@ public class NewUpdateEvent implements Eventable {
 
     // End Serialization
 
-    public NewUpdateEvent(Entity update) {
+    public NewUpdateEvent(EarthThing update) {
         this.update = update;
     }
 
-    private List<Map<String, String>> getWith(Entity thing) {
-        List<Entity> joins = earthStore.find(EarthKind.JOIN_KIND, EarthField.TARGET, thing.key());
+    private List<Map<String, String>> getWith(EarthThing thing) {
+        List<EarthThing> joins = earthStore.find(EarthKind.JOIN_KIND, EarthField.TARGET, thing.key());
 
         List<Map<String, String>> results = new ArrayList<>();
 
@@ -55,8 +54,8 @@ public class NewUpdateEvent implements Eventable {
             return results;
         }
 
-        for(Entity join : joins) {
-            Entity with = earthStore.get(join.getKey(EarthField.SOURCE));
+        for(EarthThing join : joins) {
+            EarthThing with = earthStore.get(join.getKey(EarthField.SOURCE));
             String kind = with.getString(EarthField.KIND);
             String name;
 
@@ -96,7 +95,7 @@ public class NewUpdateEvent implements Eventable {
 
     @Override
     public Object makePush() {
-        Entity person = earthStore.get(update.getKey(EarthField.SOURCE));
+        EarthThing person = earthStore.get(update.getKey(EarthField.SOURCE));
 
         return new PushSpec(
                 Config.PUSH_ACTION_NEW_UPTO,
@@ -115,8 +114,8 @@ public class NewUpdateEvent implements Eventable {
 
     @Override
     public String makeSubject() {
-        Entity person = earthStore.get(update.getKey(EarthField.SOURCE));
-        Entity updatedThing = earthStore.get(update.getKey(EarthField.TARGET));
+        EarthThing person = earthStore.get(update.getKey(EarthField.SOURCE));
+        EarthThing updatedThing = earthStore.get(update.getKey(EarthField.TARGET));
 
         String subject;
         String name = person.getString(EarthField.FIRST_NAME) + " " + person.getString(EarthField.LAST_NAME);
@@ -132,8 +131,8 @@ public class NewUpdateEvent implements Eventable {
 
     @Override
     public String makeEmail() {
-        Entity person = earthStore.get(update.getKey(EarthField.SOURCE));
-        Entity updatedThing = earthStore.get(update.getKey(EarthField.TARGET));
+        EarthThing person = earthStore.get(update.getKey(EarthField.SOURCE));
+        EarthThing updatedThing = earthStore.get(update.getKey(EarthField.TARGET));
 
         String personUrl = Config.VILLAGE_WEBSITE + person.getString(EarthField.GOOGLE_URL);
         String updateUrl = Config.VILLAGE_WEBSITE + updatedThing.getString(EarthField.KIND) + "s/" + updatedThing.key().name();

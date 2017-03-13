@@ -13,9 +13,6 @@ import com.google.appengine.api.search.SearchServiceFactory;
 import com.google.appengine.api.search.SortExpression;
 import com.google.appengine.api.search.SortOptions;
 import com.google.appengine.repackaged.com.google.common.collect.ImmutableSet;
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.Key;
-import com.google.cloud.datastore.LatLng;
 import com.queatz.snappy.shared.Config;
 
 import java.util.ArrayList;
@@ -42,13 +39,15 @@ public class EarthSearcher extends EarthControl {
 
     private Index index;
 
-    public boolean update(Entity object) {
+    @Deprecated
+    public boolean update(EarthThing object) {
         boolean success = updateGeo(object);
         updateLinked(object);
         return success;
     }
 
-    private boolean updateGeo(Entity object) {
+    @Deprecated
+    private boolean updateGeo(EarthThing object) {
         Document document = build(object);
 
         if (document == null) {
@@ -65,22 +64,25 @@ public class EarthSearcher extends EarthControl {
         return true;
     }
 
-    public void delete(Entity object) {
+    @Deprecated
+    public void delete(EarthThing object) {
         index.delete(getId(object));
     }
 
+    @Deprecated
     public void delete(String id) {
         index.delete(id);
     }
 
-    public String getId(Entity object) {
+    @Deprecated
+    public String getId(EarthThing object) {
         return object.key().name();
     }
 
-    public List<Entity> getNearby(String kind, String q, LatLng location, Date afterDate, int count) {
+    public List<EarthThing> getNearby(String kind, String q, EarthGeo location, Date afterDate, int count) {
         String queryString = "(";
 
-        final String geoString = "geopoint(" + location.latitude() + ", " + location.longitude() + ")";
+        final String geoString = "geopoint(" + location.getLatitude() + ", " + location.getLongitude() + ")";
 
         queryString += "distance(geo, " + geoString + ") < " + Config.SEARCH_MAX_VISIBILITY;
 
@@ -136,17 +138,17 @@ public class EarthSearcher extends EarthControl {
         }
 
         SortOptions sortOptions = SortOptions.newBuilder().addSortExpression(
-                SortExpression.newBuilder().setExpression("distance(geo, geopoint(" + location.latitude() + ", " + location.longitude() + "))")
+                SortExpression.newBuilder().setExpression("distance(geo, geopoint(" + location.getLatitude() + ", " + location.getLongitude() + "))")
                         .setDirection(SortExpression.SortDirection.ASCENDING).build()
         ).build();
 
         QueryOptions queryOptions = QueryOptions.newBuilder().setSortOptions(sortOptions).setLimit(count).build();
         Query query = Query.newBuilder().setOptions(queryOptions).build(queryString);
 
-        List<Entity> results = new ArrayList<>();
+        List<EarthThing> results = new ArrayList<>();
 
         for(ScoredDocument document : index.search(query)) {
-            Entity entity = thingFromDocument(document);
+            EarthThing entity = thingFromDocument(document);
 
             if (entity != null) {
                 results.add(entity);
@@ -156,21 +158,23 @@ public class EarthSearcher extends EarthControl {
         return results;
     }
 
-    private Entity thingFromDocument(Document document) {
+    @Deprecated
+    private EarthThing thingFromDocument(Document document) {
         final EarthStore earthStore = use(EarthStore.class);
         return earthStore.get(document.getId());
     }
 
-    private Document build(Entity object) {
+    @Deprecated
+    private Document build(EarthThing object) {
         final EarthStore earthStore = use(EarthStore.class);
 
         Document.Builder builder = Document.newBuilder();
 
-        if (object.contains(EarthField.GEO)) {
-            LatLng latLng = object.getLatLng(EarthField.GEO);
+        if (object.has(EarthField.GEO)) {
+            EarthGeo latLng = object.getGeo(EarthField.GEO);
 
             Field geoField = Field.newBuilder().setName(EarthField.GEO)
-                    .setGeoPoint(new GeoPoint(latLng.latitude(), latLng.longitude())).build();
+                    .setGeoPoint(new GeoPoint(latLng.getLatitude(), latLng.getLongitude())).build();
 
             builder.addField(geoField);
         }
@@ -182,29 +186,29 @@ public class EarthSearcher extends EarthControl {
         builder.setId(getId(object));
 
         Field createdField = Field.newBuilder().setName(EarthField.CREATED_ON)
-                .setNumber(object.getDateTime(EarthField.CREATED_ON).toDate().getTime() / 1000)
+                .setNumber(object.getDate(EarthField.CREATED_ON).getTime() / 1000)
                 .build();
 
         builder.addField(createdField);
 
-        if (object.contains(EarthField.AROUND)) {
+        if (object.has(EarthField.AROUND)) {
             Field updatedField = Field.newBuilder().setName(EarthField.UPDATED_ON)
-                    .setNumber(object.getDateTime(EarthField.AROUND).toDate().getTime() / 1000)
+                    .setNumber(object.getDate(EarthField.AROUND).getTime() / 1000)
                     .build();
 
             builder.addField(updatedField);
         }
 
-        if (object.contains(EarthField.NAME) && object.getString(EarthField.NAME) != null) {
+        if (object.has(EarthField.NAME) && object.getString(EarthField.NAME) != null) {
             Field nameField = Field.newBuilder().setName(EarthField.NAME)
                     .setText(tokenizeName(object.getString(EarthField.NAME))).build();
 
             builder.addField(nameField);
         }
-        else if (object.contains(EarthField.FIRST_NAME)) {
+        else if (object.has(EarthField.FIRST_NAME)) {
             String name = object.getString(EarthField.FIRST_NAME);
 
-            if (object.contains(EarthField.LAST_NAME)) {
+            if (object.has(EarthField.LAST_NAME)) {
                 name += " " + object.getString(EarthField.LAST_NAME);
             }
 
@@ -217,9 +221,9 @@ public class EarthSearcher extends EarthControl {
         // Add linked geo's
         // Fields source, target, source_geo, target_geo
         for (String field : new String[] { EarthField.SOURCE, EarthField.TARGET }) {
-            if (object.contains(field)) {
-                Key linkedEntityId = object.getKey(field);
-                Entity linkedEntity = earthStore.get(linkedEntityId);
+            if (object.has(field)) {
+                EarthRef linkedEntityId = object.getKey(field);
+                EarthThing linkedEntity = earthStore.get(linkedEntityId);
 
                 if (linkedEntity != null) {
                     Field linkedId = Field.newBuilder().setName(field)
@@ -227,11 +231,11 @@ public class EarthSearcher extends EarthControl {
 
                     builder.addField(linkedId);
 
-                    if (linkedEntity.contains(EarthField.GEO)) {
-                        LatLng linkedLatLng = linkedEntity.getLatLng(EarthField.GEO);
+                    if (linkedEntity.has(EarthField.GEO)) {
+                        EarthGeo linkedLatLng = linkedEntity.getGeo(EarthField.GEO);
 
                         Field linkedGeo = Field.newBuilder().setName(field + "_" + EarthField.GEO)
-                                .setGeoPoint(new GeoPoint(linkedLatLng.latitude(), linkedLatLng.longitude())).build();
+                                .setGeoPoint(new GeoPoint(linkedLatLng.getLatitude(), linkedLatLng.getLongitude())).build();
 
                         builder.addField(linkedGeo);
                     }
@@ -244,7 +248,8 @@ public class EarthSearcher extends EarthControl {
 
     // XXX slow, and sluggish
     // Updates the linked locations of linked entities
-    private void updateLinked(Entity entity) {
+    @Deprecated
+    private void updateLinked(EarthThing entity) {
         final EarthStore earthStore = use(EarthStore.class);
 
         String id = entity.key().name();

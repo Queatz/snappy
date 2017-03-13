@@ -1,14 +1,15 @@
 package com.queatz.snappy.logic.editors;
 
-import com.google.cloud.datastore.DateTime;
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.Key;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
+import com.queatz.snappy.logic.EarthRef;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.mines.RecentMine;
+
+import java.util.Date;
 
 /**
  * Created by jacob on 5/8/16.
@@ -24,40 +25,40 @@ public class RecentEditor extends EarthControl {
         recentMine = use(RecentMine.class);
     }
 
-    public Entity newRecent(Entity person, Entity with, Entity latest) {
+    public EarthThing newRecent(EarthThing person, EarthThing with, EarthThing latest) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.RECENT_KIND))
                 .set(EarthField.SOURCE, person.key())
                 .set(EarthField.TARGET, with.key())
-                .set(EarthField.UPDATED_ON, DateTime.now())
+                .set(EarthField.UPDATED_ON, new Date())
                 .set(EarthField.SEEN, latest.getKey(EarthField.SOURCE).equals(person.key()))
                 .set(EarthField.LATEST, latest.key()));
     }
 
-    public void updateWithMessage(Entity message) {
-        for(Key[] fromTo : new Key[][] {
-                new Key[] {
+    public void updateWithMessage(EarthThing message) {
+        for(EarthRef[] fromTo : new EarthRef[][] {
+                new EarthRef[] {
                         message.getKey(EarthField.SOURCE),
                         message.getKey(EarthField.TARGET)
                 },
-                new Key[] {
+                new EarthRef[] {
                         message.getKey(EarthField.TARGET),
                         message.getKey(EarthField.SOURCE)
                 },
         }) {
-            Entity recent = recentMine.byPerson(fromTo[0], fromTo[1]);
+            EarthThing recent = recentMine.byPerson(fromTo[0], fromTo[1]);
 
             if(recent == null) {
                 newRecent(earthStore.get(fromTo[0]), earthStore.get(fromTo[1]), message);
             } else {
                 earthStore.save(earthStore.edit(recent)
-                        .set(EarthField.UPDATED_ON, DateTime.now())
+                        .set(EarthField.UPDATED_ON, new Date())
                         .set(EarthField.LATEST, message.key())
                         .set(EarthField.SEEN, message.getKey(EarthField.SOURCE).equals(fromTo[0])));
             }
         }
     }
 
-    public Entity markSeen(Entity recent) {
+    public EarthThing markSeen(EarthThing recent) {
         return earthStore.save(earthStore.edit(recent).set(EarthField.SEEN, true));
     }
 }

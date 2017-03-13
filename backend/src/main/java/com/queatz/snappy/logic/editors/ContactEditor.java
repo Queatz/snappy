@@ -1,11 +1,11 @@
 package com.queatz.snappy.logic.editors;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 
 import javax.annotation.Nonnull;
 
@@ -21,13 +21,13 @@ public class ContactEditor extends EarthControl {
         earthStore = use(EarthStore.class);
     }
 
-    public Entity newContact(@Nonnull Entity thing, @Nonnull Entity person) {
+    public EarthThing newContact(@Nonnull EarthThing thing, @Nonnull EarthThing person) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.CONTACT_KIND))
                 .set(EarthField.SOURCE, thing.key())
                 .set(EarthField.TARGET, person.key()));
     }
 
-    public Entity newContact(@Nonnull Entity thing, @Nonnull Entity person, @Nonnull String role) {
+    public EarthThing newContact(@Nonnull EarthThing thing, @Nonnull EarthThing person, @Nonnull String role) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.CONTACT_KIND))
                 .set(EarthField.SOURCE, thing.key())
                 .set(EarthField.TARGET, person.key())

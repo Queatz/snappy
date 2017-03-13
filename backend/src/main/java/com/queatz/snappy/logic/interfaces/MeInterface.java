@@ -3,15 +3,15 @@ package com.queatz.snappy.logic.interfaces;
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.LatLng;
 import com.google.common.collect.Lists;
 import com.queatz.snappy.backend.GooglePurchaseDataSpec;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthEmail;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.EarthViewer;
@@ -45,8 +45,6 @@ import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by jacob on 5/14/16.
@@ -121,7 +119,7 @@ public class MeInterface implements Interfaceable {
         String longitudeParam = as.getParameters().get(Config.PARAM_LONGITUDE)[0];
         double latitude = Double.valueOf(latitudeParam);
         double longitude = Double.valueOf(longitudeParam);
-        final LatLng latLng = LatLng.of(latitude, longitude);
+        final EarthGeo latLng = EarthGeo.of(latitude, longitude);
 
         new PersonEditor(as).updateLocation(as.getUser(), latLng);
 
@@ -129,8 +127,8 @@ public class MeInterface implements Interfaceable {
     }
 
     private String postReport(EarthAs as, String personId) {
-        Entity jacob = new EarthStore(as).get("-697803823443327660");
-        Entity person = new EarthStore(as).get(personId);
+        EarthThing jacob = new EarthStore(as).get("-697803823443327660");
+        EarthThing person = new EarthStore(as).get(personId);
         String feedback = as.getRequest().getParameter(Config.PARAM_MESSAGE);
 
         String report = "reported person with email " +
@@ -144,14 +142,14 @@ public class MeInterface implements Interfaceable {
 
     private String getMessages(EarthAs as) {
         // XXX TODO when Datastore supports OR expressions, combine these
-        List<Entity> messagesToMe = new MessageMine(as).messagesFrom(as.getUser().key());
-        List<Entity> messagesFromMe = new MessageMine(as).messagesTo(as.getUser().key());
+        List<EarthThing> messagesToMe = new MessageMine(as).messagesFrom(as.getUser().key());
+        List<EarthThing> messagesFromMe = new MessageMine(as).messagesTo(as.getUser().key());
 
-        List<Entity> messages = Lists.newArrayList();
+        List<EarthThing> messages = Lists.newArrayList();
         messages.addAll(messagesToMe);
         messages.addAll(messagesFromMe);
 
-        List<Entity> contacts = new RecentMine(as).forPerson(as.getUser());
+        List<EarthThing> contacts = new RecentMine(as).forPerson(as.getUser());
 
         return new MessagesAndContactsView(as, messages, contacts).toJson();
     }
@@ -221,7 +219,7 @@ public class MeInterface implements Interfaceable {
                 }
             }
 
-            Entity offer = new OfferEditor(as).newOffer(as.getUser(), details, want, price, unit);
+            EarthThing offer = new OfferEditor(as).newOffer(as.getUser(), details, want, price, unit);
 
             if (offer != null) {
                 new EarthUpdate(as).send(new NewOfferEvent(offer))
@@ -240,7 +238,7 @@ public class MeInterface implements Interfaceable {
      * @deprecated Use UpdateInterface
      */
     private String postUpdate(EarthAs as) {
-        Entity update = new UpdateEditor(as).newUpdate(as.getUser());
+        EarthThing update = new UpdateEditor(as).newUpdate(as.getUser());
         GcsFilename photoName = new GcsFilename(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), "earth/thing/photo/" + update.key().name() + "/" + new Date().getTime());
 
         String message = null;

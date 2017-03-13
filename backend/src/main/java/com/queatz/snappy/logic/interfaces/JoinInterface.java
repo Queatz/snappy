@@ -1,15 +1,14 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.JoinEditor;
 import com.queatz.snappy.logic.eventables.JoinAcceptedEvent;
-import com.queatz.snappy.logic.eventables.JoinRequestEvent;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.shared.Config;
@@ -23,7 +22,7 @@ public class JoinInterface implements Interfaceable {
     public String post(EarthAs as) {
         switch (as.getRoute().size()) {
             case 1:
-                Entity join = new EarthStore(as).get(as.getRoute().get(0));
+                EarthThing join = new EarthStore(as).get(as.getRoute().get(0));
 
                 if (join == null) {
                     throw new NothingLogicResponse("join - no");
@@ -52,7 +51,7 @@ public class JoinInterface implements Interfaceable {
     public String get(EarthAs as) {
         switch (as.getRoute().size()) {
             case 1:
-                Entity join = new EarthStore(as).get(as.getRoute().get(0));
+                EarthThing join = new EarthStore(as).get(as.getRoute().get(0));
 
                 if (join == null) {
                     throw new NothingLogicResponse("join - no");

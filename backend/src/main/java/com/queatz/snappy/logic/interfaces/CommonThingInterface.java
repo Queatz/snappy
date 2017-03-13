@@ -1,11 +1,11 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.backend.ApiUtil;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
@@ -17,7 +17,6 @@ import com.queatz.snappy.service.Api;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
-import java.util.Date;
 
 /**
  * Common thing interface
@@ -39,7 +38,7 @@ public abstract class CommonThingInterface implements Interfaceable {
      *
      * @return A newly created thing.
      */
-    public abstract Entity createThing(EarthAs as);
+    public abstract EarthThing createThing(EarthAs as);
 
     /**
      * Implement this method to edit things of this kind.
@@ -47,7 +46,7 @@ public abstract class CommonThingInterface implements Interfaceable {
      * @param thing The thing to edit.
      * @return The edited thing.
      */
-    public abstract Entity editThing(EarthAs as, Entity thing);
+    public abstract EarthThing editThing(EarthAs as, EarthThing thing);
 
     /**
      * Implement this method to delete things of this kind.
@@ -55,7 +54,7 @@ public abstract class CommonThingInterface implements Interfaceable {
      * @param thing The thing to delete.
      * @return If the thing was deleted.
      */
-    public boolean deleteThing(EarthAs as, Entity thing) {
+    public boolean deleteThing(EarthAs as, EarthThing thing) {
         new EarthStore(as).conclude(thing);
         return true;
     }
@@ -66,7 +65,7 @@ public abstract class CommonThingInterface implements Interfaceable {
             case 0:
                 throw new NothingLogicResponse("thing - empty route");
             case 1:
-                Entity thing = new EarthStore(as).get(as.getRoute().get(0));
+                EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
 
                 return new EarthViewer(as).getViewForEntityOrThrow(thing).toJson();
             case 2:
@@ -86,7 +85,7 @@ public abstract class CommonThingInterface implements Interfaceable {
     public String post(EarthAs as) {
         switch (as.getRoute().size()) {
             case 0: {
-                Entity thing = this.createThing(as);
+                EarthThing thing = this.createThing(as);
                 new ContactEditor(as).newContact(thing, as.getUser());
 
                 new EarthUpdate(as).send(new NewThingEvent(thing)).toFollowersOf(as.getUser());
@@ -94,7 +93,7 @@ public abstract class CommonThingInterface implements Interfaceable {
                 return new EarthViewer(as).getViewForEntityOrThrow(thing).toJson();
             }
             case 1: {
-                Entity thing = new EarthStore(as).get(as.getRoute().get(0));
+                EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
 
                 this.editThing(as, thing);
 
@@ -106,7 +105,7 @@ public abstract class CommonThingInterface implements Interfaceable {
                     postPhoto(new EarthStore(as).get(as.getRoute().get(0)), as);
                     return new SuccessView(true).toJson();
                 } else if (Config.PATH_DELETE.equals(as.getRoute().get(1))) {
-                    Entity thing = new EarthStore(as).get(as.getRoute().get(0));
+                    EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
                     return new SuccessView(deleteThing(as, thing)).toJson();
                 }
 
@@ -118,7 +117,7 @@ public abstract class CommonThingInterface implements Interfaceable {
     }
 
     private void getPhoto(EarthAs as) {
-        Entity thing = new EarthStore(as).get(as.getRoute().get(0));
+        EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
 
         if (!thing.getBoolean(EarthField.PHOTO)) {
             throw new PrintingError(Api.Error.NOT_FOUND, "thing - photo not set");
@@ -134,7 +133,7 @@ public abstract class CommonThingInterface implements Interfaceable {
         }
     }
 
-    protected Entity postPhoto(Entity thing, EarthAs as) {
+    protected EarthThing postPhoto(EarthThing thing, EarthAs as) {
         try {
             boolean photo = ApiUtil.putPhoto(thing.key().name(), as.getApi(), as.getRequest());
 

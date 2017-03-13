@@ -1,10 +1,10 @@
 package com.queatz.snappy.logic.views;
 
-import com.google.cloud.datastore.Entity;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthJson;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Viewable;
 
@@ -21,11 +21,11 @@ public class ExistenceView extends EarthControl implements Viewable {
     final String id;
     final String kind;
 
-    public ExistenceView(EarthAs as, Entity entity) {
+    public ExistenceView(EarthAs as, EarthThing entity) {
         this(as, entity, EarthView.DEEP);
     }
 
-    public ExistenceView(EarthAs as, Entity entity, EarthView view) {
+    public ExistenceView(EarthAs as, EarthThing entity, EarthView view) {
         super(as);
 
         id = entity.key().name();

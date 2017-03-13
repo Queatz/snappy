@@ -6,13 +6,13 @@ import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
-import com.google.cloud.datastore.Entity;
 import com.google.gson.JsonObject;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthJson;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.mines.PersonMine;
 import com.queatz.snappy.shared.Config;
@@ -134,12 +134,12 @@ public class Auth {
         }
     }
 
-    public Entity fetchUserFromAuth(String email, String token) throws PrintingError {
+    public EarthThing fetchUserFromAuth(String email, String token) throws PrintingError {
         if(token == null) {
             return null;
         }
 
-        Entity person;
+        EarthThing person;
 
         if(email != null) // Google login
             person = personMine.byEmail(email);
@@ -147,7 +147,7 @@ public class Auth {
             person = personMine.byToken(token);
 
         if(person != null && email == null) {
-            if (!person.contains(EarthField.TOKEN)) {
+            if (!person.has(EarthField.TOKEN)) {
                 throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null tok");
             }
 

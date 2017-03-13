@@ -1,16 +1,14 @@
 package com.queatz.snappy.logic.editors;
 
-import com.google.appengine.api.datastore.GeoPt;
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.LatLng;
-import com.google.cloud.datastore.NullValue;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.shared.Config;
 
 /**
@@ -27,41 +25,41 @@ public class UpdateEditor extends EarthControl {
         joinEditor = use(JoinEditor.class);
     }
 
-    public Entity newUpdate(Entity person) {
+    public EarthThing newUpdate(EarthThing person) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.UPDATE_KIND))
                 .set(EarthField.SOURCE, person.key())
-                .set(EarthField.NAME, NullValue.of())
-                .set(EarthField.ABOUT, NullValue.of())
+                .set(EarthField.NAME)
+                .set(EarthField.ABOUT)
                 .set(EarthField.PHOTO, false)
                 .set(EarthField.TARGET, person.key()));
     }
 
-    public Entity stageUpdate(Entity person) {
+    public EarthThing stageUpdate(EarthThing person) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.UPDATE_KIND))
                 .set(EarthField.SOURCE, person.key())
-                .set(EarthField.NAME, NullValue.of()));
+                .set(EarthField.NAME));
     }
 
-    public Entity setMessage(Entity update, String message) {
+    public EarthThing setMessage(EarthThing update, String message) {
         return earthStore.save(earthStore.edit(update).set(EarthField.ABOUT, message));
     }
 
-    public Entity newUpdate(Entity person, String action, Entity target) {
+    public EarthThing newUpdate(EarthThing person, String action, EarthThing target) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.UPDATE_KIND))
                 .set(EarthField.SOURCE, person.key())
                 .set(EarthField.ACTION, action)
                 .set(EarthField.TARGET, target.key()));
     }
 
-    public Entity updateWith(Entity update, Entity thing, String message, boolean photo, LatLng geo, JsonArray with, boolean going) {
-        Entity.Builder edit = earthStore.edit(update)
+    public EarthThing updateWith(EarthThing update, EarthThing thing, String message, boolean photo, EarthGeo geo, JsonArray with, boolean going) {
+        EarthThing.Builder edit = earthStore.edit(update)
                 .set(EarthField.TARGET, thing.key())
                 .set(EarthField.ACTION, Config.UPDATE_ACTION_UPTO)
                 .set(EarthField.GOING, going)
                 .set(EarthField.PHOTO, photo);
 
         if (message == null) {
-            edit.set(EarthField.ABOUT, NullValue.of());
+            edit.set(EarthField.ABOUT);
         } else {
             edit.set(EarthField.ABOUT, message);
         }
@@ -70,11 +68,11 @@ public class UpdateEditor extends EarthControl {
             edit.set(EarthField.GEO, geo);
         }
 
-        Entity saved = earthStore.save(edit);
+        EarthThing saved = earthStore.save(edit);
 
         if (with != null && with.size() > 0) {
             for (JsonElement peep : with) {
-                Entity person = earthStore.get(peep.getAsString());
+                EarthThing person = earthStore.get(peep.getAsString());
                 joinEditor.newJoin(person, saved);
             }
         }
@@ -82,12 +80,12 @@ public class UpdateEditor extends EarthControl {
         return saved;
     }
 
-    public Entity updateWith(Entity update, String message, boolean photo) {
-        Entity.Builder edit = earthStore.edit(update)
+    public EarthThing updateWith(EarthThing update, String message, boolean photo) {
+        EarthThing.Builder edit = earthStore.edit(update)
                 .set(EarthField.PHOTO, photo);
 
         if (message == null) {
-            edit.set(EarthField.ABOUT, NullValue.of());
+            edit.set(EarthField.ABOUT);
         } else {
             edit.set(EarthField.ABOUT, message);
         }

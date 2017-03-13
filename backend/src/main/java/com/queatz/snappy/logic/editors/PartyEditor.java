@@ -1,15 +1,14 @@
 package com.queatz.snappy.logic.editors;
 
-import com.google.cloud.datastore.DateTime;
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.LatLng;
 import com.google.gson.JsonObject;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.shared.Config;
 
 import java.util.Date;
@@ -32,14 +31,14 @@ public class PartyEditor extends EarthControl {
         updateEditor = use(UpdateEditor.class);
     }
 
-    public Entity newParty(String original,
-                           Entity person,
-                           String name,
-                           Date date,
-                           String locationParam,
-                           String details) {
+    public EarthThing newParty(String original,
+                               EarthThing person,
+                               String name,
+                               Date date,
+                               String locationParam,
+                               String details) {
 
-        Entity location = null;
+        EarthThing location = null;
 
         if(locationParam.startsWith("{")) {
             JsonObject jsonObject = earthJson.fromJson(locationParam, JsonObject.class);
@@ -47,18 +46,18 @@ public class PartyEditor extends EarthControl {
             location = locationEditor.newLocation(
                     jsonObject.get(Config.PARAM_NAME).getAsString(),
                     jsonObject.get(Config.PARAM_ADDRESS).getAsString(),
-                    LatLng.of(jsonObject.get(Config.PARAM_LATITUDE).getAsDouble(), jsonObject.get(Config.PARAM_LONGITUDE).getAsDouble()));
+                    EarthGeo.of(jsonObject.get(Config.PARAM_LATITUDE).getAsDouble(), jsonObject.get(Config.PARAM_LONGITUDE).getAsDouble()));
         }
 
         if(location == null) {
             location = earthStore.get(locationParam);
         }
 
-        Entity party = earthStore.create(EarthKind.PARTY_KIND);
+        EarthThing party = earthStore.create(EarthKind.PARTY_KIND);
 
-        Entity.Builder partyEdit = earthStore.edit(party)
+        EarthThing.Builder partyEdit = earthStore.edit(party)
                 .set(EarthField.NAME, name)
-                .set(EarthField.DATE, DateTime.copyFrom(date))
+                .set(EarthField.DATE, date)
                 .set(EarthField.ABOUT, details)
                 .set(EarthField.FULL, false)
                 .set(EarthField.PHOTO, false)
@@ -78,7 +77,7 @@ public class PartyEditor extends EarthControl {
         return party;
     }
 
-    public Entity setFull(Entity party) {
+    public EarthThing setFull(EarthThing party) {
         return earthStore.save(earthStore.edit(party).set(EarthField.FULL, true));
     }
 }
