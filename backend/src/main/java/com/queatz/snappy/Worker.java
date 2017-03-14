@@ -17,7 +17,7 @@ import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthKind;
-import com.queatz.snappy.logic.EarthSearcher;
+import com.queatz.snappy.logic.EarthRef;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
@@ -92,7 +92,7 @@ public class Worker extends HttpServlet {
         if(fromUser != null) {
             final EarthStore earthStore = new EarthStore(as);
 
-            for(EarthThing follow : earthStore.find(EarthKind.FOLLOWER_KIND, EarthField.TARGET, earthStore.key(fromUser))) {
+            for(EarthThing follow : earthStore.find(EarthKind.FOLLOWER_KIND, EarthField.TARGET, EarthRef.of(fromUser))) {
                 toUsers.add(new SendInstance(follow.getKey(EarthField.SOURCE).name(), Config.SOCIAL_MODE_FRIENDS));
             }
 
@@ -109,7 +109,7 @@ public class Worker extends HttpServlet {
                 latLng = earthStore.get(source.getKey(EarthField.SOURCE)).getGeo(EarthField.GEO);
             }
 
-            for (EarthThing person : new EarthSearcher(as).getNearby(EarthKind.PERSON_KIND, null, latLng, null, 300)) {
+            for (EarthThing person : new EarthStore(as).getNearby(latLng, EarthKind.PERSON_KIND, null)) {
                 if(fromUser.equals(person.key().name())) {
                     continue;
                 }

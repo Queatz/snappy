@@ -1,6 +1,5 @@
 package com.queatz.snappy.logic.mines;
 
-import com.google.cloud.datastore.StructuredQuery;
 import com.google.common.collect.Lists;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;

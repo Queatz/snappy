@@ -33,9 +33,9 @@ public class OfferView extends ThingView {
         unit = offer.getString(EarthField.UNIT);
         person = new PersonView(as, earthStore.get(offer.getKey(EarthField.SOURCE)), EarthView.SHALLOW);
         likers = earthStore.count(EarthKind.LIKE_KIND, EarthField.TARGET, offer.key());
-        date = offer.getDateTime(EarthField.CREATED_ON);
+        date = offer.getDate(EarthField.CREATED_ON);
 
-        if (offer.contains(EarthField.WANT)) {
+        if (offer.has(EarthField.WANT)) {
             want = offer.getBoolean(EarthField.WANT);
         } else {
             want = null;

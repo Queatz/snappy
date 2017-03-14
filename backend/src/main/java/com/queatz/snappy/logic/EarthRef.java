@@ -5,8 +5,17 @@ package com.queatz.snappy.logic;
  */
 
 public class EarthRef {
+    private final String name;
+
+    public EarthRef(String name) {
+        this.name = name;
+    }
 
     public String name() {
         return null;
+    }
+
+    public static EarthRef of(String id) {
+        return new EarthRef(id);
     }
 }

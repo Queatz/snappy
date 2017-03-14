@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
+import com.queatz.snappy.logic.EarthRef;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
@@ -140,8 +141,8 @@ public class PersonInterface implements Interfaceable {
 
     private String getMessages(EarthAs as, String personId) {
         // XXX TODO when Datastore supports OR expressions, combine these
-        List<EarthThing> messagesToMe = new MessageMine(as).messagesFromTo(as.getUser().key(), new EarthStore(as).key(personId));
-        List<EarthThing> messagesFromMe = new MessageMine(as).messagesFromTo(new EarthStore(as).key(personId), as.getUser().key());
+        List<EarthThing> messagesToMe = new MessageMine(as).messagesFromTo(as.getUser().key(), EarthRef.of(personId));
+        List<EarthThing> messagesFromMe = new MessageMine(as).messagesFromTo(EarthRef.of(personId), as.getUser().key());
 
         List<EarthThing> messages = Lists.newArrayList();
         messages.addAll(messagesToMe);

@@ -26,8 +26,8 @@ public class LocationView extends ExistenceView {
         address = location.getString(EarthField.ADDRESS);
 
         geo = new GeoPt(
-                (float) location.getLatLng(EarthField.GEO).getLatitude(),
-                (float) location.getLatLng(EarthField.GEO).getLongitude()
+                (float) location.getGeo(EarthField.GEO).getLatitude(),
+                (float) location.getGeo(EarthField.GEO).getLongitude()
         );
     }
 }

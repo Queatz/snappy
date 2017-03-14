@@ -64,13 +64,13 @@ public class PersonView extends ExistenceView {
             auth = null;
         }
 
-        if (as.getUser().contains(EarthField.GEO) && person.contains(EarthField.GEO)) {
-            infoDistance = Util.distance(as.getUser().getLatLng(EarthField.GEO), person.getLatLng(EarthField.GEO));
+        if (as.getUser().has(EarthField.GEO) && person.has(EarthField.GEO)) {
+            infoDistance = Util.distance(as.getUser().getGeo(EarthField.GEO), person.getGeo(EarthField.GEO));
 
             boolean isBacking = use(FollowerMine.class).getFollower(person, as.getUser()) != null;
 
             if (isBacking) {
-                EarthGeo latLng = person.getLatLng(EarthField.GEO);
+                EarthGeo latLng = person.getGeo(EarthField.GEO);
                 geo = new GeoPt((float) latLng.getLatitude(), (float) latLng.getLongitude());
             } else {
                 geo = null;
@@ -80,15 +80,15 @@ public class PersonView extends ExistenceView {
             geo = null;
         }
 
-        if (person.contains(EarthField.AROUND)) {
-            infoUpdated = person.getDateTime(EarthField.AROUND);
+        if (person.has(EarthField.AROUND)) {
+            infoUpdated = person.getDate(EarthField.AROUND);
         } else {
             infoUpdated = null;
         }
 
         switch (view) {
             case DEEP:
-                createdOn = person.getDateTime(EarthField.CREATED_ON);
+                createdOn = person.getDate(EarthField.CREATED_ON);
                 socialMode = Push.getService().getSocialMode(person.key().name());
 
                 List<EarthThing> updatesList = earthStore.find(EarthKind.UPDATE_KIND, EarthField.TARGET, person.key(), Config.SEARCH_MAXIMUM);

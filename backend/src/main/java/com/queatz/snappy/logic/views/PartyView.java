@@ -33,7 +33,7 @@ public class PartyView extends ThingView {
         final EarthStore earthStore = use(EarthStore.class);
         final EarthViewer earthViewer = use(EarthViewer.class);
 
-        date = party.getDateTime(EarthField.DATE);
+        date = party.getDate(EarthField.DATE);
         full = party.getBoolean(EarthField.FULL);
         host = earthViewer.getViewForEntityOrThrow(earthStore.get(party.getKey(EarthField.HOST)), EarthView.SHALLOW);
         location = earthViewer.getViewForEntityOrThrow(earthStore.get(party.getKey(EarthField.LOCATION)), EarthView.SHALLOW);

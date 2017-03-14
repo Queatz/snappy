@@ -1,17 +1,35 @@
 package com.queatz.snappy.logic;
 
+import com.arangodb.ArangoCollection;
+import com.arangodb.ArangoCursor;
+import com.arangodb.ArangoDB;
+import com.arangodb.ArangoDatabase;
+import com.arangodb.ArangoGraph;
+import com.arangodb.entity.CollectionType;
+import com.arangodb.entity.EdgeDefinition;
+import com.arangodb.model.CollectionCreateOptions;
+import com.arangodb.velocypack.VPackSlice;
 import com.google.appengine.api.memcache.stdimpl.GCacheFactory;
+import com.google.appengine.repackaged.com.google.api.client.util.Strings;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.shared.Config;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.Nonnull;
 import javax.cache.Cache;
@@ -26,13 +44,11 @@ import javax.cache.CacheManager;
  */
 public class EarthStore extends EarthControl {
     private final EarthAuthority earthAuthority;
-    private final EarthSearcher earthSearcher;
 
     public EarthStore(EarthAs as) {
         super(as);
 
         earthAuthority = use(EarthAuthority.class);
-        earthSearcher = use(EarthSearcher.class);
 
         Cache cache;
         try {
@@ -45,34 +61,35 @@ public class EarthStore extends EarthControl {
         }
 
         this.cache = cache;
+
+        this.db = new ArangoDB.Builder().build().db();
+
+        if (!db.getCollections().contains(DEFAULT_COLLECTION)) {
+            db.createCollection(DEFAULT_COLLECTION);
+            db.createCollection(DEFAULT_RELATIONSHIPS, new CollectionCreateOptions().type(CollectionType.EDGES));
+            db.createGraph(DEFAULT_GRAPH, ImmutableSet.of(new EdgeDefinition()
+                    .collection(DEFAULT_RELATIONSHIPS)
+                    .from(DEFAULT_COLLECTION)
+                    .to(DEFAULT_COLLECTION)));
+        }
+
+        this.collection = db.collection(DEFAULT_COLLECTION);
     }
 
+    private static final String DEFAULT_GRAPH = "Graph";
+    private static final String DEFAULT_COLLECTION = "Collection";
+    private static final String DEFAULT_RELATIONSHIPS = "Relationships";
     private static final String DEFAULT_KIND = "Thing";
     private static final String DEFAULT_FIELD_KIND = EarthField.KIND;
     private static final String DEFAULT_FIELD_CREATED = EarthField.CREATED_ON;
     private static final String DEFAULT_FIELD_CONCLUDED = "concluded_on";
 
-    private final Datastore datastore = DatastoreOptions.defaultInstance().service();
-    private final KeyFactory keyFactory = datastore.newKeyFactory().kind(DEFAULT_KIND);
+    private final ArangoDatabase db;
+    private final ArangoCollection collection;
     private final Cache cache;
 
     public EarthThing get(@Nonnull String id) {
-        return get(keyFactory.newKey(id));
-    }
-
-    public EarthThing get(@Nonnull EarthRef ref) {
-        return get(keyFactory.newKey(id));
-    }
-
-    private Transaction transaction = null;
-
-    public void transact() {
-        transaction = getDatastore().newTransaction();
-    }
-
-    public void commit() {
-        transaction.commit();
-        transaction = null;
+        return get(new EarthRef(id));
     }
 
     /**
@@ -91,7 +108,7 @@ public class EarthStore extends EarthControl {
             if (cache.containsKey(key)) {
                 entity = (EarthThing) cache.get(key);
             } else {
-                entity = (transaction != null ? transaction.get(key) : datastore.get(key));
+                entity = EarthThing.from(db.getDocument(key.name(), VPackSlice.class));
 
                 if (entity != null) {
                     cache.put(key, entity);
@@ -161,10 +178,7 @@ public class EarthStore extends EarthControl {
         }
 
         // Don't allow saving entities without a created date
-        try {
-            entity.getDateTime(DEFAULT_FIELD_CREATED);
-        } catch (DatastoreException e) {
-            e.printStackTrace();
+        if (!entity.has(DEFAULT_FIELD_CREATED)) {
             return;
         }
 
@@ -173,8 +187,7 @@ public class EarthStore extends EarthControl {
             return;
         }
 
-        datastore.put(entity);
-        earthSearcher.update(entity);
+        collection.insertDocument(entity);
     }
 
     /**
@@ -186,14 +199,12 @@ public class EarthStore extends EarthControl {
      * @return The new thing
      */
     public EarthThing create(@Nonnull String kind) {
-        EarthRef key = keyFactory.newKey(newRandomId());
-        EarthThing entity = EarthThing.builder(key)
-                .set(DEFAULT_FIELD_CREATED, DateTime.now())
-                .set(DEFAULT_FIELD_CONCLUDED, NullValue.of())
-                .set(DEFAULT_FIELD_KIND, StringValue.of(kind))
+        EarthThing entity = new EarthThing.Builder()
+                .set(DEFAULT_FIELD_CREATED, new Date())
+                .set(DEFAULT_FIELD_CONCLUDED)
+                .set(DEFAULT_FIELD_KIND, kind)
                 .build();
-        datastore.put(entity);
-        earthSearcher.update(entity);
+        collection.insertDocument(entity);
         return entity;
     }
 
@@ -210,29 +221,22 @@ public class EarthStore extends EarthControl {
 //            return null;
 //        }
 //
-        Transaction transaction = datastore.newTransaction();
+        EarthThing entity = get(id);
 
-        try {
-            EarthThing entity = get(keyFactory.newKey(id));
-
-            // Don't allow concluding entities that have already concluded
-            if (!entity.isNull(DEFAULT_FIELD_CONCLUDED)) {
-                return;
-            }
-
-            // XXX TODO Authorize
-
-            transaction.put(EarthThing.builder(entity).set(DEFAULT_FIELD_CONCLUDED, new Date()).build());
-            transaction.commit();
-            earthSearcher.delete(id);
-
-            as.__entityCache.put(entity.key(), entity);
-            cache.put(entity.key(), entity);
-        } finally {
-            if (transaction.active()) {
-                transaction.rollback();
-            }
+        // Don't allow concluding entities that have already concluded
+        if (!entity.isNull(DEFAULT_FIELD_CONCLUDED)) {
+            return;
         }
+
+        // XXX TODO Authorize
+
+        collection.updateDocument(
+                entity.key().name(),
+                entity.edit().set(DEFAULT_FIELD_CONCLUDED, new Date()).build()
+        );
+
+        as.__entityCache.put(entity.key(), entity);
+        cache.put(entity.key(), entity);
     }
 
     public void conclude(EarthThing entity) {
@@ -256,7 +260,7 @@ public class EarthStore extends EarthControl {
             throw new NothingLogicResponse("unauthorized");
         }
 
-        return EarthThing.builder(entity);
+        return entity.edit();
     }
 
     /**
@@ -272,25 +276,15 @@ public class EarthStore extends EarthControl {
             throw new NothingLogicResponse("unauthorized");
         }
 
-        Transaction transaction = datastore.newTransaction();
-
-        try {
-            // Don't allow concluding entities that have already concluded
-            if (!entity.isNull(DEFAULT_FIELD_CONCLUDED)) {
-                return entity;
-            }
-
-            transaction.put(entity);
-            transaction.commit();
-            earthSearcher.update(entity);
-
-            as.__entityCache.put(entity.key(), entity);
-            cache.put(entity.key(), entity);
-        } finally {
-            if (transaction.active()) {
-                transaction.rollback();
-            }
+        // Don't allow concluding entities that have already concluded
+        if (!entity.isNull(DEFAULT_FIELD_CONCLUDED)) {
+            return entity;
         }
+
+        collection.updateDocument(entity.key().name(), entity);
+
+        as.__entityCache.put(entity.key(), entity);
+        cache.put(entity.key(), entity);
 
         return entity;
     }
@@ -308,15 +302,17 @@ public class EarthStore extends EarthControl {
      * @return Number of matching things
      */
     public int count(String kind, String field, EarthRef key) {
-        Query query = Query.keyQueryBuilder().kind(DEFAULT_KIND)
-                .filter(StructuredQuery.CompositeFilter.and(
-                        StructuredQuery.PropertyFilter.eq(EarthField.KIND, kind),
-                        StructuredQuery.PropertyFilter.eq(field, key),
-                        StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, null)
-                ))
-                .build();
+        String aql = "return count(for x in @collection filter kind == @kind and @field == @key and @concluded_field == null return 1)";
 
-        return count(datastore.run(query));
+        Map<String, Object> vars = ImmutableMap.of(
+                "collection", DEFAULT_COLLECTION,
+                "kind", kind,
+                "field", field,
+                "key", key.name(),
+                "concluded_field", DEFAULT_FIELD_CONCLUDED
+        );
+
+        return db.query(aql, vars, null, Integer.class).next();
     }
 
     public int count(Iterator queryResults) {
@@ -332,99 +328,132 @@ public class EarthStore extends EarthControl {
      * @return All the things
      */
     public List<EarthThing> find(String kind, String field, EarthRef key, Integer limit) {
-        Query<EarthThing> query = Query.entityQueryBuilder().kind(DEFAULT_KIND)
-                .filter(StructuredQuery.CompositeFilter.and(
-                        StructuredQuery.PropertyFilter.eq(EarthField.KIND, kind),
-                        StructuredQuery.PropertyFilter.eq(field, key),
-                        StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, null)
-                ))
-                .limit(limit)
-                .orderBy(StructuredQuery.OrderBy.desc(EarthField.CREATED_ON))
-                .build();
+        String aql = "for x in @collection " +
+                "filter kind == @kind and @field == @key and @concluded_field == null " +
+                "sort x.@sort" +
+                "limit @limit" +
+                "return x";
 
-        return Lists.newArrayList(datastore.run(query));
+        Map<String, Object> vars = new HashMap<>();
+        vars.put("collection", DEFAULT_COLLECTION);
+        vars.put("kind", kind);
+        vars.put("field", field);
+        vars.put("key", key.name());
+        vars.put("sort", EarthField.CREATED_ON);
+        vars.put("limit", limit == null ? Config.NEARBY_MAX_COUNT : limit);
+        vars.put("concluded_field", DEFAULT_FIELD_CONCLUDED);
+        ArangoCursor<VPackSlice> cursor = db.query(aql, vars, null, VPackSlice.class);
+
+        return StreamSupport.stream(Spliterators.spliterator(cursor, cursor.getCount(), Spliterator.SIZED), false)
+                .map(EarthThing::from)
+                .collect(Collectors.toList());
     }
 
     public List<EarthThing> find(String kind, String field, EarthRef key) {
         return find(kind, field, key, null);
     }
 
-    public List<EarthThing> getNearby(EarthGeo center, String kind) {
-        return earthSearcher.getNearby(kind, null, center, null, 100);
-    }
+    // These kinds disappear from the searcher after the specified time of inactivity
+    private static final Collection TRANSIENT_KINDS = ImmutableSet.of(EarthKind.PERSON_KIND);
+    private static final long TRANSIENT_KIND_TIMEOUT_SECONDS = 60 * 60 * 24 * 5; // 5 days
 
     public List<EarthThing> getNearby(EarthGeo center, String kind, String q) {
-        return earthSearcher.getNearby(kind, q, center, null, 100);
+        return getNearby(kind, q, center, null);
     }
 
     public List<EarthThing> getNearby(EarthGeo center, String kind, boolean recent, String q) {
-        return earthSearcher.getNearby(kind, q, center, recent ? new Date(new Date().getTime() - 1000 * 60 * 60) : null , 100);
+        return getNearby(kind, q, center, recent ? new Date(new Date().getTime() - 1000 * 60 * 60) : null);
     }
 
-    public List<EarthThing> query(StructuredQuery.Filter... filters) {
-        StructuredQuery.Filter filter = StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, null);
+    private List<EarthThing> getNearby(String kind, String q, EarthGeo location, Date afterDate) {
+        String filter = "";
 
-        StructuredQuery.Filter composite = StructuredQuery.CompositeFilter.and(filter, filters);
+        if (afterDate != null) {
+            filter += "x." + DEFAULT_FIELD_CREATED + " >= " + (afterDate.getTime());
+        }
 
-//        XXX Can do this when invalidation is implemented for ket+val+limit+kind matches
-//        if (cache.containsKey(composite)) {
-//            return (ArrayList<Entity>) cache.get(composite);
-//        }
+        if (kind != null) {
+            String kinds[] = kind.split(Pattern.quote("|"));
 
-        List<EarthThing> results = Lists.newArrayList(datastore.run(StructuredQuery.entityQueryBuilder()
-                .kind(DEFAULT_KIND)
-                .filter(composite).build()));
+            if (!filter.isEmpty()) {
+                filter += " and ";
+            }
 
-//        cache.put(composite, results);
+            filter += "(";
 
-        return results;
+            for (int i = 0; i < kinds.length; i++) {
+                if (i > 0) {
+                    filter += " or ";
+                }
+
+                if (TRANSIENT_KINDS.contains(kinds[i])) {
+                    filter += "(";
+                    filter += "x.kind == \"" + kinds[i] + "\" ";
+                    filter += "and x." + EarthField.UPDATED_ON + " >= " + Long.toString(new Date().getTime() - TRANSIENT_KIND_TIMEOUT_SECONDS);
+                    filter += ")";
+                } else {
+                    filter += "x.kind == \"" + kinds[i] + "\"";
+                }
+            }
+
+            filter += ")";
+        }
+
+        if (q != null) {
+            String[] qs = q.split("\\s+");
+
+            if (qs.length == 1) {
+                filter += " and x.name like '%" + q + "%'";
+            } else if (qs.length > 1) {
+                filter += " and (x.name like '%" + qs[0] + "%'";
+
+                for (int i = 1; i < qs.length; i++) {
+                    filter += " or x.name like '%" + qs[i] + "%'";
+                }
+
+                filter += ")";
+            }
+
+        }
+
+        filter = (!Strings.isNullOrEmpty(filter) ? filter + " and " : "");
+
+        boolean searchWithLinks = true;
+
+        String aql = "let things = (for x in near(@collection, @latitude, @longitude, @limit)) " +
+                "for x in " +
+                (searchWithLinks ? "append(things, (for n in near for n2 in any n graph '" + DEFAULT_GRAPH + "' return n2) " : "things") +
+                "filter " + filter + "@concluded_field == null " +
+                "limit @limit" +
+                "return distinct x";
+
+        Map<String, Object> vars = new HashMap<>();
+        vars.put("collection", DEFAULT_COLLECTION);
+        vars.put("latitude", location.getLatitude());
+        vars.put("longitude", location.getLongitude());
+        vars.put("limit", Config.NEARBY_MAX_COUNT);
+        vars.put("concluded_field", DEFAULT_FIELD_CONCLUDED);
+        ArangoCursor<VPackSlice> cursor = db.query(aql, vars, null, VPackSlice.class);
+
+        return StreamSupport.stream(Spliterators.spliterator(cursor, cursor.getCount(), Spliterator.SIZED), false)
+                .map(EarthThing::from)
+                .collect(Collectors.toList());
     }
 
-    public List<EarthThing> queryLimited(int limit, StructuredQuery.Filter... filters) {
-        StructuredQuery.Filter filter = StructuredQuery.PropertyFilter.eq(EarthStore.DEFAULT_FIELD_CONCLUDED, null);
+    public List<EarthThing> query(String filter, Map<String, Object> vars) {
+        vars.put("_collection", DEFAULT_COLLECTION);
+        vars.put("_limit", Config.NEARBY_MAX_COUNT);
+        vars.put("_concluded_on", DEFAULT_FIELD_CONCLUDED);
 
-        StructuredQuery.Filter composite = StructuredQuery.CompositeFilter.and(filter, filters);
+        String aql = "for x in @_collection " +
+                "filter " + filter + " and @_concluded_on == null " +
+                "limit @_limit" +
+                "return x";
 
-        return Lists.newArrayList(datastore.run(StructuredQuery.entityQueryBuilder()
-                .kind(DEFAULT_KIND)
-                .orderBy(StructuredQuery.OrderBy.desc(EarthField.CREATED_ON))
-                .limit(limit)
-                .filter(composite).build()));
+        ArangoCursor<VPackSlice> cursor = db.query(aql, vars, null, VPackSlice.class);
+
+        return StreamSupport.stream(Spliterators.spliterator(cursor, cursor.getCount(), Spliterator.SIZED), false)
+                .map(EarthThing::from)
+                .collect(Collectors.toList());
     }
-
-    public EarthRef key(String keyName) {
-        return keyFactory.newKey(keyName);
-    }
-
-    // !!!!!!!!!!!!!!!!!!!!!!
-// XXX TODO When datastore supports geo
-//    public List<Entity> queryNearToWithDatastore(GeoPt center, String kindFilter) {
-//        // XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
-//        double radius = 11265;
-//        Query.Filter containsFilter = new Query.StContainsFilter(EarthField.GEO, new Query.GeoRegion.Circle(center, radius));
-//        Query.Filter filter;
-//
-//        // XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
-//        List<Query.Filter> conditions = new ArrayList<>();
-//        conditions.add(new Query.FilterPredicate(EarthStore.DEFAULT_FIELD_CONCLUDED, Query.FilterOperator.EQUAL, null));
-//        conditions.add(containsFilter);
-//
-//        if (kindFilter != null) {
-//            conditions.add(new Query.FilterPredicate(EarthField.KIND, Query.FilterOperator.EQUAL, kindFilter));
-//        }
-//
-//        // XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
-//        filter = new Query.CompositeFilter(Query.CompositeFilterOperator.AND, conditions);
-//        List<com.google.appengine.api.datastore.Entity> entities = datastoreService
-//                .prepare(new Query(DEFAULT_KIND).setFilter(filter))
-//                .asList(FetchOptions.Builder.withDefaults());
-//
-//        // XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
-//        List<Entity> keys = new  ArrayList<>();
-//        for (com.google.appengine.api.datastore.Entity entity : entities) {
-//            keys.add(get(entity.getKey().getName()));
-//        }
-//
-//        return keys;
-//    }
 }

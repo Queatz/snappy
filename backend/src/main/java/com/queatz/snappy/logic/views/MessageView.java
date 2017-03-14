@@ -28,15 +28,15 @@ public class MessageView extends ExistenceView {
 
         EarthStore earthStore = use(EarthStore.class);
 
-        date = message.getDateTime(EarthField.CREATED_ON);
+        date = message.getDate(EarthField.CREATED_ON);
 
-        if (message.contains(EarthField.MESSAGE)) {
+        if (message.has(EarthField.MESSAGE)) {
             this.message = message.getString(EarthField.MESSAGE);
         } else {
             this.message = "";
         }
 
-        if (message.contains(EarthField.PHOTO)) {
+        if (message.has(EarthField.PHOTO)) {
             photo = message.getBoolean(EarthField.PHOTO);
         } else {
             photo = false;

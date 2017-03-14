@@ -1,27 +1,33 @@
 package com.queatz.snappy.logic;
 
 import com.arangodb.entity.BaseDocument;
+import com.arangodb.velocypack.VPack;
+import com.arangodb.velocypack.VPackSlice;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by jacob on 3/12/17.
  */
 
 public class EarthThing {
-    private BaseDocument raw;
+    private VPackSlice raw;
+
+    public EarthThing(VPackSlice vPackSlice) {
+        raw = vPackSlice;
+    }
 
     public String getString(String field) {
-        return null;
+        return raw.get(field).getAsString();
     }
 
     public boolean has(String field) {
         return true;
-    }
-
-    @Deprecated
-    public boolean contains(String field) {
-        return has(field);
     }
 
     public EarthRef key() {
@@ -48,16 +54,6 @@ public class EarthThing {
         return 0d;
     }
 
-    @Deprecated
-    public Date getDateTime(String date) {
-        return getDate(date);
-    }
-
-    @Deprecated
-    public EarthGeo getLatLng(String geo) {
-        return getGeo(geo);
-    }
-
     public boolean isNull(String field) {
         return false;
     }
@@ -66,34 +62,66 @@ public class EarthThing {
         return 0;
     }
 
-    public class Builder {
+    public static EarthThing from(@Nullable VPackSlice vPackSlice) {
+        if (vPackSlice == null) {
+            return null;
+        }
+
+        return new EarthThing(vPackSlice);
+    }
+
+    public Builder edit() {
+        return new BaseDocument().setProperties();
+    }
+
+    public static class Builder {
+        private VPackSlice raw;
+
+        public Builder() {
+            this.raw = new VPack.Builder().build();
+        }
+
+        public Builder(VPackSlice raw) {
+            this.raw = raw;
+        }
 
         public Builder set(String field) {
-            return null;
+            raw.set();
+            return this;
         }
 
         public Builder set(String field, EarthRef value) {
-            return null;
+            raw.set();
+            return this;
         }
 
         public Builder set(String field, String value) {
-            return null;
+            raw.set();
+            return this;
         }
 
         public Builder set(String field, boolean value) {
-            return null;
+            raw.set();
+            return this;
         }
 
         public Builder set(String field, Date value) {
-            return null;
+            raw.set();
+            return this;
         }
 
         public Builder set(String field, Number value) {
-            return null;
+            raw.set();
+            return this;
         }
 
         public Builder set(String field, EarthGeo geo) {
-            return null;
+            raw.set();
+            return this;
+        }
+
+        public EarthThing build() {
+            return new EarthThing(raw);
         }
     }
 }

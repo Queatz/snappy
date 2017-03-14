@@ -22,8 +22,8 @@ public class HubView extends CommonThingView {
         super(as, hub, view);
 
         geo = new GeoPt(
-            (float) hub.getLatLng(EarthField.GEO).getLatitude(),
-            (float) hub.getLatLng(EarthField.GEO).getLongitude()
+            (float) hub.getGeo(EarthField.GEO).getLatitude(),
+            (float) hub.getGeo(EarthField.GEO).getLongitude()
         );
 
         address = hub.getString(EarthField.ADDRESS);

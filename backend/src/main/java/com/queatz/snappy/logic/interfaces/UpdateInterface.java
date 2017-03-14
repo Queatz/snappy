@@ -15,6 +15,7 @@ import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthKind;
+import com.queatz.snappy.logic.EarthRef;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
@@ -118,7 +119,7 @@ public class UpdateInterface implements Interfaceable {
     }
 
     private String getLikers(EarthAs as, String updateId) {
-        List<EarthThing> likers = new EarthStore(as).find(EarthKind.LIKE_KIND, EarthField.TARGET, new EarthStore(as).key(updateId));
+        List<EarthThing> likers = new EarthStore(as).find(EarthKind.LIKE_KIND, EarthField.TARGET, EarthRef.of(updateId));
 
         return new EntityListView(as, likers, EarthView.SHALLOW).toJson();
     }
