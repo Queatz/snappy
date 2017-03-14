@@ -23,7 +23,7 @@ public class FollowerMine extends EarthControl {
                 EarthField.KIND + " == @kind and " +
                         EarthField.SOURCE + " == @source_key " +
                         EarthField.TARGET + " == @target_key",
-                ImmutableMap.of(
+                ImmutableMap.<String, Object>of(
                         "kind", EarthKind.FOLLOWER_KIND,
                         "source_key", person.key().name(),
                         "target_key", isFollowingPerson.key().name()

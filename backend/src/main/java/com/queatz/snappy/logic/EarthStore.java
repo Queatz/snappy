@@ -4,12 +4,10 @@ import com.arangodb.ArangoCollection;
 import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDatabase;
-import com.arangodb.ArangoGraph;
 import com.arangodb.entity.BaseDocument;
 import com.arangodb.entity.CollectionType;
 import com.arangodb.entity.EdgeDefinition;
 import com.arangodb.model.CollectionCreateOptions;
-import com.arangodb.velocypack.VPackSlice;
 import com.google.appengine.api.memcache.stdimpl.GCacheFactory;
 import com.google.appengine.repackaged.com.google.api.client.util.Strings;
 import com.google.common.collect.ImmutableMap;
@@ -18,6 +16,7 @@ import com.google.common.collect.Iterators;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.shared.Config;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,12 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Spliterator;
-import java.util.Spliterators;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -306,7 +301,7 @@ public class EarthStore extends EarthControl {
     public int count(String kind, String field, EarthRef key) {
         String aql = "return count(for x in @collection filter kind == @kind and @field == @key and @concluded_field == null return 1)";
 
-        Map<String, Object> vars = ImmutableMap.of(
+        Map<String, Object> vars = ImmutableMap.<String, Object>of(
                 "collection", DEFAULT_COLLECTION,
                 "kind", kind,
                 "field", field,
@@ -346,9 +341,13 @@ public class EarthStore extends EarthControl {
         vars.put("concluded_field", DEFAULT_FIELD_CONCLUDED);
         ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class);
 
-        return StreamSupport.stream(Spliterators.spliterator(cursor, cursor.getCount(), Spliterator.SIZED), false)
-                .map(EarthThing::from)
-                .collect(Collectors.toList());
+        List<EarthThing> result = new ArrayList<>();
+
+        while (cursor.hasNext()) {
+            result.add(EarthThing.from(cursor.next()));
+        }
+
+        return result;
     }
 
     public List<EarthThing> find(String kind, String field, EarthRef key) {
@@ -437,9 +436,13 @@ public class EarthStore extends EarthControl {
         vars.put("concluded_field", DEFAULT_FIELD_CONCLUDED);
         ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class);
 
-        return StreamSupport.stream(Spliterators.spliterator(cursor, cursor.getCount(), Spliterator.SIZED), false)
-                .map(EarthThing::from)
-                .collect(Collectors.toList());
+        List<EarthThing> result = new ArrayList<>();
+
+        while (cursor.hasNext()) {
+            result.add(EarthThing.from(cursor.next()));
+        }
+
+        return result;
     }
 
     public List<EarthThing> query(String filter, @Nullable Map<String, Object> vars) {
@@ -462,8 +465,12 @@ public class EarthStore extends EarthControl {
 
         ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class);
 
-        return StreamSupport.stream(Spliterators.spliterator(cursor, cursor.getCount(), Spliterator.SIZED), false)
-                .map(EarthThing::from)
-                .collect(Collectors.toList());
+        List<EarthThing> result = new ArrayList<>();
+
+        while (cursor.hasNext()) {
+            result.add(EarthThing.from(cursor.next()));
+        }
+
+        return result;
     }
 }

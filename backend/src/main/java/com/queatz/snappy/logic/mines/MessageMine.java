@@ -26,7 +26,7 @@ public class MessageMine extends EarthControl {
                 EarthField.KIND + " == @kind and " +
                         EarthField.SOURCE + " == @source " +
                         EarthField.TARGET + " == @target",
-                ImmutableMap.of(
+                ImmutableMap.<String, Object>of(
                         "kind", EarthKind.MESSAGE_KIND,
                         "source", source.name(),
                         "target", target.name()
@@ -37,7 +37,7 @@ public class MessageMine extends EarthControl {
         return use(EarthStore.class).query(
                 EarthField.KIND + " == @kind and " +
                         EarthField.SOURCE + " == @source",
-                ImmutableMap.of(
+                ImmutableMap.<String, Object>of(
                         "kind", EarthKind.MESSAGE_KIND,
                         "source", source.name()
                 ));
@@ -47,7 +47,7 @@ public class MessageMine extends EarthControl {
         return use(EarthStore.class).query(
                 EarthField.KIND + " == @kind and " +
                         EarthField.TARGET + " == @target",
-                ImmutableMap.of(
+                ImmutableMap.<String, Object>of(
                         "kind", EarthKind.MESSAGE_KIND,
                         "target", target.name()
                 ));

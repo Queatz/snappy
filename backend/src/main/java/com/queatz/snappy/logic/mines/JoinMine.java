@@ -23,7 +23,7 @@ public class JoinMine extends EarthControl {
                 EarthField.KIND + " == @kind and " +
                         EarthField.SOURCE + " == @source_key " +
                         EarthField.TARGET + " == @target_key",
-                ImmutableMap.of(
+                ImmutableMap.<String, Object>of(
                         "kind", EarthKind.JOIN_KIND,
                         "source_key", person.key().name(),
                         "target_key", party.key().name()

@@ -22,7 +22,7 @@ public class PersonMine extends EarthControl {
         List<EarthThing> result = use(EarthStore.class).query(
                 EarthField.KIND + " == @kind and " +
                         EarthField.TARGET + " == @email",
-                ImmutableMap.of(
+                ImmutableMap.<String, Object>of(
                         "kind", EarthKind.PERSON_KIND,
                         "email", email
                 )
@@ -39,7 +39,7 @@ public class PersonMine extends EarthControl {
         List<EarthThing> result = use(EarthStore.class).query(
                 EarthField.KIND + " == @kind and " +
                         EarthField.TOKEN + " == @token",
-                ImmutableMap.of(
+                ImmutableMap.<String, Object>of(
                         "kind", EarthKind.PERSON_KIND,
                         "token", token
                 )
@@ -56,7 +56,7 @@ public class PersonMine extends EarthControl {
         List<EarthThing> result = use(EarthStore.class).query(
                 EarthField.KIND + " == @kind and " +
                         EarthField.GOOGLE_URL + " == @google_url ",
-                ImmutableMap.of(
+                ImmutableMap.<String, Object>of(
                         "kind", EarthKind.PERSON_KIND,
                         "google_url", googleUrl
                 )
@@ -74,7 +74,7 @@ public class PersonMine extends EarthControl {
                 EarthField.KIND + " == @kind and " +
                         EarthField.SOURCE + " == @source_key " +
                         EarthField.SUBSCRIPTION + " == @subscription",
-                ImmutableMap.of(
+                ImmutableMap.<String, Object>of(
                         "kind", EarthKind.PERSON_KIND,
                         "subscription", subscription
                 )
