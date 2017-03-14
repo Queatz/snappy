@@ -1,5 +1,6 @@
 package com.queatz.snappy.logic.mines;
 
+import com.google.common.collect.ImmutableMap;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
@@ -18,16 +19,20 @@ public class FollowerMine extends EarthControl {
     }
 
     public EarthThing getFollower(EarthThing person, EarthThing isFollowingPerson) {
-        List<EarthThing> results = use(EarthStore.class).queryLimited(1,
-                StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.FOLLOWER_KIND),
-                StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, person.key()),
-                StructuredQuery.PropertyFilter.eq(EarthField.TARGET, isFollowingPerson.key())
-        );
+        List<EarthThing> result = use(EarthStore.class).query(
+                EarthField.KIND + " == @kind and " +
+                        EarthField.SOURCE + " == @source_key " +
+                        EarthField.TARGET + " == @target_key",
+                ImmutableMap.of(
+                        "kind", EarthKind.FOLLOWER_KIND,
+                        "source_key", person.key().name(),
+                        "target_key", isFollowingPerson.key().name()
+                ), 1);
 
-        if (results.isEmpty()) {
+        if (result.isEmpty()) {
             return null;
         } else {
-            return results.get(0);
+            return result.get(0);
         }
     }
 

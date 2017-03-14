@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.cache.Cache;
 import javax.cache.CacheException;
 import javax.cache.CacheFactory;
@@ -441,9 +442,17 @@ public class EarthStore extends EarthControl {
                 .collect(Collectors.toList());
     }
 
-    public List<EarthThing> query(String filter, Map<String, Object> vars) {
+    public List<EarthThing> query(String filter, @Nullable Map<String, Object> vars) {
+        return query(filter, vars, -1);
+    }
+
+    public List<EarthThing> query(String filter, @Nullable Map<String, Object> vars, int limit) {
+        if (vars == null) {
+            vars = new HashMap<>();
+        }
+
         vars.put("_collection", DEFAULT_COLLECTION);
-        vars.put("_limit", Config.NEARBY_MAX_COUNT);
+        vars.put("_limit", limit <= 0 ? Config.NEARBY_MAX_COUNT : limit);
         vars.put("_concluded_on", DEFAULT_FIELD_CONCLUDED);
 
         String aql = "for x in @_collection " +

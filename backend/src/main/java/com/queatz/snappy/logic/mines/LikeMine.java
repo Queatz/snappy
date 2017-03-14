@@ -1,5 +1,6 @@
 package com.queatz.snappy.logic.mines;
 
+import com.google.common.collect.ImmutableMap;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
@@ -19,16 +20,20 @@ public class LikeMine extends EarthControl {
     }
 
     public EarthThing getLike(EarthThing person, EarthThing thing) {
-        List<EarthThing> results = use(EarthStore.class).query(
-                StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.LIKE_KIND),
-                StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, person.key()),
-                StructuredQuery.PropertyFilter.eq(EarthField.TARGET, thing.key())
-        );
+        List<EarthThing> result = use(EarthStore.class).query(
+                EarthField.KIND + " == @kind and " +
+                        EarthField.SOURCE + " == @source_key " +
+                        EarthField.TARGET + " == @target_key",
+                ImmutableMap.of(
+                        "kind", EarthKind.LIKE_KIND,
+                        "source_key", person.key().name(),
+                        "target_key", thing.key().name()
+                ), 1);
 
-        if (results.isEmpty()) {
+        if (result.isEmpty()) {
             return null;
         } else {
-            return results.get(0);
+            return result.get(0);
         }
     }
 

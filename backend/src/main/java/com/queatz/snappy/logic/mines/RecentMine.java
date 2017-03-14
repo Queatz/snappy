@@ -1,6 +1,6 @@
 package com.queatz.snappy.logic.mines;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableMap;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
@@ -20,10 +20,14 @@ public class RecentMine extends EarthControl {
     }
 
     public List<EarthThing> forPerson(EarthThing person) {
-        return Lists.newArrayList(use(EarthStore.class).query(
-                StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.RECENT_KIND),
-                StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, person.key())
-        ));
+        return use(EarthStore.class).query(
+                EarthField.KIND + " == @kind and " +
+                EarthField.SOURCE + " == @source_key",
+                ImmutableMap.of(
+                        "kind", EarthKind.RECENT_KIND,
+                        "source_key", person.key()
+                )
+        );
     }
 
     public EarthThing byPerson(EarthThing person, EarthThing contact) {
@@ -31,16 +35,21 @@ public class RecentMine extends EarthControl {
     }
 
     public EarthThing byPerson(EarthRef person, EarthRef contact) {
-        List<EarthThing> results = use(EarthStore.class).queryLimited(1,
-                StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.RECENT_KIND),
-                StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, person),
-                StructuredQuery.PropertyFilter.eq(EarthField.TARGET, contact)
-        );
+        List<EarthThing> result = use(EarthStore.class).query(
+                EarthField.KIND + " == @kind and " +
+                        EarthField.SOURCE + " == @source_key " +
+                        EarthField.TARGET + " == @target_key",
+                ImmutableMap.of(
+                        "kind", EarthKind.RECENT_KIND,
+                        "source_key", person.name(),
+                        "target_key", contact.name()
+                )
+        , 1);
 
-        if (results.isEmpty()) {
+        if (result.isEmpty()) {
             return null;
         } else {
-            return results.get(0);
+            return result.get(0);
         }
     }
 }

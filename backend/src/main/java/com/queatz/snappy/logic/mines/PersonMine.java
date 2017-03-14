@@ -1,5 +1,6 @@
 package com.queatz.snappy.logic.mines;
 
+import com.google.common.collect.ImmutableMap;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
@@ -13,57 +14,70 @@ import java.util.List;
  * Created by jacob on 5/14/16.
  */
 public class PersonMine extends EarthControl {
-    private final EarthStore earthStore;
-
     public PersonMine(final EarthAs as) {
         super(as);
-
-        earthStore = use(EarthStore.class);
     }
 
     public EarthThing byEmail(String email) {
-        List<EarthThing> results = earthStore.queryLimited(1,
-                StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.PERSON_KIND),
-                StructuredQuery.PropertyFilter.eq(EarthField.EMAIL, email)
-        );
+        List<EarthThing> result = use(EarthStore.class).query(
+                EarthField.KIND + " == @kind and " +
+                        EarthField.TARGET + " == @email",
+                ImmutableMap.of(
+                        "kind", EarthKind.PERSON_KIND,
+                        "email", email
+                )
+                , 1);
 
-        if (results.isEmpty()) {
+        if (result.isEmpty()) {
             return null;
         } else {
-            return results.get(0);
+            return result.get(0);
         }
     }
 
     public EarthThing byToken(String token) {
-        List<EarthThing> results = earthStore.query(
-                StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.PERSON_KIND),
-                StructuredQuery.PropertyFilter.eq(EarthField.TOKEN, token)
-        );
+        List<EarthThing> result = use(EarthStore.class).query(
+                EarthField.KIND + " == @kind and " +
+                        EarthField.TOKEN + " == @token",
+                ImmutableMap.of(
+                        "kind", EarthKind.PERSON_KIND,
+                        "token", token
+                )
+                , 1);
 
-        if (results.isEmpty()) {
+        if (result.isEmpty()) {
             return null;
         } else {
-            return results.get(0);
+            return result.get(0);
         }
     }
 
     public EarthThing byGoogleUrl(String googleUrl) {
-        List<EarthThing> results = earthStore.queryLimited(1,
-                StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.PERSON_KIND),
-                StructuredQuery.PropertyFilter.eq(EarthField.GOOGLE_URL, googleUrl)
-        );
+        List<EarthThing> result = use(EarthStore.class).query(
+                EarthField.KIND + " == @kind and " +
+                        EarthField.GOOGLE_URL + " == @google_url ",
+                ImmutableMap.of(
+                        "kind", EarthKind.PERSON_KIND,
+                        "google_url", googleUrl
+                )
+                , 1);
 
-        if (results.isEmpty()) {
+        if (result.isEmpty()) {
             return null;
         } else {
-            return results.get(0);
+            return result.get(0);
         }
     }
 
     public long countBySubscription(String subscription) {
-        return earthStore.count(earthStore.query(
-                StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.PERSON_KIND),
-                StructuredQuery.PropertyFilter.eq(EarthField.SUBSCRIPTION, subscription)
-        ).iterator());
+        return  use(EarthStore.class).query(
+                EarthField.KIND + " == @kind and " +
+                        EarthField.SOURCE + " == @source_key " +
+                        EarthField.SUBSCRIPTION + " == @subscription",
+                ImmutableMap.of(
+                        "kind", EarthKind.PERSON_KIND,
+                        "subscription", subscription
+                )
+                , 1).size();
     }
 }

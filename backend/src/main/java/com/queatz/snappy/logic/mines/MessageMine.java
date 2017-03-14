@@ -1,5 +1,6 @@
 package com.queatz.snappy.logic.mines;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
@@ -21,30 +22,34 @@ public class MessageMine extends EarthControl {
     }
 
     public List<EarthThing> messagesFromTo(EarthRef source, EarthRef target) {
-        return Lists.newArrayList(
-                use(EarthStore.class).queryLimited(Config.SEARCH_MAXIMUM,
-                        StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.MESSAGE_KIND),
-                        StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, source),
-                        StructuredQuery.PropertyFilter.eq(EarthField.TARGET, target)
-                )
-        );
+        return use(EarthStore.class).query(
+                EarthField.KIND + " == @kind and " +
+                        EarthField.SOURCE + " == @source " +
+                        EarthField.TARGET + " == @target",
+                ImmutableMap.of(
+                        "kind", EarthKind.MESSAGE_KIND,
+                        "source", source.name(),
+                        "target", target.name()
+                ));
     }
 
     public List<EarthThing> messagesFrom(EarthRef source) {
-        return Lists.newArrayList(
-                use(EarthStore.class).queryLimited(Config.SEARCH_MAXIMUM,
-                        StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.MESSAGE_KIND),
-                        StructuredQuery.PropertyFilter.eq(EarthField.SOURCE, source)
-                )
-        );
+        return use(EarthStore.class).query(
+                EarthField.KIND + " == @kind and " +
+                        EarthField.SOURCE + " == @source",
+                ImmutableMap.of(
+                        "kind", EarthKind.MESSAGE_KIND,
+                        "source", source.name()
+                ));
     }
 
     public List<EarthThing> messagesTo(EarthRef target) {
-        return Lists.newArrayList(
-                use(EarthStore.class).queryLimited(Config.SEARCH_MAXIMUM,
-                        StructuredQuery.PropertyFilter.eq(EarthField.KIND, EarthKind.MESSAGE_KIND),
-                        StructuredQuery.PropertyFilter.eq(EarthField.TARGET, target)
-                )
-        );
+        return use(EarthStore.class).query(
+                EarthField.KIND + " == @kind and " +
+                        EarthField.TARGET + " == @target",
+                ImmutableMap.of(
+                        "kind", EarthKind.MESSAGE_KIND,
+                        "target", target.name()
+                ));
     }
 }
