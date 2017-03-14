@@ -1,13 +1,12 @@
 package com.queatz.snappy.logic;
 
 import com.arangodb.entity.BaseDocument;
-import com.arangodb.velocypack.VPack;
-import com.arangodb.velocypack.VPackSlice;
+import com.google.api.client.util.Lists;
+import com.google.common.collect.ImmutableList;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.Map;
-import java.util.stream.Stream;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -16,108 +15,114 @@ import javax.annotation.Nullable;
  */
 
 public class EarthThing {
-    private VPackSlice raw;
+    private BaseDocument raw;
 
-    public EarthThing(VPackSlice vPackSlice) {
+    public EarthThing(BaseDocument vPackSlice) {
         raw = vPackSlice;
     }
 
     public String getString(String field) {
-        return raw.get(field).getAsString();
+        return (String) raw.getAttribute(field);
     }
 
     public boolean has(String field) {
-        return true;
+        return raw.getProperties().containsKey(field);
     }
 
     public EarthRef key() {
-        return null;
+        return new EarthRef(raw.getKey());
     }
 
     public EarthRef getKey(String field) {
-        return null;
+        return new EarthRef((String) raw.getAttribute(field));
     }
 
     public boolean getBoolean(String field) {
-        return false;
+        return (Boolean) raw.getAttribute(field);
     }
 
     public Date getDate(String field) {
-        return null;
+        return (Date) raw.getAttribute(field);
     }
 
     public EarthGeo getGeo(String field) {
-        return null;
+        return EarthGeo.of(
+                (Double) ((List) raw.getAttribute(field)).get(0),
+                (Double) ((List) raw.getAttribute(field)).get(1)
+        );
     }
 
     public double getDouble(String field) {
-        return 0d;
+        return (Double) raw.getAttribute(field);
     }
 
     public boolean isNull(String field) {
-        return false;
+        return raw.getAttribute(field) == null;
     }
 
     public long getLong(String field) {
-        return 0;
+        return (Long) raw.getAttribute(field);
     }
 
-    public static EarthThing from(@Nullable VPackSlice vPackSlice) {
-        if (vPackSlice == null) {
+    public static EarthThing from(@Nullable BaseDocument document) {
+        if (document == null) {
             return null;
         }
 
-        return new EarthThing(vPackSlice);
+        return new EarthThing(document);
     }
 
     public Builder edit() {
-        return new BaseDocument().setProperties();
+        return new Builder(raw);
     }
 
     public static class Builder {
-        private VPackSlice raw;
+        private BaseDocument raw;
 
         public Builder() {
-            this.raw = new VPack.Builder().build();
+            this.raw = new BaseDocument();
         }
 
-        public Builder(VPackSlice raw) {
+        public Builder(BaseDocument raw) {
             this.raw = raw;
         }
 
         public Builder set(String field) {
-            raw.set();
+            raw.updateAttribute(field, null);
             return this;
         }
 
         public Builder set(String field, EarthRef value) {
-            raw.set();
+            raw.updateAttribute(field, value.name());
             return this;
         }
 
         public Builder set(String field, String value) {
-            raw.set();
+            raw.updateAttribute(field, value);
             return this;
         }
 
         public Builder set(String field, boolean value) {
-            raw.set();
+            raw.updateAttribute(field, value);
             return this;
         }
 
         public Builder set(String field, Date value) {
-            raw.set();
+            raw.updateAttribute(field, value);
             return this;
         }
 
         public Builder set(String field, Number value) {
-            raw.set();
-            return this;
+            raw.updateAttribute(field, value);
+          return this;
         }
 
-        public Builder set(String field, EarthGeo geo) {
-            raw.set();
-            return this;
+        public Builder set(String field, EarthGeo value) {
+            raw.updateAttribute(field, ImmutableList.of(
+                    value.getLatitude(),
+                    value.getLongitude()
+            ));
+           return this;
         }
 
         public EarthThing build() {

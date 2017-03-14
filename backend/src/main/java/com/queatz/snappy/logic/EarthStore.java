@@ -5,6 +5,7 @@ import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDatabase;
 import com.arangodb.ArangoGraph;
+import com.arangodb.entity.BaseDocument;
 import com.arangodb.entity.CollectionType;
 import com.arangodb.entity.EdgeDefinition;
 import com.arangodb.model.CollectionCreateOptions;
@@ -108,7 +109,7 @@ public class EarthStore extends EarthControl {
             if (cache.containsKey(key)) {
                 entity = (EarthThing) cache.get(key);
             } else {
-                entity = EarthThing.from(db.getDocument(key.name(), VPackSlice.class));
+                entity = EarthThing.from(db.getDocument(key.name(), BaseDocument.class));
 
                 if (entity != null) {
                     cache.put(key, entity);
@@ -342,7 +343,7 @@ public class EarthStore extends EarthControl {
         vars.put("sort", EarthField.CREATED_ON);
         vars.put("limit", limit == null ? Config.NEARBY_MAX_COUNT : limit);
         vars.put("concluded_field", DEFAULT_FIELD_CONCLUDED);
-        ArangoCursor<VPackSlice> cursor = db.query(aql, vars, null, VPackSlice.class);
+        ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class);
 
         return StreamSupport.stream(Spliterators.spliterator(cursor, cursor.getCount(), Spliterator.SIZED), false)
                 .map(EarthThing::from)
@@ -433,7 +434,7 @@ public class EarthStore extends EarthControl {
         vars.put("longitude", location.getLongitude());
         vars.put("limit", Config.NEARBY_MAX_COUNT);
         vars.put("concluded_field", DEFAULT_FIELD_CONCLUDED);
-        ArangoCursor<VPackSlice> cursor = db.query(aql, vars, null, VPackSlice.class);
+        ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class);
 
         return StreamSupport.stream(Spliterators.spliterator(cursor, cursor.getCount(), Spliterator.SIZED), false)
                 .map(EarthThing::from)
@@ -450,7 +451,7 @@ public class EarthStore extends EarthControl {
                 "limit @_limit" +
                 "return x";
 
-        ArangoCursor<VPackSlice> cursor = db.query(aql, vars, null, VPackSlice.class);
+        ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class);
 
         return StreamSupport.stream(Spliterators.spliterator(cursor, cursor.getCount(), Spliterator.SIZED), false)
                 .map(EarthThing::from)
