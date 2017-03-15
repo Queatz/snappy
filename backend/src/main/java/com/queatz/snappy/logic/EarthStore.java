@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterators;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.Gateway;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,16 +25,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.cache.Cache;
-import javax.cache.CacheException;
-import javax.cache.CacheFactory;
-import javax.cache.CacheManager;
 
 /**
  * Created by jacob on 4/2/16.
@@ -48,7 +44,11 @@ public class EarthStore extends EarthControl {
 
         earthAuthority = use(EarthAuthority.class);
 
-        this.db = new ArangoDB.Builder().user("snappy").password("snappy").build().db();
+        this.db = new ArangoDB.Builder()
+                .user(Gateway.ARANGO_USER)
+                .password(Gateway.ARANGO_PASSWORD)
+                .build()
+                .db();
 
         try {
             db.createCollection(DEFAULT_COLLECTION);
@@ -166,7 +166,7 @@ public class EarthStore extends EarthControl {
             return;
         }
 
-        collection.insertDocument(entity);
+        collection.insertDocument(entity.getRaw());
     }
 
     /**
@@ -178,13 +178,13 @@ public class EarthStore extends EarthControl {
      * @return The new thing
      */
     public EarthThing create(@Nonnull String kind) {
-        EarthThing entity = new EarthThing.Builder(newRandomId())
+        BaseDocument entity = new EarthThing.Builder(newRandomId())
                 .set(DEFAULT_FIELD_CREATED, new Date())
                 .set(DEFAULT_FIELD_CONCLUDED)
                 .set(DEFAULT_FIELD_KIND, kind)
                 .build();
         collection.insertDocument(entity);
-        return entity;
+        return new EarthThing(entity);
     }
 
     /**
@@ -248,22 +248,23 @@ public class EarthStore extends EarthControl {
      * - Fails if the thing already concluded.
      */
     public EarthThing save(@Nonnull EarthThing.Builder entityBuilder) {
-        EarthThing entity = entityBuilder.build();
+        BaseDocument entity = entityBuilder.build();
+        EarthThing thing = new EarthThing(entity);
 
-        if (!earthAuthority.authorize(entity, EarthRule.MODIFY)) {
+        if (!earthAuthority.authorize(thing, EarthRule.MODIFY)) {
             throw new NothingLogicResponse("unauthorized");
         }
 
         // Don't allow concluding entities that have already concluded
-        if (!entity.isNull(DEFAULT_FIELD_CONCLUDED)) {
-            return entity;
+        if (entity.getProperties().containsKey(DEFAULT_FIELD_CONCLUDED)) {
+            return thing;
         }
 
         collection.insertDocument(entity);
 
-        as.__entityCache.put(entity.key(), entity);
+        as.__entityCache.put(thing.key(), thing);
 
-        return entity;
+        return thing;
     }
 
     public final String newRandomId() {

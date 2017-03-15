@@ -76,6 +76,10 @@ public class EarthThing {
         return new Builder(raw);
     }
 
+    protected BaseDocument getRaw() {
+        return raw;
+    }
+
     public static class Builder {
         private BaseDocument raw;
 
@@ -125,8 +129,8 @@ public class EarthThing {
            return this;
         }
 
-        public EarthThing build() {
-            return new EarthThing(raw);
+        protected BaseDocument build() {
+            return raw;
         }
     }
 }

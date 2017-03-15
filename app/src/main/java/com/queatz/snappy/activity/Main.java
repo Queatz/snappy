@@ -94,7 +94,7 @@ public class Main extends FullscreenActivity {
             );
         }
 
-        isHome = intent.getCategories().contains(Intent.CATEGORY_HOME);
+        isHome = intent.hasCategory(Intent.CATEGORY_HOME);
 
 
         String mapFocusId = intent.getStringExtra("mapFocusId");
