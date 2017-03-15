@@ -24,14 +24,14 @@ public class Queue {
     }
 
     public void enqueuePushMessageToUser(String toUser, String action, String message) {
-        queue.add(TaskOptions.Builder.withUrl(Config.QUEUE_WORKER_URL)
+        queue.addAsync(TaskOptions.Builder.withUrl(Config.QUEUE_WORKER_URL)
                 .param("action", action)
                 .param("toUser", toUser)
                 .param("message", message));
     }
 
     public void enqueuePushMessageFromUser(String fromUser, String action, String message) {
-        queue.add(TaskOptions.Builder.withUrl(Config.QUEUE_WORKER_URL)
+        queue.addAsync(TaskOptions.Builder.withUrl(Config.QUEUE_WORKER_URL)
                 .param("action", action)
                 .param("fromUser", fromUser)
                 .param("message", message));

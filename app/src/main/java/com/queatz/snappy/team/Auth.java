@@ -1,6 +1,5 @@
 package com.queatz.snappy.team;
 
-import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -23,7 +22,6 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
-import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.util.Json;
 
@@ -218,7 +216,7 @@ public class Auth {
     }
 
     public void showMain() {
-        team.view.show(mActivity, Main.class, null);
+//        team.view.show(mActivity, Main.class, null);
     }
 
     public void reauth() {
@@ -249,7 +247,7 @@ public class Auth {
                 save();
 
                 if(isLogout) {
-                    team.view.show(null, Main.class, null);
+                    showMain();
                 }
             }
         }.execute();

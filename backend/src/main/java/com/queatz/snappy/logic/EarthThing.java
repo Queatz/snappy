@@ -1,9 +1,11 @@
 package com.queatz.snappy.logic;
 
 import com.arangodb.entity.BaseDocument;
+import com.arangodb.velocypack.internal.util.DateUtil;
 import com.google.api.client.util.Lists;
 import com.google.common.collect.ImmutableList;
 
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -42,7 +44,11 @@ public class EarthThing {
     }
 
     public Date getDate(String field) {
-        return (Date) raw.getAttribute(field);
+        try {
+            return DateUtil.parse((String) raw.getAttribute(field));
+        } catch (ParseException e) {
+            return null;
+        }
     }
 
     public EarthGeo getGeo(String field) {
@@ -82,13 +88,16 @@ public class EarthThing {
 
     public static class Builder {
         private BaseDocument raw;
+        private boolean create;
 
-        public Builder(String key) {
-            this.raw = new BaseDocument(key);
+        public Builder() {
+            this.raw = new BaseDocument();
+            create = true;
         }
 
         public Builder(BaseDocument raw) {
             this.raw = raw;
+            create = false;
         }
 
         public Builder set(String field) {
@@ -112,7 +121,7 @@ public class EarthThing {
         }
 
         public Builder set(String field, Date value) {
-            raw.addAttribute(field, value);
+            raw.addAttribute(field, DateUtil.format(value));
             return this;
         }
 
@@ -131,6 +140,10 @@ public class EarthThing {
 
         protected BaseDocument build() {
             return raw;
+        }
+
+        protected boolean isCreate() {
+            return create;
         }
     }
 }

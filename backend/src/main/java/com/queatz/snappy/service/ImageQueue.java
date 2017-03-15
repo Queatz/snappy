@@ -25,7 +25,7 @@ public class ImageQueue {
     }
 
     public void enqueue(String thing) {
-        queue.add(TaskOptions.Builder.withUrl(Config.QUEUE_IMAGE_WORKER_URL)
+        queue.addAsync(TaskOptions.Builder.withUrl(Config.QUEUE_IMAGE_WORKER_URL)
                 .param("thing", thing));
     }
 }

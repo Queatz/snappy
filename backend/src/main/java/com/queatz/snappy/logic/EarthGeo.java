@@ -9,8 +9,13 @@ public class EarthGeo {
     private double latitude;
     private double longitude;
 
+    public EarthGeo(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     public static EarthGeo of(double latitude, double longitude) {
-        return null;
+        return new EarthGeo(latitude, longitude);
     }
 
     public double getLatitude() {

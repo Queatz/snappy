@@ -18,4 +18,12 @@ public class EarthRef {
     public static EarthRef of(String name) {
         return new EarthRef(name);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return name != null &&
+                o != null &&
+                EarthRef.class.isAssignableFrom(o.getClass()) &&
+                name.equals(((EarthRef) o).name);
+    }
 }

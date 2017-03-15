@@ -1,3 +1,15 @@
+// Assume... Hub --> Club <-- Person
+
+// Any random array of things
+let things = (for thing in Village filter thing.kind == 'project' return thing)
+
+// Filter on clubs
+for thing in things for person, relationship in inbound thing
+    graph 'links'
+    filter person._key == '1016' and relationship.kind == 'owns'
+    return thing
+
+
 
 Build WAR
 ./gradlew :backend:war

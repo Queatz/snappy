@@ -9,6 +9,8 @@ import com.arangodb.entity.BaseDocument;
 import com.arangodb.entity.CollectionType;
 import com.arangodb.entity.EdgeDefinition;
 import com.arangodb.model.CollectionCreateOptions;
+import com.arangodb.model.DocumentCreateOptions;
+import com.arangodb.model.GeoIndexOptions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -62,6 +64,7 @@ public class EarthStore extends EarthControl {
         }
 
         this.collection = db.collection(DEFAULT_COLLECTION);
+        this.collection.createGeoIndex(ImmutableSet.of(EarthField.GEO), new GeoIndexOptions());
     }
 
     private static final String DEFAULT_GRAPH = "Graph";
@@ -92,7 +95,7 @@ public class EarthStore extends EarthControl {
         if (as.__entityCache.containsKey(key)) {
             entity = as.__entityCache.get(key);
         } else {
-            entity = EarthThing.from(db.getDocument(key.name(), BaseDocument.class));
+            entity = EarthThing.from(collection.getDocument(key.name(), BaseDocument.class));
 
             // Can be null
             as.__entityCache.put(key, entity);
@@ -178,13 +181,12 @@ public class EarthStore extends EarthControl {
      * @return The new thing
      */
     public EarthThing create(@Nonnull String kind) {
-        BaseDocument entity = new EarthThing.Builder(newRandomId())
+        BaseDocument entity = new EarthThing.Builder()
                 .set(DEFAULT_FIELD_CREATED, new Date())
                 .set(DEFAULT_FIELD_CONCLUDED)
                 .set(DEFAULT_FIELD_KIND, kind)
                 .build();
-        collection.insertDocument(entity);
-        return new EarthThing(entity);
+        return new EarthThing(collection.insertDocument(entity, new DocumentCreateOptions().returnNew(true).waitForSync(true)).getNew());
     }
 
     /**
@@ -260,7 +262,7 @@ public class EarthStore extends EarthControl {
             return thing;
         }
 
-        collection.insertDocument(entity);
+        collection.updateDocument(entity.getKey(), entity);
 
         as.__entityCache.put(thing.key(), thing);
 
@@ -402,13 +404,13 @@ public class EarthStore extends EarthControl {
 
         boolean searchWithLinks = true;
 
-        String aql = "let things = (for x in near(" + DEFAULT_COLLECTION + ", @latitude, @longitude, @limit)) " +
+        String aql = "let things = (for x in near(" + DEFAULT_COLLECTION + ", @latitude, @longitude, @limit) return x) " +
                 "for x in " +
-                (searchWithLinks ? "append(things, (for n in near for n2 in any n graph '" + DEFAULT_GRAPH + "' return n2) " : "things") +
+                (searchWithLinks ? "append(things, (for n in things for n2 in any n graph '" + DEFAULT_GRAPH + "' return n2)) " : "things") +
                 "filter " + filter + "x.@concluded_field == null " +
                 "limit @limit " +
-                "return distinct x";
 
+                "return distinct x";
         Map<String, Object> vars = new HashMap<>();
         vars.put("latitude", location.getLatitude());
         vars.put("longitude", location.getLongitude());

@@ -70,7 +70,7 @@ public class Api {
 
             switch (statusCode) {
                 case HttpStatus.SC_UNAUTHORIZED:
-                    mApi.team.auth.reauth();
+//                    mApi.team.auth.reauth();
                     break;
             }
 
