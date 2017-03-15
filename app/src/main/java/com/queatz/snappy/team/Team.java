@@ -173,6 +173,7 @@ public class Team implements Closeable {
     }
 
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
+        auth.onActivityResult(requestCode, resultCode, data);
         buy.onActivityResult(activity, requestCode, resultCode, data);
         location.onActivityResult(requestCode, resultCode, data);
         action.onActivityResult(activity, requestCode, resultCode, data);

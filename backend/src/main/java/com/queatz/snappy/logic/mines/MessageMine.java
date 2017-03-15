@@ -23,9 +23,9 @@ public class MessageMine extends EarthControl {
 
     public List<EarthThing> messagesFromTo(EarthRef source, EarthRef target) {
         return use(EarthStore.class).query(
-                EarthField.KIND + " == @kind and " +
-                        EarthField.SOURCE + " == @source " +
-                        EarthField.TARGET + " == @target",
+                "x." + EarthField.KIND + " == @kind and " +
+                        "x." + EarthField.SOURCE + " == @source " +
+                        "x." + EarthField.TARGET + " == @target",
                 ImmutableMap.<String, Object>of(
                         "kind", EarthKind.MESSAGE_KIND,
                         "source", source.name(),
@@ -35,8 +35,8 @@ public class MessageMine extends EarthControl {
 
     public List<EarthThing> messagesFrom(EarthRef source) {
         return use(EarthStore.class).query(
-                EarthField.KIND + " == @kind and " +
-                        EarthField.SOURCE + " == @source",
+                "x." + EarthField.KIND + " == @kind and " +
+                        "x." + EarthField.SOURCE + " == @source",
                 ImmutableMap.<String, Object>of(
                         "kind", EarthKind.MESSAGE_KIND,
                         "source", source.name()
@@ -45,8 +45,8 @@ public class MessageMine extends EarthControl {
 
     public List<EarthThing> messagesTo(EarthRef target) {
         return use(EarthStore.class).query(
-                EarthField.KIND + " == @kind and " +
-                        EarthField.TARGET + " == @target",
+                "x." + EarthField.KIND + " == @kind and " +
+                        "x." + EarthField.TARGET + " == @target",
                 ImmutableMap.<String, Object>of(
                         "kind", EarthKind.MESSAGE_KIND,
                         "target", target.name()

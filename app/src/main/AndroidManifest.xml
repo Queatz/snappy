@@ -36,15 +36,6 @@
         android:theme="@style/AppTheme" >
 
         <activity
-            android:name=".activity.Welcome"
-            android:alwaysRetainTaskState="true"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:theme="@style/WelcomeTheme"
-            android:windowSoftInputMode="adjustNothing" />
-
-        <activity
             android:name=".activity.Main"
             android:alwaysRetainTaskState="true"
             android:configChanges="keyboardHidden|orientation|screenSize"

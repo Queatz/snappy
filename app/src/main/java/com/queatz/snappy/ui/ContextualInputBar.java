@@ -192,6 +192,8 @@ public class ContextualInputBar extends LinearLayout {
             @Override
             public void onClick(View view) {
                 if (team.auth.me() == null) {
+                    team.auth.setActivity((Activity) getContext());
+                    team.auth.signin();
                     return;
                 }
 

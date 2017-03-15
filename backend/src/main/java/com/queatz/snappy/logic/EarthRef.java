@@ -12,10 +12,10 @@ public class EarthRef {
     }
 
     public String name() {
-        return null;
+        return this.name;
     }
 
-    public static EarthRef of(String id) {
-        return new EarthRef(id);
+    public static EarthRef of(String name) {
+        return new EarthRef(name);
     }
 }

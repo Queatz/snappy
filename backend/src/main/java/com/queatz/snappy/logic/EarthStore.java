@@ -3,6 +3,7 @@ package com.queatz.snappy.logic;
 import com.arangodb.ArangoCollection;
 import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDB;
+import com.arangodb.ArangoDBException;
 import com.arangodb.ArangoDatabase;
 import com.arangodb.entity.BaseDocument;
 import com.arangodb.entity.CollectionType;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
@@ -59,15 +61,17 @@ public class EarthStore extends EarthControl {
 
         this.cache = cache;
 
-        this.db = new ArangoDB.Builder().build().db();
+        this.db = new ArangoDB.Builder().user("snappy").password("snappy").build().db();
 
-        if (!db.getCollections().contains(DEFAULT_COLLECTION)) {
+        try {
             db.createCollection(DEFAULT_COLLECTION);
             db.createCollection(DEFAULT_RELATIONSHIPS, new CollectionCreateOptions().type(CollectionType.EDGES));
             db.createGraph(DEFAULT_GRAPH, ImmutableSet.of(new EdgeDefinition()
                     .collection(DEFAULT_RELATIONSHIPS)
                     .from(DEFAULT_COLLECTION)
                     .to(DEFAULT_COLLECTION)));
+        } catch (ArangoDBException ignored) {
+            // Whatever
         }
 
         this.collection = db.collection(DEFAULT_COLLECTION);
@@ -196,7 +200,7 @@ public class EarthStore extends EarthControl {
      * @return The new thing
      */
     public EarthThing create(@Nonnull String kind) {
-        EarthThing entity = new EarthThing.Builder()
+        EarthThing entity = new EarthThing.Builder(newRandomId())
                 .set(DEFAULT_FIELD_CREATED, new Date())
                 .set(DEFAULT_FIELD_CONCLUDED)
                 .set(DEFAULT_FIELD_KIND, kind)
@@ -299,10 +303,9 @@ public class EarthStore extends EarthControl {
      * @return Number of matching things
      */
     public int count(String kind, String field, EarthRef key) {
-        String aql = "return count(for x in @collection filter kind == @kind and @field == @key and @concluded_field == null return 1)";
+        String aql = "return count(for x in " + DEFAULT_COLLECTION + " filter x.kind == @kind and x.@field == @key and x.@concluded_field == null return 1)";
 
         Map<String, Object> vars = ImmutableMap.<String, Object>of(
-                "collection", DEFAULT_COLLECTION,
                 "kind", kind,
                 "field", field,
                 "key", key.name(),
@@ -325,20 +328,21 @@ public class EarthStore extends EarthControl {
      * @return All the things
      */
     public List<EarthThing> find(String kind, String field, EarthRef key, Integer limit) {
-        String aql = "for x in @collection " +
-                "filter kind == @kind and @field == @key and @concluded_field == null " +
+        String aql = "for x in " + DEFAULT_COLLECTION + " " +
+                "filter x.kind == @kind and x.@field == @key and x.@concluded_field == null " +
                 "sort x.@sort" +
-                "limit @limit" +
+                "limit @limit " +
                 "return x";
 
         Map<String, Object> vars = new HashMap<>();
-        vars.put("collection", DEFAULT_COLLECTION);
         vars.put("kind", kind);
         vars.put("field", field);
         vars.put("key", key.name());
         vars.put("sort", EarthField.CREATED_ON);
         vars.put("limit", limit == null ? Config.NEARBY_MAX_COUNT : limit);
         vars.put("concluded_field", DEFAULT_FIELD_CONCLUDED);
+
+        Logger.getLogger(Config.NAME).info(aql);
         ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class);
 
         List<EarthThing> result = new ArrayList<>();
@@ -421,19 +425,20 @@ public class EarthStore extends EarthControl {
 
         boolean searchWithLinks = true;
 
-        String aql = "let things = (for x in near(@collection, @latitude, @longitude, @limit)) " +
+        String aql = "let things = (for x in near(" + DEFAULT_COLLECTION + ", @latitude, @longitude, @limit)) " +
                 "for x in " +
                 (searchWithLinks ? "append(things, (for n in near for n2 in any n graph '" + DEFAULT_GRAPH + "' return n2) " : "things") +
-                "filter " + filter + "@concluded_field == null " +
-                "limit @limit" +
+                "filter " + filter + "x.@concluded_field == null " +
+                "limit @limit " +
                 "return distinct x";
 
         Map<String, Object> vars = new HashMap<>();
-        vars.put("collection", DEFAULT_COLLECTION);
         vars.put("latitude", location.getLatitude());
         vars.put("longitude", location.getLongitude());
         vars.put("limit", Config.NEARBY_MAX_COUNT);
         vars.put("concluded_field", DEFAULT_FIELD_CONCLUDED);
+
+        Logger.getLogger(Config.NAME).info(aql);
         ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class);
 
         List<EarthThing> result = new ArrayList<>();
@@ -449,21 +454,25 @@ public class EarthStore extends EarthControl {
         return query(filter, vars, -1);
     }
 
-    public List<EarthThing> query(String filter, @Nullable Map<String, Object> vars, int limit) {
-        if (vars == null) {
-            vars = new HashMap<>();
+    public List<EarthThing> query(String filter, @Nullable Map<String, Object> filterVars, int limit) {
+
+        Map<String, Object> var = new HashMap<>();
+
+        if (filterVars != null) {
+            var.putAll(filterVars);
         }
 
-        vars.put("_collection", DEFAULT_COLLECTION);
-        vars.put("_limit", limit <= 0 ? Config.NEARBY_MAX_COUNT : limit);
-        vars.put("_concluded_on", DEFAULT_FIELD_CONCLUDED);
+        var.put("_limit", limit <= 0 ? Config.NEARBY_MAX_COUNT : limit);
+        var.put("_concluded_on", DEFAULT_FIELD_CONCLUDED);
 
-        String aql = "for x in @_collection " +
-                "filter " + filter + " and @_concluded_on == null " +
-                "limit @_limit" +
+        String aql = "for x in " + DEFAULT_COLLECTION + " " +
+                "filter " + filter + " and x.@_concluded_on == null " +
+                "limit @_limit " +
                 "return x";
 
-        ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class);
+        Logger.getLogger(Config.NAME).info(aql);
+
+        ArangoCursor<BaseDocument> cursor = db.query(aql, var, null, BaseDocument.class);
 
         List<EarthThing> result = new ArrayList<>();
 

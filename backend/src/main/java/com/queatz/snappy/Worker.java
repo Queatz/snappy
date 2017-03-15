@@ -1,15 +1,10 @@
 package com.queatz.snappy;
 
-import com.google.appengine.api.urlfetch.HTTPHeader;
-import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.google.appengine.api.urlfetch.HTTPRequest;
-import com.google.appengine.api.urlfetch.HTTPResponse;
-import com.google.appengine.api.urlfetch.URLFetchService;
-import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import com.google.appengine.repackaged.com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.googlecode.objectify.ObjectifyService;
+import com.queatz.snappy.backend.HttpUtil;
 import com.queatz.snappy.backend.RegistrationRecord;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthEmail;
@@ -25,7 +20,6 @@ import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -214,16 +208,7 @@ public class Worker extends HttpServlet {
         push.add("to", new JsonPrimitive(regId));
 
         try {
-            URL url = new URL(Config.FCM_ENDPOINT);
-
-            URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
-            HTTPRequest httpRequest = new HTTPRequest(url, HTTPMethod.POST);
-            httpRequest.getFetchOptions().allowTruncate().doNotFollowRedirects();
-            httpRequest.setPayload(earthJson.toJson(push).getBytes("UTF-8"));
-            httpRequest.addHeader(new HTTPHeader("Content-Type", "application/json; charset=UTF-8"));
-            httpRequest.addHeader(new HTTPHeader("Authorization", "key=" + Config.GCM_KEY));
-            HTTPResponse resp = urlFetchService.fetch(httpRequest);
-            String s = new String(resp.getContent(), "UTF-8");
+            String s = HttpUtil.post(Config.FCM_ENDPOINT, "application/json; charset=UTF-8", earthJson.toJson(push).getBytes("UTF-8"), "key=" + Config.GCM_KEY);
             Logger.getLogger(Config.NAME).log(Level.INFO, s);
             return earthJson.fromJson(s, JsonObject.class);
         } catch (IOException e) {

@@ -1,0 +1,12 @@
+
+Build WAR
+./gradlew :backend:war
+
+Upload WAR
+localhost:8080/manager/html
+
+Start tomcat
+sudo /etc/init.d/tomcat8 start
+
+See logs
+/var/log/tomcat8# tail -f localhost.2017-03-14.log

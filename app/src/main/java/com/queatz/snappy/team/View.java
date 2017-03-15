@@ -10,9 +10,6 @@ import android.support.annotation.Nullable;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
-import com.queatz.snappy.activity.Main;
-import com.queatz.snappy.activity.Welcome;
-
 /**
  * Created by jacob on 2/20/15.
  */

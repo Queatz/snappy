@@ -20,8 +20,8 @@ public class PersonMine extends EarthControl {
 
     public EarthThing byEmail(String email) {
         List<EarthThing> result = use(EarthStore.class).query(
-                EarthField.KIND + " == @kind and " +
-                        EarthField.TARGET + " == @email",
+                "x." + EarthField.KIND + " == @kind and " +
+                        "x." + EarthField.TARGET + " == @email",
                 ImmutableMap.<String, Object>of(
                         "kind", EarthKind.PERSON_KIND,
                         "email", email
@@ -37,8 +37,8 @@ public class PersonMine extends EarthControl {
 
     public EarthThing byToken(String token) {
         List<EarthThing> result = use(EarthStore.class).query(
-                EarthField.KIND + " == @kind and " +
-                        EarthField.TOKEN + " == @token",
+                "x." + EarthField.KIND + " == @kind and " +
+                "x." + EarthField.TOKEN + " == @token",
                 ImmutableMap.<String, Object>of(
                         "kind", EarthKind.PERSON_KIND,
                         "token", token
@@ -54,8 +54,8 @@ public class PersonMine extends EarthControl {
 
     public EarthThing byGoogleUrl(String googleUrl) {
         List<EarthThing> result = use(EarthStore.class).query(
-                EarthField.KIND + " == @kind and " +
-                        EarthField.GOOGLE_URL + " == @google_url ",
+                "x." + EarthField.KIND + " == @kind and " +
+                        "x." + EarthField.GOOGLE_URL + " == @google_url ",
                 ImmutableMap.<String, Object>of(
                         "kind", EarthKind.PERSON_KIND,
                         "google_url", googleUrl
@@ -71,9 +71,8 @@ public class PersonMine extends EarthControl {
 
     public long countBySubscription(String subscription) {
         return  use(EarthStore.class).query(
-                EarthField.KIND + " == @kind and " +
-                        EarthField.SOURCE + " == @source_key " +
-                        EarthField.SUBSCRIPTION + " == @subscription",
+                "x." + EarthField.KIND + " == @kind and " +
+                        "x." + EarthField.SUBSCRIPTION + " == @subscription",
                 ImmutableMap.<String, Object>of(
                         "kind", EarthKind.PERSON_KIND,
                         "subscription", subscription

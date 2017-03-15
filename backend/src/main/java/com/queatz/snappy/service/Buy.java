@@ -1,13 +1,8 @@
 package com.queatz.snappy.service;
 
-import com.google.appengine.api.urlfetch.HTTPHeader;
-import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.google.appengine.api.urlfetch.HTTPRequest;
-import com.google.appengine.api.urlfetch.HTTPResponse;
-import com.google.appengine.api.urlfetch.URLFetchService;
-import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import com.google.gson.JsonObject;
 import com.queatz.snappy.backend.GooglePurchaseDataSpec;
+import com.queatz.snappy.backend.HttpUtil;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
@@ -17,8 +12,12 @@ import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.mines.PersonMine;
 import com.queatz.snappy.shared.Config;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import java.io.IOException;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jacob on 4/4/15.
@@ -36,17 +35,11 @@ public class Buy {
 
     public String getServerAuthToken() throws PrintingError {
         try {
-            URL url = new URL(Config.GOOGLE_AUTH_URL);
-
-            String payload = String.format(Config.GOOGLE_AUTH_URL_POST_PARAMS, Config.refreshToken, Config.CLIENT_ID);
-
-            URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
-            HTTPRequest httpRequest = new HTTPRequest(url, HTTPMethod.POST);
-            httpRequest.getFetchOptions().allowTruncate().doNotFollowRedirects();
-            httpRequest.addHeader(new HTTPHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8"));
-            httpRequest.setPayload(payload.getBytes());
-            HTTPResponse resp = urlFetchService.fetch(httpRequest);
-            String s = new String(resp.getContent(), "UTF-8");
+            List<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("grant_type", "refresh_token"));
+            params.add(new BasicNameValuePair("refresh_token", Config.refreshToken));
+            params.add(new BasicNameValuePair("client_id", Config.CLIENT_ID));
+            String s = HttpUtil.post(Config.GOOGLE_AUTH_URL, "application/x-www-form-urlencoded; charset=UTF-8", params);
 
             return earthJson.fromJson(s, JsonObject.class).get("access_token").getAsString();
         }
@@ -60,14 +53,8 @@ public class Buy {
         try {
             String accessToken = getServerAuthToken();
 
-            URL url = new URL(String.format(Config.GOOGLE_BILLING_URL, Config.PACKAGE, Config.subscriptionProductId, purchaseData.purchaseToken) + "?access_token=" + accessToken);
-
-            URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
-            HTTPRequest httpRequest = new HTTPRequest(url, HTTPMethod.GET);
-            httpRequest.getFetchOptions().allowTruncate().doNotFollowRedirects();
-            httpRequest.setHeader(new HTTPHeader("Content-Type", "application/json; charset=UTF-8"));
-            HTTPResponse resp = urlFetchService.fetch(httpRequest);
-            return new String(resp.getContent(), "UTF-8");
+            String url = String.format(Config.GOOGLE_BILLING_URL, Config.PACKAGE, Config.subscriptionProductId, purchaseData.purchaseToken) + "?access_token=" + accessToken;
+            return HttpUtil.get(url);
         }
         catch (IOException e) {
             e.printStackTrace();

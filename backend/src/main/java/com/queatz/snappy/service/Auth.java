@@ -1,12 +1,7 @@
 package com.queatz.snappy.service;
 
-import com.google.appengine.api.urlfetch.HTTPHeader;
-import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.google.appengine.api.urlfetch.HTTPRequest;
-import com.google.appengine.api.urlfetch.HTTPResponse;
-import com.google.appengine.api.urlfetch.URLFetchService;
-import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import com.google.gson.JsonObject;
+import com.queatz.snappy.backend.HttpUtil;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.logic.EarthAs;
@@ -20,7 +15,6 @@ import com.queatz.snappy.shared.Config;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * Created by jacob on 11/17/14.
@@ -52,18 +46,9 @@ public class Auth {
         if(StringUtils.isEmpty(email) || StringUtils.isEmpty(token))
             return false;
 
-        String s;
-
         try {
-            URL url = new URL(Config.GOOGLE_PLUS_TOKENINFO_URL + "?access_token=" + token);
-
-            URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
-            HTTPRequest httpRequest = new HTTPRequest(url, HTTPMethod.GET);
-            httpRequest.getFetchOptions().allowTruncate().doNotFollowRedirects();
-            httpRequest.addHeader(new HTTPHeader("Content-Type", "application/json; charset=UTF-8"));
-            HTTPResponse resp = urlFetchService.fetch(httpRequest);
-            s = new String(resp.getContent(), "UTF-8");
-            JsonObject response = earthJson.fromJson(s, JsonObject.class);
+            String url = Config.GOOGLE_PLUS_TOKENINFO_URL + "?access_token=" + token;
+            JsonObject response = earthJson.fromJson(HttpUtil.get(url), JsonObject.class);
 
             if(response.has("email") && response.get("email").getAsString().equals(email)) {
                 return true;
@@ -78,15 +63,8 @@ public class Auth {
 
     public PersonData getPersonData(String token) throws PrintingError {
         try {
-            URL url = new URL(Config.GOOGLE_PLUS_PROFILE_URL + "?access_token=" + token);
-
-            URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
-            HTTPRequest httpRequest = new HTTPRequest(url, HTTPMethod.GET);
-            httpRequest.getFetchOptions().allowTruncate().doNotFollowRedirects();
-            httpRequest.addHeader(new HTTPHeader("Content-Type", "application/json; charset=UTF-8"));
-            HTTPResponse resp = urlFetchService.fetch(httpRequest);
-            String s = new String(resp.getContent(), "UTF-8");
-            JsonObject response = earthJson.fromJson(s, JsonObject.class);
+            String url = Config.GOOGLE_PLUS_PROFILE_URL + "?access_token=" + token;
+            JsonObject response = earthJson.fromJson(HttpUtil.get(url), JsonObject.class);
 
             PersonData personSpec = new PersonData();
 

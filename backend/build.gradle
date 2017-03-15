@@ -38,6 +38,8 @@ appengine {
         getClientLibsOnBuild = false
         getDiscoveryDocsOnBuild = false
     }
+    httpAddress '0.0.0.0'
+    httpPort 8080
 }
 
 test {

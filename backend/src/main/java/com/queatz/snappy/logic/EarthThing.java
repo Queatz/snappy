@@ -17,8 +17,8 @@ import javax.annotation.Nullable;
 public class EarthThing {
     private BaseDocument raw;
 
-    public EarthThing(BaseDocument vPackSlice) {
-        raw = vPackSlice;
+    public EarthThing(BaseDocument thing) {
+        raw = thing;
     }
 
     public String getString(String field) {
@@ -79,8 +79,8 @@ public class EarthThing {
     public static class Builder {
         private BaseDocument raw;
 
-        public Builder() {
-            this.raw = new BaseDocument();
+        public Builder(String key) {
+            this.raw = new BaseDocument(key);
         }
 
         public Builder(BaseDocument raw) {
@@ -88,37 +88,37 @@ public class EarthThing {
         }
 
         public Builder set(String field) {
-            raw.updateAttribute(field, null);
+            raw.addAttribute(field, null);
             return this;
         }
 
         public Builder set(String field, EarthRef value) {
-            raw.updateAttribute(field, value.name());
+            raw.addAttribute(field, value.name());
             return this;
         }
 
         public Builder set(String field, String value) {
-            raw.updateAttribute(field, value);
+            raw.addAttribute(field, value);
             return this;
         }
 
         public Builder set(String field, boolean value) {
-            raw.updateAttribute(field, value);
+            raw.addAttribute(field, value);
             return this;
         }
 
         public Builder set(String field, Date value) {
-            raw.updateAttribute(field, value);
+            raw.addAttribute(field, value);
             return this;
         }
 
         public Builder set(String field, Number value) {
-            raw.updateAttribute(field, value);
+            raw.addAttribute(field, value);
           return this;
         }
 
         public Builder set(String field, EarthGeo value) {
-            raw.updateAttribute(field, ImmutableList.of(
+            raw.addAttribute(field, ImmutableList.of(
                     value.getLatitude(),
                     value.getLongitude()
             ));
