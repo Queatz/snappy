@@ -9,8 +9,7 @@ import com.arangodb.entity.BaseDocument;
 import com.arangodb.entity.CollectionType;
 import com.arangodb.entity.EdgeDefinition;
 import com.arangodb.model.CollectionCreateOptions;
-import com.google.appengine.api.memcache.stdimpl.GCacheFactory;
-import com.google.appengine.repackaged.com.google.api.client.util.Strings;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterators;
@@ -49,18 +48,6 @@ public class EarthStore extends EarthControl {
 
         earthAuthority = use(EarthAuthority.class);
 
-        Cache cache;
-        try {
-            CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
-            Map properties = new HashMap<>();
-            properties.put(GCacheFactory.EXPIRATION_DELTA, TimeUnit.DAYS.toSeconds(1));
-            cache = cacheFactory.createCache(properties);
-        } catch (CacheException e) {
-            cache = null;
-        }
-
-        this.cache = cache;
-
         this.db = new ArangoDB.Builder().user("snappy").password("snappy").build().db();
 
         try {
@@ -87,7 +74,6 @@ public class EarthStore extends EarthControl {
 
     private final ArangoDatabase db;
     private final ArangoCollection collection;
-    private final Cache cache;
 
     public EarthThing get(@Nonnull String id) {
         return get(new EarthRef(id));
@@ -106,15 +92,7 @@ public class EarthStore extends EarthControl {
         if (as.__entityCache.containsKey(key)) {
             entity = as.__entityCache.get(key);
         } else {
-            if (cache.containsKey(key)) {
-                entity = (EarthThing) cache.get(key);
-            } else {
-                entity = EarthThing.from(db.getDocument(key.name(), BaseDocument.class));
-
-                if (entity != null) {
-                    cache.put(key, entity);
-                }
-            }
+            entity = EarthThing.from(db.getDocument(key.name(), BaseDocument.class));
 
             // Can be null
             as.__entityCache.put(key, entity);
@@ -237,7 +215,6 @@ public class EarthStore extends EarthControl {
         );
 
         as.__entityCache.put(entity.key(), entity);
-        cache.put(entity.key(), entity);
     }
 
     public void conclude(EarthThing entity) {
@@ -282,10 +259,9 @@ public class EarthStore extends EarthControl {
             return entity;
         }
 
-        collection.updateDocument(entity.key().name(), entity);
+        collection.insertDocument(entity);
 
         as.__entityCache.put(entity.key(), entity);
-        cache.put(entity.key(), entity);
 
         return entity;
     }

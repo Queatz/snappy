@@ -52,13 +52,13 @@ public class Auth {
 
             if(response.has("email") && response.get("email").getAsString().equals(email)) {
                 return true;
+            } else {
+                throw new PrintingError(Api.Error.SERVER_ERROR, "no email correctness - " + response);
             }
         } catch (IOException e) {
             e.printStackTrace();
             throw new PrintingError(Api.Error.SERVER_ERROR, "real check server fail");
         }
-
-        throw new PrintingError(Api.Error.SERVER_ERROR, "real check no email correctness");
     }
 
     public PersonData getPersonData(String token) throws PrintingError {
