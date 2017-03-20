@@ -8,7 +8,6 @@ android {
     buildToolsVersion '25.0.0'
 
     defaultConfig {
-        applicationId "com.queatz.snappy"
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -23,10 +22,18 @@ android {
             proguardFile 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
+
+        debug {
+            applicationIdSuffix '.debug'
+            debuggable false
+            minifyEnabled false
+            proguardFile 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
     }
 
     dexOptions {
-        javaMaxHeapSize "4g"
+        javaMaxHeapSize '4g'
     }
 }
 

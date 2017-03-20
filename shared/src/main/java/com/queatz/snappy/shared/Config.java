@@ -17,7 +17,7 @@ public class Config {
     public static final String VILLAGE_WEBSITE = "https://village.city/";
 
     public static final String LOG_TAG = "SNAPPY_LOG";
-    public static final String API_URL = (BETA_VERSION ? "http://192.168.43.229:8080/api/" : "https://queatz-snappy.appspot.com/api/");
+    public static final String API_URL = (BETA_VERSION ? "http://192.168.1.70:8080/api/" : "https://queatz-snappy.appspot.com/api/");
     public static final String GOOGLE_PLACES_AUTOCOMPLETE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?location=%f,%f&radius=1609&input=%s&key=%s";
     public static final String GOOGLE_PLACES_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?placeid=%s&key=%s";
     public static final int maxRequestRetries = 4;
