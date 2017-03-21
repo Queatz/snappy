@@ -37,7 +37,7 @@ public class RecentMine extends EarthControl {
     public EarthThing byPerson(EarthRef person, EarthRef contact) {
         List<EarthThing> result = use(EarthStore.class).query(
                 "x." + EarthField.KIND + " == @kind and " +
-                        "x." + EarthField.SOURCE + " == @source_key " +
+                        "x." + EarthField.SOURCE + " == @source_key and " +
                         "x." + EarthField.TARGET + " == @target_key",
                 ImmutableMap.<String, Object>of(
                         "kind", EarthKind.RECENT_KIND,

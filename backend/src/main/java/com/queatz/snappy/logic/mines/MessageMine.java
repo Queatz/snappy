@@ -24,7 +24,7 @@ public class MessageMine extends EarthControl {
     public List<EarthThing> messagesFromTo(EarthRef source, EarthRef target) {
         return use(EarthStore.class).query(
                 "x." + EarthField.KIND + " == @kind and " +
-                        "x." + EarthField.SOURCE + " == @source " +
+                        "x." + EarthField.SOURCE + " == @source and " +
                         "x." + EarthField.TARGET + " == @target",
                 ImmutableMap.<String, Object>of(
                         "kind", EarthKind.MESSAGE_KIND,

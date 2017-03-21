@@ -21,7 +21,7 @@ public class FollowerMine extends EarthControl {
     public EarthThing getFollower(EarthThing person, EarthThing isFollowingPerson) {
         List<EarthThing> result = use(EarthStore.class).query(
                 "x." + EarthField.KIND + " == @kind and " +
-                        "x." + EarthField.SOURCE + " == @source_key " +
+                        "x." + EarthField.SOURCE + " == @source_key and " +
                         "x." + EarthField.TARGET + " == @target_key",
                 ImmutableMap.<String, Object>of(
                         "kind", EarthKind.FOLLOWER_KIND,

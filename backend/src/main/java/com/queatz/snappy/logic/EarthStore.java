@@ -15,7 +15,9 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterators;
+import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.service.Api;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.Gateway;
 
@@ -71,9 +73,12 @@ public class EarthStore extends EarthControl {
     private static final String DEFAULT_COLLECTION = "Collection";
     private static final String DEFAULT_RELATIONSHIPS = "Relationships";
     private static final String DEFAULT_KIND = "Thing";
+    private static final String DEFAULT_KIND_OWNER = "owner";
     private static final String DEFAULT_FIELD_KIND = EarthField.KIND;
     private static final String DEFAULT_FIELD_CREATED = EarthField.CREATED_ON;
     private static final String DEFAULT_FIELD_CONCLUDED = "concluded_on";
+    private static final String DEFAULT_FIELD_FROM = "_from";
+    private static final String DEFAULT_FIELD_TO = "_to";
 
     private final ArangoDatabase db;
     private final ArangoCollection collection;
@@ -186,7 +191,21 @@ public class EarthStore extends EarthControl {
                 .set(DEFAULT_FIELD_CONCLUDED)
                 .set(DEFAULT_FIELD_KIND, kind)
                 .build();
-        return new EarthThing(collection.insertDocument(entity, new DocumentCreateOptions().returnNew(true).waitForSync(true)).getNew());
+        EarthThing thing = new EarthThing(collection.insertDocument(entity, new DocumentCreateOptions().returnNew(true).waitForSync(true)).getNew());
+
+        setOwner(thing, as.getUser());
+
+        collection.insertDocument(entity, new DocumentCreateOptions().returnNew(true).waitForSync(true));
+
+        return thing;
+    }
+
+    private void setOwner(@Nonnull EarthThing thing, @Nonnull EarthThing owner) {
+        new EarthThing.Builder()
+                .set(DEFAULT_FIELD_KIND, DEFAULT_KIND_OWNER)
+                .set(DEFAULT_FIELD_FROM, owner.key().name())
+                .set(DEFAULT_FIELD_TO, thing.key().name())
+                .build();
     }
 
     /**
@@ -406,15 +425,15 @@ public class EarthStore extends EarthControl {
 
         String aql = "let things = (for x in near(" + DEFAULT_COLLECTION + ", @latitude, @longitude, @limit) return x) " +
                 "for x in " +
-                (searchWithLinks ? "append(things, (for n in things for n2 in any n graph '" + DEFAULT_GRAPH + "' return n2)) " : "things") +
+                (searchWithLinks ? "append(things, (for thing in things for other, relationship in outbound thing graph '" + DEFAULT_GRAPH + "' filter relationship.kind == @owner_kind return other)) " : "things") +
                 "filter " + filter + "x.@concluded_field == null " +
                 "limit @limit " +
-
                 "return distinct x";
         Map<String, Object> vars = new HashMap<>();
         vars.put("latitude", location.getLatitude());
         vars.put("longitude", location.getLongitude());
         vars.put("limit", Config.NEARBY_MAX_COUNT);
+        vars.put("owner_kind", DEFAULT_KIND_OWNER);
         vars.put("concluded_field", DEFAULT_FIELD_CONCLUDED);
 
         Logger.getLogger(Config.NAME).info(aql);
