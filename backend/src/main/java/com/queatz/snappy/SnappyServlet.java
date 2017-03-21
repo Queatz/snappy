@@ -1,6 +1,5 @@
 package com.queatz.snappy;
 
-import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.service.Api;
@@ -21,27 +20,32 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 public class SnappyServlet extends HttpServlet {
+
+    public enum RequestMethod {
+        GET, POST, PUT, DELETE
+    }
+
     public SnappyServlet() {
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        handle(HTTPMethod.GET, req, resp);
+        handle(RequestMethod.GET, req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        handle(HTTPMethod.POST, req, resp);
+        handle(RequestMethod.POST, req, resp);
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        handle(HTTPMethod.PUT, req, resp);
+        handle(RequestMethod.PUT, req, resp);
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        handle(HTTPMethod.DELETE, req, resp);
+        handle(RequestMethod.DELETE, req, resp);
     }
 
     @Override
@@ -55,7 +59,7 @@ public class SnappyServlet extends HttpServlet {
         resp.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     }
 
-    private void handle(HTTPMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void handle(RequestMethod method, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         addMainHeaders(resp);
         resp.setContentType("application/json");
         resp.setCharacterEncoding("utf-8");

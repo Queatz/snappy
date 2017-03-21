@@ -1,8 +1,8 @@
 package com.queatz.snappy.logic.views;
 
-import com.google.appengine.api.datastore.GeoPt;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthView;
 
@@ -13,7 +13,7 @@ public class LocationView extends ExistenceView {
 
     final String name;
     final String address;
-    final GeoPt geo;
+    final EarthGeo geo;
 
     public LocationView(EarthAs as, EarthThing location) {
         this(as, location, EarthView.DEEP);
@@ -25,7 +25,7 @@ public class LocationView extends ExistenceView {
         name = location.getString(EarthField.NAME);
         address = location.getString(EarthField.ADDRESS);
 
-        geo = new GeoPt(
+        geo = new EarthGeo(
                 (float) location.getGeo(EarthField.GEO).getLatitude(),
                 (float) location.getGeo(EarthField.GEO).getLongitude()
         );

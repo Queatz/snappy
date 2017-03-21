@@ -1,6 +1,5 @@
 package com.queatz.snappy.logic.views;
 
-import com.google.appengine.api.datastore.GeoPt;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
@@ -41,7 +40,7 @@ public class PersonView extends ExistenceView {
     final List<Viewable> projects;
     final List<Viewable> hubs;
     final List<Viewable> clubs;
-    final GeoPt geo;
+    final EarthGeo geo;
 
     public PersonView(EarthAs as, EarthThing person) {
         this(as, person, EarthView.DEEP);
@@ -71,7 +70,7 @@ public class PersonView extends ExistenceView {
 
             if (isBacking) {
                 EarthGeo latLng = person.getGeo(EarthField.GEO);
-                geo = new GeoPt((float) latLng.getLatitude(), (float) latLng.getLongitude());
+                geo = new EarthGeo((float) latLng.getLatitude(), (float) latLng.getLongitude());
             } else {
                 geo = null;
             }

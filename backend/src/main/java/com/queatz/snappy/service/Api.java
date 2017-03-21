@@ -4,7 +4,6 @@ import com.google.appengine.api.appidentity.AppIdentityService;
 import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
-import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.appengine.tools.cloudstorage.RetryParams;
@@ -50,7 +49,7 @@ public class Api {
     public abstract static class Path {
         protected ArrayList<String> path;
         protected EarthThing user;
-        protected HTTPMethod method;
+        protected SnappyServlet.RequestMethod method;
         protected HttpServletRequest request;
         protected HttpServletResponse response;
 
@@ -62,7 +61,7 @@ public class Api {
 
         private void _call(ArrayList<String> path,
                            EarthThing user,
-                           HTTPMethod method,
+                           SnappyServlet.RequestMethod method,
                            HttpServletRequest request,
                            HttpServletResponse response) throws IOException, PrintingError {
             this.path = path;
@@ -96,7 +95,7 @@ public class Api {
         mImagesService = ImagesServiceFactory.getImagesService();
     }
 
-    public void call(EarthThing user, HTTPMethod method, HttpServletRequest request, HttpServletResponse response) {
+    public void call(EarthThing user, SnappyServlet.RequestMethod method, HttpServletRequest request, HttpServletResponse response) {
         String[] path;
 
         try {

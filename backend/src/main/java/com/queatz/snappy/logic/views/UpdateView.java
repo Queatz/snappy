@@ -1,8 +1,8 @@
 package com.queatz.snappy.logic.views;
 
-import com.google.appengine.api.datastore.GeoPt;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
@@ -23,7 +23,7 @@ public class UpdateView extends ThingView {
     final long likers;
     final String action;
     final Viewable target;
-    final GeoPt geo;
+    final EarthGeo geo;
     final List<Viewable> with;
     final List<Viewable> updates;
     final Boolean going;
@@ -52,7 +52,7 @@ public class UpdateView extends ThingView {
         }
 
         if (update.has(EarthField.GEO)) {
-            geo = new GeoPt(
+            geo = new EarthGeo(
                     (float) update.getGeo(EarthField.GEO).getLatitude(),
                     (float) update.getGeo(EarthField.GEO).getLongitude()
             );
