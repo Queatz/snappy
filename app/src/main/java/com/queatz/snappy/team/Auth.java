@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -22,6 +23,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
+import com.queatz.snappy.R;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.util.Json;
 
@@ -143,6 +145,13 @@ public class Auth {
 
             if (token == null) {
                 mAuth.callbacks(Step.AUTHENTICATION_FAILED);
+            } else {
+                Context context = mAuth.mActivity;
+                if (context == null) {
+                    return;
+                }
+
+                Toast.makeText(context, context.getString(R.string.buy_didnt_work), Toast.LENGTH_SHORT).show();
             }
         }
 

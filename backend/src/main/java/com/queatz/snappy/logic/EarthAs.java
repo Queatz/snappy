@@ -89,4 +89,8 @@ public class EarthAs {
     public Map<String, String[]> getParameters() {
         return request.getParameterMap();
     }
+
+    public boolean hasUser() {
+        return getUser() != null;
+    }
 }

@@ -193,19 +193,21 @@ public class EarthStore extends EarthControl {
                 .build();
         EarthThing thing = new EarthThing(collection.insertDocument(entity, new DocumentCreateOptions().returnNew(true).waitForSync(true)).getNew());
 
-        setOwner(thing, as.getUser());
-
-        collection.insertDocument(entity, new DocumentCreateOptions().returnNew(true).waitForSync(true));
+        if (as.hasUser()) {
+            setOwner(thing, as.getUser());
+        }
 
         return thing;
     }
 
     private void setOwner(@Nonnull EarthThing thing, @Nonnull EarthThing owner) {
-        new EarthThing.Builder()
+        BaseDocument entity = new EarthThing.Builder()
                 .set(DEFAULT_FIELD_KIND, DEFAULT_KIND_OWNER)
                 .set(DEFAULT_FIELD_FROM, owner.key().name())
                 .set(DEFAULT_FIELD_TO, thing.key().name())
                 .build();
+
+        collection.insertDocument(entity, new DocumentCreateOptions().returnNew(true).waitForSync(true));
     }
 
     /**
