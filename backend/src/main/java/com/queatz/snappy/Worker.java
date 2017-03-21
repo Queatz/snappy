@@ -1,12 +1,12 @@
 package com.queatz.snappy;
 
-import com.google.appengine.repackaged.com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.googlecode.objectify.ObjectifyService;
 import com.queatz.snappy.backend.HttpUtil;
-import com.queatz.snappy.backend.RegistrationRecord;
 import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.editors.DeviceEditor;
+import com.queatz.snappy.logic.mines.DeviceMine;
 import com.queatz.snappy.logic.EarthEmail;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthGeo;
@@ -30,16 +30,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.googlecode.objectify.ObjectifyService.ofy;
-
 /**
  * Created by jacob on 4/11/15.
  */
 public class Worker extends HttpServlet {
-
-    static {
-        ObjectifyService.register(RegistrationRecord.class);
-    }
 
     private static class SendInstance {
         protected String userId;
@@ -130,10 +124,10 @@ public class Worker extends HttpServlet {
         }
 
         for(SendInstance sendInstance : toUsers) {
-            List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).filter("userId", sendInstance.userId).list();
+            List<EarthThing> devices = new DeviceMine(as).forUser(sendInstance.userId);
 
-            if (push == null || records.isEmpty()) {
-                if (!passesSocialMode(sendInstance, records.isEmpty() ? Config.SOCIAL_MODE_FRIENDS : pickHighestSocialMode(records))) {
+            if (push == null || devices.isEmpty()) {
+                if (!passesSocialMode(sendInstance, devices.isEmpty() ? Config.SOCIAL_MODE_FRIENDS : pickHighestSocialMode(devices))) {
                     continue;
                 }
 
@@ -144,27 +138,26 @@ public class Worker extends HttpServlet {
             boolean didSendPush = false;
 
             // Send to devices
-            for (RegistrationRecord record : records) {
-                if (!passesSocialMode(sendInstance, record.getSocialMode())) {
+            for (EarthThing device : devices) {
+                if (!passesSocialMode(sendInstance, device.getString("socialMode"))) {
                     continue;
                 }
 
                 // XXX TODO RETRIES
-                JsonObject results = send(push, record.getRegId());
+                JsonObject results = send(push, device.getString("regId"));
 
                 if (results.has("results") && results.getAsJsonArray("results").size() > 0) {
                     JsonObject result = results.getAsJsonArray("results").get(0).getAsJsonObject();
 
                     if (result.has("registration_id")) {
                         String canonicalRegId = result.get("registration_id").getAsString();
-                        record.setRegId(canonicalRegId);
-                        ofy().save().entity(record).now();
+                        new DeviceEditor(as).setRegId(device, canonicalRegId);
                     }
 
                     if (result.has("error")) {
                         if ("MismatchSenderId".equals(result.get("error").getAsString()) ||
                                 "NotRegistered".equals(result.get("error").getAsString())) {
-                            ofy().delete().entity(record).now();
+                            new DeviceEditor(as).remove(device);
                         }
                     } else {
                         didSendPush = true;
@@ -178,12 +171,12 @@ public class Worker extends HttpServlet {
         }
     }
 
-    private String pickHighestSocialMode(List<RegistrationRecord> records) {
+    private String pickHighestSocialMode(List<EarthThing> devices) {
         String socialMode = null;
 
-        for (RegistrationRecord record : records) {
-            if (socialMode == null || compareSocialModes(record.getSocialMode(), socialMode)) {
-                socialMode = record.getSocialMode();
+        for (EarthThing device : devices) {
+            if (socialMode == null || compareSocialModes(device.getString("socialMode"), socialMode)) {
+                socialMode = device.getString("socialMode");
             }
         }
 

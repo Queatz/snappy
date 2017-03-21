@@ -10,8 +10,8 @@ import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Viewable;
+import com.queatz.snappy.logic.mines.DeviceMine;
 import com.queatz.snappy.logic.mines.FollowerMine;
-import com.queatz.snappy.service.Push;
 import com.queatz.snappy.shared.Config;
 
 import java.util.Date;
@@ -89,7 +89,7 @@ public class PersonView extends ExistenceView {
         switch (view) {
             case DEEP:
                 createdOn = person.getDate(EarthField.CREATED_ON);
-                socialMode = Push.getService().getSocialMode(person.key().name());
+                socialMode = Util.findHighestSocialMode(use(DeviceMine.class).forUser(person.key().name()));
 
                 List<EarthThing> updatesList = earthStore.find(EarthKind.UPDATE_KIND, EarthField.TARGET, person.key(), Config.SEARCH_MAXIMUM);
                 List<EarthThing> offersList = earthStore.find(EarthKind.OFFER_KIND, EarthField.SOURCE, person.key());

@@ -15,9 +15,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterators;
-import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
-import com.queatz.snappy.service.Api;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.Gateway;
 

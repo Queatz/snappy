@@ -1,6 +1,9 @@
 package com.queatz.snappy.backend;
 
+import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthGeo;
+import com.queatz.snappy.logic.EarthThing;
+import com.queatz.snappy.logic.mines.DeviceMine;
 import com.queatz.snappy.shared.Config;
 
 import java.io.UnsupportedEncodingException;
@@ -11,6 +14,7 @@ import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -100,5 +104,19 @@ public class Util {
 
     public static String clip(String string) {
         return string.length() > 100 ? string.substring(0, 100) : string;
+    }
+
+    public static String findHighestSocialMode(List<EarthThing> devices) {
+        String socialMode = Config.SOCIAL_MODE_OFF;
+
+        for (EarthThing device : devices) {
+            if (Config.SOCIAL_MODE_ON.equals(device.getString("socialMode"))) {
+                return Config.SOCIAL_MODE_ON;
+            } else if (Config.SOCIAL_MODE_FRIENDS.equals(device.getString("socialMode"))) {
+                socialMode = Config.SOCIAL_MODE_FRIENDS;
+            }
+        }
+
+        return socialMode;
     }
 }

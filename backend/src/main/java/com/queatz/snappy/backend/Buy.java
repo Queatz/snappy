@@ -1,9 +1,6 @@
 package com.queatz.snappy.backend;
 
-import com.googlecode.objectify.ObjectifyService;
 import com.queatz.snappy.logic.EarthJson;
-
-import static com.googlecode.objectify.ObjectifyService.ofy;
 
 /**
  * Handles the Android app's purchase states.
@@ -14,10 +11,6 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
  */
 public class Buy {
 
-    static {
-        ObjectifyService.register(GooglePurchaseDataSpec.class);
-    }
-
     public GooglePurchaseDataSpec makeOrUpdate(GooglePurchaseDataSpec data, String subscriptionInfo) {
         if (data == null) {
             data = new GooglePurchaseDataSpec();
@@ -27,7 +20,7 @@ public class Buy {
 
         subscription = new EarthJson().fromJson(subscriptionInfo, GooglePurchaseDataSpec.class);
 
-        GooglePurchaseDataSpec purchase = ofy().load().type(GooglePurchaseDataSpec.class).filter("orderId", data.orderId).first().now();
+        GooglePurchaseDataSpec purchase = null; // @deprecated
 
         if(purchase != null) {
             purchase.startTimeMillis = data.startTimeMillis;
@@ -37,8 +30,6 @@ public class Buy {
         else {
             purchase = subscription;
         }
-
-        ofy().save().entity(purchase);
 
         return purchase;
     }

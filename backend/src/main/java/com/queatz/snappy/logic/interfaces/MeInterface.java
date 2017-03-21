@@ -16,6 +16,7 @@ import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
+import com.queatz.snappy.logic.editors.DeviceEditor;
 import com.queatz.snappy.logic.editors.OfferEditor;
 import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.editors.UpdateEditor;
@@ -29,7 +30,6 @@ import com.queatz.snappy.logic.views.MessagesAndContactsView;
 import com.queatz.snappy.logic.views.OfferView;
 import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.service.Buy;
-import com.queatz.snappy.service.Push;
 import com.queatz.snappy.shared.Config;
 
 import org.apache.commons.fileupload.FileItemIterator;
@@ -163,7 +163,7 @@ public class MeInterface implements Interfaceable {
 
     private String postUnregisterDevice(EarthAs as, String deviceId) {
         if (deviceId != null && deviceId.length() > 0) {
-            Push.getService().unregister(as.getUser().key().name(), deviceId);
+            new DeviceEditor(as).removeFor(as.getUser().key().name(), deviceId);
             return new SuccessView(true).toJson();
         } else {
             return new SuccessView(false).toJson();
@@ -172,7 +172,7 @@ public class MeInterface implements Interfaceable {
 
     private String postRegisterDevice(EarthAs as, String deviceId, String socialMode) {
         if (deviceId != null && deviceId.length() > 0) {
-            Push.getService().register(as.getUser().key().name(), deviceId, socialMode);
+            new DeviceEditor(as).newDevice(as.getUser().key().name(), deviceId, socialMode);
             return new SuccessView(true).toJson();
         } else {
             return new SuccessView(false).toJson();
