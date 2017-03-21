@@ -18,8 +18,6 @@ import com.queatz.snappy.logic.EarthStore;
 
 import org.apache.commons.io.IOUtils;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.channels.Channels;
 
