@@ -1,9 +1,5 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.google.appengine.tools.cloudstorage.GcsFileOptions;
-import com.google.appengine.tools.cloudstorage.GcsFilename;
-import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
-import com.google.common.collect.Lists;
 import com.queatz.snappy.backend.GooglePurchaseDataSpec;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthEmail;
@@ -41,8 +37,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.util.Date;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -145,7 +141,7 @@ public class MeInterface implements Interfaceable {
         List<EarthThing> messagesToMe = new MessageMine(as).messagesFrom(as.getUser().key());
         List<EarthThing> messagesFromMe = new MessageMine(as).messagesTo(as.getUser().key());
 
-        List<EarthThing> messages = Lists.newArrayList();
+        List<EarthThing> messages = new ArrayList<>();
         messages.addAll(messagesToMe);
         messages.addAll(messagesFromMe);
 
@@ -239,7 +235,7 @@ public class MeInterface implements Interfaceable {
      */
     private String postUpdate(EarthAs as) {
         EarthThing update = new UpdateEditor(as).newUpdate(as.getUser());
-        GcsFilename photoName = new GcsFilename(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), "earth/thing/photo/" + update.key().name() + "/" + new Date().getTime());
+        String photoName = "earth/thing/photo/" + update.key().name();
 
         String message = null;
         boolean allGood = false;
@@ -255,10 +251,10 @@ public class MeInterface implements Interfaceable {
                     int len;
                     byte[] buffer = new byte[8192];
 
-                    GcsOutputChannel outputChannel = as.getApi().mGCS.createOrReplace(photoName, GcsFileOptions.getDefaultInstance());
+                    OutputStream outputChannel = as.getApi().snappyImage.openOutputStream(photoName);
 
                     while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
-                        outputChannel.write(ByteBuffer.wrap(buffer, 0, len));
+                        outputChannel.write(buffer, 0, len);
                     }
 
                     outputChannel.close();

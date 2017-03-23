@@ -1,9 +1,5 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.google.appengine.tools.cloudstorage.GcsFileOptions;
-import com.google.appengine.tools.cloudstorage.GcsFilename;
-import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
-import com.google.common.collect.Lists;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
@@ -38,8 +34,8 @@ import org.apache.commons.fileupload.util.Streams;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.util.Date;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -144,7 +140,7 @@ public class PersonInterface implements Interfaceable {
         List<EarthThing> messagesToMe = new MessageMine(as).messagesFromTo(as.getUser().key(), EarthRef.of(personId));
         List<EarthThing> messagesFromMe = new MessageMine(as).messagesFromTo(EarthRef.of(personId), as.getUser().key());
 
-        List<EarthThing> messages = Lists.newArrayList();
+        List<EarthThing> messages = new ArrayList<>();
         messages.addAll(messagesToMe);
         messages.addAll(messagesFromMe);
 
@@ -152,7 +148,13 @@ public class PersonInterface implements Interfaceable {
     }
 
     private String postSeen(EarthAs as, EarthThing personId) {
-        new RecentEditor(as).markSeen(new RecentMine(as).byPerson(as.getUser(), personId));
+        EarthThing recent = new RecentMine(as).byPerson(as.getUser(), personId);
+
+        if (recent == null) {
+            throw new NothingLogicResponse("people - recent - not found");
+        }
+
+        new RecentEditor(as).markSeen(recent);
         return new SuccessView(true).toJson();
     }
 
@@ -194,7 +196,7 @@ public class PersonInterface implements Interfaceable {
 
     private String postMessage(EarthAs as, EarthThing person)  {
         EarthThing sent = new MessageEditor(as).stageMessage(as.getUser(), person);
-        GcsFilename photoName = new GcsFilename(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), "earth/thing/photo/" + sent.key().name() + "/" + new Date().getTime());
+        String photoName = "earth/thing/photo/" + sent.key().name();
 
         String message = null;
         String localId = null;
@@ -212,10 +214,10 @@ public class PersonInterface implements Interfaceable {
                     int len;
                     byte[] buffer = new byte[8192];
 
-                    GcsOutputChannel outputChannel = as.getApi().mGCS.createOrReplace(photoName, GcsFileOptions.getDefaultInstance());
+                    OutputStream outputChannel = as.getApi().snappyImage.openOutputStream(photoName);
 
                     while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
-                        outputChannel.write(ByteBuffer.wrap(buffer, 0, len));
+                        outputChannel.write(buffer, 0, len);
                     }
 
                     outputChannel.close();

@@ -1,12 +1,6 @@
 package com.queatz.snappy.service;
 
-import com.google.appengine.api.appidentity.AppIdentityService;
-import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
-import com.google.appengine.api.images.ImagesService;
-import com.google.appengine.api.images.ImagesServiceFactory;
-import com.google.appengine.tools.cloudstorage.GcsService;
-import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
-import com.google.appengine.tools.cloudstorage.RetryParams;
+import com.image.SnappyImage;
 import com.queatz.snappy.SnappyServlet;
 import com.queatz.snappy.api.Admin;
 import com.queatz.snappy.api.Logic;
@@ -78,9 +72,7 @@ public class Api {
 
     public SnappyServlet snappy;
 
-    public GcsService mGCS;
-    public AppIdentityService mAppIdentityService;
-    public ImagesService mImagesService;
+    public SnappyImage snappyImage;
 
     private HashMap<String, Class<? extends Api.Path>> paths;
 
@@ -90,9 +82,7 @@ public class Api {
         paths.put(Config.PATH_PIRATE, Pirate.class);
         paths.put(Config.PATH_ADMIN, Admin.class);
 
-        mGCS = GcsServiceFactory.createGcsService(RetryParams.getDefaultInstance());
-        mAppIdentityService = AppIdentityServiceFactory.getAppIdentityService();
-        mImagesService = ImagesServiceFactory.getImagesService();
+        snappyImage = new SnappyImage();
     }
 
     public void call(EarthThing user, SnappyServlet.RequestMethod method, HttpServletRequest request, HttpServletResponse response) {

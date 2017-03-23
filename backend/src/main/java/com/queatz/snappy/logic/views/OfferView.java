@@ -29,7 +29,7 @@ public class OfferView extends ThingView {
 
         EarthStore earthStore = use(EarthStore.class);
 
-        price = offer.isNull(EarthField.PRICE) ? null : (int) offer.getLong(EarthField.PRICE);
+        price = offer.isNull(EarthField.PRICE) ? null : offer.getNumber(EarthField.PRICE).intValue();
         unit = offer.getString(EarthField.UNIT);
         person = new PersonView(as, earthStore.get(offer.getKey(EarthField.SOURCE)), EarthView.SHALLOW);
         likers = earthStore.count(EarthKind.LIKE_KIND, EarthField.TARGET, offer.key());

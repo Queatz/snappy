@@ -9,6 +9,8 @@ import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.mines.RecentMine;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Date;
 
 /**
@@ -58,7 +60,7 @@ public class RecentEditor extends EarthControl {
         }
     }
 
-    public EarthThing markSeen(EarthThing recent) {
+    public EarthThing markSeen(@NotNull EarthThing recent) {
         return earthStore.save(earthStore.edit(recent).set(EarthField.SEEN, true));
     }
 }

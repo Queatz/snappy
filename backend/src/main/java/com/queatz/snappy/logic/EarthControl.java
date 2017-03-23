@@ -1,6 +1,6 @@
 package com.queatz.snappy.logic;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by jacob on 7/16/16.
@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 public class EarthControl {
     protected transient final EarthAs as;
 
-    public EarthControl(@Nonnull EarthAs as) {
+    public EarthControl(@NotNull EarthAs as) {
         this.as = as;
     }
 

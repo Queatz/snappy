@@ -8,7 +8,7 @@ import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by jacob on 5/22/16.
@@ -22,7 +22,7 @@ public class ResourceEditor extends EarthControl {
         earthStore = use(EarthStore.class);
     }
 
-    public EarthThing newResource(@Nonnull String name, EarthThing primaryOwner) {
+    public EarthThing newResource(@NotNull String name, EarthThing primaryOwner) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.RESOURCE_KIND))
                 .set(EarthField.PHOTO, false)
                 .set(EarthField.NAME, name)

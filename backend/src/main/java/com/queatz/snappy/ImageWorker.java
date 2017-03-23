@@ -1,25 +1,15 @@
 package com.queatz.snappy;
 
-import com.google.api.client.util.Base64;
-import com.google.appengine.api.appidentity.AppIdentityService;
-import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
-import com.google.appengine.api.images.Image;
-import com.google.appengine.api.images.ImagesService;
-import com.google.appengine.api.images.ImagesServiceFactory;
-import com.google.appengine.tools.cloudstorage.GcsFilename;
-import com.google.appengine.tools.cloudstorage.GcsInputChannel;
-import com.google.appengine.tools.cloudstorage.GcsService;
-import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
-import com.google.appengine.tools.cloudstorage.RetryParams;
-import com.queatz.snappy.backend.ApiUtil;
+import com.image.SnappyImage;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
-import java.nio.channels.Channels;
+import java.io.InputStream;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -37,29 +27,17 @@ public class ImageWorker extends HttpServlet {
 
         EarthAs as = new EarthAs();
 
-        GcsService gcsService = GcsServiceFactory.createGcsService(RetryParams.getDefaultInstance());
-        AppIdentityService appIdentityService = AppIdentityServiceFactory.getAppIdentityService();
-        ImagesService imagesService = ImagesServiceFactory.getImagesService();
+        SnappyImage snappyImage = new SnappyImage();
 
-        String fileName = ApiUtil.getFileName(gcsService, appIdentityService, "earth/thing/photo/" + thingId + "/");
+        String fileName = "earth/thing/photo/" + thingId;
 
-        GcsFilename gcsFilename = new GcsFilename(appIdentityService.getDefaultGcsBucketName(), fileName);
-        GcsInputChannel gcsInputChannel = gcsService.openReadChannel(gcsFilename, 0);
-
-        Image image = ImagesServiceFactory.makeImage(IOUtils.toByteArray(Channels.newInputStream(gcsInputChannel)));
-
-        float aspect = (float) image.getWidth() / (float) image.getHeight();
-
-        imagesService.applyTransform(ImagesServiceFactory.makeResize(2, 2), image);
+        InputStream inputStream = snappyImage.openInputStream(fileName, 2, 2);
+        float aspect = snappyImage.getAspectRatio(fileName);
 
         EarthStore earthStore = new EarthStore(as);
 
         earthStore.save(earthStore.edit(earthStore.get(thingId))
-                .set(EarthField.PLACEHOLDER, Base64.encodeBase64String(image.getImageData()))
+                .set(EarthField.PLACEHOLDER, Base64.encodeBase64String(IOUtils.toByteArray(inputStream)))
                 .set(EarthField.ASPECT_RATIO, aspect));
     }
-
-//    public static int rgb(int red, int green, int blue) {
-//        return (0xFF << 24) | (red << 16) | (green << 8) | blue;
-//    }
 }

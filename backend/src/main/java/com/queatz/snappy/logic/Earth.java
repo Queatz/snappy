@@ -3,11 +3,11 @@ package com.queatz.snappy.logic;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-
-import javax.annotation.Nonnull;
 
 /**
  * Created by jacob on 4/1/16.
@@ -73,8 +73,8 @@ public class Earth extends EarthControl implements Interfaceable {
         return interfaceable.post(as);
     }
 
-    @Nonnull
-    private EarthThing getEntityFromRoute(@Nonnull List<String> route) {
+    @NotNull
+    private EarthThing getEntityFromRoute(@NotNull List<String> route) {
         if (route.isEmpty()) {
             throw new NothingLogicResponse("earth - route is empty");
         }
@@ -94,7 +94,7 @@ public class Earth extends EarthControl implements Interfaceable {
         return entity;
     }
 
-    private Interfaceable getInterfacableFromParameters(@Nonnull Map<String, String[]> parameters) {
+    private Interfaceable getInterfacableFromParameters(@NotNull Map<String, String[]> parameters) {
         final String[] kindParameter = parameters.get(EarthField.KIND);
 
         if (kindParameter == null) {
@@ -114,8 +114,8 @@ public class Earth extends EarthControl implements Interfaceable {
         return earthRouter.interfaceFromKindOrThrowNothingResponse(kind);
     }
 
-    @Nonnull
-    private Interfaceable getInterfacableFromEntity(@Nonnull EarthThing entity) {
+    @NotNull
+    private Interfaceable getInterfacableFromEntity(@NotNull EarthThing entity) {
         final String kind = entity.getString(EarthField.KIND);
 
         if (kind == null || kind.isEmpty()) {

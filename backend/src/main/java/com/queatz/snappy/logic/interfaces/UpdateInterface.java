@@ -1,14 +1,5 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.google.appengine.api.images.ImagesService;
-import com.google.appengine.api.images.ImagesServiceFactory;
-import com.google.appengine.api.images.ServingUrlOptions;
-import com.google.appengine.tools.cloudstorage.GcsFileOptions;
-import com.google.appengine.tools.cloudstorage.GcsFilename;
-import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
-import com.google.appengine.tools.cloudstorage.ListItem;
-import com.google.appengine.tools.cloudstorage.ListOptions;
-import com.google.appengine.tools.cloudstorage.ListResult;
 import com.google.gson.JsonArray;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
@@ -43,8 +34,7 @@ import org.apache.commons.fileupload.util.Streams;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.util.Date;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -135,29 +125,9 @@ public class UpdateInterface implements Interfaceable {
 
         // XXX TODO Make this use ApiUtil.getPhoto
         try {
-            ListOptions options = new ListOptions.Builder().setPrefix("earth/thing/photo/" + updateId + "/").setRecursive(false).build();
-            ListResult list = as.getApi().mGCS.list(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), options);
+            String fileName = "\"earth/thing/photo/\" + updateId";
 
-            Date lastModified = new Date(0);
-            String fileName = null;
-            while (list.hasNext()) {
-                ListItem item = list.next();
-                if (!item.isDirectory() && lastModified.before(item.getLastModified())) {
-                    lastModified = item.getLastModified();
-                    fileName = item.getName();
-                }
-            }
-
-            if (fileName == null) {
-                throw new NothingLogicResponse("update photo - not found");
-            }
-
-            ImagesService imagesService = ImagesServiceFactory.getImagesService();
-            ServingUrlOptions servingUrlOptions = ServingUrlOptions.Builder.withGoogleStorageFileName(
-                    "/gs/" + as.getApi().mAppIdentityService.getDefaultGcsBucketName() + "/" + fileName).imageSize(size).secureUrl(true);
-            String photoUrl = imagesService.getServingUrl(servingUrlOptions);
-
-            as.getResponse().sendRedirect(photoUrl);
+            as.getResponse().sendRedirect(as.getApi().snappyImage.getServingUrl(fileName, size));
         } catch (IOException e) {
             throw new LogicException("update photo - io error");
         }
@@ -167,7 +137,7 @@ public class UpdateInterface implements Interfaceable {
 
     private String postUpdate(EarthAs as) {
         EarthThing update = new UpdateEditor(as).stageUpdate(as.getUser());
-        GcsFilename photoName = new GcsFilename(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), "earth/thing/photo/" + update.key().name() + "/" + new Date().getTime());
+        String photoName = "earth/thing/photo/" + update.key().name();
 
         String message = null;
         boolean photoUploaded = false;
@@ -191,10 +161,10 @@ public class UpdateInterface implements Interfaceable {
                     int len;
                     byte[] buffer = new byte[8192];
 
-                    GcsOutputChannel outputChannel = as.getApi().mGCS.createOrReplace(photoName, GcsFileOptions.getDefaultInstance());
+                    OutputStream outputChannel = as.getApi().snappyImage.openOutputStream(photoName);
 
                     while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
-                        outputChannel.write(ByteBuffer.wrap(buffer, 0, len));
+                        outputChannel.write(buffer, 0, len);
                     }
 
                     outputChannel.close();
@@ -259,7 +229,7 @@ public class UpdateInterface implements Interfaceable {
     private String editUpdate(EarthAs as, String updateId) {
         EarthThing update = new EarthStore(as).get(updateId);
 
-        GcsFilename photoName = new GcsFilename(as.getApi().mAppIdentityService.getDefaultGcsBucketName(), "earth/thing/photo/" + update.key().name() + "/" + new Date().getTime());
+        String photoName = "earth/thing/photo/" + update.key().name();
 
         String message = null;
         boolean photoUploaded = update.getBoolean(EarthField.PHOTO);
@@ -276,10 +246,10 @@ public class UpdateInterface implements Interfaceable {
                     int len;
                     byte[] buffer = new byte[8192];
 
-                    GcsOutputChannel outputChannel = as.getApi().mGCS.createOrReplace(photoName, GcsFileOptions.getDefaultInstance());
+                    OutputStream outputChannel = as.getApi().snappyImage.openOutputStream(photoName);
 
                     while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
-                        outputChannel.write(ByteBuffer.wrap(buffer, 0, len));
+                        outputChannel.write(buffer, 0, len);
                     }
 
                     outputChannel.close();

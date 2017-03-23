@@ -8,8 +8,8 @@ import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by jacob on 4/4/16.
@@ -23,7 +23,7 @@ public class HubEditor extends EarthControl {
         earthStore = use(EarthStore.class);
     }
 
-    public EarthThing newHub(@Nonnull String name, @Nonnull String address, @Nonnull EarthGeo latLng) {
+    public EarthThing newHub(@NotNull String name, @NotNull String address, @NotNull EarthGeo latLng) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.HUB_KIND))
                 .set(EarthField.PHOTO, false)
                 .set(EarthField.NAME, name)
@@ -32,7 +32,7 @@ public class HubEditor extends EarthControl {
                 .set(EarthField.ADDRESS, address));
     }
 
-    public EarthThing edit(@Nonnull EarthThing hub,
+    public EarthThing edit(@NotNull EarthThing hub,
                        @Nullable String name,
                        @Nullable String address,
                        @Nullable EarthGeo latLng,

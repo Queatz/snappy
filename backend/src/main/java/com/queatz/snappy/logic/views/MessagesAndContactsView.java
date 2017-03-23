@@ -1,6 +1,5 @@
 package com.queatz.snappy.logic.views;
 
-import com.google.api.client.util.Lists;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthJson;
@@ -8,6 +7,7 @@ import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Viewable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,8 +21,8 @@ public class MessagesAndContactsView extends EarthControl implements Viewable {
     public MessagesAndContactsView(EarthAs as, List<EarthThing> messages, List<EarthThing> contacts) {
         super(as);
 
-        this.messages = Lists.newArrayList();
-        this.contacts = Lists.newArrayList();
+        this.messages = new ArrayList<>();
+        this.contacts = new ArrayList<>();
 
         for (EarthThing message : messages) {
             this.messages.add(new MessageView(as, message, EarthView.SHALLOW));

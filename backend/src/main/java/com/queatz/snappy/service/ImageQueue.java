@@ -1,7 +1,7 @@
 package com.queatz.snappy.service;
 
-import com.google.appengine.api.taskqueue.QueueFactory;
-import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.common.collect.ImmutableMap;
+import com.queatz.snappy.queue.SnappyQueue;
 import com.queatz.snappy.shared.Config;
 
 /**
@@ -18,14 +18,15 @@ public class ImageQueue {
         return _service;
     }
 
-    private com.google.appengine.api.taskqueue.Queue queue;
+    private SnappyQueue queue;
 
     public ImageQueue() {
-        queue = QueueFactory.getQueue(Config.QUEUE_IMAGE_WORKER_NAME);
+        queue = new SnappyQueue(Config.QUEUE_IMAGE_WORKER_NAME);
     }
 
     public void enqueue(String thing) {
-        queue.addAsync(TaskOptions.Builder.withUrl(Config.QUEUE_IMAGE_WORKER_URL)
-                .param("thing", thing));
+        queue.add(Config.QUEUE_IMAGE_WORKER_URL, ImmutableMap.of(
+                "thing", thing
+        ));
     }
 }

@@ -19,6 +19,9 @@ import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.Gateway;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -30,8 +33,6 @@ import java.util.Random;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Created by jacob on 4/2/16.
@@ -64,6 +65,7 @@ public class EarthStore extends EarthControl {
         }
 
         this.collection = db.collection(DEFAULT_COLLECTION);
+        this.relationships = db.collection(DEFAULT_RELATIONSHIPS);
         this.collection.createGeoIndex(ImmutableSet.of(EarthField.GEO), new GeoIndexOptions());
     }
 
@@ -80,8 +82,9 @@ public class EarthStore extends EarthControl {
 
     private final ArangoDatabase db;
     private final ArangoCollection collection;
+    private final ArangoCollection relationships;
 
-    public EarthThing get(@Nonnull String id) {
+    public EarthThing get(@NotNull String id) {
         return get(new EarthRef(id));
     }
 
@@ -92,7 +95,7 @@ public class EarthStore extends EarthControl {
      *
      * @return The thing, or null if it could not be found
      */
-    public EarthThing get(@Nonnull EarthRef key) {
+    public EarthThing get(@NotNull EarthRef key) {
         EarthThing entity;
 
         if (as.__entityCache.containsKey(key)) {
@@ -157,7 +160,7 @@ public class EarthStore extends EarthControl {
      * - Fails if the thing doesn't have a creation date.
      * - Fails if the thing has already concluded
      */
-    public void put(@Nonnull EarthThing entity) {
+    public void put(@NotNull EarthThing entity) {
         if (entity.key().name().isEmpty()) {
             return;
         }
@@ -183,7 +186,7 @@ public class EarthStore extends EarthControl {
      *
      * @return The new thing
      */
-    public EarthThing create(@Nonnull String kind) {
+    public EarthThing create(@NotNull String kind) {
         BaseDocument entity = new EarthThing.Builder()
                 .set(DEFAULT_FIELD_CREATED, new Date())
                 .set(DEFAULT_FIELD_CONCLUDED)
@@ -198,14 +201,14 @@ public class EarthStore extends EarthControl {
         return thing;
     }
 
-    private void setOwner(@Nonnull EarthThing thing, @Nonnull EarthThing owner) {
+    private void setOwner(@NotNull EarthThing thing, @NotNull EarthThing owner) {
         BaseDocument entity = new EarthThing.Builder()
                 .set(DEFAULT_FIELD_KIND, DEFAULT_KIND_OWNER)
-                .set(DEFAULT_FIELD_FROM, owner.key().name())
-                .set(DEFAULT_FIELD_TO, thing.key().name())
+                .set(DEFAULT_FIELD_FROM, DEFAULT_COLLECTION + "/" + owner.key().name())
+                .set(DEFAULT_FIELD_TO, DEFAULT_COLLECTION + "/" + thing.key().name())
                 .build();
 
-        collection.insertDocument(entity, new DocumentCreateOptions().returnNew(true).waitForSync(true));
+        relationships.insertDocument(entity, new DocumentCreateOptions().returnNew(true).waitForSync(true));
     }
 
     /**
@@ -214,7 +217,7 @@ public class EarthStore extends EarthControl {
      * - Assumes external validation happens.
      * - Fails if the thing already concluded.
      */
-    public void conclude(@Nonnull String id) {
+    public void conclude(@NotNull String id) {
 
 //        XXX TODO
 //        if (!earthAuthority.authorize(entity, as, EarthRule.MODIFY)) {
@@ -253,7 +256,7 @@ public class EarthStore extends EarthControl {
      * - Assumes external validation happens.
      * - Fails if the thing already concluded.
      */
-    public EarthThing.Builder edit(@Nonnull EarthThing entity) {
+    public EarthThing.Builder edit(@NotNull EarthThing entity) {
 
         if (!earthAuthority.authorize(entity, EarthRule.MODIFY)) {
             throw new NothingLogicResponse("unauthorized");
@@ -268,7 +271,7 @@ public class EarthStore extends EarthControl {
      * - Assumes external validation happens.
      * - Fails if the thing already concluded.
      */
-    public EarthThing save(@Nonnull EarthThing.Builder entityBuilder) {
+    public EarthThing save(@NotNull EarthThing.Builder entityBuilder) {
         BaseDocument entity = entityBuilder.build();
         EarthThing thing = new EarthThing(entity);
 
@@ -328,7 +331,7 @@ public class EarthStore extends EarthControl {
     public List<EarthThing> find(String kind, String field, EarthRef key, Integer limit) {
         String aql = "for x in " + DEFAULT_COLLECTION + " " +
                 "filter x.kind == @kind and x.@field == @key and x.@concluded_field == null " +
-                "sort x.@sort" +
+                "sort x.@sort " +
                 "limit @limit " +
                 "return x";
 
@@ -423,10 +426,11 @@ public class EarthStore extends EarthControl {
 
         boolean searchWithLinks = true;
 
+        // TODO - Only allow chosen types
         String aql = "let things = (for x in near(" + DEFAULT_COLLECTION + ", @latitude, @longitude, @limit) return x) " +
                 "for x in " +
                 (searchWithLinks ? "append(things, (for thing in things for other, relationship in outbound thing graph '" + DEFAULT_GRAPH + "' filter relationship.kind == @owner_kind return other)) " : "things") +
-                "filter " + filter + "x.@concluded_field == null " +
+                "filter " + filter + "x.@concluded_field == null and x.kind != 'device' " +
                 "limit @limit " +
                 "return distinct x";
         Map<String, Object> vars = new HashMap<>();

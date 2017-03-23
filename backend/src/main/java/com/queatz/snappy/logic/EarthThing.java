@@ -2,15 +2,13 @@ package com.queatz.snappy.logic;
 
 import com.arangodb.entity.BaseDocument;
 import com.arangodb.velocypack.internal.util.DateUtil;
-import com.google.api.client.util.Lists;
 import com.google.common.collect.ImmutableList;
 
 import java.text.ParseException;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by jacob on 3/12/17.
@@ -66,8 +64,8 @@ public class EarthThing {
         return raw.getAttribute(field) == null;
     }
 
-    public long getLong(String field) {
-        return (Long) raw.getAttribute(field);
+    public Number getNumber(String field) {
+        return (Number) raw.getAttribute(field);
     }
 
     public static EarthThing from(@Nullable BaseDocument document) {

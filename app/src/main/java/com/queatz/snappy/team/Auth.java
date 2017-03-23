@@ -145,13 +145,6 @@ public class Auth {
 
             if (token == null) {
                 mAuth.callbacks(Step.AUTHENTICATION_FAILED);
-            } else {
-                Context context = mAuth.mActivity;
-                if (context == null) {
-                    return;
-                }
-
-                Toast.makeText(context, context.getString(R.string.buy_didnt_work), Toast.LENGTH_SHORT).show();
             }
         }
 

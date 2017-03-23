@@ -1,16 +1,5 @@
 package com.queatz.snappy.backend;
 
-import com.google.appengine.api.appidentity.AppIdentityService;
-import com.google.appengine.api.images.ImagesService;
-import com.google.appengine.api.images.ImagesServiceFactory;
-import com.google.appengine.api.images.ServingUrlOptions;
-import com.google.appengine.tools.cloudstorage.GcsFileOptions;
-import com.google.appengine.tools.cloudstorage.GcsFilename;
-import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
-import com.google.appengine.tools.cloudstorage.GcsService;
-import com.google.appengine.tools.cloudstorage.ListItem;
-import com.google.appengine.tools.cloudstorage.ListOptions;
-import com.google.appengine.tools.cloudstorage.ListResult;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.shared.Config;
 
@@ -21,8 +10,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.util.Date;
+import java.io.OutputStream;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +35,7 @@ public class ApiUtil {
     public static boolean getPhoto(String thingId, Api api, HttpServletRequest request, HttpServletResponse response) throws IOException {
         int size;
 
-        thingId = "earth/thing/photo/" + thingId + "/";
+        String fileName = "earth/thing/photo/" + thingId;
 
         try {
             size = Integer.parseInt(request.getParameter(Config.PARAM_SIZE));
@@ -58,43 +46,9 @@ public class ApiUtil {
         // Maximum supported by GCE
         size = Math.min(1600, size);
 
-        String fileName = getFileNameFull(api.mGCS, api.mAppIdentityService, thingId);
-
-        if (fileName == null) {
-            return false;
-        }
-
-        ImagesService imagesService = ImagesServiceFactory.getImagesService();
-        ServingUrlOptions servingUrlOptions = ServingUrlOptions.Builder
-                .withGoogleStorageFileName(fileName)
-                .imageSize(size)
-                .secureUrl(true);
-        String photoUrl = imagesService.getServingUrl(servingUrlOptions);
-
-        response.sendRedirect(photoUrl);
+        response.sendRedirect(api.snappyImage.getServingUrl(fileName, size));
 
         return true;
-    }
-
-    public static String getFileName(GcsService gcsService, AppIdentityService identityService, String prefix) throws IOException {
-        ListOptions options = new ListOptions.Builder().setPrefix(prefix).setRecursive(false).build();
-        ListResult list = gcsService.list(identityService.getDefaultGcsBucketName(), options);
-
-        Date lastModified = new Date(0);
-        String fileName = null;
-        while (list.hasNext()) {
-            ListItem item = list.next();
-            if (!item.isDirectory() && lastModified.before(item.getLastModified())) {
-                lastModified = item.getLastModified();
-                fileName = item.getName();
-            }
-        }
-
-        return fileName;
-    }
-
-    public static String getFileNameFull(GcsService gcsService, AppIdentityService identityService, String prefix) throws IOException {
-        return "/gs/" + identityService.getDefaultGcsBucketName() + "/" + getFileName(gcsService, identityService, prefix);
     }
 
     /**
@@ -107,8 +61,7 @@ public class ApiUtil {
      * @throws IOException
      */
     public static boolean putPhoto(String thingId, Api api, HttpServletRequest request) throws IOException {
-        thingId = "earth/thing/photo/" + thingId + "/" + new Date().getTime();
-        GcsFilename photoName = new GcsFilename(api.mAppIdentityService.getDefaultGcsBucketName(), thingId);
+        String photoName = "earth/thing/photo/" + thingId;
 
         try {
             ServletFileUpload upload = new ServletFileUpload();
@@ -121,10 +74,10 @@ public class ApiUtil {
                     int len;
                     byte[] buffer = new byte[8192];
 
-                    GcsOutputChannel outputChannel = api.mGCS.createOrReplace(photoName, GcsFileOptions.getDefaultInstance());
+                    OutputStream outputChannel = api.snappyImage.openOutputStream(photoName);
 
                     while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
-                        outputChannel.write(ByteBuffer.wrap(buffer, 0, len));
+                        outputChannel.write(buffer, 0, len);
                     }
 
                     outputChannel.close();

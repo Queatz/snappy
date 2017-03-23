@@ -9,16 +9,16 @@ import com.queatz.snappy.logic.EarthRef;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
 
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * Created by jacob on 3/20/17.
  */
 
 public class DeviceMine extends EarthControl {
-    public DeviceMine(@Nonnull EarthAs as) {
+    public DeviceMine(@NotNull EarthAs as) {
         super(as);
     }
     

@@ -1,6 +1,5 @@
 package com.queatz.snappy.logic.views;
 
-import com.google.api.client.util.Lists;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthJson;
@@ -9,6 +8,7 @@ import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Viewable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,7 +29,7 @@ public class EntityListView extends EarthControl implements Viewable {
     private List<Viewable> mapToViews(List<EarthThing> entities, EarthView view) {
         final EarthViewer earthViewer = use(EarthViewer.class);
 
-        List<Viewable> viewables = Lists.newArrayList();
+        List<Viewable> viewables = new ArrayList<>();
 
         for (EarthThing entity : entities) {
             viewables.add(earthViewer.getViewForEntityOrThrow(entity, view));

@@ -1,7 +1,7 @@
 package com.queatz.snappy.service;
 
-import com.google.appengine.api.taskqueue.QueueFactory;
-import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.common.collect.ImmutableMap;
+import com.queatz.snappy.queue.SnappyQueue;
 import com.queatz.snappy.shared.Config;
 
 /**
@@ -17,23 +17,25 @@ public class Queue {
         return _service;
     }
 
-    private com.google.appengine.api.taskqueue.Queue queue;
+    private SnappyQueue queue;
 
     public Queue() {
-        queue = QueueFactory.getQueue(Config.QUEUE_WORKER_NAME);
+        queue = new SnappyQueue(Config.QUEUE_WORKER_NAME);
     }
 
     public void enqueuePushMessageToUser(String toUser, String action, String message) {
-        queue.addAsync(TaskOptions.Builder.withUrl(Config.QUEUE_WORKER_URL)
-                .param("action", action)
-                .param("toUser", toUser)
-                .param("message", message));
+        queue.add(Config.QUEUE_WORKER_URL, ImmutableMap.of(
+                "action", action,
+                "toUser", toUser,
+                "message", message
+        ));
     }
 
     public void enqueuePushMessageFromUser(String fromUser, String action, String message) {
-        queue.addAsync(TaskOptions.Builder.withUrl(Config.QUEUE_WORKER_URL)
-                .param("action", action)
-                .param("fromUser", fromUser)
-                .param("message", message));
+        queue.add(Config.QUEUE_WORKER_URL, ImmutableMap.of(
+                "action", action,
+                "fromUser", fromUser,
+                "message", message
+        ));
     }
 }

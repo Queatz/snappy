@@ -7,7 +7,7 @@ import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by jacob on 5/8/16.
@@ -21,13 +21,13 @@ public class ContactEditor extends EarthControl {
         earthStore = use(EarthStore.class);
     }
 
-    public EarthThing newContact(@Nonnull EarthThing thing, @Nonnull EarthThing person) {
+    public EarthThing newContact(@NotNull EarthThing thing, @NotNull EarthThing person) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.CONTACT_KIND))
                 .set(EarthField.SOURCE, thing.key())
                 .set(EarthField.TARGET, person.key()));
     }
 
-    public EarthThing newContact(@Nonnull EarthThing thing, @Nonnull EarthThing person, @Nonnull String role) {
+    public EarthThing newContact(@NotNull EarthThing thing, @NotNull EarthThing person, @NotNull String role) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.CONTACT_KIND))
                 .set(EarthField.SOURCE, thing.key())
                 .set(EarthField.TARGET, person.key())
