@@ -23,9 +23,9 @@ public class RecentMine extends EarthControl {
         return use(EarthStore.class).query(
                 "x." + EarthField.KIND + " == @kind and " +
                 "x." + EarthField.SOURCE + " == @source_key",
-                ImmutableMap.of(
+                ImmutableMap.<String, Object>of(
                         "kind", EarthKind.RECENT_KIND,
-                        "source_key", person.key()
+                        "source_key", person.key().name()
                 )
         );
     }

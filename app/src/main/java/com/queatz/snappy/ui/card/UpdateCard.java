@@ -248,6 +248,8 @@ public class UpdateCard implements Card<DynamicRealmObject> {
 
         Button shareButton = (Button) view.findViewById(R.id.shareButton);
 
+        shareButton.getCompoundDrawables()[0].setTint(context.getResources().getColor(R.color.gray));
+
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
