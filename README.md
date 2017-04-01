@@ -116,4 +116,3 @@ Screenshot from the Android application.
 # Project Notes
 
 * Files referenced like "gateway.*" need to be manually created and filled out with project keys and secrets, your IDE should complain.
-* `python3 gen.py` needs to be run once initially and after editing things in the shared/ project
