@@ -28,7 +28,7 @@ import java.util.Random;
  */
 public class SnappyImage {
 
-    private final static String filePoolPath = "images-pool/";
+    private final static String filePoolPath = "/var/lib/village/pools/images";
     private final static String IMAGES_DATABASE_COLLECTION = "Images";
 
     private ArangoDatabase database;

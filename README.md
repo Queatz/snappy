@@ -23,6 +23,15 @@ Make sure you can also visit http://localhost:8080/manager/html and see the Tomc
 
 If either of these doesn't work, you may need to run either `sudo service arangodb start` or `sudo service tomcat8 start`.
 
+For images and file uploads to work, you'll need to run the following command as superuser:
+
+```bash
+mkdir /var/lib/village && cd /var/lib/village
+chmod 755 . && chgrp tomcat8 . && chown tomcat8 .
+```
+
+This allows Village to write images and files to disk.
+
 2) Build & upload the Village server
 
 From the projects root directory, run:
