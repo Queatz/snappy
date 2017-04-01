@@ -1,6 +1,7 @@
 package com.image;
 
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +31,8 @@ public class SnappyImageUtil {
         if (imageToScale != null) {
             scaledImage = new BufferedImage(dWidth, dHeight, imageToScale.getType());
             Graphics2D graphics2D = scaledImage.createGraphics();
+            graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                    RenderingHints.VALUE_INTERPOLATION_BICUBIC);
             graphics2D.drawImage(imageToScale, 0, 0, dWidth, dHeight, null);
             graphics2D.dispose();
         }

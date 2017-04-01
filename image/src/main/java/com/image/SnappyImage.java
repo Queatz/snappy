@@ -5,6 +5,7 @@ import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDBException;
 import com.arangodb.ArangoDatabase;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.Gateway;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,8 +29,9 @@ import java.util.Random;
  */
 public class SnappyImage {
 
-    private final static String filePoolPath = "/var/lib/village/pools/images";
+    private final static String IMAGES_POOL = "pools/images";
     private final static String IMAGES_DATABASE_COLLECTION = "Images";
+    private final static String filePoolPath = Config.VILLAGE_FILES_DIR + IMAGES_POOL;
 
     private ArangoDatabase database;
     private ArangoCollection collection;
@@ -87,7 +89,7 @@ public class SnappyImage {
                 @Override
                 public void close() throws IOException {
                     super.close();
-                    saveImage(path, file, size == null, size != null && size.getY() == 0f);
+                    saveImage(path, file, size == null, size != null && size.y == 0);
                 }
             };
         } catch (IOException e) {
@@ -138,11 +140,15 @@ public class SnappyImage {
      * @param size The requested image width, or 0 to not do scaling
      * @return A url where the image can be found
      */
+    @Nullable
     public String getServingUrl(String path, int size) {
-        return null;
+        SnappyImageMetadata metadata = getImageMetadata(path, new Point(size, 0), true);
 
-        // return path to raw file of size
-        // if size is not generated yet, generate it, and then return
+        if (metadata == null) {
+            return null;
+        }
+
+        return Paths.get("/", Config.PATH_RAW, IMAGES_POOL, metadata.file).toString();
     }
 
     /**
@@ -166,16 +172,16 @@ public class SnappyImage {
     @Nullable
     private SnappyImageMetadata getImageMetadata(String path, Point size) {
         String sizeQuery = size == null ? "x.original == true" : "x.width == @width and " +
-                (size.getY() == 0 ? "x.scaled == true" : "x.height == @height");
+                (size.y == 0 ? "x.scaled == true" : "x.height == @height");
         String query = "for x in " + IMAGES_DATABASE_COLLECTION + " filter x.path == @path and " + sizeQuery + " return x";
         Map<String, Object> vars = new HashMap<>();
         vars.put("path", path);
 
         if (size != null) {
-            vars.put("width", (int) size.getX());
+            vars.put("width", size.x);
 
-            if (size.getY() != 0f) {
-                vars.put("height", (int) size.getY());
+            if (size.y != 0) {
+                vars.put("height", size.y);
             }
         }
 
@@ -196,25 +202,12 @@ public class SnappyImage {
      * @param h The requested image height, or 0 to keep aspect
      * @return An image stream where the image can be read, or null of not found
      */
+    @Nullable
     public InputStream openInputStream(String path, int w, int h) {
-        Point size = (w == 0) ? null : new Point(w, h);
-        SnappyImageMetadata metadata = getImageMetadata(path, size);
+        SnappyImageMetadata metadata = getImageMetadata(path, new Point(w, h), true);
 
-        // Create image if it doesn't exist, based off the original size
         if (metadata == null) {
-            if (size != null) {
-                metadata = getImageMetadata(path, null);
-            }
-
-            if (metadata == null) {
-                return null;
-            }
-
-            metadata = getScaledImageMetadata(metadata, w, h);
-
-            if (metadata == null) {
-                return null;
-            }
+            return null;
         }
 
         File file = getFileFromName(metadata.file);
@@ -227,18 +220,40 @@ public class SnappyImage {
         }
     }
 
-    private SnappyImageMetadata getScaledImageMetadata(@NotNull SnappyImageMetadata metadata, int w, int h) {
+    private SnappyImageMetadata getImageMetadata(String path, Point size, boolean create) {
+        SnappyImageMetadata metadata = getImageMetadata(path, size);
+
+        // Create image if it doesn't exist, based off the original size
+        if (metadata == null && create) {
+            if (size != null) {
+                metadata = getImageMetadata(path, null);
+            }
+
+            if (metadata == null) {
+                return null;
+            }
+
+            metadata = getScaledImageMetadata(metadata, size);
+
+            if (metadata == null) {
+                return null;
+            }
+        }
+
+        return metadata;
+    }
+
+    private SnappyImageMetadata getScaledImageMetadata(@NotNull SnappyImageMetadata metadata, Point size) {
         BufferedImage image;
 
         try {
             image = SnappyImageUtil.image(getFileFromName(metadata.file));
-            image = SnappyImageUtil.scale(image, w, h > 0 ? h : (int) (w / getAspectRatio(metadata)));
+            image = SnappyImageUtil.scale(image, size.x, size.y > 0 ? size.y : (int) (size.x / getAspectRatio(metadata)));
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
 
-        Point size = new Point(w, h);
         OutputStream outputStream = openOutputStream(metadata.path, size);
 
         try {

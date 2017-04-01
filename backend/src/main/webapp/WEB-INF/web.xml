@@ -24,4 +24,13 @@
         <servlet-name>ImageWorker</servlet-name>
         <url-pattern>/image-worker</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>StaticServlet</servlet-name>
+        <servlet-class>com.queatz.snappy.StaticServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StaticServlet</servlet-name>
+        <url-pattern>/raw/*</url-pattern>
+    </servlet-mapping>
 </web-app>

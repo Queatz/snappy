@@ -125,9 +125,15 @@ public class UpdateInterface implements Interfaceable {
 
         // XXX TODO Make this use ApiUtil.getPhoto
         try {
-            String fileName = "\"earth/thing/photo/\" + updateId";
+            String fileName = "earth/thing/photo/" + updateId;
 
-            as.getResponse().sendRedirect(as.getApi().snappyImage.getServingUrl(fileName, size));
+            String servingUrl = as.getApi().snappyImage.getServingUrl(fileName, size);
+
+            if (servingUrl == null) {
+                throw new LogicException("update photo - no redirect");
+            }
+
+            as.getResponse().sendRedirect(servingUrl);
         } catch (IOException e) {
             throw new LogicException("update photo - io error");
         }
