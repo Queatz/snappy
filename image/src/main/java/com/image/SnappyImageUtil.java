@@ -1,5 +1,7 @@
 package com.image;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -18,7 +20,7 @@ public class SnappyImageUtil {
         return ImageIO.read(file);
     }
 
-    public static BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight) {
+    public static BufferedImage scale(@NotNull BufferedImage imageToScale, int dWidth, int dHeight) {
         if (dWidth == 0 || dWidth == imageToScale.getWidth()) {
             return imageToScale;
         }
@@ -27,15 +29,13 @@ public class SnappyImageUtil {
             dHeight = imageToScale.getHeight() * (dWidth / imageToScale.getWidth());
         }
 
-        BufferedImage scaledImage = null;
-        if (imageToScale != null) {
-            scaledImage = new BufferedImage(dWidth, dHeight, imageToScale.getType());
-            Graphics2D graphics2D = scaledImage.createGraphics();
-            graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                    RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-            graphics2D.drawImage(imageToScale, 0, 0, dWidth, dHeight, null);
-            graphics2D.dispose();
-        }
+        BufferedImage scaledImage;
+        scaledImage = new BufferedImage(dWidth, dHeight, imageToScale.getType());
+        Graphics2D graphics2D = scaledImage.createGraphics();
+        graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        graphics2D.drawImage(imageToScale, 0, 0, dWidth, dHeight, null);
+        graphics2D.dispose();
         return scaledImage;
     }
 

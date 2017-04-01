@@ -90,7 +90,7 @@ public class PersonView extends ExistenceView {
                 createdOn = person.getDate(EarthField.CREATED_ON);
                 socialMode = Util.findHighestSocialMode(use(DeviceMine.class).forUser(person.key().name()));
 
-                List<EarthThing> updatesList = earthStore.find(EarthKind.UPDATE_KIND, EarthField.TARGET, person.key(), Config.SEARCH_MAXIMUM);
+                List<EarthThing> updatesList = earthStore.find(EarthKind.UPDATE_KIND, EarthField.TARGET, person.key());
                 List<EarthThing> offersList = earthStore.find(EarthKind.OFFER_KIND, EarthField.SOURCE, person.key());
                 List<EarthThing> resourcesList = earthStore.find(EarthKind.RESOURCE_KIND, EarthField.SOURCE, person.key());
                 List<EarthThing> projectsList = earthStore.find(EarthKind.PROJECT_KIND, EarthField.SOURCE, person.key());

@@ -208,7 +208,7 @@ public class EarthStore extends EarthControl {
                 .set(DEFAULT_FIELD_TO, DEFAULT_COLLECTION + "/" + thing.key().name())
                 .build();
 
-        relationships.insertDocument(entity, new DocumentCreateOptions().returnNew(true).waitForSync(true));
+        relationships.insertDocument(entity, new DocumentCreateOptions());
     }
 
     /**

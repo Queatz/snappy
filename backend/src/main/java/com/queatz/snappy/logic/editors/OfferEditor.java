@@ -24,7 +24,7 @@ public class OfferEditor extends EarthControl {
                 .set(EarthField.SOURCE, person.key())
                 .set(EarthField.ABOUT, about)
                 .set(EarthField.PHOTO, false)
-                .set(EarthField.WANT, true)
+                .set(EarthField.WANT, want)
                 .set(EarthField.NAME)
                 .set(EarthField.UNIT, unit);
 

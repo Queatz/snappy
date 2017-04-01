@@ -181,6 +181,10 @@ public class MeInterface implements Interfaceable {
         return new SuccessView(ok).toJson();
     }
 
+    /**
+     * @deprecated
+     * Use OfferInterface
+     */
     private String postOffers(EarthAs as) {
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
         String details = as.getRequest().getParameter(Config.PARAM_DETAILS);
