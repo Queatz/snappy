@@ -21,7 +21,7 @@ public class PersonMine extends EarthControl {
     public EarthThing byEmail(String email) {
         List<EarthThing> result = use(EarthStore.class).query(
                 "x." + EarthField.KIND + " == @kind and " +
-                        "x." + EarthField.TARGET + " == @email",
+                        "x." + EarthField.EMAIL + " == @email",
                 ImmutableMap.<String, Object>of(
                         "kind", EarthKind.PERSON_KIND,
                         "email", email
