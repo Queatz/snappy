@@ -27,5 +27,17 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="shared" exported="" />
+    <orderEntry type="library" exported="" name="arangodb-java-driver-4.1.11" level="project" />
+    <orderEntry type="library" exported="" name="annotations-java5-15.0" level="project" />
+    <orderEntry type="library" exported="" name="velocypack-1.0.3" level="project" />
+    <orderEntry type="library" exported="" name="slf4j-api-1.7.13" level="project" />
+    <orderEntry type="library" exported="" name="json-simple-1.1.1" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.8.0" level="project" />
+    <orderEntry type="library" exported="" name="junit-4.10" level="project" />
+    <orderEntry type="library" exported="" name="hamcrest-core-1.1" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="testng-6.9.4" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="bsh-2.0b4" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="jcommander-1.48" level="project" />
   </component>
 </module>
