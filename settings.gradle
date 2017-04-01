@@ -1,1 +1,1 @@
-include ':app', ':backend', ':web', ':shared', ':image', ':queue'
+include ':app', ':backend', ':web', ':shared', ':image', ':queue', ':files'

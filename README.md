@@ -6,6 +6,60 @@ You are free to fork and modify it and build your own social network using its s
 
 It is licensed under the Apache License 2.0.
 
+# Quickstart
+
+Follow these steps to get your own version of Village up and running locally.
+
+Assumes Debian Linux environment.
+
+1) Install ArangoDB and Tomcat
+
+```bash
+apt-get install arangodb3 tomcat8
+```
+
+Make sure you can visit http://localhost:8529 and see the ArangoDB admin.
+Make sure you can also visit http://localhost:8080/manager/html and see the Tomcat admin.
+
+If either of these doesn't work, you may need to run either `sudo service arangodb start` or `sudo service tomcat8 start`.
+
+2) Build & upload the Village server
+
+From the projects root directory, run:
+
+```bash
+./gradlew :backend:war
+```
+
+This will build the Village backend into `backend/build/libs/backend.war`.  Upload this using the Tomcat admin.
+
+Note: You'll need to configure either Tomcat to point the backend to `/`, or Village to point to `/backend` on `localhost`.
+
+To configure Tomcat to treat the backend as the root server, modify `/etc/tomcat/server.xml` to contain these lines:
+
+```xml
+<Context path="" docBase="backend">
+    <!-- Default set of monitored resources -->
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+</Context>
+```
+
+To configure the Village app, modify the `API_URL` constant in `Config.java` in the `shared` lib.
+
+Note: You'll need to modify the IP address in this constant anyways, to point to the Village server.
+
+See https://github.com/Queatz/Snappy-Web-App for setting up the website.
+
+3) Run the Village Android application
+
+To run the Village app, connect an Android device or emulator and run:
+
+```bash
+./gradlew :app:installDebug
+```
+
+Or use the Android Studio Run button.
+
 ## Supported Concepts
 
 ### Things
@@ -55,7 +109,7 @@ Screenshot from the Android application.
 
 # Project Overview
 
-* Snappy is built on top of Google App Engine
+* Snappy currently depends on ArangoDB (http://arangodb.com)
 * Snappy uses Google's Material Design
 * Snappy has been developed in Android Studio
 
