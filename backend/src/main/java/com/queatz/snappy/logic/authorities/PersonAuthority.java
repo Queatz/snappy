@@ -14,6 +14,10 @@ public class PersonAuthority extends CommonThingAuthority {
                 // Anyone can see
                 return true;
             case MODIFY:
+                if (as == null) {
+                    return false;
+                }
+
                 // Only people can edit themselves
                 return as.key().equals(entity.key());
             default:

@@ -16,6 +16,10 @@ public class UpdateAuthority implements Authority {
                 // Anyone can see
                 return true;
             case MODIFY:
+                if (as == null) {
+                    return false;
+                }
+
                 // Only people can edit their updates
                 // XXX todo owners of TARGET should be able to remove
                 return !entity.has(EarthField.SOURCE) ||

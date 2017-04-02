@@ -36,13 +36,13 @@ public class EarthAuthority extends EarthControl {
 
     public boolean authorize(EarthThing entity, EarthRule rule) {
         // Internal access
-        if (as == null || as.getUser() == null) {
+        if (as == null || as.isInternalCall()) {
             return true;
         }
 
         String kind = entity.getString(EarthField.KIND);
         if (mapping.containsKey(kind)) {
-            return mapping.get(kind).authorize(as.getUser(), entity, rule);
+            return mapping.get(kind).authorize(as.hasUser() ? as.getUser() : null, entity, rule);
         }
 
         // If kind has no authority rules, assume access is ok

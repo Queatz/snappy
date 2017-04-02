@@ -15,6 +15,10 @@ public class CommonThingAuthority implements Authority {
             case ACCESS:
                 return true;
             case MODIFY:
+                if (as == null) {
+                    return false;
+                }
+
                 // XXX todo if as.getUser() in entity.getContacts()
                 // XXX todo no source === just being created, so it's ok, but is it?
                 return !entity.has(EarthField.SOURCE) ||

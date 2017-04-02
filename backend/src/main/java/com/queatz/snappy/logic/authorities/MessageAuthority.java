@@ -13,11 +13,19 @@ public class MessageAuthority implements Authority {
     public boolean authorize(EarthThing as, EarthThing entity, EarthRule rule) {
         switch (rule) {
             case ACCESS:
+                if (as == null) {
+                    return false;
+                }
+
                 // Only message senders / receivers can see message
                 return !entity.has(EarthField.SOURCE) ||
                         as.key().equals(entity.getKey(EarthField.SOURCE)) ||
                         as.key().equals(entity.getKey(EarthField.TARGET));
             case MODIFY:
+                if (as == null) {
+                    return false;
+                }
+
                 // Only message senders can edit messages
                 return !entity.has(EarthField.SOURCE) ||
                         as.key().equals(entity.getKey(EarthField.SOURCE));

@@ -105,4 +105,11 @@ public class EarthAs {
             throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null auth");
         }
     }
+
+    /**
+     * Gives permissions to internal calls
+     */
+    boolean isInternalCall() {
+        return api == null;
+    }
 }

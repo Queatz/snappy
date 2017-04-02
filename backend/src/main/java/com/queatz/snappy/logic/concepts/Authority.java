@@ -3,6 +3,9 @@ package com.queatz.snappy.logic.concepts;
 import com.queatz.snappy.logic.EarthRule;
 import com.queatz.snappy.logic.EarthThing;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Authorities allow kinds of things to allow or deny different kinds of access to the requesting
  * user based on custom rules.
@@ -16,5 +19,5 @@ public interface Authority {
      * @param rule The rule in question
      * @return Whether or not to grant access to this user
      */
-    boolean authorize(EarthThing as, EarthThing entity, EarthRule rule);
+    boolean authorize(@Nullable EarthThing as, @NotNull EarthThing entity, @NotNull EarthRule rule);
 }
