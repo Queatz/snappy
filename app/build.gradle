@@ -54,4 +54,5 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.google.code.gson:gson:2.7'
     compile project(path: ':shared')
+    compile project(path: ':branch')
 }

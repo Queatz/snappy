@@ -212,7 +212,7 @@ public class Auth {
 
     public String getAuthParam() {
         if(!isAuthenticated())
-            return null;
+            return "";
 
         return mAuthToken;
     }

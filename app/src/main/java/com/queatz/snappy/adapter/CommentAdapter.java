@@ -4,19 +4,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.ViewUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.queatz.branch.Branch;
+import com.queatz.branch.Branchable;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
@@ -29,7 +30,13 @@ import io.realm.RealmBaseAdapter;
  * Created by jacob on 10/15/16.
  */
 
-public class CommentAdapter extends RealmBaseAdapter<DynamicRealmObject> {
+public class CommentAdapter extends RealmBaseAdapter<DynamicRealmObject> implements Branchable<Activity> {
+
+    @Override
+    public void to(Branch<Activity> branch) {
+        Branch.from((Activity) context).to(branch);
+    }
+
     public CommentAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<DynamicRealmObject> data) {
         super(context, data);
     }
@@ -65,7 +72,7 @@ public class CommentAdapter extends RealmBaseAdapter<DynamicRealmObject> {
             profile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    team.action.openProfile((Activity) context, person);
+                    to(new OpenProfileAction(person));
                 }
             });
 

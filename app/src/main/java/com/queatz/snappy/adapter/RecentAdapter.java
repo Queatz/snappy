@@ -9,11 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.queatz.branch.Branch;
+import com.queatz.branch.Branchable;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.util.Functions;
 import com.squareup.picasso.Picasso;
 
@@ -24,9 +27,14 @@ import io.realm.RealmResults;
 /**
  * Created by jacob on 2/21/15.
  */
-public class RecentAdapter extends RealmBaseAdapter<DynamicRealmObject> {
+public class RecentAdapter extends RealmBaseAdapter<DynamicRealmObject> implements Branchable<Activity> {
     public RecentAdapter(Activity context, RealmResults<DynamicRealmObject> realmResults) {
         super(context, realmResults);
+    }
+
+    @Override
+    public void to(Branch<Activity> branch) {
+        Branch.from((Activity) context).to(branch);
     }
 
     @Override
@@ -73,7 +81,7 @@ public class RecentAdapter extends RealmBaseAdapter<DynamicRealmObject> {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.openProfile((Activity) context, person);
+                to(new OpenProfileAction(person));
             }
         });
 

@@ -15,12 +15,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.makeramen.RoundedImageView;
+import com.queatz.branch.Branch;
+import com.queatz.branch.Branchable;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
@@ -32,9 +35,14 @@ import io.realm.RealmResults;
 /**
  * Created by jacob on 2/8/15.
  */
-public class PartyAdapter extends RealmBaseAdapter<DynamicRealmObject> {
+public class PartyAdapter extends RealmBaseAdapter<DynamicRealmObject> implements Branchable<Activity> {
     public PartyAdapter(Context context, RealmResults<DynamicRealmObject> realmResults) {
         super(context, realmResults);
+    }
+
+    @Override
+    public void to(Branch<Activity> branch) {
+        Branch.from((Activity) context).to(branch);
     }
 
     @Override
@@ -59,8 +67,7 @@ public class PartyAdapter extends RealmBaseAdapter<DynamicRealmObject> {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(host != null)
-                    team.action.openProfile((Activity) context, host);
+                to(new OpenProfileAction(host));
             }
         });
 
@@ -143,8 +150,7 @@ public class PartyAdapter extends RealmBaseAdapter<DynamicRealmObject> {
                 memberProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (member != null)
-                            team.action.openProfile((Activity) context, member);
+                        to(new OpenProfileAction(member));
                     }
                 });
             }

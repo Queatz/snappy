@@ -26,6 +26,8 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.makeramen.RoundedImageView;
+import com.queatz.branch.Branch;
+import com.queatz.branch.Branchable;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
@@ -37,6 +39,7 @@ import com.queatz.snappy.team.Camera;
 import com.queatz.snappy.team.OnInfoChangedListener;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.ui.card.UpdateCard;
 import com.queatz.snappy.util.ContextualBehavior;
 import com.queatz.snappy.util.Functions;
@@ -58,7 +61,7 @@ import io.realm.Sort;
  * Created by jacob on 2/21/17.
  */
 
-public class ContextualInputBar extends LinearLayout {
+public class ContextualInputBar extends LinearLayout implements Branchable<Activity> {
 
     private EditText whatsUp;
     private ViewGroup info;
@@ -73,6 +76,11 @@ public class ContextualInputBar extends LinearLayout {
     private Runnable sendAction;
 
     private Team team;
+
+    @Override
+    public void to(Branch<Activity> branch) {
+        Branch.from((Activity) getContext()).to(branch);
+    }
 
     private Collection<Runnable> resizeListeners = new HashSet<>();
     private ContextualBehavior lastBehavior;
@@ -197,7 +205,7 @@ public class ContextualInputBar extends LinearLayout {
                     return;
                 }
 
-                team.action.openProfile((Activity) getContext(), team.auth.me());
+                to(new OpenProfileAction(team.auth.me()));
             }
         });
 

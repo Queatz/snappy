@@ -7,12 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.queatz.branch.Branch;
+import com.queatz.branch.Branchable;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.HostParty;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.team.actions.OpenProfileAction;
 
 import io.realm.DynamicRealmObject;
 
@@ -20,7 +23,7 @@ import io.realm.DynamicRealmObject;
  * Created by jacob on 1/3/15.
  */
 
-public class MiniMenu extends FrameLayout {
+public class MiniMenu extends FrameLayout implements Branchable<Activity> {
     public MiniMenu(android.content.Context context) {
         super(context);
         init();
@@ -34,6 +37,11 @@ public class MiniMenu extends FrameLayout {
     public MiniMenu(android.content.Context context, android.util.AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
+    }
+
+    @Override
+    public void to(Branch<Activity> branch) {
+        Branch.from((Activity) getContext()).to(branch);
     }
 
     private void init() {
@@ -71,7 +79,7 @@ public class MiniMenu extends FrameLayout {
             public void onClick(View view) {
                 DynamicRealmObject person = team.things.get(team.auth.getUser());
 
-                team.action.openProfile((Activity) getContext(), person);
+                to(new OpenProfileAction(person));
 
                 show(false);
             }

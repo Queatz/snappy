@@ -9,11 +9,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.queatz.branch.Branch;
+import com.queatz.branch.Branchable;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.util.Functions;
 import com.squareup.picasso.Picasso;
 
@@ -23,9 +26,14 @@ import io.realm.RealmList;
 /**
  * Created by jacob on 8/21/15.
  */
-public class PeopleNearHereAdapter extends BaseAdapter {
+public class PeopleNearHereAdapter extends BaseAdapter implements Branchable<Activity> {
     private RealmList<DynamicRealmObject> mRealmList;
     private Context mContext;
+
+    @Override
+    public void to(Branch<Activity> branch) {
+        Branch.from((Activity) mContext).to(branch);
+    }
 
     public PeopleNearHereAdapter(Context context, RealmList<DynamicRealmObject> realmList) {
         mContext = context;
@@ -91,8 +99,7 @@ public class PeopleNearHereAdapter extends BaseAdapter {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Team team = ((MainApplication) mContext.getApplicationContext()).team;
-                team.action.openProfile((Activity) mContext, person);
+                to(new OpenProfileAction(person));
             }
         });
 

@@ -1,5 +1,6 @@
 package com.queatz.snappy.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -18,12 +19,15 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.queatz.branch.Branch;
+import com.queatz.branch.Branchable;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.ui.CircleTransform;
 import com.queatz.snappy.ui.ContextualInputBar;
 import com.queatz.snappy.ui.OnBackPressed;
@@ -42,12 +46,17 @@ import io.realm.RealmResults;
  * Created by jacob on 8/7/16.
  */
 
-public abstract class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPressed {
+public abstract class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPressed, Branchable<Activity> {
 
     private GoogleMap mMap;
 
     private DynamicRealmObject mMapFocus;
     Team team;
+
+    @Override
+    public void to(Branch<Activity> branch) {
+        Branch.from(getActivity()).to(branch);
+    }
 
     // Injected by subclasses
     protected abstract ContextualInputBar getContextualInputBar();
@@ -121,7 +130,7 @@ public abstract class MapSlide extends Fragment implements OnMapReadyCallback, O
                 }
 
                 if ("person".equals(thing.getString(Thing.KIND))) {
-                    team.action.openProfile(getActivity(), thing);
+                    to(new OpenProfileAction(thing));
                 } else {
                     getContextualInputBar().showInfo(thing);
                 }

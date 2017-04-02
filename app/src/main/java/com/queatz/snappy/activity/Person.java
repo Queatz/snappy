@@ -1,6 +1,5 @@
 package com.queatz.snappy.activity;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,13 +9,12 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.adapter.PersonAdapter;
 import com.queatz.snappy.adapter.ProfileAdapter;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.SetSeenAction;
 import com.queatz.snappy.ui.OnBackPressed;
 import com.queatz.snappy.ui.SlideScreen;
 
@@ -25,7 +23,7 @@ import io.realm.DynamicRealmObject;
 /**
  * Created by jacob on 10/19/14.
  */
-public class Person extends Activity {
+public class Person extends TeamActivity {
 
     public static final int SLIDE_PROFILE = 0;
     public static final int SLIDE_MESSAGES = 1;
@@ -33,12 +31,8 @@ public class Person extends Activity {
     private SlideScreen mSlideScreen;
     private DynamicRealmObject mPerson;
     private boolean mIsActive;
-    public Team team;
-    private Object mContextObject;
 
-    public DynamicRealmObject getPerson() {
-        return mPerson;
-    }
+    private Object mContextObject;
 
     public SlideScreen getSlideScreen() {
         return mSlideScreen;
@@ -47,7 +41,6 @@ public class Person extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        team = ((MainApplication) getApplication()).team;
 
         mIsActive = true;
 
@@ -65,7 +58,7 @@ public class Person extends Activity {
             return;
         }
 
-        mPerson = team.realm.where("Thing").equalTo(Thing.ID, id).findFirst();
+        mPerson = getTeam().realm.where("Thing").equalTo(Thing.ID, id).findFirst();
         // Else load person and wait
 
         if(mPerson == null) {
@@ -75,7 +68,7 @@ public class Person extends Activity {
 
         setContentView(R.layout.person);
 
-        boolean itsMe = team.auth.getUser() != null && team.auth.getUser().equals(mPerson.getString(Thing.ID));
+        boolean itsMe = getTeam().auth.getUser() != null && getTeam().auth.getUser().equals(mPerson.getString(Thing.ID));
 
         mSlideScreen = (SlideScreen) findViewById(R.id.person_content);
 
@@ -100,11 +93,11 @@ public class Person extends Activity {
             public void onSlideChange(int slide) {
                 if(mPerson != null) {
                     if (slide == SLIDE_MESSAGES && mIsActive) {
-                        team.action.setSeen(mPerson);
-                        team.push.clear("messages");
-                        team.view.setTop("person/" + mPerson.getString(Thing.ID) + "/messages");
+                        to(new SetSeenAction(mPerson));
+                        getTeam().push.clear("messages");
+                        getTeam().view.setTop("person/" + mPerson.getString(Thing.ID) + "/messages");
                     } else {
-                        team.view.clearTop("person/" + mPerson.getString(Thing.ID) + "/messages");
+                        getTeam().view.clearTop("person/" + mPerson.getString(Thing.ID) + "/messages");
                     }
                 }
             }
@@ -133,7 +126,7 @@ public class Person extends Activity {
         mIsActive = true;
 
         if(mPerson != null && mSlideScreen.getSlide() == SLIDE_MESSAGES) {
-            team.view.setTop("person/" + mPerson.getString(Thing.ID) + "/messages");
+            getTeam().view.setTop("person/" + mPerson.getString(Thing.ID) + "/messages");
         }
     }
 
@@ -144,7 +137,7 @@ public class Person extends Activity {
         mIsActive = false;
 
         if (mPerson != null) {
-            team.view.clearTop("person/" + mPerson.getString(Thing.ID) + "/messages");
+            getTeam().view.clearTop("person/" + mPerson.getString(Thing.ID) + "/messages");
         }
     }
 
@@ -152,12 +145,12 @@ public class Person extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        team.onActivityResult(this, requestCode, resultCode, data);
+        getTeam().onActivityResult(this, requestCode, resultCode, data);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        team.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        getTeam().onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
@@ -167,18 +160,18 @@ public class Person extends Activity {
         }
 
         mContextObject = view.getTag();
-        team.menu.make(mContextObject, menu, menuInfo);
+        getTeam().menu.make(mContextObject, menu, menuInfo);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        return team.menu.choose(this, mContextObject, item);
+        return getTeam().menu.choose(this, mContextObject, item);
     }
 
     @Override
     public void onBackPressed() {
-        if (team.camera.isOpen()) {
-            team.camera.close();
+        if (getTeam().camera.isOpen()) {
+            getTeam().camera.close();
         } else {
             Fragment slide = mSlideScreen.getSlideFragment(mSlideScreen.getSlide());
             if (!(slide instanceof OnBackPressed) || !((OnBackPressed) slide).onBackPressed()) {

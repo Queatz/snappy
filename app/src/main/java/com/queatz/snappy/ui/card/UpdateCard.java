@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.queatz.branch.Branch;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
@@ -31,6 +32,7 @@ import com.queatz.snappy.adapter.CommentAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
@@ -49,6 +51,7 @@ public class UpdateCard implements Card<DynamicRealmObject> {
     }
 
     public View getCard(final Context context, final DynamicRealmObject update, View convertView, ViewGroup parent, boolean isFloating) {
+        final Branch<Activity> branch = Branch.from((Activity) context);
         final View view;
 
         if (convertView != null) {
@@ -88,7 +91,7 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             profile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    team.action.openProfile((Activity) context, person);
+                    branch.to(new OpenProfileAction(person));
                 }
             });
 
@@ -178,7 +181,7 @@ public class UpdateCard implements Card<DynamicRealmObject> {
                         ClickableSpan clickableSpan = new ClickableSpan() {
                             @Override
                             public void onClick(View textView) {
-                                team.action.openProfile((Activity) context, with.getObject(Thing.SOURCE));
+                                branch.to(new OpenProfileAction(with.getObject(Thing.SOURCE)));
                             }
 
                             @Override

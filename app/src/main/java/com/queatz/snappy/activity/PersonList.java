@@ -17,6 +17,7 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.OpenProfileAction;
 
 import io.realm.DynamicRealmObject;
 import io.realm.RealmResults;
@@ -72,7 +73,7 @@ public class PersonList extends FullscreenActivity {
                 personAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        team.action.openProfile(PersonList.this, adapter.getPerson(position));
+                        to(new OpenProfileAction(adapter.getPerson(position)));
                     }
                 });
             }
@@ -105,7 +106,7 @@ public class PersonList extends FullscreenActivity {
                 personAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        team.action.openProfile(PersonList.this, adapter.getPerson(position));
+                        to(new OpenProfileAction(adapter.getPerson(position)));
                     }
                 });
             }

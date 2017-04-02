@@ -2,11 +2,6 @@ package com.queatz.snappy.ui.card;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.util.Base64;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,12 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.queatz.branch.Branch;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
-import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
@@ -33,9 +29,12 @@ import io.realm.DynamicRealmObject;
  * Created by jacob on 11/12/15.
  */
 public class OfferCard implements Card<DynamicRealmObject> {
+
     @Override
     public View getCard(final Context context, final DynamicRealmObject offer, View convertView, ViewGroup parent) {
+        final Branch<Activity> branch = Branch.from((Activity) context);
         final View view;
+
 
         if (convertView != null) {
             view = convertView;
@@ -68,7 +67,7 @@ public class OfferCard implements Card<DynamicRealmObject> {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.openProfile((Activity) context, offer.getObject(Thing.PERSON));
+                branch.to(new OpenProfileAction(offer.getObject(Thing.PERSON)));
             }
         });
 

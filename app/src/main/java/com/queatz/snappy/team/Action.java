@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ConditionVariable;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +25,7 @@ import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.activity.PersonList;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.ui.TimeSlider;
 import com.queatz.snappy.util.Functions;
@@ -281,12 +283,6 @@ public class Action {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + Functions.getLocationText(location)));
 
         from.startActivity(intent);
-    }
-
-    public void openProfile(Activity from, @NonNull final DynamicRealmObject person) {
-        Bundle bundle = new Bundle();
-        bundle.putString("person", person.getString(Thing.ID));
-        team.view.show(from, Person.class, bundle);
     }
 
     public void markPartyFull(@NonNull final DynamicRealmObject party) {
@@ -550,7 +546,7 @@ public class Action {
 
                 // If location is null, then probably shared to Village from an external source
                 if (location == null) {
-                    openProfile(null, team.auth.me());
+                    new OpenProfileAction(team.auth.me()).execute();
                 }
             }
 
@@ -1157,5 +1153,8 @@ public class Action {
                     }
                 })
                 .show();
+    }
+
+    public void showLoginDialog() {
     }
 }
