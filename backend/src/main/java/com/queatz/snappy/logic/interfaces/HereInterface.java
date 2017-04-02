@@ -28,7 +28,9 @@ public class HereInterface implements Interfaceable {
         double longitude = Float.valueOf(longitudeParam);
         final EarthGeo latLng = EarthGeo.of(latitude, longitude);
 
-        new PersonEditor(as).updateLocation(as.getUser(), latLng);
+        if (as.hasUser()) {
+            new PersonEditor(as).updateLocation(as.getUser(), latLng);
+        }
 
         boolean recent = false;
 

@@ -113,7 +113,7 @@ public class Auth {
     }
 
     public EarthThing fetchUserFromAuth(String email, String token) throws PrintingError {
-        if(token == null) {
+        if(token == null || token.trim().isEmpty()) {
             return null;
         }
 

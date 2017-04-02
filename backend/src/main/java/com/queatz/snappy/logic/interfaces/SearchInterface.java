@@ -52,7 +52,7 @@ public class SearchInterface implements Interfaceable {
         List<EarthThing> results = new EarthStore(as).getNearby(latLng, kindFilter, qParam);
 
         // Hack to include recents for now...need to find a better way to "pick people" that are not nearby
-        if (kindFilter != null && kindFilter.contains(EarthKind.PERSON_KIND)) {
+        if (as.hasUser() && kindFilter != null && kindFilter.contains(EarthKind.PERSON_KIND)) {
             List<EarthThing> recents = new RecentMine(as).forPerson(as.getUser());
 
             if (qParam == null) {
@@ -84,8 +84,7 @@ public class SearchInterface implements Interfaceable {
             }
         }
 
-        return new EntityListView(as,
-                results, EarthView.SHALLOW).toJson();
+        return new EntityListView(as, results, EarthView.SHALLOW).toJson();
     }
 
     @Override

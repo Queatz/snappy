@@ -33,6 +33,8 @@ public class ContactInterface implements Interfaceable {
 
     @Override
     public String post(EarthAs as) {
+        as.requireUser();
+
         EarthStore earthStore = new EarthStore(as);
 
         switch (as.getRoute().size()) {

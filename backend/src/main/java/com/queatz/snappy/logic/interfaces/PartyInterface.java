@@ -38,6 +38,8 @@ public class PartyInterface implements Interfaceable {
 
     @Override
     public String post(EarthAs as) {
+        as.requireUser();
+
         EarthThing party;
 
         switch (as.getRoute().size()) {
@@ -81,6 +83,8 @@ public class PartyInterface implements Interfaceable {
     }
 
     private String postJoin(EarthAs as, EarthThing party) {
+        as.requireUser();
+
         EarthThing join = new JoinEditor(as).newJoin(as.getUser(), party);
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
@@ -91,6 +95,8 @@ public class PartyInterface implements Interfaceable {
     }
 
     private String postCancelJoin(EarthAs as, EarthThing party) {
+        as.requireUser();
+
         EarthThing join = new JoinMine(as).byPersonAndParty(as.getUser(), party);
 
         new JoinEditor(as).setStatus(join, Config.JOIN_STATUS_WITHDRAWN);

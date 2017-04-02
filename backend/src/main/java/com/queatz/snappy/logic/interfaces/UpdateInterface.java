@@ -90,6 +90,8 @@ public class UpdateInterface implements Interfaceable {
     }
 
     private String likeUpdate(EarthAs as, String updateId) {
+        as.requireUser();
+
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
         EarthThing poster = new EarthStore(as).get(updateId);
@@ -142,6 +144,8 @@ public class UpdateInterface implements Interfaceable {
     }
 
     private String postUpdate(EarthAs as) {
+        as.requireUser();
+
         EarthThing update = new UpdateEditor(as).stageUpdate(as.getUser());
         String photoName = "earth/thing/photo/" + update.key().name();
 

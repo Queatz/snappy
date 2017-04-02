@@ -47,6 +47,8 @@ public class OfferInterface implements Interfaceable {
 
     @Override
     public String post(EarthAs as) {
+        as.requireUser();
+
         switch (as.getRoute().size()) {
             case 0:
                 break;
@@ -110,6 +112,8 @@ public class OfferInterface implements Interfaceable {
     }
 
     private String edit(EarthAs as, String offerId) {
+        as.requireUser();
+
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
         String details = as.getRequest().getParameter(Config.PARAM_DETAILS);
         String unit = as.getRequest().getParameter(Config.PARAM_UNIT);
@@ -163,6 +167,8 @@ public class OfferInterface implements Interfaceable {
     }
 
     private String like(EarthAs as, String offerId) {
+        as.requireUser();
+
         EarthThing offer = new EarthStore(as).get(offerId);
 
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);

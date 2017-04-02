@@ -67,10 +67,6 @@ public class SnappyServlet extends HttpServlet {
         try {
             EarthThing user = new Auth().fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH));
 
-            if (user == null) {
-                throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null auth");
-            }
-
             Api.getService().call(user, method, req, resp);
         } catch (PrintingError e) {
             e.printStackTrace();

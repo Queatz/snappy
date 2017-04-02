@@ -83,6 +83,8 @@ public abstract class CommonThingInterface implements Interfaceable {
 
     @Override
     public String post(EarthAs as) {
+        as.requireUser();
+
         switch (as.getRoute().size()) {
             case 0: {
                 EarthThing thing = this.createThing(as);

@@ -57,13 +57,13 @@ public class PersonView extends ExistenceView {
         imageUrl = person.getString(EarthField.IMAGE_URL);
         googleUrl = person.getString(EarthField.GOOGLE_URL);
 
-        if (person.key().equals(as.getUser().key())) {
+        if (as.hasUser() && person.key().equals(as.getUser().key())) {
             auth = person.getString(EarthField.TOKEN);
         } else {
             auth = null;
         }
 
-        if (as.getUser().has(EarthField.GEO) && person.has(EarthField.GEO)) {
+        if (as.hasUser() && as.getUser().has(EarthField.GEO) && person.has(EarthField.GEO)) {
             infoDistance = Util.distance(as.getUser().getGeo(EarthField.GEO), person.getGeo(EarthField.GEO));
 
             boolean isBacking = use(FollowerMine.class).getFollower(person, as.getUser()) != null;

@@ -12,10 +12,6 @@ public class EarthControl {
         this.as = as;
     }
 
-    public EarthThing getUser() {
-        return as.getUser();
-    }
-
     public <T extends EarthControl> T use(Class<T> clazz) {
         return as.s(clazz);
     }

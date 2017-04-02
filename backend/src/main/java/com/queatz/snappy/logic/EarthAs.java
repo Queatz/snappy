@@ -1,7 +1,11 @@
 package com.queatz.snappy.logic;
 
+import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.shared.Config;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -81,7 +85,9 @@ public class EarthAs {
         return route;
     }
 
+    @NotNull
     public EarthThing getUser() {
+        requireUser();
         return user;
     }
 
@@ -91,6 +97,12 @@ public class EarthAs {
     }
 
     public boolean hasUser() {
-        return getUser() != null;
+        return user != null;
+    }
+
+    public void requireUser() {
+        if (!hasUser()) {
+            throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null auth");
+        }
     }
 }

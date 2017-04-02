@@ -105,8 +105,8 @@ public class PersonInterface implements Interfaceable {
     private String getPerson(EarthAs as, String personId) {
         EarthThing person = new EarthStore(as).get(personId);
 
-        // Update location of other person
-        if (person != null) {
+        // Update location of other person if auth'd
+        if (person != null && as.hasUser()) {
             if (!as.getUser().key().equals(person.key())) {
                 new EarthUpdate(as).send(new InformationEvent()).to(person);
             }
@@ -136,6 +136,8 @@ public class PersonInterface implements Interfaceable {
     }
 
     private String getMessages(EarthAs as, String personId) {
+        as.requireUser();
+
         // XXX TODO when Datastore supports OR expressions, combine these
         List<EarthThing> messagesToMe = new MessageMine(as).messagesFromTo(as.getUser().key(), EarthRef.of(personId));
         List<EarthThing> messagesFromMe = new MessageMine(as).messagesFromTo(EarthRef.of(personId), as.getUser().key());
@@ -148,6 +150,8 @@ public class PersonInterface implements Interfaceable {
     }
 
     private String postSeen(EarthAs as, EarthThing personId) {
+        as.requireUser();
+
         EarthThing recent = new RecentMine(as).byPerson(as.getUser(), personId);
 
         if (recent == null) {
@@ -159,6 +163,8 @@ public class PersonInterface implements Interfaceable {
     }
 
     private String postFollow(EarthAs as, EarthThing person) {
+        as.requireUser();
+
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
         EarthThing follow;
@@ -176,6 +182,8 @@ public class PersonInterface implements Interfaceable {
     }
 
     private String postStopFollowing(EarthAs as, EarthThing person) {
+        as.requireUser();
+
         EarthThing follower = new FollowerMine(as).getFollower(as.getUser(), person);
         new EarthStore(as).conclude(follower);
 
@@ -183,6 +191,8 @@ public class PersonInterface implements Interfaceable {
     }
 
     private String postMessage(EarthAs as, EarthThing person, String message) {
+        as.requireUser();
+
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
         EarthThing sent = new MessageEditor(as).newMessage(as.getUser(), person, message, false);
 
@@ -195,6 +205,8 @@ public class PersonInterface implements Interfaceable {
 
 
     private String postMessage(EarthAs as, EarthThing person)  {
+        as.requireUser();
+
         EarthThing sent = new MessageEditor(as).stageMessage(as.getUser(), person);
         String photoName = "earth/thing/photo/" + sent.key().name();
 

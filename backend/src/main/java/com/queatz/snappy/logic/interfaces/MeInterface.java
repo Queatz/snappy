@@ -51,8 +51,13 @@ public class MeInterface implements Interfaceable {
     public String get(EarthAs as) {
         switch (as.getRoute().size()) {
             case 1:
+                if (!as.hasUser()) {
+                    throw new NothingLogicResponse("sup dude");
+                }
                 return new EarthViewer(as).getViewForEntityOrThrow(as.getUser(), EarthView.SHALLOW).toJson();
             case 2:
+                as.requireUser();
+
                 switch (as.getRoute().get(1)) {
                     case Config.PATH_BUY:
                         return getBuy(as);
@@ -67,6 +72,8 @@ public class MeInterface implements Interfaceable {
 
     @Override
     public String post(EarthAs as) {
+        as.requireUser();
+
         switch (as.getRoute().size()) {
             case 1:
                 String about = as.getRequest().getParameter(Config.PARAM_ABOUT);
@@ -111,6 +118,8 @@ public class MeInterface implements Interfaceable {
     }
 
     private String postInfo(EarthAs as) {
+        as.requireUser();
+
         String latitudeParam = as.getParameters().get(Config.PARAM_LATITUDE)[0];
         String longitudeParam = as.getParameters().get(Config.PARAM_LONGITUDE)[0];
         double latitude = Double.valueOf(latitudeParam);
@@ -123,7 +132,9 @@ public class MeInterface implements Interfaceable {
     }
 
     private String postReport(EarthAs as, String personId) {
-        EarthThing jacob = new EarthStore(as).get("-697803823443327660");
+        as.requireUser();
+
+        EarthThing jacob = new EarthStore(as).get(Config.JACOB);
         EarthThing person = new EarthStore(as).get(personId);
         String feedback = as.getRequest().getParameter(Config.PARAM_MESSAGE);
 
@@ -137,6 +148,8 @@ public class MeInterface implements Interfaceable {
     }
 
     private String getMessages(EarthAs as) {
+        as.requireUser();
+
         // XXX TODO when Datastore supports OR expressions, combine these
         List<EarthThing> messagesToMe = new MessageMine(as).messagesFrom(as.getUser().key());
         List<EarthThing> messagesFromMe = new MessageMine(as).messagesTo(as.getUser().key());
@@ -151,6 +164,8 @@ public class MeInterface implements Interfaceable {
     }
 
     private String postClearNotification(EarthAs as, String notification) {
+        as.requireUser();
+
         new EarthUpdate(as).send(new ClearNotificationEvent(notification))
                 .to(as.getUser());
 
@@ -167,6 +182,8 @@ public class MeInterface implements Interfaceable {
     }
 
     private String postRegisterDevice(EarthAs as, String deviceId, String socialMode) {
+        as.requireUser();
+
         if (deviceId != null && deviceId.length() > 0) {
             new DeviceEditor(as).newDevice(as.getUser().key().name(), deviceId, socialMode);
             return new SuccessView(true).toJson();
@@ -176,6 +193,8 @@ public class MeInterface implements Interfaceable {
     }
 
     private String postBuy(EarthAs as, String purchaseData) {
+        as.requireUser();
+
         boolean ok = new Buy(as).validate(as.getUser(), new EarthJson().fromJson(purchaseData, GooglePurchaseDataSpec.class));
 
         return new SuccessView(ok).toJson();
@@ -186,6 +205,8 @@ public class MeInterface implements Interfaceable {
      * Use OfferInterface
      */
     private String postOffers(EarthAs as) {
+        as.requireUser();
+
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
         String details = as.getRequest().getParameter(Config.PARAM_DETAILS);
         String unit = as.getRequest().getParameter(Config.PARAM_UNIT);
@@ -238,6 +259,8 @@ public class MeInterface implements Interfaceable {
      * @deprecated Use UpdateInterface
      */
     private String postUpdate(EarthAs as) {
+        as.requireUser();
+
         EarthThing update = new UpdateEditor(as).newUpdate(as.getUser());
         String photoName = "earth/thing/photo/" + update.key().name();
 
@@ -290,6 +313,8 @@ public class MeInterface implements Interfaceable {
     }
 
     private String getBuy(EarthAs as) {
+        as.requireUser();
+
         String r;
 
         if (StringUtils.isBlank(as.getUser().getString(EarthField.SUBSCRIPTION))) {

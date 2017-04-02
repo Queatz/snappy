@@ -6,6 +6,7 @@ import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.views.SuccessView;
+import com.queatz.snappy.shared.Config;
 
 /**
  * Created by jacob on 6/11/16.
@@ -19,7 +20,9 @@ public class FeedbackInterface implements Interfaceable {
 
     @Override
     public String post(EarthAs as) {
-        EarthThing jacob = new EarthStore(as).get("550904");
+        as.requireUser();
+
+        EarthThing jacob = new EarthStore(as).get(Config.JACOB);
         String feedback = as.getRequest().getParameter("feedback");
 
         new EarthEmail().sendRawEmail(as.getUser(), jacob, "Village Feedback", feedback);

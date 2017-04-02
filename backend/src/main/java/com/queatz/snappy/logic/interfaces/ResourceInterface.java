@@ -13,6 +13,8 @@ public class ResourceInterface extends CommonThingInterface {
 
     @Override
     public EarthThing createThing(EarthAs as) {
+        as.requireUser();
+
         String[] name = as.getParameters().get(EarthField.NAME);
 
         if (name == null || name.length != 1) {
@@ -27,6 +29,8 @@ public class ResourceInterface extends CommonThingInterface {
 
     @Override
     public EarthThing editThing(EarthAs as, EarthThing resource) {
+        as.requireUser();
+
         String[] name = as.getParameters().get(EarthField.NAME);
         String[] about = as.getParameters().get(EarthField.ABOUT);
 

@@ -199,6 +199,8 @@ public class EarthStore extends EarthControl {
      * @return The new thing
      */
     public EarthThing create(@NotNull String kind) {
+        as.requireUser();
+
         BaseDocument entity = new EarthThing.Builder()
                 .set(DEFAULT_FIELD_CREATED, new Date())
                 .set(DEFAULT_FIELD_CONCLUDED)
