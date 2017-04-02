@@ -42,27 +42,39 @@ import java.util.regex.Pattern;
 public class EarthStore extends EarthControl {
     private final EarthAuthority earthAuthority;
 
-    public EarthStore(EarthAs as) {
-        super(as);
+    private static ArangoDatabase __arangoDatabase;
 
-        earthAuthority = use(EarthAuthority.class);
+    private static ArangoDatabase getDb() {
+        if (__arangoDatabase != null) {
+            return __arangoDatabase;
+        }
 
-        this.db = new ArangoDB.Builder()
+        __arangoDatabase = new ArangoDB.Builder()
                 .user(Gateway.ARANGO_USER)
                 .password(Gateway.ARANGO_PASSWORD)
                 .build()
                 .db();
 
         try {
-            db.createCollection(DEFAULT_COLLECTION);
-            db.createCollection(DEFAULT_RELATIONSHIPS, new CollectionCreateOptions().type(CollectionType.EDGES));
-            db.createGraph(DEFAULT_GRAPH, ImmutableSet.of(new EdgeDefinition()
+            __arangoDatabase.createCollection(DEFAULT_COLLECTION);
+            __arangoDatabase.createCollection(DEFAULT_RELATIONSHIPS, new CollectionCreateOptions().type(CollectionType.EDGES));
+            __arangoDatabase.createGraph(DEFAULT_GRAPH, ImmutableSet.of(new EdgeDefinition()
                     .collection(DEFAULT_RELATIONSHIPS)
                     .from(DEFAULT_COLLECTION)
                     .to(DEFAULT_COLLECTION)));
         } catch (ArangoDBException ignored) {
             // Whatever
         }
+
+        return __arangoDatabase;
+    }
+
+    public EarthStore(EarthAs as) {
+        super(as);
+
+        earthAuthority = use(EarthAuthority.class);
+
+        this.db = getDb();
 
         this.collection = db.collection(DEFAULT_COLLECTION);
         this.relationships = db.collection(DEFAULT_RELATIONSHIPS);
