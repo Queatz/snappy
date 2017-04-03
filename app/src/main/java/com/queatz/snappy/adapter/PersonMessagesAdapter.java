@@ -32,7 +32,7 @@ import io.realm.RealmResults;
  * Created by jacob on 2/21/15.
  */
 public class PersonMessagesAdapter extends RealmBaseAdapter<DynamicRealmObject> {
-    DynamicRealmObject mToPerson;
+    private DynamicRealmObject mToPerson;
 
     public PersonMessagesAdapter(Context context, RealmResults<DynamicRealmObject> realmResults, @NonNull DynamicRealmObject to) {
         super(context, realmResults);

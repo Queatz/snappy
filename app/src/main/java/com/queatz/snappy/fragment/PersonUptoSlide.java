@@ -1,5 +1,6 @@
 package com.queatz.snappy.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +11,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.queatz.branch.Branch;
+import com.queatz.branch.Branchable;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
@@ -19,6 +22,8 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.AuthenticatedAction;
+import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.ui.SlideScreen;
 import com.queatz.snappy.ui.TextView;
 import com.queatz.snappy.util.Functions;
@@ -36,7 +41,7 @@ import io.realm.Sort;
 /**
  * Created by jacob on 10/23/14.
  */
-public class PersonUptoSlide extends Fragment {
+public class PersonUptoSlide extends Fragment implements Branchable<ActivityContext> {
     private Team team;
     private DynamicRealmObject mPerson;
     private View personAbout;
@@ -44,6 +49,11 @@ public class PersonUptoSlide extends Fragment {
     private FloatingActionButton mFloatingAction;
     private RealmChangeListener<DynamicRealmObject> mChangeListener = null;
     private ListView updateList;
+
+    @Override
+    public void to(Branch<ActivityContext> branch) {
+        Branch.from((ActivityContext) getActivity()).to(branch);
+    }
 
     public void setPerson(DynamicRealmObject person) {
         mPerson = person;
@@ -288,7 +298,7 @@ public class PersonUptoSlide extends Fragment {
                 }
             });
 
-            TextView about = (TextView) personAbout.findViewById(R.id.about);
+            final TextView about = (TextView) personAbout.findViewById(R.id.about);
 
             if(team.auth.getUser() != null && team.auth.getUser().equals(mPerson.getString(Thing.ID))) {
                 messageButton.setText(getString(R.string.view_settings));
@@ -307,21 +317,26 @@ public class PersonUptoSlide extends Fragment {
                 about.setTextIsSelectable(true);
             }
 
-            if(mPerson.getString(Thing.ABOUT) == null || mPerson.getString(Thing.ABOUT).isEmpty()) {
-                if(team.auth.getUser().equals(mPerson.getString(Thing.ID))) {
+            to(new AuthenticatedAction() {
+                @Override
+                public void whenAuthenticated() {
+                    if(team.auth.getUser().equals(mPerson.getString(Thing.ID))) {
+                        about.setVisibility(View.VISIBLE);
+                        about.setTextColor(getResources().getColor(R.color.clickable));
+                        about.setText(R.string.what_are_you_into);
+                    }
+                    else {
+                        about.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void otherwise() {
                     about.setVisibility(View.VISIBLE);
-                    about.setTextColor(getResources().getColor(R.color.clickable));
-                    about.setText(R.string.what_are_you_into);
+                    about.setTextColor(getResources().getColor(R.color.text));
+                    about.setText(mPerson.getString(Thing.ABOUT));
                 }
-                else {
-                    about.setVisibility(View.GONE);
-                }
-            }
-            else {
-                about.setVisibility(View.VISIBLE);
-                about.setTextColor(getResources().getColor(R.color.text));
-                about.setText(mPerson.getString(Thing.ABOUT));
-            }
+            });
 
             TextView proximity = (TextView) personAbout.findViewById(R.id.proximity);
 

@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -23,8 +22,9 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
-import com.queatz.snappy.R;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.team.observers.AnonymousEnvironment;
+import com.queatz.snappy.team.observers.AuthenticatedEnvironment;
 import com.queatz.snappy.util.Json;
 
 import java.io.IOException;
@@ -251,6 +251,8 @@ public class Auth {
                 if(isLogout) {
                     showMain();
                 }
+
+                team.environment.handle(AnonymousEnvironment.class);
             }
         }.execute();
     }
@@ -339,6 +341,8 @@ public class Auth {
         registerDevice();
         save();
         signin();
+
+        team.environment.handle(AuthenticatedEnvironment.class);
     }
 
     private void setGoogleAuthToken(String auth) {

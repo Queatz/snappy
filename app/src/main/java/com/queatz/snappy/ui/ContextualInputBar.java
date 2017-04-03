@@ -40,6 +40,14 @@ import com.queatz.snappy.team.OnInfoChangedListener;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.OpenProfileAction;
+import com.queatz.snappy.team.actions.SigninAction;
+import com.queatz.snappy.team.contexts.ActivityContext;
+import com.queatz.snappy.team.contexts.TeamContext;
+import com.queatz.snappy.team.observers.AnonymousEnvironment;
+import com.queatz.snappy.team.observers.AuthenticatedEnvironment;
+import com.queatz.snappy.team.observers.CurrentEnvironment;
+import com.queatz.snappy.team.observers.EnvironmentContext;
+import com.queatz.snappy.team.observers.EnvironmentObserver;
 import com.queatz.snappy.ui.card.UpdateCard;
 import com.queatz.snappy.util.ContextualBehavior;
 import com.queatz.snappy.util.Functions;
@@ -61,7 +69,7 @@ import io.realm.Sort;
  * Created by jacob on 2/21/17.
  */
 
-public class ContextualInputBar extends LinearLayout implements Branchable<Activity> {
+public class ContextualInputBar extends LinearLayout implements Branchable<Activity>, EnvironmentContext {
 
     private EditText whatsUp;
     private ViewGroup info;
@@ -76,6 +84,33 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
     private Runnable sendAction;
 
     private Team team;
+    private EnvironmentObserver environmentObserver;
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        if (environmentObserver == null) {
+            environmentObserver = team.environment.observe(this);
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+        if (environmentObserver != null) {
+            team.environment.forget(this);
+            environmentObserver = null;
+        }
+    }
+
+    @Override
+    public void when(CurrentEnvironment change) {
+        if (environmentObserver != null) {
+            environmentObserver.when(change);
+        }
+    }
 
     @Override
     public void to(Branch<Activity> branch) {
@@ -103,6 +138,7 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
 
     private void init() {
         team = ((MainApplication) getContext().getApplicationContext()).team;
+        environmentObserver = team.environment.observe(this);
 
         View.inflate(getContext(), R.layout.contextual_input_bar, this);
 
@@ -185,27 +221,33 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
             }
         };
 
-        DynamicRealmObject person = team.auth.me();
-
         mProfile = (ImageView) findViewById(R.id.profile);
 
-        if(person != null) {
-            Picasso.with(team.context)
-                    .load(Functions.getImageUrlForSize(person, (int) Util.px(64)))
-                    .placeholder(R.color.spacer)
-                    .into(mProfile);
-        }
+        when(new AuthenticatedEnvironment() {
+            @Override
+            public void then() {
+                Picasso.with(team.context)
+                        .load(Functions.getImageUrlForSize(team.auth.me(), (int) Util.px(64)))
+                        .placeholder(R.color.spacer)
+                        .into(mProfile);
+            }
+        });
+
+        when(new AnonymousEnvironment() {
+            @Override
+            public void then() {
+                mProfile.setImageResource(R.drawable.pickaxe);
+            }
+        });
 
         mProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (team.auth.me() == null) {
-                    team.auth.setActivity((Activity) getContext());
-                    team.auth.signin();
-                    return;
+                if (team.environment.is(AuthenticatedEnvironment.class)) {
+                    to(new OpenProfileAction(team.auth.me()));
+                } else {
+                    to(new SigninAction());
                 }
-
-                to(new OpenProfileAction(team.auth.me()));
             }
         });
 

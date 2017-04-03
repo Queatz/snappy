@@ -13,8 +13,10 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.adapter.PersonAdapter;
 import com.queatz.snappy.adapter.ProfileAdapter;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.team.TeamActivity;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.SetSeenAction;
+import com.queatz.snappy.team.contexts.PersonContext;
 import com.queatz.snappy.ui.OnBackPressed;
 import com.queatz.snappy.ui.SlideScreen;
 
@@ -23,7 +25,7 @@ import io.realm.DynamicRealmObject;
 /**
  * Created by jacob on 10/19/14.
  */
-public class Person extends TeamActivity {
+public class Person extends TeamActivity implements PersonContext {
 
     public static final int SLIDE_PROFILE = 0;
     public static final int SLIDE_MESSAGES = 1;
@@ -33,6 +35,11 @@ public class Person extends TeamActivity {
     private boolean mIsActive;
 
     private Object mContextObject;
+
+    @Override
+    public DynamicRealmObject getPerson() {
+        return mPerson;
+    }
 
     public SlideScreen getSlideScreen() {
         return mSlideScreen;

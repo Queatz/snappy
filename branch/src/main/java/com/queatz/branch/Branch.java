@@ -31,7 +31,7 @@ public class Branch<T> {
      * @param branch The branch to execute.
      */
     public void to(Branch<T> branch) {
-        branch.with(branch.me()).execute();
+        branch.with(me()).execute();
     }
 
     public static <T> Branch<T> from(T context) {

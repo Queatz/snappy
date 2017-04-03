@@ -2,7 +2,7 @@ package com.queatz.snappy.team.actions;
 
 
 import com.queatz.branch.Branch;
-import com.queatz.snappy.team.contexts.TeamContext;
+import com.queatz.snappy.team.contexts.ActivityContext;
 
 import io.realm.DynamicRealmObject;
 
@@ -10,7 +10,7 @@ import io.realm.DynamicRealmObject;
  * Created by jacob on 4/1/17.
  */
 
-public abstract class AuthenticatedAction<T extends TeamContext> extends Branch<T> {
+public abstract class AuthenticatedAction extends Branch<ActivityContext> {
     private boolean valid() {
         return me().getTeam().auth.isAuthenticated();
     }
@@ -19,7 +19,11 @@ public abstract class AuthenticatedAction<T extends TeamContext> extends Branch<
         me().getTeam().action.showLoginDialog();
     }
 
-    public abstract void ifAuthenticated();
+    public abstract void whenAuthenticated();
+
+    public void otherwise() {
+
+    }
 
     public DynamicRealmObject getUser() {
         return me().getTeam().auth.me();
@@ -28,9 +32,10 @@ public abstract class AuthenticatedAction<T extends TeamContext> extends Branch<
     @Override
     public final void execute() {
         if (valid()) {
-            ifAuthenticated();
+            whenAuthenticated();
         } else {
             fail();
+            otherwise();
         }
     }
 }

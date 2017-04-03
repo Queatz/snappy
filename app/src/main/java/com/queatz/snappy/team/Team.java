@@ -39,6 +39,7 @@ public class Team implements Closeable {
     public Here here;
     public Advertise advertise;
     public Camera camera;
+    public Environment environment;
 
     public Team(Context c) {
         context = c;
@@ -57,6 +58,7 @@ public class Team implements Closeable {
         here = new Here(this);
         advertise = new Advertise(this);
         camera = new Camera(this);
+        environment = new Environment(this);
     }
 
     public void close() {

@@ -4,7 +4,6 @@ package com.queatz.snappy.team.actions;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Thing;
-import com.queatz.snappy.team.contexts.TeamContext;
 
 import io.realm.DynamicRealmObject;
 import io.realm.RealmResults;
@@ -13,7 +12,7 @@ import io.realm.RealmResults;
  * Created by jacob on 4/1/17.
  */
 
-public class SetSeenAction extends AuthenticatedAction<TeamContext> {
+public class SetSeenAction extends AuthenticatedAction {
 
     private final DynamicRealmObject person;
 
@@ -22,7 +21,7 @@ public class SetSeenAction extends AuthenticatedAction<TeamContext> {
     }
 
     @Override
-    public void ifAuthenticated() {
+    public void whenAuthenticated() {
         RealmResults<DynamicRealmObject> recents = me().getTeam().realm.where("Thing")
                 .equalTo("source.id", getUser().getString(Thing.ID))
                 .equalTo("target.id", person.getString(Thing.ID))

@@ -1,6 +1,5 @@
 package com.queatz.snappy.fragment;
 
-import android.app.Fragment;
 import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,7 +7,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowInsets;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -16,12 +14,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.adapter.PersonMessagesAdapter;
 import com.queatz.snappy.team.Camera;
-import com.queatz.snappy.team.Team;
+import com.queatz.snappy.team.TeamFragment;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.observers.AnonymousEnvironment;
+import com.queatz.snappy.team.observers.AuthenticatedEnvironment;
 
 import io.realm.DynamicRealmObject;
 import io.realm.RealmResults;
@@ -30,10 +29,9 @@ import io.realm.Sort;
 /**
  * Created by jacob on 10/26/14.
  */
-public class PersonMessagesSlide extends Fragment {
+public class PersonMessagesSlide extends TeamFragment {
     DynamicRealmObject mPerson;
     String messagePrefill;
-    Team team;
     Uri image;
 
     public void setPerson(DynamicRealmObject person) {
@@ -52,76 +50,89 @@ public class PersonMessagesSlide extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.person_messages, container, false);
+        final View view = inflater.inflate(R.layout.person_messages, container, false);
 
         view.setFitsSystemWindows(true);
 
-        team = ((MainApplication) getActivity().getApplication()).team;
+        if(mPerson == null) {
+            return view;
+        }
 
         final ListView list = (ListView) view.findViewById(R.id.messagesList);
 
-        if(mPerson != null) {
-            RealmResults<DynamicRealmObject> messages = team.realm.where("Thing")
-                    .beginGroup()
-                        .equalTo("from.id", team.auth.getUser())
+        when(new AuthenticatedEnvironment() {
+            @Override
+            public void then() {
+                RealmResults<DynamicRealmObject> messages = getTeam().realm.where("Thing")
+                        .beginGroup()
+                        .equalTo("from.id", getTeam().auth.me().getString(Thing.ID))
                         .equalTo("to.id", mPerson.getString(Thing.ID))
-                    .endGroup()
-                    .or()
-                    .beginGroup()
+                        .endGroup()
+                        .or()
+                        .beginGroup()
                         .equalTo("from.id", mPerson.getString(Thing.ID))
-                        .equalTo("to.id", team.auth.getUser())
-                    .endGroup()
-                    .findAllSorted("date", Sort.ASCENDING);
+                        .equalTo("to.id", getTeam().auth.me().getString(Thing.ID))
+                        .endGroup()
+                        .findAllSorted(Thing.DATE, Sort.ASCENDING);
 
-            list.setAdapter(new PersonMessagesAdapter(getActivity(), messages, team.auth.me()));
+                list.setAdapter(new PersonMessagesAdapter(getActivity(), messages, getTeam().auth.me()));
 
-            final EditText writeMessage = (EditText) view.findViewById(R.id.writeMessage);
-            final View sendButton = view.findViewById(R.id.sendButton);
-            final View cameraButton = view.findViewById(R.id.cameraButton);
+            }
+        });
 
-            prefill(view);
+        when(new AnonymousEnvironment() {
+            @Override
+            public void then() {
+                list.removeAllViews();
+            }
+        });
 
-            writeMessage.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    switch (actionId) {
-                        case EditorInfo.IME_ACTION_SEND:
-                            sendButton.callOnClick();
-                    }
+        final EditText writeMessage = (EditText) view.findViewById(R.id.writeMessage);
+        final View sendButton = view.findViewById(R.id.sendButton);
+        final View cameraButton = view.findViewById(R.id.cameraButton);
 
-                    return true;
+        prefill(view);
+
+        writeMessage.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                switch (actionId) {
+                    case EditorInfo.IME_ACTION_SEND:
+                        sendButton.callOnClick();
                 }
-            });
 
-            sendButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String message = writeMessage.getText().toString();
+                return true;
+            }
+        });
 
-                    if (mPerson == null || (message.trim().isEmpty() && image == null))
-                        return;
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = writeMessage.getText().toString();
 
-                    team.action.sendMessage(mPerson, message, image);
+                if (mPerson == null || (message.trim().isEmpty() && image == null))
+                    return;
 
-                    writeMessage.setText("");
+                getTeam().action.sendMessage(mPerson, message, image);
+
+                writeMessage.setText("");
+                image = null;
+                updateImageButton();
+            }
+        });
+
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (image == null) {
+                    getPhoto();
+                } else {
                     image = null;
+                    Toast.makeText(getActivity(), getString(R.string.photo_removed), Toast.LENGTH_SHORT).show();
                     updateImageButton();
                 }
-            });
-
-            cameraButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (image == null) {
-                        getPhoto();
-                    } else {
-                        image = null;
-                        Toast.makeText(getActivity(), getString(R.string.photo_removed), Toast.LENGTH_SHORT).show();
-                        updateImageButton();
-                    }
-                }
-            });
-        }
+            }
+        });
 
         return view;
     }
@@ -140,7 +151,7 @@ public class PersonMessagesSlide extends Fragment {
                 public void run() {
                     writeMessage.requestFocus();
                     writeMessage.selectAll();
-                    team.view.keyboard(writeMessage);
+                    getTeam().view.keyboard(writeMessage);
                 }
             });
         }
@@ -162,7 +173,7 @@ public class PersonMessagesSlide extends Fragment {
     }
 
     public void getPhoto() {
-        team.camera.getPhoto(getActivity(), new Camera.Callback() {
+        getTeam().camera.getPhoto(getActivity(), new Camera.Callback() {
             @Override
             public void onPhoto(Uri uri) {
                 PersonMessagesSlide.this.image = uri;
