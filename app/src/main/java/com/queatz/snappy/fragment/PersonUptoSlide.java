@@ -317,26 +317,30 @@ public class PersonUptoSlide extends Fragment implements Branchable<ActivityCont
                 about.setTextIsSelectable(true);
             }
 
-            to(new AuthenticatedAction() {
-                @Override
-                public void whenAuthenticated() {
-                    if(team.auth.getUser().equals(mPerson.getString(Thing.ID))) {
-                        about.setVisibility(View.VISIBLE);
-                        about.setTextColor(getResources().getColor(R.color.clickable));
-                        about.setText(R.string.what_are_you_into);
+            if(mPerson.getString(Thing.ABOUT) == null || mPerson.getString(Thing.ABOUT).isEmpty()) {
+                to(new AuthenticatedAction() {
+                    @Override
+                    public void whenAuthenticated() {
+                        if(getUser().get(Thing.ID).equals(mPerson.getString(Thing.ID))) {
+                            about.setVisibility(View.VISIBLE);
+                            about.setTextColor(getResources().getColor(R.color.clickable));
+                            about.setText(R.string.what_are_you_into);
+                        }
+                        else {
+                            about.setVisibility(View.GONE);
+                        }
                     }
-                    else {
+
+                    @Override
+                    public void otherwise() {
                         about.setVisibility(View.GONE);
                     }
-                }
-
-                @Override
-                public void otherwise() {
-                    about.setVisibility(View.VISIBLE);
-                    about.setTextColor(getResources().getColor(R.color.text));
-                    about.setText(mPerson.getString(Thing.ABOUT));
-                }
-            });
+                });
+            } else {
+                about.setVisibility(View.VISIBLE);
+                about.setTextColor(getResources().getColor(R.color.text));
+                about.setText(mPerson.getString(Thing.ABOUT));
+            }
 
             TextView proximity = (TextView) personAbout.findViewById(R.id.proximity);
 
