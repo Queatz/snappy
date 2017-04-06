@@ -2,7 +2,7 @@ package com.queatz.snappy.service;
 
 import com.google.gson.JsonObject;
 import com.queatz.snappy.backend.GooglePurchaseDataSpec;
-import com.queatz.snappy.backend.HttpUtil;
+import com.queatz.snappy.util.HttpUtil;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;

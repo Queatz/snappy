@@ -18,6 +18,7 @@ public class Config {
 
     public static final String LOG_TAG = "SNAPPY_LOG";
     public static final String API_URL = (BETA_VERSION ? "http://192.168.1.100:8080/api/" : "https://queatz-snappy.appspot.com/api/");
+    public static final String QUEUE_URL = "http://127.0.0.1:8080/";
     public static final String GOOGLE_PLACES_AUTOCOMPLETE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?location=%f,%f&radius=1609&input=%s&key=%s";
     public static final String GOOGLE_PLACES_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?placeid=%s&key=%s";
     public static final int maxRequestRetries = 4;
@@ -121,10 +122,10 @@ public class Config {
     public static final String GCM_KEY = Gateway.gcmKey;
     public static final String FCM_ENDPOINT = "https://fcm.googleapis.com/fcm/send";
     public static final String REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
-    public static final String QUEUE_WORKER_URL = "/worker";
+    public static final String QUEUE_WORKER_URL = QUEUE_URL + "worker";
     public static final String QUEUE_WORKER_NAME = "pushes";
     public static final String QUEUE_IMAGE_WORKER_NAME = "images";
-    public static final String QUEUE_IMAGE_WORKER_URL = "/image-worker";
+    public static final String QUEUE_IMAGE_WORKER_URL = QUEUE_URL + "image-worker";
 
     public static final boolean IN_BETA = false;
     public static final boolean PUBLIC_BUY = true;

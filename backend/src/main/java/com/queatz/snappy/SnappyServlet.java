@@ -4,6 +4,8 @@ import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Auth;
+import com.queatz.snappy.service.ImageQueue;
+import com.queatz.snappy.service.Queue;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
@@ -96,5 +98,12 @@ public class SnappyServlet extends HttpServlet {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void destroy() {
+        ImageQueue.getService().stop();
+        Queue.getService().stop();
+        super.destroy();
     }
 }

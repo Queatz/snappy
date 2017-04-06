@@ -4,6 +4,7 @@ import com.image.SnappyImage;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.shared.Config;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -23,7 +24,7 @@ public class ImageWorker extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String thingId = req.getParameter("thing");
+        String thingId = req.getParameter(Config.PARAM_THING);
 
         EarthAs as = new EarthAs();
 

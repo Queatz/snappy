@@ -1,4 +1,4 @@
-package com.queatz.snappy.backend;
+package com.queatz.snappy.util;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -7,14 +7,20 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import static org.apache.http.Consts.UTF_8;
 
 /**
  * Created by jacob on 3/14/17.
@@ -73,5 +79,23 @@ public class HttpUtil {
                 new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
 
         return IOUtils.toString(rd);
+    }
+
+    public static String mapToParametersString(Map<String, String> params) {
+        List<NameValuePair> pairs = new ArrayList<>();
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            pairs.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+        }
+
+        return URLEncodedUtils.format(pairs, UTF_8);
+    }
+
+    public static List<NameValuePair> mapToParameters(Map<String, String> params) {
+        List<NameValuePair> pairs = new ArrayList<>();
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            pairs.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+        }
+
+        return pairs;
     }
 }

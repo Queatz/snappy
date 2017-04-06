@@ -38,4 +38,8 @@ public class Queue {
                 "message", message
         ));
     }
+
+    public void stop() {
+        queue.stop();
+    }
 }

@@ -3,7 +3,7 @@ package com.queatz.snappy;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.queatz.snappy.backend.HttpUtil;
+import com.queatz.snappy.util.HttpUtil;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.editors.DeviceEditor;
 import com.queatz.snappy.logic.mines.DeviceMine;

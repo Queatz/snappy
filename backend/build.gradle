@@ -29,9 +29,9 @@ dependencies {
 
     compile project(':shared')
     compile project(':image')
+    compile project(':queue')
 
     testCompile 'org.testng:testng:6.9.4'
-    compile project(path: ':queue')
 }
 
 test {

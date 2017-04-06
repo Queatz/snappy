@@ -26,7 +26,11 @@ public class ImageQueue {
 
     public void enqueue(String thing) {
         queue.add(Config.QUEUE_IMAGE_WORKER_URL, ImmutableMap.of(
-                "thing", thing
+                Config.PARAM_THING, thing
         ));
+    }
+
+    public void stop() {
+        queue.stop();
     }
 }
