@@ -10,7 +10,7 @@ public class SigninAction extends ActivityAction {
     @Override
     public void execute() {
         Auth auth = getTeam().auth;
-        auth.setActivity(getActivity());
+        auth.setActivity(me().getActivity());
         auth.signin();
     }
 }

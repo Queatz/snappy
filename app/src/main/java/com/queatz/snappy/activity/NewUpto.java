@@ -14,6 +14,7 @@ import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.team.TeamActivity;
 import com.queatz.snappy.ui.EditText;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -21,7 +22,7 @@ import com.squareup.picasso.Transformation;
 /**
  * Created by jacob on 9/12/15.
  */
-public class NewUpto extends Activity {
+public class NewUpto extends TeamActivity {
     Team team;
     Uri mPhoto;
 

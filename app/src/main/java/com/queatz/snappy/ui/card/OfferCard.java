@@ -18,7 +18,9 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.LikeUpdateAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
+import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
@@ -32,14 +34,13 @@ public class OfferCard implements Card<DynamicRealmObject> {
 
     @Override
     public View getCard(final Context context, final DynamicRealmObject offer, View convertView, ViewGroup parent) {
-        final Branch<Activity> branch = Branch.from((Activity) context);
+        final Branch<ActivityContext> branch = Branch.from((ActivityContext) context);
         final View view;
 
 
         if (convertView != null) {
             view = convertView;
-        }
-        else {
+        } else {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.offer_card, parent, false);
         }
@@ -54,62 +55,67 @@ public class OfferCard implements Card<DynamicRealmObject> {
 
         final Team team = ((MainApplication) context.getApplicationContext()).team;
 
-        if(team.auth.getUser() != null && team.auth.getUser().equals(offer.getObject(Thing.PERSON).getString(Thing.ID))) {
-            view.setTag(offer);
-            ((Activity) context).registerForContextMenu(view);
-        }
+        if (offer.getObject(Thing.PERSON) != null) {
 
-        ImageView profile = (ImageView) view.findViewById(R.id.profile);
-        Picasso.with(context)
-                .load(Functions.getImageUrlForSize(offer.getObject(Thing.PERSON), (int) Util.px(64)))
-                .placeholder(R.color.spacer)
-                .into(profile);
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                branch.to(new OpenProfileAction(offer.getObject(Thing.PERSON)));
+            if (team.auth.getUser() != null && team.auth.getUser().equals(offer.getObject(Thing.PERSON).getString(Thing.ID))) {
+                view.setTag(offer);
+                ((Activity) context).registerForContextMenu(view);
             }
-        });
 
-        final View.OnClickListener onClick = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Messages are settings for the active person, so skip
-                if (offer.getObject(Thing.PERSON).equals(team.auth.me())) {
-                    return;
-                }
-
-                Toast.makeText(context, team.context.getString(R.string.opening_conversation), Toast.LENGTH_SHORT).show();
-                team.action.openMessages((Activity) context, offer.getObject(Thing.PERSON), Util.offerMessagePrefill(offer));
-            }
-        };
-
-        view.findViewById(R.id.takeOffer).setOnClickListener(onClick);
-
-        view.setClickable(true);
-        view.setOnTouchListener(new View.OnTouchListener() {
-            private GestureDetector gestureDetector = new GestureDetector(team.context, new GestureDetector.SimpleOnGestureListener() {
+            ImageView profile = (ImageView) view.findViewById(R.id.profile);
+            Picasso.with(context)
+                    .load(Functions.getImageUrlForSize(offer.getObject(Thing.PERSON), (int) Util.px(64)))
+                    .placeholder(R.color.spacer)
+                    .into(profile);
+            profile.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onDoubleTap(MotionEvent e) {
-                    team.action.likeUpdate(offer);
-                    return true;
+                public void onClick(View v) {
+                    branch.to(new OpenProfileAction(offer.getObject(Thing.PERSON)));
                 }
             });
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gestureDetector.onTouchEvent(event);
+            final View.OnClickListener onClick = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Messages are settings for the active person, so skip
+                    if (offer.getObject(Thing.PERSON).equals(team.auth.me())) {
+                        return;
+                    }
+
+                    Toast.makeText(context, team.context.getString(R.string.opening_conversation), Toast.LENGTH_SHORT).show();
+                    team.action.openMessages((Activity) context, offer.getObject(Thing.PERSON), Util.offerMessagePrefill(offer));
+                }
+            };
+
+
+            view.findViewById(R.id.takeOffer).setOnClickListener(onClick);
+
+            view.setClickable(true);
+            view.setOnTouchListener(new View.OnTouchListener() {
+                private GestureDetector gestureDetector = new GestureDetector(team.context, new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onDoubleTap(MotionEvent e) {
+                        branch.to(new LikeUpdateAction(offer));
+                        return true;
+                    }
+                });
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return gestureDetector.onTouchEvent(event);
+                }
+            });
+
+            TextView type = (TextView) view.findViewById(R.id.type);
+
+            if (Util.offerIsRequest(offer)) {
+                type.setText(context.getString(R.string.person_wants, offer.getObject(Thing.PERSON).getString(Thing.FIRST_NAME)));
+                type.setTextColor(context.getResources().getColor(R.color.purple));
+            } else {
+                type.setText(context.getString(R.string.person_offers, offer.getObject(Thing.PERSON).getString(Thing.FIRST_NAME)));
+                type.setTextColor(context.getResources().getColor(R.color.green));
             }
-        });
 
-        TextView type = (TextView) view.findViewById(R.id.type);
-
-        if (Util.offerIsRequest(offer)) {
-            type.setText(context.getString(R.string.person_wants, offer.getObject(Thing.PERSON).getString(Thing.FIRST_NAME)));
-            type.setTextColor(context.getResources().getColor(R.color.purple));
-        } else {
-            type.setText(context.getString(R.string.person_offers, offer.getObject(Thing.PERSON).getString(Thing.FIRST_NAME)));
-            type.setTextColor(context.getResources().getColor(R.color.green));
         }
 
         TextView time = (TextView) view.findViewById(R.id.time);
@@ -160,7 +166,7 @@ public class OfferCard implements Card<DynamicRealmObject> {
             likers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    team.action.likeUpdate(offer);
+                    branch.to(new LikeUpdateAction(offer));
                 }
             });
         }

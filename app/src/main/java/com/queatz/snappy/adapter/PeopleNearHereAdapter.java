@@ -17,6 +17,7 @@ import com.queatz.snappy.Util;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.OpenProfileAction;
+import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.util.Functions;
 import com.squareup.picasso.Picasso;
 
@@ -26,13 +27,13 @@ import io.realm.RealmList;
 /**
  * Created by jacob on 8/21/15.
  */
-public class PeopleNearHereAdapter extends BaseAdapter implements Branchable<Activity> {
+public class PeopleNearHereAdapter extends BaseAdapter implements Branchable<ActivityContext> {
     private RealmList<DynamicRealmObject> mRealmList;
     private Context mContext;
 
     @Override
-    public void to(Branch<Activity> branch) {
-        Branch.from((Activity) mContext).to(branch);
+    public void to(Branch<ActivityContext> branch) {
+        Branch.from((ActivityContext) mContext).to(branch);
     }
 
     public PeopleNearHereAdapter(Context context, RealmList<DynamicRealmObject> realmList) {

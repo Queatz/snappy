@@ -1,6 +1,5 @@
 package com.queatz.snappy.ui;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -16,6 +15,7 @@ import com.queatz.snappy.activity.HostParty;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.actions.OpenProfileAction;
+import com.queatz.snappy.team.contexts.ActivityContext;
 
 import io.realm.DynamicRealmObject;
 
@@ -23,7 +23,7 @@ import io.realm.DynamicRealmObject;
  * Created by jacob on 1/3/15.
  */
 
-public class MiniMenu extends FrameLayout implements Branchable<Activity> {
+public class MiniMenu extends FrameLayout implements Branchable<ActivityContext> {
     public MiniMenu(android.content.Context context) {
         super(context);
         init();
@@ -40,8 +40,8 @@ public class MiniMenu extends FrameLayout implements Branchable<Activity> {
     }
 
     @Override
-    public void to(Branch<Activity> branch) {
-        Branch.from((Activity) getContext()).to(branch);
+    public void to(Branch<ActivityContext> branch) {
+        Branch.from((ActivityContext) getContext()).to(branch);
     }
 
     private void init() {

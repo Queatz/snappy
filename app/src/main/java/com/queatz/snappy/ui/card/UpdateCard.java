@@ -32,7 +32,11 @@ import com.queatz.snappy.adapter.CommentAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.LikeUpdateAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
+import com.queatz.snappy.team.contexts.ActivityContext;
+import com.queatz.snappy.team.observers.AuthenticatedEnvironment;
+import com.queatz.snappy.team.observers.EnvironmentObserver;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
@@ -51,7 +55,7 @@ public class UpdateCard implements Card<DynamicRealmObject> {
     }
 
     public View getCard(final Context context, final DynamicRealmObject update, View convertView, ViewGroup parent, boolean isFloating) {
-        final Branch<Activity> branch = Branch.from((Activity) context);
+        final Branch<ActivityContext> branch = Branch.from((ActivityContext) context);
         final View view;
 
         if (convertView != null) {
@@ -112,7 +116,7 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             private GestureDetector gestureDetector = new GestureDetector(team.context, new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onDoubleTap(MotionEvent e) {
-                    team.action.likeUpdate(update);
+                    branch.to(new LikeUpdateAction(update));
                     updateLikes(view, update, context);
                     return true;
                 }
@@ -309,7 +313,7 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             likersCount = update.getInt(Thing.LIKERS);
         }
 
-        boolean byMe = Util.liked(update, team.auth.me());
+        boolean byMe = team.environment.is(AuthenticatedEnvironment.class) && Util.liked(update, team.auth.me());
 
         likers.setCompoundDrawablesWithIntrinsicBounds(byMe ? R.drawable.ic_favorite_white_24dp : R.drawable.ic_favorite_border_white_24dp, 0, 0, 0);
         likers.getCompoundDrawables()[0].setTint(context.getResources().getColor(R.color.red));
@@ -328,7 +332,7 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             likers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    team.action.likeUpdate(update);
+                    Branch.from((ActivityContext) context).to(new LikeUpdateAction(update));
                     updateLikes(view, update, context);
                 }
             });

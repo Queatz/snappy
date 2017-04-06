@@ -18,6 +18,7 @@ import com.queatz.snappy.Util;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.OpenProfileAction;
+import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
@@ -30,11 +31,11 @@ import io.realm.RealmBaseAdapter;
  * Created by jacob on 10/15/16.
  */
 
-public class CommentAdapter extends RealmBaseAdapter<DynamicRealmObject> implements Branchable<Activity> {
+public class CommentAdapter extends RealmBaseAdapter<DynamicRealmObject> implements Branchable<ActivityContext> {
 
     @Override
-    public void to(Branch<Activity> branch) {
-        Branch.from((Activity) context).to(branch);
+    public void to(Branch<ActivityContext> branch) {
+        Branch.from((ActivityContext) context).to(branch);
     }
 
     public CommentAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<DynamicRealmObject> data) {

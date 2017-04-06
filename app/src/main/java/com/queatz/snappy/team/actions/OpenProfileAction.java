@@ -26,6 +26,6 @@ public class OpenProfileAction extends PersonActivityAction {
 
         Bundle bundle = new Bundle();
         bundle.putString(Config.EXTRA_PERSON_ID, getPerson().getString(Thing.ID));
-        getTeam().view.show(me(), Person.class, bundle);
+        getTeam().view.show(me().getActivity(), Person.class, bundle);
     }
 }

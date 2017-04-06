@@ -69,7 +69,7 @@ import io.realm.Sort;
  * Created by jacob on 2/21/17.
  */
 
-public class ContextualInputBar extends LinearLayout implements Branchable<Activity>, EnvironmentContext {
+public class ContextualInputBar extends LinearLayout implements Branchable<ActivityContext>, EnvironmentContext {
 
     private EditText whatsUp;
     private ViewGroup info;
@@ -113,8 +113,8 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
     }
 
     @Override
-    public void to(Branch<Activity> branch) {
-        Branch.from((Activity) getContext()).to(branch);
+    public void to(Branch<ActivityContext> branch) {
+        Branch.from((ActivityContext) getContext()).to(branch);
     }
 
     private Collection<Runnable> resizeListeners = new HashSet<>();

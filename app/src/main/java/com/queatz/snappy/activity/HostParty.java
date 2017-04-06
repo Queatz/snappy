@@ -41,6 +41,7 @@ import com.queatz.snappy.adapter.LocationAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.team.TeamActivity;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.TextView;
 import com.queatz.snappy.ui.TimeSlider;
@@ -57,7 +58,7 @@ import io.realm.Sort;
 /**
  * Created by jacob on 1/3/15.
  */
-public class HostParty extends Activity {
+public class HostParty extends TeamActivity {
     public Team team;
     private String mGroup;
     private Date mDate;

@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.HostParty;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.team.observers.AnonymousEnvironment;
 
 import io.realm.DynamicRealmObject;
 
@@ -45,7 +46,9 @@ public class Menu {
             menu.add(R.string.change_photo);
         }
         else if ("person".equals(kind)) {
-            if (!((DynamicRealmObject) object).getString(Thing.ID).equals(team.auth.me().getString(Thing.ID))) {
+            if (team.environment.is(AnonymousEnvironment.class) ||
+                    !((DynamicRealmObject) object).getString(Thing.ID)
+                            .equals(team.auth.me().getString(Thing.ID))) {
                 //TODO make sure follow for you -> them is leaded when loading profile...
 
                 DynamicRealmObject follow = team.realm.where("Thing")

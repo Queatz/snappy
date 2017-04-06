@@ -24,6 +24,7 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.OpenProfileAction;
+import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
@@ -35,14 +36,14 @@ import io.realm.RealmResults;
 /**
  * Created by jacob on 2/8/15.
  */
-public class PartyAdapter extends RealmBaseAdapter<DynamicRealmObject> implements Branchable<Activity> {
+public class PartyAdapter extends RealmBaseAdapter<DynamicRealmObject> implements Branchable<ActivityContext> {
     public PartyAdapter(Context context, RealmResults<DynamicRealmObject> realmResults) {
         super(context, realmResults);
     }
 
     @Override
-    public void to(Branch<Activity> branch) {
-        Branch.from((Activity) context).to(branch);
+    public void to(Branch<ActivityContext> branch) {
+        Branch.from((ActivityContext) context).to(branch);
     }
 
     @Override

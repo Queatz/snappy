@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.makeramen.RoundedImageView;
 import com.queatz.branch.Branch;
-import com.queatz.branch.Branchable;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
@@ -26,6 +25,7 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.OpenProfileAction;
+import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
@@ -38,7 +38,7 @@ import io.realm.RealmResults;
  */
 public class PartyCard implements Card<DynamicRealmObject> {
     public View getCard(final Context context, final DynamicRealmObject party, View convertView, ViewGroup parent) {
-        final Branch<Activity> branch = Branch.from((Activity) context);
+        final Branch<ActivityContext> branch = Branch.from((ActivityContext) context);
 
         View view;
 

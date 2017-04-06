@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -22,6 +23,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
+import com.queatz.snappy.R;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.observers.AnonymousEnvironment;
 import com.queatz.snappy.team.observers.AuthenticatedEnvironment;
@@ -343,6 +345,12 @@ public class Auth {
         signin();
 
         team.environment.handle(AuthenticatedEnvironment.class);
+
+        Toast.makeText(
+                team.context,
+                team.context.getString(R.string.welcome_person, me().getString(Thing.FIRST_NAME)),
+                Toast.LENGTH_SHORT
+        ).show();
     }
 
     private void setGoogleAuthToken(String auth) {

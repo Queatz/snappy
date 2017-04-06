@@ -186,6 +186,7 @@
     <string name="message_person">Message %1$s</string>
     <string name="view_settings">View settings</string>
     <string name="hey_name">Hey %1$s!</string>
+    <string name="welcome_person">Welcome %1$s!</string>
 
     <plurals name="likes">
         <item quantity="one">%1$s Liker</item>

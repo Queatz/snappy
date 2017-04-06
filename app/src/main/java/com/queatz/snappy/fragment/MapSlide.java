@@ -28,6 +28,7 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.OpenProfileAction;
+import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.ui.CircleTransform;
 import com.queatz.snappy.ui.ContextualInputBar;
 import com.queatz.snappy.ui.OnBackPressed;
@@ -46,7 +47,7 @@ import io.realm.RealmResults;
  * Created by jacob on 8/7/16.
  */
 
-public abstract class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPressed, Branchable<Activity> {
+public abstract class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPressed, Branchable<ActivityContext> {
 
     private GoogleMap mMap;
 
@@ -54,8 +55,8 @@ public abstract class MapSlide extends Fragment implements OnMapReadyCallback, O
     Team team;
 
     @Override
-    public void to(Branch<Activity> branch) {
-        Branch.from(getActivity()).to(branch);
+    public void to(Branch<ActivityContext> branch) {
+        Branch.from((ActivityContext) getActivity()).to(branch);
     }
 
     // Injected by subclasses

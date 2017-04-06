@@ -1,6 +1,5 @@
 package com.queatz.snappy.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,11 +9,12 @@ import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.team.Auth;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.team.TeamActivity;
 
 /**
  * Created by jacob on 10/19/14.
  */
-public class Welcome extends Activity {
+public class Welcome extends TeamActivity {
     private Team team;
 
     @Override
