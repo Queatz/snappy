@@ -77,13 +77,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp">
 
-            <LinearLayout
+            <LinearLayout style="?android:attr/borderlessButtonStyle"
                 android:id="@+id/time_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:background="@drawable/floating_click"
                 android:clickable="true"
                 android:padding="4dp">
 
@@ -106,13 +105,12 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <LinearLayout style="?android:attr/borderlessButtonStyle"
                 android:id="@+id/location_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:background="@drawable/floating_click"
                 android:clickable="true"
                 android:padding="4dp">
 
