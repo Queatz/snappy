@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -108,6 +109,8 @@ public class SnappyImage {
     private boolean saveImage(String path, File file, boolean original, boolean scaled) {
         SnappyImageMetadata metadata = new SnappyImageMetadata();
 
+        clear(path);
+
         metadata.path = path;
         metadata.file = file.getName();
         metadata.original = original;
@@ -132,6 +135,23 @@ public class SnappyImage {
         collection.insertDocument(metadata);
 
         return true;
+    }
+
+    /**
+     * Removes all association of images with a path.
+     * @param path The path to clear
+     */
+    private void clear(String path) {
+        Map<String, Object> vars = new HashMap<>();
+        vars.put("path", path);
+
+        database.query(
+                "for x in " + IMAGES_DATABASE_COLLECTION +
+                " filter x.path = @path remove x in " + IMAGES_DATABASE_COLLECTION,
+                vars,
+                null,
+                Boolean.class
+        );
     }
 
     /**
@@ -173,7 +193,7 @@ public class SnappyImage {
     private SnappyImageMetadata getImageMetadata(String path, Point size) {
         String sizeQuery = size == null ? "x.original == true" : "x.width == @width and " +
                 (size.y == 0 ? "x.scaled == true" : "x.height == @height");
-        String query = "for x in " + IMAGES_DATABASE_COLLECTION + " filter x.path == @path and " + sizeQuery + " return x";
+        String query = "for x in " + IMAGES_DATABASE_COLLECTION + " filter x.path == @path and " + sizeQuery + " limit 1 return x";
         Map<String, Object> vars = new HashMap<>();
         vars.put("path", path);
 

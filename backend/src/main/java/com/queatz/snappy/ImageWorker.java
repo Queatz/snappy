@@ -35,6 +35,10 @@ public class ImageWorker extends HttpServlet {
         InputStream inputStream = snappyImage.openInputStream(fileName, 2, 2);
         float aspect = snappyImage.getAspectRatio(fileName);
 
+        if (inputStream == null) {
+            return;
+        }
+
         EarthStore earthStore = new EarthStore(as);
 
         earthStore.save(earthStore.edit(earthStore.get(thingId))
