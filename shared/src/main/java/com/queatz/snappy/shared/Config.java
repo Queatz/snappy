@@ -192,6 +192,9 @@ public class Config {
     public static final String JOIN_STATUS_OUT = "out";
     public static final String JOIN_STATUS_WITHDRAWN = "withdrawn";
 
+    public static final String MEMBER_STATUS_SUGGESTED = "suggested";
+    public static final String MEMBER_STATUS_ACTIVE = "active";
+
     public static final String QUEST_STATUS_OPEN = "open";
     public static final String QUEST_STATUS_STARTED = "started";
     public static final String QUEST_STATUS_COMPLETE = "complete";
@@ -240,6 +243,8 @@ public class Config {
     public static final String PARAM_KIND = "kind";
     public static final String PARAM_Q = "q";
     public static final String PARAM_RECENT = "recent";
+    public static final String PARAM_SOURCE = "source";
+    public static final String PARAM_TARGET = "target";
 
     public static final String GOOGLE_PLUS_PROFILE_URL = "https://www.googleapis.com/plus/v1/people/me";
     public static final String GOOGLE_PLUS_TOKENINFO_URL = "https://www.googleapis.com/oauth2/v1/tokeninfo";

@@ -39,4 +39,8 @@ public class FollowerMine extends EarthControl {
     public int countFollowers(EarthThing entity) {
         return use(EarthStore.class).count(EarthKind.FOLLOWER_KIND, EarthField.TARGET, entity.key());
     }
+
+    public int countFollowing(EarthThing entity) {
+        return use(EarthStore.class).count(EarthKind.FOLLOWER_KIND, EarthField.SOURCE, entity.key());
+    }
 }

@@ -9,6 +9,7 @@ import com.queatz.snappy.logic.views.HubView;
 import com.queatz.snappy.logic.views.JoinView;
 import com.queatz.snappy.logic.views.LikeView;
 import com.queatz.snappy.logic.views.LocationView;
+import com.queatz.snappy.logic.views.MemberView;
 import com.queatz.snappy.logic.views.MessageView;
 import com.queatz.snappy.logic.views.OfferView;
 import com.queatz.snappy.logic.views.PartyView;
@@ -59,6 +60,7 @@ public class EarthViewer extends EarthControl {
         mapping.put(EarthKind.JOIN_KIND, getConstructor(JoinView.class));
         mapping.put(EarthKind.RESOURCE_KIND, getConstructor(ResourceView.class));
         mapping.put(EarthKind.PROJECT_KIND, getConstructor(ProjectView.class));
+        mapping.put(EarthKind.MEMBER_KIND, getConstructor(MemberView.class));
 
         Constructor<? extends Viewable> identity = getConstructor(ExistenceView.class);
     }

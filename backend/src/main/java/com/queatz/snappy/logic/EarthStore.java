@@ -226,6 +226,22 @@ public class EarthStore extends EarthControl {
     }
 
     /**
+     * Create a relationship between two things.
+     * @param toThing
+     * @param fromThing
+     * @param kind
+     */
+    public void join(@NotNull EarthThing thing, @NotNull EarthThing fromThing, @NotNull String kind) {
+        BaseDocument entity = new EarthThing.Builder()
+                .set(DEFAULT_FIELD_KIND, kind)
+                .set(DEFAULT_FIELD_FROM, DEFAULT_COLLECTION + "/" + fromThing.key().name())
+                .set(DEFAULT_FIELD_TO, DEFAULT_COLLECTION + "/" + thing.key().name())
+                .build();
+
+        relationships.insertDocument(entity, new DocumentCreateOptions());
+    }
+
+    /**
      * Conclude a thing by it's id.
      *
      * - Assumes external validation happens.
@@ -307,6 +323,42 @@ public class EarthStore extends EarthControl {
 
     public final String newRandomId() {
         return Long.toString(new Random().nextLong());
+    }
+
+    /**
+     * Find relationships.//
+     */
+    public List<EarthThing> findFor(EarthThing thing, String kind, String relationshipKind) {
+        Map<String, Object> vars = new HashMap<>();
+        vars.put("key", DEFAULT_COLLECTION + "/" + thing.key().name());
+        vars.put("kind", DEFAULT_KIND_OWNER);
+        vars.put("concluded_field", DEFAULT_FIELD_CONCLUDED);
+
+        String filter = "";
+
+        if (relationshipKind != null) {
+            filter += "and relationship.kind == @relationshipKind ";
+            vars.put("relationshipKind", relationshipKind);
+        }
+
+        if (kind != null) {
+            filter += "and other.kind == @kind ";
+            vars.put("kind", kind);
+        }
+
+        String aql = "for other, relationship in outbound @key graph '" + DEFAULT_GRAPH + "' " +
+                "filter other.@concluded_field == null " + filter + "return distinct other";
+
+        Logger.getLogger(Config.NAME).info(aql);
+        ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class);
+
+        List<EarthThing> result = new ArrayList<>();
+
+        while (cursor.hasNext()) {
+            result.add(EarthThing.from(cursor.next()));
+        }
+
+        return result;
     }
 
     /**

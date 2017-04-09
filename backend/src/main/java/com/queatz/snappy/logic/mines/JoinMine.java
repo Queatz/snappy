@@ -21,12 +21,12 @@ public class JoinMine extends EarthControl {
     public EarthThing byPersonAndParty(EarthThing person, EarthThing party) {
         List<EarthThing> result = use(EarthStore.class).query(
                 "x." + EarthField.KIND + " == @kind and " +
-                        "x." + EarthField.SOURCE + " == @source_key and " +
-                        "x." + EarthField.TARGET + " == @target_key",
+                        "x." + EarthField.SOURCE + " == @source and " +
+                        "x." + EarthField.TARGET + " == @target",
                 ImmutableMap.<String, Object>of(
                         "kind", EarthKind.JOIN_KIND,
-                        "source_key", person.key().name(),
-                        "target_key", party.key().name()
+                        "source", person.key().name(),
+                        "target", party.key().name()
                 ), 1);
 
         if (result.isEmpty()) {
