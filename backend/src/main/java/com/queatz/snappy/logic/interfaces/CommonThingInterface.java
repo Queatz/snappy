@@ -1,5 +1,6 @@
 package com.queatz.snappy.logic.interfaces;
 
+import com.google.common.base.Strings;
 import com.queatz.snappy.backend.ApiUtil;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.logic.EarthAs;
@@ -10,6 +11,7 @@ import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.ContactEditor;
+import com.queatz.snappy.logic.editors.MemberEditor;
 import com.queatz.snappy.logic.eventables.NewThingEvent;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.SuccessView;
@@ -26,7 +28,7 @@ import java.io.IOException;
  * GET /:id             -> thing
  * GET /:id/photo       -> thing photo
  *
- * POST ?kind=...       -> new thing
+ * POST ?kind=...       -> new thing (optional: ?in=12345)
  * POST /:id            -> update thing
  * POST /:id/photo      -> update photo
  *
@@ -92,6 +94,19 @@ public abstract class CommonThingInterface implements Interfaceable {
 
                 new EarthUpdate(as).send(new NewThingEvent(thing)).toFollowersOf(as.getUser());
 
+                String in = extract(as.getParameters().get(Config.PARAM_IN));
+
+                if (!Strings.isNullOrEmpty(in)) {
+                    EarthThing of = new EarthStore(as).get(in);
+
+                    if (of != null) {
+                        // TODO: Make suggestion if not owned by me
+                        new MemberEditor(as).create(thing, of, Config.MEMBER_STATUS_ACTIVE);
+                    } else {
+                        // Silent fail
+                    }
+                }
+
                 return new EarthViewer(as).getViewForEntityOrThrow(thing).toJson();
             }
             case 1: {
@@ -145,5 +160,9 @@ public abstract class CommonThingInterface implements Interfaceable {
             e.printStackTrace();
             throw new PrintingError(Api.Error.NOT_FOUND, "thing - photo io error");
         }
+    }
+
+    private String extract(String[] param) {
+        return param == null || param.length != 1 ? null : param[0];
     }
 }

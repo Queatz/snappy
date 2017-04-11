@@ -23,12 +23,16 @@ public class HubEditor extends EarthControl {
         earthStore = use(EarthStore.class);
     }
 
-    public EarthThing newHub(@NotNull String name, @NotNull String address, @NotNull EarthGeo latLng) {
+    public EarthThing newHub(@NotNull String name,
+                             @NotNull String address,
+                             @NotNull EarthGeo latLng,
+                             @NotNull EarthThing primaryOwner) {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.HUB_KIND))
                 .set(EarthField.PHOTO, false)
                 .set(EarthField.NAME, name)
                 .set(EarthField.ABOUT, "")
                 .set(EarthField.GEO, latLng)
+                .set(EarthField.SOURCE, primaryOwner.key())
                 .set(EarthField.ADDRESS, address));
     }
 

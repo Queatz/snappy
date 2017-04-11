@@ -31,8 +31,11 @@ public class HubInterface extends CommonThingInterface {
             throw new NothingLogicResponse("hub - name, address, geo, and about parameters are expected");
         }
 
-        return new HubEditor(as).newHub(name[0], address[0],
-                EarthGeo.of(Double.valueOf(latitude[0]), Double.valueOf(longitude[0])));
+        return new HubEditor(as).newHub(
+                name[0],
+                address[0],
+                EarthGeo.of(Double.valueOf(latitude[0]), Double.valueOf(longitude[0])),
+                as.getUser());
     }
 
     @Override
