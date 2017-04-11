@@ -49,6 +49,8 @@ public class MeInterface implements Interfaceable {
 
     @Override
     public String get(EarthAs as) {
+        as.requireUser();
+
         switch (as.getRoute().size()) {
             case 1:
                 if (!as.hasUser()) {

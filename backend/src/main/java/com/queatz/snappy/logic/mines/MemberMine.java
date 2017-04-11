@@ -30,7 +30,7 @@ public class MemberMine extends EarthControl {
                         "kind", EarthKind.MEMBER_KIND,
                         "target", thing.key().name(),
                         "status", status
-                ), 1);
+                ));
     }
 
     public EarthThing byThingToThing(EarthThing source, EarthThing target) {

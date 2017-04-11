@@ -109,7 +109,9 @@ public class SnappyImage {
     private boolean saveImage(String path, File file, boolean original, boolean scaled) {
         SnappyImageMetadata metadata = new SnappyImageMetadata();
 
-        clear(path);
+        if (original) {
+            clear(path);
+        }
 
         metadata.path = path;
         metadata.file = file.getName();
@@ -147,7 +149,7 @@ public class SnappyImage {
 
         database.query(
                 "for x in " + IMAGES_DATABASE_COLLECTION +
-                " filter x.path = @path remove x in " + IMAGES_DATABASE_COLLECTION,
+                " filter x.path == @path remove x in " + IMAGES_DATABASE_COLLECTION,
                 vars,
                 null,
                 Boolean.class

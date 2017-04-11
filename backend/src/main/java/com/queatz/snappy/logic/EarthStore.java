@@ -91,6 +91,7 @@ public class EarthStore extends EarthControl {
     private static final String DEFAULT_FIELD_CONCLUDED = "concluded_on";
     private static final String DEFAULT_FIELD_FROM = "_from";
     private static final String DEFAULT_FIELD_TO = "_to";
+    private static final String DEFAULT_AUTH_KIND = EarthKind.PERSON_KIND;
 
     private final ArangoDatabase db;
     private final ArangoCollection collection;
@@ -199,7 +200,9 @@ public class EarthStore extends EarthControl {
      * @return The new thing
      */
     public EarthThing create(@NotNull String kind) {
-        as.requireUser();
+        if (!DEFAULT_AUTH_KIND.equals(kind)) {
+            as.requireUser();
+        }
 
         BaseDocument entity = new EarthThing.Builder()
                 .set(DEFAULT_FIELD_CREATED, new Date())
@@ -227,7 +230,7 @@ public class EarthStore extends EarthControl {
 
     /**
      * Create a relationship between two things.
-     * @param toThing
+     * @param thing
      * @param fromThing
      * @param kind
      */
@@ -447,28 +450,30 @@ public class EarthStore extends EarthControl {
         if (kind != null) {
             String kinds[] = kind.split(Pattern.quote("|"));
 
-            if (!filter.isEmpty()) {
-                filter += " and ";
-            }
-
-            filter += "(";
-
-            for (int i = 0; i < kinds.length; i++) {
-                if (i > 0) {
-                    filter += " or ";
+            if (kinds.length > 0 && !kinds[0].isEmpty()) {
+                if (!filter.isEmpty()) {
+                    filter += " and ";
                 }
 
-                if (TRANSIENT_KINDS.contains(kinds[i])) {
-                    filter += "(";
-                    filter += "x.kind == \"" + kinds[i] + "\" ";
-                    filter += "and x." + EarthField.UPDATED_ON + " >= " + Long.toString(new Date().getTime() - TRANSIENT_KIND_TIMEOUT_SECONDS);
-                    filter += ")";
-                } else {
-                    filter += "x.kind == \"" + kinds[i] + "\"";
-                }
-            }
+                filter += "(";
 
-            filter += ")";
+                for (int i = 0; i < kinds.length; i++) {
+                    if (i > 0) {
+                        filter += " or ";
+                    }
+
+                    if (TRANSIENT_KINDS.contains(kinds[i])) {
+                        filter += "(";
+                        filter += "x.kind == \"" + kinds[i] + "\" ";
+                        filter += "and x." + EarthField.UPDATED_ON + " >= " + Long.toString(new Date().getTime() - TRANSIENT_KIND_TIMEOUT_SECONDS);
+                        filter += ")";
+                    } else {
+                        filter += "x.kind == \"" + kinds[i] + "\"";
+                    }
+                }
+
+                filter += ")";
+            }
         }
 
         if (q != null) {
