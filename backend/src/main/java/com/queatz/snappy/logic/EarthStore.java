@@ -465,7 +465,7 @@ public class EarthStore extends EarthControl {
                     if (TRANSIENT_KINDS.contains(kinds[i])) {
                         filter += "(";
                         filter += "x.kind == \"" + kinds[i] + "\" ";
-                        filter += "and x." + EarthField.UPDATED_ON + " >= " + Long.toString(new Date().getTime() - TRANSIENT_KIND_TIMEOUT_SECONDS);
+                        filter += "and date_timestamp(x." + EarthField.AROUND + ") >= date_timestamp(date_subtract(date_now(), " + TRANSIENT_KIND_TIMEOUT_SECONDS + "), 's')";
                         filter += ")";
                     } else {
                         filter += "x.kind == \"" + kinds[i] + "\"";
@@ -480,12 +480,12 @@ public class EarthStore extends EarthControl {
             String[] qs = q.split("\\s+");
 
             if (qs.length == 1) {
-                filter += " and x.name like '%" + q + "%'";
+                filter += " and " + and(q);
             } else if (qs.length > 1) {
-                filter += " and (x.name like '%" + qs[0] + "%'";
+                filter += " and (" + and(qs[0]);
 
                 for (int i = 1; i < qs.length; i++) {
-                    filter += " or x.name like '%" + qs[i] + "%'";
+                    filter += " or " + and(qs[i]);
                 }
 
                 filter += ")";
@@ -521,6 +521,13 @@ public class EarthStore extends EarthControl {
         }
 
         return result;
+    }
+
+    private String and(String q) {
+        return "(x.name like '%" + q + "%' or " +
+                "x.firstName like '%" + q + "%' or " +
+                "x.lastName like '%" + q + "%' or " +
+                "x.about like '%" + q + "%')";
     }
 
     public List<EarthThing> query(String filter, @Nullable Map<String, Object> vars) {

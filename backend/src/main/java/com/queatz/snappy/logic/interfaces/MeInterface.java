@@ -1,5 +1,6 @@
 package com.queatz.snappy.logic.interfaces;
 
+import com.google.common.base.Strings;
 import com.queatz.snappy.backend.GooglePurchaseDataSpec;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthEmail;
@@ -13,6 +14,7 @@ import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.DeviceEditor;
+import com.queatz.snappy.logic.editors.MemberEditor;
 import com.queatz.snappy.logic.editors.OfferEditor;
 import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.editors.UpdateEditor;
@@ -212,6 +214,7 @@ public class MeInterface implements Interfaceable {
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
         String details = as.getRequest().getParameter(Config.PARAM_DETAILS);
         String unit = as.getRequest().getParameter(Config.PARAM_UNIT);
+        String in = as.getRequest().getParameter(Config.PARAM_IN);
         boolean want = Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_WANT));
 
         // @deprecated
@@ -245,6 +248,17 @@ public class MeInterface implements Interfaceable {
             EarthThing offer = new OfferEditor(as).newOffer(as.getUser(), details, want, price, unit);
 
             if (offer != null) {
+                if (!Strings.isNullOrEmpty(in)) {
+                    EarthThing of = new EarthStore(as).get(in);
+
+                    if (of != null) {
+                        // TODO: Make suggestion if not owned by me
+                        new MemberEditor(as).create(offer, of, Config.MEMBER_STATUS_ACTIVE);
+                    } else {
+                        // Silent fail
+                    }
+                }
+
                 new EarthUpdate(as).send(new NewOfferEvent(offer))
                         .toFollowersOf(as.getUser());
 

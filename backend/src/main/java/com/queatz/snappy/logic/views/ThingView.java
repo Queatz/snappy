@@ -16,6 +16,7 @@ public class ThingView extends ExistenceView {
     final boolean photo;
     final String placeholder;
     final Float aspect;
+    final Boolean owner;
 
     public ThingView(EarthAs as, EarthThing thing) {
         this(as, thing, EarthView.DEEP);
@@ -54,6 +55,14 @@ public class ThingView extends ExistenceView {
             aspect = (float) thing.getDouble(EarthField.ASPECT_RATIO);
         } else {
             aspect = null;
+        }
+
+        if (thing.has(EarthField.SOURCE) &&
+                as.hasUser() &&
+                thing.getString(EarthField.SOURCE).equals(as.getUser().key().name())) {
+            owner = true;
+        } else {
+            owner = false;
         }
     }
 }
