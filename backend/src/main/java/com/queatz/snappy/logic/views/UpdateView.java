@@ -11,7 +11,6 @@ import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Viewable;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by jacob on 5/8/16.
@@ -19,13 +18,11 @@ import java.util.List;
 public class UpdateView extends CommonThingView {
 
     final Date date;
-    final PersonView person;
+    final Viewable source;
+    final Viewable target;
     final long likers;
     final String action;
-    final Viewable target;
     final EarthGeo geo;
-    final List<Viewable> with;
-    final List<Viewable> updates;
     final Boolean going;
 
     public UpdateView(EarthAs as, EarthThing update) {
@@ -39,11 +36,8 @@ public class UpdateView extends CommonThingView {
         final EarthViewer earthViewer = use(EarthViewer.class);
 
         date = update.getDate(EarthField.CREATED_ON);
-        person = new PersonView(as, earthStore.get(update.getKey(EarthField.SOURCE)), EarthView.SHALLOW);
+        source = earthViewer.getViewForEntityOrThrow(earthStore.get(update.getKey(EarthField.SOURCE)), EarthView.SHALLOW);
         likers = earthStore.count(EarthKind.LIKE_KIND, EarthField.TARGET, update.key());
-
-        List<EarthThing> joinList = earthStore.find(EarthKind.JOIN_KIND, EarthField.TARGET, update.key());
-        with = new EntityListView(as, joinList, EarthView.IDENTITY).asList();
 
         if (update.has(EarthField.GOING)) {
             going = update.getBoolean(EarthField.GOING);
@@ -70,15 +64,6 @@ public class UpdateView extends CommonThingView {
             action = update.getString(EarthField.ACTION);
         } else {
             action = null;
-        }
-
-        switch (view) {
-            case DEEP:
-                List<EarthThing> commentList = earthStore.find(EarthKind.UPDATE_KIND, EarthField.TARGET, update.key());
-                updates = new EntityListView(as, commentList, EarthView.SHALLOW).asList();
-                break;
-            default:
-                updates = null;
         }
     }
 }

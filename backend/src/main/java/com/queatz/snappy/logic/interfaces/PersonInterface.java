@@ -9,7 +9,6 @@ import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.EarthViewer;
-import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.FollowerEditor;
 import com.queatz.snappy.logic.editors.MessageEditor;
 import com.queatz.snappy.logic.editors.RecentEditor;
@@ -42,13 +41,11 @@ import java.util.logging.Logger;
 /**
  * Created by jacob on 5/9/16.
  */
-public class PersonInterface implements Interfaceable {
+public class PersonInterface extends CommonThingInterface {
 
     @Override
-    public String get(EarthAs as) {
+    public String getThing(EarthAs as, EarthThing earthThing) {
         switch (as.getRoute().size()) {
-            case 1:
-                return getPerson(as, as.getRoute().get(0));
             case 2:
                 String personId = as.getRoute().get(0);
 
@@ -71,48 +68,55 @@ public class PersonInterface implements Interfaceable {
     }
 
     @Override
-    public String post(EarthAs as) {
-        switch (as.getRoute().size()) {
-            case 1:
-                EarthThing person = new EarthStore(as).get(as.getRoute().get(0));
+    public EarthThing editThing(EarthAs as, EarthThing thing) {
+            EarthThing person = new EarthStore(as).get(as.getRoute().get(0));
 
-                if (Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_SEEN))) {
-                   return postSeen(as, person);
-                } else if (Boolean.toString(true).equals(as.getRequest().getParameter(Config.PARAM_FOLLOW))) {
-                    return postFollow(as, person);
-                } else if (Boolean.toString(false).equals(as.getRequest().getParameter(Config.PARAM_FOLLOW))) {
-                    return postStopFollowing(as, person);
-                } else {
-                    String message = as.getRequest().getParameter(Config.PARAM_MESSAGE);
+            if (Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_SEEN))) {
+               postSeen(as, person);
+            } else if (Boolean.toString(true).equals(as.getRequest().getParameter(Config.PARAM_FOLLOW))) {
+                person = postFollow(as, person);
+            } else if (Boolean.toString(false).equals(as.getRequest().getParameter(Config.PARAM_FOLLOW))) {
+                postStopFollowing(as, person);
+            } else {
+                String message = as.getRequest().getParameter(Config.PARAM_MESSAGE);
 
-                    if (message != null) {
-                        return postMessage(as, person, message);
-                    }
+                if (message != null) {
+                    person = postMessage(as, person, message);
                 }
-
-                break;
-            case 2:
-                switch (as.getRoute().get(1)) {
-                    case Config.PATH_MESSAGE:
-                        return postMessage(as, new EarthStore(as).get(as.getRoute().get(0)));
-                }
-                break;
         }
 
-        throw new NothingLogicResponse("people - bad path");
+        return person;
     }
 
-    private String getPerson(EarthAs as, String personId) {
-        EarthThing person = new EarthStore(as).get(personId);
-
+    @Override
+    public void onGet(EarthAs as, EarthThing person) {
         // Update location of other person if auth'd
         if (person != null && as.hasUser()) {
             if (!as.getUser().key().equals(person.key())) {
                 new EarthUpdate(as).send(new InformationEvent()).to(person);
             }
         }
+    }
 
-        return new EarthViewer(as).getViewForEntityOrThrow(person).toJson();
+    @Override
+    public String postThing(EarthAs as, EarthThing thing) {
+        switch (as.getRoute().size()) {
+            case 2:
+                switch (as.getRoute().get(1)) {
+                    case Config.PATH_MESSAGE:
+                        return new EarthViewer(as).getViewForEntityOrThrow(
+                                postMessage(as, new EarthStore(as).get(as.getRoute().get(0)))
+                        ).toJson();
+                }
+                break;
+        }
+
+        return null;
+    }
+
+    @Override
+    public EarthThing createThing(EarthAs as) {
+        throw new NothingLogicResponse("not this way");
     }
 
     private String getFollows(EarthAs as, boolean followers, String personId) {
@@ -162,7 +166,7 @@ public class PersonInterface implements Interfaceable {
         return new SuccessView(true).toJson();
     }
 
-    private String postFollow(EarthAs as, EarthThing person) {
+    private EarthThing postFollow(EarthAs as, EarthThing person) {
         as.requireUser();
 
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
@@ -178,7 +182,7 @@ public class PersonInterface implements Interfaceable {
                     .to(follow.getKey(EarthField.TARGET));
         }
 
-        return new FollowerView(as, follow).setLocalId(localId).toJson();
+        return follow.setLocalId(localId);
     }
 
     private String postStopFollowing(EarthAs as, EarthThing person) {
@@ -190,7 +194,7 @@ public class PersonInterface implements Interfaceable {
         return new SuccessView(true).toJson();
     }
 
-    private String postMessage(EarthAs as, EarthThing person, String message) {
+    private EarthThing postMessage(EarthAs as, EarthThing person, String message) {
         as.requireUser();
 
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
@@ -200,11 +204,10 @@ public class PersonInterface implements Interfaceable {
 
         new EarthUpdate(as).send(new MessageEvent(sent)).to(person);
 
-        return new MessageView(as, sent).setLocalId(localId).toJson();
+        return sent.setLocalId(localId);
     }
 
-
-    private String postMessage(EarthAs as, EarthThing person)  {
+    private EarthThing postMessage(EarthAs as, EarthThing person)  {
         as.requireUser();
 
         EarthThing sent = new MessageEditor(as).stageMessage(as.getUser(), person);
@@ -259,7 +262,7 @@ public class PersonInterface implements Interfaceable {
 
         new EarthUpdate(as).send(new MessageEvent(sent)).to(person);
 
-        return new MessageView(as, sent).setLocalId(localId).toJson();
+        return sent.setLocalId(localId);
     }
 
 }

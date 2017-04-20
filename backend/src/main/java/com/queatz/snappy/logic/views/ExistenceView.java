@@ -30,6 +30,7 @@ public class ExistenceView extends EarthControl implements Viewable {
 
         id = entity.key().name();
         kind = entity.getString(EarthField.KIND);
+        localId = entity.getLocalId();
     }
 
     @Override

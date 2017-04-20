@@ -23,7 +23,6 @@ public class PersonView extends CommonThingView {
 
     final String firstName;
     final String lastName;
-    final String about;
     final String imageUrl;
     final String googleUrl;
     final String auth;
@@ -34,12 +33,6 @@ public class PersonView extends CommonThingView {
     final Double infoDistance;
     final Date infoUpdated;
     final Date createdOn;
-    final List<Viewable> updates;
-    final List<Viewable> offers;
-    final List<Viewable> resources;
-    final List<Viewable> projects;
-    final List<Viewable> hubs;
-    final List<Viewable> clubs;
     final EarthGeo geo;
 
     public PersonView(EarthAs as, EarthThing person) {
@@ -53,7 +46,6 @@ public class PersonView extends CommonThingView {
 
         firstName = person.getString(EarthField.FIRST_NAME);
         lastName = person.getString(EarthField.LAST_NAME);
-        about = person.getString(EarthField.ABOUT);
         imageUrl = person.getString(EarthField.IMAGE_URL);
         googleUrl = person.getString(EarthField.GOOGLE_URL);
 
@@ -89,21 +81,6 @@ public class PersonView extends CommonThingView {
             case DEEP:
                 createdOn = person.getDate(EarthField.CREATED_ON);
                 socialMode = Util.findHighestSocialMode(use(DeviceMine.class).forUser(person.key().name()));
-
-                List<EarthThing> updatesList = earthStore.find(EarthKind.UPDATE_KIND, EarthField.TARGET, person.key());
-                List<EarthThing> offersList = earthStore.find(EarthKind.OFFER_KIND, EarthField.SOURCE, person.key());
-                List<EarthThing> resourcesList = earthStore.find(EarthKind.RESOURCE_KIND, EarthField.SOURCE, person.key());
-                List<EarthThing> projectsList = earthStore.find(EarthKind.PROJECT_KIND, EarthField.SOURCE, person.key());
-                List<EarthThing> hubsList = earthStore.find(EarthKind.HUB_KIND, EarthField.SOURCE, person.key());
-                List<EarthThing> clubsList = earthStore.find(EarthKind.CLUB_KIND, EarthField.SOURCE, person.key());
-
-                updates = new EntityListView(as, updatesList, EarthView.DEEP).asList();
-                offers = new EntityListView(as, offersList, EarthView.SHALLOW).asList();
-                resources = new EntityListView(as, resourcesList, EarthView.SHALLOW).asList();
-                projects = new EntityListView(as, projectsList, EarthView.SHALLOW).asList();
-                hubs = new EntityListView(as, hubsList, EarthView.SHALLOW).asList();
-                clubs = new EntityListView(as, clubsList, EarthView.SHALLOW).asList();
-
                 infoFollowers = earthStore.count(EarthKind.FOLLOWER_KIND, EarthField.TARGET, person.key());
                 infoFollowing = earthStore.count(EarthKind.FOLLOWER_KIND, EarthField.SOURCE, person.key());
                 infoOffers = null;
@@ -111,12 +88,6 @@ public class PersonView extends CommonThingView {
                 break;
             default:
                 socialMode = null;
-                updates = null;
-                offers = null;
-                resources = null;
-                projects = null;
-                hubs = null;
-                clubs = null;
                 infoFollowers = null;
                 infoFollowing = null;
                 createdOn = null;

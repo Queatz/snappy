@@ -101,8 +101,7 @@ public class OfferInterface extends CommonThingInterface {
                 new EarthUpdate(as).send(new NewOfferEvent(offer))
                         .toFollowersOf(as.getUser());
 
-//                return new OfferView(as, offer).setLocalId(localId).toJson();
-                return offer;
+                return offer.setLocalId(localId);
             } else {
                 throw new NothingLogicResponse("offers - error");
             }
@@ -146,8 +145,7 @@ public class OfferInterface extends CommonThingInterface {
                 }
             }
 
-            thing = new OfferEditor(as).edit(thing, details, price, unit);
-//            return new OfferView(as, offer).setLocalId(localId).toJson(); // XXX TODO how to set localId
+            thing = new OfferEditor(as).edit(thing, details, price, unit).setLocalId(localId);
         }
 
         return thing;

@@ -48,7 +48,7 @@ public abstract class CommonThingInterface implements Interfaceable {
      * Paths match: /:id?custom_params
      *
      * @param thing The thing to edit.
-     * @return The edited thing.
+     * @return The edited thing, or null to not write the thing view.
      */
     public abstract EarthThing editThing(EarthAs as, EarthThing thing);
 
@@ -84,6 +84,10 @@ public abstract class CommonThingInterface implements Interfaceable {
         return null;
     }
 
+    public void onGet(EarthAs as, EarthThing person) {
+
+    }
+
     @Override
     public String get(EarthAs as) {
         switch (as.getRoute().size()) {
@@ -91,6 +95,8 @@ public abstract class CommonThingInterface implements Interfaceable {
                 throw new NothingLogicResponse("thing - empty route");
             case 1: {
                 EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
+
+                onGet(as, thing);
 
                 return new EarthViewer(as).getViewForEntityOrThrow(thing).toJson();
             } case 2:
@@ -141,7 +147,9 @@ public abstract class CommonThingInterface implements Interfaceable {
             case 1: {
                 EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
 
-                this.editThing(as, thing);
+                if (this.editThing(as, thing) == null) {
+                    return null;
+                }
 
                 return new EarthViewer(as).getViewForEntityOrThrow(thing).toJson();
             }
@@ -197,7 +205,7 @@ public abstract class CommonThingInterface implements Interfaceable {
         }
     }
 
-    private String extract(String[] param) {
+    protected String extract(String[] param) {
         return param == null || param.length != 1 ? null : param[0];
     }
 }

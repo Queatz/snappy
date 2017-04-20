@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class EarthThing {
     private BaseDocument raw;
+    private String localId;
 
     public EarthThing(BaseDocument thing) {
         raw = thing;
@@ -82,6 +83,15 @@ public class EarthThing {
 
     protected BaseDocument getRaw() {
         return raw;
+    }
+
+    public String getLocalId() {
+        return localId;
+    }
+
+    public EarthThing setLocalId(String localId) {
+        this.localId = localId;
+        return this;
     }
 
     public static class Builder {

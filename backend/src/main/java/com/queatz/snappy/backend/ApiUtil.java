@@ -3,7 +3,6 @@ package com.queatz.snappy.backend;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.shared.Config;
 
-import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
