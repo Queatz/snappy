@@ -1,6 +1,7 @@
 package com.queatz.snappy.logic.interfaces;
 
 import com.google.gson.JsonArray;
+import com.queatz.snappy.backend.ApiUtil;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthGeo;
@@ -11,14 +12,11 @@ import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthView;
-import com.queatz.snappy.logic.EarthViewer;
-import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.LikeEditor;
 import com.queatz.snappy.logic.editors.UpdateEditor;
 import com.queatz.snappy.logic.eventables.LikeEvent;
 import com.queatz.snappy.logic.eventables.NewCommentEvent;
 import com.queatz.snappy.logic.eventables.NewUpdateEvent;
-import com.queatz.snappy.logic.exceptions.LogicException;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.mines.LikeMine;
 import com.queatz.snappy.logic.views.EntityListView;
@@ -34,17 +32,16 @@ import org.apache.commons.fileupload.util.Streams;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.logging.Logger;
 
 /**
  * Created by jacob on 5/9/16.
  */
-public class UpdateInterface implements Interfaceable {
+public class UpdateInterface extends CommonThingInterface {
 
     @Override
-    public String get(EarthAs as) {
+    public String getThing(EarthAs as, EarthThing thing) {
         switch (as.getRoute().size()) {
             case 2:
                 String updateId = as.getRoute().get(0);
@@ -52,41 +49,22 @@ public class UpdateInterface implements Interfaceable {
                 switch (as.getRoute().get(1)) {
                     case Config.PATH_LIKERS:
                         return getLikers(as, updateId);
-                    case Config.PATH_PHOTO:
-                        return getPhoto(as, updateId);
-                    default:
                 }
         }
 
-        throw new NothingLogicResponse("update - bad path");
+        return null;
     }
 
     @Override
-    public String post(EarthAs as) {
+    public String postThing(EarthAs as, EarthThing thing) {
         switch (as.getRoute().size()) {
-            case 0:
-                return postUpdate(as);
-            case 1:
-                String updateId = as.getRoute().get(0);
-
-                String edit = as.getRequest().getParameter(Config.PARAM_EDIT);
-
-                if (Boolean.toString(true).equals(edit)) {
-                    return editUpdate(as, updateId);
-                }
-                break;
             case 2:
                 if (Config.PATH_LIKE.equals(as.getRoute().get(1))) {
                     return likeUpdate(as, as.getRoute().get(0));
                 }
-                else if (Config.PATH_DELETE.equals(as.getRoute().get(1))) {
-                    new EarthStore(as).conclude(as.getRoute().get(0));
-
-                    return new SuccessView(true).toJson();
-                }
         }
 
-        throw new NothingLogicResponse("update - bad path");
+        return null;
     }
 
     private String likeUpdate(EarthAs as, String updateId) {
@@ -116,38 +94,46 @@ public class UpdateInterface implements Interfaceable {
         return new EntityListView(as, likers, EarthView.SHALLOW).toJson();
     }
 
-    private String getPhoto(EarthAs as, String updateId) {
-        int size;
+    @Override
+    public EarthThing editThing(EarthAs as, EarthThing update) {
+        String message = null;
+        boolean photoUploaded = update.getBoolean(EarthField.PHOTO);
 
         try {
-            size = Integer.parseInt(as.getRequest().getParameter(Config.PARAM_SIZE));
-        } catch (NumberFormatException e) {
-            size = 200;
-        }
+            ServletFileUpload upload = new ServletFileUpload();
+            FileItemIterator iterator = upload.getItemIterator(as.getRequest());
+            while (iterator.hasNext()) {
+                FileItemStream item = iterator.next();
+                InputStream stream = item.openStream();
 
-        // XXX TODO Make this use ApiUtil.getPhoto
-        try {
-            String fileName = "earth/thing/photo/" + updateId;
-
-            String servingUrl = as.getApi().snappyImage.getServingUrl(fileName, size);
-
-            if (servingUrl == null) {
-                throw new LogicException("update photo - no redirect");
+                if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
+                    ApiUtil.putPhoto(update.key().name(), as.getApi(),  as.getRequest());
+                    photoUploaded = true;
+                }
+                else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {
+                    message = Streams.asString(stream, "UTF-8");
+                }
             }
-
-            as.getResponse().sendRedirect(servingUrl);
-        } catch (IOException e) {
-            throw new LogicException("update photo - io error");
+        }
+        catch (FileUploadException | IOException e) {
+            Logger.getLogger(Config.NAME).severe(e.toString());
+            throw new NothingLogicResponse("upto photo - couldn't upload because: " + e);
         }
 
-        return null;
+        if (message == null && !photoUploaded) {
+            throw new NothingLogicResponse("post update - nothing to post");
+        }
+
+        update = new UpdateEditor(as).updateWith(update, message, photoUploaded);
+
+        return update;
     }
 
-    private String postUpdate(EarthAs as) {
+    @Override
+    public EarthThing createThing(EarthAs as) {
         as.requireUser();
 
         EarthThing update = new UpdateEditor(as).stageUpdate(as.getUser());
-        String photoName = "earth/thing/photo/" + update.key().name();
 
         String message = null;
         boolean photoUploaded = false;
@@ -160,6 +146,7 @@ public class UpdateInterface implements Interfaceable {
         boolean going = false;
 
         // XXX TODO Make this use ApiUtil.putPhoto (with support for reading other params)
+
         try {
             ServletFileUpload upload = new ServletFileUpload();
             FileItemIterator iterator = upload.getItemIterator(as.getRequest());
@@ -168,17 +155,7 @@ public class UpdateInterface implements Interfaceable {
                 InputStream stream = item.openStream();
 
                 if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
-                    int len;
-                    byte[] buffer = new byte[8192];
-
-                    OutputStream outputChannel = as.getApi().snappyImage.openOutputStream(photoName);
-
-                    while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
-                        outputChannel.write(buffer, 0, len);
-                    }
-
-                    outputChannel.close();
-
+                    ApiUtil.putPhoto(update.key().name(), as.getApi(), item);
                     photoUploaded = true;
                 }
                 else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {
@@ -233,55 +210,6 @@ public class UpdateInterface implements Interfaceable {
             new EarthUpdate(as).send(new NewUpdateEvent(update)).toFollowersOf(thing);
         }
 
-        return new EarthViewer(as).getViewForEntityOrThrow(update).toJson();
-    }
-
-    private String editUpdate(EarthAs as, String updateId) {
-        EarthThing update = new EarthStore(as).get(updateId);
-
-        String photoName = "earth/thing/photo/" + update.key().name();
-
-        String message = null;
-        boolean photoUploaded = update.getBoolean(EarthField.PHOTO);
-
-        // XXX TODO Make this use ApiUtil.putPhoto (with support for reading other params)
-        try {
-            ServletFileUpload upload = new ServletFileUpload();
-            FileItemIterator iterator = upload.getItemIterator(as.getRequest());
-            while (iterator.hasNext()) {
-                FileItemStream item = iterator.next();
-                InputStream stream = item.openStream();
-
-                if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
-                    int len;
-                    byte[] buffer = new byte[8192];
-
-                    OutputStream outputChannel = as.getApi().snappyImage.openOutputStream(photoName);
-
-                    while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
-                        outputChannel.write(buffer, 0, len);
-                    }
-
-                    outputChannel.close();
-
-                    photoUploaded = true;
-                }
-                else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {
-                    message = Streams.asString(stream, "UTF-8");
-                }
-            }
-        }
-        catch (FileUploadException | IOException e) {
-            Logger.getLogger(Config.NAME).severe(e.toString());
-            throw new NothingLogicResponse("upto photo - couldn't upload because: " + e);
-        }
-
-        if (message == null && !photoUploaded) {
-            throw new NothingLogicResponse("post update - nothing to post");
-        }
-
-        update = new UpdateEditor(as).updateWith(update, message, photoUploaded);
-
-        return new EarthViewer(as).getViewForEntityOrThrow(update).toJson();
+        return update;
     }
 }

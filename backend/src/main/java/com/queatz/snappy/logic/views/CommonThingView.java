@@ -17,14 +17,6 @@ import java.util.List;
  */
 public class CommonThingView extends ThingView {
 
-    @Deprecated
-    // Included in members
-    final List<Viewable> contacts;
-
-    @Deprecated
-    // Included in members
-    final List<Viewable> updates;
-
     /**
      * List of members of this thing of all kinds.
      */
@@ -46,23 +38,7 @@ public class CommonThingView extends ThingView {
 
         switch (view) {
             case DEEP:
-                final ContactMine contactMine = use(ContactMine.class);
-                final UpdateMine updateMine = use(UpdateMine.class);
                 final MemberMine memberMine = use(MemberMine.class);
-                final List<EarthThing> contacts = contactMine.getContacts(thing);
-                final List<EarthThing> updates = updateMine.updatesOf(thing);
-
-                if (contacts != null) {
-                    this.contacts = new EntityListView(as, contacts, EarthView.SHALLOW).asList();
-                } else {
-                    this.contacts = null;
-                }
-
-                if (updates != null) {
-                    this.updates = new EntityListView(as, updates, EarthView.SHALLOW).asList();
-                } else {
-                    this.updates = null;
-                }
 
                 final List<EarthThing> pool = memberMine.byThingWithStatus(thing, Config.MEMBER_STATUS_ACTIVE);
 
@@ -73,8 +49,6 @@ public class CommonThingView extends ThingView {
                 }
                 break;
             default:
-                this.contacts = null;
-                this.updates = null;
                 this.members = null;
         }
     }

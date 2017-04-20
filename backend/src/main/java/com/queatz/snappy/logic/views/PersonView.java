@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by jacob on 5/8/16.
  */
-public class PersonView extends ExistenceView {
+public class PersonView extends CommonThingView {
 
     final String firstName;
     final String lastName;

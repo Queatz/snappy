@@ -12,10 +12,10 @@ import java.util.Date;
 /**
  * Created by jacob on 5/8/16.
  */
-public class OfferView extends ThingView {
+public class OfferView extends CommonThingView {
     final Integer price;
     final String unit;
-    final PersonView person;
+    final PersonView source;
     final Date date;
     final int likers;
     final Boolean want;
@@ -31,7 +31,7 @@ public class OfferView extends ThingView {
 
         price = offer.isNull(EarthField.PRICE) ? null : offer.getNumber(EarthField.PRICE).intValue();
         unit = offer.getString(EarthField.UNIT);
-        person = new PersonView(as, earthStore.get(offer.getKey(EarthField.SOURCE)), EarthView.SHALLOW);
+        source = new PersonView(as, earthStore.get(offer.getKey(EarthField.SOURCE)), EarthView.SHALLOW);
         likers = earthStore.count(EarthKind.LIKE_KIND, EarthField.TARGET, offer.key());
         date = offer.getDate(EarthField.CREATED_ON);
 

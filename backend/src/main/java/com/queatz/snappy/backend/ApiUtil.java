@@ -3,6 +3,7 @@ package com.queatz.snappy.backend;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.shared.Config;
 
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
@@ -61,28 +62,14 @@ public class ApiUtil {
      * @throws IOException
      */
     public static boolean putPhoto(String thingId, Api api, HttpServletRequest request) throws IOException {
-        String photoName = "earth/thing/photo/" + thingId;
-
         try {
             ServletFileUpload upload = new ServletFileUpload();
             FileItemIterator iterator = upload.getItemIterator(request);
             while (iterator.hasNext()) {
                 FileItemStream item = iterator.next();
-                InputStream stream = item.openStream();
 
                 if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
-                    int len;
-                    byte[] buffer = new byte[8192];
-
-                    OutputStream outputChannel = api.snappyImage.openOutputStream(photoName);
-
-                    while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
-                        outputChannel.write(buffer, 0, len);
-                    }
-
-                    outputChannel.close();
-
-                    return true;
+                    return putPhoto(thingId, api, item);
                 }
             }
         } catch (FileUploadException e) {
@@ -90,5 +77,27 @@ public class ApiUtil {
         }
 
         return false;
+    }
+
+    public static boolean putPhoto(String thingId, Api api, FileItemStream item) throws IOException {
+        String photoName = "earth/thing/photo/" + thingId;
+
+        int len;
+        byte[] buffer = new byte[8192];
+
+        InputStream stream = item.openStream();
+        OutputStream outputChannel = api.snappyImage.openOutputStream(photoName);
+
+        if (outputChannel == null) {
+            return false;
+        }
+
+        while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
+            outputChannel.write(buffer, 0, len);
+        }
+
+        outputChannel.close();
+
+        return true;
     }
 }

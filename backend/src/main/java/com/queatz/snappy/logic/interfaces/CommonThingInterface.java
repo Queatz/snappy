@@ -45,6 +45,8 @@ public abstract class CommonThingInterface implements Interfaceable {
     /**
      * Implement this method to edit things of this kind.
      *
+     * Paths match: /:id?custom_params
+     *
      * @param thing The thing to edit.
      * @return The edited thing.
      */
@@ -61,22 +63,49 @@ public abstract class CommonThingInterface implements Interfaceable {
         return true;
     }
 
+    /**
+     * Implement this method to add custom getters.
+     *
+     * Paths match: /:id/custom_string
+     *
+     * @return Any string response, or null to relay no action was taken
+     */
+    public String getThing(EarthAs as,  EarthThing thing) {
+        return null;
+    }
+    /**
+     * Implement this method to add custom setters.
+     *
+     * Paths match: /:id/custom_string
+     *
+     * @return Any string response, or null to relay no action was taken
+     */
+    public String postThing(EarthAs as,  EarthThing thing) {
+        return null;
+    }
+
     @Override
     public String get(EarthAs as) {
         switch (as.getRoute().size()) {
             case 0:
                 throw new NothingLogicResponse("thing - empty route");
-            case 1:
+            case 1: {
                 EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
 
                 return new EarthViewer(as).getViewForEntityOrThrow(thing).toJson();
-            case 2:
+            } case 2:
                 switch (as.getRoute().get(1)) {
                     case Config.PATH_PHOTO:
                         getPhoto(as);
                         return null;
                     default:
-                        throw new NothingLogicResponse("thing - bad path");
+                        EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
+
+                        if (getThing(as, thing) == null) {
+                            throw new NothingLogicResponse("thing - bad path");
+                        }
+
+                        break;
                 }
             default:
                 throw new NothingLogicResponse("thing - bad path");
@@ -124,6 +153,12 @@ public abstract class CommonThingInterface implements Interfaceable {
                 } else if (Config.PATH_DELETE.equals(as.getRoute().get(1))) {
                     EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
                     return new SuccessView(deleteThing(as, thing)).toJson();
+                } else {
+                    EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
+                    String string = postThing(as, thing);
+                    if (string != null) {
+                        return string;
+                    }
                 }
 
                 throw new NothingLogicResponse("thing - bad path");

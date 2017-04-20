@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by jacob on 5/8/16.
  */
-public class UpdateView extends ThingView {
+public class UpdateView extends CommonThingView {
 
     final Date date;
     final PersonView person;
