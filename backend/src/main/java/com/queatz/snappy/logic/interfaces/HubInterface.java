@@ -53,8 +53,4 @@ public class HubInterface extends CommonThingInterface {
 
         return new HubEditor(as).edit(hub, extract(name), extract(address), latLng, extract(about));
     }
-
-    private String extract(String[] param) {
-        return param == null || param.length != 1 ? null : param[0];
-    }
 }

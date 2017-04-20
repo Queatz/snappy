@@ -36,8 +36,4 @@ public class ResourceInterface extends CommonThingInterface {
 
         return new ResourceEditor(as).edit(resource, extract(name), extract(about));
     }
-
-    private String extract(String[] param) {
-        return param == null || param.length != 1 ? null : param[0];
-    }
 }

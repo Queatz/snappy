@@ -125,7 +125,10 @@ public abstract class CommonThingInterface implements Interfaceable {
         switch (as.getRoute().size()) {
             case 0: {
                 EarthThing thing = this.createThing(as);
-                new ContactEditor(as).newContact(thing, as.getUser());
+
+                // Add contact
+                EarthThing contact = new ContactEditor(as).newContact(thing, as.getUser());
+                new MemberEditor(as).create(contact, thing, Config.MEMBER_STATUS_ACTIVE);
 
                 new EarthUpdate(as).send(new NewThingEvent(thing)).toFollowersOf(as.getUser());
 

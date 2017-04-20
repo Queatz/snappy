@@ -33,8 +33,4 @@ public class ProjectInterface extends CommonThingInterface {
 
         return new ProjectEditor(as).edit(resource, extract(name), extract(about));
     }
-
-    private String extract(String[] param) {
-        return param == null || param.length != 1 ? null : param[0];
-    }
 }
