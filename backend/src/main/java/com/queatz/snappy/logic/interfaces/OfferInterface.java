@@ -53,7 +53,6 @@ public class OfferInterface extends CommonThingInterface {
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
         String details = as.getRequest().getParameter(Config.PARAM_DETAILS);
         String unit = as.getRequest().getParameter(Config.PARAM_UNIT);
-        String in = as.getRequest().getParameter(Config.PARAM_IN);
         boolean want = Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_WANT));
 
         // @deprecated
@@ -87,17 +86,6 @@ public class OfferInterface extends CommonThingInterface {
             EarthThing offer = new OfferEditor(as).newOffer(as.getUser(), details, want, price, unit);
 
             if (offer != null) {
-                if (!Strings.isNullOrEmpty(in)) {
-                    EarthThing of = new EarthStore(as).get(in);
-
-                    if (of != null) {
-                        // TODO: Make suggestion if not owned by me
-                        new MemberEditor(as).create(offer, of, Config.MEMBER_STATUS_ACTIVE);
-                    } else {
-                        // Silent fail
-                    }
-                }
-
                 new EarthUpdate(as).send(new NewOfferEvent(offer))
                         .toFollowersOf(as.getUser());
 

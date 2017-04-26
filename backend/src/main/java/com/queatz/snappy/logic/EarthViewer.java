@@ -70,6 +70,10 @@ public class EarthViewer extends EarthControl {
     }
 
     public Viewable getViewForEntityOrThrow(EarthThing entity, EarthView view) {
+        if (entity == null) {
+            return null;
+        }
+
         Constructor<? extends Viewable> constructor = mapping.get(entity.getString(EarthField.KIND));
 
         if (constructor == null) {

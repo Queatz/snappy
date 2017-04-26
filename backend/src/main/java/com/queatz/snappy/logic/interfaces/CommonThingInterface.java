@@ -107,11 +107,12 @@ public abstract class CommonThingInterface implements Interfaceable {
                     default:
                         EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
 
-                        if (getThing(as, thing) == null) {
+                        String string = getThing(as, thing);
+                        if (string == null) {
                             throw new NothingLogicResponse("thing - bad path");
                         }
 
-                        break;
+                        return string;
                 }
             default:
                 throw new NothingLogicResponse("thing - bad path");
@@ -150,7 +151,9 @@ public abstract class CommonThingInterface implements Interfaceable {
             case 1: {
                 EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
 
-                if (this.editThing(as, thing) == null) {
+                thing = this.editThing(as, thing);
+
+                if (thing == null) {
                     return null;
                 }
 

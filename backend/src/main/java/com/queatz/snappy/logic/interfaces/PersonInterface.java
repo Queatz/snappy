@@ -49,14 +49,11 @@ public class PersonInterface extends CommonThingInterface {
             case 2:
                 String personId = as.getRoute().get(0);
 
-                boolean followers = false;
-
                 switch (as.getRoute().get(1)) {
                     case Config.PATH_FOLLOWERS:
-                        followers = true;
-                        // Fall-through
+                        return getFollows(as, true, personId);
                     case Config.PATH_FOLLOWING:
-                        return getFollows(as, followers, personId);
+                        return getFollows(as, false, personId);
                     case Config.PATH_PARTIES:
                         return getParties(as, personId);
                     case Config.PATH_MESSAGES:
