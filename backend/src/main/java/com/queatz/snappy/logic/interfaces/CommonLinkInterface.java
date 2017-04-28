@@ -5,6 +5,7 @@ import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
+import com.queatz.snappy.logic.editors.MemberEditor;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.shared.Config;
@@ -25,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public abstract class CommonLinkInterface implements Interfaceable {
 
-    public abstract EarthThing create(EarthAs as, EarthThing source, EarthThing target, String role);
+    public abstract EarthThing create(EarthAs as, EarthThing source, EarthThing target, String status, String role);
     protected abstract EarthThing edit(EarthAs as, EarthThing link, HttpServletRequest request);
 
     @Override
@@ -54,7 +55,8 @@ public abstract class CommonLinkInterface implements Interfaceable {
                 EarthThing target = earthStore.get(as.getParameters().get(Config.PARAM_TARGET)[0]);
                 String role = extract(as.getParameters().get(Config.PARAM_ROLE));
 
-                EarthThing link = create(as, source, target, role);
+                EarthThing link = create(as, source, target, Config.MEMBER_STATUS_ACTIVE, role);
+                new MemberEditor(as).create(link, target, Config.MEMBER_STATUS_ACTIVE);
 
                 return new EarthViewer(as).getViewForEntityOrThrow(link).toJson();
             }
@@ -80,7 +82,7 @@ public abstract class CommonLinkInterface implements Interfaceable {
         return null;
     }
 
-    private String extract(String[] param) {
+    protected String extract(String[] param) {
         return param == null || param.length != 1 ? null : param[0];
     }
 }

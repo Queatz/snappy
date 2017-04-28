@@ -6,7 +6,6 @@ import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
-import com.queatz.snappy.shared.Config;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -19,13 +18,23 @@ public class MemberEditor extends EarthControl {
         super(as);
     }
 
-    public EarthThing create(EarthThing source, EarthThing target, String role) {
+    public EarthThing create(EarthThing source, EarthThing target, String status) {
+        return create(source, target, status, null);
+    }
+    public EarthThing create(EarthThing source, EarthThing target, String status, String role) {
         EarthStore earthStore = use(EarthStore.class);
 
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.MEMBER_KIND))
-                .set(EarthField.STATUS, Config.MEMBER_STATUS_ACTIVE)
+                .set(EarthField.STATUS, status)
                 .set(EarthField.ROLE, role)
                 .set(EarthField.SOURCE, source.key())
                 .set(EarthField.TARGET, target.key()));
+    }
+
+    public EarthThing editRole(EarthThing member, String role) {
+        EarthStore earthStore = use(EarthStore.class);
+
+        return earthStore.save(earthStore.edit(member)
+                .set(EarthField.ROLE, role));
     }
 }

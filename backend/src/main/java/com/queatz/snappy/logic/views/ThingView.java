@@ -57,9 +57,9 @@ public class ThingView extends ExistenceView {
             aspect = null;
         }
 
-        if (thing.has(EarthField.SOURCE) &&
-                as.hasUser() &&
-                thing.getString(EarthField.SOURCE).equals(as.getUser().key().name())) {
+        if (as.hasUser() &&
+                (thing.key().name().equals(as.getUser().key().name()) ||
+                (thing.has(EarthField.SOURCE) && thing.getString(EarthField.SOURCE).equals(as.getUser().key().name())))) {
             owner = true;
         } else {
             owner = false;

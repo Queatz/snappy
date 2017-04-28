@@ -11,6 +11,7 @@ import com.queatz.snappy.logic.EarthView;
 
 public class MemberView extends LinkView {
     final String status;
+    final String role;
 
     public MemberView(EarthAs as, EarthThing member) {
         this(as, member, EarthView.DEEP);
@@ -19,5 +20,11 @@ public class MemberView extends LinkView {
     public MemberView(EarthAs as, EarthThing member, EarthView view) {
         super(as, member, view);
         status = member.getString(EarthField.STATUS);
+
+        if (member.has(EarthField.ROLE)) {
+            role = member.getString(EarthField.ROLE);
+        } else {
+            role = null;
+        }
     }
 }

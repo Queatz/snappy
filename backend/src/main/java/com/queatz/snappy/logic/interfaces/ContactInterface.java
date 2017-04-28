@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 public class ContactInterface extends CommonLinkInterface {
 
     @Override
-    public EarthThing create(EarthAs as, EarthThing source, EarthThing target, String role) {
+    public EarthThing create(EarthAs as, EarthThing source, EarthThing target, String status, String role) {
         as.requireUser();
 
         EarthThing contact;
