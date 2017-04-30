@@ -148,5 +148,18 @@ Edit /etc/apache2/sites-enabled/000-default.conf
     npm i
     sudo npm i -g typescript
     tsc
-    node app.js
+    sudo node app.js
 
+#### Production Bundling
+
+If you want production bundling, do:
+
+    cd Snappy-Web-App/web-app/src/main/webapp
+    ng build -prod -op dist/ --aot
+    
+Zip and upload to your box and do:
+
+    cd dist/
+    sudo npm i --save-dev express
+    cp ../Snappy-Web-App/web-app/src/main/webapp/app.js app.js
+    sudo node app.js
