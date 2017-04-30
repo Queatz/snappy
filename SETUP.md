@@ -57,6 +57,12 @@ Modify /etc/tomcat8/server.xml to include:
     arangosh> require('@arangodb/users').save('snappy', 'snappy')
     arangosh> require('@arangodb/users').grantDatabase('snappy', '_system')
 
+Make data dir:
+
+    mkdir /var/lib/village/
+    chown tomcat8 /var/lib/village/
+    chgrp tomcat8 /var/lib/village/
+
 See more here:
 https://docs.arangodb.com/3.0/Manual/Administration/ManagingUsers.html
 
