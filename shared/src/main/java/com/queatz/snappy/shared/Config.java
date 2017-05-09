@@ -13,8 +13,9 @@ public class Config {
     public static final int WIPE_VERSIONS_BELOW = 44;
 
     // The email emails are sent from
-    public static final String VILLAGE_EMAIL = "Village <my@village.city>";
-    public static final String VILLAGE_WEBSITE = "https://village.city/";
+    public static final String VILLAGE_EMAIL_ADDRESS = "my@village.city";
+    public static final String VILLAGE_EMAIL = "Village <" + VILLAGE_EMAIL_ADDRESS + ">";
+    public static final String VILLAGE_WEBSITE = "https://vlllage.com/";
 
     public static final String LOG_TAG = "SNAPPY_LOG";
     public static final String API_URL = (BETA_VERSION ? "http://192.168.1.105:8080/api/" : "https://vlllage.com/api/");
@@ -294,7 +295,8 @@ public class Config {
     public static final String PATH_LIKE = "like";
     public static final String PATH_REPORT = "report";
     public static final String PATH_INFO = "info";
-    public static final String PATH_RAW = "raw";
+    public static final String PATH_GEO_SUBSCRIBE = "geo-subscribe";
 
+    public static final String PATH_RAW = "raw";
     public static final String JACOB = "1915326";
 }

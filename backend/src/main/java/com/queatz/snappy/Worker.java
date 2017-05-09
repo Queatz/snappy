@@ -169,7 +169,7 @@ public class Worker extends HttpServlet {
         EmailOptions options = new EmailOptions()
                 .setSubject(eventable.makeSubject())
                 .setBody(eventable.makeEmail())
-                .setFooter("<br /><br /><span style=\"color: #757575;\">You're subscribed to " + sendInstance.locality + ".  To unsubscribe, click <a href=\"" + Config.API_URL + "/" + EarthSpecialRoute.GEO_SUBSCRIBE_ROUTE + "?unsubscribe=" + sendInstance.token + "\">here</a>.</span>");
+                .setFooter("<br /><br /><span style=\"color: #757575;\">You're subscribed to " + sendInstance.locality + ".  To unsubscribe, click <a href=\"" + Config.API_URL + Config.PATH_EARTH + "/" + Config.PATH_GEO_SUBSCRIBE + "?unsubscribe=" + sendInstance.token + "\">here</a>.</span>");
         sendToEmail(options, sendInstance.email);
     }
 

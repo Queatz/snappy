@@ -25,7 +25,7 @@ public class GeoSubscribeMine extends EarthControl {
     public EarthThing byToken(String token) {
         List<EarthThing> geoSubscribe = use(EarthStore.class).query(
                 "x." + EarthField.KIND + " == @kind and " +
-                "x." + EarthField.UNSUBSCRIBE_TOKEN + " == @token and ",
+                "x." + EarthField.UNSUBSCRIBE_TOKEN + " == @token",
                 ImmutableMap.<String, Object>of(
                         "kind", EarthKind.GEO_SUBSCRIBE_KIND,
                         "token", token

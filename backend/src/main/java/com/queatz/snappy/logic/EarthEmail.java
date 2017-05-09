@@ -48,7 +48,7 @@ public class EarthEmail {
         Session session = Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(Config.VILLAGE_EMAIL, Gateway.VILLAGE_EMAIL_PASSWORD);
+                return new PasswordAuthentication(Config.VILLAGE_EMAIL_ADDRESS, Gateway.VILLAGE_EMAIL_PASSWORD);
             }
         });
 

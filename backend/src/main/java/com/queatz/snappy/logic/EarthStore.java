@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -91,7 +91,10 @@ public class EarthStore extends EarthControl {
     private static final String DEFAULT_FIELD_CONCLUDED = "concluded_on";
     private static final String DEFAULT_FIELD_FROM = "_from";
     private static final String DEFAULT_FIELD_TO = "_to";
-    private static final String DEFAULT_AUTH_KIND = EarthKind.PERSON_KIND;
+    private static final Set<String> DEFAULT_AUTH_KINDS = ImmutableSet.of(
+            EarthKind.PERSON_KIND, // Because people need to be created before logging in
+            EarthKind.GEO_SUBSCRIBE_KIND
+    );
 
     private final ArangoDatabase db;
     private final ArangoCollection collection;
@@ -200,7 +203,7 @@ public class EarthStore extends EarthControl {
      * @return The new thing
      */
     public EarthThing create(@NotNull String kind) {
-        if (!DEFAULT_AUTH_KIND.equals(kind)) {
+        if (!DEFAULT_AUTH_KINDS.contains(kind)) {
             as.requireUser();
         }
 

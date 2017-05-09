@@ -19,11 +19,7 @@ public class GeoSubscribeInterface implements Interfaceable {
 
     @Override
     public String get(EarthAs as) {
-        throw new NothingLogicResponse("geo-subscribe - bad path");
-    }
 
-    @Override
-    public String post(EarthAs as) {
         switch (as.getRoute().size()) {
             case 1:
                 String unsubscribe = as.getRequest().getParameter(Config.PARAM_UNSUBSCRIBE);
@@ -31,7 +27,15 @@ public class GeoSubscribeInterface implements Interfaceable {
                 if (!Strings.isNullOrEmpty(unsubscribe)) {
                     return this.unsubscribe(as, unsubscribe);
                 }
+        }
 
+        throw new NothingLogicResponse("geo-subscribe - bad path");
+    }
+
+    @Override
+    public String post(EarthAs as) {
+        switch (as.getRoute().size()) {
+            case 1:
                 double latitude = Double.parseDouble(as.getRequest().getParameter(Config.PARAM_LATITUDE));
                 double longitude = Double.parseDouble(as.getRequest().getParameter(Config.PARAM_LATITUDE));
                 String email = as.getRequest().getParameter(Config.PARAM_EMAIL);
