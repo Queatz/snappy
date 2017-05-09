@@ -48,7 +48,7 @@ Modify /etc/tomcat8/server.xml to include:
                maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
                SSLCertificateFile="/etc/letsencrypt/live/vlllage.com/fullchain.pem"
                SSLCertificateKeyFile="/etc/letsencrypt/live/vlllage.com/privkey.pem"
-               SSLVerifyClient="optional" SSLProtocol="TLSv1+TLSv1.1+TLSv1.2" />
+               SSLVerifyClient="none" SSLProtocol="TLSv1+TLSv1.1+TLSv1.2" />
                
 #### 2) Setup Database
 
@@ -162,4 +162,4 @@ Zip and upload to your box and do:
     cd dist/
     sudo npm i --save-dev express
     cp ../Snappy-Web-App/web-app/src/main/webapp/app.js app.js
-    sudo node app.js
+    sudo node app.js &

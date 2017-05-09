@@ -17,7 +17,7 @@ public class Config {
     public static final String VILLAGE_WEBSITE = "https://village.city/";
 
     public static final String LOG_TAG = "SNAPPY_LOG";
-    public static final String API_URL = (BETA_VERSION ? "http://192.168.1.105:8080/api/" : "https://queatz-snappy.appspot.com/api/");
+    public static final String API_URL = (BETA_VERSION ? "http://192.168.1.105:8080/api/" : "https://vlllage.com/api/");
     public static final String QUEUE_URL = "http://127.0.0.1:8080/";
     public static final String GOOGLE_PLACES_AUTOCOMPLETE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?location=%f,%f&radius=1609&input=%s&key=%s";
     public static final String GOOGLE_PLACES_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?placeid=%s&key=%s";
@@ -246,6 +246,10 @@ public class Config {
     public static final String PARAM_SOURCE = "source";
     public static final String PARAM_TARGET = "target";
     public static final String PARAM_IN = "in";
+    public static final String PARAM_UNSUBSCRIBE = "unsubscribe";
+    public static final String PARAM_WITH = "with";
+    public static final String PARAM_GOING = "going";
+    public static final String PARAM_WANT = "want";
 
     public static final String GOOGLE_PLUS_PROFILE_URL = "https://www.googleapis.com/plus/v1/people/me";
     public static final String GOOGLE_PLUS_TOKENINFO_URL = "https://www.googleapis.com/oauth2/v1/tokeninfo";
@@ -289,9 +293,6 @@ public class Config {
     public static final String PATH_EDIT = "edit";
     public static final String PATH_LIKE = "like";
     public static final String PATH_REPORT = "report";
-    public static final String PARAM_WITH = "with";
-    public static final String PARAM_GOING = "going";
-    public static final String PARAM_WANT = "want";
     public static final String PATH_INFO = "info";
     public static final String PATH_RAW = "raw";
 

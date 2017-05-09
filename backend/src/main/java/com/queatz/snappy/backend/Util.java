@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.UUID;
 
 import static java.lang.Math.atan2;
@@ -118,5 +119,12 @@ public class Util {
         }
 
         return socialMode;
+    }
+
+    public static String randomToken() {
+        Random random = new Random();
+        return Long.toString(random.nextLong()) +
+                Long.toString(random.nextLong()) +
+                Long.toString(random.nextLong());
     }
 }

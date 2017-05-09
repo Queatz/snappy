@@ -324,10 +324,6 @@ public class EarthStore extends EarthControl {
         return thing;
     }
 
-    public final String newRandomId() {
-        return Long.toString(new Random().nextLong());
-    }
-
     /**
      * Find relationships.//
      */

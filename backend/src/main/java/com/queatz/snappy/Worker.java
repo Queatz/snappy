@@ -3,6 +3,8 @@ package com.queatz.snappy;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.queatz.snappy.backend.EmailOptions;
+import com.queatz.snappy.logic.EarthSpecialRoute;
 import com.queatz.snappy.util.HttpUtil;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.editors.DeviceEditor;
@@ -55,6 +57,28 @@ public class Worker extends HttpServlet {
         }
     }
 
+    private static class GeoSubscribeInstance {
+        protected String email;
+        protected String locality;
+        protected String token;
+
+        protected GeoSubscribeInstance(String email, String locality, String token) {
+            this.email = email;
+            this.locality = locality;
+            this.token = token;
+        }
+
+        @Override
+        public int hashCode() {
+            return this.token.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            return other instanceof GeoSubscribeInstance && ((GeoSubscribeInstance) other).token.equals(this.token);
+        }
+    }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         String action = req.getParameter("action");
@@ -67,7 +91,7 @@ public class Worker extends HttpServlet {
 
         Eventable eventable = new EarthUpdate(as).from(action, data);
 
-        HashSet<SendInstance> toUsers = new HashSet<>();
+        HashSet<Object> toUsers = new HashSet<>();
 
         // Specific
 
@@ -91,18 +115,27 @@ public class Worker extends HttpServlet {
 
             EarthGeo latLng;
 
+            // Use own geo, or source geo
             if (source.has(EarthField.GEO)) {
                 latLng = source.getGeo(EarthField.GEO);
             } else {
                 latLng = earthStore.get(source.getKey(EarthField.SOURCE)).getGeo(EarthField.GEO);
             }
 
-            for (EarthThing person : new EarthStore(as).getNearby(latLng, EarthKind.PERSON_KIND, null)) {
-                if(fromUser.equals(person.key().name())) {
+            for (EarthThing thing : new EarthStore(as).getNearby(latLng, EarthKind.PERSON_KIND + "|" + EarthKind.GEO_SUBSCRIBE_KIND, null)) {
+                if(fromUser.equals(thing.key().name())) {
                     continue;
                 }
 
-                toUsers.add(new SendInstance(person.key().name(), Config.SOCIAL_MODE_ON));
+                if (EarthKind.PERSON_KIND.equals(thing.getString(EarthField.KIND))) {
+                    toUsers.add(new SendInstance(thing.key().name(), Config.SOCIAL_MODE_ON));
+                } else if (EarthKind.GEO_SUBSCRIBE_KIND.equals(thing.getString(EarthField.KIND))) {
+                    toUsers.add(new GeoSubscribeInstance(
+                            thing.getString(EarthField.EMAIL),
+                            thing.getString(EarthField.NAME),
+                            thing.getString(EarthField.UNSUBSCRIBE_TOKEN)
+                    ));
+                }
             }
         }
 
@@ -123,51 +156,67 @@ public class Worker extends HttpServlet {
             push = null;
         }
 
-        for(SendInstance sendInstance : toUsers) {
-            List<EarthThing> devices = new DeviceMine(as).forUser(sendInstance.userId);
+        for(Object sendInstance : toUsers) {
+            if (sendInstance instanceof SendInstance) {
+                handlePersonSendInstance((SendInstance) sendInstance, push, as, eventable);
+            } else if (sendInstance instanceof GeoSubscribeInstance) {
+                handleGeoSubscribeInstance((GeoSubscribeInstance) sendInstance, eventable);
+            }
+        }
+    }
 
-            if (push == null || devices.isEmpty()) {
-                if (!passesSocialMode(sendInstance, devices.isEmpty() ? Config.SOCIAL_MODE_FRIENDS : pickHighestSocialMode(devices))) {
-                    continue;
-                }
+    private void handleGeoSubscribeInstance(GeoSubscribeInstance sendInstance, Eventable eventable) {
+        EmailOptions options = new EmailOptions()
+                .setSubject(eventable.makeSubject())
+                .setBody(eventable.makeEmail())
+                .setFooter("<br /><br /><span style=\"color: #757575;\">You're subscribed to " + sendInstance.locality + ".  To unsubscribe, click <a href=\"" + Config.API_URL + "/" + EarthSpecialRoute.GEO_SUBSCRIBE_ROUTE + "?unsubscribe=" + sendInstance.token + "\">here</a>.</span>");
+        sendToEmail(options, sendInstance.email);
+    }
 
-                sendEmail(as, eventable, sendInstance.userId);
+    private void handlePersonSendInstance(SendInstance sendInstance, JsonObject push, EarthAs as, Eventable eventable) {
+        List<EarthThing> devices = new DeviceMine(as).forUser(sendInstance.userId);
+
+        if (push == null || devices.isEmpty()) {
+            if (!passesSocialMode(sendInstance, devices.isEmpty() ? Config.SOCIAL_MODE_FRIENDS : pickHighestSocialMode(devices))) {
+                return;
+            }
+
+            sendEmailToPerson(as, eventable, sendInstance.userId);
+            return;
+        }
+
+        boolean didSendPush = false;
+
+        // Send to devices
+        for (EarthThing device : devices) {
+            if (!passesSocialMode(sendInstance, device.getString("socialMode"))) {
                 continue;
             }
 
-            boolean didSendPush = false;
+            // XXX TODO RETRIES
+            JsonObject results = send(push, device.getString("regId"));
 
-            // Send to devices
-            for (EarthThing device : devices) {
-                if (!passesSocialMode(sendInstance, device.getString("socialMode"))) {
-                    continue;
+            if (results.has("results") && results.getAsJsonArray("results").size() > 0) {
+                JsonObject result = results.getAsJsonArray("results").get(0).getAsJsonObject();
+
+                if (result.has("registration_id")) {
+                    String canonicalRegId = result.get("registration_id").getAsString();
+                    new DeviceEditor(as).setRegId(device, canonicalRegId);
                 }
 
-                // XXX TODO RETRIES
-                JsonObject results = send(push, device.getString("regId"));
-
-                if (results.has("results") && results.getAsJsonArray("results").size() > 0) {
-                    JsonObject result = results.getAsJsonArray("results").get(0).getAsJsonObject();
-
-                    if (result.has("registration_id")) {
-                        String canonicalRegId = result.get("registration_id").getAsString();
-                        new DeviceEditor(as).setRegId(device, canonicalRegId);
+                if (result.has("error")) {
+                    if ("MismatchSenderId".equals(result.get("error").getAsString()) ||
+                            "NotRegistered".equals(result.get("error").getAsString())) {
+                        new DeviceEditor(as).remove(device);
                     }
-
-                    if (result.has("error")) {
-                        if ("MismatchSenderId".equals(result.get("error").getAsString()) ||
-                                "NotRegistered".equals(result.get("error").getAsString())) {
-                            new DeviceEditor(as).remove(device);
-                        }
-                    } else {
-                        didSendPush = true;
-                    }
+                } else {
+                    didSendPush = true;
                 }
             }
+        }
 
-            if (!didSendPush) {
-                sendEmail(as, eventable, sendInstance.userId);
-            }
+        if (!didSendPush) {
+            sendEmailToPerson(as, eventable, sendInstance.userId);
         }
     }
 
@@ -229,7 +278,7 @@ public class Worker extends HttpServlet {
         return true;
     }
 
-    private void sendEmail(EarthAs as, Eventable eventable, String toUser) {
+    private void sendEmailToPerson(EarthAs as, Eventable eventable, String toUser) {
         final String subject = eventable.makeSubject();
 
         // Not an email-able notification
@@ -241,5 +290,17 @@ public class Worker extends HttpServlet {
                 new EarthStore(as).get(toUser).getString(EarthField.EMAIL),
                 subject,
                 eventable.makeEmail());
+    }
+
+    private void sendToEmail(EmailOptions options, String email) {
+        // Not an email-able notification
+        if (options.getSubject() == null) {
+            return;
+        }
+
+        new EarthEmail().sendRawEmail(
+                email,
+                options.getSubject(),
+                options.getCompleteEmail());
     }
 }

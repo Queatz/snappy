@@ -6,6 +6,7 @@ import com.queatz.snappy.logic.interfaces.ByNameInterface;
 import com.queatz.snappy.logic.interfaces.ContactInterface;
 import com.queatz.snappy.logic.interfaces.FeedbackInterface;
 import com.queatz.snappy.logic.interfaces.FollowerInterface;
+import com.queatz.snappy.logic.interfaces.GeoSubscribeInterface;
 import com.queatz.snappy.logic.interfaces.HereInterface;
 import com.queatz.snappy.logic.interfaces.HubInterface;
 import com.queatz.snappy.logic.interfaces.JoinInterface;
@@ -67,6 +68,7 @@ public class EarthRouter extends EarthControl {
         specialMapping.put(EarthSpecialRoute.BY_NAME_ROUTE, new ByNameInterface());
         specialMapping.put(EarthSpecialRoute.FEEDBACK_ROUTE, new FeedbackInterface());
         specialMapping.put(EarthSpecialRoute.SEARCH_ROUTE, new SearchInterface());
+        specialMapping.put(EarthSpecialRoute.GEO_SUBSCRIBE_ROUTE, new GeoSubscribeInterface());
     }
 
     public Interfaceable interfaceFromKindOrThrowNothingResponse(String kind) {

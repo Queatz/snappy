@@ -164,4 +164,5 @@ public class EarthField {
     public static final String PLACEHOLDER = "placeholder";
     public static final String ASPECT_RATIO = "aspect_ratio";
     public static final String GOING = "going";
+    public static final String UNSUBSCRIBE_TOKEN = "unsubscribe_token";
 }

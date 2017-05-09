@@ -21,4 +21,5 @@ public class EarthKind {
     public static final String CLUB_KIND = "club";
     public static final String DEVICE_KIND = "device";
     public static final String MEMBER_KIND = "member";
+    public static final String GEO_SUBSCRIBE_KIND = "geosubscribe";
 }
