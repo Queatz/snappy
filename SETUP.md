@@ -72,6 +72,10 @@ Compile the backend in `snappy` with `./gradlew :backend:war`
 
 Upload `backend/build/libs/backend.war` to your server
 
+(Optional: If you already have the backend deployed, you may need to undeploy it)
+
+    curl -u tomcat:tomcat http://tomcat:tomcat@127.0.0.1:8080/manager/text/undeploy?path=/backend
+
 Install the backend in Tomcat8
 
     curl --upload-file backend.war -u tomcat:tomcat http://tomcat:tomcat@127.0.0.1:8080/manager/text/deploy?path=/backend&update=true

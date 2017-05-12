@@ -9,7 +9,7 @@ public class Config {
 
     // Android
 
-    public static final boolean BETA_VERSION = true;
+    public static final boolean BETA_VERSION = false;
     public static final int WIPE_VERSIONS_BELOW = 44;
 
     // The email emails are sent from
@@ -18,7 +18,7 @@ public class Config {
     public static final String VILLAGE_WEBSITE = "https://vlllage.com/";
 
     public static final String LOG_TAG = "SNAPPY_LOG";
-    public static final String API_URL = (BETA_VERSION ? "http://192.168.1.105:8080/api/" : "https://vlllage.com/api/");
+    public static final String API_URL = (BETA_VERSION ? "http://192.168.1.105:8080/api/" : "https://vlllage.com:8443/api/");
     public static final String QUEUE_URL = "http://127.0.0.1:8080/";
     public static final String GOOGLE_PLACES_AUTOCOMPLETE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?location=%f,%f&radius=1609&input=%s&key=%s";
     public static final String GOOGLE_PLACES_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?placeid=%s&key=%s";
