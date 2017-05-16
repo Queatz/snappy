@@ -37,8 +37,11 @@ import io.realm.RealmResults;
  * Created by jacob on 2/8/15.
  */
 public class PartyAdapter extends RealmBaseAdapter<DynamicRealmObject> implements Branchable<ActivityContext> {
+    private final Context context;
+
     public PartyAdapter(Context context, RealmResults<DynamicRealmObject> realmResults) {
-        super(context, realmResults);
+        super(realmResults);
+        this.context = context;
     }
 
     @Override
@@ -169,7 +172,7 @@ public class PartyAdapter extends RealmBaseAdapter<DynamicRealmObject> implement
             }
             else {
                 action.setVisibility(View.VISIBLE);
-                action.setText(context.getText(party.getList(Thing.JOINS).size() > 0 ? R.string.mark_party_full : R.string.close_party));
+                action.setText(context.getText(party.getList(Thing.MEMBERS).size() > 0 ? R.string.mark_party_full : R.string.close_party));
                 action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

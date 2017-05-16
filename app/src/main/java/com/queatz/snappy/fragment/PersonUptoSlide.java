@@ -209,7 +209,7 @@ public class PersonUptoSlide extends Fragment implements Branchable<ActivityCont
                         .equalTo("source.id", mPerson.getString(Thing.ID))
                         .findAll();
                 DynamicRealmObject add = team.things.put(response);
-                team.things.diff(previousOffers, add.getList(Thing.OFFERS));
+                team.things.diff(previousOffers, add.getList(Thing.MEMBERS));
 
                 update(getView());
             }

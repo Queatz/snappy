@@ -26,11 +26,15 @@ import io.realm.DynamicRealmObject;
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmBaseAdapter;
 
+import static com.queatz.snappy.Util.context;
+
 /**
  * Created by jacob on 10/15/16.
  */
 
 public class CommentAdapter extends RealmBaseAdapter<DynamicRealmObject> implements Branchable<ActivityContext> {
+
+    private final Context context;
 
     @Override
     public void to(Branch<ActivityContext> branch) {
@@ -38,7 +42,8 @@ public class CommentAdapter extends RealmBaseAdapter<DynamicRealmObject> impleme
     }
 
     public CommentAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<DynamicRealmObject> data) {
-        super(context, data);
+        super(data);
+        this.context = context;
     }
 
     @Override

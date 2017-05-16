@@ -23,10 +23,12 @@ import io.realm.RealmResults;
  * Created by jacob on 2/19/15.
  */
 public class PersonListAdapter extends RealmBaseAdapter<DynamicRealmObject> {
+    private final Context context;
     boolean showFollowing;
 
     public PersonListAdapter(Context context, RealmResults<DynamicRealmObject> realmResults, boolean showFollowing) {
-        super(context, realmResults);
+        super(realmResults);
+        this.context = context;
         this.showFollowing = showFollowing;
     }
 

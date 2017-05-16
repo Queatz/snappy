@@ -29,8 +29,11 @@ import io.realm.RealmResults;
  * Created by jacob on 2/21/15.
  */
 public class RecentAdapter extends RealmBaseAdapter<DynamicRealmObject> implements Branchable<ActivityContext> {
+    private final Activity context;
+
     public RecentAdapter(Activity context, RealmResults<DynamicRealmObject> realmResults) {
-        super(context, realmResults);
+        super(realmResults);
+        this.context = context;
     }
 
     @Override

@@ -23,10 +23,12 @@ import io.realm.RealmResults;
  * Created by jacob on 2/25/15.
  */
 public class LocationAdapter extends RealmBaseAdapter<DynamicRealmObject> {
+    private final Context context;
     private int mLimit = -1;
 
     public LocationAdapter(Context context, RealmResults<DynamicRealmObject> realmResults, int limit) {
-        super(context, realmResults);
+        super(realmResults);
+        this.context = context;
         mLimit = limit;
     }
 

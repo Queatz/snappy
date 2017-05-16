@@ -21,9 +21,12 @@ import io.realm.RealmResults;
  * Created by jacob on 12/6/15.
  */
 public class LikerAdapter extends RealmBaseAdapter<DynamicRealmObject> {
-        public LikerAdapter(Context context, RealmResults<DynamicRealmObject> realmResults) {
-            super(context, realmResults);
-        }
+    private final Context context;
+
+    public LikerAdapter(Context context, RealmResults<DynamicRealmObject> realmResults) {
+            super(realmResults);
+        this.context = context;
+    }
 
         public DynamicRealmObject getPerson(int position) {
             DynamicRealmObject like = getItem(position);

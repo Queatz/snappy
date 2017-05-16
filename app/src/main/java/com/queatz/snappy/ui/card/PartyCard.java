@@ -159,7 +159,7 @@ public class PartyCard implements Card<DynamicRealmObject> {
             }
             else {
                 action.setVisibility(View.VISIBLE);
-                action.setText(context.getText(party.getList(Thing.JOINS).size() > 0 ? R.string.mark_party_full : R.string.close_party));
+                action.setText(context.getText(party.getList(Thing.MEMBERS).size() > 0 ? R.string.mark_party_full : R.string.close_party));
                 action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

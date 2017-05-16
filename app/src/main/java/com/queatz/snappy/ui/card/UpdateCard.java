@@ -153,8 +153,8 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             photo.setVisibility(View.GONE);
         }
 
-        if (!update.isNull(Thing.WITH)) {
-            RealmList<DynamicRealmObject> withThings = update.getList(Thing.WITH);
+        if (!update.isNull(Thing.MEMBERS)) {
+            RealmList<DynamicRealmObject> withThings = update.getList(Thing.MEMBERS);
 
             RealmList<DynamicRealmObject> people = new RealmList<>();
             RealmList<DynamicRealmObject> hubs = new RealmList<>();
@@ -263,7 +263,7 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             }
         });
 
-        CommentAdapter commentsAdapter = new CommentAdapter(context, update.getList(Thing.UPDATES).sort(Thing.DATE, Sort.ASCENDING));
+        CommentAdapter commentsAdapter = new CommentAdapter(context, update.getList(Thing.MEMBERS).sort(Thing.DATE, Sort.ASCENDING));
 
         ((ListView) view.findViewById(R.id.commentsList)).setAdapter(commentsAdapter);
 

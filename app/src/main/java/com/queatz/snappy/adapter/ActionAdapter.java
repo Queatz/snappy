@@ -31,8 +31,11 @@ import io.realm.RealmResults;
  * Created by jacob on 2/18/15.
  */
 public class ActionAdapter extends RealmBaseAdapter<DynamicRealmObject> implements Branchable<ActivityContext> {
+    private final Context context;
+
     public ActionAdapter(Context context, RealmResults<DynamicRealmObject> realmResults) {
-        super(context, realmResults);
+        super(realmResults);
+        this.context = context;
     }
 
     @Override

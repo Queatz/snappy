@@ -22,8 +22,11 @@ import io.realm.RealmResults;
  */
 
 public class SuggestionAdapter extends RealmBaseAdapter<DynamicRealmObject> {
+    private final Context context;
+
     public SuggestionAdapter(Context context, RealmResults<DynamicRealmObject> realmResults) {
-        super(context, realmResults);
+        super(realmResults);
+        this.context = context;
     }
 
     @Override

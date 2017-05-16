@@ -23,8 +23,11 @@ import io.realm.RealmResults;
  * Created by jacob on 2/16/15.
  */
 public class HostPartyAdapter extends RealmBaseAdapter<DynamicRealmObject> {
+    private final Context context;
+
     public HostPartyAdapter(Context context, RealmResults<DynamicRealmObject> realmResults) {
-        super(context, realmResults);
+        super(realmResults);
+        this.context = context;
     }
 
     @Override
