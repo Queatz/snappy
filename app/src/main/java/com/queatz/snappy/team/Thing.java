@@ -153,6 +153,16 @@ public class Thing {
     public static final String ROLE = "role";
 
     /**
+     * A list of members of a thing.
+     */
+    public static final String MEMBERS = "members";
+
+    /**
+     * If the active user owns this thing.
+     */
+    public static final String OWNER = "owner";
+
+    /**
      * Other, less generic fields.
      */
     public static final String FIRST_NAME = "firstName";
@@ -168,23 +178,17 @@ public class Thing {
 
     // From views
     public static final String LIKERS = "likers";
-    public static final String JOINS = "joins";
-    public static final String OFFERS = "offers";
-    public static final String UPDATES = "updates";
     public static final String INFO_FOLLOWERS = "infoFollowers";
     public static final String INFO_FOLLOWING = "infoFollowing";
     public static final String INFO_DISTANCE = "infoDistance";
     public static final String INFO_UPDATED = "infoUpdated";
     public static final String SOCIAL_MODE = "socialMode";
-    public static final String PERSON = "person";
     public static final String TO = "to";
     public static final String FROM = "from";
-    public static final String CONTACTS = "contacts";
 
     public static final String AUTH = "auth";
     public static final String PLACEHOLDER = "placeholder";
     public static final String ASPECT = "aspect";
-    public static final String WITH = "with";
 
     // Local only
     public static final String LOCAL_STATE = "localState";

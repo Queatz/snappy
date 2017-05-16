@@ -569,7 +569,7 @@ public class Action {
         DynamicRealmObject o = team.realm.createObject("Thing");
         o.setString(Thing.KIND, "update");
         o.setString(Thing.ID, localId);
-        o.setObject(Thing.PERSON, team.auth.me());
+        o.setObject(Thing.SOURCE, team.auth.me());
         o.setObject(Thing.TARGET, update);
         o.setString(Thing.ABOUT, message);
         o.setString(Thing.ACTION, Config.UPDATE_ACTION_UPTO);
@@ -1055,23 +1055,23 @@ public class Action {
 
         switch (thing.getString(Thing.KIND)) {
             case "offer":
-                name = thing.getObject(Thing.PERSON).getString(Thing.FIRST_NAME) + " " +
-                        thing.getObject(Thing.PERSON).getString(Thing.LAST_NAME);
+                name = thing.getObject(Thing.SOURCE).getString(Thing.FIRST_NAME) + " " +
+                        thing.getObject(Thing.SOURCE).getString(Thing.LAST_NAME);
 
                 subject = "Offers by " + name;
 
                 String offerOrRequest = Util.offerIsRequest(thing) ? "wanted" : "offered";
 
                 text = "Check out " + thing.getString(Thing.ABOUT) + " " + offerOrRequest + " by " + name + "\n\n" +
-                    Config.VILLAGE_WEBSITE + thing.getObject(Thing.PERSON).getString(Thing.GOOGLE_URL);
+                    Config.VILLAGE_WEBSITE + thing.getObject(Thing.SOURCE).getString(Thing.GOOGLE_URL);
                 break;
             case "update":
-                name = thing.getObject(Thing.PERSON).getString(Thing.FIRST_NAME) + " " +
-                        thing.getObject(Thing.PERSON).getString(Thing.LAST_NAME);
+                name = thing.getObject(Thing.SOURCE).getString(Thing.FIRST_NAME) + " " +
+                        thing.getObject(Thing.SOURCE).getString(Thing.LAST_NAME);
 
                 subject = "Updates from " + name;
                 text = thing.getString(Thing.ABOUT) + " — " + name + "\n\n" +
-                        Config.VILLAGE_WEBSITE + thing.getObject(Thing.PERSON).getString(Thing.GOOGLE_URL);
+                        Config.VILLAGE_WEBSITE + thing.getObject(Thing.SOURCE).getString(Thing.GOOGLE_URL);
                 break;
             default:
                 return;

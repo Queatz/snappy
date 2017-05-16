@@ -56,7 +56,6 @@ public class Things {
                 case Thing.LOCATION:
                 case Thing.SOURCE:
                 case Thing.TARGET:
-                case Thing.PERSON:
                 case Thing.LATEST:
                 case Thing.HOST:
                 case Thing.FROM:
@@ -106,11 +105,7 @@ public class Things {
                     break;
 
                 // List
-                case Thing.JOINS:
-                case Thing.OFFERS:
-                case Thing.UPDATES:
-                case Thing.CONTACTS:
-                case Thing.WITH:
+                case Thing.MEMBERS:
                     thing.setList(entry.getKey(), putAll(realm, entry.getValue().getAsJsonArray()));
                     break;
 

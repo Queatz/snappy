@@ -536,7 +536,7 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
             RealmChangeListener<DynamicRealmObject> changeListener = new RealmChangeListener<DynamicRealmObject>() {
                 @Override
                 public void onChange(DynamicRealmObject element) {
-                    List<DynamicRealmObject> contacts = thing.getList(Thing.CONTACTS);
+                    List<DynamicRealmObject> contacts = thing.getList(Thing.MEMBERS);
 
                     LinearLayout contactsLayout = ((LinearLayout) view.findViewById(R.id.contacts));
                     View contactsHeader = view.findViewById(R.id.contactsHeader);

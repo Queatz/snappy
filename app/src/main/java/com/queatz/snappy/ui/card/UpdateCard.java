@@ -36,7 +36,6 @@ import com.queatz.snappy.team.actions.LikeUpdateAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.team.observers.AuthenticatedEnvironment;
-import com.queatz.snappy.team.observers.EnvironmentObserver;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
@@ -78,7 +77,7 @@ public class UpdateCard implements Card<DynamicRealmObject> {
 
         final Team team = ((MainApplication) context.getApplicationContext()).team;
 
-        final DynamicRealmObject person = update.getObject(Thing.PERSON);
+        final DynamicRealmObject person = update.getObject(Thing.SOURCE);
         final DynamicRealmObject location = !update.isNull(Thing.TARGET) && !update.getObject(Thing.TARGET).isNull(Thing.LOCATION) ?
                 update.getObject(Thing.TARGET).getObject(Thing.LOCATION) : null;
 

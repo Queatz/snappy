@@ -1,6 +1,5 @@
 package com.queatz.snappy.fragment;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -8,7 +7,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -333,7 +331,7 @@ public abstract class MapSlide extends Fragment implements OnMapReadyCallback, O
                 if (thing.getBoolean(Thing.PHOTO)) {
                     photo = Util.photoUrl(String.format(Config.PATH_EARTH_PHOTO, thing.getString(Thing.ID)), (int) Util.px(32));
                 } else {
-                    photo = Functions.getImageUrlForSize(thing.getObject(Thing.PERSON), (int) Util.px(32));
+                    photo = Functions.getImageUrlForSize(thing.getObject(Thing.SOURCE), (int) Util.px(32));
                 }
 
                 Picasso.with(getActivity()).load(photo)

@@ -160,7 +160,7 @@ public class Util {
 
         switch (action) {
             case Config.UPDATE_ACTION_HOST_PARTY:
-                if(update.getObject(Thing.TARGET) == null || update.getObject(Thing.PERSON) == null)
+                if(update.getObject(Thing.TARGET) == null || update.getObject(Thing.SOURCE) == null)
                     return null;
 
                 past = TimeUtil.isPartyPast(update.getObject(Thing.TARGET));

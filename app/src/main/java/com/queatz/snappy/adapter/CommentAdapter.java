@@ -1,6 +1,5 @@
 package com.queatz.snappy.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -58,7 +57,7 @@ public class CommentAdapter extends RealmBaseAdapter<DynamicRealmObject> impleme
 
         DynamicRealmObject comment = getItem(position);
 
-        final DynamicRealmObject person = comment.getObject(Thing.PERSON);
+        final DynamicRealmObject person = comment.getObject(Thing.SOURCE);
 
         if(person != null) {
             int s = (int) Util.px(32);

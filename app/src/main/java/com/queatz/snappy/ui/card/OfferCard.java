@@ -55,22 +55,22 @@ public class OfferCard implements Card<DynamicRealmObject> {
 
         final Team team = ((MainApplication) context.getApplicationContext()).team;
 
-        if (offer.getObject(Thing.PERSON) != null) {
+        if (offer.getObject(Thing.SOURCE) != null) {
 
-            if (team.auth.getUser() != null && team.auth.getUser().equals(offer.getObject(Thing.PERSON).getString(Thing.ID))) {
+            if (team.auth.getUser() != null && team.auth.getUser().equals(offer.getObject(Thing.SOURCE).getString(Thing.ID))) {
                 view.setTag(offer);
                 ((Activity) context).registerForContextMenu(view);
             }
 
             ImageView profile = (ImageView) view.findViewById(R.id.profile);
             Picasso.with(context)
-                    .load(Functions.getImageUrlForSize(offer.getObject(Thing.PERSON), (int) Util.px(64)))
+                    .load(Functions.getImageUrlForSize(offer.getObject(Thing.SOURCE), (int) Util.px(64)))
                     .placeholder(R.color.spacer)
                     .into(profile);
             profile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    branch.to(new OpenProfileAction(offer.getObject(Thing.PERSON)));
+                    branch.to(new OpenProfileAction(offer.getObject(Thing.SOURCE)));
                 }
             });
 
@@ -78,12 +78,12 @@ public class OfferCard implements Card<DynamicRealmObject> {
                 @Override
                 public void onClick(View v) {
                     // Messages are settings for the active person, so skip
-                    if (offer.getObject(Thing.PERSON).equals(team.auth.me())) {
+                    if (offer.getObject(Thing.SOURCE).equals(team.auth.me())) {
                         return;
                     }
 
                     Toast.makeText(context, team.context.getString(R.string.opening_conversation), Toast.LENGTH_SHORT).show();
-                    team.action.openMessages((Activity) context, offer.getObject(Thing.PERSON), Util.offerMessagePrefill(offer));
+                    team.action.openMessages((Activity) context, offer.getObject(Thing.SOURCE), Util.offerMessagePrefill(offer));
                 }
             };
 
@@ -109,10 +109,10 @@ public class OfferCard implements Card<DynamicRealmObject> {
             TextView type = (TextView) view.findViewById(R.id.type);
 
             if (Util.offerIsRequest(offer)) {
-                type.setText(context.getString(R.string.person_wants, offer.getObject(Thing.PERSON).getString(Thing.FIRST_NAME)));
+                type.setText(context.getString(R.string.person_wants, offer.getObject(Thing.SOURCE).getString(Thing.FIRST_NAME)));
                 type.setTextColor(context.getResources().getColor(R.color.purple));
             } else {
-                type.setText(context.getString(R.string.person_offers, offer.getObject(Thing.PERSON).getString(Thing.FIRST_NAME)));
+                type.setText(context.getString(R.string.person_offers, offer.getObject(Thing.SOURCE).getString(Thing.FIRST_NAME)));
                 type.setTextColor(context.getResources().getColor(R.color.green));
             }
 

@@ -83,7 +83,7 @@ public class PersonMessagesSlide extends TeamFragment {
         when(new AnonymousEnvironment() {
             @Override
             public void then() {
-                list.removeAllViews();
+                list.setAdapter(null);
             }
         });
 
