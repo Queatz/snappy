@@ -32,6 +32,7 @@ import com.queatz.snappy.adapter.CommentAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.ThingKinds;
 import com.queatz.snappy.team.actions.LikeUpdateAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
@@ -40,8 +41,11 @@ import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import io.realm.DynamicRealmObject;
 import io.realm.RealmList;
+import io.realm.RealmResults;
 import io.realm.Sort;
 
 /**
@@ -154,10 +158,9 @@ public class UpdateCard implements Card<DynamicRealmObject> {
         }
 
         if (!update.isNull(Thing.MEMBERS)) {
-            RealmList<DynamicRealmObject> withThings = update.getList(Thing.MEMBERS);
-
-            RealmList<DynamicRealmObject> people = new RealmList<>();
-            RealmList<DynamicRealmObject> hubs = new RealmList<>();
+            List<DynamicRealmObject> withThings = Util.mapToObjectField(Util.membersOf(update, ThingKinds.JOIN), Thing.SOURCE);
+            List<DynamicRealmObject> people = new RealmList<>();
+            List<DynamicRealmObject> hubs = new RealmList<>();
 
             for (DynamicRealmObject withThing : withThings) {
                 if ("person".equals(withThing.getObject(Thing.SOURCE).getString(Thing.KIND))) {
@@ -263,7 +266,13 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             }
         });
 
-        CommentAdapter commentsAdapter = new CommentAdapter(context, update.getList(Thing.MEMBERS).sort(Thing.DATE, Sort.ASCENDING));
+        RealmResults<DynamicRealmObject> with = update.getList(Thing.MEMBERS)
+                .where()
+                .equalTo(Thing.SOURCE + "." + Thing.KIND, ThingKinds.JOIN)
+                .equalTo(Thing.SOURCE + "." + Thing.SOURCE + "." + Thing.KIND, ThingKinds.PERSON)
+                .findAll()
+                .sort(Thing.DATE, Sort.ASCENDING);
+        CommentAdapter commentsAdapter = new CommentAdapter(context, with);
 
         ((ListView) view.findViewById(R.id.commentsList)).setAdapter(commentsAdapter);
 

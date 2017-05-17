@@ -39,6 +39,7 @@ import com.queatz.snappy.team.Camera;
 import com.queatz.snappy.team.OnInfoChangedListener;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.ThingKinds;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.actions.SigninAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
@@ -536,12 +537,12 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
             RealmChangeListener<DynamicRealmObject> changeListener = new RealmChangeListener<DynamicRealmObject>() {
                 @Override
                 public void onChange(DynamicRealmObject element) {
-                    List<DynamicRealmObject> contacts = thing.getList(Thing.MEMBERS);
+                    List<DynamicRealmObject> members = Util.membersOf(thing, ThingKinds.CONTACT);
 
                     LinearLayout contactsLayout = ((LinearLayout) view.findViewById(R.id.contacts));
                     View contactsHeader = view.findViewById(R.id.contactsHeader);
 
-                    if (contacts.size() < 1) {
+                    if (members.size() < 1) {
                         contactsLayout.setVisibility(View.GONE);
                         contactsHeader.setVisibility(View.GONE);
                     } else {
@@ -550,12 +551,13 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
 
                         contactsLayout.removeAllViews();
 
-                        for (DynamicRealmObject contact : contacts) {
-                            final DynamicRealmObject member = contact.getObject(Thing.TARGET);
+                        for (DynamicRealmObject m : members) {
+                            final DynamicRealmObject member = m.getObject(Thing.SOURCE).getObject(Thing.TARGET);
+
                             FrameLayout memberProfile = (FrameLayout) View.inflate(getContext(), R.layout.contact, null);
                             contactsLayout.addView(memberProfile);
                             Picasso.with(getContext())
-                                    .load(member == null ? "" : Functions.getImageUrlForSize(contact.getObject(Thing.TARGET), (int) Util.px(64)))
+                                    .load(member == null ? "" : Functions.getImageUrlForSize(member.getObject(Thing.TARGET), (int) Util.px(64)))
                                     .placeholder(R.color.spacer)
                                     .into((RoundedImageView) memberProfile.findViewById(R.id.profile));
 

@@ -33,6 +33,7 @@ import com.queatz.snappy.team.OnScrollActions;
 import com.queatz.snappy.team.ScrollActionsTouchListener;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.ThingKinds;
 import com.queatz.snappy.ui.camera.CameraImageSaver;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
@@ -40,10 +41,14 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import io.realm.DynamicRealmObject;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 
 import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
@@ -386,5 +391,44 @@ public class Util {
 
         onUiChanged.onSystemUiVisibilityChange(window.getDecorView().getSystemUiVisibility());
         window.getDecorView().setOnSystemUiVisibilityChangeListener(onUiChanged);
+    }
+
+    /**
+     * Creates a member. Does not manage its own transaction.
+     * @param source The source, or "member"
+     * @param target The target, or "membership provider"
+     * @return The newly created member
+     */
+    public static DynamicRealmObject createMember(DynamicRealmObject source, DynamicRealmObject target) {
+        DynamicRealmObject member = team.realm.createObject("Thing");
+        member.setString(Thing.KIND, ThingKinds.MEMBER);
+        member.setObject(Thing.SOURCE, source);
+        member.setObject(Thing.TARGET, target);
+        member.setString(Thing.STATUS, Config.MEMBER_STATUS_ACTIVE);
+        return member;
+    }
+
+    public static RealmResults<DynamicRealmObject> membersOf(DynamicRealmObject thing, String membersOfKind) {
+        return thing.getList(Thing.MEMBERS)
+                .where()
+                .equalTo(Thing.SOURCE + "." + Thing.KIND, membersOfKind)
+                .findAll();
+    }
+
+    /**
+     * Maps a list of object to a certain object field, dropping them if that field does not exist.
+     * @param list The list to map
+     * @return The mapped list
+     */
+    public static List<DynamicRealmObject> mapToObjectField(RealmResults<DynamicRealmObject> list, String field) {
+        ArrayList<DynamicRealmObject> results = new ArrayList<>();
+
+        for (DynamicRealmObject thing : list) {
+            if (thing.hasField(field)) {
+                results.add(thing.getObject(field));
+            }
+        }
+
+        return results;
     }
 }

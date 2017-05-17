@@ -22,6 +22,7 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.ThingKinds;
 import com.queatz.snappy.team.actions.AuthenticatedAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.ui.SlideScreen;
@@ -123,12 +124,12 @@ public class PersonUptoSlide extends Fragment implements Branchable<ActivityCont
         if(mPerson != null) {
             RealmResults<DynamicRealmObject> offers = team.realm.where("Thing")
                     .equalTo(Thing.KIND, "offer")
-                    .equalTo("person.id", mPerson.getString(Thing.ID))
+                    .equalTo("source.id", mPerson.getString(Thing.ID))
                     .findAllSorted("price", Sort.ASCENDING);
 
             RealmResults<DynamicRealmObject> recentUpdates = team.realm.where("Thing")
                     .equalTo(Thing.KIND, "update")
-                    .equalTo("person.id", mPerson.getString(Thing.ID))
+                    .equalTo("source.id", mPerson.getString(Thing.ID))
                     .equalTo("target.id", mPerson.getString(Thing.ID))
                     .findAllSorted("date", Sort.DESCENDING);
 
@@ -209,7 +210,9 @@ public class PersonUptoSlide extends Fragment implements Branchable<ActivityCont
                         .equalTo("source.id", mPerson.getString(Thing.ID))
                         .findAll();
                 DynamicRealmObject add = team.things.put(response);
-                team.things.diff(previousOffers, add.getList(Thing.MEMBERS));
+
+                // TODO might be troublemaker
+                team.things.diff(previousOffers, Util.mapToObjectField(Util.membersOf(add, ThingKinds.OFFER), Thing.SOURCE));
 
                 update(getView());
             }

@@ -72,7 +72,7 @@ public class Here {
                         RealmResults<DynamicRealmObject> removeOffers =
                                 team.realm.where("Thing")
                                         .equalTo(Thing.KIND, "offer")
-                                        .notEqualTo("person.id", team.auth.getUser())
+                                        .notEqualTo("source.id", team.auth.getUser())
                                         .findAll();
 
                         team.realm.beginTransaction();

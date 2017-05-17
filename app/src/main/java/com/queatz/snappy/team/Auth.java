@@ -209,7 +209,7 @@ public class Auth {
     }
 
     public boolean isAuthenticated() {
-        return mUser != null && mAuthToken != null;
+        return mUser != null && me() != null && mAuthToken != null;
     }
 
     public String getAuthParam() {

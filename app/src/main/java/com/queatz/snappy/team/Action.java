@@ -574,7 +574,7 @@ public class Action {
         o.setString(Thing.ABOUT, message);
         o.setString(Thing.ACTION, Config.UPDATE_ACTION_UPTO);
         o.setDate(Thing.DATE, new Date());
-        update.getList(Thing.MEMBERS).add(o); // TODO must add member to update
+        update.getList(Thing.MEMBERS).add(Util.createMember(o, update));
         team.realm.commitTransaction();
 
         RequestParams params = new RequestParams();

@@ -377,14 +377,14 @@ public class PartiesSlide extends MapSlide implements
                         .greaterThan("date", new Date(new Date().getTime() - 1000 * 60 * 60))
                     .beginGroup()
                         .equalTo("full", false).or()
-                        .equalTo("joins.source.id", me).or()
+                        .equalTo("members.source.source.id", me).or()
                         .equalTo("host.id", me)
                     .endGroup()
                     .findAllSorted("date", Sort.ASCENDING);
 
             RealmResults<DynamicRealmObject> queryOffers = team.realm.where("Thing")
                     .equalTo(Thing.KIND, "offer")
-                    .notEqualTo("person.id", team.auth.getUser())
+                    .notEqualTo("source.id", team.auth.getUser())
                     .findAllSorted(Thing.PRICE, Sort.ASCENDING);
 
             RealmResults<DynamicRealmObject> queryUpdates = team.realm.where("Thing")

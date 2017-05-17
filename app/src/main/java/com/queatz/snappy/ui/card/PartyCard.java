@@ -24,6 +24,7 @@ import com.queatz.snappy.adapter.ActionAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.ThingKinds;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.util.Functions;
@@ -158,8 +159,10 @@ public class PartyCard implements Card<DynamicRealmObject> {
                 action.setVisibility(View.GONE);
             }
             else {
+                boolean hasMembers = Util.membersOf(party, ThingKinds.JOIN).size() > 0;
+
                 action.setVisibility(View.VISIBLE);
-                action.setText(context.getText(party.getList(Thing.MEMBERS).size() > 0 ? R.string.mark_party_full : R.string.close_party));
+                action.setText(context.getText(hasMembers ? R.string.mark_party_full : R.string.close_party));
                 action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
