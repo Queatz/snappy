@@ -660,12 +660,13 @@ public class Action {
         params.put(Config.PARAM_DETAILS, details);
         params.put(Config.PARAM_PRICE, price);
         params.put(Config.PARAM_UNIT, unit);
+        params.put(Config.PARAM_IN, team.auth.me().getString(Thing.ID));
 
         if (want != null) {
             params.put(Config.PARAM_WANT, want);
         }
 
-        team.api.post(Config.PATH_EARTH + "/" + Config.PATH_ME_OFFERS, params, new Api.Callback() {
+        team.api.post(Config.PATH_EARTH, params, new Api.Callback() {
             @Override
             public void success(String response) {
                 team.things.put(response);

@@ -13,6 +13,7 @@ import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.editors.LikeEditor;
+import com.queatz.snappy.logic.editors.MemberEditor;
 import com.queatz.snappy.logic.editors.UpdateEditor;
 import com.queatz.snappy.logic.eventables.LikeEvent;
 import com.queatz.snappy.logic.eventables.NewCommentEvent;
@@ -161,7 +162,7 @@ public class UpdateInterface extends CommonThingInterface {
                 else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {
                     message = Streams.asString(stream, "UTF-8");
                 }
-                else if (Config.PARAM_THING.equals(item.getFieldName())) {
+                else if (Config.PARAM_IN.equals(item.getFieldName())) {
                     thingId = Streams.asString(stream, "UTF-8");
                 }
                 else if (Config.PARAM_LATITUDE.equals(item.getFieldName())) {
@@ -203,6 +204,9 @@ public class UpdateInterface extends CommonThingInterface {
         }
 
         update = new UpdateEditor(as).updateWith(update, thing, message, photoUploaded, geo, with, going);
+
+        // Associate comment
+        new MemberEditor(as).create(thing, update, Config.MEMBER_STATUS_ACTIVE);
 
         if (EarthKind.UPDATE_KIND.equals(thing.getString(EarthField.KIND))) {
             new EarthUpdate(as).send(new NewCommentEvent(update)).to(thing.getKey(EarthField.SOURCE));

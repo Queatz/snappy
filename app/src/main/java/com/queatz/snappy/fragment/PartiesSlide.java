@@ -26,6 +26,7 @@ import com.queatz.snappy.team.OnScrollActions;
 import com.queatz.snappy.team.ScrollActionsTouchListener;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.ThingKinds;
 import com.queatz.snappy.ui.ContextualInputBar;
 import com.queatz.snappy.ui.OnBackPressed;
 import com.queatz.snappy.ui.RevealAnimation;
@@ -369,11 +370,11 @@ public class PartiesSlide extends MapSlide implements
         if(getActivity() == null)
             return;
 
-        if(mList.getAdapter() == null) {
+        if(true || mList.getAdapter() == null) {
             String me = team.auth.getUser();
 
             RealmResults<DynamicRealmObject> queryParties = team.realm.where("Thing")
-                    .equalTo(Thing.KIND, "party")
+                    .equalTo(Thing.KIND, ThingKinds.PARTY)
                         .greaterThan("date", new Date(new Date().getTime() - 1000 * 60 * 60))
                     .beginGroup()
                         .equalTo("full", false).or()
@@ -383,12 +384,12 @@ public class PartiesSlide extends MapSlide implements
                     .findAllSorted("date", Sort.ASCENDING);
 
             RealmResults<DynamicRealmObject> queryOffers = team.realm.where("Thing")
-                    .equalTo(Thing.KIND, "offer")
+                    .equalTo(Thing.KIND, ThingKinds.OFFER)
                     .notEqualTo("source.id", team.auth.getUser())
                     .findAllSorted(Thing.PRICE, Sort.ASCENDING);
 
             RealmResults<DynamicRealmObject> queryUpdates = team.realm.where("Thing")
-                    .equalTo(Thing.KIND, "update")
+                    .equalTo(Thing.KIND, ThingKinds.UPDATE)
                     .notEqualTo("source.id", team.auth.getUser())
                     .findAllSorted(Thing.DATE, Sort.DESCENDING);
 

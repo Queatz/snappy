@@ -268,7 +268,7 @@ public class UpdateCard implements Card<DynamicRealmObject> {
 
         RealmResults<DynamicRealmObject> with = update.getList(Thing.MEMBERS)
                 .where()
-                .equalTo(Thing.SOURCE + "." + Thing.KIND, ThingKinds.JOIN)
+                .equalTo(Thing.SOURCE + "." + Thing.KIND, ThingKinds.UPDATE)
                 .equalTo(Thing.SOURCE + "." + Thing.SOURCE + "." + Thing.KIND, ThingKinds.PERSON)
                 .findAll()
                 .sort(Thing.DATE, Sort.ASCENDING);

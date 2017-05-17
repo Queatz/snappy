@@ -60,7 +60,7 @@ public class CommentAdapter extends RealmBaseAdapter<DynamicRealmObject> impleme
             view = inflater.inflate(R.layout.comment_item, parent, false);
         }
 
-        DynamicRealmObject comment = getItem(position);
+        DynamicRealmObject comment = getItem(position).getObject(Thing.SOURCE);
 
         final DynamicRealmObject person = comment.getObject(Thing.SOURCE);
 
