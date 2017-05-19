@@ -962,46 +962,4 @@ public class Action {
 
         return price;
     }
-
-    public void report(Activity activity, final DynamicRealmObject person) {
-        final EditText editText = new EditText(activity);
-        int p = (int) Util.px(16);
-        editText.setPadding(p, p, p, p);
-        editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        editText.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
-        editText.setHint(R.string.what_went_wrong);
-        editText.setSingleLine(false);
-
-        new AlertDialog.Builder(activity).setView(editText)
-                .setNegativeButton(R.string.nope, null)
-                .setPositiveButton(R.string.report, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String report = editText.getText().toString();
-
-                        RequestParams params = new RequestParams();
-                        params.put(Config.PARAM_MESSAGE, report);
-
-                        team.api.post(Config.PATH_EARTH + "/" + Config.PATH_ME + "/report/" + person.getString(Thing.ID), params, new Api.Callback() {
-                            @Override
-                            public void success(String response) {
-                                Toast.makeText(team.context, R.string.thanks_for_report, Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void fail(String response) {
-                                Toast.makeText(team.context, "Failed to report this person", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                })
-                .show();
-
-        editText.post(new Runnable() {
-            @Override
-            public void run() {
-                team.view.keyboard(editText);
-            }
-        });
-    }
 }
