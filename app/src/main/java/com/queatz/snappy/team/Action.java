@@ -55,41 +55,6 @@ public class Action {
         team = t;
     }
 
-    public void setSeen(@NonNull final DynamicRealmObject person) {
-        if(team.auth.getUser() == null)
-            return;
-
-        RealmResults<DynamicRealmObject> recents = team.realm.where("Thing")
-                .equalTo("source.id", team.auth.getUser())
-                .equalTo("target.id", person.getString(Thing.ID))
-                .findAll();
-
-        boolean changed = false;
-
-        team.realm.beginTransaction();
-
-        for(int i = 0; i < recents.size(); i++) {
-            DynamicRealmObject recent = recents.get(i);
-
-            if(!recent.getBoolean(Thing.SEEN)) {
-                recent.setBoolean(Thing.SEEN, true);
-                changed = true;
-            }
-        }
-
-        if(changed) {
-            team.realm.commitTransaction();
-
-            RequestParams params = new RequestParams();
-            params.put(Config.PARAM_SEEN, true);
-
-            team.api.post(Config.PATH_EARTH + "/" + person.getString(Thing.ID), params);
-        }
-        else {
-            team.realm.cancelTransaction();
-        }
-    }
-
     public void openMessages(@NonNull Activity from, @NonNull final DynamicRealmObject person) {
         openMessages(from, person, null);
     }
@@ -114,70 +79,6 @@ public class Action {
         }
 
         team.view.show(from, Person.class, bundle);
-    }
-
-    public void sendMessage(@NonNull final DynamicRealmObject to, @Nullable final String message, @Nullable final Uri photo) {
-        if (photo == null && message == null) {
-            return;
-        }
-
-        final String localId = Util.createLocalId();
-
-        RequestParams params = new RequestParams();
-        params.put(Config.PARAM_LOCAL_ID, localId);
-
-        if (message != null) {
-            params.put(Config.PARAM_MESSAGE, message);
-        }
-
-        if (photo != null) try {
-            params.put(Config.PARAM_PHOTO, team.context.getContentResolver().openInputStream(photo), photo.getPath());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        params.setForceMultipartEntityContentType(true);
-
-        team.realm.beginTransaction();
-        DynamicRealmObject o = team.realm.createObject("Thing");
-        o.setString(Thing.KIND, ThingKinds.MESSAGE);
-        o.setString(Thing.ID, localId);
-        o.setObject(Thing.FROM, team.auth.me());
-        o.setObject(Thing.TO, to);
-
-        if (message != null) {
-            o.setString(Thing.MESSAGE, message);
-        }
-
-        o.setDate(Thing.DATE, new Date());
-
-        team.realm.commitTransaction();
-
-        team.local.updateRecentsForMessage(o);
-
-        team.api.post(Config.PATH_EARTH + "/" + to.getString(Thing.ID) + "/" + Config.PATH_MESSAGE, params, new Api.Callback() {
-            @Override
-            public void success(String response) {
-                team.things.put(response);
-            }
-
-            @Override
-            public void fail(String response) {
-                // Reverse local modifications after retrying
-                Toast.makeText(team.context, R.string.message_not_sent, Toast.LENGTH_SHORT).show();
-
-                DynamicRealmObject message = team.realm.where("Thing")
-                        .equalTo(Thing.ID, localId)
-                        .findFirst();
-
-                if (message != null) {
-                    team.realm.beginTransaction();
-                    message.set(Thing.LOCAL_STATE, LocalState.UNSYNCED);
-                    team.realm.commitTransaction();
-                }
-            }
-        });
     }
 
     public void showFollowers(@NonNull Activity from, @NonNull final DynamicRealmObject person) {

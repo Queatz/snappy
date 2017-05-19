@@ -10,7 +10,7 @@ import io.realm.DynamicRealmObject;
  * Created by jacob on 4/1/17.
  */
 
-public abstract class AuthenticatedAction extends Branch<ActivityContext> {
+public abstract class AuthenticatedAction extends ActivityAction {
     private boolean valid() {
         return me().getTeam().auth.isAuthenticated();
     }

@@ -19,6 +19,7 @@ import com.queatz.snappy.adapter.PersonMessagesAdapter;
 import com.queatz.snappy.team.Camera;
 import com.queatz.snappy.team.TeamFragment;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.SendMessageAction;
 import com.queatz.snappy.team.observers.AnonymousEnvironment;
 import com.queatz.snappy.team.observers.AuthenticatedEnvironment;
 
@@ -113,7 +114,7 @@ public class PersonMessagesSlide extends TeamFragment {
                 if (mPerson == null || (message.trim().isEmpty() && image == null))
                     return;
 
-                getTeam().action.sendMessage(mPerson, message, image);
+                to(new SendMessageAction(mPerson, message, image));
 
                 writeMessage.setText("");
                 image = null;
