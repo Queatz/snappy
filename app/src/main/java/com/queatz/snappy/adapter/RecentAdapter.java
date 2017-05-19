@@ -65,12 +65,12 @@ public class RecentAdapter extends RealmBaseAdapter<DynamicRealmObject> implemen
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.openMessages((Activity) context, recent.getObject(Thing.TARGET));
+                team.action.openMessages(context, recent.getObject(Thing.TARGET));
             }
         });
 
         view.setTag(recent);
-        ((Activity) context).registerForContextMenu(view);
+        context.registerForContextMenu(view);
 
         TextView name = (TextView) view.findViewById(R.id.name);
         TextView lastMessage = (TextView) view.findViewById(R.id.lastMessage);
@@ -90,7 +90,7 @@ public class RecentAdapter extends RealmBaseAdapter<DynamicRealmObject> implemen
         });
 
         profile.setTag(person);
-        ((Activity) context).registerForContextMenu(profile);
+        context.registerForContextMenu(profile);
 
         name.setText(Functions.getFullName(person));
         name.setTypeface(null, !recent.getBoolean(Thing.SEEN) ? Typeface.BOLD : Typeface.NORMAL);

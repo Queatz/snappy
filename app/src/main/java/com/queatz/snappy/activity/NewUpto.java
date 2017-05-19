@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.adapter.PostSelfUpdateAction;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.TeamActivity;
 import com.queatz.snappy.ui.EditText;
@@ -92,7 +93,7 @@ public class NewUpto extends TeamActivity {
     }
 
     private void save() {
-        team.action.postSelfUpdate(mPhoto, ((EditText) findViewById(R.id.message)).getText().toString());
+        to(new PostSelfUpdateAction(mPhoto, ((EditText) findViewById(R.id.message)).getText().toString()));
     }
 
     @Override

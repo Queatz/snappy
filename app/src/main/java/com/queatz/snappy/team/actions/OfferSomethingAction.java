@@ -88,9 +88,9 @@ public class OfferSomethingAction extends ActivityAction {
 
     private float getFreePercent() {
         if (Config.HOSTING_ENABLED_TRUE.equals(me().getTeam().buy.hostingEnabled())) {
-            return (float) (-Config.PAID_OFFER_PRICE_MIN / (float) (-Config.PAID_OFFER_PRICE_MIN + Config.PAID_OFFER_PRICE_MAX)) * 0.9f;
+            return -Config.PAID_OFFER_PRICE_MIN / (float) (-Config.PAID_OFFER_PRICE_MIN + Config.PAID_OFFER_PRICE_MAX) * 0.9f;
         } else {
-            return (float) (-Config.FREE_OFFER_PRICE_MIN / (float) (-Config.FREE_OFFER_PRICE_MIN + Config.FREE_OFFER_PRICE_MAX)) * 0.9f;
+            return -Config.FREE_OFFER_PRICE_MIN / (float) (-Config.FREE_OFFER_PRICE_MIN + Config.FREE_OFFER_PRICE_MAX) * 0.9f;
         }
     }
 

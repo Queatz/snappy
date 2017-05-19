@@ -32,6 +32,7 @@ import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.HostParty;
+import com.queatz.snappy.adapter.PostSelfUpdateAction;
 import com.queatz.snappy.adapter.SuggestionAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
@@ -310,7 +311,7 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
             imWith.add(imAt);
         }
 
-        team.action.postSelfUpdate(image, text, team.location.get(), imWith, isGoing);
+        to(new PostSelfUpdateAction(image, text, team.location.get(), imWith, isGoing));
         resetAll();
 
         team.view.keyboard(whatsUp, false);
