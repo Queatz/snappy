@@ -5,9 +5,12 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.queatz.branch.Branch;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.HostParty;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.team.actions.AddToHomeScreenAction;
+import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.team.observers.AnonymousEnvironment;
 
 import io.realm.DynamicRealmObject;
@@ -81,7 +84,7 @@ public class Menu {
         }
     }
 
-    public boolean choose(final Activity activity, Object object, final MenuItem item) {
+    public boolean choose(final TeamActivity activity, Object object, final MenuItem item) {
         String kind = null;
 
         if (object instanceof DynamicRealmObject) {
@@ -129,7 +132,7 @@ public class Menu {
             } else if (team.context.getString(R.string.report_this_person).equals(item.getTitle())) {
                 team.action.report(activity, (DynamicRealmObject) object);
             } else if (team.context.getString(R.string.add_to_home_screen).equals(item.getTitle())) {
-                team.action.addToHomeScreen(activity, (DynamicRealmObject) object);
+                Branch.from((ActivityContext) activity).to(new AddToHomeScreenAction((DynamicRealmObject) object));
             }
         }
         else if("offer".equals(kind)) {

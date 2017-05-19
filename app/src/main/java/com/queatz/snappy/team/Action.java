@@ -1114,42 +1114,4 @@ public class Action {
                 .setPositiveButton(R.string.ok, null)
                 .show();
     }
-
-    public void addToHomeScreen(final Activity activity, final DynamicRealmObject person) {
-        Picasso.with(activity)
-                .load(Functions.getImageUrlForSize(person, (int) Util.px(64)))
-                .transform(new RoundedTransformationBuilder().oval(true).build())
-                .placeholder(R.color.spacer)
-                .into(new Target() {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        Intent shortcutIntent = new Intent(activity, Person.class);
-                        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        shortcutIntent.putExtra(Config.EXTRA_PERSON_ID, person.getString(Thing.ID));
-                        shortcutIntent.putExtra(Config.EXTRA_SHOW, "messages");
-
-                        Intent addIntent = new Intent();
-                        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-                        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, person.getString(Thing.FIRST_NAME));
-                        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON, bitmap);
-
-                        addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-                        activity.sendBroadcast(addIntent);
-                    }
-
-                    @Override
-                    public void onBitmapFailed(Drawable errorDrawable) {
-
-                    }
-
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                    }
-                });
-    }
-
-    public void signout(@NonNull final Activity activity) {
-
-    }
 }
