@@ -65,7 +65,7 @@ public class RecentAdapter extends RealmBaseAdapter<DynamicRealmObject> implemen
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.openMessages(context, recent.getObject(Thing.TARGET));
+                to(new OpenMessagesAction(recent.getObject(Thing.TARGET)));
             }
         });
 

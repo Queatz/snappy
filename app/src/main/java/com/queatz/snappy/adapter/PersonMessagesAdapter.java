@@ -13,11 +13,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.queatz.branch.Branch;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.LocalState;
@@ -43,6 +45,8 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<DynamicRealmObject> 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        final Branch<ActivityContext> branch = Branch.from((ActivityContext) context);
+
         View view;
 
         if (convertView != null) {
@@ -94,7 +98,7 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<DynamicRealmObject> 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     DynamicRealmObject who = isOwn ? message.getObject(Thing.TO) : person;
 
-                    team.action.openMessages((Activity) context, who, message.getString(Thing.MESSAGE));
+                    branch.to(new OpenMessagesAction(who, message.getString(Thing.MESSAGE)));
                 }
 
                 return false;

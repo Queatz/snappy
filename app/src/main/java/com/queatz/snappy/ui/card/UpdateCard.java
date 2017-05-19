@@ -29,6 +29,8 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.adapter.CommentAdapter;
+import com.queatz.snappy.adapter.PostCommentOnAction;
+import com.queatz.snappy.adapter.ShowLikersAction;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
@@ -282,7 +284,8 @@ public class UpdateCard implements Card<DynamicRealmObject> {
         view.findViewById(R.id.sendCommentButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                postComment(team, update, writeComment);
+                branch.to(new PostCommentOnAction(update, writeComment.getText().toString()));
+                clearComment(team, writeComment);
             }
         });
 
@@ -290,7 +293,8 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (EditorInfo.IME_ACTION_GO == actionId) {
-                    postComment(team, update, writeComment);
+                    branch.to(new PostCommentOnAction(update, writeComment.getText().toString()));
+                    clearComment(team, writeComment);
                 }
 
                 return false;
@@ -302,14 +306,15 @@ public class UpdateCard implements Card<DynamicRealmObject> {
         return view;
     }
 
-    private void postComment(Team team, DynamicRealmObject update, EditText comment) {
-        team.action.postCommentOn(update, comment.getText().toString());
+    private void clearComment(Team team, EditText comment) {
         comment.setText("");
         team.view.keyboard(comment, false);
     }
 
     private void updateLikes(final View view, final DynamicRealmObject update, final Context context) {
         final Team team = ((MainApplication) context.getApplicationContext()).team;
+        final Branch<ActivityContext> branch = Branch.from((ActivityContext) context);
+
 
         final Button likers = (Button) view.findViewById(R.id.likers);
 
@@ -333,7 +338,7 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             likers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    team.action.showLikers((Activity) context, update);
+                    branch.to(new ShowLikersAction(update));
                 }
             });
         } else {

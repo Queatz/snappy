@@ -16,6 +16,8 @@ import com.queatz.branch.Branch;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.adapter.OpenMessagesAction;
+import com.queatz.snappy.adapter.ShowLikersAction;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.LikeUpdateAction;
@@ -84,7 +86,7 @@ public class OfferCard implements Card<DynamicRealmObject> {
                     }
 
                     Toast.makeText(context, team.context.getString(R.string.opening_conversation), Toast.LENGTH_SHORT).show();
-                    team.action.openMessages((Activity) context, offer.getObject(Thing.SOURCE), Util.offerMessagePrefill(offer));
+                    branch.to(new OpenMessagesAction(offer.getObject(Thing.SOURCE), Util.offerMessagePrefill(offer)));
                 }
             };
 
@@ -158,7 +160,7 @@ public class OfferCard implements Card<DynamicRealmObject> {
             likers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    team.action.showLikers((Activity) context, offer);
+                    branch.to(new ShowLikersAction(offer));
                 }
             });
         } else {

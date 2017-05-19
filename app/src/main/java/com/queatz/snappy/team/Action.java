@@ -55,32 +55,6 @@ public class Action {
         team = t;
     }
 
-    public void openMessages(@NonNull Activity from, @NonNull final DynamicRealmObject person) {
-        openMessages(from, person, null);
-    }
-
-    public void openMessages(@NonNull Activity from, @NonNull final DynamicRealmObject person, @Nullable String message) {
-        if (from instanceof Person) {
-            DynamicRealmObject activityPerson = ((Person) from).getPerson();
-
-            if (activityPerson != null && activityPerson.getString(Thing.ID).equals(person.getString(Thing.ID))) {
-                ((Person) from).getSlideScreen().setSlide(Person.SLIDE_MESSAGES);
-            }
-
-            return;
-        }
-
-        Bundle bundle = new Bundle();
-        bundle.putString("person", person.getString(Thing.ID));
-        bundle.putString("show", "messages");
-
-        if (message != null) {
-            bundle.putString("message", message);
-        }
-
-        team.view.show(from, Person.class, bundle);
-    }
-
     public void showFollowers(@NonNull Activity from, @NonNull final DynamicRealmObject person) {
         Bundle bundle = new Bundle();
         bundle.putString("person", person.getString(Thing.ID));
@@ -93,14 +67,6 @@ public class Action {
         Bundle bundle = new Bundle();
         bundle.putString("person", person.getString(Thing.ID));
         bundle.putBoolean("showFollowing", true);
-
-        team.view.show(from, PersonList.class, bundle);
-    }
-
-    public void showLikers(@NonNull Activity from, @NonNull final DynamicRealmObject update) {
-        Bundle bundle = new Bundle();
-        bundle.putString("update", update.getString(Thing.ID));
-        bundle.putBoolean("showLikers", true);
 
         team.view.show(from, PersonList.class, bundle);
     }
@@ -369,62 +335,6 @@ public class Action {
         bundle.putBoolean("show_post_host_message", true);
 
         team.view.show(activity, Main.class, bundle);
-    }
-
-    public boolean postCommentOn(final DynamicRealmObject update, final String message) {
-        if (update == null || message == null || message.trim().length() < 1) {
-            return false;
-        }
-
-        final String localId = Util.createLocalId();
-
-        team.realm.beginTransaction();
-        DynamicRealmObject o = team.realm.createObject("Thing");
-        o.setString(Thing.KIND, "update");
-        o.setString(Thing.ID, localId);
-        o.setObject(Thing.SOURCE, team.auth.me());
-        o.setObject(Thing.TARGET, update);
-        o.setString(Thing.ABOUT, message);
-        o.setString(Thing.ACTION, Config.UPDATE_ACTION_UPTO);
-        o.setDate(Thing.DATE, new Date());
-        update.getList(Thing.MEMBERS).add(Util.createMember(o, update));
-        team.realm.commitTransaction();
-
-        RequestParams params = new RequestParams();
-        params.put(Config.PARAM_THING, update.getString(Thing.ID));
-        params.put(Config.PARAM_MESSAGE, message);
-        params.put(Config.PARAM_LOCAL_ID, localId);
-
-        // The server expects this for updates
-        params.setForceMultipartEntityContentType(true);
-
-        team.api.post(Config.PATH_EARTH + "?kind=update", params, new Api.Callback() {
-            @Override
-            public void success(String response) {
-                team.things.put(response);
-            }
-
-            @Override
-            public void fail(String response) {
-                Toast.makeText(team.context, "Couldn't post comment", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        return true;
-    }
-
-    public void deleteThing(@NonNull DynamicRealmObject thing) {
-        // TODO keep until delete is in place
-        try {
-            team.api.post(Config.PATH_EARTH + "/" + thing.getString(Thing.ID) + "/" + Config.PATH_DELETE);
-
-            team.realm.beginTransaction();
-            thing.deleteFromRealm();
-            team.realm.commitTransaction();
-        }
-        catch (IllegalStateException e) {
-            e.printStackTrace();
-        }
     }
 
     DynamicRealmObject nPendingOfferPhotoChange;

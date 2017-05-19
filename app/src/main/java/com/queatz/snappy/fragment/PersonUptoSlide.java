@@ -15,6 +15,7 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.adapter.FeedAdapter;
+import com.queatz.snappy.adapter.OpenMessagesAction;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
@@ -301,7 +302,7 @@ public class PersonUptoSlide extends TeamFragment {
             messageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    team.action.openMessages(getActivity(), mPerson);
+                    to(new OpenMessagesAction(mPerson));
                 }
             });
 

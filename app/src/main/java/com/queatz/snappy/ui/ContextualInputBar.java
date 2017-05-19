@@ -32,6 +32,7 @@ import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.HostParty;
+import com.queatz.snappy.adapter.OpenMessagesAction;
 import com.queatz.snappy.adapter.PostSelfUpdateAction;
 import com.queatz.snappy.adapter.SuggestionAdapter;
 import com.queatz.snappy.shared.Config;
@@ -570,8 +571,9 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
                             memberProfile.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if (member != null)
-                                        team.action.openMessages((Activity) getContext(), member);
+                                    if (member != null) {
+                                        to(new OpenMessagesAction(member));
+                                    }
                                 }
                             });
                         }

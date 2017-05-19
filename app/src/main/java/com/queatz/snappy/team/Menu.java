@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.queatz.branch.Branch;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.HostParty;
+import com.queatz.snappy.adapter.DeleteThingAction;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.actions.ActivityAction;
 import com.queatz.snappy.team.actions.AddToHomeScreenAction;
@@ -142,7 +143,7 @@ public class Menu {
         }
         else if("offer".equals(kind)) {
             if(team.context.getString(R.string.stop_offering).equals(item.getTitle())) {
-                team.action.deleteThing(((DynamicRealmObject) object));
+                branch.to(new DeleteThingAction((DynamicRealmObject) object));
             } else if(team.context.getString(R.string.add_photo).equals(item.getTitle()) || team.context.getString(R.string.change_photo).equals(item.getTitle())) {
                 team.action.addPhotoToOffer(activity, ((DynamicRealmObject) object));
             } else if(team.context.getString(R.string.remove_photo).equals(item.getTitle())) {
@@ -151,7 +152,7 @@ public class Menu {
         }
         else if("recent".equals(kind)) {
             if(team.context.getString(R.string.remove).equals(item.getTitle())) {
-                team.action.deleteThing(((DynamicRealmObject) object));
+                branch.to(new DeleteThingAction((DynamicRealmObject) object));
             }
         }
 
