@@ -25,6 +25,7 @@ import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.OpenLocationAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.ui.CircleTransform;
@@ -141,7 +142,7 @@ public abstract class MapSlide extends Fragment implements OnMapReadyCallback, O
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                team.action.openLocation(getActivity(), (DynamicRealmObject) marker.getTag());
+                to(new OpenLocationAction((DynamicRealmObject) marker.getTag()));
             }
         });
 

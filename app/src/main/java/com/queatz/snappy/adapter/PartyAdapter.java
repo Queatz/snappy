@@ -25,6 +25,7 @@ import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.ThingKinds;
 import com.queatz.snappy.team.actions.OpenDateAction;
+import com.queatz.snappy.team.actions.OpenLocationAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.util.Functions;
@@ -104,7 +105,7 @@ public class PartyAdapter extends RealmBaseAdapter<DynamicRealmObject> implement
             view.findViewById(R.id.location_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    team.action.openLocation((Activity) context, location);
+                    to(new OpenLocationAction(location));
                 }
             });
 

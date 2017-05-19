@@ -163,15 +163,6 @@ public class Action {
         });
     }
 
-    public void openLocation(@NonNull Activity from, DynamicRealmObject location) {
-        if(location == null)
-            return;
-
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + Functions.getLocationText(location)));
-
-        from.startActivity(intent);
-    }
-
     public void markPartyFull(@NonNull final DynamicRealmObject party) {
         team.realm.beginTransaction();
         party.setBoolean(Thing.FULL, true);
