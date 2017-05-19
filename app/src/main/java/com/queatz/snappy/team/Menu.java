@@ -11,6 +11,7 @@ import com.queatz.snappy.activity.HostParty;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.actions.ActivityAction;
 import com.queatz.snappy.team.actions.AddToHomeScreenAction;
+import com.queatz.snappy.team.actions.ChangeLocationPhotoAction;
 import com.queatz.snappy.team.actions.ReportThingAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.team.observers.AnonymousEnvironment;
@@ -124,7 +125,7 @@ public class Menu {
         }
         else if("location".equals(kind)) {
             if(team.context.getString(R.string.change_photo).equals(item.getTitle())) {
-                team.action.changeLocationPhoto(activity, ((DynamicRealmObject) object));
+                branch.to(new ChangeLocationPhotoAction((DynamicRealmObject) object));
             }
         }
         else if("person".equals(kind)) {

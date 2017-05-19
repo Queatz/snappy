@@ -641,47 +641,7 @@ public class Action {
             });
     }
 
-    DynamicRealmObject nPendingLocationPhotoChange;
-
-    public void changeLocationPhoto(Activity activity, DynamicRealmObject location) {
-        nPendingLocationPhotoChange = location;
-
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        activity.startActivityForResult(intent, Config.REQUEST_CODE_CHOOSER);
-    }
-
-    public void likeUpdate(final DynamicRealmObject update) {
-        if (Util.liked(update, team.auth.me())) {
-            return;
-        }
-
-        String localId = Util.createLocalId();
-
-        team.realm.beginTransaction();
-        DynamicRealmObject o = team.realm.createObject("Thing");
-        o.setString(Thing.KIND, "like");
-        o.setString(Thing.ID, localId);
-        o.setObject(Thing.SOURCE, team.auth.me());
-        o.setObject(Thing.TARGET, update);
-        team.realm.commitTransaction();
-
-        RequestParams params = new RequestParams();
-        params.put(Config.PARAM_LOCAL_ID, localId);
-
-        team.api.post(Config.PATH_EARTH + "/" + update.getString(Thing.ID) + "/" + Config.PATH_LIKE, params, new Api.Callback() {
-            @Override
-            public void success(String response) {
-                team.things.put(response);
-            }
-
-            @Override
-            public void fail(String response) {
-                Toast.makeText(team.context, "Couldn't like " + update.getString(Thing.KIND), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+    public DynamicRealmObject nPendingLocationPhotoChange;
 
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
         switch (requestCode) {
