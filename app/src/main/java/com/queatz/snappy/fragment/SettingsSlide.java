@@ -13,6 +13,9 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.TeamFragment;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.ShowAboutAction;
+import com.queatz.snappy.team.actions.ShowPrivacyPolicyAction;
+import com.queatz.snappy.team.actions.ShowTermsOfServiceAction;
 import com.queatz.snappy.team.actions.SignoutAction;
 import com.queatz.snappy.ui.TextView;
 
@@ -59,21 +62,21 @@ public class SettingsSlide extends TeamFragment {
         halp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.showAbout(getActivity());
+                to(new ShowAboutAction());
             }
         });
 
         privacyPolicy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.showPrivacyPolicy(getActivity());
+                to(new ShowPrivacyPolicyAction());
             }
         });
 
         termsOfService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.showTermsOfService(getActivity());
+                to(new ShowTermsOfServiceAction());
             }
         });
 

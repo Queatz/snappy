@@ -751,15 +751,6 @@ public class Action {
         activity.startActivityForResult(intent, Config.REQUEST_CODE_CHOOSER);
     }
 
-    public void showAbout(Activity activity) {
-        View view = View.inflate(activity, R.layout.information, null);
-
-        new AlertDialog.Builder(activity)
-                .setView(view)
-                .setPositiveButton(R.string.ok, null)
-                .show();
-    }
-
     public void likeUpdate(final DynamicRealmObject update) {
         if (Util.liked(update, team.auth.me())) {
             return;
@@ -1095,23 +1086,5 @@ public class Action {
         catch(Exception e)
         { //e.toString();
         }
-    }
-
-    public void showPrivacyPolicy(Activity activity) {
-        View view = View.inflate(activity, R.layout.privacy_policy, null);
-
-        new AlertDialog.Builder(activity)
-                .setView(view)
-                .setPositiveButton(R.string.ok, null)
-                .show();
-    }
-
-    public void showTermsOfService(Activity activity) {
-        View view = View.inflate(activity, R.layout.terms_of_service, null);
-
-        new AlertDialog.Builder(activity)
-                .setView(view)
-                .setPositiveButton(R.string.ok, null)
-                .show();
     }
 }
