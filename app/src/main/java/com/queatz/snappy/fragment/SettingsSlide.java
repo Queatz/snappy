@@ -13,6 +13,7 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.TeamFragment;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.SendFeedbackAction;
 import com.queatz.snappy.team.actions.ShowAboutAction;
 import com.queatz.snappy.team.actions.ShowPrivacyPolicyAction;
 import com.queatz.snappy.team.actions.ShowTermsOfServiceAction;
@@ -85,7 +86,7 @@ public class SettingsSlide extends TeamFragment {
         view.findViewById(R.id.action_send_feedback).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.sendFeedback(getActivity());
+                to(new SendFeedbackAction());
             }
         });
 
