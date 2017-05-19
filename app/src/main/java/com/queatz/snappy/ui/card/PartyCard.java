@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.makeramen.RoundedImageView;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.queatz.branch.Branch;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;

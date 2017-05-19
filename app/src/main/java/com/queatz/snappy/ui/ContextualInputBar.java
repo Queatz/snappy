@@ -25,7 +25,7 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import com.makeramen.RoundedImageView;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.queatz.branch.Branch;
 import com.queatz.branch.Branchable;
 import com.queatz.snappy.MainApplication;

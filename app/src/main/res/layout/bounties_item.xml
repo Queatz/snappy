@@ -12,7 +12,7 @@
         android:orientation="horizontal"
         android:padding="8dp">
 
-        <com.makeramen.RoundedImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/profile"
             android:layout_width="32dp"
             android:layout_height="32dp"
@@ -42,7 +42,7 @@
             android:textColor="@color/white"
             android:textSize="18sp" />
 
-        <com.makeramen.RoundedImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/people"
             android:visibility="gone"
             android:layout_width="32dp"

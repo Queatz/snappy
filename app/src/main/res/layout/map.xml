@@ -55,7 +55,7 @@
             android:elevation="4dp"
             android:layout_margin="8dp">
 
-            <com.makeramen.RoundedImageView
+            <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/at"
                 android:visibility="gone"
                 android:layout_width="32dp"

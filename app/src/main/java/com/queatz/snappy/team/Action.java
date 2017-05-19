@@ -17,7 +17,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
-import com.makeramen.RoundedTransformationBuilder;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.Main;

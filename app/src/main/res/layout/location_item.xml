@@ -10,7 +10,7 @@
     android:paddingTop="4dp"
     android:orientation="horizontal">
 
-    <com.makeramen.RoundedImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/profile"
         android:layout_width="24dp"
         android:layout_height="24dp"

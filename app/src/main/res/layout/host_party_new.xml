@@ -46,7 +46,7 @@
             android:paddingTop="4dp"
             android:orientation="horizontal">
 
-            <com.makeramen.RoundedImageView
+            <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/selectedLocationProfile"
                 android:layout_width="32dp"
                 android:layout_height="32dp"

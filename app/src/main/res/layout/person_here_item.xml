@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:padding="8dp">
 
-    <com.makeramen.RoundedImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/profile"
         android:layout_width="48dp"
         android:layout_height="48dp"
