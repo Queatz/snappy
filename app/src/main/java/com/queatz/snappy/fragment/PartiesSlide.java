@@ -138,7 +138,11 @@ public class PartiesSlide extends MapSlide implements
                 }
 
                 if (mList.getFirstVisiblePosition() == 0) {
-                    motionEvent.offsetLocation(0, mList.getChildAt(0).getTop());
+                    View firstChild = mList.getChildAt(0);
+
+                    if (firstChild != null) {
+                        motionEvent.offsetLocation(0, mList.getChildAt(0).getTop());
+                    }
                 }
 
                 mapView.dispatchTouchEvent(motionEvent);

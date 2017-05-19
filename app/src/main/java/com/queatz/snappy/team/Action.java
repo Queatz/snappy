@@ -633,11 +633,15 @@ public class Action {
         team.api.post(Config.PATH_EARTH + "/" + offer.getString(Thing.ID) + "/" + Config.PATH_PHOTO + "/" + Config.PATH_DELETE);
     }
 
-    public void addOffer(@NonNull String details, @Nullable Boolean want, @Nullable Integer price, @Nullable String unit) {
+    public boolean addOffer(@NonNull String details, @Nullable Boolean want, @Nullable Integer price, @Nullable String unit) {
         details = details.trim();
 
         if(details.isEmpty()) {
-            return;
+            return false;
+        }
+
+        if (team.auth.me() == null) {
+            return false;
         }
 
         team.realm.beginTransaction();
@@ -677,6 +681,8 @@ public class Action {
                 Toast.makeText(team.context, R.string.couldnt_add_offer, Toast.LENGTH_SHORT).show();
             }
         });
+
+        return true;
     }
 
     public void changeAbout(@NonNull Activity activity) {
@@ -845,12 +851,12 @@ public class Action {
         });
     }
 
-    public void want(@NonNull String details) {
-        want(details, true);
+    public boolean want(@NonNull String details) {
+        return want(details, true);
     }
 
-    public void want(@NonNull String details, boolean want) {
-        team.action.addOffer(
+    public boolean want(@NonNull String details, boolean want) {
+        return team.action.addOffer(
                 details,
                 want,
                 null,

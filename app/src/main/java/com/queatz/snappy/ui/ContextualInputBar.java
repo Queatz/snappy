@@ -323,9 +323,14 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
             return;
         }
 
-        team.action.want(text);
-        whatsUp.setText("");
-        team.view.keyboard(whatsUp, false);
+        if (team.action.want(text)) {
+            whatsUp.setText("");
+            team.view.keyboard(whatsUp, false);
+        } else {
+            if (team.environment.is(AnonymousEnvironment.class)) {
+                to(new SigninAction());
+            }
+        }
     }
 
     public void resetAll() {
