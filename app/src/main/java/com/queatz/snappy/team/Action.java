@@ -163,20 +163,6 @@ public class Action {
         });
     }
 
-    public void openDate(@NonNull Activity from, @NonNull final DynamicRealmObject party) {
-        Intent intent = new Intent(Intent.ACTION_INSERT, CalendarContract.Events.CONTENT_URI);
-        intent.setType("vnd.android.cursor.dir/event");
-        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, party.getDate(Thing.DATE).getTime());
-        intent.putExtra(CalendarContract.Events.TITLE, party.getString(Thing.NAME));
-        intent.putExtra(CalendarContract.Events.DESCRIPTION, party.getString(Thing.ABOUT));
-
-        if (!party.isNull(Thing.LOCATION)) {
-            intent.putExtra(CalendarContract.Events.EVENT_LOCATION, party.getObject(Thing.LOCATION).getString(Thing.NAME));
-        }
-
-        from.startActivity(intent);
-    }
-
     public void openLocation(@NonNull Activity from, DynamicRealmObject location) {
         if(location == null)
             return;
