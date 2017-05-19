@@ -24,6 +24,7 @@ import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.ThingKinds;
 import com.queatz.snappy.team.actions.AuthenticatedAction;
+import com.queatz.snappy.team.actions.OfferSomethingAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.ui.SlideScreen;
 import com.queatz.snappy.ui.TextView;
@@ -156,7 +157,7 @@ public class PersonUptoSlide extends Fragment implements Branchable<ActivityCont
             mFloatingAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    team.action.offerSomething(getActivity());
+                    to(new OfferSomethingAction());
                 }
             });
 
