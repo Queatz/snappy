@@ -11,7 +11,9 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.team.TeamFragment;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.SignoutAction;
 import com.queatz.snappy.ui.TextView;
 
 import io.realm.DynamicRealmObject;
@@ -19,7 +21,7 @@ import io.realm.DynamicRealmObject;
 /**
  * Created by jacob on 12/6/15.
  */
-public class SettingsSlide extends Fragment {
+public class SettingsSlide extends TeamFragment {
     DynamicRealmObject mPerson;
     Team team;
 
@@ -87,7 +89,7 @@ public class SettingsSlide extends Fragment {
         view.findViewById(R.id.action_logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.signout(getActivity());
+                to(new SignoutAction());
             }
         });
 

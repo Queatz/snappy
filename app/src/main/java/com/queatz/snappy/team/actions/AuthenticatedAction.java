@@ -16,7 +16,7 @@ public abstract class AuthenticatedAction extends Branch<ActivityContext> {
     }
 
     private void fail() {
-        me().getTeam().action.showLoginDialog();
+        to(new SigninAction());
     }
 
     public abstract void whenAuthenticated();

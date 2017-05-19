@@ -29,7 +29,7 @@ public class Team implements Closeable {
     public View view;
     public Auth auth;
     public Api api;
-    public Action action;
+    @Deprecated public Action action;
     public Things things;
     public Location location;
     public Push push;
