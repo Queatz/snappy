@@ -35,6 +35,7 @@ import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.ThingKinds;
 import com.queatz.snappy.team.actions.LikeUpdateAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
+import com.queatz.snappy.team.actions.ShareThingAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.team.observers.AuthenticatedEnvironment;
 import com.queatz.snappy.util.Functions;
@@ -262,7 +263,7 @@ public class UpdateCard implements Card<DynamicRealmObject> {
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.share((Activity) view.getContext(), update);
+                branch.to(new ShareThingAction(update));
             }
         });
 

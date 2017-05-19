@@ -20,6 +20,7 @@ import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.LikeUpdateAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
+import com.queatz.snappy.team.actions.ShareThingAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.TimeUtil;
@@ -180,7 +181,7 @@ public class OfferCard implements Card<DynamicRealmObject> {
         view.findViewById(R.id.shareButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                team.action.share((Activity) view.getContext(), offer);
+                branch.to(new ShareThingAction(offer));
             }
         });
         return view;

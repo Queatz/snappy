@@ -1004,45 +1004,4 @@ public class Action {
             }
         });
     }
-
-    public void share(Activity activity, DynamicRealmObject thing) {
-        String text;
-        String subject;
-        String name;
-
-        switch (thing.getString(Thing.KIND)) {
-            case "offer":
-                name = thing.getObject(Thing.SOURCE).getString(Thing.FIRST_NAME) + " " +
-                        thing.getObject(Thing.SOURCE).getString(Thing.LAST_NAME);
-
-                subject = "Offers by " + name;
-
-                String offerOrRequest = Util.offerIsRequest(thing) ? "wanted" : "offered";
-
-                text = "Check out " + thing.getString(Thing.ABOUT) + " " + offerOrRequest + " by " + name + "\n\n" +
-                    Config.VILLAGE_WEBSITE + thing.getObject(Thing.SOURCE).getString(Thing.GOOGLE_URL);
-                break;
-            case "update":
-                name = thing.getObject(Thing.SOURCE).getString(Thing.FIRST_NAME) + " " +
-                        thing.getObject(Thing.SOURCE).getString(Thing.LAST_NAME);
-
-                subject = "Updates from " + name;
-                text = thing.getString(Thing.ABOUT) + " — " + name + "\n\n" +
-                        Config.VILLAGE_WEBSITE + thing.getObject(Thing.SOURCE).getString(Thing.GOOGLE_URL);
-                break;
-            default:
-                return;
-        }
-
-        try {
-            Intent i = new Intent(Intent.ACTION_SEND);
-            i.setType("text/plain");
-            i.putExtra(Intent.EXTRA_SUBJECT, subject);
-            i.putExtra(Intent.EXTRA_TEXT, text);
-            activity.startActivity(Intent.createChooser(i, activity.getString(R.string.choose_application)));
-        }
-        catch(Exception e)
-        { //e.toString();
-        }
-    }
 }
