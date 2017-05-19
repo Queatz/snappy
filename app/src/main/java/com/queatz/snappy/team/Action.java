@@ -587,60 +587,6 @@ public class Action {
         return true;
     }
 
-    public void changeAbout(@NonNull Activity activity) {
-        final EditText editText = new EditText(activity);
-        int p = (int) Util.px(16);
-        editText.setPadding(p, p, p, p);
-        editText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        editText.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
-        editText.setSingleLine(false);
-        editText.setHint(R.string.what_are_you_into);
-
-        String about = team.auth.me().getString(Thing.ABOUT);
-
-        if(about == null || about.isEmpty()) {
-            about = "";
-        }
-
-        editText.setText(about);
-
-        new AlertDialog.Builder(activity).setView(editText)
-                .setNegativeButton(R.string.nope, null)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String about = editText.getText().toString();
-
-                        team.realm.beginTransaction();
-                        team.auth.me().setString(Thing.ABOUT, about);
-                        team.realm.commitTransaction();
-
-                        RequestParams params = new RequestParams();
-                        params.put(Config.PARAM_ABOUT, about);
-
-                        team.api.post(Config.PATH_EARTH + "/" + Config.PATH_ME, params, new Api.Callback() {
-                            @Override
-                            public void success(String response) {
-
-                            }
-
-                            @Override
-                            public void fail(String response) {
-                                Toast.makeText(team.context, "Couldn't change what you're into", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                })
-                .show();
-
-            editText.post(new Runnable() {
-                @Override
-                public void run() {
-                    team.view.keyboard(editText);
-                }
-            });
-    }
-
     public DynamicRealmObject nPendingLocationPhotoChange;
 
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
