@@ -56,6 +56,7 @@ public class PartiesSlide extends MapSlide implements
 
     ListView mList;
     View emptyView;
+    int emptyViewHeight;
 
     private boolean layoutsShown = true;
     private ScrollActionsTouchListener layoutsListener;
@@ -90,7 +91,10 @@ public class PartiesSlide extends MapSlide implements
         view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
-                emptyView.setMinimumHeight(view.getMeasuredHeight());
+                if (emptyViewHeight != view.getMeasuredHeight()) {
+                    emptyViewHeight = view.getMeasuredHeight();
+                    emptyView.setMinimumHeight(emptyViewHeight);
+                }
             }
         });
 

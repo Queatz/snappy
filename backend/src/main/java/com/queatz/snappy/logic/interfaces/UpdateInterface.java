@@ -162,7 +162,7 @@ public class UpdateInterface extends CommonThingInterface {
                 else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {
                     message = Streams.asString(stream, "UTF-8");
                 }
-                else if (Config.PARAM_IN.equals(item.getFieldName())) {
+                else if (Config.PARAM_THING.equals(item.getFieldName())) {
                     thingId = Streams.asString(stream, "UTF-8");
                 }
                 else if (Config.PARAM_LATITUDE.equals(item.getFieldName())) {
@@ -206,7 +206,7 @@ public class UpdateInterface extends CommonThingInterface {
         update = new UpdateEditor(as).updateWith(update, thing, message, photoUploaded, geo, with, going);
 
         // Associate comment
-        new MemberEditor(as).create(thing, update, Config.MEMBER_STATUS_ACTIVE);
+        new MemberEditor(as).create(update, thing, Config.MEMBER_STATUS_ACTIVE);
 
         if (EarthKind.UPDATE_KIND.equals(thing.getString(EarthField.KIND))) {
             new EarthUpdate(as).send(new NewCommentEvent(update)).to(thing.getKey(EarthField.SOURCE));

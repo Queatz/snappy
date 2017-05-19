@@ -15,7 +15,7 @@ public class Config {
     /**
      * Force this to use the beta configuration.
      */
-    public static final boolean BETA_VERSION = false;
+    public static final boolean BETA_VERSION = true;
 
     /**
      * During app upgrades, this value is compared against the app version code, and if it is less
@@ -38,7 +38,7 @@ public class Config {
     /**
      * The Village backend url.
      */
-    public static final String API_URL = (BETA_VERSION ? "http://192.168.1.105:8080/api/" : "https://vlllage.com:8443/api/");
+    public static final String API_URL = (BETA_VERSION ? "http://192.168.1.21:8080/api/" : "https://vlllage.com:8443/api/");
 
     /**
      * The url for queues, accessed by the backend.  Localhost if on the same machine.

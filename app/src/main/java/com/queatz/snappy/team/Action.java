@@ -140,7 +140,7 @@ public class Action {
 
         team.realm.beginTransaction();
         DynamicRealmObject o = team.realm.createObject("Thing");
-        o.setString(Thing.KIND, "message");
+        o.setString(Thing.KIND, ThingKinds.MESSAGE);
         o.setString(Thing.ID, localId);
         o.setObject(Thing.FROM, team.auth.me());
         o.setObject(Thing.TO, to);
@@ -164,7 +164,7 @@ public class Action {
             @Override
             public void fail(String response) {
                 // Reverse local modifications after retrying
-                Toast.makeText(team.context, "Message not sent", Toast.LENGTH_SHORT).show();
+                Toast.makeText(team.context, R.string.message_not_sent, Toast.LENGTH_SHORT).show();
 
                 DynamicRealmObject message = team.realm.where("Thing")
                         .equalTo(Thing.ID, localId)

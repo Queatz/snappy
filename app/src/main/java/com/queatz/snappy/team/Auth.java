@@ -62,7 +62,6 @@ public class Auth {
     private GetAuthTokenTask mFetchTask;
     private Activity mActivity;
     private HashSet<Callback> mCallbacks;
-    private GcmRegistrationAsyncTask gcmRegistrationAsyncTask = null;
     private Handler mHandler;
     private Runnable mRegisterDeviceRunnable = null;
 

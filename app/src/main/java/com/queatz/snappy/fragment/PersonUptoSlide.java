@@ -50,6 +50,7 @@ public class PersonUptoSlide extends Fragment implements Branchable<ActivityCont
     private FloatingActionButton mFloatingAction;
     private RealmChangeListener<DynamicRealmObject> mChangeListener = null;
     private ListView updateList;
+    private int topGlassHeight;
 
     @Override
     public void to(Branch<ActivityContext> branch) {
@@ -114,7 +115,10 @@ public class PersonUptoSlide extends Fragment implements Branchable<ActivityCont
         view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
-                topGlass.setMinimumHeight(view.getMeasuredHeight());
+                if (topGlassHeight != view.getMeasuredHeight()) {
+                    topGlassHeight = view.getMeasuredHeight();
+                    topGlass.setMinimumHeight(topGlassHeight);
+                }
             }
         });
 
