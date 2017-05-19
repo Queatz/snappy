@@ -1,6 +1,5 @@
 package com.queatz.snappy.activity;
 
-import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;

@@ -1,7 +1,5 @@
 package com.queatz.snappy.fragment;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
@@ -12,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.queatz.branch.Branch;
-import com.queatz.branch.Branchable;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
@@ -21,6 +18,7 @@ import com.queatz.snappy.adapter.FeedAdapter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.team.TeamFragment;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.ThingKinds;
 import com.queatz.snappy.team.actions.AuthenticatedAction;
@@ -44,7 +42,7 @@ import io.realm.Sort;
 /**
  * Created by jacob on 10/23/14.
  */
-public class PersonUptoSlide extends Fragment implements Branchable<ActivityContext> {
+public class PersonUptoSlide extends TeamFragment {
     private Team team;
     private DynamicRealmObject mPerson;
     private View personAbout;

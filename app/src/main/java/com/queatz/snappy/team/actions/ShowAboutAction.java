@@ -1,8 +1,5 @@
 package com.queatz.snappy.team.actions;
 
-import android.app.AlertDialog;
-import android.view.View;
-
 import com.queatz.snappy.R;
 
 /**

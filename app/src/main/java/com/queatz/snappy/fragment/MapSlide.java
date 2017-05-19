@@ -1,6 +1,5 @@
 package com.queatz.snappy.fragment;
 
-import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -18,12 +17,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.queatz.branch.Branch;
-import com.queatz.branch.Branchable;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.team.TeamFragment;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.OpenLocationAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
@@ -46,7 +45,7 @@ import io.realm.RealmResults;
  * Created by jacob on 8/7/16.
  */
 
-public abstract class MapSlide extends Fragment implements OnMapReadyCallback, OnBackPressed, Branchable<ActivityContext> {
+public abstract class MapSlide extends TeamFragment implements OnMapReadyCallback, OnBackPressed {
 
     private GoogleMap mMap;
 
