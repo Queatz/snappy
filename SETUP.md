@@ -11,12 +11,20 @@ Domain: `vlllage.com`
 
     apt-get install software-properties-common apt-transport-https -y --force-yes
     apt-add-repository http://deb.debian.org/debian/ sid main contrib
-    apt-add-repository https://www.arangodb.com/repositories/arangodb31/Debian_8.0/ /
+    apt-add-repository 'https://www.arangodb.com/repositories/arangodb31/Debian_8.0/ /'
     
+    apt-get update
     apt-get install openjdk-8-jre openjdk-8-jre-headless openjdk-8-jdk ca-certificates-java
     apt-get install tomcat8 tomcat8-admin git default-jdk -y --force-yes
     apt-get install arangodb3 -y --force-yes
     apt-get install libservlet3.1-java -y --force-yes
+
+Note: You may want to do some additional things, such as:
+
+    curl -O https://www.arangodb.com/repositories/arangodb31/Debian_8.0/Release.key
+    apt-key add - < Release.key
+
+Check https://www.arangodb.com/download-major/debian/ for latest information.
 
 Modify /etc/tomcat8/tomcat-users.html to include:
 
