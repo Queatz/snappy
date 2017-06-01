@@ -23,6 +23,11 @@ public class CommonThingView extends ThingView {
     final List<Viewable> members;
 
     /**
+     * List of things that this thing is in.
+     */
+    final List<Viewable> in;
+
+    /**
      * Number of backers of this thing.
      */
     final int backers;
@@ -40,16 +45,25 @@ public class CommonThingView extends ThingView {
             case DEEP:
                 final MemberMine memberMine = use(MemberMine.class);
 
-                final List<EarthThing> pool = memberMine.byThingWithStatus(thing, Config.MEMBER_STATUS_ACTIVE);
+                final List<EarthThing> thingMembers = memberMine.byThingWithStatus(thing, Config.MEMBER_STATUS_ACTIVE);
 
-                if (pool != null) {
-                    this.members = new EntityListView(as, pool, EarthView.SHALLOW).asList();
+                if (thingMembers != null) {
+                    this.members = new EntityListView(as, thingMembers, EarthView.SHALLOW).asList();
                 } else {
                     this.members = null;
+                }
+
+                final List<EarthThing> thingIsIn = memberMine.isAMemberOfThingsWithStatus(thing, Config.MEMBER_STATUS_ACTIVE);
+
+                if (thingIsIn != null) {
+                    this.in = new EntityListView(as, thingIsIn, EarthView.SHALLOW).asList();
+                } else {
+                    this.in = null;
                 }
                 break;
             default:
                 this.members = null;
+                this.in = null;
         }
     }
 }
