@@ -26,13 +26,13 @@ Note: You may want to do some additional things, such as:
 
 Check https://www.arangodb.com/download-major/debian/ for latest information.
 
-Modify /etc/tomcat8/tomcat-users.html to include:
+Modify `/etc/tomcat8/tomcat-users.html` to include:
 
     <role rolename="tomcat"/>
     <role rolename="manager-script"/>
     <user username="tomcat" password="tomcat" roles="tomcat,manager-script"/>
 
-Modify /etc/tomcat8/context.html to include:
+Modify /etc/tomcat8/context.xml` to include:
 
     <Context antiResourceLocking="false" privilaged="true">
         <Valve className="org.apache.catalina.valves.RemoteAddrValve"
@@ -43,14 +43,17 @@ Modify /etc/tomcat8/context.html to include:
     </Context>
 
 
-Modify /etc/tomcat8/server.html to include within <Host>:
+Modify `/etc/tomcat8/server.xml` to include within `<Host>`:
 
     <Context path="" docBase="backend">
         <!-- Default set of monitored resources -->
         <WatchedResource>WEB-INF/web.xml</WatchedResource>
     </Context>
 
-Modify /etc/tomcat8/server.xml to include:
+Note: it may be easiest to add this after loading the `backend` into Tomcat, or otherwise Tomcat
+may not start.
+
+Modify `/etc/tomcat8/server.xml` to include within `<Service name="Catalina">`:
 
     <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
                maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
@@ -156,6 +159,7 @@ Edit /etc/apache2/sites-enabled/000-default.conf
 
 #### 1) Setup
 
+    npm install -g @angular/cli
     cd Snappy-Web-App/web-app/src/main/webapp
     npm i
     sudo npm i -g typescript
