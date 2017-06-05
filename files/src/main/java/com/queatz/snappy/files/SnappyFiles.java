@@ -22,19 +22,19 @@ public class SnappyFiles {
     }
 
     @Nullable
-    public OutputStream openOutputStream(final String path) {
+    public OutputStream openOutputStream(final String path) throws IOException {
         return openOutputStream(path, null);
     }
 
     @Nullable
-    public OutputStream openOutputStream(final String path, @Nullable final Runnable onCloseCallback) {
+    public OutputStream openOutputStream(final String path, @Nullable final Runnable onCloseCallback) throws IOException {
 
         // Ensure pool folder exists
         File pool = new File(filePoolPath);
 
         if (!pool.exists()) {
             if (!pool.mkdirs()) {
-                return null;
+                throw new IOException("Could not create file pool directory. Do we have permissions?");
             }
         }
 
