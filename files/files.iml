@@ -27,6 +27,16 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="library" exported="" name="annotations-java5-15.0" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.8.0" level="project" />
+    <orderEntry type="library" exported="" name="httpclient-4.5.3" level="project" />
+    <orderEntry type="library" exported="" name="commons-io-2.5" level="project" />
+    <orderEntry type="library" exported="" name="httpcore-4.4.6" level="project" />
+    <orderEntry type="library" exported="" name="commons-logging-1.2" level="project" />
+    <orderEntry type="library" exported="" name="commons-codec-1.9" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="testng-6.9.4" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="bsh-2.0b4" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="jcommander-1.48" level="project" />
   </component>
 </module>

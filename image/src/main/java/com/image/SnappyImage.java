@@ -222,7 +222,7 @@ public class SnappyImage {
      * @param path The image path
      * @param w The requested image width, or 0 to not resize
      * @param h The requested image height, or 0 to keep aspect
-     * @return An image stream where the image can be read, or null of not found
+     * @return An image stream where the image can be read, or null if not found
      */
     @Nullable
     public InputStream openInputStream(String path, int w, int h) {
