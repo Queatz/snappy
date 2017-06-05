@@ -18,7 +18,7 @@ public class SnappyFiles {
     private final String filePoolPath;
 
     public SnappyFiles(@NotNull String poolName) {
-        filePoolPath = Config.VILLAGE_FILES_DIR + poolName;
+        filePoolPath = Config.VILLAGE_FILES_DIR + "pools/" + poolName;
     }
 
     @Nullable
@@ -81,7 +81,7 @@ public class SnappyFiles {
         }
     }
 
-    public File getFileFromName(String file) {
+    private File getFileFromName(String file) {
         return Paths.get(filePoolPath, file).toFile();
     }
 
