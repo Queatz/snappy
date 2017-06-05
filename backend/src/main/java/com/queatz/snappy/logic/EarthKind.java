@@ -23,4 +23,6 @@ public class EarthKind {
     public static final String MEMBER_KIND = "member";
     public static final String GEO_SUBSCRIBE_KIND = "geosubscribe";
     public static final String FORM_KIND = "form";
+    public static final String FORM_ITEM_KIND = "form-item";
+    public static final String FORM_SUBMISSION_KIND = "form-submission";
 }
