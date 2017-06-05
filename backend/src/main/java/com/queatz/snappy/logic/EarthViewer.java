@@ -5,6 +5,7 @@ import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.ContactView;
 import com.queatz.snappy.logic.views.ExistenceView;
 import com.queatz.snappy.logic.views.FollowerView;
+import com.queatz.snappy.logic.views.FormView;
 import com.queatz.snappy.logic.views.HubView;
 import com.queatz.snappy.logic.views.JoinView;
 import com.queatz.snappy.logic.views.LikeView;
@@ -61,6 +62,7 @@ public class EarthViewer extends EarthControl {
         mapping.put(EarthKind.RESOURCE_KIND, getConstructor(ResourceView.class));
         mapping.put(EarthKind.PROJECT_KIND, getConstructor(ProjectView.class));
         mapping.put(EarthKind.MEMBER_KIND, getConstructor(MemberView.class));
+        mapping.put(EarthKind.FORM_KIND, getConstructor(FormView.class));
 
         Constructor<? extends Viewable> identity = getConstructor(ExistenceView.class);
     }

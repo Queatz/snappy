@@ -280,6 +280,7 @@ public class Config {
     public static final String PUSH_ACTION_OFFER_LIKED = "offer_liked";
     public static final String PUSH_ACTION_NEW_COMMENT = "new_comment";
     public static final String PUSH_ACTION_INFORMATION = "information";
+    public static final String PUSH_ACTION_FORM_SUBMISSION_EVENT = "form_submission";
 
     // Types of updates
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";

@@ -9,7 +9,12 @@ public enum EarthView {
      */
     DEEP,
 
-    IDENTITY, /**
+    /**
+     * Just enough to uniquely identify.
+     */
+    IDENTITY,
+
+    /**
      * Do not follow links.
      */
     SHALLOW
