@@ -27,6 +27,6 @@
 -keepnames public class * extends io.realm.RealmObject
 -keep class io.realm.** { *; }
 -dontwarn javax.**
--dontwarn io.realm.**
+-keep io.realm.**
 
 -dontwarn com.squareup.okhttp.**

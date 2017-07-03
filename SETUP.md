@@ -173,7 +173,7 @@ If you want production bundling, do:
     cd Snappy-Web-App/web-app/src/main/webapp
     ng build -prod -op dist/ --aot
     
-Zip and upload to your box and do:
+Zip and upload `dist/` to your box and do:
 
     cd dist/
     sudo npm i --save-dev express

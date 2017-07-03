@@ -5,12 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
-import com.queatz.branch.Branch;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.team.TeamActivity;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.util.Functions;
 import com.squareup.picasso.Picasso;

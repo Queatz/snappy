@@ -36,7 +36,7 @@ public class Functions {
     }
 
     public static String getImageUrlForSize(DynamicRealmObject person, int size) {
-        if(person.isNull(Thing.IMAGE_URL) ||
+        if(person == null || person.isNull(Thing.IMAGE_URL) ||
                 person.getString(Thing.IMAGE_URL) == null ||
                 person.getString(Thing.IMAGE_URL).isEmpty() ||
                 !person.getString(Thing.IMAGE_URL).contains("="))

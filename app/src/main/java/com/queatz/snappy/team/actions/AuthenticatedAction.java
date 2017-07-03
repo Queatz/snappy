@@ -1,8 +1,7 @@
 package com.queatz.snappy.team.actions;
 
 
-import com.queatz.branch.Branch;
-import com.queatz.snappy.team.contexts.ActivityContext;
+import com.queatz.snappy.team.observers.AuthenticatedEnvironment;
 
 import io.realm.DynamicRealmObject;
 
@@ -12,7 +11,7 @@ import io.realm.DynamicRealmObject;
 
 public abstract class AuthenticatedAction extends ActivityAction {
     private boolean valid() {
-        return me().getTeam().auth.isAuthenticated();
+        return me().getTeam().environment.is(AuthenticatedEnvironment.class);
     }
 
     private void fail() {
