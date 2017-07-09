@@ -9,30 +9,33 @@ Using Debian 8.0...
 
 Domain: `vlllage.com`
 
-    apt-get install software-properties-common apt-transport-https -y --force-yes
-    apt-add-repository http://deb.debian.org/debian/ sid main contrib
-    apt-add-repository 'https://www.arangodb.com/repositories/arangodb31/Debian_8.0/ /'
+    sudo su -
+        
+    curl -O https://www.arangodb.com/repositories/arangodb31/Debian_8.0/Release.key
+    apt-key add - < Release.key
     
+    apt-get install software-properties-common apt-transport-https -y --force-yes
+    apt-add-repository 'http://deb.debian.org/debian/ sid main contrib'
+    echo 'deb https://www.arangodb.com/repositories/arangodb31/Debian_8.0/ /' | sudo tee /etc/apt/sources.list.d/arangodb.list
+
     apt-get update
-    apt-get install openjdk-8-jre openjdk-8-jre-headless openjdk-8-jdk ca-certificates-java
+    apt-get install openjdk-8-jre openjdk-8-jre-headless openjdk-8-jdk ca-certificates-java --force-yes
     apt-get install tomcat8 tomcat8-admin git default-jdk -y --force-yes
     apt-get install arangodb3 -y --force-yes
     apt-get install libservlet3.1-java -y --force-yes
 
-Note: You may want to do some additional things, such as:
-
-    curl -O https://www.arangodb.com/repositories/arangodb31/Debian_8.0/Release.key
-    apt-key add - < Release.key
 
 Check https://www.arangodb.com/download-major/debian/ for latest information.
 
-Modify `/etc/tomcat8/tomcat-users.html` to include:
+Install `node` from https://github.com/nodesource/distributions#debinstall
+
+Modify `/etc/tomcat8/tomcat-users.xml` to include within `<tomcat-users>`:
 
     <role rolename="tomcat"/>
     <role rolename="manager-script"/>
     <user username="tomcat" password="tomcat" roles="tomcat,manager-script"/>
 
-Modify /etc/tomcat8/context.xml` to include:
+Modify `/etc/tomcat8/context.xml` to include:
 
     <Context antiResourceLocking="false" privilaged="true">
         <Valve className="org.apache.catalina.valves.RemoteAddrValve"
@@ -55,12 +58,19 @@ may not start.
 
 Modify `/etc/tomcat8/server.xml` to include within `<Service name="Catalina">`:
 
-    <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
+    <Connector port="8443" address="0.0.0.0"
+               protocol="org.apache.coyote.http11.Http11NioProtocol"
                maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
-               SSLCertificateFile="/etc/letsencrypt/live/vlllage.com/fullchain.pem"
-               SSLCertificateKeyFile="/etc/letsencrypt/live/vlllage.com/privkey.pem"
+               SSLCertificateFile="/etc/letsencrypt/archive/vlllage.com/fullchain1.pem"
+               SSLCertificateKeyFile="/etc/letsencrypt/archive/vlllage.com/privkey1.pem"
                SSLVerifyClient="none" SSLProtocol="TLSv1+TLSv1.1+TLSv1.2" />
                
+    <Connector port="8080" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               URIEncoding="UTF-8"
+               redirectPort="8443"
+               address="0.0.0.0" />
+             
 #### 2) Setup Database
 
 `arangosh`
@@ -68,20 +78,24 @@ Modify `/etc/tomcat8/server.xml` to include within `<Service name="Catalina">`:
     arangosh> require('@arangodb/users').save('snappy', 'snappy')
     arangosh> require('@arangodb/users').grantDatabase('snappy', '_system')
 
+See more here:
+https://docs.arangodb.com/3.0/Manual/Administration/ManagingUsers.html
+
 Make data dir:
 
     mkdir /var/lib/village/
     chown tomcat8 /var/lib/village/
     chgrp tomcat8 /var/lib/village/
 
-See more here:
-https://docs.arangodb.com/3.0/Manual/Administration/ManagingUsers.html
-
 #### 3) Setup Backend
 
 Compile the backend in `snappy` with `./gradlew :backend:war`
 
 Upload `backend/build/libs/backend.war` to your server
+
+Restart Tomcat8
+
+`/etc/init.d/tomcat8 restart`
 
 (Optional: If you already have the backend deployed, you may need to undeploy it)
 
@@ -92,21 +106,34 @@ Install the backend in Tomcat8
     curl --upload-file backend.war -u tomcat:tomcat http://tomcat:tomcat@127.0.0.1:8080/manager/text/deploy?path=/backend&update=true
     curl -u tomcat:tomcat http://127.0.0.1:8080/manager/text/reload?path=/
 
-Restart Tomcat8
-
-`/etc/init.d/tomcat8 restart`
-
 #### 4) Setup HTTPS
 
-    apt-get install python-certbot-apache -t jessie-backports python-pip
+    apt-get install python-certbot-apache python-pip
     sudo pip install ndg_httpsclient
     certbot --apache
-    chmod 0666 /etc/letsencrypt
-    chmod 0666 /etc/letsencrypt/archive
-    chmod 0666 /etc/letsencrypt/archive/vlllage.com
-    chmod 0666 /etc/letsencrypt/live/vlllage.com/fullchain.pem
-    chmod 0666 /etc/letsencrypt/live/vlllage.com/privkey.pem
+    chmod 0777 /etc
+    chmod 0777 /etc/letsencrypt
+    chmod 0777 /etc/letsencrypt/archive
+    chmod 0777 /etc/letsencrypt/archive/vlllage.com
+    chmod 0777 /etc/letsencrypt/archive/vlllage.com/fullchain1.pem
+    chmod 0777 /etc/letsencrypt/archive/vlllage.com/privkey1.pem
+    chmod 0777 /etc/letsencrypt/live
+    chmod 0777 /etc/letsencrypt/live/vlllage.com
+    chmod 0777 /etc/letsencrypt/live/vlllage.com/fullchain.pem
+    chmod 0777 /etc/letsencrypt/live/vlllage.com/privkey.pem
     sudo apachectl restart
+
+Enable ports:
+
+    iptables -F
+    iptables -X
+    iptables -t nat -F
+    iptables -t nat -X
+    iptables -t mangle -F
+    iptables -t mangle -X
+    iptables -P INPUT ACCEPT
+    iptables -P OUTPUT ACCEPT
+    iptables -P FORWARD ACCEPT
 
 Edit /etc/apache2/sites-enabled/000-default-le-ssl.conf 
 
@@ -118,14 +145,11 @@ Edit /etc/apache2/sites-enabled/000-default-le-ssl.conf
         Include /etc/letsencrypt/options-ssl-apache.conf
         ServerName vlllage.com
     
-    
         ProxyRequests off
-    
     
         <Proxy *>
                 Require all granted
         </Proxy>
-    
     
         SSLProxyEngine on
         ProxyPass / https://127.0.0.1:3000/
@@ -139,21 +163,17 @@ Edit /etc/apache2/sites-enabled/000-default.conf
 
     <VirtualHost *:80>
         ServerName vlllage.com
-    
-    
-        ProxyRequests off
-    
-    
-        <Proxy *>
-                Require all granted
-        </Proxy>
-    
-    
-        SSLProxyEngine on
-        ProxyPass / https://127.0.0.1:3000/
-        ProxyPassReverse / https://127.0.0.1:3000/
-        ProxyPreserveHost on
+        Redirect permanent / https://vlllage.com/
     </VirtualHost>
+
+Restart apache:
+
+    a2enmod proxy proxy_http rewrite
+    sudo apachectl restart
+
+Make sure your firewall allows the following ports:
+
+    80;443;8443
 
 ## Frontend
 
