@@ -14,8 +14,8 @@
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
-    <output url="file://$MODULE_DIR$/build/classes/main" />
-    <output-test url="file://$MODULE_DIR$/build/classes/test" />
+    <output url="file://$MODULE_DIR$/build/classes/java/main" />
+    <output-test url="file://$MODULE_DIR$/build/classes/java/test" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
@@ -28,13 +28,15 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="shared" exported="" />
-    <orderEntry type="library" exported="" name="annotations-java5-15.0" level="project" />
-    <orderEntry type="library" exported="" name="gson-2.8.0" level="project" />
-    <orderEntry type="library" exported="" name="httpclient-4.5.3" level="project" />
-    <orderEntry type="library" exported="" name="commons-io-2.5" level="project" />
-    <orderEntry type="library" exported="" name="httpcore-4.4.6" level="project" />
-    <orderEntry type="library" exported="" name="commons-logging-1.2" level="project" />
-    <orderEntry type="library" exported="" name="commons-codec-1.9" level="project" />
+    <orderEntry type="module" module-name="shared" exported="" />
+    <orderEntry type="module" module-name="shared" exported="" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="annotations-java5-15.0" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="gson-2.8.0" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="httpclient-4.5.3" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="commons-io-2.5" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="httpcore-4.4.6" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="commons-logging-1.2" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="commons-codec-1.9" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="testng-6.9.4" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="bsh-2.0b4" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="jcommander-1.48" level="project" />

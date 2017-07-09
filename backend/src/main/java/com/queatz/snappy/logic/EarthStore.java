@@ -534,6 +534,10 @@ public class EarthStore extends EarthControl {
     }
 
     public List<EarthThing> query(String filter, @Nullable Map<String, Object> filterVars, int limit) {
+        return query(filter, filterVars, limit, null);
+    }
+
+    public List<EarthThing> query(String filter, @Nullable Map<String, Object> filterVars, int limit, String sort) {
 
         Map<String, Object> var = new HashMap<>();
 
@@ -542,11 +546,13 @@ public class EarthStore extends EarthControl {
         }
 
         var.put("_limit", limit <= 0 ? Config.NEARBY_MAX_COUNT : limit);
+        var.put("_sort_by", limit <= 0 ? Config.NEARBY_MAX_COUNT : limit);
         var.put("_concluded_on", DEFAULT_FIELD_CONCLUDED);
 
         String aql = "for x in " + DEFAULT_COLLECTION + " " +
                 "filter " + filter + " and x.@_concluded_on == null " +
                 "limit @_limit " +
+                (sort != null ? "sort x.@_sort_by " : "sort x." + EarthField.CREATED_ON) +
                 "return x";
 
         Logger.getLogger(Config.NAME).info(aql);

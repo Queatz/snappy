@@ -174,6 +174,9 @@ public class UpdateInterface extends CommonThingInterface {
                 else if (Config.PARAM_GOING.equals(item.getFieldName())) {
                     going = Boolean.parseBoolean(Streams.asString(stream, "UTF-8"));
                 }
+                else if (Config.PARAM_THING.equals(item.getFieldName())) {
+                    thingId = Streams.asString(stream, "UTF-8");
+                }
             }
         }
         catch (FileUploadException | IOException e) {

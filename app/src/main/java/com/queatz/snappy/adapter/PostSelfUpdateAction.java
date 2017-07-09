@@ -51,7 +51,7 @@ public class PostSelfUpdateAction extends AuthenticatedAction {
     public void whenAuthenticated() {
         RequestParams params = new RequestParams();
 
-        if (photo == null && message == null) {
+        if (photo == null && message == null && with == null) {
             return;
         }
 
@@ -90,7 +90,7 @@ public class PostSelfUpdateAction extends AuthenticatedAction {
         // The server expects this whether or not there is an image being uploaded
         params.setForceMultipartEntityContentType(true);
 
-        getTeam().api.post(Config.PATH_EARTH + "?kind=update", params, new Api.Callback() {
+        getTeam().api.post(Config.PATH_EARTH + "?kind=update&in=" + getTeam().auth.getUser(), params, new Api.Callback() {
             @Override
             public void success(String response) {
                 getTeam().things.put(response);
@@ -103,7 +103,7 @@ public class PostSelfUpdateAction extends AuthenticatedAction {
 
             @Override
             public void fail(String response) {
-                Toast.makeText(getTeam().context, "Couldn't upload photo", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getTeam().context, "Couldn't post update", Toast.LENGTH_SHORT).show();
             }
         });
 

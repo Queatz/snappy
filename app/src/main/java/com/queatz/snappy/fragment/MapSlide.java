@@ -291,7 +291,7 @@ public abstract class MapSlide extends TeamFragment implements OnMapReadyCallbac
         for (DynamicRealmObject thing : things) {
             LatLng location = new LatLng(thing.getDouble(Thing.LATITUDE), thing.getDouble(Thing.LONGITUDE));
 
-            MarkerOptions options = new MarkerOptions().position(location);
+            MarkerOptions options = new MarkerOptions().anchor(.5f, .5f).position(location);
             final Marker marker = mMap.addMarker(options);
 
             marker.setTag(thing);
