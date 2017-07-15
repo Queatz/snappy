@@ -58,7 +58,7 @@ public class EarthThing {
     }
 
     public double getDouble(String field) {
-        return (Double) raw.getAttribute(field);
+        return getNumber(field).doubleValue();
     }
 
     public boolean isNull(String field) {

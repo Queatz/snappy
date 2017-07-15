@@ -19,21 +19,28 @@ Domain: `vlllage.com`
     echo 'deb https://www.arangodb.com/repositories/arangodb31/Debian_8.0/ /' | sudo tee /etc/apt/sources.list.d/arangodb.list
 
     apt-get update
-    apt-get install openjdk-8-jre openjdk-8-jre-headless openjdk-8-jdk ca-certificates-java --force-yes
-    apt-get install tomcat8 tomcat8-admin git default-jdk -y --force-yes
-    apt-get install arangodb3 -y --force-yes
-    apt-get install libservlet3.1-java -y --force-yes
+    apt-get install openjdk-8-jre openjdk-8-jre-headless openjdk-8-jdk ca-certificates-java -y
+    apt-get install apache2 tomcat8 tomcat8-admin git default-jdk -y
+    apt-get install arangodb3 -y
+    apt-get install libservlet3.1-java -y
 
+Note, if you see `arangodb3 : Depends: libssl1.0.0 (>= 1.0.1) but it is not installable`,
+then make sure you have `jessie` in your `/etc/apt/sources.list` file.
+
+    deb http://deb.debian.org/debian/ jessie contrib main
 
 Check https://www.arangodb.com/download-major/debian/ for latest information.
 
-Install `node` from https://github.com/nodesource/distributions#debinstall
+Install `node` (see https://github.com/nodesource/distributions#debinstall)
+
+    curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+    sudo apt-get install -y nodejs
 
 Modify `/etc/tomcat8/tomcat-users.xml` to include within `<tomcat-users>`:
 
     <role rolename="tomcat"/>
     <role rolename="manager-script"/>
-    <user username="tomcat" password="tomcat" roles="tomcat,manager-script"/>
+    <user username="TOMCATSECRETUSER293" password="TOMCATSECRETPASSWORD3984" roles="tomcat,manager-script"/>
 
 Modify `/etc/tomcat8/context.xml` to include:
 
@@ -45,16 +52,6 @@ Modify `/etc/tomcat8/context.xml` to include:
         
     </Context>
 
-
-Modify `/etc/tomcat8/server.xml` to include within `<Host>`:
-
-    <Context path="" docBase="backend">
-        <!-- Default set of monitored resources -->
-        <WatchedResource>WEB-INF/web.xml</WatchedResource>
-    </Context>
-
-Note: it may be easiest to add this after loading the `backend` into Tomcat, or otherwise Tomcat
-may not start.
 
 Modify `/etc/tomcat8/server.xml` to include within `<Service name="Catalina">`:
 
@@ -93,22 +90,31 @@ Compile the backend in `snappy` with `./gradlew :backend:war`
 
 Upload `backend/build/libs/backend.war` to your server
 
+
+(Optional: If you already have the backend deployed, you may need to undeploy it)
+
+    curl -u TOMCATSECRETUSER293:TOMCATSECRETPASSWORD3984 http://127.0.0.1:8080/manager/text/undeploy?path=/backend
+
+Install the backend in Tomcat8
+
+    curl --upload-file backend.war -u TOMCATSECRETUSER293:TOMCATSECRETPASSWORD3984 http://127.0.0.1:8080/manager/text/deploy?path=/backend&update=true
+    curl -u TOMCATSECRETUSER293:TOMCATSECRETPASSWORD3984 http://127.0.0.1:8080/manager/text/reload?path=/
+
+
+Modify `/etc/tomcat8/server.xml` to include within `<Host>`:
+
+    <Context path="" docBase="backend">
+        <!-- Default set of monitored resources -->
+        <WatchedResource>WEB-INF/web.xml</WatchedResource>
+    </Context>
+
 Restart Tomcat8
 
 `/etc/init.d/tomcat8 restart`
 
-(Optional: If you already have the backend deployed, you may need to undeploy it)
-
-    curl -u tomcat:tomcat http://tomcat:tomcat@127.0.0.1:8080/manager/text/undeploy?path=/backend
-
-Install the backend in Tomcat8
-
-    curl --upload-file backend.war -u tomcat:tomcat http://tomcat:tomcat@127.0.0.1:8080/manager/text/deploy?path=/backend&update=true
-    curl -u tomcat:tomcat http://127.0.0.1:8080/manager/text/reload?path=/
-
 #### 4) Setup HTTPS
 
-    apt-get install python-certbot-apache python-pip
+    apt-get install python-certbot-apache python-pip -y
     sudo pip install ndg_httpsclient
     certbot --apache
     chmod 0777 /etc
@@ -134,6 +140,12 @@ Enable ports:
     iptables -P INPUT ACCEPT
     iptables -P OUTPUT ACCEPT
     iptables -P FORWARD ACCEPT
+
+Edit `CATALINA_HOME/webapps/manager/WEB-INF/web.xml` to contain:
+
+    <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
 
 Edit /etc/apache2/sites-enabled/000-default-le-ssl.conf 
 
@@ -169,7 +181,7 @@ Edit /etc/apache2/sites-enabled/000-default.conf
 Restart apache:
 
     a2enmod proxy proxy_http rewrite
-    sudo apachectl restart
+    apachectl restart
 
 Make sure your firewall allows the following ports:
 
@@ -199,3 +211,11 @@ Zip and upload `dist/` to your box and do:
     sudo npm i --save-dev express
     cp ../Snappy-Web-App/web-app/src/main/webapp/app.js app.js
     sudo node app.js &
+
+## Backup
+
+If you want to backup all Village data
+
+    arangodump --output-directory "dump"
+    zip -r dump.zip dump/
+    zip -r village-data.zip /var/lib/village

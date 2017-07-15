@@ -50,7 +50,7 @@
     <orderEntry type="library" exported="" scope="PROVIDED" name="gson-2.8.0" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-lang3-3.0" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="httpclient-4.5.3" level="project" />
-    <orderEntry type="library" exported="" scope="PROVIDED" name="arangodb-java-driver-4.2.0" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="arangodb-java-driver-4.2.1" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="guava-21.0" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="annotations-java5-15.0" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="javax.faces-2.2.8" level="project" />
@@ -62,7 +62,7 @@
     <orderEntry type="library" exported="" scope="PROVIDED" name="httpcore-4.4.6" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-logging-1.2" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-codec-1.9" level="project" />
-    <orderEntry type="library" exported="" scope="PROVIDED" name="velocypack-1.0.8" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="velocypack-1.0.9" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="slf4j-api-1.7.13" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="json-simple-1.1.1" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="activation-1.1" level="project" />

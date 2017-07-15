@@ -407,7 +407,7 @@ public class EarthStore extends EarthControl {
         vars.put("kind", kind);
         vars.put("field", field);
         vars.put("key", key.name());
-        vars.put("sort", EarthField.CREATED_ON);
+        vars.put("sort", DEFAULT_FIELD_CREATED);
         vars.put("limit", limit == null ? Config.NEARBY_MAX_COUNT : limit);
         vars.put("concluded_field", DEFAULT_FIELD_CONCLUDED);
 
@@ -546,13 +546,13 @@ public class EarthStore extends EarthControl {
         }
 
         var.put("_limit", limit <= 0 ? Config.NEARBY_MAX_COUNT : limit);
-        var.put("_sort_by", limit <= 0 ? Config.NEARBY_MAX_COUNT : limit);
+        var.put("_sort_by", sort == null ? DEFAULT_FIELD_CREATED : sort);
         var.put("_concluded_on", DEFAULT_FIELD_CONCLUDED);
 
         String aql = "for x in " + DEFAULT_COLLECTION + " " +
                 "filter " + filter + " and x.@_concluded_on == null " +
+                "sort x.@_sort_by " +
                 "limit @_limit " +
-                (sort != null ? "sort x.@_sort_by " : "sort x." + EarthField.CREATED_ON) +
                 "return x";
 
         Logger.getLogger(Config.NAME).info(aql);
