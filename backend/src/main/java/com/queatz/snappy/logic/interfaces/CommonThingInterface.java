@@ -177,6 +177,23 @@ public abstract class CommonThingInterface implements Interfaceable {
 
                 throw new NothingLogicResponse("thing - bad path");
             }
+            case 3: {
+                EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
+
+                if (Config.PATH_PHOTO.equals(as.getRoute().get(1))) {
+                    if (Config.PATH_DELETE.equals(as.getRoute().get(2))) {
+                        removePhoto(thing, as);
+                        return new SuccessView(true).toJson();
+                    }
+                }
+
+                String string = postThing(as, thing);
+                if (string != null) {
+                    return string;
+                }
+
+                throw new NothingLogicResponse("thing - bad path");
+            }
         }
 
         return null;
@@ -209,6 +226,11 @@ public abstract class CommonThingInterface implements Interfaceable {
             e.printStackTrace();
             throw new PrintingError(Api.Error.NOT_FOUND, "thing - photo io error");
         }
+    }
+
+    protected EarthThing removePhoto(EarthThing thing, EarthAs as) {
+        EarthStore earthStore = new EarthStore(as);
+        return earthStore.save(earthStore.edit(thing).set(EarthField.PHOTO, false));
     }
 
     protected String extract(String[] param) {
