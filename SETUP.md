@@ -147,6 +147,15 @@ Edit `CATALINA_HOME/webapps/manager/WEB-INF/web.xml` to contain:
         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
     </user-data-constraint>
 
+Also, for safety, undeploy Tomcat manager:
+
+      curl -u TOMCATSECRETUSER293:TOMCATSECRETPASSWORD3984 http://127.0.0.1:8080/manager/text/undeploy?path=/host-manager
+      curl -u TOMCATSECRETUSER293:TOMCATSECRETPASSWORD3984 http://127.0.0.1:8080/manager/text/undeploy?path=/manager
+
+Later, you can replace the file, like such:
+
+    mv backend.war /var/lib/tomcat8/webapps/backend.war
+
 Edit /etc/apache2/sites-enabled/000-default-le-ssl.conf 
 
     <IfModule mod_ssl.c>
