@@ -145,6 +145,11 @@ public class EarthField {
     public static final String ROLE = "role";
 
     /**
+     * Used in chat.
+     */
+    public static final String TOPIC = "topic";
+
+    /**
      * Whether or  not this is a request or offer.
      */
     public static final String WANT = "want";

@@ -1,7 +1,7 @@
 package com.queatz.snappy.chat;
 
 import com.queatz.snappy.chat.actions.ChatMessage;
-import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.logic.EarthJson;
 
 import java.io.IOException;
@@ -17,14 +17,14 @@ public class ChatSession {
 
     private Session session;
     private ChatLogic chat;
-    private EarthAs as;
     private EarthJson json;
+    private EarthGeo location;
 
     public ChatSession(Session session, ChatLogic chat) {
         this.session = session;
         this.chat = chat;
-        this.as = new EarthAs();
         this.json = new EarthJson();
+        this.location = new EarthGeo();
     }
 
     public void join() {
@@ -65,5 +65,13 @@ public class ChatSession {
             e.printStackTrace();
             Logger.getAnonymousLogger().warning("CHAT SEND ERROR: " + e.getMessage());
         }
+    }
+
+    public void setLocation(EarthGeo location) {
+        this.location = location;
+    }
+
+    public EarthGeo getLocation() {
+        return location;
     }
 }

@@ -4,11 +4,11 @@ import com.arangodb.entity.BaseDocument;
 import com.arangodb.velocypack.internal.util.DateUtil;
 import com.google.common.collect.ImmutableList;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by jacob on 3/12/17.
@@ -146,7 +146,7 @@ public class EarthThing {
            return this;
         }
 
-        protected BaseDocument build() {
+        public BaseDocument build() {
             return raw;
         }
 

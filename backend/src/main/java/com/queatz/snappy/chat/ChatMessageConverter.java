@@ -4,6 +4,7 @@ import com.queatz.snappy.chat.actions.AdAdd;
 import com.queatz.snappy.chat.actions.ChatMessage;
 import com.queatz.snappy.chat.actions.MessageSend;
 import com.queatz.snappy.chat.actions.SessionStart;
+import com.queatz.snappy.chat.actions.SessionStartResponse;
 import com.queatz.snappy.logic.EarthJson;
 
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +44,10 @@ public class ChatMessageConverter {
         }
 
         if (SessionStart.class.isAssignableFrom(chatMessage.getClass())) {
+            return ChatAction.SESSION_START;
+        }
+
+        if (SessionStartResponse.class.isAssignableFrom(chatMessage.getClass())) {
             return ChatAction.SESSION_START;
         }
 

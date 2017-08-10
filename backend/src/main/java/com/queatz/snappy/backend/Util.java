@@ -1,9 +1,7 @@
 package com.queatz.snappy.backend;
 
-import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.logic.EarthThing;
-import com.queatz.snappy.logic.mines.DeviceMine;
 import com.queatz.snappy.shared.Config;
 
 import java.io.UnsupportedEncodingException;

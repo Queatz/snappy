@@ -1,6 +1,9 @@
 package com.queatz.snappy.chat.actions;
 
+import com.queatz.snappy.chat.ChatKind;
 import com.queatz.snappy.chat.ChatSession;
+import com.queatz.snappy.chat.ChatWorld;
+import com.queatz.snappy.logic.EarthField;
 
 import java.util.Date;
 
@@ -53,6 +56,14 @@ public class AdAdd implements ChatMessage {
 
     @Override
     public void got(ChatSession chat) {
+        ChatWorld world = chat.getChat().getWorld();
+
+        world.add(world.stage(ChatKind.AD_KIND)
+                .set(EarthField.GEO, chat.getLocation())
+                .set(EarthField.NAME, getName())
+                .set(EarthField.ABOUT, getDescription())
+                .set(EarthField.TOPIC, getTopic()));
+
         chat.getChat().broadcast(chat, this);
     }
 }
