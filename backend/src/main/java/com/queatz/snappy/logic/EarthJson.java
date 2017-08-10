@@ -28,6 +28,10 @@ public class EarthJson {
         return gson.fromJson(json, clazz);
     }
 
+    public <T> T fromJson(JsonElement json, Class<T> clazz) {
+        return gson.fromJson(json, clazz);
+    }
+
     public <T> T fromJson(String json, Type token) {
         return gson.fromJson(json, token);
     }
