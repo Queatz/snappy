@@ -65,6 +65,7 @@ public class ChatLogic extends ChatEndpoint {
             switch (thing.getString(EarthField.KIND)) {
                 case ChatKind.AD_KIND:
                     result.add(ChatMessageConverter.convert(new AdAdd()
+                            .setSource(thing.getString(EarthField.SOURCE))
                             .setDate(thing.getDate(EarthField.CREATED_ON))
                             .setDescription(thing.getString(EarthField.ABOUT))
                             .setName(thing.getString(EarthField.NAME))
