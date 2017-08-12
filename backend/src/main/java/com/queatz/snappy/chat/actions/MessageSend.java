@@ -12,6 +12,7 @@ import com.queatz.snappy.logic.EarthField;
 public class MessageSend implements ChatMessage {
     private String topic;
     private String message;
+    private String photo;
 
     public String getTopic() {
         return topic;
@@ -28,6 +29,15 @@ public class MessageSend implements ChatMessage {
 
     public MessageSend setMessage(String message) {
         this.message = message;
+        return this;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public MessageSend setPhoto(String photo) {
+        this.photo = photo;
         return this;
     }
 

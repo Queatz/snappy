@@ -74,6 +74,7 @@ public class ChatLogic extends ChatEndpoint {
                 case ChatKind.MESSAGE_KIND:
                     result.add(ChatMessageConverter.convert(new MessageSend()
                             .setTopic(thing.getString(EarthField.TOPIC))
+                            .setPhoto(thing.getString(EarthField.PHOTO))
                             .setMessage(thing.getString(EarthField.MESSAGE))));
                     break;
                 default:

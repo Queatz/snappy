@@ -50,7 +50,7 @@ public class ChatServer {
 
     @OnMessage
     public void onData(byte[] data) throws IOException {
-        Logger.getAnonymousLogger().info("WEBSOCKET (DATA): " + data);
+        Logger.getAnonymousLogger().info("WEBSOCKET (DATA): " + data.length);
         chatSession.got(data);
     }
 

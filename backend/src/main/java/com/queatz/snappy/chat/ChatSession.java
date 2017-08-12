@@ -1,10 +1,18 @@
 package com.queatz.snappy.chat;
 
+import com.google.common.primitives.Bytes;
+import com.image.SnappyImage;
+import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.chat.actions.ChatMessage;
+import com.queatz.snappy.chat.actions.MessageSend;
+import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.logic.EarthJson;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import javax.websocket.Session;
@@ -47,7 +55,40 @@ public class ChatSession {
     }
 
     public void got(byte[] data) {
-        // photos, topic
+        int idx = Bytes.indexOf(data, (byte) 0);
+
+        if (idx < 0) {
+            return;
+        }
+
+        String topic = new String(Arrays.copyOfRange(data, 0, idx), Charset.forName("UTF-8"));
+
+        SnappyImage snappyImage = new SnappyImage();
+        String name = "chat/" + Util.randomToken();
+        OutputStream outputChannel = snappyImage.openOutputStream(name);
+
+        if (outputChannel == null) {
+            return;
+        }
+
+        try {
+            // Skip null-byte and write rest of bytes to image
+            outputChannel.write(data, idx + 1, data.length - (idx + 1));
+            outputChannel.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ChatWorld world = chat.getWorld();
+
+        world.add(world.stage(ChatKind.MESSAGE_KIND)
+                .set(EarthField.GEO, getLocation())
+                .set(EarthField.PHOTO, snappyImage.getServingUrl(name, 600))
+                .set(EarthField.TOPIC, topic));
+
+        MessageSend send = new MessageSend().setTopic(topic).setPhoto(snappyImage.getServingUrl(name, 600));
+        chat.broadcast(this, send);
+        send(send);
     }
 
     public Session getSession() {
