@@ -246,8 +246,6 @@ public class Advertise {
             if (advertiser != null) {
                 advertiser.startAdvertising(advertiseSettings, advertiseData, mAdvertiseCallback);
             } else {
-                Log.w(Config.LOG_TAG, "advertise - advertiser null, trying depricated method...");
-
                 Log.w(Config.LOG_TAG, "advertise - advertiser null");
             }
         }
@@ -585,6 +583,7 @@ public class Advertise {
                 .setSmallIcon(R.drawable.icon_system)
                 .setPriority(Notification.PRIORITY_LOW)
                 .setContentTitle(blePerson.personName)
+                .setVibrate(new long[] {0, 175, 175, 75})
                 .setContentText(team.context.getString(R.string.is_here))
                 .setDeleteIntent(deletePendingIntent);
 

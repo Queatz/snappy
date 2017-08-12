@@ -12,7 +12,7 @@ android {
         targetSdkVersion 25
 
         versionCode 46
-        versionName "0.4.1"
+        versionName "0.4.3"
     }
 
     buildTypes {
