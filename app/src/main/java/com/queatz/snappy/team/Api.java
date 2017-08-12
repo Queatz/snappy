@@ -10,14 +10,36 @@ import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.shared.Config;
 
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpStatus;
+import cz.msebera.android.httpclient.conn.ssl.SSLSocketFactory;
+import cz.msebera.android.httpclient.conn.ssl.TrustSelfSignedStrategy;
 
 /**
  * Created by jacob on 11/16/14.
  */
 
 public class Api {
+
+    public static SSLSocketFactory _ssl;
+
+    public static SSLSocketFactory ssl() {
+        if (_ssl == null) {
+            try {
+                _ssl = new SSLSocketFactory(new TrustSelfSignedStrategy(), SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            } catch (NoSuchAlgorithmException | KeyManagementException | UnrecoverableKeyException | KeyStoreException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return _ssl;
+    }
+
     public interface Callback {
         void success(String response);
         void fail(String response);
@@ -154,6 +176,7 @@ public class Api {
         mHandler = new Handler(Looper.getMainLooper());
         mClient = new AsyncHttpClient();
         mClient.setTimeout(30000);
+        mClient.setSSLSocketFactory(ssl());
     }
 
     public AsyncHttpClient client() {

@@ -25,6 +25,7 @@ import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.actions.ShareThingAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.util.Functions;
+import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 
@@ -66,7 +67,7 @@ public class OfferCard implements Card<DynamicRealmObject> {
             }
 
             ImageView profile = (ImageView) view.findViewById(R.id.profile);
-            Picasso.with(context)
+            Images.with(context)
                     .load(Functions.getImageUrlForSize(offer.getObject(Thing.SOURCE), (int) Util.px(64)))
                     .placeholder(R.color.spacer)
                     .into(profile);

@@ -19,14 +19,12 @@ import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.util.Functions;
+import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.TimeUtil;
-import com.squareup.picasso.Picasso;
 
 import io.realm.DynamicRealmObject;
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmBaseAdapter;
-
-import static com.queatz.snappy.Util.context;
 
 /**
  * Created by jacob on 10/15/16.
@@ -69,7 +67,7 @@ public class CommentAdapter extends RealmBaseAdapter<DynamicRealmObject> impleme
 
             ImageView profile = (ImageView) view.findViewById(R.id.profile);
 
-            Picasso.with(context)
+            Images.with(context)
                     .load(Functions.getImageUrlForSize(person, s))
                     .placeholder(R.color.spacer)
                     .into(profile);

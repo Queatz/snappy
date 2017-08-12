@@ -36,7 +36,10 @@ import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.ThingKinds;
 import com.queatz.snappy.ui.camera.CameraImageSaver;
 import com.queatz.snappy.util.Functions;
+import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.TimeUtil;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -46,8 +49,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import cz.msebera.android.httpclient.conn.ssl.AllowAllHostnameVerifier;
+import cz.msebera.android.httpclient.conn.ssl.SSLContextBuilder;
+import cz.msebera.android.httpclient.conn.ssl.TrustSelfSignedStrategy;
 import io.realm.DynamicRealmObject;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 
 import static java.lang.Math.atan2;
@@ -319,17 +324,17 @@ public class Util {
 
     public static void setPhotoWithPicasso(DynamicRealmObject thing, int s, ImageView photo) {
         photo.setImageDrawable(null);
-        Picasso.with(context).cancelRequest(photo);
+        Images.with(context).cancelRequest(photo);
 
         String photoUrl = Util.photoUrl(Config.PATH_EARTH + "/" + thing.getString(Thing.ID) + "/" + Config.PATH_PHOTO, s / 2);
 
         if (thing.isNull(Thing.PLACEHOLDER)) {
-            Picasso.with(context)
+            Images.with(context)
                     .load(photoUrl)
                     .placeholder(R.color.spacer)
                     .into(photo);
         } else {
-            Picasso.with(context)
+            Images.with(context)
                     .load(photoUrl)
                     .placeholder(placeholder(context.getResources(), thing.getString(Thing.PLACEHOLDER)))
                     .into(photo);

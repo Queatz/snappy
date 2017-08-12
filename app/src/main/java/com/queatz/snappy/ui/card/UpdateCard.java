@@ -41,6 +41,7 @@ import com.queatz.snappy.team.actions.ShareThingAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.team.observers.AuthenticatedEnvironment;
 import com.queatz.snappy.util.Functions;
+import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.TimeUtil;
 import com.squareup.picasso.Picasso;
 
@@ -93,7 +94,7 @@ public class UpdateCard implements Card<DynamicRealmObject> {
 
             ImageView profile = (ImageView) view.findViewById(R.id.profile);
 
-            Picasso.with(context)
+            Images.with(context)
                     .load(location == null ? Functions.getImageUrlForSize(person, s) : Util.locationPhoto(location, s))
                     .placeholder(location == null ? R.color.spacer : R.drawable.location)
                     .into(profile);

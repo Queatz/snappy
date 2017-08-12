@@ -9,9 +9,8 @@ import android.widget.TextView;
 
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
-import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.util.Functions;
-import com.squareup.picasso.Picasso;
+import com.queatz.snappy.util.Images;
 
 import io.realm.DynamicRealmObject;
 import io.realm.RealmBaseAdapter;
@@ -44,7 +43,7 @@ public class SuggestionAdapter extends RealmBaseAdapter<DynamicRealmObject> {
         DynamicRealmObject person = getItem(position);
 
         if(person != null) {
-            Picasso.with(context)
+            Images.with(context)
                     .load(Functions.getImageUrlForSize(person, (int) Util.px(64)))
                     .placeholder(R.color.spacer)
                     .into((ImageView) view.findViewById(R.id.profile));

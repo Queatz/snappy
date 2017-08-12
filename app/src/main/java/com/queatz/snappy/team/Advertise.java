@@ -1,5 +1,6 @@
 package com.queatz.snappy.team;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -55,6 +56,7 @@ import io.realm.DynamicRealmObject;
 /**
  * Created by jacob on 12/3/15.
  */
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class Advertise {
     public Team team;
     private BluetoothManager mBluetoothManager;
@@ -114,8 +116,8 @@ public class Advertise {
     }
 
     public boolean capable() {
-        // Note: can go down to 18 eventually...
-        return Build.VERSION.SDK_INT >= 21 && team.context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
+                team.context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
     }
 
     /**
@@ -125,9 +127,6 @@ public class Advertise {
      * @return Whether or not advertising was enabled successfully
      */
     public boolean enable(@Nullable Activity activity) {
-        // TODO re-enable this in the future
-        if (true) return false;
-
         handler = new Handler(team.context.getMainLooper());
 
         if (!capable()) {
@@ -407,7 +406,7 @@ public class Advertise {
             return;
         }
 
-        BluetoothGatt gatt = device.connectGatt(team.context, false, new BluetoothGattCallback() {
+        BluetoothGattCallback callback = new BluetoothGattCallback() {
             String personName;
             String personId;
 
@@ -512,7 +511,15 @@ public class Advertise {
 
                 readNextCharacteristic();
             }
-        }, BluetoothDevice.TRANSPORT_LE);
+        };
+
+        BluetoothGatt gatt;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            gatt = device.connectGatt(team.context, false, callback, BluetoothDevice.TRANSPORT_LE);
+        } else {
+            gatt = device.connectGatt(team.context, false, callback);
+        }
 
         mBluetoothGatts.add(gatt);
     }

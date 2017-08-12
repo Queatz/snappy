@@ -19,7 +19,7 @@ import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.util.Functions;
-import com.squareup.picasso.Picasso;
+import com.queatz.snappy.util.Images;
 
 import io.realm.DynamicRealmObject;
 import io.realm.RealmBaseAdapter;
@@ -77,7 +77,7 @@ public class RecentAdapter extends RealmBaseAdapter<DynamicRealmObject> implemen
         TextView proximity = (TextView) view.findViewById(R.id.proximity);
         ImageView profile = (ImageView) view.findViewById(R.id.profile);
 
-        Picasso.with(context)
+        Images.with(context)
                 .load(Functions.getImageUrlForSize(person, (int) Util.px(64)))
                 .placeholder(R.color.spacer)
                 .into(profile);

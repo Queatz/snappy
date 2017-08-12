@@ -52,6 +52,8 @@ dependencies {
     compile 'io.realm:android-adapters:2.0.0'
     compile 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.okhttp:okhttp:2.2.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
     compile 'com.google.code.gson:gson:2.7'
     compile project(path: ':shared')
     compile project(path: ':branch')

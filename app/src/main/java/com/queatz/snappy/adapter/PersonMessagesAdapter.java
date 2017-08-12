@@ -1,6 +1,5 @@
 package com.queatz.snappy.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.Gravity;
@@ -20,11 +19,10 @@ import com.queatz.snappy.Util;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.contexts.ActivityContext;
-import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.util.Functions;
+import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.LocalState;
 import com.queatz.snappy.util.TimeUtil;
-import com.squareup.picasso.Picasso;
 
 import io.realm.DynamicRealmObject;
 import io.realm.RealmBaseAdapter;
@@ -74,7 +72,7 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<DynamicRealmObject> 
             wrapper.bringToFront();
         }
 
-        Picasso.with(context)
+        Images.with(context)
                 .load(Functions.getImageUrlForSize(person, (int) Util.px(32)))
                 .placeholder(R.color.spacer)
                 .into(profile);
@@ -107,7 +105,7 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<DynamicRealmObject> 
 
         if (!message.isNull(Thing.PHOTO) && message.getBoolean(Thing.PHOTO)) {
             photo.setVisibility(View.VISIBLE);
-            Picasso.with(context)
+            Images.with(context)
                     .load(Util.locationPhoto(message, parent.getMeasuredWidth()))
                     .placeholder(R.color.spacer)
                     .into(photo);

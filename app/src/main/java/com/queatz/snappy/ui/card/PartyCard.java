@@ -30,8 +30,8 @@ import com.queatz.snappy.team.actions.OpenLocationAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.util.Functions;
+import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.TimeUtil;
-import com.squareup.picasso.Picasso;
 
 import io.realm.DynamicRealmObject;
 import io.realm.RealmResults;
@@ -75,7 +75,7 @@ public class PartyCard implements Card<DynamicRealmObject> {
         if(host != null) {
             String name = String.format(context.getString(R.string.by), Functions.getFullName(host));
             ((TextView) view.findViewById(R.id.by_text)).setText(name);
-            Picasso.with(context).load(Functions.getImageUrlForSize(host, (int) Util.px(64))).placeholder(R.color.spacer).into(profile);
+            Images.with(context).load(Functions.getImageUrlForSize(host, (int) Util.px(64))).placeholder(R.color.spacer).into(profile);
         }
 
         ImageView timeIcon = ((ImageView) view.findViewById(R.id.time_icon));
@@ -105,7 +105,7 @@ public class PartyCard implements Card<DynamicRealmObject> {
             String photoUrl = Util.locationPhoto(location, (int) Util.px(128));
 
             ImageView locationIcon = (ImageView) view.findViewById(R.id.location_icon);
-            Picasso.with(context).load(photoUrl).placeholder(R.drawable.location).into(locationIcon);
+            Images.with(context).load(photoUrl).placeholder(R.drawable.location).into(locationIcon);
 
             ((TextView) view.findViewById(R.id.location_text)).setText(location.getString(Thing.NAME));
             ((TextView) view.findViewById(R.id.time_text)).setText(party.isNull(Thing.DATE) ? context.getString(R.string.hidden) : TimeUtil.cuteDate(party.getDate(Thing.DATE)));
@@ -139,7 +139,7 @@ public class PartyCard implements Card<DynamicRealmObject> {
                 final DynamicRealmObject member = j.getObject(Thing.SOURCE);
                 FrameLayout memberProfile = (FrameLayout) View.inflate(context, R.layout.party_member, null);
                 whosin.addView(memberProfile);
-                Picasso.with(context).load(member == null ? "" : Functions.getImageUrlForSize(j.getObject(Thing.SOURCE), (int) Util.px(64))).placeholder(R.color.spacer).into((RoundedImageView) memberProfile.findViewById(R.id.profile));
+                Images.with(context).load(member == null ? "" : Functions.getImageUrlForSize(j.getObject(Thing.SOURCE), (int) Util.px(64))).placeholder(R.color.spacer).into((RoundedImageView) memberProfile.findViewById(R.id.profile));
 
                 memberProfile.setOnClickListener(new View.OnClickListener() {
                     @Override

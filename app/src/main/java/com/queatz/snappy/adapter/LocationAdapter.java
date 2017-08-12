@@ -13,7 +13,7 @@ import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
-import com.squareup.picasso.Picasso;
+import com.queatz.snappy.util.Images;
 
 import io.realm.DynamicRealmObject;
 import io.realm.RealmBaseAdapter;
@@ -62,7 +62,7 @@ public class LocationAdapter extends RealmBaseAdapter<DynamicRealmObject> {
         int s = (int) Util.px(128);
         String photoUrl = Config.API_URL + String.format(Config.PATH_EARTH_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getString(Thing.ID));
 
-        Picasso.with(context).load(photoUrl).placeholder(R.drawable.location).into(profile);
+        Images.with(context).load(photoUrl).placeholder(R.drawable.location).into(profile);
 
         name.setText(location.getString(Thing.NAME));
 

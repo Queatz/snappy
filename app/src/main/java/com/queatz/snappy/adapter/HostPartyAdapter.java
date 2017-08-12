@@ -12,8 +12,8 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.TimeUtil;
-import com.squareup.picasso.Picasso;
 
 import io.realm.DynamicRealmObject;
 import io.realm.RealmBaseAdapter;
@@ -51,7 +51,7 @@ public class HostPartyAdapter extends RealmBaseAdapter<DynamicRealmObject> {
         String photoUrl = Config.API_URL + String.format(Config.PATH_EARTH_PHOTO + "?s=" + s + "&auth=" + ((MainApplication) context.getApplicationContext()).team.auth.getAuthParam(), party.getObject(Thing.LOCATION).getString(Thing.ID));
 
         ImageView locationIcon = (ImageView) view.findViewById(R.id.location_icon);
-        Picasso.with(context).load(photoUrl).placeholder(R.drawable.location).into(locationIcon);
+        Images.with(context).load(photoUrl).placeholder(R.drawable.location).into(locationIcon);
 
         return view;
     }

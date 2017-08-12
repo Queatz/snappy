@@ -21,7 +21,7 @@ import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.util.Functions;
-import com.squareup.picasso.Picasso;
+import com.queatz.snappy.util.Images;
 
 import io.realm.DynamicRealmObject;
 import io.realm.RealmBaseAdapter;
@@ -60,7 +60,7 @@ public class ActionAdapter extends RealmBaseAdapter<DynamicRealmObject> implemen
         final String status = join.getString(Thing.STATUS);
 
         ImageView profile = ((ImageView) view.findViewById(R.id.profile));
-        Picasso.with(context).load(person == null ? "" : Functions.getImageUrlForSize(person, (int) Util.px(64))).placeholder(R.color.spacer).into(profile);
+        Images.with(context).load(person == null ? "" : Functions.getImageUrlForSize(person, (int) Util.px(64))).placeholder(R.color.spacer).into(profile);
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
