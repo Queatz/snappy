@@ -40,7 +40,7 @@ public class SnappyImageUtil {
     }
 
     public static void write(OutputStream outputStream, BufferedImage image) throws IOException {
-        ImageIO.write(image, "jpg", outputStream);
+        ImageIO.write(image, "png", outputStream);
         outputStream.close();
     }
 }
