@@ -26,6 +26,8 @@ import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,11 +37,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.queatz.snappy.AdvertiseBroadcastReceiver;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.util.Functions;
+import com.queatz.snappy.util.Images;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -78,6 +84,7 @@ public class Advertise {
         String deviceAddress;
         String personId;
         String personName;
+        String imageUrl;
         Date lastSeen;
         Date lastHidden;
 
@@ -366,9 +373,9 @@ public class Advertise {
         }
     }
 
-    public void hidePerson(@NonNull String deviceAddress) {
-        if (devices.containsKey(deviceAddress)) {
-            devices.get(deviceAddress).lastHidden = new Date();
+    public void hidePerson(@NonNull String personId) {
+        if (devices.containsKey(personId)) {
+            devices.get(personId).lastHidden = new Date();
         }
     }
 
@@ -394,15 +401,13 @@ public class Advertise {
     }
 
     private void doFoundDevice(final BluetoothDevice device) {
+        for (BluetoothGatt gatt : mBluetoothGatts) {
+            if (gatt.getDevice().getAddress().equals(device.getAddress())) {
+                return;
+            }
+        }
+
         Log.e(Config.LOG_TAG, "advertise - dodevicefound " + device);
-
-        if (alreadyFoundPersonRecently(device)) {
-            return;
-        }
-
-        if (mBluetoothGatts.contains(device)) {
-            return;
-        }
 
         BluetoothGattCallback callback = new BluetoothGattCallback() {
             String personName;
@@ -522,8 +527,8 @@ public class Advertise {
         mBluetoothGatts.add(gatt);
     }
 
-    private boolean alreadyFoundPersonRecently(BluetoothDevice device) {
-        return devices.containsKey(device.getAddress()) && isRecent(devices.get(device.getAddress()).lastSeen);
+    private boolean alreadyFoundPersonRecently(String personId) {
+        return devices.containsKey(personId) && isRecent(devices.get(personId).lastSeen);
     }
 
     private boolean isRecent(@NonNull Date date) {
@@ -533,10 +538,14 @@ public class Advertise {
     private void foundPerson(String personId, String personName, String address) {
         Log.e(Config.LOG_TAG, "advertise - found person " + personId + " - " + personName);
 
+        if (alreadyFoundPersonRecently(personId)) {
+            return;
+        }
+
         BlePerson blePerson;
 
-        if (devices.containsKey(address)) {
-            blePerson = devices.get(address);
+        if (devices.containsKey(personId)) {
+            blePerson = devices.get(personId);
             blePerson.lastSeen = new Date();
             blePerson.personId = personId;
             blePerson.personName = personName;
@@ -544,7 +553,7 @@ public class Advertise {
             blePerson = new BlePerson(address, personId, personName, new Date());
         }
 
-        devices.put(address, blePerson);
+        devices.put(personId, blePerson);
         updateNotifications();
     }
 
@@ -564,30 +573,72 @@ public class Advertise {
         team.push.clear("person/" + blePerson.personId + "/advertise");
     }
 
-    private void showNotification(BlePerson blePerson) {
+    private void showNotification(final BlePerson blePerson) {
         NotificationCompat.Builder builder;
-        Intent resultIntent;
         Intent deleteIntent;
-        PendingIntent deletePendingIntent;
+        final PendingIntent deletePendingIntent;
 
         Bundle deleteExtras = new Bundle();
-        deleteExtras.putString("deviceAddress", blePerson.deviceAddress);
+        deleteExtras.putString("personId", blePerson.personId);
 
         deleteIntent = new Intent(team.context, AdvertiseBroadcastReceiver.class);
         deleteIntent.putExtras(deleteExtras);
         deletePendingIntent = PendingIntent.getBroadcast(team.context, 0, deleteIntent, 0);
 
-        builder = new NotificationCompat.Builder(team.context)
-                .setDefaults(0)
-                .setAutoCancel(false)
-                .setSmallIcon(R.drawable.icon_system)
-                .setPriority(Notification.PRIORITY_LOW)
-                .setContentTitle(blePerson.personName)
-                .setVibrate(new long[] {0, 175, 175, 75})
-                .setContentText(team.context.getString(R.string.is_here))
-                .setDeleteIntent(deletePendingIntent);
+        if (blePerson.imageUrl == null) {
+            builder = new NotificationCompat.Builder(team.context)
+                    .setDefaults(0)
+                    .setAutoCancel(false)
+                    .setSmallIcon(R.drawable.icon_system)
+                    .setPriority(Notification.PRIORITY_LOW)
+                    .setContentTitle(blePerson.personName)
+                    .setVibrate(new long[] {0, 175, 175, 75})
+                    .setContentText(team.context.getString(R.string.is_here))
+                    .setDeleteIntent(deletePendingIntent);
 
-        resultIntent = new Intent(team.context, Person.class);
+            showNotification(builder, blePerson);
+
+            loadImage(blePerson);
+        } else {
+            Images.with(team.context)
+                    .load(Functions.getImageUrlForSize(blePerson.imageUrl, 64))
+                    .transform(new RoundedTransformationBuilder().oval(true).build())
+                    .into(new Target() {
+                        @Override
+                        public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(team.context)
+                                            .setDefaults(0)
+                                            .setAutoCancel(false)
+                                            .setSmallIcon(R.drawable.icon_system)
+                                            .setLargeIcon(bitmap)
+                                            .setPriority(Notification.PRIORITY_LOW)
+                                            .setContentTitle(blePerson.personName)
+                                            .setContentText(team.context.getString(R.string.is_here))
+                                            .setDeleteIntent(deletePendingIntent);
+
+                                    showNotification(builder, blePerson);
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onBitmapFailed(Drawable errorDrawable) {
+
+                        }
+
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                        }
+                    });
+        }
+    }
+
+    private void showNotification(NotificationCompat.Builder builder, BlePerson blePerson) {
+        Intent resultIntent = new Intent(team.context, Person.class);
         Bundle extras = new Bundle();
         extras.putString("person", blePerson.personId);
         resultIntent.putExtras(extras);
@@ -600,5 +651,27 @@ public class Advertise {
         }
 
         team.push.show("person/" + blePerson.personId + "/advertise", builder.build());
+    }
+
+    private void loadImage(final BlePerson blePerson) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                team.api.get(Config.PATH_EARTH + "/" + blePerson.personId, new Api.Callback() {
+                    @Override
+                    public void success(String response) {
+                        DynamicRealmObject person = team.things.put(response);
+
+                        blePerson.imageUrl = person.getString(Thing.IMAGE_URL);
+                        showNotification(blePerson);
+                    }
+
+                    @Override
+                    public void fail(String response) {
+
+                    }
+                });
+            }
+        });
     }
 }

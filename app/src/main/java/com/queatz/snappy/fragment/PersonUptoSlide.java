@@ -29,8 +29,8 @@ import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.ui.SlideScreen;
 import com.queatz.snappy.ui.TextView;
 import com.queatz.snappy.util.Functions;
+import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.TimeUtil;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -264,7 +264,7 @@ public class PersonUptoSlide extends TeamFragment {
 
             ImageView profile = (ImageView) view.findViewById(R.id.profile);
 
-            Picasso.with(getActivity())
+            Images.with(getActivity())
                     .load(Functions.getImageUrlForSize(mPerson, (int) Util.px(512)))
                     .into(profile);
 

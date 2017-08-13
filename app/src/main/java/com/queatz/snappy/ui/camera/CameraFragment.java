@@ -273,7 +273,7 @@ public class CameraFragment extends Fragment {
 //                examplePhoto.post(new Runnable() {
 //                    @Override
 //                    public void run() {
-//                        Picasso.with(getActivity()).load(Util.uriFromImage(reader.acquireLatestImage()))
+//                        Images.with(getActivity()).load(Util.uriFromImage(reader.acquireLatestImage()))
 //                                .into(examplePhoto);
 //                    }
 //                });

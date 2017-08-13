@@ -44,4 +44,11 @@ public class Functions {
 
         return person.getString(Thing.IMAGE_URL).split("=")[0] + "=" + size;
     }
+
+    public static String getImageUrlForSize(String imageUrl, int size) {
+        if(imageUrl == null || !imageUrl.contains("="))
+            return null;
+
+        return imageUrl.split("=")[0] + "=" + size;
+    }
 }

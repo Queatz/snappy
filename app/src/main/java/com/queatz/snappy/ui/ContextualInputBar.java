@@ -45,7 +45,6 @@ import com.queatz.snappy.team.ThingKinds;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.actions.SigninAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
-import com.queatz.snappy.team.contexts.TeamContext;
 import com.queatz.snappy.team.observers.AnonymousEnvironment;
 import com.queatz.snappy.team.observers.AuthenticatedEnvironment;
 import com.queatz.snappy.team.observers.CurrentEnvironment;
@@ -54,7 +53,7 @@ import com.queatz.snappy.team.observers.EnvironmentObserver;
 import com.queatz.snappy.ui.card.UpdateCard;
 import com.queatz.snappy.util.ContextualBehavior;
 import com.queatz.snappy.util.Functions;
-import com.squareup.picasso.Picasso;
+import com.queatz.snappy.util.Images;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -229,7 +228,7 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
         when(new AuthenticatedEnvironment() {
             @Override
             public void then() {
-                Picasso.with(team.context)
+                Images.with(team.context)
                         .load(Functions.getImageUrlForSize(team.auth.me(), (int) Util.px(64)))
                         .placeholder(R.color.spacer)
                         .into(mProfile);
@@ -422,7 +421,7 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
         int z = 0;
         for (DynamicRealmObject with : imWith) {
             View profile = LayoutInflater.from(getContext()).inflate(R.layout.with_person, withLayout, false);
-            Picasso.with(getContext())
+            Images.with(getContext())
                     .load(Functions.getImageUrlForSize(with, (int) Util.px(48)))
                     .placeholder(R.color.spacer)
                     .into((ImageView) profile.findViewById(R.id.profile));
@@ -439,7 +438,7 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
         if (imAt != null) {
             mProfile.setVisibility(View.GONE);
             at.setVisibility(View.VISIBLE);
-            Picasso.with(getContext()).load(Util.locationPhoto(imAt, (int) Util.px(48)))
+            Images.with(getContext()).load(Util.locationPhoto(imAt, (int) Util.px(48)))
                     .placeholder(R.drawable.location)
                     .into(at);
 
@@ -534,9 +533,9 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
             photo.setImageDrawable(null);
             photo.setVisibility(View.VISIBLE);
 
-            Picasso.with(getContext()).cancelRequest(photo);
+            Images.with(getContext()).cancelRequest(photo);
 
-            Picasso.with(getContext())
+            Images.with(getContext())
                     .load(photoUrl)
                     .placeholder(R.drawable.location)
                     .into(photo);
@@ -563,7 +562,7 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
 
                             FrameLayout memberProfile = (FrameLayout) View.inflate(getContext(), R.layout.contact, null);
                             contactsLayout.addView(memberProfile);
-                            Picasso.with(getContext())
+                            Images.with(getContext())
                                     .load(member == null ? "" : Functions.getImageUrlForSize(member.getObject(Thing.TARGET), (int) Util.px(64)))
                                     .placeholder(R.color.spacer)
                                     .into((RoundedImageView) memberProfile.findViewById(R.id.profile));

@@ -19,7 +19,7 @@ import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.util.Functions;
-import com.squareup.picasso.Picasso;
+import com.queatz.snappy.util.Images;
 
 import io.realm.DynamicRealmObject;
 import io.realm.RealmList;
@@ -90,7 +90,7 @@ public class PeopleNearHereAdapter extends BaseAdapter implements Branchable<Act
         TextView name = (TextView) view.findViewById(R.id.name);
         ImageView profile = (ImageView) view.findViewById(R.id.profile);
 
-        Picasso.with(mContext)
+        Images.with(mContext)
                 .load(Functions.getImageUrlForSize(person, (int) Util.px(48)))
                 .placeholder(R.color.spacer)
                 .into(profile);

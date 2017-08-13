@@ -44,8 +44,8 @@ import com.queatz.snappy.team.TeamActivity;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.TextView;
 import com.queatz.snappy.ui.TimeSlider;
+import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.TimeUtil;
-import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 
@@ -518,7 +518,7 @@ public class HostParty extends TeamActivity {
         int s = (int) Util.px(128);
         String photoUrl = Config.API_URL + String.format(Config.PATH_EARTH_PHOTO + "?s=" + s + "&auth=" + team.auth.getAuthParam(), location.getString(Thing.ID));
 
-        Picasso.with(team.context).load(photoUrl).placeholder(R.drawable.location).into(locationProfile);
+        Images.with(team.context).load(photoUrl).placeholder(R.drawable.location).into(locationProfile);
 
         mNewParty.findViewById(R.id.locationDetailsLayout).setVisibility(View.GONE);
 

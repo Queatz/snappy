@@ -1,44 +1,26 @@
 package com.queatz.snappy.team;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.InputType;
-import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
-import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.Main;
-import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.activity.PersonList;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.team.actions.OpenProfileAction;
-import com.queatz.snappy.ui.EditText;
-import com.queatz.snappy.ui.TimeSlider;
 import com.queatz.snappy.util.Functions;
-import com.queatz.snappy.util.Json;
-import com.queatz.snappy.util.LocalState;
+import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.ResponseUtil;
 import com.queatz.snappy.util.TimeUtil;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import io.realm.DynamicRealmObject;
 import io.realm.RealmResults;
@@ -460,7 +442,7 @@ public class Action {
             public void success(String response) {
                 if (id != null) {
                     String photoUrl = Config.API_URL + String.format(Config.PATH_EARTH_PHOTO + "?s=64&auth=" + team.auth.getAuthParam(), id);
-                    Picasso.with(team.context).invalidate(photoUrl);
+                    Images.with(team.context).invalidate(photoUrl);
                 }
             }
 

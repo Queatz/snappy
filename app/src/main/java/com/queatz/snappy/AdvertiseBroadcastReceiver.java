@@ -28,8 +28,8 @@ public class AdvertiseBroadcastReceiver extends BroadcastReceiver {
 
         if (intent != null) {
             if (Config.EXTRA_ACTION_HIDE.equals(intent.getStringExtra(Config.EXTRA_ACTION))) {
-                if (intent.hasExtra("deviceAddress")) {
-                    team.advertise.hidePerson(intent.getStringExtra("deviceAddress"));
+                if (intent.hasExtra("personId")) {
+                    team.advertise.hidePerson(intent.getStringExtra("personId"));
                 }
             }
         }

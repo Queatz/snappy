@@ -31,6 +31,7 @@ import com.queatz.snappy.ui.CircleTransform;
 import com.queatz.snappy.ui.ContextualInputBar;
 import com.queatz.snappy.ui.OnBackPressed;
 import com.queatz.snappy.util.Functions;
+import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.Json;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -300,7 +301,7 @@ public abstract class MapSlide extends TeamFragment implements OnMapReadyCallbac
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(Util.tint(getResources().getColor(R.color.blue))));
 
             if ("hub".equals(thing.getString(Thing.KIND))) {
-                Picasso.with(getActivity()).load(Util.photoUrl(String.format(Config.PATH_EARTH_PHOTO, thing.getString(Thing.ID)), (int) Util.px(48)))
+                Images.with(getActivity()).load(Util.photoUrl(String.format(Config.PATH_EARTH_PHOTO, thing.getString(Thing.ID)), (int) Util.px(48)))
                         .transform(new CircleTransform())
                         .into(new Target() {
                             @Override
@@ -334,7 +335,7 @@ public abstract class MapSlide extends TeamFragment implements OnMapReadyCallbac
                     photo = Functions.getImageUrlForSize(thing.getObject(Thing.SOURCE), (int) Util.px(32));
                 }
 
-                Picasso.with(getActivity()).load(photo)
+                Images.with(getActivity()).load(photo)
                         .transform(new CircleTransform())
                         .into(new Target() {
                             @Override
@@ -362,7 +363,7 @@ public abstract class MapSlide extends TeamFragment implements OnMapReadyCallbac
             } else if ("person".equals(thing.getString(Thing.KIND))) {
                 String photo = Functions.getImageUrlForSize(thing, (int) Util.px(32));
 
-                Picasso.with(getActivity()).load(photo)
+                Images.with(getActivity()).load(photo)
                         .transform(new CircleTransform())
                         .into(new Target() {
                             @Override

@@ -11,6 +11,7 @@ import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.util.Functions;
+import com.queatz.snappy.util.Images;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -30,7 +31,7 @@ public class AddToHomeScreenAction extends ActivityAction {
 
     @Override
     public void execute() {
-        Picasso.with(me().getActivity())
+        Images.with(me().getActivity())
                 .load(Functions.getImageUrlForSize(person, (int) Util.px(64)))
                 .transform(new RoundedTransformationBuilder().oval(true).build())
                 .placeholder(R.color.spacer)

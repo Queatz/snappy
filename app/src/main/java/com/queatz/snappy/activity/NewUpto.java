@@ -16,7 +16,7 @@ import com.queatz.snappy.adapter.PostSelfUpdateAction;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.TeamActivity;
 import com.queatz.snappy.ui.EditText;
-import com.squareup.picasso.Picasso;
+import com.queatz.snappy.util.Images;
 import com.squareup.picasso.Transformation;
 
 /**
@@ -64,7 +64,7 @@ public class NewUpto extends TeamActivity {
 
         final Matrix matrix = Util.transformationFromExif(mPhoto);
 
-        Picasso.with(this).load(mPhoto).transform(new Transformation() {
+        Images.with(this).load(mPhoto).transform(new Transformation() {
             @Override
             public Bitmap transform(Bitmap source) {
                 if(matrix == null) {
