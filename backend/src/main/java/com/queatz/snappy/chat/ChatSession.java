@@ -61,7 +61,12 @@ public class ChatSession {
             return;
         }
 
-        String topic = new String(Arrays.copyOfRange(data, 0, idx), Charset.forName("UTF-8"));
+        String string = new String(Arrays.copyOfRange(data, 0, idx), Charset.forName("UTF-8"));
+        MessageSend chatMessage = json.fromJson(string, MessageSend.class);
+
+        String topic = chatMessage.getTopic();
+        String avatar = chatMessage.getAvatar();
+
 
         SnappyImage snappyImage = new SnappyImage();
         String name = "chat/" + Util.randomToken();
@@ -84,9 +89,13 @@ public class ChatSession {
         world.add(world.stage(ChatKind.MESSAGE_KIND)
                 .set(EarthField.GEO, getLocation())
                 .set(EarthField.PHOTO, snappyImage.getServingUrl(name, 600))
+                .set(EarthField.IMAGE_URL, avatar)
                 .set(EarthField.TOPIC, topic));
 
-        MessageSend send = new MessageSend().setTopic(topic).setPhoto(snappyImage.getServingUrl(name, 600));
+        MessageSend send = new MessageSend()
+                .setTopic(topic)
+                .setAvatar(avatar)
+                .setPhoto(snappyImage.getServingUrl(name, 600));
         chat.broadcast(this, send);
         send(send);
     }
