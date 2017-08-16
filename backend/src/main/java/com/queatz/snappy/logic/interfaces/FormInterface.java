@@ -1,8 +1,10 @@
 package com.queatz.snappy.logic.interfaces;
 
 import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.editors.FormEditor;
+import com.queatz.snappy.logic.editors.ProjectEditor;
 import com.queatz.snappy.shared.Config;
 
 /**
@@ -19,6 +21,11 @@ public class FormInterface extends CommonThingInterface {
 
     @Override
     public EarthThing editThing(EarthAs as, EarthThing thing) {
-        return null;
+        as.requireUser();
+
+        String[] name = as.getParameters().get(EarthField.NAME);
+        String[] about = as.getParameters().get(EarthField.ABOUT);
+
+        return new ProjectEditor(as).edit(thing, extract(name), extract(about));
     }
 }
