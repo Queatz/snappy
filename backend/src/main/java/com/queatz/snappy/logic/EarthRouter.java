@@ -3,6 +3,7 @@ package com.queatz.snappy.logic;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.interfaces.ByNameInterface;
+import com.queatz.snappy.logic.interfaces.ClubInterface;
 import com.queatz.snappy.logic.interfaces.ContactInterface;
 import com.queatz.snappy.logic.interfaces.FeedbackInterface;
 import com.queatz.snappy.logic.interfaces.FollowerInterface;
@@ -48,6 +49,7 @@ public class EarthRouter extends EarthControl {
          * This is the kinds to interfaces mapping!
          */
         mapping.put(EarthKind.HUB_KIND, new HubInterface());
+        mapping.put(EarthKind.CLUB_KIND, new ClubInterface());
         mapping.put(EarthKind.CONTACT_KIND, new ContactInterface());
         mapping.put(EarthKind.FOLLOWER_KIND, new FollowerInterface());
         mapping.put(EarthKind.LIKE_KIND, new LikeInterface());

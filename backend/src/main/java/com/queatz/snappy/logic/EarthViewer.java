@@ -2,6 +2,7 @@ package com.queatz.snappy.logic;
 
 import com.queatz.snappy.logic.concepts.Viewable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.logic.views.ClubView;
 import com.queatz.snappy.logic.views.ContactView;
 import com.queatz.snappy.logic.views.ExistenceView;
 import com.queatz.snappy.logic.views.FollowerView;
@@ -48,6 +49,7 @@ public class EarthViewer extends EarthControl {
     static {
         // This is the entity to view mapping!
         mapping.put(EarthKind.HUB_KIND, getConstructor(HubView.class));
+        mapping.put(EarthKind.CLUB_KIND, getConstructor(ClubView.class));
         mapping.put(EarthKind.CONTACT_KIND, getConstructor(ContactView.class));
         mapping.put(EarthKind.FOLLOWER_KIND, getConstructor(FollowerView.class));
         mapping.put(EarthKind.LIKE_KIND, getConstructor(LikeView.class));

@@ -185,6 +185,7 @@ public class Config {
     public static final String PATH_INFO = "info";
     public static final String PATH_GEO_SUBSCRIBE = "geo-subscribe";
     public static final String PATH_RAW = "raw";
+    public static final String PATH_CLUBS = "clubs";
 
     // Google Play billing configuration (unused)
     public static final int BILLING_RESPONSE_RESULT_OK                  = 0;

@@ -14,8 +14,10 @@ import com.queatz.snappy.logic.editors.DeviceEditor;
 import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.eventables.ClearNotificationEvent;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.logic.mines.ClubMine;
 import com.queatz.snappy.logic.mines.MessageMine;
 import com.queatz.snappy.logic.mines.RecentMine;
+import com.queatz.snappy.logic.views.EntityListView;
 import com.queatz.snappy.logic.views.MessagesAndContactsView;
 import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.shared.Config;
@@ -43,6 +45,8 @@ public class MeInterface implements Interfaceable {
                 switch (as.getRoute().get(1)) {
                     case Config.PATH_MESSAGES:
                         return getMessages(as);
+                    case Config.PATH_CLUBS:
+                        return getClubs(as);
                 }
                 // Fall-through
             default:
@@ -128,6 +132,12 @@ public class MeInterface implements Interfaceable {
         List<EarthThing> contacts = new RecentMine(as).forPerson(as.getUser());
 
         return new MessagesAndContactsView(as, messages, contacts).toJson();
+    }
+
+    private String getClubs(EarthAs as) {
+        as.requireUser();
+
+        return new EntityListView(as, new ClubMine(as).clubsOf(as.getUser())).toJson();
     }
 
     private String postClearNotification(EarthAs as, String notification) {
