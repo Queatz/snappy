@@ -4,10 +4,8 @@ import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Viewable;
-import com.queatz.snappy.logic.mines.ContactMine;
 import com.queatz.snappy.logic.mines.FollowerMine;
 import com.queatz.snappy.logic.mines.MemberMine;
-import com.queatz.snappy.logic.mines.UpdateMine;
 import com.queatz.snappy.shared.Config;
 
 import java.util.List;
@@ -40,10 +38,10 @@ public class CommonThingView extends ThingView {
         super(as, thing, view);
 
         backers = use(FollowerMine.class).countFollowers(thing);
+        final MemberMine memberMine = use(MemberMine.class);
 
         switch (view) {
             case DEEP:
-                final MemberMine memberMine = use(MemberMine.class);
 
                 final List<EarthThing> thingMembers = memberMine.byThingWithStatus(thing, Config.MEMBER_STATUS_ACTIVE);
 
@@ -60,6 +58,13 @@ public class CommonThingView extends ThingView {
                 } else {
                     this.in = null;
                 }
+                break;
+
+            case SHALLOW:
+
+                this.members = null;
+                this.in = null;
+
                 break;
             default:
                 this.members = null;

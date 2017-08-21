@@ -24,12 +24,12 @@ public class ClubMine extends EarthControl {
     public List<EarthThing> clubsOf(EarthThing thing) {
         return use(EarthStore.class).query(
                 "x." + EarthField.KIND + " == @kind and " +
-                "x." + EarthField.TARGET + " == @target and " +
-                "x." + EarthField.TARGET + "." + EarthField.KIND + " == @club_kind ",
+                "x." + EarthField.SOURCE + " == @source and " +
+                "(for y in " + EarthStore.DEFAULT_COLLECTION + " filter y._key == x." + EarthField.TARGET + " return y." + EarthField.KIND + ")[0] == @club_kind",
                 ImmutableMap.<String, Object>of(
                         "kind", EarthKind.MEMBER_KIND,
                         "club_kind", EarthKind.CLUB_KIND,
-                        "target", thing.key().name()
+                        "source", thing.key().name()
                 ));
     }
 }

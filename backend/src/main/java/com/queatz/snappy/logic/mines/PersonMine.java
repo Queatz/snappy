@@ -19,7 +19,7 @@ public class PersonMine extends EarthControl {
     }
 
     public EarthThing byEmail(String email) {
-        List<EarthThing> result = use(EarthStore.class).query(
+        List<EarthThing> result = use(EarthStore.class).queryInternal(
                 "x." + EarthField.KIND + " == @kind and " +
                         "x." + EarthField.EMAIL + " == @email",
                 ImmutableMap.<String, Object>of(
@@ -36,7 +36,7 @@ public class PersonMine extends EarthControl {
     }
 
     public EarthThing byToken(String token) {
-        List<EarthThing> result = use(EarthStore.class).query(
+        List<EarthThing> result = use(EarthStore.class).queryInternal(
                 "x." + EarthField.KIND + " == @kind and " +
                 "x." + EarthField.TOKEN + " == @token",
                 ImmutableMap.<String, Object>of(
@@ -53,7 +53,7 @@ public class PersonMine extends EarthControl {
     }
 
     public EarthThing byGoogleUrl(String googleUrl) {
-        List<EarthThing> result = use(EarthStore.class).query(
+        List<EarthThing> result = use(EarthStore.class).queryInternal(
                 "x." + EarthField.KIND + " == @kind and " +
                         "x." + EarthField.GOOGLE_URL + " == @google_url ",
                 ImmutableMap.<String, Object>of(

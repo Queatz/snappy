@@ -45,7 +45,7 @@ public class HereInterface implements Interfaceable {
         }
 
         return new EntityListView(as, new EarthStore(as)
-                .getNearby(latLng, kindFilter, recent, null), EarthView.SHALLOW).toJson();
+                .getNearby(latLng, kindFilter, recent, null), EarthView.DEEP).toJson();
     }
 
     @Override

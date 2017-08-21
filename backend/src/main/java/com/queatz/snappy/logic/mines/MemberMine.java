@@ -62,4 +62,18 @@ public class MemberMine extends EarthControl {
                         "status", status
                 ));
     }
+
+    public List<EarthThing> isAMemberOfThingsWithStatus(EarthThing thing, String filterByKind, String status) {
+        return use(EarthStore.class).query(
+                "x." + EarthField.KIND + " == @kind and " +
+                        "x." + EarthField.SOURCE + " == @source and " +
+                        "x." + EarthField.STATUS + " == @status and " +
+                        "(for y in " + EarthStore.DEFAULT_COLLECTION + " filter y._key == x." + EarthField.TARGET + " return y." + EarthField.KIND + ")[0] == @memberKind",
+                ImmutableMap.<String, Object>of(
+                        "kind", EarthKind.MEMBER_KIND,
+                        "source", thing.key().name(),
+                        "status", status,
+                        "memberKind", filterByKind
+                ));
+    }
 }
