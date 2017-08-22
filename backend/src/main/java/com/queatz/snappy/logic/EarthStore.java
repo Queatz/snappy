@@ -11,11 +11,12 @@ import com.arangodb.entity.EdgeDefinition;
 import com.arangodb.model.CollectionCreateOptions;
 import com.arangodb.model.DocumentCreateOptions;
 import com.arangodb.model.GeoIndexOptions;
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterators;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.logic.query.EarthQueryAppendFilter;
+import com.queatz.snappy.logic.query.EarthQueryNearFilter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.Gateway;
 
@@ -30,7 +31,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 
@@ -81,14 +81,14 @@ public class EarthStore extends EarthControl {
         this.collection.createGeoIndex(ImmutableSet.of(EarthField.GEO), new GeoIndexOptions());
     }
 
-    private static final String DEFAULT_GRAPH = "Graph";
+    public static final String DEFAULT_GRAPH = "Graph";
     public static final String DEFAULT_COLLECTION = "Collection";
-    private static final String DEFAULT_RELATIONSHIPS = "Relationships";
+    public static final String DEFAULT_RELATIONSHIPS = "Relationships";
     private static final String DEFAULT_KIND = "Thing";
     private static final String DEFAULT_KIND_OWNER = EarthRelationship.OWNER;
     private static final String DEFAULT_FIELD_KIND = EarthField.KIND;
     private static final String DEFAULT_FIELD_CREATED = EarthField.CREATED_ON;
-    private static final String DEFAULT_FIELD_CONCLUDED = "concluded_on";
+    public static final String DEFAULT_FIELD_CONCLUDED = "concluded_on";
     private static final String DEFAULT_FIELD_FROM = "_from";
     private static final String DEFAULT_FIELD_TO = "_to";
     private static final Set<String> DEFAULT_AUTH_KINDS = ImmutableSet.of(
@@ -117,11 +117,12 @@ public class EarthStore extends EarthControl {
         if (as.__entityCache.containsKey(key)) {
             entity = as.__entityCache.get(key);
         } else {
-            String aql = getVisibleQueryString() + "for x in " + DEFAULT_COLLECTION +
-                    " filter x._key == '" + key.name() + "' and " + getVisibleQueryFilterString() +
-                    " return x";
-            Map<String, Object> vars = ImmutableMap.of();
-            ArangoCursor<BaseDocument> c = db.query(aql, vars, null, BaseDocument.class);
+            ArangoCursor<BaseDocument> c = db.query(
+                    new EarthQuery(as).filter("_key", "'" + key.name() + "'").aql(),
+                    null,
+                    null,
+                    BaseDocument.class
+            );
 
             if (!c.hasNext()) {
                 return null;
@@ -234,12 +235,6 @@ public class EarthStore extends EarthControl {
      * - Fails if the thing already concluded.
      */
     public void conclude(@NotNull String id) {
-
-//        XXX TODO
-//        if (!earthAuthority.authorize(entity, as, EarthRule.MODIFY)) {
-//            return null;
-//        }
-//
         EarthThing entity = get(id);
 
         // Don't allow concluding entities that have already concluded
@@ -318,7 +313,7 @@ public class EarthStore extends EarthControl {
     public int count(String kind, String field, EarthRef key) {
         String aql = "return count(for x in " + DEFAULT_COLLECTION + " filter x.kind == @kind and x.@field == @key and x.@concluded_field == null return 1)";
 
-        Map<String, Object> vars = ImmutableMap.<String, Object>of(
+        Map<String, Object> vars = ImmutableMap.of(
                 "kind", kind,
                 "field", field,
                 "key", key.name(),
@@ -341,11 +336,13 @@ public class EarthStore extends EarthControl {
      * @return All the things
      */
     public List<EarthThing> find(String kind, String field, EarthRef key, Integer limit) {
-        String aql = getVisibleQueryString() + "for x in " + DEFAULT_COLLECTION + " " +
-                "filter x.kind == @kind and x.@field == @key and x.@concluded_field == null and " + getVisibleQueryFilterString() + " " +
-                "sort x.@sort " +
-                "limit @limit " +
-                "return x";
+        String aql = new EarthQuery(as)
+                .filter(EarthField.KIND, "@kind")
+                .filter("@field", "@key")
+                .filter("@concluded_field", "null")
+                .sort("@sort")
+                .limit("@limit")
+                .aql();
 
         Map<String, Object> vars = new HashMap<>();
         vars.put("kind", kind);
@@ -355,7 +352,6 @@ public class EarthStore extends EarthControl {
         vars.put("limit", limit == null ? Config.NEARBY_MAX_COUNT : limit);
         vars.put("concluded_field", DEFAULT_FIELD_CONCLUDED);
 
-        Logger.getLogger(Config.NAME).info(aql);
         ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class);
 
         List<EarthThing> result = new ArrayList<>();
@@ -436,25 +432,31 @@ public class EarthStore extends EarthControl {
 
         }
 
-        filter = (!Strings.isNullOrEmpty(filter) ? filter + " and " : "");
+        String aql = new EarthQuery(as)
+                .let("things", new EarthQueryNearFilter("@latitude", "@longitude", "@limit").aql())
+                .in(new EarthQueryAppendFilter("things", new EarthQuery(as)
+                                .internal(true)
+                                .as("thing")
+                                .in("things " + new EarthQuery(as)
+                                        .internal(true)
+                                        .as("other, relationship")
+                                        .in("outbound thing graph '" + DEFAULT_GRAPH + "'")
+                                        .filter("relationship.kind", "@owner_kind")
+                                        .aql("other")
+                                ).aql(null)).aql())
+                .filter(EarthField.KIND, "!=", "'device'")
+                .filter(EarthField.KIND, "!=", "'geosubscribe'")
+                .filter(filter)
+                .limit("@limit")
+                .distinct(true)
+                .aql();
 
-        boolean searchWithLinks = true;
-
-        // TODO - Only allow chosen types
-        String aql = getVisibleQueryString() + "let things = (for x in near(" + DEFAULT_COLLECTION + ", @latitude, @longitude, @limit) return x) " +
-                "for x in " +
-                (searchWithLinks ? "append(things, (for thing in things for other, relationship in outbound thing graph '" + DEFAULT_GRAPH + "' filter relationship.kind == @owner_kind return other)) " : "things") +
-                "filter " + filter + "x.@concluded_field == null and x.kind != 'device' and " + getVisibleQueryFilterString() + " " +
-                "limit @limit " +
-                "return distinct x";
         Map<String, Object> vars = new HashMap<>();
         vars.put("latitude", location.getLatitude());
         vars.put("longitude", location.getLongitude());
         vars.put("limit", Config.NEARBY_MAX_COUNT);
         vars.put("owner_kind", DEFAULT_KIND_OWNER);
-        vars.put("concluded_field", DEFAULT_FIELD_CONCLUDED);
 
-        Logger.getLogger(Config.NAME).info(aql);
         ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class);
 
         List<EarthThing> result = new ArrayList<>();
@@ -497,13 +499,13 @@ public class EarthStore extends EarthControl {
         var.put("_sort_by", sort == null ? DEFAULT_FIELD_CREATED : sort);
         var.put("_concluded_on", DEFAULT_FIELD_CONCLUDED);
 
-        String aql = (isInternalQuery ? "" : getVisibleQueryString()) + "for x in " + DEFAULT_COLLECTION + " " +
-                "filter " + filter + " and x.@_concluded_on == null " + (isInternalQuery ? "" : "and " + getVisibleQueryFilterString() + "  ") +
-                "sort x.@_sort_by " +
-                "limit @_limit " +
-                "return x";
-
-        Logger.getLogger(Config.NAME).info(aql);
+        String aql = new EarthQuery(as)
+                .filter(filter)
+                .filter("@_concluded_on", "null")
+                .sort("@_sort_by")
+                .limit("@_limit")
+                .internal(isInternalQuery)
+                .aql();
 
         ArangoCursor<BaseDocument> cursor = db.query(aql, var, null, BaseDocument.class);
 
@@ -521,38 +523,5 @@ public class EarthStore extends EarthControl {
      */
     public List<EarthThing> queryInternal(String filter, @Nullable Map<String, Object> filterVars, int limit) {
         return query(true, filter, filterVars, limit, null);
-    }
-
-    private String getVisibleQueryString() {
-        as.requireUser();
-
-        return "let clubs = (\n" +
-                "    for club in " + DEFAULT_COLLECTION + "\n" +
-                "        for member in " + DEFAULT_COLLECTION + "\n" +
-                "            filter club." + EarthField.KIND + " == '" + EarthKind.CLUB_KIND + "'\n" +
-                "                and member." + EarthField.KIND + " == '" + EarthKind.MEMBER_KIND + "'\n" +
-                "                and member." + EarthField.TARGET + " == club._key\n" +
-                "                and member." + EarthField.SOURCE + " == '" + as.getUser().key().name() + "'\n" +
-                "                and member." + DEFAULT_FIELD_CONCLUDED + " == null\n" +
-                "                and club." + DEFAULT_FIELD_CONCLUDED + " == null\n" +
-                "                return distinct club\n" +
-                ")" +
-                "\n" +
-                "let visible = (\n" +
-                "    for member in " + DEFAULT_COLLECTION + "\n" +
-                "        for club in clubs\n" +
-                "            for thing in " + DEFAULT_COLLECTION + "\n" +
-                "                filter member." + EarthField.KIND + " == '" + EarthKind.MEMBER_KIND + "'\n" +
-                "                    and member." + EarthField.TARGET + " == club._key\n" +
-                "                    and member." + EarthField.SOURCE + " == thing._key\n" +
-                "                    and member." + DEFAULT_FIELD_CONCLUDED + " == null\n" +
-                "                    and thing." + DEFAULT_FIELD_CONCLUDED + " == null\n" +
-                "                    and club." + DEFAULT_FIELD_CONCLUDED + " == null\n" +
-                "                    return distinct thing\n" +
-                ")\n";
-    }
-
-    private String getVisibleQueryFilterString() {
-        return "x in visible";
     }
 }
