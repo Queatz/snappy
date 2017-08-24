@@ -57,9 +57,16 @@ public class EarthStore extends EarthControl {
 
         try {
             __arangoDatabase.createCollection(DEFAULT_COLLECTION);
+
             __arangoDatabase.createCollection(DEFAULT_RELATIONSHIPS, new CollectionCreateOptions().type(CollectionType.EDGES));
             __arangoDatabase.createGraph(DEFAULT_GRAPH, ImmutableSet.of(new EdgeDefinition()
                     .collection(DEFAULT_RELATIONSHIPS)
+                    .from(DEFAULT_COLLECTION)
+                    .to(DEFAULT_COLLECTION)));
+
+            __arangoDatabase.createCollection(CLUB_RELATIONSHIPS, new CollectionCreateOptions().type(CollectionType.EDGES));
+            __arangoDatabase.createGraph(CLUB_GRAPH, ImmutableSet.of(new EdgeDefinition()
+                    .collection(CLUB_RELATIONSHIPS)
                     .from(DEFAULT_COLLECTION)
                     .to(DEFAULT_COLLECTION)));
         } catch (ArangoDBException ignored) {
@@ -77,15 +84,21 @@ public class EarthStore extends EarthControl {
         this.db = getDb();
 
         this.collection = db.collection(DEFAULT_COLLECTION);
-        this.relationships = db.collection(DEFAULT_RELATIONSHIPS);
         this.collection.createGeoIndex(ImmutableSet.of(EarthField.GEO), new GeoIndexOptions());
+
+        this.relationships = db.collection(DEFAULT_RELATIONSHIPS);
+        this.clubRelationships = db.collection(CLUB_RELATIONSHIPS);
     }
 
     public static final String DEFAULT_GRAPH = "Graph";
     public static final String DEFAULT_COLLECTION = "Collection";
     public static final String DEFAULT_RELATIONSHIPS = "Relationships";
+    public static final String CLUB_GRAPH = "ClubsGraph";
+    public static final String CLUB_RELATIONSHIPS = "Clubs";
+
     private static final String DEFAULT_KIND = "Thing";
-    private static final String DEFAULT_KIND_OWNER = EarthRelationship.OWNER;
+    public static final String DEFAULT_KIND_OWNER = EarthRelationship.OWNER;
+    public static final String DEFAULT_KIND_MEMBER = EarthRelationship.MEMBER;
     private static final String DEFAULT_FIELD_KIND = EarthField.KIND;
     private static final String DEFAULT_FIELD_CREATED = EarthField.CREATED_ON;
     public static final String DEFAULT_FIELD_CONCLUDED = "concluded_on";
@@ -99,6 +112,7 @@ public class EarthStore extends EarthControl {
     private final ArangoDatabase db;
     private final ArangoCollection collection;
     private final ArangoCollection relationships;
+    private final ArangoCollection clubRelationships;
 
     public EarthThing get(@NotNull String id) {
         return get(new EarthRef(id));
@@ -118,7 +132,9 @@ public class EarthStore extends EarthControl {
             entity = as.__entityCache.get(key);
         } else {
             ArangoCursor<BaseDocument> c = db.query(
-                    new EarthQuery(as).filter("_key", "'" + key.name() + "'").aql(),
+                    new EarthQuery(as)
+                            .filter("_key", "'" + key.name() + "'")
+                            .aql(),
                     null,
                     null,
                     BaseDocument.class
@@ -196,7 +212,9 @@ public class EarthStore extends EarthControl {
         EarthThing thing = new EarthThing(collection.insertDocument(entity, new DocumentCreateOptions().returnNew(true).waitForSync(true)).getNew());
 
         if (as.hasUser()) {
+            // Declare owner and make visible to self
             setOwner(thing, as.getUser());
+            addToClub(thing, as.getUser());
         }
 
         return thing;
@@ -210,6 +228,33 @@ public class EarthStore extends EarthControl {
                 .build();
 
         relationships.insertDocument(entity, new DocumentCreateOptions());
+    }
+
+    public void addToClub(@NotNull EarthThing thing, @NotNull EarthThing club) {
+        BaseDocument entity = new EarthThing.Builder()
+                .set(DEFAULT_FIELD_FROM, DEFAULT_COLLECTION + "/" + thing.key().name())
+                .set(DEFAULT_FIELD_TO, DEFAULT_COLLECTION + "/" + club.key().name())
+                .build();
+
+        clubRelationships.insertDocument(entity, new DocumentCreateOptions());
+    }
+
+    public void removeFromClub(@NotNull EarthThing thing, @NotNull EarthThing club) {
+        ArangoCursor<BaseDocument> c = db.query(
+                "for x in " + CLUB_RELATIONSHIPS + "" +
+                        " filter x." + DEFAULT_FIELD_FROM + " == @thing" +
+                        " and x." + DEFAULT_FIELD_TO + " == @club return x",
+                ImmutableMap.of(
+                        "thing", thing.key().name(),
+                        "club", club.key().name()
+                ),
+                null,
+                BaseDocument.class
+        );
+
+        while (c.hasNext()) {
+            clubRelationships.deleteDocument(c.next().getKey());
+        }
     }
 
     /**

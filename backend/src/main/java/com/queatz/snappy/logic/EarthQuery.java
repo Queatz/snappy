@@ -5,14 +5,15 @@ import com.queatz.snappy.logic.query.EarthQueryLet;
 import com.queatz.snappy.shared.Config;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static com.queatz.snappy.logic.EarthStore.CLUB_GRAPH;
 import static com.queatz.snappy.logic.EarthStore.DEFAULT_COLLECTION;
-import static com.queatz.snappy.logic.EarthStore.DEFAULT_FIELD_CONCLUDED;
 
 /**
  * Created by jacob on 8/21/17.
@@ -90,17 +91,20 @@ public class EarthQuery extends EarthControl {
         return aql(x);
     }
 
-    public String aql(String of) {
+    public String aql(@Nullable String of) {
+        if (as.isInternal()) {
+            this.internal = true;
+        }
+
         String result = (lets.isEmpty() ? "" : lets.stream()
                 .map(l -> "let " + l.getVar() + " = (" + l.getValue() + ")\n")
                 .collect(Collectors.joining())) +
-
-                (internal ? "" : getVisibleQueryString()) + "for " + x + " in " + in +
-                (filters.isEmpty() && internal ? "" : " filter " + (filters.isEmpty() ? "" : (
+                "for " + x + " in " + in +
+                (filters.isEmpty() ? "" : " filter " + (
                         filters.stream()
                                 .map(f -> f.getValue() == null ? f.getKey() : (!f.getKey().contains(".") ? x + "." : "") + f.getKey() + " " + f.getComparator() + " " + f.getValue() + "")
                                 .collect(Collectors.joining(" and "))
-                ) + (internal ? "" : " and ")) + (internal ? "" : getVisibleQueryFilterString())) +
+                ) + (internal ? "" : getVisibleQueryString())) +
                 (sort == null ? "" : " sort " + sort) +
                 (limit == null ? "" : " limit " + limit) +
                 (of == null ? "" : " return" + (distinct ? " distinct" : "") + " " + of);
@@ -113,33 +117,10 @@ public class EarthQuery extends EarthControl {
     private String getVisibleQueryString() {
         as.requireUser();
 
-        return "let clubs = (\n" +
-                "    for club in " + DEFAULT_COLLECTION + "\n" +
-                "        for member in " + DEFAULT_COLLECTION + "\n" +
-                "            filter club." + EarthField.KIND + " == '" + EarthKind.CLUB_KIND + "'\n" +
-                "                and member." + EarthField.KIND + " == '" + EarthKind.MEMBER_KIND + "'\n" +
-                "                and member." + EarthField.TARGET + " == club._key\n" +
-                "                and member." + EarthField.SOURCE + " == '" + as.getUser().key().name() + "'\n" +
-                "                and member." + DEFAULT_FIELD_CONCLUDED + " == null\n" +
-                "                and club." + DEFAULT_FIELD_CONCLUDED + " == null\n" +
-                "                return distinct club\n" +
-                ")" +
-                "\n" +
-                "let visible = (\n" +
-                "    for member in " + in + "\n" +
-                "        for club in clubs\n" +
-                "            for thing in " + DEFAULT_COLLECTION + "\n" +
-                "                filter member." + EarthField.KIND + " == '" + EarthKind.MEMBER_KIND + "'\n" +
-                "                    and member." + EarthField.TARGET + " == club._key\n" +
-                "                    and member." + EarthField.SOURCE + " == thing._key\n" +
-                "                    and member." + DEFAULT_FIELD_CONCLUDED + " == null\n" +
-                "                    and thing." + DEFAULT_FIELD_CONCLUDED + " == null\n" +
-                "                    and club." + DEFAULT_FIELD_CONCLUDED + " == null\n" +
-                "                    return distinct thing\n" +
-                ")\n";
-    }
-
-    private String getVisibleQueryFilterString() {
-        return x + " in visible";
+        return "\nfilter (\n" +
+                "        for t1, r1 in outbound '" + DEFAULT_COLLECTION + "/" + as.getUser().key().name() + "' graph '" + CLUB_GRAPH + "'\n" +
+                "            for t2, r2 in outbound " + x + " graph '" + CLUB_GRAPH + "'\n" +
+                "                filter r1._to == r2._to limit 1 return true\n" +
+                ")[0] == true\n";
     }
 }

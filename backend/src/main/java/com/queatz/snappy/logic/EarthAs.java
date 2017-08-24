@@ -5,7 +5,6 @@ import com.queatz.snappy.service.Api;
 import com.queatz.snappy.shared.Config;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -26,6 +25,7 @@ public class EarthAs {
     private final HttpServletResponse response;
     private final List<String> route;
     private final EarthThing user;
+    private final boolean internal;
 
     // Per request cache
     final Map<EarthRef, EarthThing> __entityCache = new HashMap<>();
@@ -33,17 +33,22 @@ public class EarthAs {
     private Map<Class, Object> singletons;
 
     public EarthAs(Api api, HttpServletRequest request, HttpServletResponse response, List<String> route, EarthThing user) {
+        this(api, request, response, route, user, false);
+    }
+
+    public EarthAs(Api api, HttpServletRequest request, HttpServletResponse response, List<String> route, EarthThing user, boolean internal) {
         this.api = api;
         this.request = request;
         this.response = response;
         this.route = route;
         this.user = user;
+        this.internal = internal;
 
         singletons = new HashMap<>();
     }
 
     public EarthAs () {
-        this(null, null, null, null, null);
+        this(null, null, null, null, null, true);
     }
 
     @SuppressWarnings("unchecked")
@@ -111,5 +116,9 @@ public class EarthAs {
      */
     boolean isInternalCall() {
         return api == null;
+    }
+
+    public boolean isInternal() {
+        return internal;
     }
 }

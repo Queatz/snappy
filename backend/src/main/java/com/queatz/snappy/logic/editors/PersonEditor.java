@@ -35,11 +35,16 @@ public class PersonEditor extends EarthControl {
     }
 
     public EarthThing newPerson(String email) {
-        return earthStore.save(earthStore.edit(earthStore.create(EarthKind.PERSON_KIND))
+        EarthThing person = earthStore.save(earthStore.edit(earthStore.create(EarthKind.PERSON_KIND))
                 .set(EarthField.TOKEN, Util.genToken())
                 .set(EarthField.EMAIL, email)
                 .set(EarthField.ABOUT)
                 .set(EarthField.SUBSCRIPTION));
+
+        // A person starts out with their own club
+        earthStore.addToClub(person, person);
+
+        return person;
     }
 
     public EarthThing updatePerson(EarthThing person,
