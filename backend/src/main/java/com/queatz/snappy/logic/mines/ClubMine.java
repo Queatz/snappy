@@ -5,6 +5,7 @@ import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
+import com.queatz.snappy.logic.EarthQuery;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
 
@@ -26,12 +27,14 @@ public class ClubMine extends EarthControl {
 
     public List<EarthThing> clubsOf(EarthThing thing) {
         return use(EarthStore.class).queryRaw(
-                "for club in inbound @id graph @graph filter" +
-                " club.@kind == @club_kind and club.@concluded_on == null return club",
+                new EarthQuery(as)
+                        .in("inbound @id graph @graph")
+                        .filter(EarthField.KIND, "@club_kind")
+                        .filter("@concluded_on", "null")
+                        .aql(),
                 ImmutableMap.of(
                     "id", thing.id(),
                     "graph", CLUB_GRAPH,
-                    "kind", EarthField.KIND,
                     "club_kind", EarthKind.CLUB_KIND,
                     "concluded_on", DEFAULT_FIELD_CONCLUDED
                 ));
