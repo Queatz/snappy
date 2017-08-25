@@ -8,13 +8,10 @@ import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthView;
-import com.queatz.snappy.logic.concepts.Viewable;
 import com.queatz.snappy.logic.mines.DeviceMine;
 import com.queatz.snappy.logic.mines.FollowerMine;
-import com.queatz.snappy.shared.Config;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by jacob on 5/8/16.

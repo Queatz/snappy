@@ -4,7 +4,11 @@ import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthView;
+import com.queatz.snappy.logic.concepts.Viewable;
+import com.queatz.snappy.logic.mines.ClubMine;
 import com.queatz.snappy.service.ImageQueue;
+
+import java.util.List;
 
 /**
  * Created by jacob on 4/3/16.
@@ -17,6 +21,7 @@ public class ThingView extends ExistenceView {
     final String placeholder;
     final Float aspect;
     final Boolean owner;
+    final List<Viewable> clubs;
 
     public ThingView(EarthAs as, EarthThing thing) {
         this(as, thing, EarthView.DEEP);
@@ -60,5 +65,11 @@ public class ThingView extends ExistenceView {
         owner = as.hasUser() &&
                 (thing.key().name().equals(as.getUser().key().name()) ||
                         (thing.has(EarthField.SOURCE) && thing.getString(EarthField.SOURCE).equals(as.getUser().key().name())));
+
+        clubs = new EntityListView(
+                as,
+                as.s(ClubMine.class).clubsOf(thing),
+                EarthView.SHALLOW
+        ).asList();
     }
 }

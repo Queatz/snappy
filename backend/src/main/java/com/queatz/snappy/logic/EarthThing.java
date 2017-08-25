@@ -34,6 +34,10 @@ public class EarthThing {
         return new EarthRef(raw.getKey());
     }
 
+    public String id() {
+        return raw.getId();
+    }
+
     public EarthRef getKey(String field) {
         return new EarthRef((String) raw.getAttribute(field));
     }

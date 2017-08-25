@@ -397,6 +397,10 @@ public class EarthStore extends EarthControl {
         vars.put("limit", limit == null ? Config.NEARBY_MAX_COUNT : limit);
         vars.put("concluded_field", DEFAULT_FIELD_CONCLUDED);
 
+        return queryRaw(aql, vars);
+    }
+
+    public List<EarthThing> queryRaw(String aql, Map<String, Object> vars) {
         ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class);
 
         List<EarthThing> result = new ArrayList<>();
