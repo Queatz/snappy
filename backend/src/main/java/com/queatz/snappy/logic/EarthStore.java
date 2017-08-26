@@ -453,7 +453,7 @@ public class EarthStore extends EarthControl {
                     if (TRANSIENT_KINDS.contains(kinds[i])) {
                         filter += "(";
                         filter += "x.kind == \"" + kinds[i] + "\" ";
-                        filter += "and date_timestamp(x." + EarthField.AROUND + ") >= date_timestamp(date_subtract(date_now(), " + TRANSIENT_KIND_TIMEOUT_SECONDS + "), 's')";
+                        filter += "and date_timestamp(x." + EarthField.AROUND + ") >= date_timestamp(date_subtract(date_now(), " + TRANSIENT_KIND_TIMEOUT_SECONDS + ", 's'))";
                         filter += ")";
                     } else {
                         filter += "x.kind == \"" + kinds[i] + "\"";
