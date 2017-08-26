@@ -518,10 +518,10 @@ public class EarthStore extends EarthControl {
     }
 
     private String and(String q) {
-        return "(x.name like '%" + q + "%' or " +
-                "x.firstName like '%" + q + "%' or " +
-                "x.lastName like '%" + q + "%' or " +
-                "x.about like '%" + q + "%')";
+        return "(x." + EarthField.NAME + " like '%" + q + "%' or " +
+                "x." + EarthField.FIRST_NAME + " like '%" + q + "%' or " +
+                "x." + EarthField.LAST_NAME + " like '%" + q + "%' or " +
+                "x." + EarthField.ABOUT + " like '%" + q + "%')";
     }
 
     public List<EarthThing> query(String filter, @Nullable Map<String, Object> vars) {
