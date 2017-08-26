@@ -27,9 +27,6 @@ public class EarthAs {
     private final EarthThing user;
     private final boolean internal;
 
-    // Per request cache
-    final Map<EarthRef, EarthThing> __entityCache = new HashMap<>();
-
     private Map<Class, Object> singletons;
 
     public EarthAs(Api api, HttpServletRequest request, HttpServletResponse response, List<String> route, EarthThing user) {

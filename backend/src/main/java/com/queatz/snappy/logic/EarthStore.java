@@ -128,25 +128,20 @@ public class EarthStore extends EarthControl {
      */
     public EarthThing get(@NotNull EarthRef key) {
         EarthThing entity;
+        ArangoCursor<BaseDocument> c = db.query(
+                new EarthQuery(as)
+                        .filter("_key", "'" + key.name() + "'")
+                        .aql(),
+                null,
+                null,
+                BaseDocument.class
+        );
 
-        if (as.__entityCache.containsKey(key)) {
-            entity = as.__entityCache.get(key);
-        } else {
-            ArangoCursor<BaseDocument> c = db.query(
-                    new EarthQuery(as)
-                            .filter("_key", "'" + key.name() + "'")
-                            .aql(),
-                    null,
-                    null,
-                    BaseDocument.class
-            );
-
-            if (!c.hasNext()) {
-                return null;
-            }
-
-            entity = EarthThing.from(c.next());
+        if (!c.hasNext()) {
+            return null;
         }
+
+        entity = EarthThing.from(c.next());
 
         if (entity == null) {
             return null;
@@ -160,9 +155,6 @@ public class EarthStore extends EarthControl {
         if (!earthAuthority.authorize(entity, EarthRule.ACCESS)) {
             return null;
         }
-
-        // Can be null
-        as.__entityCache.put(key, entity);
 
         return entity;
     }
@@ -298,8 +290,6 @@ public class EarthStore extends EarthControl {
                 entity.key().name(),
                 entity.edit().set(DEFAULT_FIELD_CONCLUDED, new Date()).build()
         );
-
-        as.__entityCache.put(entity.key(), entity);
     }
 
     public void conclude(EarthThing entity) {
@@ -346,8 +336,6 @@ public class EarthStore extends EarthControl {
         }
 
         collection.updateDocument(entity.getKey(), entity);
-
-        as.__entityCache.put(thing.key(), thing);
 
         return thing;
     }
