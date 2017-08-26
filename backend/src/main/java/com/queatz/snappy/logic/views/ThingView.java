@@ -2,6 +2,7 @@ package com.queatz.snappy.logic.views;
 
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Viewable;
@@ -66,10 +67,14 @@ public class ThingView extends ExistenceView {
                 (thing.key().name().equals(as.getUser().key().name()) ||
                         (thing.has(EarthField.SOURCE) && thing.getString(EarthField.SOURCE).equals(as.getUser().key().name())));
 
-        clubs = new EntityListView(
-                as,
-                as.s(ClubMine.class).clubsOf(thing),
-                EarthView.SHALLOW
-        ).asList();
+        if (EarthKind.CLUB_KIND.equals(thing.getString(EarthField.KIND))) {
+            clubs = null;
+        } else {
+            clubs = new EntityListView(
+                    as,
+                    use(ClubMine.class).clubsOf(thing),
+                    EarthView.SHALLOW
+            ).asList();
+        }
     }
 }
