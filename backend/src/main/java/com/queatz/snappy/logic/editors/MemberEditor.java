@@ -6,6 +6,7 @@ import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
+import com.queatz.snappy.logic.mines.ClubMine;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -24,11 +25,19 @@ public class MemberEditor extends EarthControl {
     public EarthThing create(EarthThing source, EarthThing target, String status, String role) {
         EarthStore earthStore = use(EarthStore.class);
 
-        return earthStore.save(earthStore.edit(earthStore.create(EarthKind.MEMBER_KIND))
+        EarthThing member = earthStore.save(earthStore.edit(earthStore.create(EarthKind.MEMBER_KIND))
                 .set(EarthField.STATUS, status)
                 .set(EarthField.ROLE, role)
                 .set(EarthField.SOURCE, source.key())
                 .set(EarthField.TARGET, target.key()));
+
+        if (EarthKind.CLUB_KIND.equals(target.getString(EarthField.KIND))) {
+            earthStore.addToClub(source, target);
+        }
+
+        use(ClubMine.class).clubsOf(target).forEach(club -> earthStore.addToClub(source, club));
+
+        return member;
     }
 
     public EarthThing editRole(EarthThing member, String role) {

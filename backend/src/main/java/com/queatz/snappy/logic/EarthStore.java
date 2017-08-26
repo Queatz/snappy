@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterators;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.logic.mines.ClubMine;
 import com.queatz.snappy.logic.query.EarthQueryAppendFilter;
 import com.queatz.snappy.logic.query.EarthQueryNearFilter;
 import com.queatz.snappy.shared.Config;
@@ -288,6 +289,10 @@ public class EarthStore extends EarthControl {
         }
 
         // XXX TODO Authorize
+
+        ClubMine clubMine = use(ClubMine.class);
+
+        clubMine.clubsOf(entity).forEach(club -> removeFromClub(entity, club));
 
         collection.updateDocument(
                 entity.key().name(),
