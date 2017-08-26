@@ -216,8 +216,8 @@ public class EarthStore extends EarthControl {
     private void setOwner(@NotNull EarthThing thing, @NotNull EarthThing owner) {
         BaseDocument entity = new EarthThing.Builder()
                 .set(DEFAULT_FIELD_KIND, DEFAULT_KIND_OWNER)
-                .set(DEFAULT_FIELD_FROM, DEFAULT_COLLECTION + "/" + owner.key().name())
-                .set(DEFAULT_FIELD_TO, DEFAULT_COLLECTION + "/" + thing.key().name())
+                .set(DEFAULT_FIELD_FROM, owner.id())
+                .set(DEFAULT_FIELD_TO, thing.id())
                 .build();
 
         relationships.insertDocument(entity, new DocumentCreateOptions());
@@ -225,8 +225,8 @@ public class EarthStore extends EarthControl {
 
     public void addToClub(@NotNull EarthThing thing, @NotNull EarthThing club) {
         BaseDocument entity = new EarthThing.Builder()
-                .set(DEFAULT_FIELD_FROM, DEFAULT_COLLECTION + "/" + thing.key().name())
-                .set(DEFAULT_FIELD_TO, DEFAULT_COLLECTION + "/" + club.key().name())
+                .set(DEFAULT_FIELD_FROM, thing.id())
+                .set(DEFAULT_FIELD_TO, club.id())
                 .build();
 
         clubRelationships.insertDocument(entity, new DocumentCreateOptions());

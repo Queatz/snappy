@@ -28,7 +28,7 @@ public class ClubMine extends EarthControl {
     public List<EarthThing> clubsOf(EarthThing thing) {
         return use(EarthStore.class).queryRaw(
                 new EarthQuery(as)
-                        .in("inbound @id graph @graph")
+                        .in("outbound @id graph @graph")
                         .filter(EarthField.KIND, "@club_kind")
                         .filter("@concluded_on", "null")
                         .aql(),
