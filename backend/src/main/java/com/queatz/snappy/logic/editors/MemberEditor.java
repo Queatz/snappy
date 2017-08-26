@@ -33,9 +33,11 @@ public class MemberEditor extends EarthControl {
 
         if (EarthKind.CLUB_KIND.equals(target.getString(EarthField.KIND))) {
             earthStore.addToClub(source, target);
+        } else {
+            use(ClubMine.class)
+                    .clubsOf(target)
+                    .forEach(club -> earthStore.addToClub(source, club));
         }
-
-        use(ClubMine.class).clubsOf(target).forEach(club -> earthStore.addToClub(source, club));
 
         return member;
     }

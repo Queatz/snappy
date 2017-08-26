@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import static com.queatz.snappy.logic.EarthStore.CLUB_GRAPH;
 import static com.queatz.snappy.logic.EarthStore.DEFAULT_COLLECTION;
+import static com.queatz.snappy.logic.EarthStore.DEFAULT_FIELD_CONCLUDED;
 
 /**
  * Created by jacob on 8/21/17.
@@ -29,6 +30,7 @@ public class EarthQuery extends EarthControl {
     private boolean distinct = false;
     private String x = "x";
     private String in = DEFAULT_COLLECTION;
+    private boolean count = false;
 
     public EarthQuery(@NotNull EarthAs as) {
         super(as);
@@ -96,22 +98,32 @@ public class EarthQuery extends EarthControl {
             this.internal = true;
         }
 
+        if (of != null) {
+            filter(DEFAULT_FIELD_CONCLUDED, "null");
+        }
+
         String result = (lets.isEmpty() ? "" : lets.stream()
                 .map(l -> "let " + l.getVar() + " = (" + l.getValue() + ")\n")
                 .collect(Collectors.joining())) +
+                (count ? "return count(" : "") +
                 "for " + x + " in " + in +
                 (filters.isEmpty() ? "" : " filter " + (
                         filters.stream()
-                                .map(f -> f.getValue() == null ? f.getKey() : (!f.getKey().contains(".") ? x + "." : "") + f.getKey() + " " + f.getComparator() + " " + f.getValue() + "")
+                                .map(f -> f.getValue() == null ? f.getKey() : (!f.getKey().contains(".") ? gX() + "." : "") + f.getKey() + " " + f.getComparator() + " " + f.getValue() + "")
                                 .collect(Collectors.joining(" and "))
-                ) + (internal ? "" : getVisibleQueryString())) +
+                )) + (internal ? "" : getVisibleQueryString()) +
                 (sort == null ? "" : " sort " + sort) +
                 (limit == null ? "" : " limit " + limit) +
-                (of == null ? "" : " return" + (distinct ? " distinct" : "") + " " + of);
+                (of == null ? "" : " return" + (distinct ? " distinct" : "") + " " + of) +
+                (count ? ")" : "");
 
         Logger.getLogger(Config.NAME).info(result);
 
         return result;
+    }
+
+    private String gX() {
+        return x.split(",")[0];
     }
 
     private String getVisibleQueryString() {
@@ -122,5 +134,10 @@ public class EarthQuery extends EarthControl {
                 "            for t2, r2 in outbound " + x + " graph '" + CLUB_GRAPH + "'\n" +
                 "                filter r1._to == r2._to limit 1 return true\n" +
                 ")[0] == true\n";
+    }
+
+    public EarthQuery count(boolean count) {
+        this.count = count;
+        return this;
     }
 }

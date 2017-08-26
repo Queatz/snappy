@@ -1,18 +1,23 @@
 package com.queatz.snappy.logic.query;
 
+import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.logic.EarthControl;
+import com.queatz.snappy.logic.EarthQuery;
+
 import static com.queatz.snappy.logic.EarthStore.DEFAULT_COLLECTION;
 
 /**
  * Created by jacob on 8/21/17.
  */
 
-public class EarthQueryNearFilter {
+public class EarthQueryNearFilter extends EarthControl {
 
     private String longitude;
     private String latitude;
     private String limit;
 
-    public EarthQueryNearFilter(String longitude, String latitude, String limit) {
+    public EarthQueryNearFilter(EarthAs as, String longitude, String latitude, String limit) {
+        super(as);
         this.longitude = longitude;
         this.latitude = latitude;
         this.limit = limit;
@@ -46,6 +51,8 @@ public class EarthQueryNearFilter {
     }
 
     public String aql() {
-        return "for x in near(" + DEFAULT_COLLECTION + ", @latitude, @longitude, @limit) return x";
+        return new EarthQuery(as)
+                .in("near(" + DEFAULT_COLLECTION + ", @latitude, @longitude, @limit)")
+                .aql();
     }
 }

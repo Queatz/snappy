@@ -53,6 +53,11 @@ public abstract class CommonLinkInterface implements Interfaceable {
             case 0: {
                 EarthThing source = earthStore.get(as.getParameters().get(Config.PARAM_SOURCE)[0]);
                 EarthThing target = earthStore.get(as.getParameters().get(Config.PARAM_TARGET)[0]);
+
+                if (source == null || target == null) {
+                    return null;
+                }
+
                 String role = extract(as.getParameters().get(Config.PARAM_ROLE));
 
                 EarthThing link = create(as, source, target, Config.MEMBER_STATUS_ACTIVE, role);

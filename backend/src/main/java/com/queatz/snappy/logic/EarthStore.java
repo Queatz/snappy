@@ -97,14 +97,12 @@ public class EarthStore extends EarthControl {
     public static final String CLUB_GRAPH = "ClubsGraph";
     public static final String CLUB_RELATIONSHIPS = "Clubs";
 
-    private static final String DEFAULT_KIND = "Thing";
     public static final String DEFAULT_KIND_OWNER = EarthRelationship.OWNER;
-    public static final String DEFAULT_KIND_MEMBER = EarthRelationship.MEMBER;
     private static final String DEFAULT_FIELD_KIND = EarthField.KIND;
     private static final String DEFAULT_FIELD_CREATED = EarthField.CREATED_ON;
     public static final String DEFAULT_FIELD_CONCLUDED = "concluded_on";
-    private static final String DEFAULT_FIELD_FROM = "_from";
-    private static final String DEFAULT_FIELD_TO = "_to";
+    public static final String DEFAULT_FIELD_FROM = "_from";
+    public static final String DEFAULT_FIELD_TO = "_to";
     private static final Set<String> DEFAULT_AUTH_KINDS = ImmutableSet.of(
             EarthKind.PERSON_KIND, // Because people need to be created before logging in
             EarthKind.GEO_SUBSCRIBE_KIND
@@ -234,12 +232,12 @@ public class EarthStore extends EarthControl {
 
     public void removeFromClub(@NotNull EarthThing thing, @NotNull EarthThing club) {
         ArangoCursor<BaseDocument> c = db.query(
-                "for x in " + CLUB_RELATIONSHIPS + "" +
+                "for x in " + CLUB_RELATIONSHIPS +
                         " filter x." + DEFAULT_FIELD_FROM + " == @thing" +
                         " and x." + DEFAULT_FIELD_TO + " == @club return x",
                 ImmutableMap.of(
-                        "thing", thing.key().name(),
-                        "club", club.key().name()
+                        "thing", thing.id(),
+                        "club", club.id()
                 ),
                 null,
                 BaseDocument.class
@@ -284,7 +282,19 @@ public class EarthStore extends EarthControl {
 
         ClubMine clubMine = use(ClubMine.class);
 
-        clubMine.clubsOf(entity).forEach(club -> removeFromClub(entity, club));
+        clubMine.clubsOf(entity)
+                .forEach(club -> removeFromClub(entity, club));
+
+        if (EarthKind.MEMBER_KIND.equals(entity.getString(EarthField.KIND))) {
+            EarthThing source = get(entity.getKey(EarthField.SOURCE));
+            EarthThing target = get(entity.getKey(EarthField.TARGET));
+
+            if (source != null && target != null) {
+                if (EarthKind.CLUB_KIND.equals(target.getString(EarthField.KIND))) {
+                    removeFromClub(source, target);
+                }
+            }
+        }
 
         collection.updateDocument(
                 entity.key().name(),
@@ -349,16 +359,13 @@ public class EarthStore extends EarthControl {
      * @return Number of matching things
      */
     public int count(String kind, String field, EarthRef key) {
-        String aql = "return count(for x in " + DEFAULT_COLLECTION + " filter x.kind == @kind and x.@field == @key and x.@concluded_field == null return 1)";
+        String aql = new EarthQuery(as)
+                .filter(DEFAULT_FIELD_KIND, "'" + kind + "'")
+                .filter(field, "'" + key.name() + "'")
+                .count(true)
+                .aql();
 
-        Map<String, Object> vars = ImmutableMap.of(
-                "kind", kind,
-                "field", field,
-                "key", key.name(),
-                "concluded_field", DEFAULT_FIELD_CONCLUDED
-        );
-
-        return db.query(aql, vars, null, Integer.class).next();
+        return db.query(aql, ImmutableMap.of(), null, Integer.class).next();
     }
 
     public int count(Iterator queryResults) {
@@ -475,7 +482,7 @@ public class EarthStore extends EarthControl {
         }
 
         String aql = new EarthQuery(as)
-                .let("things", new EarthQueryNearFilter("@latitude", "@longitude", "@limit").aql())
+                .let("things", new EarthQueryNearFilter(as, "@latitude", "@longitude", "@limit").aql())
                 .in(new EarthQueryAppendFilter("things", new EarthQuery(as)
                                 .internal(true)
                                 .as("thing")
@@ -539,11 +546,9 @@ public class EarthStore extends EarthControl {
 
         var.put("_limit", limit <= 0 ? Config.NEARBY_MAX_COUNT : limit);
         var.put("_sort_by", sort == null ? DEFAULT_FIELD_CREATED : sort);
-        var.put("_concluded_on", DEFAULT_FIELD_CONCLUDED);
 
         String aql = new EarthQuery(as)
                 .filter(filter)
-                .filter("@_concluded_on", "null")
                 .sort("@_sort_by")
                 .limit("@_limit")
                 .internal(isInternalQuery)

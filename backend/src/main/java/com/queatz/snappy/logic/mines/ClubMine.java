@@ -14,7 +14,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import static com.queatz.snappy.logic.EarthStore.CLUB_GRAPH;
-import static com.queatz.snappy.logic.EarthStore.DEFAULT_FIELD_CONCLUDED;
+import static com.queatz.snappy.logic.EarthStore.CLUB_RELATIONSHIPS;
+import static com.queatz.snappy.logic.EarthStore.DEFAULT_FIELD_FROM;
+import static com.queatz.snappy.logic.EarthStore.DEFAULT_FIELD_TO;
 
 /**
  * Created by jacob on 8/20/17.
@@ -30,13 +32,24 @@ public class ClubMine extends EarthControl {
                 new EarthQuery(as)
                         .in("outbound @id graph @graph")
                         .filter(EarthField.KIND, "@club_kind")
-                        .filter("@concluded_on", "null")
                         .aql(),
                 ImmutableMap.of(
                     "id", thing.id(),
                     "graph", CLUB_GRAPH,
-                    "club_kind", EarthKind.CLUB_KIND,
-                    "concluded_on", DEFAULT_FIELD_CONCLUDED
+                    "club_kind", EarthKind.CLUB_KIND
+                ));
+    }
+
+    public List<EarthThing> clubsOf(EarthThing thing, EarthThing club) {
+        return use(EarthStore.class).queryRaw(
+                new EarthQuery(as)
+                        .in(CLUB_RELATIONSHIPS)
+                        .filter(DEFAULT_FIELD_FROM, "@thing")
+                        .filter(DEFAULT_FIELD_TO, "@club")
+                        .aql(),
+                ImmutableMap.of(
+                        "club", club.id(),
+                        "thing", thing.id()
                 ));
     }
 }
