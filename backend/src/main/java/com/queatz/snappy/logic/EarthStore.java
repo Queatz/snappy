@@ -491,21 +491,10 @@ public class EarthStore extends EarthControl {
             }
         }
 
+        final String Q_PARAM = "q";
+
         if (q != null) {
-            String[] qs = q.split("\\s+");
-
-            if (qs.length == 1) {
-                filter += " and " + and(q);
-            } else if (qs.length > 1) {
-                filter += " and (" + and(qs[0]);
-
-                for (int i = 1; i < qs.length; i++) {
-                    filter += " or " + and(qs[i]);
-                }
-
-                filter += ")";
-            }
-
+            filter += " and " + and(Q_PARAM);
         }
 
         String aql = new EarthQuery(as)
@@ -533,6 +522,10 @@ public class EarthStore extends EarthControl {
         vars.put("limit", Config.NEARBY_MAX_COUNT);
         vars.put("owner_kind", DEFAULT_KIND_OWNER);
 
+        if (q != null) {
+            vars.put(Q_PARAM, "%" + q.trim().toLowerCase() + "%");
+        }
+
         ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class);
 
         List<EarthThing> result = new ArrayList<>();
@@ -545,10 +538,10 @@ public class EarthStore extends EarthControl {
     }
 
     private String and(String q) {
-        return "(x." + EarthField.NAME + " like '%" + q + "%' or " +
-                "x." + EarthField.FIRST_NAME + " like '%" + q + "%' or " +
-                "x." + EarthField.LAST_NAME + " like '%" + q + "%' or " +
-                "x." + EarthField.ABOUT + " like '%" + q + "%')";
+        return "(LOWER(x." + EarthField.NAME + ") like @" + q + " or " +
+                "LOWER(x." + EarthField.FIRST_NAME + ") like @" + q + " or " +
+                "LOWER(x." + EarthField.LAST_NAME + ") like @" + q + " or " +
+                "LOWER(x." + EarthField.ABOUT + ") like @" + q + ")";
     }
 
     public List<EarthThing> query(String filter, @Nullable Map<String, Object> vars) {
