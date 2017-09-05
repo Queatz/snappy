@@ -222,6 +222,10 @@ public class EarthStore extends EarthControl {
     }
 
     public void addToClub(@NotNull EarthThing thing, @NotNull EarthThing club) {
+        if (isInClub(thing, club)) {
+            return;
+        }
+
         BaseDocument entity = new EarthThing.Builder()
                 .set(DEFAULT_FIELD_FROM, thing.id())
                 .set(DEFAULT_FIELD_TO, club.id())
@@ -246,6 +250,28 @@ public class EarthStore extends EarthControl {
         while (c.hasNext()) {
             clubRelationships.deleteDocument(c.next().getKey());
         }
+    }
+
+    /**
+     * Checks if a thing is in a club.
+     * @param thing
+     * @param club
+     * @return True, if it is in the club
+     */
+    private boolean isInClub(EarthThing thing, EarthThing club) {
+        ArangoCursor<BaseDocument> c = db.query(
+                "for x in " + CLUB_RELATIONSHIPS +
+                        " filter x." + DEFAULT_FIELD_FROM + " == @thing" +
+                        " and x." + DEFAULT_FIELD_TO + " == @club limit 1 return x",
+                ImmutableMap.of(
+                        "thing", thing.id(),
+                        "club", club.id()
+                ),
+                null,
+                BaseDocument.class
+        );
+
+        return c.hasNext();
     }
 
     /**
@@ -280,18 +306,19 @@ public class EarthStore extends EarthControl {
 
         // XXX TODO Authorize
 
-        ClubMine clubMine = use(ClubMine.class);
-
-        clubMine.clubsOf(entity)
+        // Remove club relationships
+        use(ClubMine.class).clubsOf(entity)
                 .forEach(club -> removeFromClub(entity, club));
 
+        // Remove person from club
         if (EarthKind.MEMBER_KIND.equals(entity.getString(EarthField.KIND))) {
             EarthThing source = get(entity.getKey(EarthField.SOURCE));
             EarthThing target = get(entity.getKey(EarthField.TARGET));
 
             if (source != null && target != null) {
-                if (EarthKind.CLUB_KIND.equals(target.getString(EarthField.KIND))) {
-                    removeFromClub(source, target);
+                if (EarthKind.PERSON_KIND.equals(source.getString(EarthField.KIND)) &&
+                    EarthKind.CLUB_KIND.equals(target.getString(EarthField.KIND))) {
+                        removeFromClub(source, target);
                 }
             }
         }

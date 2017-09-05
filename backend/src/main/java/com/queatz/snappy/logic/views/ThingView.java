@@ -22,6 +22,7 @@ public class ThingView extends ExistenceView {
     final String placeholder;
     final Float aspect;
     final Boolean owner;
+    final Boolean hidden;
     final List<Viewable> clubs;
 
     public ThingView(EarthAs as, EarthThing thing) {
@@ -66,6 +67,12 @@ public class ThingView extends ExistenceView {
         owner = as.hasUser() &&
                 (thing.key().name().equals(as.getUser().key().name()) ||
                         (thing.has(EarthField.SOURCE) && thing.getString(EarthField.SOURCE).equals(as.getUser().key().name())));
+
+        if (owner) {
+            hidden = thing.has(EarthField.HIDDEN) && thing.getBoolean(EarthField.HIDDEN);
+        } else {
+            hidden = null;
+        }
 
         if (EarthKind.CLUB_KIND.equals(thing.getString(EarthField.KIND))) {
             clubs = null;

@@ -127,13 +127,11 @@ public class EarthQuery extends EarthControl {
     }
 
     private String getVisibleQueryString() {
-        as.requireUser();
-
-        return "\nfilter (\n" +
+        return "\nfilter " + x + "." + EarthField.HIDDEN + " != true" + (as.hasUser() ? " or (\n" +
                 "        for t1, r1 in outbound '" + DEFAULT_COLLECTION + "/" + as.getUser().key().name() + "' graph '" + CLUB_GRAPH + "'\n" +
                 "            for t2, r2 in outbound " + x + " graph '" + CLUB_GRAPH + "'\n" +
                 "                filter r1._to == r2._to limit 1 return true\n" +
-                ")[0] == true\n";
+                ")[0] == true\n" : "");
     }
 
     public EarthQuery count(boolean count) {

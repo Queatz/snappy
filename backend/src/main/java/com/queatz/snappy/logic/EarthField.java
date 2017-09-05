@@ -155,6 +155,11 @@ public class EarthField {
     public static final String WANT = "want";
 
     /**
+     * True if thing is hidden from public, otherwise thing is considered public.
+     */
+    public static final String HIDDEN = "hidden";
+
+    /**
      * Other, less generic fields.
      */
     public static final String FIRST_NAME = "first_name";

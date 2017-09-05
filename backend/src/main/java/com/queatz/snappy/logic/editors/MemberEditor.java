@@ -32,8 +32,12 @@ public class MemberEditor extends EarthControl {
                 .set(EarthField.TARGET, target.key()));
 
         if (EarthKind.CLUB_KIND.equals(target.getString(EarthField.KIND))) {
-            earthStore.addToClub(source, target);
+            // Add people to clubs
+            if (EarthKind.PERSON_KIND.equals(source.getString(EarthField.KIND))) {
+                earthStore.addToClub(source, target);
+            }
         } else {
+            // Make thing visible to clubs of parent, i.e. update -> project
             use(ClubMine.class)
                     .clubsOf(target)
                     .forEach(club -> earthStore.addToClub(source, club));

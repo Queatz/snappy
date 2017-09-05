@@ -1,14 +1,18 @@
 package com.queatz.snappy.logic.interfaces;
 
 import com.google.common.base.Strings;
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 import com.queatz.snappy.backend.ApiUtil;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthViewer;
+import com.queatz.snappy.logic.EarthVisibility;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.ContactEditor;
 import com.queatz.snappy.logic.editors.MemberEditor;
@@ -19,6 +23,7 @@ import com.queatz.snappy.service.Api;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Common thing interface
@@ -155,6 +160,29 @@ public abstract class CommonThingInterface implements Interfaceable {
 
                 if (thing == null) {
                     return null;
+                }
+
+                // Common visibility
+
+                String hidden = extract(as.getParameters().get(Config.PARAM_HIDDEN));
+
+                if (hidden != null) {
+                    as.s(EarthVisibility.class).setHidden(thing, Boolean.parseBoolean(hidden));
+                }
+
+                String clubs = extract(as.getParameters().get(Config.PARAM_CLUBS));
+
+                if (clubs != null) {
+                    try {
+                        Map<String, Boolean> clubsMap = new EarthJson().fromJson(
+                                clubs,
+                                new TypeToken<Map<String, Boolean>>() {}.getType()
+                        );
+
+                        as.s(EarthVisibility.class).setVisibility(thing, clubsMap);
+                    } catch (JsonParseException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 return new EarthViewer(as).getViewForEntityOrThrow(thing).toJson();
