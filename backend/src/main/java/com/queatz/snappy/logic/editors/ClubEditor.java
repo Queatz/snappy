@@ -24,9 +24,16 @@ public class ClubEditor extends EarthControl {
     }
 
     public EarthThing newClub(@NotNull String name, @NotNull EarthThing primaryOwner) {
-        return earthStore.save(earthStore.edit(earthStore.create(EarthKind.CLUB_KIND))
+        EarthThing club = earthStore.save(earthStore.edit(earthStore.create(EarthKind.CLUB_KIND))
                 .set(EarthField.NAME, name)
+                .set(EarthField.ABOUT, "")
                 .set(EarthField.SOURCE, primaryOwner.key()));
+
+
+        // A club has to be part of itself
+        earthStore.addToClub(club, club);
+
+        return club;
     }
 
     public EarthThing edit(@NotNull EarthThing club,

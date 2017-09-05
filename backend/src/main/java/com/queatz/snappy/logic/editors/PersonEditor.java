@@ -41,7 +41,7 @@ public class PersonEditor extends EarthControl {
                 .set(EarthField.ABOUT)
                 .set(EarthField.SUBSCRIPTION));
 
-        // A person starts out with their own club
+        // A person starts out as their own club
         earthStore.addToClub(person, person);
 
         return person;
