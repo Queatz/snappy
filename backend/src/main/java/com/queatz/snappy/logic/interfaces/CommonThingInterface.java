@@ -249,7 +249,10 @@ public abstract class CommonThingInterface implements Interfaceable {
             boolean photo = ApiUtil.putPhoto(thing.key().name(), as.getApi(), as.getRequest());
 
             EarthStore earthStore = new EarthStore(as);
-            return earthStore.save(earthStore.edit(thing).set(EarthField.PHOTO, photo));
+            return earthStore.save(earthStore.edit(thing)
+                    .set(EarthField.PLACEHOLDER)
+                    .set(EarthField.ASPECT_RATIO)
+                    .set(EarthField.PHOTO, photo));
         } catch (IOException e) {
             e.printStackTrace();
             throw new PrintingError(Api.Error.NOT_FOUND, "thing - photo io error");

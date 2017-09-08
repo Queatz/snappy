@@ -97,7 +97,7 @@ public class PostSelfUpdateAction extends AuthenticatedAction {
 
                 // If location is null, then probably shared to Village from an external source
                 if (location == null) {
-                    new OpenProfileAction(getTeam().auth.me()).execute();
+                    to(new OpenProfileAction(getTeam().auth.me()));
                 }
             }
 
