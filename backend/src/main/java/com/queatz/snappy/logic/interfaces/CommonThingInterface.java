@@ -209,27 +209,35 @@ public abstract class CommonThingInterface implements Interfaceable {
     }
 
     // Common visibility
-    private void setVisibility(EarthAs as, EarthThing thing) {
+    protected void setVisibility(EarthAs as, EarthThing thing) {
         String hidden = extract(as.getParameters().get(Config.PARAM_HIDDEN));
 
         if (hidden != null) {
-            as.s(EarthVisibility.class).setHidden(thing, Boolean.parseBoolean(hidden));
+            setVisibilityHidden(as, thing, hidden);
         }
 
         String clubs = extract(as.getParameters().get(Config.PARAM_CLUBS));
 
         if (clubs != null) {
-            try {
-                Map<String, Boolean> clubsMap = new EarthJson().fromJson(
-                        clubs,
-                        new TypeToken<Map<String, Boolean>>() {}.getType()
-                );
-
-                as.s(EarthVisibility.class).setVisibility(thing, clubsMap);
-            } catch (JsonParseException e) {
-                e.printStackTrace();
-            }
+            setVisibilityClubs(as, thing, clubs);
         }
+    }
+
+    protected void setVisibilityClubs(EarthAs as, EarthThing thing, String clubs) {
+        try {
+            Map<String, Boolean> clubsMap = new EarthJson().fromJson(
+                    clubs,
+                    new TypeToken<Map<String, Boolean>>() {}.getType()
+            );
+
+            as.s(EarthVisibility.class).setVisibility(thing, clubsMap);
+        } catch (JsonParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void setVisibilityHidden(EarthAs as, EarthThing thing, String hidden) {
+        as.s(EarthVisibility.class).setHidden(thing, Boolean.parseBoolean(hidden));
     }
 
     private void getPhoto(EarthAs as) {

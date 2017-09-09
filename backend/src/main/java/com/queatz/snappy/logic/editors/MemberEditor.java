@@ -6,7 +6,6 @@ import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
-import com.queatz.snappy.logic.mines.ClubMine;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,10 +36,11 @@ public class MemberEditor extends EarthControl {
                 earthStore.addToClub(source, target);
             }
         } else {
+            // Configured on frontend
             // Make thing visible to clubs of parent, i.e. update -> project
-            use(ClubMine.class)
-                    .clubsOf(target)
-                    .forEach(club -> earthStore.addToClub(source, club));
+            // use(ClubMine.class)
+            //         .clubsOf(target)
+            //         .forEach(club -> earthStore.addToClub(source, club));
         }
 
         return member;

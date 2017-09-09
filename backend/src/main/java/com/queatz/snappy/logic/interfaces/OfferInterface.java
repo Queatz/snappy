@@ -1,7 +1,5 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.google.common.base.Strings;
-import com.queatz.snappy.backend.ApiUtil;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
@@ -9,24 +7,18 @@ import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthView;
-import com.queatz.snappy.logic.EarthViewer;
-import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.LikeEditor;
-import com.queatz.snappy.logic.editors.MemberEditor;
 import com.queatz.snappy.logic.editors.OfferEditor;
 import com.queatz.snappy.logic.eventables.NewOfferEvent;
 import com.queatz.snappy.logic.eventables.OfferLikeEvent;
-import com.queatz.snappy.logic.exceptions.LogicException;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.mines.LikeMine;
 import com.queatz.snappy.logic.views.EntityListView;
 import com.queatz.snappy.logic.views.LikeView;
-import com.queatz.snappy.logic.views.OfferView;
 import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.service.Buy;
 import com.queatz.snappy.shared.Config;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
