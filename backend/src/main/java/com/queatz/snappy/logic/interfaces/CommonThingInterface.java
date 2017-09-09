@@ -151,6 +151,8 @@ public abstract class CommonThingInterface implements Interfaceable {
                     }
                 }
 
+                setVisibility(as, thing);
+
                 return new EarthViewer(as).getViewForEntityOrThrow(thing).toJson();
             }
             case 1: {
@@ -162,28 +164,7 @@ public abstract class CommonThingInterface implements Interfaceable {
                     return null;
                 }
 
-                // Common visibility
-
-                String hidden = extract(as.getParameters().get(Config.PARAM_HIDDEN));
-
-                if (hidden != null) {
-                    as.s(EarthVisibility.class).setHidden(thing, Boolean.parseBoolean(hidden));
-                }
-
-                String clubs = extract(as.getParameters().get(Config.PARAM_CLUBS));
-
-                if (clubs != null) {
-                    try {
-                        Map<String, Boolean> clubsMap = new EarthJson().fromJson(
-                                clubs,
-                                new TypeToken<Map<String, Boolean>>() {}.getType()
-                        );
-
-                        as.s(EarthVisibility.class).setVisibility(thing, clubsMap);
-                    } catch (JsonParseException e) {
-                        e.printStackTrace();
-                    }
-                }
+                setVisibility(as, thing);
 
                 return new EarthViewer(as).getViewForEntityOrThrow(thing).toJson();
             }
@@ -225,6 +206,30 @@ public abstract class CommonThingInterface implements Interfaceable {
         }
 
         return null;
+    }
+
+    // Common visibility
+    private void setVisibility(EarthAs as, EarthThing thing) {
+        String hidden = extract(as.getParameters().get(Config.PARAM_HIDDEN));
+
+        if (hidden != null) {
+            as.s(EarthVisibility.class).setHidden(thing, Boolean.parseBoolean(hidden));
+        }
+
+        String clubs = extract(as.getParameters().get(Config.PARAM_CLUBS));
+
+        if (clubs != null) {
+            try {
+                Map<String, Boolean> clubsMap = new EarthJson().fromJson(
+                        clubs,
+                        new TypeToken<Map<String, Boolean>>() {}.getType()
+                );
+
+                as.s(EarthVisibility.class).setVisibility(thing, clubsMap);
+            } catch (JsonParseException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void getPhoto(EarthAs as) {
