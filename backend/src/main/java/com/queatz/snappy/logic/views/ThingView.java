@@ -7,6 +7,7 @@ import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Viewable;
 import com.queatz.snappy.logic.mines.ClubMine;
+import com.queatz.snappy.logic.mines.FollowerMine;
 import com.queatz.snappy.service.ImageQueue;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class ThingView extends ExistenceView {
     final String placeholder;
     final Float aspect;
     final Boolean owner;
+    final Boolean backing;
     final Boolean hidden;
     final List<Viewable> clubs;
 
@@ -83,5 +85,7 @@ public class ThingView extends ExistenceView {
                     EarthView.SHALLOW
             ).asList();
         }
+
+        backing = as.hasUser() && use(FollowerMine.class).getFollower(as.getUser(), thing) != null;
     }
 }
