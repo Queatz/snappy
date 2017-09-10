@@ -29,7 +29,7 @@ public class OpenMessagesAction extends ActivityAction {
     }
 
     @Override
-    public void execute() {
+    protected void execute() {
         if (me().getActivity() instanceof Person) {
             DynamicRealmObject activityPerson = ((Person) me().getActivity()).getPerson();
 

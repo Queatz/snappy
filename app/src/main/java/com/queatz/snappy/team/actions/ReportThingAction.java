@@ -30,7 +30,7 @@ public class ReportThingAction extends ActivityAction {
     }
 
     @Override
-    public void execute() {
+    protected void execute() {
         final EditText editText = new EditText(me().getActivity());
         int p = (int) Util.px(16);
         editText.setPadding(p, p, p, p);

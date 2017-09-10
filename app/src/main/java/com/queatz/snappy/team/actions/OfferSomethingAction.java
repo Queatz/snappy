@@ -16,7 +16,7 @@ import com.queatz.snappy.ui.TimeSlider;
 
 public class OfferSomethingAction extends ActivityAction {
     @Override
-    public void execute() {
+    protected void execute() {
         final View newOffer = View.inflate(me().getActivity(), R.layout.new_offer, null);
 
         final EditText experienceDetails = (EditText) newOffer.findViewById(R.id.details);

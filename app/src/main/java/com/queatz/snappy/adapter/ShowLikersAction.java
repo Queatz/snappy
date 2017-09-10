@@ -20,7 +20,7 @@ public class ShowLikersAction extends ActivityAction {
     }
 
     @Override
-    public void execute() {
+    protected void execute() {
         Bundle bundle = new Bundle();
         bundle.putString("update", update.getString(Thing.ID));
         bundle.putBoolean("showLikers", true);

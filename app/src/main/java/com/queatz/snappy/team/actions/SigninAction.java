@@ -8,7 +8,7 @@ import com.queatz.snappy.team.Auth;
 
 public class SigninAction extends ActivityAction {
     @Override
-    public void execute() {
+    protected void execute() {
         Auth auth = getTeam().auth;
         auth.setActivity(me().getActivity());
         auth.signin();

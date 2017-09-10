@@ -11,7 +11,7 @@ import com.queatz.snappy.R;
 
 public abstract class ShowOkDialogAction extends ActivityAction {
     @Override
-    public void execute() {
+    protected void execute() {
         View view = View.inflate(me().getActivity(), getLayout(), null);
 
         new AlertDialog.Builder(me().getActivity())

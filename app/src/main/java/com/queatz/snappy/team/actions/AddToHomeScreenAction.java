@@ -30,7 +30,7 @@ public class AddToHomeScreenAction extends ActivityAction {
     }
 
     @Override
-    public void execute() {
+    protected void execute() {
         Images.with(me().getActivity())
                 .load(Functions.getImageUrlForSize(person, (int) Util.px(64)))
                 .transform(new RoundedTransformationBuilder().oval(true).build())

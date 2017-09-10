@@ -21,7 +21,7 @@ public class Branch<T> {
     /**
      * Execute the branch.
      */
-    public void execute() {}
+    protected void execute() {}
 
     /**
      * Shorthand for

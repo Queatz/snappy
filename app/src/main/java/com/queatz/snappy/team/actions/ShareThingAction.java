@@ -22,7 +22,7 @@ public class ShareThingAction extends ActivityAction {
     }
 
     @Override
-    public void execute() {
+    protected void execute() {
         String text;
         String subject;
         String name;

@@ -19,7 +19,7 @@ public class OpenDateAction extends ActivityAction {
     }
 
     @Override
-    public void execute() {
+    protected void execute() {
         Intent intent = new Intent(Intent.ACTION_INSERT, CalendarContract.Events.CONTENT_URI);
         intent.setType("vnd.android.cursor.dir/event");
         intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, party.getDate(Thing.DATE).getTime());

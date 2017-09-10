@@ -19,7 +19,7 @@ public class OpenLocationAction extends ActivityAction {
     }
 
     @Override
-    public void execute() {
+    protected void execute() {
         if(location == null)
             return;
 

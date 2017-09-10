@@ -19,7 +19,7 @@ public class OpenProfileAction extends PersonActivityAction {
     }
 
     @Override
-    public void execute() {
+    protected void execute() {
         if (getPerson() == null) {
             return;
         }

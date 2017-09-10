@@ -11,7 +11,7 @@ import com.queatz.snappy.R;
 
 public class SignoutAction extends ActivityAction {
     @Override
-    public void execute() {
+    protected void execute() {
         new AlertDialog.Builder(me().getActivity())
                 .setMessage(R.string.signout_of)
                 .setNegativeButton(R.string.nope, null)

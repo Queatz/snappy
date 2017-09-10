@@ -19,7 +19,7 @@ public class ChangeLocationPhotoAction extends ActivityAction {
     }
 
     @Override
-    public void execute() {
+    protected void execute() {
         getTeam().action.nPendingLocationPhotoChange = location;
 
         Intent intent = new Intent();
