@@ -2,6 +2,7 @@ package com.queatz.snappy.ui.card;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -43,7 +44,6 @@ import com.queatz.snappy.team.observers.AuthenticatedEnvironment;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.TimeUtil;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -76,11 +76,17 @@ public class UpdateCard implements Card<DynamicRealmObject> {
         if (isFloating) {
             view.setBackgroundResource(R.drawable.white_rounded);
             view.findViewById(R.id.highlight).setBackgroundResource(R.drawable.blue_rounded_top);
-            view.setElevation(0);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                view.setElevation(0);
+            }
         } else {
             view.setBackgroundResource(R.color.white);
             view.findViewById(R.id.highlight).setBackgroundResource(R.color.blue);
-            view.setElevation(Util.px(2));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                view.setElevation(Util.px(2));
+            }
         }
 
         final Team team = ((MainApplication) context.getApplicationContext()).team;

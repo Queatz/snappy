@@ -367,4 +367,6 @@ public class Config {
     public static final String GOOGLE_AUTH_URL_POST_PARAMS = "grant_type=refresh_token&refresh_token=%s&client_id=%s";
     public static final String subscriptionProductId = "com.queatz.snappy.monthly";
     public static final String refreshToken = Gateway.refreshToken;
+
+    public static final boolean REQUIRE_BLUETOOTH = false;
 }

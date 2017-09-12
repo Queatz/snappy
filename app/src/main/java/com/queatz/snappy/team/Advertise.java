@@ -179,15 +179,15 @@ public class Advertise {
         }
 
         if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-            mBluetoothAdapter.setName(Functions.getFullName(team.auth.me()));
 
-            if (activity == null) {
+            if (activity == null || !Config.REQUIRE_BLUETOOTH) {
                 return false;
             }
 
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             activity.startActivityForResult(enableBtIntent, Config.REQUEST_CODE_ENABLE_BT);
         } else {
+            mBluetoothAdapter.setName(Functions.getFullName(team.auth.me()));
             enable();
         }
 

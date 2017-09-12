@@ -401,7 +401,7 @@ public class PartiesSlide extends MapSlide implements
                     .notEqualTo("source.id", team.auth.getUser())
                     .findAllSorted(Thing.DATE, Sort.DESCENDING);
 
-            final ArrayList<RealmResults> list = new ArrayList<>();
+            final ArrayList<RealmResults<DynamicRealmObject>> list = new ArrayList<>();
             list.add(queryParties);
             list.add(queryOffers);
             list.add(queryUpdates);

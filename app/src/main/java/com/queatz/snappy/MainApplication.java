@@ -1,6 +1,6 @@
 package com.queatz.snappy;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.ui.Global;
@@ -8,7 +8,7 @@ import com.queatz.snappy.ui.Global;
 /**
  * Created by jacob on 10/18/14.
  */
-public class MainApplication extends Application {
+public class MainApplication extends MultiDexApplication {
     public Team team;
 
     @Override

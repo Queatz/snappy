@@ -2,6 +2,7 @@ package com.queatz.snappy.ui.card;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,7 +28,6 @@ import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.TimeUtil;
-import com.squareup.picasso.Picasso;
 
 import io.realm.DynamicRealmObject;
 
@@ -175,11 +175,15 @@ public class OfferCard implements Card<DynamicRealmObject> {
             });
         }
 
-        likers.getCompoundDrawables()[0].setTint(context.getResources().getColor(R.color.red));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            likers.getCompoundDrawables()[0].setTint(context.getResources().getColor(R.color.red));
+        }
 
         Button shareButton = (Button) view.findViewById(R.id.shareButton);
 
-        shareButton.getCompoundDrawables()[0].setTint(context.getResources().getColor(R.color.gray));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            shareButton.getCompoundDrawables()[0].setTint(context.getResources().getColor(R.color.gray));
+        }
 
         view.findViewById(R.id.shareButton).setOnClickListener(new View.OnClickListener() {
             @Override

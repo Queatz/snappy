@@ -138,7 +138,7 @@ public class PersonUptoSlide extends TeamFragment {
                     .equalTo("target.id", mPerson.getString(Thing.ID))
                     .findAllSorted("date", Sort.DESCENDING);
 
-            final ArrayList<RealmResults> list = new ArrayList<>();
+            final ArrayList<RealmResults<DynamicRealmObject>> list = new ArrayList<>();
             list.add(offers);
             list.add(recentUpdates);
 
