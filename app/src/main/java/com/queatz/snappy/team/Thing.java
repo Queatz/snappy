@@ -168,6 +168,7 @@ public class Thing {
     public static final String HIDDEN = "hidden";
     public static final String CLUBS = "clubs";
     public static final String IN = "in";
+    public static final String JOINS = "joins";
 
     /**
      * Other, less generic fields.
@@ -188,6 +189,7 @@ public class Thing {
     public static final String BACKERS = "backers";
     public static final String INFO_FOLLOWERS = "infoFollowers";
     public static final String INFO_FOLLOWING = "infoFollowing";
+    public static final String INFO_OFFERS = "infoOffers";
     public static final String INFO_DISTANCE = "infoDistance";
     public static final String INFO_UPDATED = "infoUpdated";
     public static final String SOCIAL_MODE = "socialMode";

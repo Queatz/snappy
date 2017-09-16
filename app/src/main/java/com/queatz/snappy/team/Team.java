@@ -41,6 +41,8 @@ public class Team implements Closeable {
     public Camera camera;
     public Environment environment;
 
+    private RealmConfiguration realmConfig = null;
+
     public Team(Context c) {
         context = c;
         preferences = c.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
@@ -72,6 +74,17 @@ public class Team implements Closeable {
     public DynamicRealm realm() {
         Realm.init(context);
 
+        if (realmConfig == null) {
+            realmConfig = new RealmConfiguration.Builder()
+                    .migration(new RealmMigration() {
+                        @Override
+                        public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
+
+                        }
+                    })
+                    .deleteRealmIfMigrationNeeded().build();
+        }
+
         try {
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             int prefAppVersion = preferences.getInt(Config.PREFERENCE_APP_VERSION, -1);
@@ -89,14 +102,7 @@ public class Team implements Closeable {
             e.printStackTrace();
         }
 
-        DynamicRealm dynamicRealm = DynamicRealm.getInstance(new RealmConfiguration.Builder()
-            .migration(new RealmMigration() {
-                @Override
-                public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
-
-                }
-            })
-            .deleteRealmIfMigrationNeeded().build());
+        DynamicRealm dynamicRealm = DynamicRealm.getInstance(realmConfig);
 
         if (dynamicRealm.getSchema().contains("Thing")) {
             return dynamicRealm;
@@ -123,6 +129,7 @@ public class Team implements Closeable {
         schema.addField(Thing.MESSAGE, String.class);
         schema.addField(Thing.SOCIAL_MODE, String.class);
         schema.addField(Thing.PLACEHOLDER, String.class);
+        schema.addField(Thing.ROLE, String.class);
 
         // Object
         schema.addRealmObjectField(Thing.LOCATION, schema);
@@ -158,6 +165,7 @@ public class Team implements Closeable {
         schema.addField(Thing.PRICE, Integer.class);
         schema.addField(Thing.INFO_FOLLOWERS, Integer.class);
         schema.addField(Thing.INFO_FOLLOWING, Integer.class);
+        schema.addField(Thing.INFO_OFFERS, Integer.class);
         schema.addField(Thing.LIKERS, Integer.class);
         schema.addField(Thing.BACKERS, Integer.class);
 
@@ -165,6 +173,7 @@ public class Team implements Closeable {
         schema.addRealmListField(Thing.MEMBERS, schema);
         schema.addRealmListField(Thing.IN, schema);
         schema.addRealmListField(Thing.CLUBS, schema);
+        schema.addRealmListField(Thing.JOINS, schema);
 
         // Local only
         schema.addField(Thing.LOCAL_STATE, String.class);

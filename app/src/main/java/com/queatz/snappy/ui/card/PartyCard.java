@@ -25,6 +25,9 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.ThingKinds;
+import com.queatz.snappy.team.actions.CancelJoinAction;
+import com.queatz.snappy.team.actions.JoinPartyAction;
+import com.queatz.snappy.team.actions.MarkPartyFullAction;
 import com.queatz.snappy.team.actions.OpenDateAction;
 import com.queatz.snappy.team.actions.OpenLocationAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
@@ -168,7 +171,7 @@ public class PartyCard implements Card<DynamicRealmObject> {
                 action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        team.action.markPartyFull(party);
+                        branch.to(new MarkPartyFullAction(party));
                     }
                 });
             }
@@ -191,7 +194,7 @@ public class PartyCard implements Card<DynamicRealmObject> {
                 action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        team.action.joinParty((Activity) context, party);
+                        branch.to(new JoinPartyAction(party));
                     }
                 });
             }
@@ -210,7 +213,7 @@ public class PartyCard implements Card<DynamicRealmObject> {
                                     String items[] = context.getResources().getStringArray(R.array.requested_menu);
 
                                     if(context.getString(R.string.cancel).equals(items[which])) {
-                                        team.action.cancelJoin(party);
+                                        branch.to(new CancelJoinAction(party));
                                     }
                                 }
                             }).show();

@@ -46,7 +46,7 @@ public class PartyEditor extends EarthControl {
 
             location = locationEditor.newLocation(
                     jsonObject.get(Config.PARAM_NAME).getAsString(),
-                    jsonObject.get(Config.PARAM_ADDRESS).getAsString(),
+                    jsonObject.has(Config.PARAM_ADDRESS) ? jsonObject.get(Config.PARAM_ADDRESS).getAsString() : null,
                     EarthGeo.of(jsonObject.get(Config.PARAM_LATITUDE).getAsDouble(), jsonObject.get(Config.PARAM_LONGITUDE).getAsDouble()));
         }
 

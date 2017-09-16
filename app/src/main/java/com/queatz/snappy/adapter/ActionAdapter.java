@@ -18,6 +18,8 @@ import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.AcceptJoinAction;
+import com.queatz.snappy.team.actions.HideJoinAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.util.Functions;
@@ -60,7 +62,12 @@ public class ActionAdapter extends RealmBaseAdapter<DynamicRealmObject> implemen
         final String status = join.getString(Thing.STATUS);
 
         ImageView profile = ((ImageView) view.findViewById(R.id.profile));
-        Images.with(context).load(person == null ? "" : Functions.getImageUrlForSize(person, (int) Util.px(64))).placeholder(R.color.spacer).into(profile);
+
+        if (person != null) {
+            Images.with(context).load(Functions.getImageUrlForSize(person, (int) Util.px(64))).placeholder(R.color.spacer).into(profile);
+        } else {
+            profile.setImageResource(R.color.spacer);
+        }
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,9 +86,7 @@ public class ActionAdapter extends RealmBaseAdapter<DynamicRealmObject> implemen
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Team team = ((MainApplication) context.getApplicationContext()).team;
-
-                team.action.acceptJoin(join);
+                to(new AcceptJoinAction(join));
             }
         });
 
@@ -96,7 +101,7 @@ public class ActionAdapter extends RealmBaseAdapter<DynamicRealmObject> implemen
                         String items[] = context.getResources().getStringArray(R.array.join_request_menu);
 
                         if(context.getString(R.string.hide).equals(items[which])) {
-                            team.action.hideJoin(join);
+                            to(new HideJoinAction(join));
                         }
                     }
                 }).show();

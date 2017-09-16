@@ -60,7 +60,8 @@ public class PartyInterface implements Interfaceable {
                         details
                 );
 
-                new EarthUpdate(as).send(new NewPartyEvent(party))
+                new EarthUpdate(as)
+                        .send(new NewPartyEvent(party))
                         .toFollowersOf(as.getUser());
 
                 return new PartyView(as, party).setLocalId(localId).toJson();

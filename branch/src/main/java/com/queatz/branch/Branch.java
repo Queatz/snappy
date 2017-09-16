@@ -24,9 +24,7 @@ public class Branch<T> {
     protected void execute() {}
 
     /**
-     * Shorthand for
-     *
-     * new OtherBranch().with(me()).execute();
+     * Branch to another branch.
      *
      * @param branch The branch to execute.
      */

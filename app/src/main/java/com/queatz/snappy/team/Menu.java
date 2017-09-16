@@ -1,6 +1,5 @@
 package com.queatz.snappy.team;
 
-import android.app.Activity;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -10,10 +9,11 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.activity.HostParty;
 import com.queatz.snappy.adapter.DeleteThingAction;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.team.actions.ActivityAction;
 import com.queatz.snappy.team.actions.AddToHomeScreenAction;
+import com.queatz.snappy.team.actions.BackThingAction;
 import com.queatz.snappy.team.actions.ChangeLocationPhotoAction;
 import com.queatz.snappy.team.actions.ReportThingAction;
+import com.queatz.snappy.team.actions.StopBackingThingAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.team.observers.AnonymousEnvironment;
 
@@ -131,10 +131,10 @@ public class Menu {
         }
         else if("person".equals(kind)) {
             if(team.context.getString(R.string.follow).equals(item.getTitle())) {
-                team.action.followPerson(((DynamicRealmObject) object));
+                branch.to(new BackThingAction((DynamicRealmObject) object));
             }
             else if(team.context.getString(R.string.stop_following).equals(item.getTitle())) {
-                team.action.stopFollowingPerson(((DynamicRealmObject) object));
+                branch.to(new StopBackingThingAction((DynamicRealmObject) object));
             } else if (team.context.getString(R.string.report_this_person).equals(item.getTitle())) {
                 branch.to(new ReportThingAction((DynamicRealmObject) object));
             } else if (team.context.getString(R.string.add_to_home_screen).equals(item.getTitle())) {

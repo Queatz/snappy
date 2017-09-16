@@ -65,8 +65,6 @@ public class Main extends FullscreenActivity {
             }
         });
 
-        team.buy.pullPerson();
-
         mSlideScreen = (SlideScreen) findViewById(R.id.main_content);
         mSlideScreen.setAdapter(new MainAdapter(getFragmentManager()));
 

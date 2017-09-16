@@ -35,7 +35,7 @@
     <string name="welcome_to">Welcome to</string>
     <string name="SNAPPY">VILLAGE</string>
     <string name="enter_address">Find a location for \"%1$s\"…</string>
-    <string name="parties_empty">No offers nearby</string>
+    <string name="parties_empty">Nothing happening nearby</string>
     <string name="messages_empty">No messages</string>
     <string name="hide">Hide</string>
     <string name="cancel">Cancel</string>

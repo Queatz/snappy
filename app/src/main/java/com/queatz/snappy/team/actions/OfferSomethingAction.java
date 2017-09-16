@@ -67,12 +67,12 @@ public class OfferSomethingAction extends ActivityAction {
                     return;
                 }
 
-                getTeam().action.addOffer(
+                to(new AddOfferAction(
                         experienceDetails.getText().toString(),
                         null,
                         getPrice(priceSlider.getPercent()),
                         perUnit.getText().toString()
-                );
+                ));
 
                 dialog.dismiss();
             }

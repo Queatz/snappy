@@ -143,7 +143,6 @@ public class Config {
     public static final String PATH_EARTH_PHOTO = "earth/%s/photo";
     public static final String PATH_MESSAGES_ID = "messages/%s";
     public static final String PATH_OFFER_ID = "offer/%s";
-    public static final String PATH_ME_UPTO= "me/upto";
     public static final String PATH_ME_BUY= "me/buy";
     public static final String PATH_ME_REGISTER_DEVICE = "me/register_device";
     public static final String PATH_ME_UNREGISTER_DEVICE = "me/unregister_device";

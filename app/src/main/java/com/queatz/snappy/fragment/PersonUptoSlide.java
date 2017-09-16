@@ -23,8 +23,11 @@ import com.queatz.snappy.team.TeamFragment;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.ThingKinds;
 import com.queatz.snappy.team.actions.AuthenticatedAction;
+import com.queatz.snappy.team.actions.BackThingAction;
 import com.queatz.snappy.team.actions.ChangeAboutAction;
 import com.queatz.snappy.team.actions.OfferSomethingAction;
+import com.queatz.snappy.team.actions.ShowBackersAction;
+import com.queatz.snappy.team.actions.ShowBackingAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.ui.SlideScreen;
 import com.queatz.snappy.ui.TextView;
@@ -33,7 +36,6 @@ import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.TimeUtil;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.DynamicRealmObject;
 import io.realm.RealmChangeListener;
@@ -127,20 +129,7 @@ public class PersonUptoSlide extends TeamFragment {
         updateList.addFooterView(new View(getActivity()));
 
         if(mPerson != null) {
-            RealmResults<DynamicRealmObject> offers/* = team.realm.where("Thing")
-                    .beginGroup()
-                        .equalTo(Thing.KIND, ThingKinds.OFFER)
-                        .equalTo("source.id", mPerson.getString(Thing.ID))
-                    .endGroup()
-                    .or()
-                    .beginGroup()
-                        .equalTo(Thing.KIND, ThingKinds.UPDATE)
-                        .equalTo("source.id", mPerson.getString(Thing.ID))
-                        .equalTo("target.id", mPerson.getString(Thing.ID))
-                    .endGroup()
-                    .findAllSorted(Thing.DATE, Sort.DESCENDING)*/;
-
-            offers = team.realm.where("Thing")
+            RealmResults<DynamicRealmObject> offers = team.realm.where("Thing")
                     .equalTo(Thing.KIND, ThingKinds.MEMBER)
                     .equalTo(Thing.TARGET + "." + Thing.ID, mPerson.getString(Thing.ID))
                     .findAllSorted(Thing.SOURCE + "." + Thing.DATE, Sort.DESCENDING);
@@ -216,15 +205,7 @@ public class PersonUptoSlide extends TeamFragment {
                     return;
                 }
 
-                List<DynamicRealmObject> previousOffers = team.realm.where("Thing")
-                        .equalTo(Thing.KIND, "offer")
-                        .equalTo("source.id", mPerson.getString(Thing.ID))
-                        .findAll();
-                DynamicRealmObject add = team.things.put(response);
-
-                // TODO might be troublemaker
-                team.things.diff(previousOffers, Util.mapToObjectField(Util.membersOf(add, ThingKinds.OFFER), Thing.SOURCE));
-
+                team.things.put(response);
                 update(getView());
             }
 
@@ -293,14 +274,14 @@ public class PersonUptoSlide extends TeamFragment {
             personAbout.findViewById(R.id.followers_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    team.action.showFollowers(getActivity(), mPerson);
+                    to(new ShowBackersAction(mPerson));
                 }
             });
 
             personAbout.findViewById(R.id.following_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    team.action.showFollowing(getActivity(), mPerson);
+                    to(new ShowBackingAction(mPerson));
                 }
             });
 
@@ -386,7 +367,7 @@ public class PersonUptoSlide extends TeamFragment {
                 actionButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        team.action.followPerson(mPerson);
+                        to(new BackThingAction(mPerson));
                     }
                 });
             }

@@ -49,6 +49,7 @@ public class Things {
                 case Thing.SOCIAL_MODE:
                 case Thing.MESSAGE:
                 case Thing.PLACEHOLDER:
+                case Thing.ROLE:
                     thing.setString(entry.getKey(), entry.getValue().getAsString());
                     break;
 
@@ -101,6 +102,7 @@ public class Things {
                 // Integer
                 case Thing.PRICE:
                 case Thing.LIKERS:
+                case Thing.INFO_OFFERS:
                 case Thing.INFO_FOLLOWERS:
                 case Thing.BACKERS:
                 case Thing.INFO_FOLLOWING:
@@ -111,6 +113,7 @@ public class Things {
                 case Thing.MEMBERS:
                 case Thing.IN:
                 case Thing.CLUBS:
+                case Thing.JOINS:
                     thing.setList(entry.getKey(), putAll(realm, entry.getValue().getAsJsonArray()));
                     break;
 
@@ -125,7 +128,7 @@ public class Things {
     }
 
     public DynamicRealmObject get(@NonNull String id) {
-        return team.realm.where("Thing").equalTo(Thing.ID, id).findFirst();
+        return team.realm().where("Thing").equalTo(Thing.ID, id).findFirst();
     }
 
     public DynamicRealmObject put(DynamicRealm realm, JsonObject jsonObject) {
@@ -173,9 +176,9 @@ public class Things {
         if (jsonObject == null) {
             return null;
         }
-        team.realm.beginTransaction();
-        DynamicRealmObject o = put(team.realm, jsonObject);
-        team.realm.commitTransaction();
+        team.realm().beginTransaction();
+        DynamicRealmObject o = put(team.realm(), jsonObject);
+        team.realm().commitTransaction();
 
         return o;
     }
@@ -193,9 +196,9 @@ public class Things {
         if (jsonArray == null) {
             return null;
         }
-        team.realm.beginTransaction();
-        RealmList<DynamicRealmObject> o = putAll(team.realm, jsonArray);
-        team.realm.commitTransaction();
+        team.realm().beginTransaction();
+        RealmList<DynamicRealmObject> o = putAll(team.realm(), jsonArray);
+        team.realm().commitTransaction();
 
         return o;
     }
@@ -234,7 +237,7 @@ public class Things {
             return;
         }
 
-        team.realm.beginTransaction();
+        team.realm().beginTransaction();
 
         for (int i = 0; i < current.size(); i++) {
             if (!actual.contains(current.get(i))) {
@@ -242,6 +245,6 @@ public class Things {
             }
         }
 
-        team.realm.commitTransaction();
+        team.realm().commitTransaction();
     }
 }

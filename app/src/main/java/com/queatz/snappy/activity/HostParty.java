@@ -42,6 +42,7 @@ import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.TeamActivity;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.actions.HostPartyAction;
 import com.queatz.snappy.ui.TextView;
 import com.queatz.snappy.ui.TimeSlider;
 import com.queatz.snappy.util.Images;
@@ -98,8 +99,6 @@ public class HostParty extends TeamActivity {
         View.OnClickListener oclk = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Team team = ((MainApplication) getApplication()).team;
-
                 String name = ((EditText) mNewParty.findViewById(R.id.name)).getText().toString();
                 Date date = percentToDate(((TimeSlider) mNewParty.findViewById(R.id.timeSlider)).getPercent());
                 String details = ((EditText) mNewParty.findViewById(R.id.details)).getText().toString();
@@ -114,7 +113,7 @@ public class HostParty extends TeamActivity {
                     return;
                 }
 
-                team.action.hostParty(HostParty.this, mGroup, name, date, mLocation, details);
+                to(new HostPartyAction(mGroup, name, date, mLocation, details));
                 finish();
             }
         };
@@ -419,7 +418,7 @@ public class HostParty extends TeamActivity {
     }
 
     private void fetchParties() {
-        team.api.get(Config.PATH_EARTH + "/" + team.auth.getUser() + Config.PATH_PARTIES, null, new Api.Callback() {
+        team.api.get(Config.PATH_EARTH + "/" + team.auth.getUser() + "/" + Config.PATH_PARTIES, null, new Api.Callback() {
             @Override
             public void success(String response) {
                 team.things.putAll(response);

@@ -4,8 +4,12 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
+import com.queatz.branch.Branch;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
+import com.queatz.snappy.team.actions.AcceptJoinAction;
+import com.queatz.snappy.team.actions.JoinPartyAction;
+import com.queatz.snappy.team.contexts.ActivityContext;
 
 /**
  * Created by jacob on 8/8/15.
@@ -29,10 +33,12 @@ public class Background extends Service {
 
         switch (action) {
             case Config.EXTRA_ACTION_JOIN_ACCEPT:
-                team.action.acceptJoin(intent.getStringExtra(Config.EXTRA_JOIN_ID));
+                Branch.from((ActivityContext) getApplicationContext())
+                        .to(new AcceptJoinAction(intent.getStringExtra(Config.EXTRA_JOIN_ID)));
                 break;
             case Config.EXTRA_ACTION_JOIN_REQUEST:
-                team.action.joinParty(null, intent.getStringExtra(Config.EXTRA_PARTY_ID));
+                Branch.from((ActivityContext) getApplicationContext())
+                        .to(new JoinPartyAction(intent.getStringExtra(Config.EXTRA_PARTY_ID)));
                 break;
         }
 

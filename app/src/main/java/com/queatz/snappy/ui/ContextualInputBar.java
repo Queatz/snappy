@@ -42,6 +42,7 @@ import com.queatz.snappy.team.OnInfoChangedListener;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.ThingKinds;
+import com.queatz.snappy.team.actions.AddOfferAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.actions.SigninAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
@@ -324,14 +325,11 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
             return;
         }
 
-        if (team.action.want(text)) {
-            whatsUp.setText("");
-            team.view.keyboard(whatsUp, false);
-        } else {
-            if (team.environment.is(AnonymousEnvironment.class)) {
-                to(new SigninAction());
-            }
-        }
+        to(new AddOfferAction(text));
+
+        // XXX todo only if add offer completely succeeded
+        whatsUp.setText("");
+        team.view.keyboard(whatsUp, false);
     }
 
     public void resetAll() {

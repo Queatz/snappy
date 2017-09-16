@@ -24,6 +24,9 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.ThingKinds;
+import com.queatz.snappy.team.actions.CancelJoinAction;
+import com.queatz.snappy.team.actions.JoinPartyAction;
+import com.queatz.snappy.team.actions.MarkPartyFullAction;
 import com.queatz.snappy.team.actions.OpenDateAction;
 import com.queatz.snappy.team.actions.OpenLocationAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
@@ -53,7 +56,7 @@ public class PartyAdapter extends RealmBaseAdapter<DynamicRealmObject> implement
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, final ViewGroup parent) {
         View view;
 
         if (convertView != null) {
@@ -182,7 +185,7 @@ public class PartyAdapter extends RealmBaseAdapter<DynamicRealmObject> implement
                 action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        team.action.markPartyFull(party);
+                        to(new MarkPartyFullAction(party));
                     }
                 });
             }
@@ -205,7 +208,7 @@ public class PartyAdapter extends RealmBaseAdapter<DynamicRealmObject> implement
                 action.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        team.action.joinParty((Activity) context, party);
+                        to(new JoinPartyAction(party));
                     }
                 });
             }
@@ -224,7 +227,7 @@ public class PartyAdapter extends RealmBaseAdapter<DynamicRealmObject> implement
                                     String items[] = context.getResources().getStringArray(R.array.requested_menu);
 
                                     if(context.getString(R.string.cancel).equals(items[which])) {
-                                        team.action.cancelJoin(party);
+                                        to(new CancelJoinAction(party));
                                     }
                                 }
                             }).show();
