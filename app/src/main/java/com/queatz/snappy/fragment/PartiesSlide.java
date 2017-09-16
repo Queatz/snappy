@@ -378,33 +378,28 @@ public class PartiesSlide extends MapSlide implements
         if(getActivity() == null)
             return;
 
-        if(true || mList.getAdapter() == null) {
+        if(mList.getAdapter() == null) {
             String me = team.auth.getUser();
 
             RealmResults<DynamicRealmObject> queryParties = team.realm.where("Thing")
-                    .equalTo(Thing.KIND, ThingKinds.PARTY)
-                        .greaterThan("date", new Date(new Date().getTime() - 1000 * 60 * 60))
                     .beginGroup()
-                        .equalTo("full", false).or()
-                        .equalTo("members.source.source.id", me).or()
-                        .equalTo("host.id", me)
+                        .equalTo(Thing.KIND, ThingKinds.PARTY)
+                            .greaterThan(Thing.DATE, new Date(new Date().getTime() - 1000 * 60 * 60))
+                        .beginGroup()
+                            .equalTo(Thing.FULL, false).or()
+                            .equalTo("members.source.source.id", me).or()
+                            .equalTo("host.id", me)
+                        .endGroup()
                     .endGroup()
-                    .findAllSorted("date", Sort.ASCENDING);
-
-            RealmResults<DynamicRealmObject> queryOffers = team.realm.where("Thing")
-                    .equalTo(Thing.KIND, ThingKinds.OFFER)
-                    .notEqualTo("source.id", team.auth.getUser())
-                    .findAllSorted(Thing.PRICE, Sort.ASCENDING);
-
-            RealmResults<DynamicRealmObject> queryUpdates = team.realm.where("Thing")
-                    .equalTo(Thing.KIND, ThingKinds.UPDATE)
-                    .notEqualTo("source.id", team.auth.getUser())
+                    .or()
+                    .beginGroup()
+                        .in(Thing.KIND, new String[] {ThingKinds.OFFER, ThingKinds.UPDATE, ThingKinds.PROJECT, ThingKinds.RESOURCE, ThingKinds.HUB})
+                        .notEqualTo("source.id", team.auth.getUser())
+                    .endGroup()
                     .findAllSorted(Thing.DATE, Sort.DESCENDING);
 
             final ArrayList<RealmResults<DynamicRealmObject>> list = new ArrayList<>();
             list.add(queryParties);
-            list.add(queryOffers);
-            list.add(queryUpdates);
             mList.setAdapter(new FeedAdapter(getActivity(), list));
         }
 
@@ -426,11 +421,11 @@ public class PartiesSlide extends MapSlide implements
                 RealmList<DynamicRealmObject> locations = new RealmList<>();
 
                 for (DynamicRealmObject thing : things) {
-                    if ("person".equals(thing.getString(Thing.KIND))) {
+                    if (ThingKinds.PERSON.equals(thing.getString(Thing.KIND))) {
                         people.add(thing);
-                    } else if ("hub".equals(thing.getString(Thing.KIND))) {
+                    } else if (ThingKinds.HUB.equals(thing.getString(Thing.KIND))) {
                         locations.add(thing);
-                    } else if("party".equals(thing.getString(Thing.KIND))) {
+                    } else if(ThingKinds.PARTY.equals(thing.getString(Thing.KIND))) {
                         team.api.get(Config.PATH_EARTH + "/" + thing.getString(Thing.ID), new Api.Callback() {
                             @Override
                             public void success(String response) {

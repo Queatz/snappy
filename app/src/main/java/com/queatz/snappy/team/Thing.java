@@ -163,6 +163,13 @@ public class Thing {
     public static final String OWNER = "owner";
 
     /**
+     * Relationships
+     */
+    public static final String HIDDEN = "hidden";
+    public static final String CLUBS = "clubs";
+    public static final String IN = "in";
+
+    /**
      * Other, less generic fields.
      */
     public static final String FIRST_NAME = "firstName";
@@ -178,6 +185,7 @@ public class Thing {
 
     // From views
     public static final String LIKERS = "likers";
+    public static final String BACKERS = "backers";
     public static final String INFO_FOLLOWERS = "infoFollowers";
     public static final String INFO_FOLLOWING = "infoFollowing";
     public static final String INFO_DISTANCE = "infoDistance";

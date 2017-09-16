@@ -22,7 +22,7 @@ public class Config {
      * than this number, then the database will be wiped clean, and the new version code will be
      * stored.
      */
-    public static final int WIPE_VERSIONS_BELOW = 46;
+    public static final int WIPE_VERSIONS_BELOW = 47;
 
     // The email emails are sent from
     public static final String VILLAGE_EMAIL_ADDRESS = "my@village.city";

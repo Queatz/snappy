@@ -173,9 +173,9 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             List<DynamicRealmObject> hubs = new RealmList<>();
 
             for (DynamicRealmObject withThing : withThings) {
-                if ("person".equals(withThing.getObject(Thing.SOURCE).getString(Thing.KIND))) {
+                if (ThingKinds.PERSON.equals(withThing.getObject(Thing.SOURCE).getString(Thing.KIND))) {
                     people.add(withThing);
-                } else if ("hub".equals(withThing.getObject(Thing.SOURCE).getString(Thing.KIND))) {
+                } else if (ThingKinds.HUB.equals(withThing.getObject(Thing.SOURCE).getString(Thing.KIND))) {
                     hubs.add(withThing);
                 }
             }

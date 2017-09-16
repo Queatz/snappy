@@ -188,6 +188,8 @@
     <string name="hey_name">Hey %1$s!</string>
     <string name="welcome_person">Welcome %1$s!</string>
     <string name="message_not_sent">Message not sent</string>
+    <string name="view_thing">View %1$s</string>
+    <string name="no_description_provided">No description provided.</string>
 
     <plurals name="likes">
         <item quantity="one">%1$s Liker</item>

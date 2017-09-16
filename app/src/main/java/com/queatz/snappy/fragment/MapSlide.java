@@ -24,6 +24,7 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.TeamFragment;
 import com.queatz.snappy.team.Thing;
+import com.queatz.snappy.team.ThingKinds;
 import com.queatz.snappy.team.actions.OpenLocationAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
@@ -256,17 +257,17 @@ public abstract class MapSlide extends TeamFragment implements OnMapReadyCallbac
         Team team = ((MainApplication) getActivity().getApplication()).team;
 
         things = team.realm.where("Thing")
-                .equalTo(Thing.KIND, "hub")
+                .equalTo(Thing.KIND, ThingKinds.HUB)
                 .or()
                 .beginGroup()
-                    .equalTo(Thing.KIND, "update")
+                    .equalTo(Thing.KIND, ThingKinds.UPDATE)
                     .greaterThanOrEqualTo(Thing.DATE, new Date(new Date().getTime() - 1000 * 60 * 60))
                     .isNotNull(Thing.LATITUDE)
                     .isNotNull(Thing.LONGITUDE)
                 .endGroup()
                 .or()
                 .beginGroup()
-                    .equalTo(Thing.KIND, "person")
+                    .equalTo(Thing.KIND, ThingKinds.PERSON)
                     .isNotNull(Thing.LATITUDE)
                     .isNotNull(Thing.LONGITUDE)
                 .endGroup()
@@ -300,7 +301,7 @@ public abstract class MapSlide extends TeamFragment implements OnMapReadyCallbac
             // Placeholder
             marker.setIcon(BitmapDescriptorFactory.fromBitmap(Util.tint(getResources().getColor(R.color.blue))));
 
-            if ("hub".equals(thing.getString(Thing.KIND))) {
+            if (ThingKinds.HUB.equals(thing.getString(Thing.KIND))) {
                 Images.with(getActivity()).load(Util.photoUrl(String.format(Config.PATH_EARTH_PHOTO, thing.getString(Thing.ID)), (int) Util.px(48)))
                         .transform(new CircleTransform())
                         .into(new Target() {
@@ -326,7 +327,7 @@ public abstract class MapSlide extends TeamFragment implements OnMapReadyCallbac
 
                             }
                         });
-            } else if ("update".equals(thing.getString(Thing.KIND))) {
+            } else if (ThingKinds.UPDATE.equals(thing.getString(Thing.KIND))) {
                 String photo;
 
                 if (thing.getBoolean(Thing.PHOTO)) {
@@ -360,7 +361,7 @@ public abstract class MapSlide extends TeamFragment implements OnMapReadyCallbac
 
                             }
                         });
-            } else if ("person".equals(thing.getString(Thing.KIND))) {
+            } else if (ThingKinds.PERSON.equals(thing.getString(Thing.KIND))) {
                 String photo = Functions.getImageUrlForSize(thing, (int) Util.px(32));
 
                 Images.with(getActivity()).load(photo)

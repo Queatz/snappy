@@ -76,6 +76,8 @@ public class Things {
                 case Thing.SEEN:
                 case Thing.FULL:
                 case Thing.WANT:
+                case Thing.OWNER:
+                case Thing.HIDDEN:
                 case Thing.GOING:
                     thing.setBoolean(entry.getKey(), entry.getValue().getAsBoolean());
                     break;
@@ -100,12 +102,15 @@ public class Things {
                 case Thing.PRICE:
                 case Thing.LIKERS:
                 case Thing.INFO_FOLLOWERS:
+                case Thing.BACKERS:
                 case Thing.INFO_FOLLOWING:
                     thing.setInt(entry.getKey(), entry.getValue().getAsInt());
                     break;
 
                 // List
                 case Thing.MEMBERS:
+                case Thing.IN:
+                case Thing.CLUBS:
                     thing.setList(entry.getKey(), putAll(realm, entry.getValue().getAsJsonArray()));
                     break;
 
@@ -120,7 +125,7 @@ public class Things {
     }
 
     public DynamicRealmObject get(@NonNull String id) {
-        return team.realm.where("Thing").equalTo("id", id).findFirst();
+        return team.realm.where("Thing").equalTo(Thing.ID, id).findFirst();
     }
 
     public DynamicRealmObject put(DynamicRealm realm, JsonObject jsonObject) {
@@ -130,7 +135,7 @@ public class Things {
 
         String localId = null, id;
 
-        if (!jsonObject.has("id")) {
+        if (!jsonObject.has(Thing.ID)) {
             Log.w(Config.LOG_TAG, "Object must have ID! " + jsonObject);
             return null;
         }
@@ -139,14 +144,20 @@ public class Things {
             localId = jsonObject.get("localId").getAsString();
         }
 
-        id = jsonObject.get("id").getAsString();
+        id = jsonObject.get(Thing.ID).getAsString();
 
-        DynamicRealmObject o;
+        DynamicRealmObject o = null;
 
-        o = realm.where("Thing").equalTo("id", id).findFirst();
+        if (o == null) {
+            o = realm.where("Thing")
+                    .equalTo(Thing.ID, id)
+                    .findFirst();
+        }
 
         if(o == null && localId != null) {
-            o = realm.where("Thing").equalTo("id", localId).findFirst();
+            o = realm.where("Thing")
+                    .equalTo(Thing.ID, localId)
+                    .findFirst();
         }
 
         if(o == null) {

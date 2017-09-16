@@ -3,6 +3,12 @@
 <!-- http://www.google.com/design/spec/style/color.html -->
 
 <resources>
+    <color name="thing_project">#ff5722</color>
+    <color name="thing_hub">#2196F3</color>
+    <color name="thing_resource">#795548</color>
+    <color name="thing_club">#fbc02d</color>
+    <color name="thing_form">#9c27b0</color>
+
     <color name="blue">#2196F3</color>
     <color name="lightblue">#6db0b0</color>
     <color name="darkenedblue">#5EA1A1</color>

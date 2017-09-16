@@ -18,6 +18,7 @@ public class ThingKinds {
     public static final String PARTY = "party";
     public static final String LOCATION = "location";
     public static final String RESOURCE = "resource";
+    public static final String FORM = "form";
     public static final String PROJECT = "project";
     public static final String CLUB = "club";
     public static final String MEMBER = "member";

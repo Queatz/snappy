@@ -145,6 +145,8 @@ public class Team implements Closeable {
         schema.addField(Thing.FULL, Boolean.class);
         schema.addField(Thing.WANT, Boolean.class);
         schema.addField(Thing.GOING, Boolean.class);
+        schema.addField(Thing.OWNER, Boolean.class);
+        schema.addField(Thing.HIDDEN, Boolean.class);
 
         // Double
         schema.addField(Thing.LATITUDE, Double.class);
@@ -157,9 +159,12 @@ public class Team implements Closeable {
         schema.addField(Thing.INFO_FOLLOWERS, Integer.class);
         schema.addField(Thing.INFO_FOLLOWING, Integer.class);
         schema.addField(Thing.LIKERS, Integer.class);
+        schema.addField(Thing.BACKERS, Integer.class);
 
         // List
         schema.addRealmListField(Thing.MEMBERS, schema);
+        schema.addRealmListField(Thing.IN, schema);
+        schema.addRealmListField(Thing.CLUBS, schema);
 
         // Local only
         schema.addField(Thing.LOCAL_STATE, String.class);

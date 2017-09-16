@@ -339,10 +339,11 @@ public class Util {
                     .placeholder(placeholder(context.getResources(), thing.getString(Thing.PLACEHOLDER)))
                     .into(photo);
 
-            if (!thing.isNull(Thing.ASPECT)) {
-                final float aspect = (float) thing.getDouble(Thing.ASPECT);
-                photo.getLayoutParams().height = (int) (s / aspect);
-            }
+        }
+
+        if (!thing.isNull(Thing.ASPECT)) {
+            final float aspect = (float) thing.getDouble(Thing.ASPECT);
+            photo.getLayoutParams().height = (int) (s / aspect);
         }
     }
 

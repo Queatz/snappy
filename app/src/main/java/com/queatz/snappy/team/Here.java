@@ -60,7 +60,7 @@ public class Here {
                 params.put("latitude", location.getLatitude());
                 params.put("longitude", location.getLongitude());
 
-                team.api.get(Config.PATH_EARTH + "/" + Config.PATH_HERE + "/offer|hub|person|party", params, new Api.Callback() {
+                team.api.get(Config.PATH_EARTH + "/" + Config.PATH_HERE + "/person|resource|project|offer|club|hub|form|party", params, new Api.Callback() {
                     @Override
                     public void success(String response) {
                         if(refresher != null) {

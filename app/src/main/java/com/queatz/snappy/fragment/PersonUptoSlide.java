@@ -127,20 +127,26 @@ public class PersonUptoSlide extends TeamFragment {
         updateList.addFooterView(new View(getActivity()));
 
         if(mPerson != null) {
-            RealmResults<DynamicRealmObject> offers = team.realm.where("Thing")
-                    .equalTo(Thing.KIND, "offer")
-                    .equalTo("source.id", mPerson.getString(Thing.ID))
-                    .findAllSorted("price", Sort.ASCENDING);
+            RealmResults<DynamicRealmObject> offers/* = team.realm.where("Thing")
+                    .beginGroup()
+                        .equalTo(Thing.KIND, ThingKinds.OFFER)
+                        .equalTo("source.id", mPerson.getString(Thing.ID))
+                    .endGroup()
+                    .or()
+                    .beginGroup()
+                        .equalTo(Thing.KIND, ThingKinds.UPDATE)
+                        .equalTo("source.id", mPerson.getString(Thing.ID))
+                        .equalTo("target.id", mPerson.getString(Thing.ID))
+                    .endGroup()
+                    .findAllSorted(Thing.DATE, Sort.DESCENDING)*/;
 
-            RealmResults<DynamicRealmObject> recentUpdates = team.realm.where("Thing")
-                    .equalTo(Thing.KIND, "update")
-                    .equalTo("source.id", mPerson.getString(Thing.ID))
-                    .equalTo("target.id", mPerson.getString(Thing.ID))
-                    .findAllSorted("date", Sort.DESCENDING);
+            offers = team.realm.where("Thing")
+                    .equalTo(Thing.KIND, ThingKinds.MEMBER)
+                    .equalTo(Thing.TARGET + "." + Thing.ID, mPerson.getString(Thing.ID))
+                    .findAllSorted(Thing.SOURCE + "." + Thing.DATE, Sort.DESCENDING);
 
             final ArrayList<RealmResults<DynamicRealmObject>> list = new ArrayList<>();
             list.add(offers);
-            list.add(recentUpdates);
 
             updateList.setAdapter(new FeedAdapter(getActivity(), list));
         }

@@ -9,6 +9,7 @@ import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.ThingKinds;
+import com.queatz.snappy.ui.card.CommonThingCard;
 import com.queatz.snappy.ui.card.OfferCard;
 import com.queatz.snappy.ui.card.PartyCard;
 import com.queatz.snappy.ui.card.UpdateCard;
@@ -31,6 +32,7 @@ public class FeedAdapter extends BaseAdapter {
     private UpdateCard updateCard = new UpdateCard();
     private PartyCard partyCard = new PartyCard();
     private OfferCard offerCard = new OfferCard();
+    private CommonThingCard commonThingCard = new CommonThingCard();
 
     public FeedAdapter(Context context, ArrayList<RealmResults<DynamicRealmObject>> results) {
         if (context == null) {
@@ -97,22 +99,38 @@ public class FeedAdapter extends BaseAdapter {
         View view;
         DynamicRealmObject thing = (DynamicRealmObject) getItem(position);
 
-        boolean isSameKind = convertView != null &&
+        boolean isSameKind = convertView != null && convertView.getTag() != null &&
                 ((DynamicRealmObject) convertView.getTag()).isValid() &&
                 thing.getString(Thing.KIND).equals(((DynamicRealmObject) convertView.getTag()).getString(Thing.KIND));
 
-        if (ThingKinds.PARTY.equals(thing.getString(Thing.KIND))) {
-            view = partyCard.getCard(context, thing, isSameKind ? convertView : null, parent);
-            view.setTag(thing);
-        }  else if (ThingKinds.OFFER.equals(thing.getString(Thing.KIND))) {
-            view = offerCard.getCard(context, thing, isSameKind ? convertView : null, parent);
-            view.setTag(thing);
-        }  else if (ThingKinds.UPDATE.equals(thing.getString(Thing.KIND))) {
-            view = updateCard.getCard(context, thing, isSameKind ? convertView : null, parent);
-            view.setTag(thing);
-        } else {
-            throw new IllegalStateException("Invalid object found: " + thing);
+        if (ThingKinds.MEMBER.equals(thing.getString(Thing.KIND))) {
+            thing = thing.getObject(Thing.SOURCE);
         }
+
+        if (thing == null) {
+            return new View(context);
+        }
+
+        switch (thing.getString(Thing.KIND)) {
+            case ThingKinds.PARTY:
+                view = partyCard.getCard(context, thing, isSameKind ? convertView : null, parent);
+                break;
+            case ThingKinds.OFFER:
+                view = offerCard.getCard(context, thing, isSameKind ? convertView : null, parent);
+                break;
+            case ThingKinds.UPDATE:
+                view = updateCard.getCard(context, thing, isSameKind ? convertView : null, parent);
+                break;
+            case ThingKinds.PROJECT:
+            case ThingKinds.RESOURCE:
+            case ThingKinds.HUB:
+                view = commonThingCard.getCard(context, thing, isSameKind ? convertView : null, parent);
+                break;
+            default:
+                return new View(context);
+        }
+
+        view.setTag(thing);
 
         return view;
     }
