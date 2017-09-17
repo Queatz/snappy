@@ -398,7 +398,6 @@ public class PartiesSlide extends MapSlide implements
                     .or()
                     .beginGroup()
                         .in(Thing.KIND, new String[] {ThingKinds.OFFER, ThingKinds.UPDATE, ThingKinds.PROJECT, ThingKinds.RESOURCE, ThingKinds.HUB})
-                        .notEqualTo("source.id", team.auth.getUser())
                     .endGroup()
                     .findAllSorted(Thing.DATE, Sort.DESCENDING);
 

@@ -91,7 +91,7 @@ public class PostSelfUpdateAction extends AuthenticatedAction {
         // The server expects this whether or not there is an image being uploaded
         params.setForceMultipartEntityContentType(true);
 
-        getTeam().api.post(Config.PATH_EARTH + "?kind=update&in=" + getTeam().auth.getUser(), params, new Api.Callback() {
+        getTeam().api.post(Config.PATH_EARTH + "?kind=update", params, new Api.Callback() {
             @Override
             public void success(String response) {
                 to(new UpdateThings(response));
