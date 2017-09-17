@@ -38,6 +38,10 @@ public class UpdateThings extends Branch<ActivityContext> {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
+                if (me() == null) {
+                    return null;
+                }
+
                 switch (response.charAt(0)) {
                     case '{':
                         resultId = new Things(me().getTeam().realm()).put(response).getString(Thing.ID);

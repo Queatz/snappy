@@ -167,8 +167,11 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             photo.setVisibility(View.GONE);
         }
 
-        if (!update.isNull(Thing.MEMBERS)) {
-            List<DynamicRealmObject> withThings = Util.mapToObjectField(Util.membersOf(update, ThingKinds.JOIN), Thing.SOURCE);
+        if (!update.isNull(Thing.JOINS)) {
+            List<DynamicRealmObject> withThings = team.realm.where("Thing")
+                    .equalTo(Thing.KIND, ThingKinds.JOIN)
+                    .equalTo("target.id", update.getString(Thing.ID))
+                    .findAll();
             List<DynamicRealmObject> people = new RealmList<>();
             List<DynamicRealmObject> hubs = new RealmList<>();
 
@@ -267,7 +270,9 @@ public class UpdateCard implements Card<DynamicRealmObject> {
 
         Button shareButton = (Button) view.findViewById(R.id.shareButton);
 
-        shareButton.getCompoundDrawables()[0].setTint(context.getResources().getColor(R.color.gray));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            shareButton.getCompoundDrawables()[0].setTint(context.getResources().getColor(R.color.gray));
+        }
 
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -337,7 +342,11 @@ public class UpdateCard implements Card<DynamicRealmObject> {
         boolean byMe = team.environment.is(AuthenticatedEnvironment.class) && Util.liked(update, team.auth.me());
 
         likers.setCompoundDrawablesWithIntrinsicBounds(byMe ? R.drawable.ic_favorite_white_24dp : R.drawable.ic_favorite_border_white_24dp, 0, 0, 0);
-        likers.getCompoundDrawables()[0].setTint(context.getResources().getColor(R.color.red));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            likers.getCompoundDrawables()[0].setTint(context.getResources().getColor(R.color.red));
+        }
+
         likers.setVisibility(View.VISIBLE);
 
         if (likersCount > 0) {

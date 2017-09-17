@@ -183,7 +183,7 @@ public class PartyCard implements Card<DynamicRealmObject> {
 
             if(team.auth.getUser() != null) {
                 requested = team.realm.where("Thing")
-                        .equalTo(Thing.KIND, "join")
+                        .equalTo(Thing.KIND, ThingKinds.JOIN)
                         .equalTo("target.id", party.getString(Thing.ID))
                         .equalTo("source.id", team.auth.getUser()).findFirst();
             }
@@ -236,7 +236,7 @@ public class PartyCard implements Card<DynamicRealmObject> {
 
         if(team.auth.getUser() != null && party.getObject(Thing.HOST) != null && team.auth.getUser().equals(party.getObject(Thing.HOST).getString(Thing.ID))) {
             joinRequests = team.realm.where("Thing")
-                    .equalTo(Thing.KIND, "join")
+                    .equalTo(Thing.KIND, ThingKinds.JOIN)
                     .equalTo("target.id", party.getString(Thing.ID))
                     .equalTo("status", Config.JOIN_STATUS_REQUESTED).findAll();
         }

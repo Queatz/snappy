@@ -11,6 +11,7 @@ import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Viewable;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by jacob on 5/8/16.
@@ -24,6 +25,7 @@ public class UpdateView extends CommonThingView {
     final String action;
     final EarthGeo geo;
     final Boolean going;
+    final List<Viewable> joins;
 
     public UpdateView(EarthAs as, EarthThing update) {
         this(as, update, EarthView.DEEP);
@@ -64,6 +66,16 @@ public class UpdateView extends CommonThingView {
             action = update.getString(EarthField.ACTION);
         } else {
             action = null;
+        }
+
+        switch (view) {
+            case DEEP:
+                List<EarthThing> joinsList = earthStore.find(EarthKind.JOIN_KIND, EarthField.TARGET, update.key());
+                joins = new EntityListView(as, joinsList, EarthView.SHALLOW).asList();
+
+                break;
+            default:
+                joins = null;
         }
     }
 }
