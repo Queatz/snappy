@@ -89,7 +89,7 @@ public class Main extends FullscreenActivity {
             mSlideScreen.setSlide(
                     "chat".equals(show) ? 0 :
                     "parties".equals(show) ? 1 :
-                    "messages".equals(show) ? 2 : 1
+                    "messages".equals(show) ? 2 : 0
             );
         } else {
             // xxx todo set last slide

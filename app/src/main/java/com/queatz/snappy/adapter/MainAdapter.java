@@ -3,6 +3,7 @@ package com.queatz.snappy.adapter;
 import android.app.Fragment;
 import android.app.FragmentManager;
 
+import com.queatz.snappy.fragment.ChatSlide;
 import com.queatz.snappy.fragment.MessagesSlide;
 import com.queatz.snappy.fragment.PartiesSlide;
 import com.queatz.snappy.ui.slidescreen.SlideScreen;
@@ -22,7 +23,7 @@ public class MainAdapter extends SlideScreen.SlideScreenAdapter {
     public Fragment getSlide(int page) {
         switch (page) {
             case 0:
-                return new PartiesSlide();
+                return new ChatSlide();
             case 1:
                 return new PartiesSlide();
             case 2:
