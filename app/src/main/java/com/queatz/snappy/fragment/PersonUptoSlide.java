@@ -30,7 +30,7 @@ import com.queatz.snappy.team.actions.ShowBackersAction;
 import com.queatz.snappy.team.actions.ShowBackingAction;
 import com.queatz.snappy.team.actions.UpdateThings;
 import com.queatz.snappy.team.contexts.ActivityContext;
-import com.queatz.snappy.ui.SlideScreen;
+import com.queatz.snappy.ui.slidescreen.SlideScreen;
 import com.queatz.snappy.ui.TextView;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.Images;

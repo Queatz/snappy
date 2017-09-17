@@ -18,7 +18,7 @@ import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.SetSeenAction;
 import com.queatz.snappy.team.contexts.PersonContext;
 import com.queatz.snappy.ui.OnBackPressed;
-import com.queatz.snappy.ui.SlideScreen;
+import com.queatz.snappy.ui.slidescreen.SlideScreen;
 
 import io.realm.DynamicRealmObject;
 

@@ -27,7 +27,7 @@ import io.realm.RealmObject;
 public class Things {
     private DynamicRealm realm;
 
-    private static final Map<String, DynamicRealmObject> addedInTransaction = new HashMap<>();
+    private final Map<String, DynamicRealmObject> addedInTransaction = new HashMap<>();
 
     public Things(DynamicRealm realm) {
         this.realm = realm;

@@ -1,10 +1,9 @@
-package com.queatz.snappy.ui;
+package com.queatz.snappy.ui.slidescreen;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
@@ -15,8 +14,6 @@ import android.view.ViewGroup;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
-
-import java.util.Date;
 
 /**
  * Created by jacob on 10/19/14.
@@ -52,88 +49,20 @@ public class SlideScreen extends ViewGroup {
         void onSlideChange(int currentSlide);
     }
 
-    public static class SlideAnimation extends Handler {
-        private SlideScreen mSlideScreen;
-        private float mFrom;
-        private float mTo;
-        private int mDuration;
-        private long mStartOffsetTime;
-        private Date mStartTime;
-        private Runnable mLoopRunnable;
-        private boolean mAlive;
-
-        public SlideAnimation(SlideScreen slideScreen, int to) {
-            mSlideScreen = slideScreen;
-            mFrom = mSlideScreen.mOffset;
-            mTo = to;
-            mDuration = 150;
-            mStartOffsetTime = 0;
-            mAlive = false;
-
-            mLoopRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    loop();
-                }
-            };
-        }
-
-        public boolean isAlive() {
-            return mAlive;
-        }
-
-        public void start() {
-            start(0);
-        }
-
-        public void start(float startDelta) {
-            mStartTime = new Date();
-            mStartOffsetTime = (long) (mDuration * startDelta);
-            mAlive = true;
-            post(mLoopRunnable);
-        }
-
-        public void stop() {
-            mAlive = false;
-            removeCallbacks(mLoopRunnable);
-        }
-
-        public float interpolate(float dt) {
-            return (float) Math.abs((Math.sin((dt - .5) * Math.PI) + 1) / 2f);
-        }
-
-        public float getDelta() {
-            return Math.min(1.0f, Math.max(0.0f, (float) (new Date().getTime() + mStartOffsetTime - mStartTime.getTime()) / (float) mDuration));
-        }
-
-        private void loop() {
-            float dt = getDelta();
-
-            apply(interpolate(dt));
-
-            if(dt >= 1.0f) {
-                stop();
-                return;
-            }
-
-            postDelayed(mLoopRunnable, 0);
-        }
-
-        public void apply(float time){
-            mSlideScreen.setOffset(mTo * time + mFrom * (1.0f - time));
-        }
-    }
-
     private SparseArray<SlideAsChild> mSlides;
     private int mSlide;
-    private float mOffset;
+    protected float mOffset;
     private OnSlideCallback mOnSlideCallback;
     private SlideScreenAdapter mAdapter;
     private SlideAnimation mAnimation;
+    private ExposeAnimation exposeAnimation;
     private float mXFlingDelta;
     private float mDownX, mDownY;
     private boolean mSnatched, mUnsnatchable;
     private boolean mChildIsUsingMotion;
+    private int gap = (int) Util.px(128);
+    protected boolean expose = false;
+    protected float currentScale = 1;
 
     public SlideScreen(Context context) {
         super(context);
@@ -184,6 +113,21 @@ public class SlideScreen extends ViewGroup {
         return mSlides.get(slide).fragment;
     }
 
+    public void expose(boolean expose) {
+        this.expose = expose;
+
+        if(exposeAnimation != null) {
+            exposeAnimation.stop();
+        }
+
+        exposeAnimation = new ExposeAnimation(this, this.expose);
+        exposeAnimation.start();
+    }
+
+    public boolean isExpose() {
+        return expose;
+    }
+
     private void smoothSlideTo(int slide) {
         if(mAnimation != null) {
             mAnimation.stop();
@@ -195,7 +139,7 @@ public class SlideScreen extends ViewGroup {
             mOnSlideCallback.onSlideChange(slide);
     }
 
-    private void setOffset(float offset) {
+    protected void setOffset(float offset) {
         mOffset = Math.max(0, Math.min(mAdapter.getCount() - 1, offset));
         mSlide = Math.round(mOffset);
         positionChildren();
@@ -203,6 +147,11 @@ public class SlideScreen extends ViewGroup {
         if(mOnSlideCallback != null) {
             mOnSlideCallback.onSlide(mSlide, mOffset);
         }
+    }
+
+    protected void setScale(float scale) {
+        this.currentScale = scale;
+        positionChildren();
     }
 
     private String getFragName(Object slide) {
@@ -239,7 +188,7 @@ public class SlideScreen extends ViewGroup {
         int fr = (int) Math.floor(mOffset);
         int to = fr + 1;
 
-        int width = getWidth();
+        int width = getWidth() + (int) (gap * (1 - currentScale));
 
         for(int c = 0; c < getChildCount(); c++) {
             View view = getChildAt(c);
@@ -248,8 +197,16 @@ public class SlideScreen extends ViewGroup {
             if(child == null)
                 continue;
 
-            view.setVisibility(child.position < fr || child.position > to ? View.GONE : View.VISIBLE);
-            int l = width * child.position - (int) (mOffset * (float) getWidth());
+            if (currentScale >= 1) {
+                view.setVisibility(child.position < fr || child.position > to ? View.GONE : View.VISIBLE);
+            } else {
+                view.setVisibility(View.VISIBLE);
+            }
+
+            view.setScaleX(currentScale);
+            view.setScaleY(currentScale);
+
+            int l = (int) (currentScale * (width * child.position - (int) (mOffset * (float) width)));
             view.layout(l, 0, l + getWidth(), getHeight());
         }
     }

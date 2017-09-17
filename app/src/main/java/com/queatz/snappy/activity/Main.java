@@ -20,7 +20,7 @@ import com.queatz.snappy.team.Buy;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.OnBackPressed;
-import com.queatz.snappy.ui.SlideScreen;
+import com.queatz.snappy.ui.slidescreen.SlideScreen;
 
 import io.realm.DynamicRealmObject;
 
@@ -85,11 +85,14 @@ public class Main extends FullscreenActivity {
     protected void onNewIntent(Intent intent) {
         String show = intent.getStringExtra("show");
 
-        if(show != null) {
+        if(true || show != null) {
             mSlideScreen.setSlide(
-                    "parties".equals(show) ? 0 :
-                    "messages".equals(show) ? 1 : 0
+                    "chat".equals(show) ? 0 :
+                    "parties".equals(show) ? 1 :
+                    "messages".equals(show) ? 2 : 1
             );
+        } else {
+            // xxx todo set last slide
         }
 
         isHome = intent.hasCategory(Intent.CATEGORY_HOME);
@@ -140,6 +143,8 @@ public class Main extends FullscreenActivity {
     public void onBackPressed() {
         if (team.camera.isOpen()) {
             team.camera.close();
+        } else if (true) {
+            mSlideScreen.expose(!mSlideScreen.isExpose());
         } else {
             Fragment slide = mSlideScreen.getSlideFragment(mSlideScreen.getSlide());
             if (!(slide instanceof OnBackPressed) || !((OnBackPressed) slide).onBackPressed()) {

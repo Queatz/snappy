@@ -5,7 +5,7 @@ import android.app.FragmentManager;
 
 import com.queatz.snappy.fragment.PersonMessagesSlide;
 import com.queatz.snappy.fragment.PersonUptoSlide;
-import com.queatz.snappy.ui.SlideScreen;
+import com.queatz.snappy.ui.slidescreen.SlideScreen;
 
 import io.realm.DynamicRealmObject;
 

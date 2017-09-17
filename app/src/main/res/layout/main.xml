@@ -4,10 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.queatz.snappy.ui.SlideScreen
+    <com.queatz.snappy.ui.slidescreen.SlideScreen
         android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@drawable/daylight" />
 
     <RelativeLayout
         android:id="@+id/cameraLayout"
