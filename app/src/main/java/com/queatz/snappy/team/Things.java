@@ -10,6 +10,7 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.util.Json;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,9 +21,13 @@ import io.realm.RealmObject;
 
 /**
  * Created by jacob on 2/14/15.
+ *
+ * Do not use this class across multiple threads.
  */
 public class Things {
     private DynamicRealm realm;
+
+    private static final Map<String, DynamicRealmObject> addedInTransaction = new HashMap<>();
 
     public Things(DynamicRealm realm) {
         this.realm = realm;
@@ -151,20 +156,30 @@ public class Things {
 
         DynamicRealmObject o = null;
 
+        if (addedInTransaction.containsKey(id)) {
+            o = addedInTransaction.get(id);
+        }
+
         if (o == null) {
             o = realm.where("Thing")
                     .equalTo(Thing.ID, id)
                     .findFirst();
+
+            if (o != null) addedInTransaction.put(id, o);
         }
 
         if(o == null && localId != null) {
             o = realm.where("Thing")
                     .equalTo(Thing.ID, localId)
                     .findFirst();
+
+            if (o != null) addedInTransaction.put(id, o);
         }
 
         if(o == null) {
             o = realm.createObject("Thing");
+
+            if (o != null) addedInTransaction.put(id, o);
         }
 
         deepJson(realm, o, jsonObject);
@@ -179,6 +194,7 @@ public class Things {
         realm.beginTransaction();
         DynamicRealmObject o = put(realm, jsonObject);
         realm.commitTransaction();
+        addedInTransaction.clear();
 
         return o;
     }
@@ -199,6 +215,7 @@ public class Things {
         realm.beginTransaction();
         RealmList<DynamicRealmObject> o = putAll(realm, jsonArray);
         realm.commitTransaction();
+        addedInTransaction.clear();
 
         return o;
     }
