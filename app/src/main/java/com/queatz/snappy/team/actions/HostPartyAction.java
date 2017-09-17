@@ -61,7 +61,7 @@ public class HostPartyAction extends ActivityAction {
         getTeam().api.post(Config.PATH_EARTH + "?" + params.toString(), null, new Api.Callback() {
             @Override
             public void success(String response) {
-                getTeam().things.put(response);
+                to(new UpdateThings(response));
             }
 
             @Override

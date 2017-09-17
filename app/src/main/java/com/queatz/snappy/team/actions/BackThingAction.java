@@ -41,7 +41,7 @@ public class BackThingAction extends ActivityAction {
         getTeam().api.post(Config.PATH_EARTH + "/" + thing.getString(Thing.ID), params, new Api.Callback() {
             @Override
             public void success(String response) {
-                getTeam().things.put(response);
+                to(new UpdateThings(response));
             }
 
             @Override

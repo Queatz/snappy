@@ -70,11 +70,7 @@ public class JoinPartyAction extends AuthenticatedAction {
         getTeam().api.post(Config.PATH_EARTH + "/" + party.getString(Thing.ID), params, new Api.Callback() {
             @Override
             public void success(String response) {
-                if (response == null) {
-                    return;
-                }
-
-                getTeam().things.put(response);
+                to(new UpdateThings(response));
             }
 
             @Override

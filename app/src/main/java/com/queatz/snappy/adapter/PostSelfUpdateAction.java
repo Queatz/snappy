@@ -11,6 +11,7 @@ import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.AuthenticatedAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
+import com.queatz.snappy.team.actions.UpdateThings;
 import com.queatz.snappy.util.Json;
 
 import java.io.FileNotFoundException;
@@ -93,7 +94,7 @@ public class PostSelfUpdateAction extends AuthenticatedAction {
         getTeam().api.post(Config.PATH_EARTH + "?kind=update&in=" + getTeam().auth.getUser(), params, new Api.Callback() {
             @Override
             public void success(String response) {
-                getTeam().things.put(response);
+                to(new UpdateThings(response));
 
                 // If location is null, then probably shared to Village from an external source
                 if (location == null) {

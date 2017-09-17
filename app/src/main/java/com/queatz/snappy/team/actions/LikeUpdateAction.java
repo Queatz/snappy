@@ -44,7 +44,7 @@ public class LikeUpdateAction extends AuthenticatedAction {
         me().getTeam().api.post(Config.PATH_EARTH + "/" + update.getString(Thing.ID) + "/" + Config.PATH_LIKE, params, new Api.Callback() {
             @Override
             public void success(String response) {
-                me().getTeam().things.put(response);
+                to(new UpdateThings(response));
             }
 
             @Override

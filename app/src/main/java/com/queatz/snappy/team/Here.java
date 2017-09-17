@@ -3,10 +3,11 @@ package com.queatz.snappy.team;
 import android.app.Activity;
 import android.support.v4.widget.SwipeRefreshLayout;
 
-import com.google.gson.JsonArray;
 import com.loopj.android.http.RequestParams;
+import com.queatz.branch.Branch;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.util.Json;
+import com.queatz.snappy.team.actions.UpdateThings;
+import com.queatz.snappy.team.contexts.ActivityContext;
 
 import io.realm.DynamicRealmObject;
 import io.realm.RealmList;
@@ -26,7 +27,7 @@ public class Here {
         void onSuccess(RealmList<DynamicRealmObject> things);
     }
 
-    public void getRecentUpdates(Activity activity) {
+    public void getRecentUpdates(final Activity activity) {
         team.location.get(activity, new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
             @Override
             public void onLocationFound(final android.location.Location location) {
@@ -37,7 +38,7 @@ public class Here {
                 team.api.get(Config.PATH_EARTH + "/" + Config.PATH_HERE + "/update?recent=true", params, new Api.Callback() {
                     @Override
                     public void success(String response) {
-                        team.things.putAll(response);
+                        Branch.from((ActivityContext) activity).to(new UpdateThings(response));
                     }
 
                     @Override
@@ -67,23 +68,16 @@ public class Here {
                             refresher.setRefreshing(false);
                         }
 
-                        JsonArray jsonArray = Json.from(response, JsonArray.class);
-
-                        RealmResults<DynamicRealmObject> removeOffers =
-                                team.realm.where("Thing")
-                                        .equalTo(Thing.KIND, "offer")
-                                        .notEqualTo("source.id", team.auth.getUser())
-                                        .findAll();
-
-                        team.realm.beginTransaction();
-                        removeOffers.deleteAllFromRealm();
-                        team.realm.commitTransaction();
-
-                        RealmList<DynamicRealmObject> things = team.things.putAll(jsonArray);
-
-                        if(callback != null) {
-                            callback.onSuccess(things);
-                        }
+                        Branch.from((ActivityContext) activity).to(new UpdateThings(response).when(RealmResults.class, new Branch<RealmResults>() {
+                            @Override
+                            protected void execute() {
+                                if(callback != null) {
+                                    RealmList <DynamicRealmObject> results = new RealmList<>();
+                                    results.addAll(((RealmResults<DynamicRealmObject>) me()).subList(0, me().size()));
+                                    callback.onSuccess(results);
+                                }
+                            }
+                        }));
                     }
 
                     @Override

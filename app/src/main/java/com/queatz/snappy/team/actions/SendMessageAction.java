@@ -79,7 +79,7 @@ public class SendMessageAction extends AuthenticatedAction {
         getTeam().api.post(Config.PATH_EARTH + "/" + to.getString(Thing.ID) + "/" + Config.PATH_MESSAGE, params, new Api.Callback() {
             @Override
             public void success(String response) {
-                getTeam().things.put(response);
+                to(new UpdateThings(response));
             }
 
             @Override

@@ -22,10 +22,10 @@ import io.realm.RealmObject;
  * Created by jacob on 2/14/15.
  */
 public class Things {
-    public Team team;
+    private DynamicRealm realm;
 
-    public Things(Team t) {
-        team = t;
+    public Things(DynamicRealm realm) {
+        this.realm = realm;
     }
 
     private void deepJson(DynamicRealm realm, DynamicRealmObject thing, JsonObject o) {
@@ -128,7 +128,7 @@ public class Things {
     }
 
     public DynamicRealmObject get(@NonNull String id) {
-        return team.realm().where("Thing").equalTo(Thing.ID, id).findFirst();
+        return realm.where("Thing").equalTo(Thing.ID, id).findFirst();
     }
 
     public DynamicRealmObject put(DynamicRealm realm, JsonObject jsonObject) {
@@ -176,9 +176,9 @@ public class Things {
         if (jsonObject == null) {
             return null;
         }
-        team.realm().beginTransaction();
-        DynamicRealmObject o = put(team.realm(), jsonObject);
-        team.realm().commitTransaction();
+        realm.beginTransaction();
+        DynamicRealmObject o = put(realm, jsonObject);
+        realm.commitTransaction();
 
         return o;
     }
@@ -196,9 +196,9 @@ public class Things {
         if (jsonArray == null) {
             return null;
         }
-        team.realm().beginTransaction();
-        RealmList<DynamicRealmObject> o = putAll(team.realm(), jsonArray);
-        team.realm().commitTransaction();
+        realm.beginTransaction();
+        RealmList<DynamicRealmObject> o = putAll(realm, jsonArray);
+        realm.commitTransaction();
 
         return o;
     }
@@ -237,7 +237,7 @@ public class Things {
             return;
         }
 
-        team.realm().beginTransaction();
+        realm.beginTransaction();
 
         for (int i = 0; i < current.size(); i++) {
             if (!actual.contains(current.get(i))) {
@@ -245,6 +245,6 @@ public class Things {
             }
         }
 
-        team.realm().commitTransaction();
+        realm.commitTransaction();
     }
 }

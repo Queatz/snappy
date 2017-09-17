@@ -45,6 +45,7 @@ import com.queatz.snappy.team.ThingKinds;
 import com.queatz.snappy.team.actions.AddOfferAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.actions.SigninAction;
+import com.queatz.snappy.team.actions.UpdateThings;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.team.observers.AnonymousEnvironment;
 import com.queatz.snappy.team.observers.AuthenticatedEnvironment;
@@ -584,7 +585,7 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
             team.api.get(Config.PATH_EARTH + "/" + thing.getString(Thing.ID), new Api.Callback() {
                 @Override
                 public void success(String response) {
-                    team.things.put(response);
+                    to(new UpdateThings(response));
                 }
 
                 @Override

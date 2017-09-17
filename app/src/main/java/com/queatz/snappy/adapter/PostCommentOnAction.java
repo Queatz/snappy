@@ -8,6 +8,7 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.AuthenticatedAction;
+import com.queatz.snappy.team.actions.UpdateThings;
 
 import java.util.Date;
 
@@ -58,7 +59,7 @@ public class PostCommentOnAction extends AuthenticatedAction {
         getTeam().api.post(Config.PATH_EARTH + "?kind=update", params, new Api.Callback() {
             @Override
             public void success(String response) {
-                getTeam().things.put(response);
+                to(new UpdateThings(response));
             }
 
             @Override

@@ -27,6 +27,7 @@ import com.queatz.snappy.team.ScrollActionsTouchListener;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.ThingKinds;
+import com.queatz.snappy.team.actions.UpdateThings;
 import com.queatz.snappy.ui.ContextualInputBar;
 import com.queatz.snappy.ui.OnBackPressed;
 import com.queatz.snappy.ui.RevealAnimation;
@@ -135,7 +136,10 @@ public class PartiesSlide extends MapSlide implements
                     showingMapBottomLayout = true;
                 }
 
-                View mapView = getChildFragmentManager().findFragmentById(R.id.map).getView();
+                View mapView = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    mapView = getChildFragmentManager().findFragmentById(R.id.map).getView();
+                }
 
                 if (mapView == null) {
                     return false;
@@ -430,7 +434,7 @@ public class PartiesSlide extends MapSlide implements
                             @Override
                             public void success(String response) {
                                 // Do this to update party joins
-                                team.things.put(response);
+                                to(new UpdateThings(response));
                             }
 
                             @Override

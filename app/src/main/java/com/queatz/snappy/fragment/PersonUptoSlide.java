@@ -28,6 +28,7 @@ import com.queatz.snappy.team.actions.ChangeAboutAction;
 import com.queatz.snappy.team.actions.OfferSomethingAction;
 import com.queatz.snappy.team.actions.ShowBackersAction;
 import com.queatz.snappy.team.actions.ShowBackingAction;
+import com.queatz.snappy.team.actions.UpdateThings;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.ui.SlideScreen;
 import com.queatz.snappy.ui.TextView;
@@ -197,16 +198,14 @@ public class PersonUptoSlide extends TeamFragment {
         team.api.get(Config.PATH_EARTH + "/" + mPerson.getString(Thing.ID), new Api.Callback() {
             @Override
             public void success(String response) {
-                if (response == null) {
-                    return;
-                }
-
-                if(mPerson == null) {
-                    return;
-                }
-
-                team.things.put(response);
-                update(getView());
+                to(new UpdateThings(response).when(Boolean.class, new Branch<Boolean>() {
+                    @Override
+                    protected void execute() {
+                        if (me()) {
+                            update(getView());
+                        }
+                    }
+                }));
             }
 
             @Override

@@ -76,7 +76,7 @@ public class AddOfferAction extends AuthenticatedAction {
         me().getTeam().api.post(Config.PATH_EARTH, params, new Api.Callback() {
             @Override
             public void success(String response) {
-                me().getTeam().things.put(response);
+                to(new UpdateThings(response));
             }
 
             @Override

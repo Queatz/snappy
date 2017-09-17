@@ -51,7 +51,7 @@ public class Team implements Closeable {
         auth = new Auth(this);
         api = new Api(this);
         action = new Action(this);
-        things = new Things(this);
+        things = new Things(realm);
         view = new View(this);
         location = new Location(this);
         push = new Push(this);
