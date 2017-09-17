@@ -14,7 +14,7 @@ import io.realm.DynamicRealmObject;
  * Created by jacob on 9/16/17.
  */
 
-public class BackThingAction extends ActivityAction {
+public class BackThingAction extends AuthenticatedAction {
 
     private DynamicRealmObject thing;
 
@@ -23,7 +23,7 @@ public class BackThingAction extends ActivityAction {
     }
 
     @Override
-    protected void execute() {
+    public void whenAuthenticated() {
         final String localId = Util.createLocalId();
 
         getTeam().realm.beginTransaction();

@@ -57,7 +57,7 @@ public class PostSelfUpdateAction extends AuthenticatedAction {
         }
 
         try {
-            params.put(Config.PARAM_THING, getTeam().auth.getUser());
+            params.put(Config.PARAM_IN, getTeam().auth.getUser());
 
             if (photo != null) {
                 params.put(Config.PARAM_PHOTO, getTeam().context.getContentResolver().openInputStream(photo), photo.getPath());

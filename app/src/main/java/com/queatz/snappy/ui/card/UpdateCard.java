@@ -281,10 +281,10 @@ public class UpdateCard implements Card<DynamicRealmObject> {
             }
         });
 
-        RealmResults<DynamicRealmObject> with = update.getList(Thing.MEMBERS)
-                .where()
+        RealmResults<DynamicRealmObject> with = team.realm.where("Thing")
+                .equalTo(Thing.KIND, ThingKinds.MEMBER)
                 .equalTo(Thing.SOURCE + "." + Thing.KIND, ThingKinds.UPDATE)
-                .equalTo(Thing.SOURCE + "." + Thing.SOURCE + "." + Thing.KIND, ThingKinds.PERSON)
+                .equalTo(Thing.TARGET + "." + Thing.ID, update.getString(Thing.ID))
                 .findAll()
                 .sort(Thing.DATE, Sort.ASCENDING);
         CommentAdapter commentsAdapter = new CommentAdapter(context, with);

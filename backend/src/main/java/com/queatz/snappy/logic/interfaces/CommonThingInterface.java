@@ -138,18 +138,7 @@ public abstract class CommonThingInterface implements Interfaceable {
 
                 new EarthUpdate(as).send(new NewThingEvent(thing)).toFollowersOf(as.getUser());
 
-                String in = extract(as.getParameters().get(Config.PARAM_IN));
-
-                if (!Strings.isNullOrEmpty(in)) {
-                    EarthThing of = new EarthStore(as).get(in);
-
-                    if (of != null) {
-                        // TODO: Make suggestion if not owned by me
-                        new MemberEditor(as).create(thing, of, Config.MEMBER_STATUS_ACTIVE);
-                    } else {
-                        // Silent fail
-                    }
-                }
+                isIn(as, thing, extract(as.getParameters().get(Config.PARAM_IN)));
 
                 setVisibility(as, thing);
 
@@ -206,6 +195,23 @@ public abstract class CommonThingInterface implements Interfaceable {
         }
 
         return null;
+    }
+
+    protected void isIn(EarthAs as, EarthThing thing, String in) {
+        if (!Strings.isNullOrEmpty(in)) {
+            EarthThing of = new EarthStore(as).get(in);
+
+            isIn(as, thing, of);
+        }
+    }
+
+    protected void isIn(EarthAs as, EarthThing thing, EarthThing of) {
+        if (of != null) {
+            // TODO: Make suggestion if not owned by me
+            new MemberEditor(as).create(thing, of, Config.MEMBER_STATUS_ACTIVE);
+        } else {
+            // Silent fail
+        }
     }
 
     // Common visibility

@@ -11,10 +11,8 @@ import android.widget.TextView;
 
 import com.queatz.branch.Branch;
 import com.queatz.branch.Branchable;
-import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
-import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
@@ -46,8 +44,6 @@ public class CommentAdapter extends RealmBaseAdapter<DynamicRealmObject> impleme
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final Team team = ((MainApplication) context.getApplicationContext()).team;
-
         final View view;
 
         if (convertView != null) {

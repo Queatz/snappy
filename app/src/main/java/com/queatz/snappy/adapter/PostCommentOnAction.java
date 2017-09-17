@@ -49,7 +49,7 @@ public class PostCommentOnAction extends AuthenticatedAction {
         getTeam().realm.commitTransaction();
 
         RequestParams params = new RequestParams();
-        params.put(Config.PARAM_THING, update.getString(Thing.ID));
+        params.put(Config.PARAM_IN, update.getString(Thing.ID));
         params.put(Config.PARAM_MESSAGE, message);
         params.put(Config.PARAM_LOCAL_ID, localId);
 

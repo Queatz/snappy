@@ -185,7 +185,7 @@ public class UpdateInterface extends CommonThingInterface {
                 else if (Config.PARAM_GOING.equals(item.getFieldName())) {
                     going = Boolean.parseBoolean(Streams.asString(stream, "UTF-8"));
                 }
-                else if (Config.PARAM_THING.equals(item.getFieldName())) {
+                else if (Config.PARAM_IN.equals(item.getFieldName())) {
                     thingId = Streams.asString(stream, "UTF-8");
                 } else if (Config.PARAM_HIDDEN.equals(item.getFieldName())) {
                     hidden = Streams.asString(stream, "UTF-8");
@@ -219,6 +219,8 @@ public class UpdateInterface extends CommonThingInterface {
         }
 
         update = new UpdateEditor(as).updateWith(update, thing, message, photoUploaded, geo, with, going);
+
+        isIn(as, update, thing);
 
         if (EarthKind.UPDATE_KIND.equals(thing.getString(EarthField.KIND))) {
             new EarthUpdate(as).send(new NewCommentEvent(update)).to(thing.getKey(EarthField.SOURCE));

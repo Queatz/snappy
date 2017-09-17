@@ -509,7 +509,7 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
             return;
         }
 
-        if ("hub".equals(thing.getString(Thing.KIND))) {
+        if (ThingKinds.HUB.equals(thing.getString(Thing.KIND))) {
             final View view = LayoutInflater.from(getContext()).inflate(R.layout.hub_sheet, null);
 
             TextView details = (TextView) view.findViewById(R.id.details);
@@ -562,7 +562,7 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
                             FrameLayout memberProfile = (FrameLayout) View.inflate(getContext(), R.layout.contact, null);
                             contactsLayout.addView(memberProfile);
                             Images.with(getContext())
-                                    .load(member == null ? "" : Functions.getImageUrlForSize(member.getObject(Thing.TARGET), (int) Util.px(64)))
+                                    .load(member == null ? "" : Functions.getImageUrlForSize(member, (int) Util.px(64)))
                                     .placeholder(R.color.spacer)
                                     .into((RoundedImageView) memberProfile.findViewById(R.id.profile));
 
@@ -620,7 +620,7 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
             info.addView(view);
 
             layoutChange();
-        } else if ("update".equals(thing.getString(Thing.KIND))) {
+        } else if (ThingKinds.UPDATE.equals(thing.getString(Thing.KIND))) {
             info.addView(new UpdateCard().getCard(getContext(), thing, null, info, true));
         }
 
