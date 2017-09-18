@@ -88,7 +88,6 @@ public class Person extends TeamActivity implements PersonContext {
             personAdapter.setMessagePrefill(message);
 
             mSlideScreen.setAdapter(personAdapter);
-
         }
 
         mSlideScreen.setOnSlideCallback(new SlideScreen.OnSlideCallback() {

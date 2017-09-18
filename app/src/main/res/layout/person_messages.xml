@@ -41,7 +41,7 @@
                 android:paddingRight="12dp"
                 android:minWidth="0dp"
                 android:tint="@color/gray"
-                android:src="@drawable/ic_photo_camera_white_24dp" />Up
+                android:src="@drawable/ic_photo_camera_white_24dp" />
 
             <com.queatz.snappy.ui.EditText
                 android:id="@+id/writeMessage"

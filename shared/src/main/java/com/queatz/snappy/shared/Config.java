@@ -10,6 +10,8 @@ public class Config {
     // Village admin user id (i.e. who gets feedback emails)
     public static final String JACOB = "8393";
 
+    public static final String LOCAL_IP = "192.168.1.114";
+
     // Android
 
     /**
@@ -36,9 +38,24 @@ public class Config {
     public static final String LOG_TAG = "SNAPPY_LOG";
 
     /**
+     * The Village backend.
+     */
+    public static final String BACKEND_DOMAIN = (BETA_VERSION ? LOCAL_IP + ":8080" : "vlllage.com:8443");
+
+    /**
      * The Village backend url.
      */
-    public static final String API_URL = (BETA_VERSION ? "http://192.168.1.114:8080/api/" : "https://vlllage.com:8443/api/");
+    public static final String BASE_URL = (BETA_VERSION ? "http://" : "https://") + BACKEND_DOMAIN;
+
+    /**
+     * The Village backend url.
+     */
+    public static final String API_URL = BASE_URL + "/api/";
+
+    /**
+     * The Village WebSocket url.
+     */
+    public static final String WS_URI = (BETA_VERSION ? "ws://" : "wss://") + BACKEND_DOMAIN + "/ws";
 
     /**
      * The url for queues, accessed by the backend.  Localhost if on the same machine.
@@ -100,6 +117,8 @@ public class Config {
     public static final String PREFERENCE_SOCIAL_MODE = "other.social_mode";
     public static final String PREFERENCE_APP_VERSION = "app.version";
     public static final String PREFERENCE_MAP_POSITION = "other.map.position";
+    public static final String PREFERENCE_RECENT_MAIN_SCREEN = "app.main.screen.index";
+    public static final String PREFERENCE_CHAT_TOKEN = "chat.token";
 
     // Android request codes
     public static final int REQUEST_CODE_AUTH_RESOLUTION = 1;

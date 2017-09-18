@@ -5,7 +5,8 @@ import com.queatz.snappy.chat.actions.AdAdd;
 import com.queatz.snappy.chat.actions.ChatMessage;
 import com.queatz.snappy.chat.actions.MessageSend;
 import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.logic.EarthGeo;
+import com.queatz.snappy.shared.chat.BasicChatMessage;
+import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.snappy.logic.EarthThing;
 
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class ChatLogic extends ChatEndpoint {
         for (EarthThing thing : things) {
             switch (thing.getString(EarthField.KIND)) {
                 case ChatKind.AD_KIND:
-                    result.add(ChatMessageConverter.convert(new AdAdd()
+                    result.add(ChatMessageConverter.convert((ChatMessage) new AdAdd()
                             .setSource(thing.getString(EarthField.SOURCE))
                             .setDate(thing.getDate(EarthField.CREATED_ON))
                             .setDescription(thing.getString(EarthField.ABOUT))
@@ -72,7 +73,7 @@ public class ChatLogic extends ChatEndpoint {
                             .setTopic(thing.getString(EarthField.TOPIC))));
                     break;
                 case ChatKind.MESSAGE_KIND:
-                    result.add(ChatMessageConverter.convert(new MessageSend()
+                    result.add(ChatMessageConverter.convert((ChatMessage) new MessageSend()
                             .setTopic(thing.getString(EarthField.TOPIC))
                             .setPhoto(thing.getString(EarthField.PHOTO))
                             .setAvatar(thing.getString(EarthField.IMAGE_URL))

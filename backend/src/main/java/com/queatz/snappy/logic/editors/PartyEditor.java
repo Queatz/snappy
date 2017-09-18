@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.logic.EarthGeo;
+import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthRef;

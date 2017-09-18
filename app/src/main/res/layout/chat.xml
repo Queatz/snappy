@@ -8,9 +8,62 @@
 
     <ListView
         android:id="@+id/chatList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:stackFromBottom="true"
+        android:transcriptMode="normal"
+        android:gravity="bottom"
         android:divider="@null"
         android:dividerHeight="0dp" />
+
+    <LinearLayout
+        android:id="@+id/chatLayout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="0dp"
+        android:padding="0dp"
+        android:background="@color/white"
+        android:elevation="8dp">
+
+        <ImageButton style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/avatarButton"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_weight="0"
+            android:layout_marginLeft="8dp"
+            android:layout_gravity="center_vertical"
+            android:padding="0dp"
+            android:minWidth="0dp" />
+
+        <com.queatz.snappy.ui.EditText
+            android:id="@+id/chatHere"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            android:background="@color/white"
+            android:hint="@string/chat_here"
+            android:textSize="18sp"
+            android:lineSpacingMultiplier="1.25"
+            android:textColorHint="@color/gray"
+            android:imeOptions="actionSend"
+            android:inputType="textMultiLine|textShortMessage|textCapSentences" />
+
+        <ImageView
+            android:id="@+id/sendButton"
+            android:clickable="true"
+            android:background="?android:selectableItemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="8dp"
+            android:tint="@color/gray"
+            android:src="@drawable/ic_send_white_24dp" />
+
+    </LinearLayout>
 
 </LinearLayout>

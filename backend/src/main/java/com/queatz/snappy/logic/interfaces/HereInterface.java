@@ -1,7 +1,7 @@
 package com.queatz.snappy.logic.interfaces;
 
 import com.queatz.snappy.logic.EarthAs;
-import com.queatz.snappy.logic.EarthGeo;
+import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Interfaceable;

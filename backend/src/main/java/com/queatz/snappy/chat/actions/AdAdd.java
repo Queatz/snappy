@@ -7,76 +7,13 @@ import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.mines.PersonMine;
-
-import java.util.Date;
+import com.queatz.snappy.shared.chat.AdAddChatMessage;
 
 /**
  * Created by jacob on 8/9/17.
  */
 
-public class AdAdd implements ChatMessage {
-
-    private String name;
-    private String topic;
-    private Date date;
-    private String description;
-    private String source;
-
-    private String token;
-
-    public String getName() {
-        return name;
-    }
-
-    public AdAdd setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public AdAdd setTopic(String topic) {
-        this.topic = topic;
-        return this;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public AdAdd setDescription(String description) {
-        this.description = description;
-        return this;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public AdAdd setDate(Date date) {
-        this.date = date;
-        return this;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public AdAdd setSource(String source) {
-        this.source = source;
-        return this;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public AdAdd setToken(String token) {
-        this.token = token;
-        return this;
-    }
+public class AdAdd extends AdAddChatMessage implements ChatMessage {
 
     @Override
     public void got(ChatSession chat) {

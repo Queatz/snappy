@@ -6,6 +6,8 @@ import com.queatz.snappy.chat.actions.MessageSend;
 import com.queatz.snappy.chat.actions.SessionStart;
 import com.queatz.snappy.chat.actions.SessionStartResponse;
 import com.queatz.snappy.logic.EarthJson;
+import com.queatz.snappy.shared.chat.BasicChatMessage;
+import com.queatz.snappy.shared.chat.ChatAction;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -4,53 +4,13 @@ import com.queatz.snappy.chat.ChatKind;
 import com.queatz.snappy.chat.ChatSession;
 import com.queatz.snappy.chat.ChatWorld;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.shared.chat.MessageSendChatMessage;
 
 /**
  * Created by jacob on 8/9/17.
  */
 
-public class MessageSend implements ChatMessage {
-
-    private String topic;
-    private String message;
-    private String photo;
-    private String avatar;
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public MessageSend setTopic(String topic) {
-        this.topic = topic;
-        return this;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public MessageSend setMessage(String message) {
-        this.message = message;
-        return this;
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public MessageSend setPhoto(String photo) {
-        this.photo = photo;
-        return this;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public MessageSend setAvatar(String avatar) {
-        this.avatar = avatar;
-        return this;
-    }
+public class MessageSend extends MessageSendChatMessage implements ChatMessage {
 
     @Override
     public void got(ChatSession chat) {

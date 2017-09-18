@@ -1,8 +1,9 @@
 package com.queatz.snappy.backend;
 
-import com.queatz.snappy.logic.EarthGeo;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.Shared;
+import com.queatz.snappy.shared.earth.EarthGeo;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -14,7 +15,6 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.UUID;
 
 import static java.lang.Math.atan2;
@@ -120,9 +120,6 @@ public class Util {
     }
 
     public static String randomToken() {
-        Random random = new Random();
-        return Long.toString(random.nextLong()) +
-                Long.toString(random.nextLong()) +
-                Long.toString(random.nextLong());
+        return Shared.randomToken();
     }
 }

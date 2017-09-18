@@ -3,6 +3,7 @@ package com.queatz.snappy.logic;
 import com.arangodb.entity.BaseDocument;
 import com.arangodb.velocypack.internal.util.DateUtil;
 import com.google.common.collect.ImmutableList;
+import com.queatz.snappy.shared.earth.EarthGeo;
 
 import org.jetbrains.annotations.Nullable;
 

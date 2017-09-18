@@ -1,4 +1,4 @@
-package com.queatz.snappy.chat;
+package com.queatz.snappy.shared.chat;
 
 import com.google.gson.JsonElement;
 

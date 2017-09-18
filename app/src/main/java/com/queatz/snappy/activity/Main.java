@@ -10,6 +10,7 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
@@ -67,6 +68,29 @@ public class Main extends FullscreenActivity {
 
         mSlideScreen = (SlideScreen) findViewById(R.id.main_content);
         mSlideScreen.setAdapter(new MainAdapter(getFragmentManager()));
+        mSlideScreen.setOnSlideCallback(new SlideScreen.OnSlideCallback() {
+            @Override
+            public void onSlide(int currentSlide, float offsetPercentage) {
+
+            }
+
+            @Override
+            public void onSlideChange(int currentSlide) {
+                team.preferences.edit()
+                        .putInt(Config
+                        .PREFERENCE_RECENT_MAIN_SCREEN, currentSlide)
+                        .apply();
+
+                switch (currentSlide) {
+                    case 0:
+                        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+                        break;
+                    default:
+                        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+                }
+            }
+        });
 
         if(getIntent() != null) {
             onNewIntent(getIntent());
@@ -85,18 +109,17 @@ public class Main extends FullscreenActivity {
     protected void onNewIntent(Intent intent) {
         String show = intent.getStringExtra("show");
 
-        if(true || show != null) {
+        if(show != null) {
             mSlideScreen.setSlide(
                     "chat".equals(show) ? 0 :
                     "parties".equals(show) ? 1 :
                     "messages".equals(show) ? 2 : 0
             );
         } else {
-            // xxx todo set last slide
+            mSlideScreen.setSlide(team.preferences.getInt(Config.PREFERENCE_RECENT_MAIN_SCREEN, 0));
         }
 
         isHome = intent.hasCategory(Intent.CATEGORY_HOME);
-
 
         String mapFocusId = intent.getStringExtra("mapFocusId");
 
@@ -143,15 +166,20 @@ public class Main extends FullscreenActivity {
     public void onBackPressed() {
         if (team.camera.isOpen()) {
             team.camera.close();
-        } else if (true) {
-            mSlideScreen.expose(!mSlideScreen.isExpose());
         } else {
             Fragment slide = mSlideScreen.getSlideFragment(mSlideScreen.getSlide());
             if (!(slide instanceof OnBackPressed) || !((OnBackPressed) slide).onBackPressed()) {
-
-                if (!isHome) {
-                    super.onBackPressed();
+                if (!mSlideScreen.isExpose()) {
+                    mSlideScreen.expose(true);
+                    return;
                 }
+
+                // Cannot go back from the phone's home screen
+                if (isHome) {
+                    return;
+                }
+
+                super.onBackPressed();
             }
         }
     }

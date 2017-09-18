@@ -3,7 +3,7 @@ package com.queatz.snappy.logic.interfaces;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthEmail;
 import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.logic.EarthGeo;
+import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;

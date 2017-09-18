@@ -6,7 +6,8 @@ import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.chat.actions.ChatMessage;
 import com.queatz.snappy.chat.actions.MessageSend;
 import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.logic.EarthGeo;
+import com.queatz.snappy.shared.chat.BasicChatMessage;
+import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.snappy.logic.EarthJson;
 
 import java.io.IOException;
@@ -92,7 +93,7 @@ public class ChatSession {
                 .set(EarthField.IMAGE_URL, avatar)
                 .set(EarthField.TOPIC, topic));
 
-        MessageSend send = new MessageSend()
+        MessageSend send = (MessageSend) new MessageSend()
                 .setTopic(topic)
                 .setAvatar(avatar)
                 .setPhoto(snappyImage.getServingUrl(name, 600));

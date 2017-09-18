@@ -20,6 +20,7 @@ import com.queatz.snappy.logic.query.EarthQueryAppendFilter;
 import com.queatz.snappy.logic.query.EarthQueryNearFilter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.Gateway;
+import com.queatz.snappy.shared.earth.EarthGeo;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

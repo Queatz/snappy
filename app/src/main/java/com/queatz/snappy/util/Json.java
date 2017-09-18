@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 
 import java.text.DateFormat;
-import java.util.List;
 
 /**
  * Created by jacob on 10/18/15.
@@ -22,6 +21,14 @@ public class Json {
     static public <T> T from(JsonElement json, Class<T> clazz) {
         try {
             return new GsonBuilder().setDateFormat(DateFormat.FULL, DateFormat.FULL).create().fromJson(json, clazz);
+        } catch (JsonSyntaxException e) {
+            return null;
+        }
+    }
+
+    static public JsonElement tree(Object json) {
+        try {
+            return new GsonBuilder().setDateFormat(DateFormat.FULL, DateFormat.FULL).create().toJsonTree(json);
         } catch (JsonSyntaxException e) {
             return null;
         }

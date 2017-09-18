@@ -190,6 +190,8 @@
     <string name="message_not_sent">Message not sent</string>
     <string name="view_thing">View %1$s</string>
     <string name="no_description_provided">No description provided.</string>
+    <string name="chat_here">Chat here…</string>
+    <string name="chat_in">Chat in %1$s…</string>
 
     <plurals name="likes">
         <item quantity="one">%1$s Liker</item>

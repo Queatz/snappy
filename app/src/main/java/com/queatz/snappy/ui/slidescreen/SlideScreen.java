@@ -60,6 +60,7 @@ public class SlideScreen extends ViewGroup {
     private float mDownX, mDownY;
     private boolean mSnatched, mUnsnatchable;
     private boolean mChildIsUsingMotion;
+    private int slopRadius = (int) Util.px(64);
     private int gap = (int) Util.px(128);
     protected boolean expose = false;
     protected float currentScale = 1;
@@ -115,6 +116,10 @@ public class SlideScreen extends ViewGroup {
 
     public void expose(boolean expose) {
         this.expose = expose;
+
+        if (expose && currentScale >= 1) {
+            // Change background color
+        }
 
         if(exposeAnimation != null) {
             exposeAnimation.stop();
@@ -275,6 +280,10 @@ public class SlideScreen extends ViewGroup {
                 break;
             case MotionEvent.ACTION_UP:
                 getParent().requestDisallowInterceptTouchEvent(false);
+
+                if (expose && Math.abs(event.getX() - mDownX) < slopRadius && Math.abs(event.getY() - mDownY) < slopRadius) {
+                    expose(false);
+                }
 
                 resolve(true);
                 return false;
