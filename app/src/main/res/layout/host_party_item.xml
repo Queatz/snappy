@@ -55,7 +55,7 @@
                         android:layout_gravity="center_vertical"
                         android:gravity="center_vertical"
                         android:text="@string/host_again"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/font_md"
                         android:textColor="@color/clickable" />
 
                     <com.queatz.snappy.ui.TextView
@@ -65,7 +65,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="8dp"
                         android:gravity="center_vertical"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/font_md"
                         android:textColor="@color/gray" />
 
                 </LinearLayout>

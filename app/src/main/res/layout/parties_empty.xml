@@ -15,7 +15,7 @@
         android:textAlignment="center"
         android:textColor="@color/clickable"
         android:text="@string/enable_location"
-        android:textSize="18sp"/>
+        android:textSize="@dimen/font_md"/>
 
     <com.queatz.snappy.ui.TextView
         android:id="@+id/noParties"
@@ -29,6 +29,6 @@
         android:textColor="@color/info"
         android:lineSpacingMultiplier="1.5"
         android:text="@string/parties_empty"
-        android:textSize="18sp" />
+        android:textSize="@dimen/font_md" />
 
 </com.queatz.snappy.ui.ScrollStopper>

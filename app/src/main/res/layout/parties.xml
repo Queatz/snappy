@@ -68,7 +68,7 @@
                             android:textAlignment="center"
                             android:maxLines="1"
                             android:textColor="@color/clickable"
-                            android:textSize="18sp"/>
+                            android:textSize="@dimen/font_md"/>
 
                         <FrameLayout
                             android:id="@+id/peopleNearbyListHolder"

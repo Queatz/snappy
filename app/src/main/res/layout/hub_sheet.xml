@@ -61,7 +61,7 @@
                 android:scrollbars="vertical"
                 android:maxHeight="96dp"
                 android:textColor="@color/text"
-                android:textSize="18sp" />
+                android:textSize="@dimen/font_md" />
 
             <com.queatz.snappy.ui.TextView
                 android:id="@+id/details"

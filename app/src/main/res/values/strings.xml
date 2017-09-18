@@ -192,6 +192,9 @@
     <string name="no_description_provided">No description provided.</string>
     <string name="chat_here">Chat here…</string>
     <string name="chat_in">Chat in %1$s…</string>
+    <string name="locality_chats">%1$s CHATS</string>
+    <string name="chat_topic_recent">%1$s NEW</string>
+    <string name="chats">CHATS</string>
 
     <plurals name="likes">
         <item quantity="one">%1$s Liker</item>

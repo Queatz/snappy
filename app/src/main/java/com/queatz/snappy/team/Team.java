@@ -8,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 
+import com.queatz.snappy.chat.Locality;
 import com.queatz.snappy.shared.Config;
 
 import java.io.Closeable;
@@ -32,6 +33,7 @@ public class Team implements Closeable {
     @Deprecated public Action action;
     public Things things;
     public Location location;
+    public Locality locality;
     public Push push;
     public Local local;
     public Buy buy;
@@ -40,6 +42,7 @@ public class Team implements Closeable {
     public Advertise advertise;
     public Camera camera;
     public Environment environment;
+    public Callbacks callbacks;
 
     private RealmConfiguration realmConfig = null;
 
@@ -54,6 +57,7 @@ public class Team implements Closeable {
         things = new Things(realm);
         view = new View(this);
         location = new Location(this);
+        locality = new Locality(this);
         push = new Push(this);
         local = new Local(this);
         menu = new Menu(this);
@@ -61,6 +65,7 @@ public class Team implements Closeable {
         advertise = new Advertise(this);
         camera = new Camera(this);
         environment = new Environment(this);
+        callbacks = new Callbacks(this);
     }
 
     public void close() {
@@ -189,6 +194,7 @@ public class Team implements Closeable {
         location.onActivityResult(requestCode, resultCode, data);
         action.onActivityResult(activity, requestCode, resultCode, data);
         advertise.onActivityResult(activity, requestCode, resultCode, data);
+        callbacks.onActivityResult(activity, requestCode, resultCode, data);
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

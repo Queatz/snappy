@@ -52,7 +52,7 @@
                 android:padding="8dp"
                 android:background="@color/white"
                 android:hint="@string/write_message"
-                android:textSize="18sp"
+                android:textSize="@dimen/font_md"
                 android:lineSpacingMultiplier="1.25"
                 android:textColorHint="@color/gray"
                 android:inputType="textMultiLine|textShortMessage|textCapSentences" />

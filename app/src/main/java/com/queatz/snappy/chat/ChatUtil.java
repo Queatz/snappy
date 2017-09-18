@@ -8,7 +8,7 @@ import com.queatz.snappy.shared.Config;
 
 public class ChatUtil {
     public static String defaultTopicImg(String topic) {
-        return Config.VILLAGE_WEBSITE + "img/topics/" + topic.toLowerCase() + ".png";
+        return Config.VILLAGE_WEBSITE + "img/topics/" + topic.toLowerCase().replace(" ", "%20") + ".png";
     }
 
     public static String defaultAvatarImg(String avatar) {

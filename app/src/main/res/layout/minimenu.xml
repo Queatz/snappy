@@ -86,7 +86,7 @@
         android:background="@color/deepdarkred"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="@dimen/font_md"
         android:padding="8dp"
         android:textAlignment="center"
         android:gravity="center_horizontal"

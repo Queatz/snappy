@@ -23,6 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:textColor="@color/event"
-        android:textSize="18sp"
+        android:textSize="@dimen/font_md"
         android:layout_marginLeft="8dp" />
 </LinearLayout>

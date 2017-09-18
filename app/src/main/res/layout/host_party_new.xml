@@ -100,7 +100,7 @@
                 android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="@dimen/font_md"
                 android:hint="@string/enter_address"
                 android:inputType="textCapWords"
                 android:lines="1"

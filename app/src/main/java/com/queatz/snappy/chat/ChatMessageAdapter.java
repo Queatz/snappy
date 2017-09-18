@@ -59,12 +59,14 @@ public class ChatMessageAdapter extends BaseAdapter {
 
         MessageSendChatMessage chat = getItem(position);
 
-        TextView message = (TextView) view.findViewById(R.id.message);
-        ImageView avatar = (ImageView) view.findViewById(R.id.avatar);
-        ImageView photo = (ImageView) view.findViewById(R.id.photo);
+        final TextView message = (TextView) view.findViewById(R.id.message);
+        final ImageView avatar = (ImageView) view.findViewById(R.id.avatar);
+        final ImageView photo = (ImageView) view.findViewById(R.id.photo);
 
         if (chat == null) {
             message.setText("");
+            photo.setVisibility(View.GONE);
+            message.setVisibility(View.GONE);
             return view;
         }
 

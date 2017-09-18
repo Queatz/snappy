@@ -40,7 +40,7 @@
             android:layout_marginLeft="8dp"
             android:textColor="@color/text"
             android:paddingBottom="18sp"
-            android:textSize="18sp" />
+            android:textSize="@dimen/font_md" />
 
         <Button style="@style/Widget.AppCompat.Button.Borderless"
             android:id="@+id/price"

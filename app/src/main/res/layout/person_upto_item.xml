@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="@color/text"
-                android:textSize="18sp" />
+                android:textSize="@dimen/font_md" />
 
         </LinearLayout>
 
@@ -151,7 +151,7 @@
             android:minHeight="48dp"
             android:padding="8dp"
             android:hint="@string/write_comment"
-            android:textSize="18sp"
+            android:textSize="@dimen/font_md"
             android:imeOptions="actionGo"
             android:lineSpacingMultiplier="1.25"
             android:textColorHint="@color/gray"

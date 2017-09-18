@@ -9,6 +9,8 @@
     <color name="thing_club">#fbc02d</color>
     <color name="thing_form">#9c27b0</color>
 
+    <color name="chat_new">#F44336</color>
+
     <color name="blue">#2196F3</color>
     <color name="lightblue">#6db0b0</color>
     <color name="darkenedblue">#5EA1A1</color>
@@ -44,4 +46,5 @@
     <color name="yellow">#E9B24C</color>
     <color name="purple">#9848C5</color>
     <color name="darkpurple">#6C2394</color>
+    <color name="transparent_white">#00ffffff</color>
 </resources>

@@ -17,7 +17,7 @@
         android:hint="@string/describe_the_quest"
         android:inputType="textShortMessage|textCapSentences|textMultiLine"
         android:textColorHint="@color/whiteout"
-        android:textSize="18sp" />
+        android:textSize="@dimen/font_md" />
 
     <com.queatz.snappy.ui.ScrollStopper
         android:layout_width="match_parent"

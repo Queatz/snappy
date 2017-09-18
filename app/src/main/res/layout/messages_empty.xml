@@ -13,6 +13,6 @@
         android:textColor="@color/blackout"
         android:lineSpacingMultiplier="1.5"
         android:text="@string/messages_empty"
-        android:textSize="18sp"/>
+        android:textSize="@dimen/font_md"/>
 
 </LinearLayout>

@@ -95,11 +95,13 @@ public class ChatManager {
         }
         messages.get(chat.getTopic()).add(chat);
 
-        // XXX TODO Use ArangoDB for Android ... or realm
-        for (ChatRoom topic : topics) {
-            if (topic.getName().equals(chat.getTopic())) {
-                topic.setRecent(topic.getRecent() + 1);
-                break;
+        if (!currentTopic.getName().equals(chat.getTopic())) {
+            // XXX TODO Use ArangoDB for Android ... or realm
+            for (ChatRoom topic : topics) {
+                if (topic.getName().equals(chat.getTopic())) {
+                    topic.setRecent(topic.getRecent() + 1);
+                    break;
+                }
             }
         }
     }
@@ -149,6 +151,7 @@ public class ChatManager {
 
     public ChatManager setCurrentTopic(ChatRoom currentTopic) {
         this.currentTopic = currentTopic;
+        currentTopic.setRecent(0);
         return this;
     }
 
@@ -157,23 +160,23 @@ public class ChatManager {
         return this;
     }
 
-    public void sendPhoto(byte[] file) {
+    public void sendPhoto(String topic, byte[] file) {
         if (websocket == null) {
             return;
         }
 
         byte[] author = Json.to(new ChatAuthor()
-                .setTopic(currentTopic.getName())
+                .setTopic(topic)
                 .setAvatar(myAvatar)
         ).getBytes(Charset.forName("UTF-8"));
 
         ByteArrayBuffer bytes = new ByteArrayBuffer(author.length + 1 + file.length);
 
-        new ByteArrayBuffer(0).append(author, 0, author.length);
-        new ByteArrayBuffer(0).append(new byte[] { 0 }, 0, 1);
-        new ByteArrayBuffer(0).append(file, 0, file.length);
+        bytes.append(author, 0, author.length);
+        bytes.append(new byte[] { 0 }, 0, 1);
+        bytes.append(file, 0, file.length);
 
-        websocket.send(bytes.toByteArray());
+        websocket.send(bytes.buffer());
     }
 
     public void close() {

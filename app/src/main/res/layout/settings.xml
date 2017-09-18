@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="32dp"
                 android:layout_weight="1"
-                android:textSize="18sp"
+                android:textSize="@dimen/font_md"
                 android:textColor="@color/text"
                 android:text="@string/social_mode" />
 
@@ -34,7 +34,7 @@
                 android:layout_weight="0"
                 android:layout_margin="32dp"
                 android:textAllCaps="true"
-                android:textSize="18sp"
+                android:textSize="@dimen/font_md"
                 android:textStyle="bold"
                 android:textColor="@color/green"
                 android:text="@string/on" />
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="32dp"
                 android:layout_weight="1"
-                android:textSize="18sp"
+                android:textSize="@dimen/font_md"
                 android:textColor="@color/clickable"
                 android:text="@string/halp" />
 
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="32dp"
                 android:layout_weight="1"
-                android:textSize="18sp"
+                android:textSize="@dimen/font_md"
                 android:textColor="@color/clickable"
                 android:text="@string/privacy_policy" />
 
@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="32dp"
                 android:layout_weight="1"
-                android:textSize="18sp"
+                android:textSize="@dimen/font_md"
                 android:textColor="@color/clickable"
                 android:text="@string/terms_of_service" />
 
@@ -111,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="32dp"
                 android:layout_weight="1"
-                android:textSize="18sp"
+                android:textSize="@dimen/font_md"
                 android:textColor="@color/clickable"
                 android:text="@string/send_feedback" />
 
@@ -130,7 +130,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="32dp"
                 android:layout_weight="1"
-                android:textSize="18sp"
+                android:textSize="@dimen/font_md"
                 android:textColor="@color/gray"
                 android:text="@string/signout" />
 
