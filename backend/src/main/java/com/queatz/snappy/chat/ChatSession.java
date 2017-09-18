@@ -5,10 +5,14 @@ import com.image.SnappyImage;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.chat.actions.ChatMessage;
 import com.queatz.snappy.chat.actions.MessageSend;
+import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.EarthJson;
+import com.queatz.snappy.logic.EarthThing;
+import com.queatz.snappy.logic.EarthUpdate;
+import com.queatz.snappy.logic.eventables.ChatEvent;
 import com.queatz.snappy.shared.chat.BasicChatMessage;
 import com.queatz.snappy.shared.earth.EarthGeo;
-import com.queatz.snappy.logic.EarthJson;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -87,17 +91,23 @@ public class ChatSession {
 
         ChatWorld world = chat.getWorld();
 
-        world.add(world.stage(ChatKind.MESSAGE_KIND)
+        EarthThing chatThing = world.add(world.stage(ChatKind.MESSAGE_KIND)
                 .set(EarthField.GEO, getLocation())
                 .set(EarthField.PHOTO, snappyImage.getServingUrl(name, 600))
                 .set(EarthField.IMAGE_URL, avatar)
                 .set(EarthField.TOPIC, topic));
 
+        new EarthUpdate(new EarthAs())
+                .send(new ChatEvent(topic))
+                .toFollowersOf(chatThing);
+
         MessageSend send = (MessageSend) new MessageSend()
                 .setTopic(topic)
                 .setAvatar(avatar)
                 .setPhoto(snappyImage.getServingUrl(name, 600));
+
         chat.broadcast(this, send);
+
         send(send);
     }
 

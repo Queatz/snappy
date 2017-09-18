@@ -2,6 +2,7 @@ package com.queatz.snappy.logic;
 
 import com.google.common.collect.HashBiMap;
 import com.queatz.snappy.logic.concepts.Eventable;
+import com.queatz.snappy.logic.eventables.ChatEvent;
 import com.queatz.snappy.logic.eventables.ClearNotificationEvent;
 import com.queatz.snappy.logic.eventables.FollowEvent;
 import com.queatz.snappy.logic.eventables.FormSubmissionEvent;
@@ -54,6 +55,7 @@ public class EarthUpdate extends EarthControl {
         eventableMap.put(Config.PUSH_ACTION_NEW_COMMENT, NewCommentEvent.class);
         eventableMap.put(Config.PUSH_ACTION_INFORMATION, InformationEvent.class);
         eventableMap.put(Config.PUSH_ACTION_FORM_SUBMISSION_EVENT, FormSubmissionEvent.class);
+        eventableMap.put(Config.PUSH_ACTION_NEW_CHAT, ChatEvent.class);
 
         actionMap = HashBiMap.create(eventableMap).inverse();
     }

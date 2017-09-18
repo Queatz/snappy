@@ -48,7 +48,11 @@ public class ChatManager {
         defaultAvatars = DefaultChatAvatars.get();
         currentTopic = topics.get(0);
 
-        myAvatar = newRandomAvatar();
+        myAvatar = team.preferences.getString(Config.PREFERENCE_CHAT_AVATAR, null);
+
+        if (myAvatar == null) {
+            setMyAvatar(newRandomAvatar());
+        }
 
         chatToken = team.preferences.getString(Config.PREFERENCE_CHAT_TOKEN, null);
 
@@ -173,6 +177,7 @@ public class ChatManager {
 
     public ChatManager setMyAvatar(String myAvatar) {
         this.myAvatar = myAvatar;
+        team.preferences.edit().putString(Config.PREFERENCE_CHAT_AVATAR, myAvatar).apply();
         return this;
     }
 

@@ -16,6 +16,7 @@ import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.team.push.ChatPushHandler;
 import com.queatz.snappy.team.push.CommentPushHandler;
 import com.queatz.snappy.team.push.DefaultPushHandler;
 import com.queatz.snappy.team.push.FollowPushHandler;
@@ -47,6 +48,7 @@ public class Push {
     private OfferLikePushHandler offerLikePushHandler;
     private CommentPushHandler newCommentPushHandler;
     private InformationPushHandler informationPushHandler;
+    private ChatPushHandler chatPushHandler;
 
     public Push(Team t) {
         team = t;
@@ -63,6 +65,7 @@ public class Push {
         likePushHandler = new LikePushHandler(team);
         offerLikePushHandler = new OfferLikePushHandler(team);
         informationPushHandler = new InformationPushHandler(team);
+        chatPushHandler = new ChatPushHandler(team);
     }
 
     public void show(String push, Notification notification) {
@@ -135,6 +138,9 @@ public class Push {
                 break;
             case Config.PUSH_ACTION_NEW_COMMENT:
                 newCommentPushHandler.got(body);
+                break;
+            case Config.PUSH_ACTION_NEW_CHAT:
+                chatPushHandler.got(body);
                 break;
             default:
                 Log.w(Config.LOG_TAG, "Push received with no action: " + action);

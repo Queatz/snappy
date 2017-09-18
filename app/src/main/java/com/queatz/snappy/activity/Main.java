@@ -84,10 +84,16 @@ public class Main extends FullscreenActivity {
                 switch (currentSlide) {
                     case 0:
                         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+                        team.view.setTop("main.chat");
+
                         break;
                     default:
                         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
+                        team.view.clearTop("main.chat");
+
+                        break;
                 }
             }
         });
@@ -120,6 +126,10 @@ public class Main extends FullscreenActivity {
         }
 
         isHome = intent.hasCategory(Intent.CATEGORY_HOME);
+
+        if (mSlideScreen.isExpose()) {
+            mSlideScreen.expose(false);
+        }
 
         String mapFocusId = intent.getStringExtra("mapFocusId");
 

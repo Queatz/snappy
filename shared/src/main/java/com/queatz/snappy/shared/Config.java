@@ -119,6 +119,7 @@ public class Config {
     public static final String PREFERENCE_MAP_POSITION = "other.map.position";
     public static final String PREFERENCE_RECENT_MAIN_SCREEN = "app.main.screen.index";
     public static final String PREFERENCE_CHAT_TOKEN = "chat.token";
+    public static final String PREFERENCE_CHAT_AVATAR = "chat.avatar";
 
     // Android request codes
     public static final int REQUEST_CODE_AUTH_RESOLUTION = 1;
@@ -301,6 +302,7 @@ public class Config {
     public static final String PUSH_ACTION_NEW_COMMENT = "new_comment";
     public static final String PUSH_ACTION_INFORMATION = "information";
     public static final String PUSH_ACTION_FORM_SUBMISSION_EVENT = "form_submission";
+    public static final String PUSH_ACTION_NEW_CHAT = "chat_new";
 
     // Types of updates
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";

@@ -3,6 +3,7 @@ package com.queatz.snappy.fragment;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
@@ -70,7 +71,10 @@ public abstract class MapSlide extends TeamFragment implements OnMapReadyCallbac
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((MapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            ((MapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+        }
 
         team = ((MainApplication) getActivity().getApplication()).team;
         team.here.getRecentUpdates(getActivity());
@@ -84,12 +88,33 @@ public abstract class MapSlide extends TeamFragment implements OnMapReadyCallbac
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mMap != null) try {
+            mMap.setMyLocationEnabled(false);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (mMap != null) try {
+            mMap.setMyLocationEnabled(true);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
         mMap.setBuildingsEnabled(false);
         mMap.getUiSettings().setTiltGesturesEnabled(true);
-
 
         if (team.preferences.contains(Config.PREFERENCE_MAP_POSITION)) {
             String saved = team.preferences.getString(Config.PREFERENCE_MAP_POSITION, null);

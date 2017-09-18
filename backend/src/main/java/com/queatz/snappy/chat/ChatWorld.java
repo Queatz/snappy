@@ -10,9 +10,9 @@ import com.arangodb.model.DocumentCreateOptions;
 import com.arangodb.model.GeoIndexOptions;
 import com.google.common.collect.ImmutableSet;
 import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.shared.Gateway;
+import com.queatz.snappy.shared.earth.EarthGeo;
 
 import java.util.ArrayList;
 import java.util.Date;

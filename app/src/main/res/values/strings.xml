@@ -195,6 +195,7 @@
     <string name="locality_chats">%1$s CHATS</string>
     <string name="chat_topic_recent">%1$s NEW</string>
     <string name="chats">CHATS</string>
+    <string name="new_chat_activity">new chat activity</string>
 
     <plurals name="likes">
         <item quantity="one">%1$s Liker</item>
