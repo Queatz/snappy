@@ -107,8 +107,24 @@ public class ChatManager {
     }
 
     public void got(SessionStartResponseChatMessage chat) {
+        reset();
+
         for (BasicChatMessage basicChatMessage : chat.getReplay()) {
             got(basicChatMessage);
+        }
+    }
+
+    private void reset() {
+        for (Map.Entry<String, List<MessageSendChatMessage>> kv : messages.entrySet()) {
+            kv.getValue().clear();
+        }
+
+        for (ChatRoom topic : topics) {
+            topic.setRecent(0);
+
+            if (topic.getAds() != null) {
+                topic.getAds().clear();
+            }
         }
     }
 
