@@ -3,6 +3,7 @@ package com.queatz.snappy.adapter;
 import android.app.Fragment;
 import android.app.FragmentManager;
 
+import com.queatz.snappy.fragment.AppsSlide;
 import com.queatz.snappy.fragment.ChatSlide;
 import com.queatz.snappy.fragment.MessagesSlide;
 import com.queatz.snappy.fragment.PartiesSlide;
@@ -17,7 +18,7 @@ public class MainAdapter extends SlideScreen.SlideScreenAdapter {
     }
 
     public int getCount() {
-        return 3;
+        return 4;
     }
 
     public Fragment getSlide(int page) {
@@ -28,6 +29,8 @@ public class MainAdapter extends SlideScreen.SlideScreenAdapter {
                 return new PartiesSlide();
             case 2:
                 return new MessagesSlide();
+            case 3:
+                return new AppsSlide();
             default:
                 return null;
         }

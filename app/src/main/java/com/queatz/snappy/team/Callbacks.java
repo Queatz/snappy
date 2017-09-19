@@ -36,4 +36,10 @@ public class Callbacks {
             callbacks.remove(requestCode).onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    public void unset(int requestCode, PreferenceManager.OnActivityResultListener onActivityResultListener) {
+        if (callbacks.containsKey(requestCode) && callbacks.get(requestCode) == onActivityResultListener) {
+            callbacks.remove(requestCode);
+        }
+    }
 }

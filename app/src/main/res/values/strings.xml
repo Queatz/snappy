@@ -196,6 +196,7 @@
     <string name="chat_topic_recent">%1$s NEW</string>
     <string name="chats">CHATS</string>
     <string name="new_chat_activity">new chat activity</string>
+    <string name="app_not_installed">App not installed</string>
 
     <plurals name="likes">
         <item quantity="one">%1$s Liker</item>
