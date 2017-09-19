@@ -136,6 +136,12 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".WallpaperChangeReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.WALLPAPER_CHANGED" />
+            </intent-filter>
+        </receiver>
+
         <receiver android:name=".PackageChangeReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />

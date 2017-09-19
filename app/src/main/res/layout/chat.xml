@@ -1,104 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.queatz.snappy.ui.SystemFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white">
+    android:clipToPadding="false"
+    android:background="@android:color/transparent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".5"
-        android:orientation="vertical"
-        android:elevation="4dp"
-        android:background="@color/white">
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
 
-        <com.queatz.snappy.ui.TextView
-            android:id="@+id/chatLocality"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/font_md"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:padding="@dimen/pad_lg"
-            android:textColor="@color/gray"
-            android:text="@string/chats"/>
+            android:layout_height="0dp"
+            android:layout_weight=".5"
+            android:orientation="vertical"
+            android:elevation="4dp"
+            android:background="@color/white">
+
+            <com.queatz.snappy.ui.TextView
+                android:id="@+id/chatLocality"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_md"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:padding="@dimen/pad_lg"
+                android:textColor="@color/gray"
+                android:text="@string/chats"/>
+
+            <ListView
+                android:id="@+id/topicsList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null"
+                android:dividerHeight="0dp" />
+
+        </LinearLayout>
 
         <ListView
-            android:id="@+id/topicsList"
+            android:id="@+id/chatList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:stackFromBottom="true"
+            android:transcriptMode="normal"
+            android:gravity="bottom"
             android:divider="@null"
             android:dividerHeight="0dp" />
 
-    </LinearLayout>
-
-    <ListView
-        android:id="@+id/chatList"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:stackFromBottom="true"
-        android:transcriptMode="normal"
-        android:gravity="bottom"
-        android:divider="@null"
-        android:dividerHeight="0dp" />
-
-    <LinearLayout
-        android:id="@+id/chatLayout"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="0dp"
-        android:padding="0dp"
-        android:background="@color/white"
-        android:elevation="8dp">
-
-        <ImageView
-            android:id="@+id/avatarButton"
-            android:clickable="true"
-            android:background="?android:selectableItemBackground"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_weight="0"
-            android:layout_marginLeft="8dp"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:padding="0dp"
-            android:minWidth="0dp" />
-
-        <com.queatz.snappy.ui.EditText
-            android:id="@+id/chatHere"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/chatLayout"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            android:padding="8dp"
-            android:background="@color/white"
-            android:hint="@string/chat_here"
-            android:textSize="@dimen/font_md"
-            android:lineSpacingMultiplier="1.25"
-            android:textColorHint="@color/gray"
-            android:imeOptions="actionSend"
-            android:inputType="textMultiLine|textShortMessage|textCapSentences" />
-
-        <ImageView
-            android:id="@+id/sendButton"
-            android:clickable="true"
-            android:background="?android:selectableItemBackground"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
             android:layout_margin="0dp"
-            android:gravity="center"
-            android:paddingLeft="@dimen/pad_lg"
-            android:paddingRight="@dimen/pad_lg"
-            android:paddingTop="0dp"
-            android:paddingBottom="0dp"
-            android:tint="@color/gray"
-            android:src="@drawable/ic_add_a_photo_white_24dp" />
+            android:padding="0dp"
+            android:background="@color/white"
+            android:elevation="8dp">
+
+            <ImageView
+                android:id="@+id/avatarButton"
+                android:clickable="true"
+                android:background="?android:selectableItemBackground"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_weight="0"
+                android:layout_marginLeft="8dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:padding="0dp"
+                android:minWidth="0dp" />
+
+            <com.queatz.snappy.ui.EditText
+                android:id="@+id/chatHere"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:padding="8dp"
+                android:background="@color/white"
+                android:hint="@string/chat_here"
+                android:textSize="@dimen/font_md"
+                android:lineSpacingMultiplier="1.25"
+                android:textColorHint="@color/gray"
+                android:imeOptions="actionSend"
+                android:inputType="textMultiLine|textShortMessage|textCapSentences" />
+
+            <ImageView
+                android:id="@+id/sendButton"
+                android:clickable="true"
+                android:background="?android:selectableItemBackground"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="0dp"
+                android:gravity="center"
+                android:paddingLeft="@dimen/pad_lg"
+                android:paddingRight="@dimen/pad_lg"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:tint="@color/gray"
+                android:src="@drawable/ic_add_a_photo_white_24dp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</com.queatz.snappy.ui.SystemFrameLayout>

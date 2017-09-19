@@ -201,6 +201,8 @@
     <string name="all_apps">All Apps</string>
     <string name="added_to_top">Added to top</string>
     <string name="removed_from_top">%1$s removed from top</string>
+    <string name="my_apps">My Apps</string>
+    <string name="tap_and_hold_on_apps_to_add_them_here">Tap and hold on apps to add them here.</string>
 
     <plurals name="likes">
         <item quantity="one">%1$s Liker</item>

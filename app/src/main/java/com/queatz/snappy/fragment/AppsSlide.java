@@ -56,18 +56,16 @@ public class AppsSlide extends TeamFragment {
         listener = new PreferenceManager.OnActivityResultListener() {
             @Override
             public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
-                if (requestCode == Config.REQUEST_CODE_APP_LIST_CHANGED) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            populate();
-                            allAppsAdapter.notifyDataSetChanged();
-                        }
-                    });
-                    return true;
-                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        populate();
+                        allAppsAdapter.notifyDataSetChanged();
+                        updateTopApps(getView());
+                    }
+                });
 
-                return false;
+                return true;
             }
         };
 
@@ -129,6 +127,8 @@ public class AppsSlide extends TeamFragment {
             }
         });
 
+        updateTopApps(view);
+
         return view;
     }
 
@@ -142,11 +142,21 @@ public class AppsSlide extends TeamFragment {
         }
 
         topApps.add(resolveInfo);
-        allAppsTopAdapter.notifyDataSetChanged();
+        updateTopApps(getView());
 
         saveTopApps();
 
         Toast.makeText(getActivity(), R.string.added_to_top, Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateTopApps(View view) {
+        if (view == null) {
+            return;
+        }
+
+        view.findViewById(R.id.myAppsText).setVisibility(topApps.isEmpty() ? View.GONE : View.VISIBLE);
+        allAppsTopAdapter.notifyDataSetChanged();
+
     }
 
     private void removeFromTop(ResolveInfo resolveInfo) {
@@ -156,7 +166,7 @@ public class AppsSlide extends TeamFragment {
             saveTopApps();
 
             Toast.makeText(getActivity(), getResources().getString(R.string.removed_from_top, resolveInfo.activityInfo.loadLabel(packageManager).toString()), Toast.LENGTH_SHORT).show();
-            allAppsTopAdapter.notifyDataSetChanged();
+            updateTopApps(getView());
         }
     }
 

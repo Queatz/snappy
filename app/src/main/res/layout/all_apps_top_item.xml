@@ -9,6 +9,10 @@
         android:id="@+id/appIcon"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_margin="@dimen/pad_md" />
+        android:layout_marginLeft="@dimen/pad_md"
+        android:layout_marginRight="@dimen/pad_md"
+        android:layout_marginTop="@dimen/pad_lg"
+        android:layout_marginBottom="@dimen/pad_lg"
+        android:elevation="4dp" />
 
 </LinearLayout>

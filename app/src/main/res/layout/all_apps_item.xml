@@ -9,7 +9,8 @@
         android:id="@+id/appIcon"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_margin="@dimen/pad_md" />
+        android:layout_margin="@dimen/pad_md"
+        android:elevation="4dp" />
 
     <com.queatz.snappy.ui.TextView
         android:id="@+id/appName"
@@ -17,6 +18,10 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/pad_md"
         android:textSize="@dimen/font_lg"
+        android:shadowColor="@color/gray"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="3"
         android:textColor="@color/white" />
 
 </LinearLayout>

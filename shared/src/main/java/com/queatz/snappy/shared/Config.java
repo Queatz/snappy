@@ -133,6 +133,7 @@ public class Config {
     public static final int REQUEST_CODE_REQUEST_PERMISSION = 8;
     public static final int REQUEST_CODE_SEND_CHAT_PHOTO = 9;
     public static final int REQUEST_CODE_APP_LIST_CHANGED = 1000;
+    public static final int REQUEST_CODE_WALLPAPER_CHANGED = 1001;
 
     // Bluetooth GATT configuration
     public static final UUID UUID_SERVICE = UUID.fromString("2d444574-5fdb-4e49-8921-3823f80b39a5");

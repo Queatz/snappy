@@ -1,16 +1,18 @@
 package com.queatz.snappy.activity;
 
 import android.app.Fragment;
+import android.app.WallpaperManager;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
@@ -36,6 +38,7 @@ public class Main extends FullscreenActivity {
 
     private Object mContextObject;
     private boolean isHome;
+    private PreferenceManager.OnActivityResultListener onWallpaperChangedListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,19 +80,18 @@ public class Main extends FullscreenActivity {
             @Override
             public void onSlideChange(int currentSlide) {
                 team.preferences.edit()
-                        .putInt(Config
-                        .PREFERENCE_RECENT_MAIN_SCREEN, currentSlide)
+                        .putInt(Config.PREFERENCE_RECENT_MAIN_SCREEN, currentSlide)
                         .apply();
 
                 switch (currentSlide) {
                     case 0:
-                        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+//                        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
                         team.view.setTop("main.chat");
 
                         break;
                     default:
-                        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//                        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
                         team.view.clearTop("main.chat");
 
@@ -103,12 +105,31 @@ public class Main extends FullscreenActivity {
         }
 
         team.advertise.enable(this);
+
+        wallpaper();
+
+        onWallpaperChangedListener = new PreferenceManager.OnActivityResultListener() {
+            @Override
+            public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        wallpaper();
+                    }
+                });
+
+                return true;
+            }
+        };
+
+        team.callbacks.set(Config.REQUEST_CODE_WALLPAPER_CHANGED, onWallpaperChangedListener);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         mDestroyed = true;
+        team.callbacks.unset(Config.REQUEST_CODE_WALLPAPER_CHANGED, onWallpaperChangedListener);
     }
 
     @Override
@@ -192,5 +213,29 @@ public class Main extends FullscreenActivity {
                 super.onBackPressed();
             }
         }
+    }
+
+    private void wallpaper() {
+        WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!wallpaperManager.isWallpaperSupported()) {
+                return;
+            }
+        }
+
+        Drawable drawable = wallpaperManager.getDrawable();
+
+        if (drawable == null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                drawable = wallpaperManager.getBuiltInDrawable();
+            }
+        }
+
+        if (drawable == null) {
+            return;
+        }
+
+        mSlideScreen.setBackground(drawable);
     }
 }

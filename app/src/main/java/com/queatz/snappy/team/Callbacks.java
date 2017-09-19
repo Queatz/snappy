@@ -33,7 +33,11 @@ public class Callbacks {
 
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
         if (callbacks.containsKey(requestCode)) {
-            callbacks.remove(requestCode).onActivityResult(requestCode, resultCode, data);
+            boolean sticky = callbacks.get(requestCode).onActivityResult(requestCode, resultCode, data);
+
+            if (!sticky) {
+                callbacks.remove(requestCode);
+            }
         }
     }
 

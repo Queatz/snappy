@@ -12,10 +12,10 @@ import com.queatz.snappy.team.Team;
  * Created by jacob on 9/18/17.
  */
 
-public class PackageChangeReceiver extends BroadcastReceiver {
+public class WallpaperChangeReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Team team = ((MainApplication) context.getApplicationContext()).team;
-        team.callbacks.onActivityResult(null, Config.REQUEST_CODE_APP_LIST_CHANGED, Activity.RESULT_OK, intent);
+        team.callbacks.onActivityResult(null, Config.REQUEST_CODE_WALLPAPER_CHANGED, Activity.RESULT_OK, intent);
     }
 }

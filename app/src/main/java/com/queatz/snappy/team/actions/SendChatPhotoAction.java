@@ -59,7 +59,7 @@ public class SendChatPhotoAction extends ActivityAction {
                     }
                 }
 
-                return true;
+                return false;
             }
         });
     }

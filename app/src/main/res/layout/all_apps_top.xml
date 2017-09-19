@@ -4,6 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.queatz.snappy.ui.TextView
+        android:id="@+id/myAppsText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:textSize="@dimen/font_md"
+        android:textAllCaps="true"
+        android:padding="@dimen/pad_md"
+        android:textColor="@color/gray"
+        android:text="@string/my_apps"/>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
