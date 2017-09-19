@@ -202,10 +202,23 @@ public class SlideScreen extends ViewGroup {
             if(child == null)
                 continue;
 
-            if (currentScale >= 1) {
-                view.setVisibility(child.position < fr || child.position > to ? View.GONE : View.VISIBLE);
-            } else {
-                view.setVisibility(View.VISIBLE);
+            int previousVisibility = view.getVisibility();
+
+            int expfrto = currentScale >= 1 ? 0 : 1;
+
+            view.setVisibility(
+                    (child.position < fr - expfrto) ||
+                    (child.position > ( mOffset == 0 ? fr : to) + expfrto) ?
+                    View.GONE :
+                    View.VISIBLE
+            );
+
+            if (view.getVisibility() != previousVisibility) {
+                if (previousVisibility == View.GONE) {
+                    child.fragment.onResume();
+                } else {
+                    child.fragment.onPause();
+                }
             }
 
             view.setScaleX(currentScale);
