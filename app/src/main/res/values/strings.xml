@@ -197,6 +197,10 @@
     <string name="chats">CHATS</string>
     <string name="new_chat_activity">new chat activity</string>
     <string name="app_not_installed">App not installed</string>
+    <string name="top_apps">Top Apps</string>
+    <string name="all_apps">All Apps</string>
+    <string name="added_to_top">Added to top</string>
+    <string name="removed_from_top">%1$s removed from top</string>
 
     <plurals name="likes">
         <item quantity="one">%1$s Liker</item>

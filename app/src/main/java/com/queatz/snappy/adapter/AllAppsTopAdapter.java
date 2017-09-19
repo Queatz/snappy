@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.queatz.snappy.R;
 
@@ -16,9 +15,9 @@ import java.util.List;
  * Created by jacob on 9/18/17.
  */
 
-public class AllAppsAdapter extends AllAppsBaseAdapter {
+public class AllAppsTopAdapter extends AllAppsBaseAdapter {
 
-    public AllAppsAdapter(Context context, List<ResolveInfo> apps) {
+    public AllAppsTopAdapter(Context context, List<ResolveInfo> apps) {
         super(context, apps);
     }
 
@@ -30,16 +29,14 @@ public class AllAppsAdapter extends AllAppsBaseAdapter {
             view = convertView;
         } else {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.all_apps_item, parent, false);
+            view = inflater.inflate(R.layout.all_apps_top_item, parent, false);
         }
 
         ResolveInfo appInfo = getItem(position);
         view.setTag(appInfo);
 
-        final TextView appName = (TextView) view.findViewById(R.id.appName);
         final ImageView appIcon = (ImageView) view.findViewById(R.id.appIcon);
 
-        appName.setText(appInfo.loadLabel(context.getPackageManager()));
         appIcon.setImageDrawable(appInfo.loadIcon(context.getPackageManager()));
 
         return view;

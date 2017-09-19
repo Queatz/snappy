@@ -120,6 +120,7 @@ public class Config {
     public static final String PREFERENCE_RECENT_MAIN_SCREEN = "app.main.screen.index";
     public static final String PREFERENCE_CHAT_TOKEN = "chat.token";
     public static final String PREFERENCE_CHAT_AVATAR = "chat.avatar";
+    public static final String PREFERENCE_ALL_APPS_TOP_APPS = "all_apps.top";
 
     // Android request codes
     public static final int REQUEST_CODE_AUTH_RESOLUTION = 1;
