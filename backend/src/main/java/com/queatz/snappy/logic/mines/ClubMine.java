@@ -30,7 +30,7 @@ public class ClubMine extends EarthControl {
                         .in("outbound @id graph @graph")
                         .filter(EarthField.KIND, "@club_kind")
                         .distinct(true)
-                        .sort("'" + EarthField.CREATED_ON + "'")
+                        .sort("x." + EarthField.CREATED_ON + " desc")
                         .aql(),
                 ImmutableMap.of(
                     "id", thing.id(),

@@ -63,7 +63,7 @@ public class ChatWorld {
 
 
     public List<EarthThing> near(EarthGeo location) {
-        String aql = "for x in near(" + CHAT_COLLECTION + ", @latitude, @longitude, @limit) sort x." + EarthField.CREATED_ON + " return x";
+        String aql = "for x in near(" + CHAT_COLLECTION + ", @latitude, @longitude, @limit) sort x." + EarthField.CREATED_ON + " desc return x";
 
         Map<String, Object> vars = new HashMap<>();
         vars.put("latitude", location.getLatitude());

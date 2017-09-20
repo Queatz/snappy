@@ -104,6 +104,7 @@ public class EarthStore extends EarthControl {
     public static final String DEFAULT_FIELD_CONCLUDED = "concluded_on";
     public static final String DEFAULT_FIELD_FROM = "_from";
     public static final String DEFAULT_FIELD_TO = "_to";
+    public static final String DEFAULT_SORT = DEFAULT_FIELD_CREATED + " desc";
     private static final Set<String> DEFAULT_AUTH_KINDS = ImmutableSet.of(
             EarthKind.PERSON_KIND, // Because people need to be created before logging in
             EarthKind.GEO_SUBSCRIBE_KIND
@@ -421,7 +422,7 @@ public class EarthStore extends EarthControl {
         vars.put("kind", kind);
         vars.put("field", field);
         vars.put("key", key.name());
-        vars.put("sort", DEFAULT_FIELD_CREATED);
+        vars.put("sort", DEFAULT_SORT);
         vars.put("limit", limit == null ? Config.NEARBY_MAX_COUNT : limit);
         vars.put("concluded_field", DEFAULT_FIELD_CONCLUDED);
 
@@ -566,7 +567,7 @@ public class EarthStore extends EarthControl {
         }
 
         var.put("_limit", limit <= 0 ? Config.NEARBY_MAX_COUNT : limit);
-        var.put("_sort_by", sort == null ? DEFAULT_FIELD_CREATED : sort);
+        var.put("_sort_by", sort == null ? DEFAULT_SORT : sort);
 
         String aql = new EarthQuery(as)
                 .filter(filter)
