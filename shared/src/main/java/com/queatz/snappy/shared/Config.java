@@ -209,6 +209,7 @@ public class Config {
     public static final String PATH_GEO_SUBSCRIBE = "geo-subscribe";
     public static final String PATH_RAW = "raw";
     public static final String PATH_CLUBS = "clubs";
+    public static final String PATH_TOKEN = "token";
 
     // Google Play billing configuration (unused)
     public static final int BILLING_RESPONSE_RESULT_OK                  = 0;
@@ -393,4 +394,8 @@ public class Config {
     public static final String refreshToken = Gateway.refreshToken;
 
     public static final boolean REQUIRE_BLUETOOTH = false;
+
+    // Apps
+
+    public static final String PARAM_DOMAIN = "domain";
 }

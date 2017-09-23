@@ -10,4 +10,5 @@ public class EarthSpecialRoute {
     public static final String GEO_SUBSCRIBE_ROUTE = "geo-subscribe";
     public static final String FEEDBACK_ROUTE = "feedback";
     public static final String SEARCH_ROUTE = "search";
+    public static final String APP_ROUTE = "app";
 }

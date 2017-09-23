@@ -2,6 +2,7 @@ package com.queatz.snappy.logic;
 
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.logic.interfaces.AppInterface;
 import com.queatz.snappy.logic.interfaces.ByNameInterface;
 import com.queatz.snappy.logic.interfaces.ClubInterface;
 import com.queatz.snappy.logic.interfaces.ContactInterface;
@@ -77,6 +78,7 @@ public class EarthRouter extends EarthControl {
         specialMapping.put(EarthSpecialRoute.FEEDBACK_ROUTE, new FeedbackInterface());
         specialMapping.put(EarthSpecialRoute.SEARCH_ROUTE, new SearchInterface());
         specialMapping.put(EarthSpecialRoute.GEO_SUBSCRIBE_ROUTE, new GeoSubscribeInterface());
+        specialMapping.put(EarthSpecialRoute.APP_ROUTE, new AppInterface());
     }
 
     public Interfaceable interfaceFromKindOrThrowNothingResponse(String kind) {
