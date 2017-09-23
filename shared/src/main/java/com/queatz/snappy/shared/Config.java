@@ -398,4 +398,5 @@ public class Config {
     // Apps
 
     public static final String PARAM_DOMAIN = "domain";
+    public static final String PATH_STORE = "store";
 }
