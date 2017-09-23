@@ -146,7 +146,10 @@ public class Main extends FullscreenActivity {
             mSlideScreen.setSlide(team.preferences.getInt(Config.PREFERENCE_RECENT_MAIN_SCREEN, 0));
         }
 
-        isHome = intent.hasCategory(Intent.CATEGORY_HOME);
+        if (intent.hasCategory(Intent.CATEGORY_HOME)) {
+            isHome = true;
+            team.stack.closeAllExcept(getClass());
+        }
 
         if (mSlideScreen.isExpose()) {
             mSlideScreen.expose(false);

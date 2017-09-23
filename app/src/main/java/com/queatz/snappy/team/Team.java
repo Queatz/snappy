@@ -43,6 +43,7 @@ public class Team implements Closeable {
     public Camera camera;
     public Environment environment;
     public Callbacks callbacks;
+    public Stack stack;
 
     private RealmConfiguration realmConfig = null;
 
@@ -66,6 +67,7 @@ public class Team implements Closeable {
         camera = new Camera(this);
         environment = new Environment(this);
         callbacks = new Callbacks(this);
+        stack = new Stack(this);
     }
 
     public void close() {

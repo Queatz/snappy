@@ -125,6 +125,8 @@ public class Person extends TeamActivity implements PersonContext {
         mSlideScreen.setSlide("upto".equals(show) ? SLIDE_PROFILE : "messages".equals(show) ? SLIDE_MESSAGES : SLIDE_PROFILE);
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();

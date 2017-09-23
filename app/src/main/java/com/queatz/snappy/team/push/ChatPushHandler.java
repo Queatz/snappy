@@ -35,6 +35,8 @@ public class ChatPushHandler extends PushHandler {
         String message = team.context.getString(R.string.new_chat_activity);
 
         builder = team.push.newNotification()
+                .setVibrate(null)
+                .setSound(null)
                 .setContentTitle(topic)
                 .setContentText(message);
 

@@ -75,7 +75,7 @@ public class ChatWorld {
         List<EarthThing> result = new ArrayList<>();
 
         while (cursor.hasNext()) {
-            result.add(EarthThing.from(cursor.next()));
+            result.add(0, EarthThing.from(cursor.next()));
         }
 
         return result;

@@ -32,6 +32,8 @@ public class MessagePushHandler extends PushHandler {
         PendingIntent pendingIntent;
         Intent resultIntent;
 
+        fetch(push);
+
         JsonObject from = push.getAsJsonObject("from");
         String fromId = from.get("id").getAsString();
 
@@ -107,11 +109,13 @@ public class MessagePushHandler extends PushHandler {
         }
 
         team.push.show("messages", builder.build());
-
-        fetch(push);
     }
 
     private void fetch(JsonObject push) {
+        if (!push.has("id")) {
+            return;
+        }
+
         team.api.get(Config.PATH_EARTH + "/" + push.get("id").getAsString(), new Api.Callback() {
             @Override
             public void success(String response) {
