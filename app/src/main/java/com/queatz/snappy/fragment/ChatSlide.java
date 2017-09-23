@@ -15,9 +15,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.koushikdutta.async.callback.CompletedCallback;
-import com.koushikdutta.async.http.AsyncHttpClient;
-import com.koushikdutta.async.http.WebSocket;
 import com.queatz.snappy.R;
 import com.queatz.snappy.chat.ChatManager;
 import com.queatz.snappy.chat.ChatMessageAdapter;
@@ -25,22 +22,13 @@ import com.queatz.snappy.chat.ChatRoom;
 import com.queatz.snappy.chat.ChatTopicAdapter;
 import com.queatz.snappy.chat.ChatUtil;
 import com.queatz.snappy.chat.Locality;
-import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.chat.OnChatChangedCallback;
 import com.queatz.snappy.shared.chat.MessageSendChatMessage;
 import com.queatz.snappy.team.TeamFragment;
 import com.queatz.snappy.team.actions.SendChatPhotoAction;
 import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.ui.PixelatedTransform;
 import com.queatz.snappy.util.Images;
-
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import cz.msebera.android.httpclient.conn.ssl.SSLConnectionSocketFactory;
 
 /**
  * Created by jacob on 9/17/17.
@@ -56,121 +44,32 @@ public class ChatSlide extends TeamFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        chatManager = new ChatManager(getTeam());
-
-        connect();
-    }
-
-    private void connect() {
-        SSLContext sslContext;
-
-        X509TrustManager tm = new X509TrustManager() {
+        chatManager = new ChatManager(getActivity(), getTeam(), new OnChatChangedCallback() {
             @Override
-            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            public void onContentChanged() {
+                if (getActivity() == null) {
+                    return;
+                }
 
-            }
-
-            @Override
-            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-
-            }
-
-            @Override
-            public X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-        };
-
-        try {
-            sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, new TrustManager[] { tm }, null);
-        } catch (Exception e1) {
-            e1.printStackTrace();
-            return;
-        }
-
-        AsyncHttpClient.getDefaultInstance().getSSLSocketMiddleware().setSSLContext(sslContext);
-        AsyncHttpClient.getDefaultInstance().getSSLSocketMiddleware().setHostnameVerifier(SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-        AsyncHttpClient.getDefaultInstance().getSSLSocketMiddleware().setTrustManagers(new TrustManager[] { tm });
-
-        AsyncHttpClient.getDefaultInstance()
-                .websocket(Config.WS_URI, "RFC6570", new AsyncHttpClient.WebSocketConnectCallback() {
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
-                    public void onCompleted(final Exception ex, WebSocket webSocket) {
-                        if (ex != null) {
-                            ex.printStackTrace();
-                            return;
-                        }
-
-                        chatManager.setWebSocket(webSocket);
-
-                        Location location = getTeam().location.get();
-
-                        webSocket.setStringCallback(new WebSocket.StringCallback() {
-                            public void onStringAvailable(final String message) {
-                                chatManager.got(message);
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        refreshViews();
-                                    }
-                                });
-                            }
-                        });
-
-                        webSocket.setClosedCallback(new CompletedCallback() {
-                            @Override
-                            public void onCompleted(Exception e) {
-                                if (e != null) {
-                                    e.printStackTrace();
-                                }
-
-                                connect();
-                            }
-                        });
-
-                        webSocket.setEndCallback(new CompletedCallback() {
-                            @Override
-                            public void onCompleted(Exception e) {
-                                if (e != null) {
-                                    e.printStackTrace();
-                                }
-
-                                connect();
-                            }
-                        });
-
-                        if (location != null) {
-                            chatManager.start(location);
-                        } else {
-                            getTeam().location.get(getActivity(), new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
-                                @Override
-                                public void onLocationFound(Location location) {
-                                    chatManager.start(location);
-                                    findLocality(location);
-                                }
-
-                                @Override
-                                public void onLocationUnavailable() {
-
-                                }
-                            });
-                        }
-
-                        if (getTeam().locality.get() != null) {
-                            setLocality(getTeam().locality.get());
-                        }
+                    public void run() {
+                        refreshViews();
                     }
                 });
-    }
+            }
 
-    private void findLocality(Location location) {
-        getTeam().locality.get(location, new Locality.OnLocalityFound() {
             @Override
-            public void onLocalityFound(String locality) {
-                setLocality(locality);
+            public void onLocationChanged(Location location) {
+                if (getTeam().locality.get() != null) {
+                    setLocality(getTeam().locality.get());
+                }
+
+                findLocality(location);
             }
         });
+
+        chatManager.connect();
     }
 
     private void refreshViews() {
@@ -337,12 +236,26 @@ public class ChatSlide extends TeamFragment {
                 .into(avatarButton);
     }
 
-    private void setLocality(String locality) {
-        if (getView() == null) {
+    private void findLocality(Location location) {
+        getTeam().locality.get(location, new Locality.OnLocalityFound() {
+            @Override
+            public void onLocalityFound(String locality) {
+                setLocality(locality);
+            }
+        });
+    }
+
+    private void setLocality(final String locality) {
+        if (getView() == null || getActivity() == null) {
             return;
         }
 
-        TextView chatLocality = (TextView) getView().findViewById(R.id.chatLocality);
-        chatLocality.setText(getString(R.string.locality_chats, locality.toUpperCase()));
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TextView chatLocality = (TextView) getView().findViewById(R.id.chatLocality);
+                chatLocality.setText(getString(R.string.locality_chats, locality.toUpperCase()));
+            }
+        });
     }
 }

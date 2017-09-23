@@ -1,8 +1,11 @@
 package com.queatz.snappy.chat;
 
+import android.app.Activity;
 import android.location.Location;
 import android.util.Log;
 
+import com.koushikdutta.async.callback.CompletedCallback;
+import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.WebSocket;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.Shared;
@@ -16,12 +19,21 @@ import com.queatz.snappy.team.Team;
 import com.queatz.snappy.util.Json;
 
 import java.nio.charset.Charset;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import cz.msebera.android.httpclient.conn.ssl.SSLConnectionSocketFactory;
 import cz.msebera.android.httpclient.util.ByteArrayBuffer;
 
 /**
@@ -31,17 +43,23 @@ import cz.msebera.android.httpclient.util.ByteArrayBuffer;
 public class ChatManager {
 
     private final Team team;
+    private final Activity activity;
+    private final OnChatChangedCallback onChatChangedCallback;
 
     private String chatToken;
+    private boolean isConnecting;
     private List<ChatRoom> topics;
     private Map<String, List<MessageSendChatMessage>> messages;
     private List<String> defaultAvatars;
     private ChatRoom currentTopic;
     private String myAvatar;
     private WebSocket websocket;
+    private final Queue<Object> queue = new ConcurrentLinkedQueue<>();
 
-    public ChatManager(Team team) {
+    public ChatManager(Activity activity, Team team, OnChatChangedCallback onChatChangedCallback) {
         this.team = team;
+        this.activity = activity;
+        this.onChatChangedCallback = onChatChangedCallback;
 
         messages = new HashMap<>();
         topics = DefaultChatRooms.get();
@@ -60,6 +78,112 @@ public class ChatManager {
             chatToken = Shared.randomToken();
             team.preferences.edit().putString(Config.PREFERENCE_CHAT_TOKEN, chatToken).apply();
         }
+    }
+
+    public void connect() {
+        SSLContext sslContext;
+
+        X509TrustManager tm = new X509TrustManager() {
+            @Override
+            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+            }
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+            }
+
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+        };
+
+        try {
+            sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, new TrustManager[] { tm }, null);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            return;
+        }
+
+        AsyncHttpClient.getDefaultInstance().getSSLSocketMiddleware().setSSLContext(sslContext);
+        AsyncHttpClient.getDefaultInstance().getSSLSocketMiddleware().setHostnameVerifier(SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+        AsyncHttpClient.getDefaultInstance().getSSLSocketMiddleware().setTrustManagers(new TrustManager[] { tm });
+
+        isConnecting = true;
+        AsyncHttpClient.getDefaultInstance()
+                .websocket(Config.WS_URI, "RFC6570", new AsyncHttpClient.WebSocketConnectCallback() {
+                    @Override
+                    public void onCompleted(final Exception ex, WebSocket webSocket) {
+                        isConnecting = false;
+
+                        if (ex != null) {
+                            ex.printStackTrace();
+                            return;
+                        }
+
+                        setWebSocket(webSocket);
+
+                        webSocket.setStringCallback(new WebSocket.StringCallback() {
+                            public void onStringAvailable(final String message) {
+                                got(message);
+                                if (onChatChangedCallback != null) {
+                                    onChatChangedCallback.onContentChanged();
+                                }
+                            }
+                        });
+
+                        webSocket.setClosedCallback(new CompletedCallback() {
+                            @Override
+                            public void onCompleted(Exception e) {
+                                if (e != null) {
+                                    e.printStackTrace();
+                                }
+
+                                connect();
+                            }
+                        });
+
+                        webSocket.setEndCallback(new CompletedCallback() {
+                            @Override
+                            public void onCompleted(Exception e) {
+                                if (e != null) {
+                                    e.printStackTrace();
+                                }
+
+                                connect();
+                            }
+                        });
+
+                        Location location = team.location.get();
+
+                        if (location != null) {
+                            start(location);
+
+                            if (onChatChangedCallback != null) {
+                                onChatChangedCallback.onLocationChanged(location);
+                            }
+                        } else {
+                            team.location.get(activity, new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
+                                @Override
+                                public void onLocationFound(Location location) {
+                                    start(location);
+
+                                    if (onChatChangedCallback != null) {
+                                        onChatChangedCallback.onLocationChanged(location);
+                                    }
+                                }
+
+                                @Override
+                                public void onLocationUnavailable() {
+
+                                }
+                            });
+                        }
+                    }
+                });
     }
 
     public String newRandomAvatar() {
@@ -133,7 +257,8 @@ public class ChatManager {
     }
 
     public void start(Location location) {
-        if (websocket == null) {
+        if (!connected()) {
+            queue(location);
             return;
         }
 
@@ -146,6 +271,25 @@ public class ChatManager {
 
     public ChatManager setWebSocket(WebSocket websocket) {
         this.websocket = websocket;
+
+        while (!queue.isEmpty()) {
+            Object item = queue.remove();
+
+            if (item instanceof MessageSendChatMessage) {
+                send((MessageSendChatMessage) item);
+            } else if (item instanceof SendPhotoToTopic) {
+                sendPhoto(
+                        ((SendPhotoToTopic) item).getTopic(),
+                        ((SendPhotoToTopic) item).getFile()
+                );
+            } else if (item instanceof Location) {
+                start((Location) item);
+            } else {
+                Log.w(Config.LOG_TAG, "chat - unknown queue item: " + item);
+
+            }
+        }
+
         return this;
     }
 
@@ -182,7 +326,8 @@ public class ChatManager {
     }
 
     public void sendPhoto(String topic, byte[] file) {
-        if (websocket == null) {
+        if (!connected()) {
+            queue(new SendPhotoToTopic(topic, file));
             return;
         }
 
@@ -200,6 +345,10 @@ public class ChatManager {
         websocket.send(bytes.buffer());
     }
 
+    public boolean connected() {
+        return websocket != null && websocket.isOpen();
+    }
+
     public void close() {
         if (websocket != null) {
             websocket.close();
@@ -208,11 +357,20 @@ public class ChatManager {
     }
 
     public void send(MessageSendChatMessage messageSendChatMessage) {
-        if (websocket == null) {
+        if (!connected()) {
+            queue(messageSendChatMessage);
             return;
         }
 
         got(messageSendChatMessage);
         websocket.send(Json.to(new BasicChatMessage(ChatAction.MESSAGE_SEND, Json.tree(messageSendChatMessage))));
+    }
+
+    private void queue(Object o) {
+        queue.add(o);
+
+        if (!connected() && !isConnecting) {
+            connect();
+        }
     }
 }
