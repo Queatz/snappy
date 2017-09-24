@@ -3,7 +3,7 @@
     android:id="@+id/frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/shadow">
+    android:background="@color/black">
 
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/photoView"

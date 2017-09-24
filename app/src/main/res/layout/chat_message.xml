@@ -25,7 +25,7 @@
         android:textIsSelectable="true"
         android:text="Chat message"/>
 
-    <com.makeramen.roundedimageview.RoundedImageView
+    <ImageView
         android:id="@+id/photo"
         android:visibility="gone"
         android:layout_width="0dp"
@@ -33,7 +33,6 @@
         android:layout_weight="1"
         android:adjustViewBounds="true"
         android:layout_marginRight="16dp"
-        app:riv_corner_radius="2dp"
         android:background="@drawable/white_rounded"
         android:elevation="4dp"
         android:src="@color/spacer"/>

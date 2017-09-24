@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.queatz.snappy.R;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.chat.MessageSendChatMessage;
@@ -79,6 +80,7 @@ public class ChatMessageAdapter extends BaseAdapter {
 
             Images.with(context)
                     .load(Config.BASE_URL + chat.getPhoto())
+                    .transform(new RoundedTransformationBuilder().cornerRadiusDp(3).build())
                     .placeholder(R.color.spacer)
                     .into(photo);
 
