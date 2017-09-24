@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.queatz.branch.Branch;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
@@ -108,6 +109,7 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<DynamicRealmObject> 
             photo.setVisibility(View.VISIBLE);
             Images.with(context)
                     .load(Util.locationPhoto(message, parent.getMeasuredWidth()))
+                    .transform(new RoundedTransformationBuilder().cornerRadiusDp(3).build())
                     .placeholder(R.color.spacer)
                     .into(photo);
 
