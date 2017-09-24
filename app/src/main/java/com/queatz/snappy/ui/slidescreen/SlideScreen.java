@@ -60,7 +60,7 @@ public class SlideScreen extends ViewGroup {
     private float mDownX, mDownY;
     private boolean mSnatched, mUnsnatchable;
     private boolean mChildIsUsingMotion;
-    private int slopRadius = (int) Util.px(64);
+    private int slopRadius = (int) Util.px(96);
     private int gap = (int) Util.px(128);
     protected boolean expose = false;
     protected float currentScale = 1;
