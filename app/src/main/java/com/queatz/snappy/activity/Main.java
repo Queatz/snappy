@@ -23,6 +23,7 @@ import com.queatz.snappy.team.Buy;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.ui.OnBackPressed;
+import com.queatz.snappy.ui.ZoomableImageView;
 import com.queatz.snappy.ui.slidescreen.SlideScreen;
 
 import io.realm.DynamicRealmObject;
@@ -198,7 +199,9 @@ public class Main extends FullscreenActivity {
 
     @Override
     public void onBackPressed() {
-        if (team.camera.isOpen()) {
+        if (ZoomableImageView.isZooming()) {
+            ZoomableImageView.close();
+        } else if (team.camera.isOpen()) {
             team.camera.close();
         } else {
             Fragment slide = mSlideScreen.getSlideFragment(mSlideScreen.getSlide());

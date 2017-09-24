@@ -18,6 +18,7 @@ import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.actions.SetSeenAction;
 import com.queatz.snappy.team.contexts.PersonContext;
 import com.queatz.snappy.ui.OnBackPressed;
+import com.queatz.snappy.ui.ZoomableImageView;
 import com.queatz.snappy.ui.slidescreen.SlideScreen;
 
 import io.realm.DynamicRealmObject;
@@ -178,7 +179,9 @@ public class Person extends TeamActivity implements PersonContext {
 
     @Override
     public void onBackPressed() {
-        if (getTeam().camera.isOpen()) {
+        if (ZoomableImageView.isZooming()) {
+            ZoomableImageView.close();
+        } else if (getTeam().camera.isOpen()) {
             getTeam().camera.close();
         } else {
             Fragment slide = mSlideScreen.getSlideFragment(mSlideScreen.getSlide());

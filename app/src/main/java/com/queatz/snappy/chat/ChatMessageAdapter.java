@@ -12,6 +12,7 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.chat.MessageSendChatMessage;
 import com.queatz.snappy.ui.PixelatedTransform;
+import com.queatz.snappy.ui.ZoomableImageView;
 import com.queatz.snappy.util.Images;
 
 import java.util.ArrayList;
@@ -80,6 +81,8 @@ public class ChatMessageAdapter extends BaseAdapter {
                     .load(Config.BASE_URL + chat.getPhoto())
                     .placeholder(R.color.spacer)
                     .into(photo);
+
+            ZoomableImageView.zoomable(photo);
         } else {
             photo.setVisibility(View.GONE);
             message.setVisibility(View.VISIBLE);

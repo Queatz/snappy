@@ -41,6 +41,7 @@ import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.actions.ShareThingAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.team.observers.AuthenticatedEnvironment;
+import com.queatz.snappy.ui.ZoomableImageView;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.TimeUtil;
@@ -150,6 +151,7 @@ public class UpdateCard implements Card<DynamicRealmObject> {
                 photo.setVisibility(View.VISIBLE);
 
                 Util.setPhotoWithPicasso(update, parent.getMeasuredWidth(), photo);
+                ZoomableImageView.zoomable(photo);
             } else {
                 photo.setVisibility(View.GONE);
             }

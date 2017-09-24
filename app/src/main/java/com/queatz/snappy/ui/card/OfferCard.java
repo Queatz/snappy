@@ -25,6 +25,7 @@ import com.queatz.snappy.team.actions.LikeUpdateAction;
 import com.queatz.snappy.team.actions.OpenProfileAction;
 import com.queatz.snappy.team.actions.ShareThingAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
+import com.queatz.snappy.ui.ZoomableImageView;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.TimeUtil;
@@ -140,6 +141,7 @@ public class OfferCard implements Card<DynamicRealmObject> {
         if (offer.getBoolean(Thing.PHOTO)) {
             photo.setVisibility(View.VISIBLE);
             Util.setPhotoWithPicasso(offer, parent.getMeasuredWidth(), photo);
+            ZoomableImageView.zoomable(photo);
         } else {
             photo.setVisibility(View.GONE);
         }

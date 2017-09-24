@@ -19,6 +19,7 @@ import com.queatz.snappy.Util;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.contexts.ActivityContext;
+import com.queatz.snappy.ui.ZoomableImageView;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.LocalState;
@@ -112,6 +113,7 @@ public class PersonMessagesAdapter extends RealmBaseAdapter<DynamicRealmObject> 
 
             photo.setClickable(true);
             photo.setOnTouchListener(timeTap);
+            ZoomableImageView.zoomable(photo);
         } else {
             photo.setVisibility(View.GONE);
         }
