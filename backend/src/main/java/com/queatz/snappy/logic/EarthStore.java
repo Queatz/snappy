@@ -236,6 +236,35 @@ public class EarthStore extends EarthControl {
         clubRelationships.insertDocument(entity, new DocumentCreateOptions());
     }
 
+    /**
+     * Get the owner.
+     * @param thing
+     */
+    @Nullable
+    public EarthThing ownerOf(@Nullable EarthThing thing) {
+        if (thing == null) {
+            return null;
+        }
+
+        ArangoCursor<BaseDocument> c = db.query(
+                "for x in " + DEFAULT_RELATIONSHIPS +
+                        " filter x." + DEFAULT_FIELD_KIND + " == @kind" +
+                        " and x." + DEFAULT_FIELD_TO + " == @thing limit 1 return x",
+                ImmutableMap.of(
+                        "thing", thing.id(),
+                        "kind", DEFAULT_KIND_OWNER
+                ),
+                null,
+                BaseDocument.class
+        );
+
+        if (c.hasNext()) {
+            return EarthThing.from(c.next());
+        } else {
+            return null;
+        }
+    }
+
     public void removeFromClub(@NotNull EarthThing thing, @NotNull EarthThing club) {
         ArangoCursor<BaseDocument> c = db.query(
                 "for x in " + CLUB_RELATIONSHIPS +
@@ -511,8 +540,8 @@ public class EarthStore extends EarthControl {
                                         .filter("relationship.kind", "@owner_kind")
                                         .aql("other")
                                 ).aql(null)).aql())
-                .filter(EarthField.KIND, "!=", "'device'")
-                .filter(EarthField.KIND, "!=", "'geosubscribe'")
+                .filter(EarthField.KIND, "!=", "'" + EarthKind.DEVICE_KIND + "'")
+                .filter(EarthField.KIND, "!=", "'" + EarthKind.GEO_SUBSCRIBE_KIND + "'")
                 .filter(filter)
                 .limit("@limit")
                 .distinct(true)

@@ -31,6 +31,7 @@ public class OfferSomethingAction extends ActivityAction {
                 Integer price = getPrice(percent);
 
                 if (price == null) {
+                    perUnit.setVisibility(View.GONE);
                     return getTeam().context.getString(R.string.ask);
                 }
 
@@ -45,7 +46,10 @@ public class OfferSomethingAction extends ActivityAction {
                 }
 
                 if (price == 0) {
+                    perUnit.setVisibility(View.GONE);
                     return getTeam().context.getString(R.string.no_bounty);
+                } else {
+                    perUnit.setVisibility(View.VISIBLE);
                 }
 
                 return  me().getActivity().getString(R.string.for_amount, "$" + Integer.toString(Math.abs(price)));

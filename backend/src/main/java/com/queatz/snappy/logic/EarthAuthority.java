@@ -1,5 +1,6 @@
 package com.queatz.snappy.logic;
 
+import com.queatz.snappy.logic.authorities.ClubAuthority;
 import com.queatz.snappy.logic.authorities.FormAuthority;
 import com.queatz.snappy.logic.authorities.HubAuthority;
 import com.queatz.snappy.logic.authorities.MemberAuthority;
@@ -36,6 +37,7 @@ public class EarthAuthority extends EarthControl {
         mapping.put(EarthKind.PARTY_KIND, new PartyAuthority());
         mapping.put(EarthKind.MEMBER_KIND, new MemberAuthority());
         mapping.put(EarthKind.FORM_KIND, new FormAuthority());
+        mapping.put(EarthKind.CLUB_KIND, new ClubAuthority());
     }
 
     public boolean authorize(EarthThing entity, EarthRule rule) {

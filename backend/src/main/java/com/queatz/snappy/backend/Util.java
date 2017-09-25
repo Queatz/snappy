@@ -75,7 +75,6 @@ public class Util {
         return formatter.format(date);
     }
 
-    // Helper function until Datastore has geo-spacial query support
     public static String encode(String string) {
         try {
             return URLEncoder.encode(string, "UTF-8");
@@ -86,7 +85,6 @@ public class Util {
         }
     }
 
-    // Helper function until Datastore has geo-spacial query support
     public static String decode(String string) {
         try {
             return URLDecoder.decode(string, "UTF-8");

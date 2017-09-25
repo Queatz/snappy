@@ -236,7 +236,7 @@ public class AppsSlide extends TeamFragment {
 
     private Intent getIntent(ResolveInfo resolveInfo) {
         Intent intent = new Intent();
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClassName(
                 resolveInfo.activityInfo.applicationInfo.packageName,
                 resolveInfo.activityInfo.name

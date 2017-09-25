@@ -206,6 +206,12 @@ public class PartiesSlide extends MapSlide implements
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        refresh();
+    }
+
+    @Override
     public void onGlobalLayout() {
         if (getView() == null) {
             return;
