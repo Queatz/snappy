@@ -8,5 +8,6 @@ import android.location.Location;
 
 public interface OnChatChangedCallback {
     void onContentChanged();
+    void onPhotoUploaded();
     void onLocationChanged(Location location);
 }

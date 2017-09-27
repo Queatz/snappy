@@ -9,12 +9,14 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.queatz.branch.Branch;
 import com.queatz.snappy.R;
 import com.queatz.snappy.chat.ChatManager;
 import com.queatz.snappy.chat.ChatMessageAdapter;
@@ -27,6 +29,7 @@ import com.queatz.snappy.shared.chat.MessageSendChatMessage;
 import com.queatz.snappy.team.TeamFragment;
 import com.queatz.snappy.team.actions.SendChatPhotoAction;
 import com.queatz.snappy.ui.EditText;
+import com.queatz.snappy.ui.FadePulseAnimation;
 import com.queatz.snappy.ui.PixelatedTransform;
 import com.queatz.snappy.util.Images;
 
@@ -66,6 +69,22 @@ public class ChatSlide extends TeamFragment {
                 }
 
                 findLocality(location);
+            }
+
+            @Override
+            public void onPhotoUploaded() {
+                if (getView() == null || getActivity() == null) {
+                    return;
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final ImageView sendButton = getView().findViewById(R.id.sendButton);
+                        sendButton.clearAnimation();
+                        sendButton.setAlpha(1f);
+                    }
+                });
             }
         });
 
@@ -117,9 +136,9 @@ public class ChatSlide extends TeamFragment {
         showMessagesForTopic();
         chatList.setAdapter(chatMessageAdapter);
 
-        final ImageView avatarButton = (ImageView) view.findViewById(R.id.avatarButton);
-        final EditText chatHere = (EditText) view.findViewById(R.id.chatHere);
-        final ImageView sendButton = (ImageView) view.findViewById(R.id.sendButton);
+        final ImageView avatarButton = view.findViewById(R.id.avatarButton);
+        final EditText chatHere = view.findViewById(R.id.chatHere);
+        final ImageView sendButton = view.findViewById(R.id.sendButton);
 
         avatarButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,7 +190,8 @@ public class ChatSlide extends TeamFragment {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 switch (actionId) {
                     case EditorInfo.IME_ACTION_SEND:
-                        sendButton.callOnClick();
+                        sendMessage();
+                        break;
                 }
 
                 return true;
@@ -182,7 +202,21 @@ public class ChatSlide extends TeamFragment {
     }
 
     private void sendPhoto() {
-        to(new SendChatPhotoAction(chatManager));
+        if (getView() == null) {
+            return;
+        }
+
+        final ImageView sendButton = getView().findViewById(R.id.sendButton);
+
+        to(new SendChatPhotoAction(chatManager).when(Boolean.class, new Branch<Boolean>() {
+            @Override
+            protected void execute() {
+                if (me()) {
+                    final Animation animation = new FadePulseAnimation(sendButton);
+                    sendButton.startAnimation(animation);
+                }
+            }
+        }));
     }
 
     private void sendMessage() {
@@ -253,7 +287,7 @@ public class ChatSlide extends TeamFragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                TextView chatLocality = (TextView) getView().findViewById(R.id.chatLocality);
+                TextView chatLocality = getView().findViewById(R.id.chatLocality);
                 chatLocality.setText(getString(R.string.locality_chats, locality.toUpperCase()));
             }
         });

@@ -129,10 +129,10 @@ public class ChatManager {
 
                         webSocket.setStringCallback(new WebSocket.StringCallback() {
                             public void onStringAvailable(final String message) {
-                                got(message);
                                 if (onChatChangedCallback != null) {
                                     onChatChangedCallback.onContentChanged();
                                 }
+                                got(message);
                             }
                         });
 
@@ -222,7 +222,12 @@ public class ChatManager {
         if(!messages.containsKey(chat.getTopic())) {
             messages.put(chat.getTopic(), new ArrayList<MessageSendChatMessage>());
         }
+
         messages.get(chat.getTopic()).add(chat);
+
+        if (onChatChangedCallback != null) {
+            onChatChangedCallback.onContentChanged();
+        }
 
         if (!currentTopic.getName().equals(chat.getTopic()) && isNew(chat)) {
             // XXX TODO Use ArangoDB for Android ... or realm
@@ -233,10 +238,17 @@ public class ChatManager {
                 }
             }
         }
+
+        // Yes, it's true that someone else uploading a photo will cause this to trigger.
+        if (chat.getPhoto() != null && !chat.getPhoto().isEmpty()) {
+            if (onChatChangedCallback != null) {
+                onChatChangedCallback.onPhotoUploaded();
+            }
+        }
     }
 
     private boolean isNew(MessageSendChatMessage chat) {
-        return chat.getDate().after(new Date(team.preferences.getLong(Config.PREFERENCE_CHAT_TOPIC_LAST_SEEN + "[" + chat.getTopic() + "]", 0)));
+        return chat.getDate() == null || chat.getDate().after(new Date(team.preferences.getLong(Config.PREFERENCE_CHAT_TOPIC_LAST_SEEN + "[" + chat.getTopic() + "]", 0)));
     }
 
     private boolean setSeen(String topic) {

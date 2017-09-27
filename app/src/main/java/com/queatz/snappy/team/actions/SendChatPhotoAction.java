@@ -14,6 +14,8 @@ import java.io.InputStream;
 
 /**
  * Created by jacob on 9/18/17.
+ *
+ * @emit true on completion
  */
 
 public class SendChatPhotoAction extends ActivityAction {
@@ -35,6 +37,7 @@ public class SendChatPhotoAction extends ActivityAction {
         getTeam().callbacks.set(Config.REQUEST_CODE_SEND_CHAT_PHOTO, new PreferenceManager.OnActivityResultListener() {
             @Override
             public boolean onActivityResult(int requestCode, int resultCode, Intent intent) {
+                emit(resultCode == Activity.RESULT_OK);
                 if(resultCode == Activity.RESULT_OK) {
                     final Uri photo = intent.getData();
 
