@@ -331,6 +331,8 @@ public class Config {
 
     // Backend url parameters
     public static final String PARAM_ABOUT = "about";
+    public static final String PARAM_LINK = "link";
+    public static final String PARAM_LINK_PRECHECK = "link_precheck";
     public static final String PARAM_EMAIL = "email";
     public static final String PARAM_AUTH = "auth";
     public static final String PARAM_LOCATION = "location";

@@ -4,6 +4,7 @@ import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.mines.PersonMine;
 import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
@@ -63,21 +64,24 @@ public class PersonEditor extends EarthControl {
                 .set(EarthField.LAST_NAME, nullableString(lastName))
                 .set(EarthField.GENDER, nullableString(gender))
                 .set(EarthField.LANGUAGE, nullableString(language))
-                .set(EarthField.IMAGE_URL, nullableString(imageUrl))
-                .set(EarthField.GOOGLE_ID, nullableString(googleId))
-                .set(EarthField.GOOGLE_URL, nullableString(googleUrl));
+                .set(EarthField.IMAGE_URL, nullableString(imageUrl));
 
         if (StringUtils.isBlank(person.getString(EarthField.TOKEN))) {
             update.set(EarthField.TOKEN, token);
         }
 
         if (StringUtils.isBlank(person.getString(EarthField.ABOUT))) {
-            update.set(EarthField.ABOUT, about == null ? "" : about);
+            update.set(EarthField.ABOUT, nullableString(about));
         }
 
-        if (StringUtils.isBlank(googleUrl)) {
-            update.set(EarthField.GOOGLE_URL, googleId);
+        if (StringUtils.isBlank(person.getString(EarthField.GOOGLE_URL))) {
+            if (!StringUtils.isBlank(googleUrl)) {
+                update.set(EarthField.GOOGLE_URL, googleUrl);
+            } else {
+                update.set(EarthField.GOOGLE_URL, googleId);
+            }
         }
+
 
         if (!StringUtils.isBlank(subscription)) {
             update.set(EarthField.SUBSCRIPTION, subscription);
@@ -112,5 +116,14 @@ public class PersonEditor extends EarthControl {
 
     public void updateAbout(EarthThing person, String about) {
         earthStore.save(earthStore.edit(person).set(EarthField.ABOUT, about));
+    }
+
+    public boolean updateLink(EarthThing person, String link) {
+        if (new PersonMine(new EarthAs()).byGoogleUrl(link) != null) {
+            return false;
+        }
+
+        earthStore.save(earthStore.edit(person).set(EarthField.GOOGLE_URL, link));
+        return true;
     }
 }

@@ -3,6 +3,8 @@ package com.queatz.snappy.logic.interfaces;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthEmail;
 import com.queatz.snappy.logic.EarthField;
+import com.queatz.snappy.logic.WebsiteHelper;
+import com.queatz.snappy.logic.mines.PersonMine;
 import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
@@ -21,6 +23,8 @@ import com.queatz.snappy.logic.views.EntityListView;
 import com.queatz.snappy.logic.views.MessagesAndContactsView;
 import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.shared.Config;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -60,13 +64,33 @@ public class MeInterface implements Interfaceable {
 
         switch (as.getRoute().size()) {
             case 1:
+                String linkPrecheck = as.getRequest().getParameter(Config.PARAM_LINK_PRECHECK);
+
+                if (linkPrecheck != null) {
+                    linkPrecheck = sanitizeUrl(linkPrecheck);
+
+                    if (StringUtils.isEmpty(linkPrecheck) || WebsiteHelper.isReservedUrl(linkPrecheck)) {
+                        return new SuccessView(false).toJson();
+                    }
+
+                    return new SuccessView(new PersonMine(new EarthAs()).byGoogleUrl(linkPrecheck) == null).toJson();
+                }
+
                 String about = as.getRequest().getParameter(Config.PARAM_ABOUT);
 
                 if (about != null) {
                     new PersonEditor(as).updateAbout(as.getUser(), about);
+                    return new SuccessView(true).toJson();
                 }
 
-                return new SuccessView(true).toJson();
+                String link = as.getRequest().getParameter(Config.PARAM_LINK);
+
+                if (link != null) {
+                    return new SuccessView(new PersonEditor(as)
+                            .updateLink(as.getUser(), link)).toJson();
+                }
+
+                throw new NothingLogicResponse("me - no params");
             case 2:
                 switch (as.getRoute().get(1)) {
                     case Config.PATH_INFO:
@@ -93,6 +117,16 @@ public class MeInterface implements Interfaceable {
             default:
                 throw new NothingLogicResponse("me - bad path");
         }
+    }
+
+    private String sanitizeUrl(String link) {
+        link = link.trim().toLowerCase();
+
+        if (link.matches(".*[^a-z\\d_].*")) {
+            return null;
+        }
+
+        return link;
     }
 
     private String postInfo(EarthAs as) {
