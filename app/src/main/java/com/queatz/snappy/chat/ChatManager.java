@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -223,7 +224,7 @@ public class ChatManager {
         }
         messages.get(chat.getTopic()).add(chat);
 
-        if (!currentTopic.getName().equals(chat.getTopic())) {
+        if (!currentTopic.getName().equals(chat.getTopic()) && isNew(chat)) {
             // XXX TODO Use ArangoDB for Android ... or realm
             for (ChatRoom topic : topics) {
                 if (topic.getName().equals(chat.getTopic())) {
@@ -232,6 +233,15 @@ public class ChatManager {
                 }
             }
         }
+    }
+
+    private boolean isNew(MessageSendChatMessage chat) {
+        return chat.getDate().after(new Date(team.preferences.getLong(Config.PREFERENCE_CHAT_TOPIC_LAST_SEEN + "[" + chat.getTopic() + "]", 0)));
+    }
+
+    private boolean setSeen(String topic) {
+        team.preferences.edit().putLong(Config.PREFERENCE_CHAT_TOPIC_LAST_SEEN + "[" + topic + "]", new Date().getTime()).apply();
+        return false;
     }
 
     public void got(SessionStartResponseChatMessage chat) {
@@ -316,6 +326,7 @@ public class ChatManager {
     public ChatManager setCurrentTopic(ChatRoom currentTopic) {
         this.currentTopic = currentTopic;
         currentTopic.setRecent(0);
+        setSeen(currentTopic.getName());
         return this;
     }
 
