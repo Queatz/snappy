@@ -163,7 +163,7 @@ public class Main extends FullscreenActivity {
                     .equalTo(Thing.ID, mapFocusId)
                     .findFirst();
 
-            ((MapSlide) mSlideScreen.getSlideFragment(0)).setMapFocus(mapFocus);
+            ((MapSlide) mSlideScreen.getSlideFragment(MainAdapter.MAP_SLIDE)).setMapFocus(mapFocus);
         }
     }
 
