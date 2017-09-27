@@ -247,9 +247,12 @@ public class EarthStore extends EarthControl {
         }
 
         ArangoCursor<BaseDocument> c = db.query(
-                "for x in " + DEFAULT_RELATIONSHIPS +
-                        " filter x." + DEFAULT_FIELD_KIND + " == @kind" +
-                        " and x." + DEFAULT_FIELD_TO + " == @thing limit 1 return x",
+                new EarthQuery(as)
+                        .as("other, relationship")
+                        .in("inbound @thing graph '" + DEFAULT_GRAPH + "'")
+                        .filter("relationship." + DEFAULT_FIELD_KIND, "@kind")
+                        .limit("1")
+                        .aql("other"),
                 ImmutableMap.of(
                         "thing", thing.id(),
                         "kind", DEFAULT_KIND_OWNER
@@ -537,7 +540,7 @@ public class EarthStore extends EarthControl {
                                         .internal(true)
                                         .as("other, relationship")
                                         .in("outbound thing graph '" + DEFAULT_GRAPH + "'")
-                                        .filter("relationship.kind", "@owner_kind")
+                                        .filter("relationship." + DEFAULT_FIELD_KIND, "@owner_kind")
                                         .aql("other")
                                 ).aql(null)).aql())
                 .filter(EarthField.KIND, "!=", "'" + EarthKind.DEVICE_KIND + "'")
