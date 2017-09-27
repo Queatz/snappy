@@ -2,6 +2,7 @@ package com.queatz.snappy.chat;
 
 import android.app.Activity;
 import android.location.Location;
+import android.os.Handler;
 import android.util.Log;
 
 import com.koushikdutta.async.callback.CompletedCallback;
@@ -56,11 +57,13 @@ public class ChatManager {
     private String myAvatar;
     private WebSocket websocket;
     private final Queue<Object> queue = new ConcurrentLinkedQueue<>();
+    private Handler handler;
 
     public ChatManager(Activity activity, Team team, OnChatChangedCallback onChatChangedCallback) {
         this.team = team;
         this.activity = activity;
         this.onChatChangedCallback = onChatChangedCallback;
+        this.handler = new Handler();
 
         messages = new HashMap<>();
         topics = DefaultChatRooms.get();
@@ -113,6 +116,10 @@ public class ChatManager {
         AsyncHttpClient.getDefaultInstance().getSSLSocketMiddleware().setHostnameVerifier(SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
         AsyncHttpClient.getDefaultInstance().getSSLSocketMiddleware().setTrustManagers(new TrustManager[] { tm });
 
+        if (onChatChangedCallback != null) {
+            onChatChangedCallback.onConnectionChange(false);
+        }
+
         isConnecting = true;
         AsyncHttpClient.getDefaultInstance()
                 .websocket(Config.WS_URI, "RFC6570", new AsyncHttpClient.WebSocketConnectCallback() {
@@ -121,18 +128,28 @@ public class ChatManager {
                         isConnecting = false;
 
                         if (ex != null) {
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    connect();
+                                }
+                            }, 5000);
                             ex.printStackTrace();
                             return;
+                        }
+
+                        if (onChatChangedCallback != null) {
+                            onChatChangedCallback.onConnectionChange(true);
                         }
 
                         setWebSocket(webSocket);
 
                         webSocket.setStringCallback(new WebSocket.StringCallback() {
                             public void onStringAvailable(final String message) {
+                                got(message);
                                 if (onChatChangedCallback != null) {
                                     onChatChangedCallback.onContentChanged();
                                 }
-                                got(message);
                             }
                         });
 
@@ -224,10 +241,6 @@ public class ChatManager {
         }
 
         messages.get(chat.getTopic()).add(chat);
-
-        if (onChatChangedCallback != null) {
-            onChatChangedCallback.onContentChanged();
-        }
 
         if (!currentTopic.getName().equals(chat.getTopic()) && isNew(chat)) {
             // XXX TODO Use ArangoDB for Android ... or realm

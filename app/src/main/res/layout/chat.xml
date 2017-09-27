@@ -40,16 +40,41 @@
 
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/chatList"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:stackFromBottom="true"
-            android:transcriptMode="normal"
-            android:gravity="bottom"
-            android:divider="@null"
-            android:dividerHeight="0dp" />
+            android:layout_weight="1">
+
+            <ListView
+                android:id="@+id/chatList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:stackFromBottom="true"
+                android:transcriptMode="normal"
+                android:gravity="bottom"
+                android:divider="@null"
+                android:dividerHeight="0dp" />
+
+            <com.queatz.snappy.ui.TextView
+                android:id="@+id/reconnecting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:visibility="gone"
+                android:textAllCaps="true"
+                android:background="@drawable/white_rounded_ripple"
+                android:textColor="@color/yellow"
+                android:textStyle="bold"
+                android:elevation="2dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:paddingRight="6dp"
+                android:paddingLeft="6dp"
+                android:text="@string/reconnecting"
+                android:layout_margin="@dimen/pad_lg"/>
+
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/chatLayout"

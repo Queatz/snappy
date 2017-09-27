@@ -31,6 +31,7 @@ import com.queatz.snappy.team.actions.SendChatPhotoAction;
 import com.queatz.snappy.ui.EditText;
 import com.queatz.snappy.ui.FadePulseAnimation;
 import com.queatz.snappy.ui.PixelatedTransform;
+import com.queatz.snappy.ui.RevealAnimation;
 import com.queatz.snappy.util.Images;
 
 /**
@@ -83,6 +84,29 @@ public class ChatSlide extends TeamFragment {
                         final ImageView sendButton = getView().findViewById(R.id.sendButton);
                         sendButton.clearAnimation();
                         sendButton.setAlpha(1f);
+                    }
+                });
+            }
+
+            @Override
+            public void onConnectionChange(final boolean isConnected) {
+                if (getView() == null || getActivity() == null) {
+                    return;
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final View reconnecting = getView().findViewById(R.id.reconnecting);
+                        if (isConnected) {
+                            if (reconnecting.getVisibility() != View.GONE) {
+                                RevealAnimation.collapse(reconnecting);
+                            }
+                        } else {
+                            if (reconnecting.getVisibility() == View.GONE) {
+                                RevealAnimation.expand(reconnecting);
+                            }
+                        }
                     }
                 });
             }
