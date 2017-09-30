@@ -140,7 +140,7 @@ public class Main extends FullscreenActivity {
         if(show != null) {
             mSlideScreen.setSlide(
                     "chat".equals(show) ? 0 :
-                    "parties".equals(show) ? 1 :
+                    "map".equals(show) || "parties".equals(show) ? 1 :
                     "messages".equals(show) ? 2 : 0
             );
         } else {

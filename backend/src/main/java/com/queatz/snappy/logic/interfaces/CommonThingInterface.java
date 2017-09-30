@@ -136,7 +136,9 @@ public abstract class CommonThingInterface implements Interfaceable {
                 EarthThing contact = new ContactEditor(as).newContact(thing, as.getUser());
                 new MemberEditor(as).create(contact, thing, Config.MEMBER_STATUS_ACTIVE);
 
-                new EarthUpdate(as).send(new NewThingEvent(thing)).toFollowersOf(as.getUser());
+                if (!Strings.isNullOrEmpty(thing.getString(EarthField.NAME))) {
+                    new EarthUpdate(as).send(new NewThingEvent(thing)).toFollowersOf(as.getUser());
+                }
 
                 isIn(as, thing, extract(as.getParameters().get(Config.PARAM_IN)));
 
