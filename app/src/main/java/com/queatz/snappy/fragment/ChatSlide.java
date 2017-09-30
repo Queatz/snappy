@@ -135,8 +135,8 @@ public class ChatSlide extends TeamFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.chat, container, false);
 
-        ListView chatList = (ListView) view.findViewById(R.id.chatList);
-        ListView topicsList = (ListView) view.findViewById(R.id.topicsList);
+        ListView chatList = view.findViewById(R.id.chatList);
+        ListView topicsList = view.findViewById(R.id.topicsList);
 
         chatTopicAdapter = new ChatTopicAdapter(getActivity());
         chatTopicAdapter.setTopics(chatManager.getTopics());
@@ -150,9 +150,7 @@ public class ChatSlide extends TeamFragment {
                     return;
                 }
 
-                chatManager.setCurrentTopic(next);
-                showMessagesForTopic();
-                refreshViews();
+                setTopic(next);
             }
         });
 
@@ -225,6 +223,20 @@ public class ChatSlide extends TeamFragment {
         return view;
     }
 
+    public void setTopic(String topic) {
+        setTopic(chatManager.getTopic(topic));
+    }
+
+    private void setTopic(ChatRoom chatRoom) {
+        if (chatRoom == null) {
+            return;
+        }
+
+        chatManager.setCurrentTopic(chatRoom);
+        showMessagesForTopic();
+        refreshViews();
+    }
+
     private void sendPhoto() {
         if (getView() == null) {
             return;
@@ -248,7 +260,7 @@ public class ChatSlide extends TeamFragment {
             return;
         }
 
-        EditText chatHere = (EditText) getView().findViewById(R.id.chatHere);
+        EditText chatHere = getView().findViewById(R.id.chatHere);
 
         String message = chatHere.getText().toString().trim();
 

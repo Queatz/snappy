@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
+import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Thing;
@@ -41,7 +42,7 @@ public class AddToHomeScreenAction extends ActivityAction {
                         Intent shortcutIntent = new Intent(me().getActivity(), Person.class);
                         shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         shortcutIntent.putExtra(Config.EXTRA_PERSON_ID, person.getString(Thing.ID));
-                        shortcutIntent.putExtra(Config.EXTRA_SHOW, "messages");
+                        shortcutIntent.putExtra(Config.EXTRA_SHOW, Main.MESSAGES_SLIDE);
 
                         Intent addIntent = new Intent();
                         addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);

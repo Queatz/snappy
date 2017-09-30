@@ -153,6 +153,8 @@ public class Config {
     public static final String EXTRA_ACTION_JOIN_REQUEST = "join.request";
     public static final String EXTRA_ACTION_HIDE = "hide";
     public static final String EXTRA_SHOW = "show";
+    public static final String EXTRA_CHAT_TOPIC = "chat_topic";
+    public static final String EXTRA_MAP_FOCUS_ID = "mapFocusId";
 
     // Various path parts the app will use to build requests to the backend
     public static final String PATH_QUEST_ID = "quest/%s";

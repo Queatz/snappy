@@ -30,18 +30,19 @@ public class ChatPushHandler extends PushHandler {
             return;
         }
 
-        String topic = push.getAsJsonObject("topic").getAsString();
+        String topic = push.get("topic").getAsString();
 
         String message = team.context.getString(R.string.new_chat_activity);
 
         builder = team.push.newNotification()
                 .setVibrate(null)
                 .setSound(null)
-                .setContentTitle(topic)
-                .setContentText(message);
+                .setContentTitle(message)
+                .setContentText(topic);
 
         Bundle extras = new Bundle();
-        extras.putString(Config.EXTRA_SHOW, "chat");
+        extras.putString(Config.EXTRA_SHOW, Main.CHAT_SLIDE);
+        extras.putString(Config.EXTRA_CHAT_TOPIC, topic);
         resultIntent = new Intent(team.context, Main.class);
         resultIntent.putExtras(extras);
         PendingIntent pendingIntent = PendingIntent.getActivity(team.context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);

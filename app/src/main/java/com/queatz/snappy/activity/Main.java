@@ -17,6 +17,7 @@ import android.view.View;
 import com.queatz.snappy.MainApplication;
 import com.queatz.snappy.R;
 import com.queatz.snappy.adapter.MainAdapter;
+import com.queatz.snappy.fragment.ChatSlide;
 import com.queatz.snappy.fragment.MapSlide;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Buy;
@@ -32,6 +33,12 @@ import io.realm.DynamicRealmObject;
  * Created by jacob on 10/19/14.
  */
 public class Main extends FullscreenActivity {
+
+    public static final String CHAT_SLIDE = "chat";
+    public static final String MAP_SLIDE = "map";
+    public static final String MESSAGES_SLIDE = "messages";
+    public static final String APPS_SLIDE = "apps";
+
     public Team team;
 
     private SlideScreen mSlideScreen;
@@ -135,13 +142,14 @@ public class Main extends FullscreenActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        String show = intent.getStringExtra("show");
+        String show = intent.getStringExtra(Config.EXTRA_SHOW);
 
         if(show != null) {
             mSlideScreen.setSlide(
-                    "chat".equals(show) ? 0 :
-                    "map".equals(show) || "parties".equals(show) ? 1 :
-                    "messages".equals(show) ? 2 : 0
+                    CHAT_SLIDE.equals(show) ? 0 :
+                    MAP_SLIDE.equals(show) ? 1 :
+                    MESSAGES_SLIDE.equals(show) ? 2 :
+                    APPS_SLIDE.equals(show) ? 2 : 0
             );
         } else {
             mSlideScreen.setSlide(team.preferences.getInt(Config.PREFERENCE_RECENT_MAIN_SCREEN, 0));
@@ -156,7 +164,7 @@ public class Main extends FullscreenActivity {
             mSlideScreen.expose(false);
         }
 
-        String mapFocusId = intent.getStringExtra("mapFocusId");
+        String mapFocusId = intent.getStringExtra(Config.EXTRA_MAP_FOCUS_ID);
 
         if (mapFocusId != null) {
             DynamicRealmObject mapFocus = team.realm.where("Thing")
@@ -164,6 +172,12 @@ public class Main extends FullscreenActivity {
                     .findFirst();
 
             ((MapSlide) mSlideScreen.getSlideFragment(MainAdapter.MAP_SLIDE)).setMapFocus(mapFocus);
+        }
+
+        String chatTopic = intent.getStringExtra(Config.EXTRA_CHAT_TOPIC);
+
+        if (chatTopic != null) {
+            ((ChatSlide) mSlideScreen.getSlideFragment(MainAdapter.CHAT_SLIDE)).setTopic(chatTopic);
         }
     }
 

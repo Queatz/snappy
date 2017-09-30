@@ -99,7 +99,7 @@ public class ChatSession {
 
         new EarthUpdate(new EarthAs())
                 .send(new ChatEvent(topic))
-                .toFollowersOf(chatThing);
+                .toLocation(getLocation());
 
         MessageSend send = (MessageSend) new MessageSend()
                 .setTopic(topic)

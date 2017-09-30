@@ -22,6 +22,7 @@ import com.queatz.snappy.logic.eventables.RefreshMeEvent;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.service.Queue;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.earth.EarthGeo;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -88,6 +89,10 @@ public class EarthUpdate extends EarthControl {
 
         public EventableWrapper toFollowersOf(EarthThing entity) {
             return toFollowersOf(entity.key());
+        }
+
+        public void toLocation(EarthGeo location) {
+            Queue.getService().enqueuePushMessageFromLocation(location, action, event.toData());
         }
     }
 

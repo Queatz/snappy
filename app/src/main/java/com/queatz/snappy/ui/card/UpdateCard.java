@@ -237,8 +237,8 @@ public class UpdateCard implements Card<DynamicRealmObject> {
                             public void onClick(View textView) {
                                 // XXX Show on map
                                 Bundle extras = new Bundle();
-                                extras.putString("show", "map");
-                                extras.putString("mapFocusId", with.getObject(Thing.SOURCE).getString(Thing.ID));
+                                extras.putString(Config.EXTRA_SHOW, Main.MAP_SLIDE);
+                                extras.putString(Config.EXTRA_MAP_FOCUS_ID, with.getObject(Thing.SOURCE).getString(Thing.ID));
                                 team.view.show((Activity) context, Main.class, extras);
                             }
 

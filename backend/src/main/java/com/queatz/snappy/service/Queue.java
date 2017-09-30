@@ -1,8 +1,10 @@
 package com.queatz.snappy.service;
 
 import com.google.common.collect.ImmutableMap;
+import com.queatz.snappy.logic.EarthJson;
 import com.queatz.snappy.queue.SnappyQueue;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.earth.EarthGeo;
 
 /**
  * Created by jacob on 4/11/15.
@@ -35,6 +37,14 @@ public class Queue {
         queue.add(Config.QUEUE_WORKER_URL, ImmutableMap.of(
                 "action", action,
                 "fromUser", fromUser,
+                "message", message
+        ));
+    }
+
+    public void enqueuePushMessageFromLocation(EarthGeo location, String action, String message) {
+        queue.add(Config.QUEUE_WORKER_URL, ImmutableMap.of(
+                "action", action,
+                "location", new EarthJson().toJson(location),
                 "message", message
         ));
     }

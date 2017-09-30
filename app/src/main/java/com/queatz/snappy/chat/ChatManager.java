@@ -409,4 +409,14 @@ public class ChatManager {
             connect();
         }
     }
+
+    public ChatRoom getTopic(String topic) {
+        for (ChatRoom chatRoom : topics) {
+            if (chatRoom.getName().equals(topic)) {
+                return chatRoom;
+            }
+        }
+
+        return null;
+    }
 }

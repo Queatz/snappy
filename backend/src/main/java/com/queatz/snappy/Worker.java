@@ -84,7 +84,9 @@ public class Worker extends HttpServlet {
 
         String toUser = req.getParameter("toUser");
         String fromUser = req.getParameter("fromUser");
+        String location = req.getParameter("location");
         String data = req.getParameter("message");
+        EarthGeo latLng = null;
 
         EarthAs as = new EarthAs();
 
@@ -113,29 +115,33 @@ public class Worker extends HttpServlet {
             EarthThing source = earthStore.get(fromUser);
 
             if (source != null) {
-                EarthGeo latLng;
-
                 // Use own geo, or source geo
                 if (source.has(EarthField.GEO)) {
                     latLng = source.getGeo(EarthField.GEO);
                 } else {
                     latLng = earthStore.get(source.getKey(EarthField.SOURCE)).getGeo(EarthField.GEO);
                 }
+            }
+        }
 
-                for (EarthThing thing : new EarthStore(as).getNearby(latLng, EarthKind.PERSON_KIND + "|" + EarthKind.GEO_SUBSCRIBE_KIND, null)) {
-                    if (fromUser.equals(thing.key().name())) {
-                        continue;
-                    }
+        if (location != null) {
+            latLng = new EarthJson().fromJson(location, EarthGeo.class);
+        }
 
-                    if (EarthKind.PERSON_KIND.equals(thing.getString(EarthField.KIND))) {
-                        toUsers.add(new SendInstance(thing.key().name(), Config.SOCIAL_MODE_ON));
-                    } else if (EarthKind.GEO_SUBSCRIBE_KIND.equals(thing.getString(EarthField.KIND))) {
-                        toUsers.add(new GeoSubscribeInstance(
-                                thing.getString(EarthField.EMAIL),
-                                thing.getString(EarthField.NAME),
-                                thing.getString(EarthField.UNSUBSCRIBE_TOKEN)
-                        ));
-                    }
+        if (latLng != null) {
+            for (EarthThing thing : new EarthStore(as).getNearby(latLng, EarthKind.PERSON_KIND + "|" + EarthKind.GEO_SUBSCRIBE_KIND, null)) {
+                if (fromUser != null && fromUser.equals(thing.key().name())) {
+                    continue;
+                }
+
+                if (EarthKind.PERSON_KIND.equals(thing.getString(EarthField.KIND))) {
+                    toUsers.add(new SendInstance(thing.key().name(), Config.SOCIAL_MODE_ON));
+                } else if (EarthKind.GEO_SUBSCRIBE_KIND.equals(thing.getString(EarthField.KIND))) {
+                    toUsers.add(new GeoSubscribeInstance(
+                            thing.getString(EarthField.EMAIL),
+                            thing.getString(EarthField.NAME),
+                            thing.getString(EarthField.UNSUBSCRIBE_TOKEN)
+                    ));
                 }
             }
         }

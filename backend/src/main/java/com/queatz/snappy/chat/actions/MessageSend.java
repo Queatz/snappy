@@ -28,7 +28,7 @@ public class MessageSend extends MessageSendChatMessage implements ChatMessage {
 
         new EarthUpdate(new EarthAs())
                 .send(new ChatEvent(getTopic()))
-                .toFollowersOf(chatThing);
+                .toLocation(chat.getLocation());
 
         chat.getChat().broadcast(chat, this);
     }
