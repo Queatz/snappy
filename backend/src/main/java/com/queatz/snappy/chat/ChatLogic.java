@@ -76,6 +76,7 @@ public class ChatLogic extends ChatEndpoint {
                     result.add(ChatMessageConverter.convert((ChatMessage) new MessageSend()
                             .setTopic(thing.getString(EarthField.TOPIC))
                             .setPhoto(thing.getString(EarthField.PHOTO))
+                            .setDate(thing.getDate(EarthField.CREATED_ON))
                             .setAvatar(thing.getString(EarthField.IMAGE_URL))
                             .setMessage(thing.getString(EarthField.MESSAGE))));
                     break;
