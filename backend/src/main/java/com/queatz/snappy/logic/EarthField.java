@@ -160,6 +160,11 @@ public class EarthField {
     public static final String HIDDEN = "hidden";
 
     /**
+     * Arbitrary data associated with the thing.
+     */
+    public static final String DATA = "data";
+
+    /**
      * Other, less generic fields.
      */
     public static final String FIRST_NAME = "first_name";

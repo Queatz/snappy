@@ -32,7 +32,7 @@ public class ProjectEditor extends EarthControl {
 
     public EarthThing edit(EarthThing resource, String name, String about) {
         if (name == null && about == null) {
-            throw new NothingLogicResponse("resource - nothing to do");
+            throw new NothingLogicResponse("project - nothing to do");
         }
 
         EarthThing.Builder edit = earthStore.edit(resource);

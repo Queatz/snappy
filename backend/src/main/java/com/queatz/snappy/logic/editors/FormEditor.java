@@ -6,6 +6,7 @@ import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthThing;
+import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -24,5 +25,29 @@ public class FormEditor extends EarthControl {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.FORM_KIND))
                         .set(EarthField.NAME, name)
                         .set(EarthField.SOURCE, creator.key().name()));
+    }
+
+    public EarthThing edit(EarthThing resource, String name, String about, String data) {
+        EarthStore earthStore = use(EarthStore.class);
+
+        if (name == null && about == null) {
+            throw new NothingLogicResponse("form - nothing to do");
+        }
+
+        EarthThing.Builder edit = earthStore.edit(resource);
+
+        if (name != null) {
+            edit.set(EarthField.NAME, name);
+        }
+
+        if (about != null) {
+            edit.set(EarthField.ABOUT, about);
+        }
+
+        if (data != null) {
+            edit.set(EarthField.DATA, data);
+        }
+
+        return earthStore.save(edit);
     }
 }
