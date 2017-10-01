@@ -1,5 +1,7 @@
 package com.queatz.snappy.files;
 
+import com.queatz.snappy.shared.Config;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,10 +15,10 @@ import java.nio.file.Paths;
 
 public class SnappyFiles {
 
-    private final String filePoolPath;
+    public final static String FILES_POOL = "pools/files";
+    private final static String filePoolPath = Config.VILLAGE_FILES_DIR + FILES_POOL;
 
-    public SnappyFiles(@NotNull String poolName) {
-        filePoolPath = poolName;
+    public SnappyFiles() {
     }
 
     @Nullable

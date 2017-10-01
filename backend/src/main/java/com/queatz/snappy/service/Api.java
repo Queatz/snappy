@@ -6,6 +6,7 @@ import com.queatz.snappy.api.Admin;
 import com.queatz.snappy.api.Logic;
 import com.queatz.snappy.api.Pirate;
 import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.files.SnappyFiles;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.shared.Config;
 
@@ -73,6 +74,7 @@ public class Api {
     public SnappyServlet snappy;
 
     public SnappyImage snappyImage;
+    public SnappyFiles snappyFiles;
 
     private HashMap<String, Class<? extends Api.Path>> paths;
 
@@ -83,6 +85,7 @@ public class Api {
         paths.put(Config.PATH_ADMIN, Admin.class);
 
         snappyImage = new SnappyImage();
+        snappyFiles = new SnappyFiles();
     }
 
     public void call(EarthThing user, SnappyServlet.RequestMethod method, HttpServletRequest request, HttpServletResponse response) {

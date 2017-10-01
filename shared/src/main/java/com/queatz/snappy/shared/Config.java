@@ -388,6 +388,8 @@ public class Config {
     public static final String PARAM_TYPE = "type";
     public static final String PARAM_HIDDEN = "hidden";
     public static final String PARAM_CLUBS = "clubs";
+    public static final String PARAM_DATA = "data";
+    public static final String PARAM_FILE = "file";
 
     // Google login configuration
     public static final String GOOGLE_PLUS_PROFILE_URL = "https://www.googleapis.com/plus/v1/people/me";

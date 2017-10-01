@@ -1,6 +1,7 @@
 package com.queatz.snappy;
 
 import com.queatz.snappy.backend.PrintingError;
+import com.queatz.snappy.backend.StringResponse;
 import com.queatz.snappy.logic.EarthThing;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Auth;
@@ -73,6 +74,12 @@ public class SnappyServlet extends HttpServlet {
         } catch (PrintingError e) {
             e.printStackTrace();
             errorOut(resp, e);
+        } catch (StringResponse string) {
+            try {
+                resp.getWriter().write(string.getString());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

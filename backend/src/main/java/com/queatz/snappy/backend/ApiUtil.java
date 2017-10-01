@@ -11,10 +11,13 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Paths;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import static com.queatz.snappy.files.SnappyFiles.FILES_POOL;
 
 /**
  * Utilities for server stuff.
@@ -79,8 +82,10 @@ public class ApiUtil {
     }
 
     public static boolean putPhoto(String thingId, Api api, FileItemStream item) throws IOException {
-        String photoName = "earth/thing/photo/" + thingId;
+        return putPhotoRaw("earth/thing/photo/" + thingId, api, item);
+    }
 
+    public static boolean putPhotoRaw(String photoName, Api api, FileItemStream item) throws IOException {
         int len;
         byte[] buffer = new byte[8192];
 
@@ -98,5 +103,30 @@ public class ApiUtil {
         outputChannel.close();
 
         return true;
+    }
+
+    public static String putFile(Api api, FileItemStream item) throws IOException {
+        int len;
+        byte[] buffer = new byte[8192];
+
+        String fileName = Util.randomToken() + Util.randomToken();
+        InputStream stream = item.openStream();
+        OutputStream outputChannel = api.snappyFiles.openOutputStream(fileName);
+
+        if (outputChannel == null) {
+            return null;
+        }
+
+        while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
+            outputChannel.write(buffer, 0, len);
+        }
+
+        outputChannel.close();
+
+        return FILES_POOL + "/" + fileName;
+    }
+
+    public static String fileUrl(String fileName) {
+        return Paths.get("/", Config.PATH_RAW, fileName).toString();
     }
 }

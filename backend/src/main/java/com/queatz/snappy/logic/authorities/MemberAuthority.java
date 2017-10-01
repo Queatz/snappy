@@ -19,14 +19,14 @@ public class MemberAuthority implements Authority {
                 return true;
             case MODIFY:
                 EarthAs earthAs = new EarthAs();
+                EarthStore earthStore = earthAs.s(EarthStore.class);
 
                 if (as != null) {
-                    EarthStore earthStore = earthAs.s(EarthStore.class);
                     EarthThing owner = earthStore.ownerOf(entity);
 
                     if (owner != null && owner.id().equals(as.id())) {
                         return true;
-                    } if (entity.has(EarthField.TARGET)) {
+                    } else if (entity.has(EarthField.TARGET)) {
                         EarthThing target = earthStore.get(entity.getString(EarthField.TARGET));
 
                         if (target != null && target.key().name().equals(as.id())) {
@@ -36,8 +36,6 @@ public class MemberAuthority implements Authority {
                         EarthThing ownerOfTarget = earthStore.ownerOf(target);
                         return ownerOfTarget != null && ownerOfTarget.id().equals(as.id());
                     }
-                } else {
-                    return false;
                 }
         }
 

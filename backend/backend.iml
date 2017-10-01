@@ -39,12 +39,15 @@
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="queue" exported="" />
+    <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="queue" exported="" />
+    <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="queue" exported="" />
+    <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="servlet-api-2.5" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-fileupload-1.3" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="gson-2.8.0" level="project" />

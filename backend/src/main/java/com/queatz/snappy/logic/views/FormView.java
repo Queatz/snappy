@@ -12,7 +12,7 @@ import com.queatz.snappy.logic.EarthView;
 
 public class FormView extends CommonThingView {
 
-    private String data;
+    private final String data;
 
     public FormView(EarthAs as, EarthThing thing) {
         this(as, thing, EarthView.DEEP);

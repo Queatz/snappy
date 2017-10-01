@@ -105,9 +105,12 @@ public class EarthStore extends EarthControl {
     public static final String DEFAULT_FIELD_FROM = "_from";
     public static final String DEFAULT_FIELD_TO = "_to";
     public static final String DEFAULT_SORT = DEFAULT_FIELD_CREATED;
-    private static final Set<String> DEFAULT_AUTH_KINDS = ImmutableSet.of(
+
+    static final Set<String> DEFAULT_AUTH_KINDS = ImmutableSet.of(
             EarthKind.PERSON_KIND, // Because people need to be created before logging in
-            EarthKind.GEO_SUBSCRIBE_KIND
+            EarthKind.GEO_SUBSCRIBE_KIND,
+            EarthKind.FORM_SUBMISSION_KIND,
+            EarthKind.MEMBER_KIND
     );
 
     private final ArangoDatabase db;
@@ -213,7 +216,7 @@ public class EarthStore extends EarthControl {
         return thing;
     }
 
-    private void setOwner(@NotNull EarthThing thing, @NotNull EarthThing owner) {
+    public void setOwner(@NotNull EarthThing thing, @NotNull EarthThing owner) {
         BaseDocument entity = new EarthThing.Builder()
                 .set(DEFAULT_FIELD_KIND, DEFAULT_KIND_OWNER)
                 .set(DEFAULT_FIELD_FROM, owner.id())
