@@ -70,20 +70,16 @@ public class ThingView extends ExistenceView {
                 (thing.key().name().equals(as.getUser().key().name()) ||
                         (thing.has(EarthField.SOURCE) && thing.getString(EarthField.SOURCE).equals(as.getUser().key().name())));
 
-        if (owner) {
-            hidden = thing.has(EarthField.HIDDEN) && thing.getBoolean(EarthField.HIDDEN);
-        } else {
-            hidden = null;
-        }
-
         if (EarthKind.CLUB_KIND.equals(thing.getString(EarthField.KIND))) {
             clubs = null;
+            hidden = null;
         } else {
             clubs = new EntityListView(
                     as,
                     use(ClubMine.class).clubsOf(thing),
                     EarthView.SHALLOW
             ).asList();
+            hidden = thing.has(EarthField.HIDDEN) && thing.getBoolean(EarthField.HIDDEN);
         }
 
         backing = as.hasUser() && use(FollowerMine.class).getFollower(as.getUser(), thing) != null;

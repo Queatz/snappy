@@ -22,13 +22,19 @@ public class MemberAuthority implements Authority {
 
                 if (as != null) {
                     EarthStore earthStore = earthAs.s(EarthStore.class);
+                    EarthThing owner = earthStore.ownerOf(entity);
 
-                    if (entity.has(EarthField.TARGET)) {
-                        EarthThing ownerOfTarget = earthStore.ownerOf(earthStore.get(entity.getString(EarthField.TARGET)));
+                    if (owner != null && owner.id().equals(as.id())) {
+                        return true;
+                    } if (entity.has(EarthField.TARGET)) {
+                        EarthThing target = earthStore.get(entity.getString(EarthField.TARGET));
+
+                        if (target != null && target.key().name().equals(as.id())) {
+                            return true;
+                        }
+
+                        EarthThing ownerOfTarget = earthStore.ownerOf(target);
                         return ownerOfTarget != null && ownerOfTarget.id().equals(as.id());
-                    } else {
-                        EarthThing owner = earthStore.ownerOf(entity);
-                        return owner != null && owner.id().equals(as.id());
                     }
                 } else {
                     return false;

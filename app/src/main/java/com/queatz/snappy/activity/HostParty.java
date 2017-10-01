@@ -308,8 +308,6 @@ public class HostParty extends TeamActivity {
         team.location.getTopGoogleLocationForInput(q, new com.queatz.snappy.team.Location.AutocompleteCallback() {
             @Override
             public void onResult(final JsonObject result) {
-                Log.d(Config.LOG_TAG, "result: " + result);
-
                 mLocationMap.getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(final GoogleMap googleMap) {

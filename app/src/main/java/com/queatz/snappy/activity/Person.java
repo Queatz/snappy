@@ -184,8 +184,12 @@ public class Person extends TeamActivity implements PersonContext {
         } else if (getTeam().camera.isOpen()) {
             getTeam().camera.close();
         } else {
-            Fragment slide = mSlideScreen.getSlideFragment(mSlideScreen.getSlide());
-            if (!(slide instanceof OnBackPressed) || !((OnBackPressed) slide).onBackPressed()) {
+            if (mSlideScreen != null) {
+                Fragment slide = mSlideScreen.getSlideFragment(mSlideScreen.getSlide());
+                if (!(slide instanceof OnBackPressed) || !((OnBackPressed) slide).onBackPressed()) {
+                    super.onBackPressed();
+                }
+            } else {
                 super.onBackPressed();
             }
         }

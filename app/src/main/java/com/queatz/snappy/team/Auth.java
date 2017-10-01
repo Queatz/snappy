@@ -191,8 +191,6 @@ public class Auth {
         mGcmRegistrationId = team.preferences.getString(Config.PREFERENCE_GCM_REGISTRATION_ID, null);
         mSocialMode = team.preferences.getString(Config.PREFERENCE_SOCIAL_MODE, Config.SOCIAL_MODE_ON);
 
-        Log.d(Config.LOG_TAG, "user = " + mUser);
-
         registerDevice();
     }
 

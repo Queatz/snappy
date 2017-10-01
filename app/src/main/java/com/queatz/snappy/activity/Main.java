@@ -55,7 +55,7 @@ public class Main extends FullscreenActivity {
         team = ((MainApplication) getApplication()).team;
         team.auth.setActivity(this);
 
-        Log.d(Config.LOG_TAG, "auth = " + team.auth.getAuthParam());
+        Log.i(Config.LOG_TAG, "auth = " + team.auth.getAuthParam());
 
         setContentView(R.layout.main);
 

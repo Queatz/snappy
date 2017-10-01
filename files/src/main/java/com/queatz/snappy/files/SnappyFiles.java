@@ -1,7 +1,5 @@
 package com.queatz.snappy.files;
 
-import com.queatz.snappy.shared.Config;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,7 +16,7 @@ public class SnappyFiles {
     private final String filePoolPath;
 
     public SnappyFiles(@NotNull String poolName) {
-        filePoolPath = Config.VILLAGE_FILES_DIR + "pools/" + poolName;
+        filePoolPath = poolName;
     }
 
     @Nullable
