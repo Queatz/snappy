@@ -80,7 +80,7 @@ public class FormSubmissionInterface implements Interfaceable {
                 if (!item.isFormField() && item.getFieldName().startsWith(Config.PARAM_PHOTO + "---")) {
                     String answerId = item.getFieldName().split("---", 2)[1];
                     String photoName = "form-submission-" + Util.randomToken() + Util.randomToken();
-                    ApiUtil.putPhotoRaw(photoName, as.getApi(), item);
+                    ApiUtil.putPhotoRaw(photoName, item.getName(), as.getApi(), item);
                     photos.put(answerId, photoName);
                 } else if (!item.isFormField() && item.getFieldName().startsWith(Config.PARAM_FILE + "---")) {
                     String answerId = item.getFieldName().split("---", 2)[1];

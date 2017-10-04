@@ -107,7 +107,7 @@ public class UpdateInterface extends CommonThingInterface {
                 InputStream stream = item.openStream();
 
                 if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
-                    ApiUtil.putPhoto(update.key().name(), as.getApi(),  as.getRequest());
+                    ApiUtil.putPhoto(update.key().name(), as.getApi(), as.getRequest());
                     photoUploaded = true;
                 }
                 else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {
@@ -167,7 +167,7 @@ public class UpdateInterface extends CommonThingInterface {
                 InputStream stream = item.openStream();
 
                 if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
-                    ApiUtil.putPhoto(update.key().name(), as.getApi(), item);
+                    ApiUtil.putPhoto(update.key().name(), item.getName(), as.getApi(), item);
                     photoUploaded = true;
                 }
                 else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {

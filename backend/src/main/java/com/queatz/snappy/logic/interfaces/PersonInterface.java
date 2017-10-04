@@ -20,8 +20,6 @@ import com.queatz.snappy.logic.mines.FollowerMine;
 import com.queatz.snappy.logic.mines.MessageMine;
 import com.queatz.snappy.logic.mines.RecentMine;
 import com.queatz.snappy.logic.views.EntityListView;
-import com.queatz.snappy.logic.views.FollowerView;
-import com.queatz.snappy.logic.views.MessageView;
 import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.shared.Config;
 
@@ -226,7 +224,7 @@ public class PersonInterface extends CommonThingInterface {
                     int len;
                     byte[] buffer = new byte[8192];
 
-                    OutputStream outputChannel = as.getApi().snappyImage.openOutputStream(photoName);
+                    OutputStream outputChannel = as.getApi().snappyImage.openOutputStream(photoName, item.getName());
 
                     while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
                         outputChannel.write(buffer, 0, len);

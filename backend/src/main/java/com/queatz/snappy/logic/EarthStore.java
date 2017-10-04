@@ -10,7 +10,11 @@ import com.arangodb.entity.CollectionType;
 import com.arangodb.entity.EdgeDefinition;
 import com.arangodb.model.CollectionCreateOptions;
 import com.arangodb.model.DocumentCreateOptions;
+import com.arangodb.model.FulltextIndexOptions;
 import com.arangodb.model.GeoIndexOptions;
+import com.arangodb.model.HashIndexOptions;
+import com.arangodb.model.SkiplistIndexOptions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterators;
@@ -71,6 +75,27 @@ public class EarthStore extends EarthControl {
                     .collection(CLUB_RELATIONSHIPS)
                     .from(DEFAULT_COLLECTION)
                     .to(DEFAULT_COLLECTION)));
+        } catch (ArangoDBException ignored) {
+            // Whatever
+        }
+
+        // Index commonly searched fields
+        try {
+            __arangoDatabase.collection(DEFAULT_COLLECTION).createHashIndex(ImmutableList.of(DEFAULT_FIELD_CONCLUDED), new HashIndexOptions());
+            __arangoDatabase.collection(DEFAULT_COLLECTION).createHashIndex(ImmutableList.of(EarthField.KIND), new HashIndexOptions());
+            __arangoDatabase.collection(DEFAULT_COLLECTION).createHashIndex(ImmutableList.of(EarthField.SOURCE), new HashIndexOptions());
+            __arangoDatabase.collection(DEFAULT_COLLECTION).createHashIndex(ImmutableList.of(EarthField.TARGET), new HashIndexOptions());
+            __arangoDatabase.collection(DEFAULT_COLLECTION).createHashIndex(ImmutableList.of(EarthField.HIDDEN), new HashIndexOptions());
+            __arangoDatabase.collection(DEFAULT_COLLECTION).createHashIndex(ImmutableList.of(EarthField.TOKEN), new HashIndexOptions());
+            __arangoDatabase.collection(DEFAULT_COLLECTION).createHashIndex(ImmutableList.of(EarthField.EMAIL), new HashIndexOptions());
+            __arangoDatabase.collection(DEFAULT_COLLECTION).createSkiplistIndex(ImmutableList.of(EarthField.EMAIL), new SkiplistIndexOptions().sparse(true));
+
+            __arangoDatabase.collection(DEFAULT_COLLECTION).createFulltextIndex(ImmutableList.of(
+                    EarthField.NAME,
+                    EarthField.FIRST_NAME,
+                    EarthField.LAST_NAME,
+                    EarthField.ABOUT
+            ), new FulltextIndexOptions());
         } catch (ArangoDBException ignored) {
             // Whatever
         }

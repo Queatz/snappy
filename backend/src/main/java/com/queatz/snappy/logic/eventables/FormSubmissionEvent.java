@@ -124,7 +124,7 @@ public class FormSubmissionEvent implements Eventable {
 
                         if (obj.has("answer")) {
                             String url = Config.BASE_URL + obj.get("answer").getAsString();
-                            builder.append("<img src=\"").append(url).append("\" /><br />");
+                            builder.append("<img style=\"border-radius: 4px;\" src=\"").append(url).append("\" /><br />");
                             builder.append(url);
                         } else {
                             builder.append(noAnswer());

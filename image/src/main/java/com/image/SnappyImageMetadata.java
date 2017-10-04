@@ -35,4 +35,9 @@ public class SnappyImageMetadata {
      * Whether or not this is considered an aspect-locked scaled version.
      */
     public boolean scaled;
+
+    /**
+     * The original filename.
+     */
+    public String name;
 }

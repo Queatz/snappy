@@ -14,7 +14,7 @@ public class SnappyFilesTest {
 
     @Test
     public void testSaveAndReadFile() throws Exception {
-        SnappyFiles snappyFiles = new SnappyFiles("test");
+        SnappyFiles snappyFiles = new SnappyFiles();
 
         byte[] raw = new byte[] {1, 2, 3, 4, 5};
 

@@ -27,7 +27,12 @@ public class SnappyFiles {
     }
 
     @Nullable
-    public OutputStream openOutputStream(final String path, @Nullable final Runnable onCloseCallback) throws IOException {
+    public OutputStream openOutputStream(final String path, final String name) throws IOException {
+        return openOutputStream(path, name, null);
+    }
+
+    @Nullable
+    public OutputStream openOutputStream(final String path, final String name, @Nullable final Runnable onCloseCallback) throws IOException {
 
         // Ensure pool folder exists
         File pool = new File(filePoolPath);

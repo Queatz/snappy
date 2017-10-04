@@ -16,6 +16,10 @@ public class Local {
     }
 
     public void updateRecentsForMessage(@NonNull DynamicRealmObject message) {
+        updateRecentsForMessage(message, false);
+    }
+
+    public void updateRecentsForMessage(@NonNull DynamicRealmObject message, boolean inTransaction) {
         RealmResults<DynamicRealmObject> recents = team.realm.where("Thing")
                 .equalTo(Thing.KIND, "recent")
                 .beginGroup()
@@ -31,7 +35,9 @@ public class Local {
                 .endGroup()
                 .findAll();
 
-        team.realm.beginTransaction();
+        if (!inTransaction) {
+            team.realm.beginTransaction();
+        }
 
         for(int i = 0; i < recents.size(); i++) {
             DynamicRealmObject recent = recents.get(i);
@@ -42,6 +48,8 @@ public class Local {
             }
         }
 
-        team.realm.commitTransaction();
+        if (!inTransaction) {
+            team.realm.commitTransaction();
+        }
     }
 }

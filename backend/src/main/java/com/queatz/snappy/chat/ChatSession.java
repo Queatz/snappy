@@ -75,7 +75,7 @@ public class ChatSession {
 
         SnappyImage snappyImage = new SnappyImage();
         String name = "chat/" + Util.randomToken();
-        OutputStream outputChannel = snappyImage.openOutputStream(name);
+        OutputStream outputChannel = snappyImage.openOutputStream(name, null);
 
         if (outputChannel == null) {
             return;

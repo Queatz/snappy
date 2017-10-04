@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -57,18 +56,29 @@ public class SnappyImage {
         collection = database.collection(IMAGES_DATABASE_COLLECTION);
     }
 
-    /**
-     * Opens a writable stream to store an image at path.
-     * @param path The image path
-     * @return The output stream to write to, or null if the path already exists
-     */
     @Nullable
     public OutputStream openOutputStream(final String path) {
         return openOutputStream(path, null);
     }
 
+    /**
+     * Opens a writable stream to store an image at path.
+     * @param path The image path
+     * @param name The file name
+     * @return The output stream to write to, or null if the path already exists
+     */
     @Nullable
-    private OutputStream openOutputStream(final String path, final Point size) {
+    public OutputStream openOutputStream(final String path, final String name) {
+        return openOutputStream(path, name, null);
+    }
+
+    @Nullable
+    public OutputStream openOutputStream(final SnappyImageMetadata metadata, Point size) {
+        return openOutputStream(metadata.path, metadata.name, size);
+    }
+
+    @Nullable
+    private OutputStream openOutputStream(final String path, final String name, final Point size) {
 
         // Ensure pool folder exists
         File pool = new File(filePoolPath);
@@ -90,7 +100,7 @@ public class SnappyImage {
                 @Override
                 public void close() throws IOException {
                     super.close();
-                    saveImage(path, file, size == null, size != null && size.y == 0);
+                    saveImage(path, name, file, size == null, size != null && size.y == 0);
                 }
             };
         } catch (IOException e) {
@@ -106,7 +116,7 @@ public class SnappyImage {
     /**
      * Reads and saves image details after successfully written to the pool.
      */
-    private boolean saveImage(String path, File file, boolean original, boolean scaled) {
+    private boolean saveImage(String path, String name, File file, boolean original, boolean scaled) {
         SnappyImageMetadata metadata = new SnappyImageMetadata();
 
         if (original) {
@@ -114,6 +124,7 @@ public class SnappyImage {
         }
 
         metadata.path = path;
+        metadata.name = name;
         metadata.file = file.getName();
         metadata.original = original;
         metadata.scaled = scaled;
@@ -276,7 +287,7 @@ public class SnappyImage {
             return null;
         }
 
-        OutputStream outputStream = openOutputStream(metadata.path, size);
+        OutputStream outputStream = openOutputStream(metadata, size);
 
         try {
             SnappyImageUtil.write(outputStream, image);

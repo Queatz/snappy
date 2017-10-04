@@ -71,7 +71,7 @@ public class ApiUtil {
                 FileItemStream item = iterator.next();
 
                 if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
-                    return putPhoto(thingId, api, item);
+                    return putPhoto(thingId, item.getName(), api, item);
                 }
             }
         } catch (FileUploadException e) {
@@ -81,16 +81,16 @@ public class ApiUtil {
         return false;
     }
 
-    public static boolean putPhoto(String thingId, Api api, FileItemStream item) throws IOException {
-        return putPhotoRaw("earth/thing/photo/" + thingId, api, item);
+    public static boolean putPhoto(String thingId, String name, Api api, FileItemStream item) throws IOException {
+        return putPhotoRaw("earth/thing/photo/" + thingId, name, api, item);
     }
 
-    public static boolean putPhotoRaw(String photoName, Api api, FileItemStream item) throws IOException {
+    public static boolean putPhotoRaw(String photoName, String name, Api api, FileItemStream item) throws IOException {
         int len;
         byte[] buffer = new byte[8192];
 
         InputStream stream = item.openStream();
-        OutputStream outputChannel = api.snappyImage.openOutputStream(photoName);
+        OutputStream outputChannel = api.snappyImage.openOutputStream(photoName, name);
 
         if (outputChannel == null) {
             return false;
@@ -109,9 +109,9 @@ public class ApiUtil {
         int len;
         byte[] buffer = new byte[8192];
 
-        String fileName = Util.randomToken() + Util.randomToken();
+        String fileName = Util.randomToken() + Util.randomToken() + "-" + item.getName().replace("/", "");
         InputStream stream = item.openStream();
-        OutputStream outputChannel = api.snappyFiles.openOutputStream(fileName);
+        OutputStream outputChannel = api.snappyFiles.openOutputStream(fileName, item.getName());
 
         if (outputChannel == null) {
             return null;

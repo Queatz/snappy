@@ -231,7 +231,11 @@ public class SlideScreen extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        positionChildren();
+        try {
+            positionChildren();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
