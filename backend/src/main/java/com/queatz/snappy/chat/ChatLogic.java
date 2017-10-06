@@ -1,13 +1,16 @@
 package com.queatz.snappy.chat;
 
-import com.queatz.snappy.backend.Util;
+import com.queatz.chat.ChatConfig;
+import com.queatz.chat.ChatKind;
+import com.queatz.chat.ChatWorld;
+import com.queatz.earth.EarthField;
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.chat.actions.AdAdd;
 import com.queatz.snappy.chat.actions.ChatMessage;
 import com.queatz.snappy.chat.actions.MessageSend;
-import com.queatz.earth.EarthField;
+import com.queatz.snappy.shared.Shared;
 import com.queatz.snappy.shared.chat.BasicChatMessage;
 import com.queatz.snappy.shared.earth.EarthGeo;
-import com.queatz.earth.EarthThing;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,7 +38,7 @@ public class ChatLogic extends ChatEndpoint {
                     continue;
                 }
 
-                if (Util.distance(chat.getLocation(), other.getLocation()) > ChatConfig.MAX_RADIUS) {
+                if (Shared.distance(chat.getLocation(), other.getLocation()) > ChatConfig.MAX_RADIUS) {
                     Logger.getAnonymousLogger().warning("Distance too far");
                     continue;
                 }

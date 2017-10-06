@@ -1,10 +1,10 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.snappy.logic.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthKind;
-import com.queatz.snappy.logic.EarthStore;
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.editors.LikeEditor;
@@ -16,7 +16,6 @@ import com.queatz.snappy.logic.mines.LikeMine;
 import com.queatz.snappy.logic.views.EntityListView;
 import com.queatz.snappy.logic.views.LikeView;
 import com.queatz.snappy.logic.views.SuccessView;
-import com.queatz.snappy.service.Buy;
 import com.queatz.snappy.shared.Config;
 
 import java.util.List;
@@ -60,11 +59,7 @@ public class OfferInterface extends CommonThingInterface {
 
             // Validate pricing
             if (price != null) {
-                if (new Buy(as).valid(as.getUser())) {
-                    price = Math.min(Config.PAID_OFFER_PRICE_MAX, Math.max(Config.PAID_OFFER_PRICE_MIN, price));
-                } else {
-                    price = Math.min(Config.FREE_OFFER_PRICE_MAX, Math.max(Config.FREE_OFFER_PRICE_MIN, price));
-                }
+                price = Math.min(Config.PAID_OFFER_PRICE_MAX, Math.max(Config.PAID_OFFER_PRICE_MIN, price));
 
                 if (Math.abs(price) < 200) {
                     price = (int) Math.floor(price / 10) * 10;
@@ -110,11 +105,7 @@ public class OfferInterface extends CommonThingInterface {
 
             // Validate pricing
             if (price != null) {
-                if (new Buy(as).valid(as.getUser())) {
-                    price = Math.min(Config.PAID_OFFER_PRICE_MAX, Math.max(Config.PAID_OFFER_PRICE_MIN, price));
-                } else {
-                    price = Math.min(Config.FREE_OFFER_PRICE_MAX, Math.max(Config.FREE_OFFER_PRICE_MIN, price));
-                }
+                price = Math.min(Config.PAID_OFFER_PRICE_MAX, Math.max(Config.PAID_OFFER_PRICE_MIN, price));
 
                 if (Math.abs(price) < 200) {
                     price = (int) Math.floor(price / 10) * 10;

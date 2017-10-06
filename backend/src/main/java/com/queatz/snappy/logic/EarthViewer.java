@@ -3,6 +3,8 @@ package com.queatz.snappy.logic;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthKind;
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.api.EarthControl;
 import com.queatz.snappy.logic.concepts.Viewable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.ClubView;

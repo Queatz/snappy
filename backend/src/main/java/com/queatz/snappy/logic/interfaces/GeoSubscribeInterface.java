@@ -1,7 +1,7 @@
 package com.queatz.snappy.logic.interfaces;
 
 import com.google.common.base.Strings;
-import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.api.EarthAs;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.concepts.Interfaceable;

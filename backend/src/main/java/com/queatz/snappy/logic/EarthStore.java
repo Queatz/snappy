@@ -22,6 +22,8 @@ import com.google.common.collect.Iterators;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthKind;
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.api.EarthControl;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.mines.ClubMine;
 import com.queatz.snappy.logic.query.EarthQueryAppendFilter;

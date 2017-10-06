@@ -1,9 +1,7 @@
 package com.queatz.snappy.api;
 
 import com.queatz.snappy.logic.Earth;
-import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
-import com.queatz.snappy.service.Api;
 
 import java.io.IOException;
 
@@ -14,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * Created by jacob on 4/2/16.
  */
-public class Logic extends Api.Path {
+public class Logic extends Path {
 
     public Logic(Api api) {
         super(api);

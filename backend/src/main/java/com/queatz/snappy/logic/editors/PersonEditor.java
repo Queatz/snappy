@@ -1,10 +1,10 @@
 package com.queatz.snappy.logic.editors;
 
-import com.queatz.snappy.backend.Util;
-import com.queatz.snappy.logic.EarthAs;
-import com.queatz.snappy.logic.EarthControl;
+import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.api.EarthControl;
 import com.queatz.earth.EarthField;
 import com.queatz.snappy.logic.mines.PersonMine;
+import com.queatz.snappy.shared.Shared;
 import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.earth.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
@@ -30,14 +30,14 @@ public class PersonEditor extends EarthControl {
 
     public EarthThing newPerson() {
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.PERSON_KIND))
-                .set(EarthField.TOKEN, Util.genToken())
+                .set(EarthField.TOKEN, Shared.genToken())
                 .set(EarthField.ABOUT)
                 .set(EarthField.SUBSCRIPTION));
     }
 
     public EarthThing newPerson(String email) {
         EarthThing person = earthStore.save(earthStore.edit(earthStore.create(EarthKind.PERSON_KIND))
-                .set(EarthField.TOKEN, Util.genToken())
+                .set(EarthField.TOKEN, Shared.genToken())
                 .set(EarthField.EMAIL, email)
                 .set(EarthField.ABOUT)
                 .set(EarthField.SUBSCRIPTION));

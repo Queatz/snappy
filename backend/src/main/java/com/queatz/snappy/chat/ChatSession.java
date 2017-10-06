@@ -2,9 +2,11 @@ package com.queatz.snappy.chat;
 
 import com.google.common.primitives.Bytes;
 import com.image.SnappyImage;
+import com.queatz.chat.ChatKind;
+import com.queatz.chat.ChatWorld;
 import com.queatz.snappy.chat.actions.ChatMessage;
 import com.queatz.snappy.chat.actions.MessageSend;
-import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.api.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.snappy.shared.EarthJson;
 import com.queatz.earth.EarthThing;

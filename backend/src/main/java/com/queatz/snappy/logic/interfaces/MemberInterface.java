@@ -1,6 +1,6 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.api.EarthAs;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.editors.MemberEditor;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;

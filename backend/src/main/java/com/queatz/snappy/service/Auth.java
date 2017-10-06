@@ -1,10 +1,11 @@
 package com.queatz.snappy.service;
 
 import com.google.gson.JsonObject;
+import com.queatz.snappy.api.Error;
+import com.queatz.snappy.shared.Shared;
 import com.queatz.snappy.util.HttpUtil;
-import com.queatz.snappy.backend.PrintingError;
-import com.queatz.snappy.backend.Util;
-import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.api.PrintingError;
+import com.queatz.snappy.api.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.snappy.shared.EarthJson;
 import com.queatz.earth.EarthThing;
@@ -53,11 +54,11 @@ public class Auth {
             if(response.has("email") && response.get("email").getAsString().equals(email)) {
                 return true;
             } else {
-                throw new PrintingError(Api.Error.SERVER_ERROR, "no email correctness - " + response);
+                throw new PrintingError(Error.SERVER_ERROR, "no email correctness - " + response);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            throw new PrintingError(Api.Error.SERVER_ERROR, "real check server fail");
+            throw new PrintingError(Error.SERVER_ERROR, "real check server fail");
         }
     }
 
@@ -69,7 +70,7 @@ public class Auth {
             PersonData personSpec = new PersonData();
 
             if(response.has("url") && StringUtils.isNotBlank(response.get("url").getAsString())) {
-                personSpec.googleUrl = Util.googleUrl(response.get("url").getAsString()).toLowerCase();
+                personSpec.googleUrl = Shared.googleUrl(response.get("url").getAsString()).toLowerCase();
             }
 
             if(response.has("gender")) {
@@ -108,7 +109,7 @@ public class Auth {
         }
         catch (IOException e) {
             e.printStackTrace();
-            throw new PrintingError(Api.Error.SERVER_ERROR, "user details server fail");
+            throw new PrintingError(Error.SERVER_ERROR, "user details server fail");
         }
     }
 
@@ -126,7 +127,7 @@ public class Auth {
 
         if(person != null && email == null) {
             if (!person.has(EarthField.TOKEN)) {
-                throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "null tok");
+                throw new PrintingError(Error.NOT_AUTHENTICATED, "null tok");
             }
 
             if (person.getString(EarthField.TOKEN).equals(token)) {
@@ -135,12 +136,12 @@ public class Auth {
         }
 
         if (!isRealGoogleAuth(email, token))
-            throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "iz not realz auth");
+            throw new PrintingError(Error.NOT_AUTHENTICATED, "iz not realz auth");
 
         PersonData personData = getPersonData(token);
 
         if(personData == null) {
-            throw new PrintingError(Api.Error.NOT_AUTHENTICATED, "no data or google's api changed");
+            throw new PrintingError(Error.NOT_AUTHENTICATED, "no data or google's api changed");
         }
 
         if (person == null) {

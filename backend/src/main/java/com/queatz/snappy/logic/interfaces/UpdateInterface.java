@@ -1,8 +1,8 @@
 package com.queatz.snappy.logic.interfaces;
 
 import com.google.gson.JsonArray;
-import com.queatz.snappy.backend.ApiUtil;
-import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.api.ApiUtil;
+import com.queatz.snappy.api.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.snappy.shared.EarthJson;
@@ -107,7 +107,7 @@ public class UpdateInterface extends CommonThingInterface {
                 InputStream stream = item.openStream();
 
                 if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
-                    ApiUtil.putPhoto(update.key().name(), as.getApi(), as.getRequest());
+                    ApiUtil.putPhoto(update.key().name(), as.getApi().snappyImage, as.getRequest());
                     photoUploaded = true;
                 }
                 else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {
@@ -167,7 +167,7 @@ public class UpdateInterface extends CommonThingInterface {
                 InputStream stream = item.openStream();
 
                 if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
-                    ApiUtil.putPhoto(update.key().name(), item.getName(), as.getApi(), item);
+                    ApiUtil.putPhoto(update.key().name(), item.getName(), as.getApi().snappyImage, item);
                     photoUploaded = true;
                 }
                 else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {

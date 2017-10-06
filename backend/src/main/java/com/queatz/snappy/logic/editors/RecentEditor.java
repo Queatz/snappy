@@ -1,7 +1,7 @@
 package com.queatz.snappy.logic.editors;
 
-import com.queatz.snappy.logic.EarthAs;
-import com.queatz.snappy.logic.EarthControl;
+import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.api.EarthControl;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthKind;
 import com.queatz.snappy.shared.earth.EarthRef;

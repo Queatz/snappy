@@ -1,9 +1,9 @@
 package com.queatz.snappy.chat.actions;
 
-import com.queatz.snappy.chat.ChatKind;
+import com.queatz.chat.ChatKind;
 import com.queatz.snappy.chat.ChatSession;
-import com.queatz.snappy.chat.ChatWorld;
-import com.queatz.snappy.logic.EarthAs;
+import com.queatz.chat.ChatWorld;
+import com.queatz.snappy.api.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.mines.PersonMine;

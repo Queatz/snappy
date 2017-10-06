@@ -103,6 +103,11 @@ public class Config {
     public static final long PARTY_DEFAULT_DURATION = 1000 * 60 * 60;
 
     /**
+     * Whether or not enabling Bluetooth should be requested upon app-launch.
+     */
+    public static final boolean REQUIRE_BLUETOOTH = false;
+
+    /**
      * The folder where images and files are persisted to disk.
      */
     public static final String VILLAGE_FILES_DIR = "/var/lib/village/";
@@ -400,10 +405,12 @@ public class Config {
     public static final String subscriptionProductId = "com.queatz.snappy.monthly";
     public static final String refreshToken = Gateway.refreshToken;
 
-    public static final boolean REQUIRE_BLUETOOTH = false;
-
     // Apps
 
     public static final String PARAM_DOMAIN = "domain";
     public static final String PATH_STORE = "store";
+
+    // Etc
+
+    public static final String PHOTO_FILES_BUCKET = "earth/thing/photo/";
 }

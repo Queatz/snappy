@@ -1,14 +1,11 @@
 package com.queatz.snappy.api;
 
-import com.queatz.snappy.backend.PrintingError;
-import com.queatz.snappy.logic.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.eventables.RefreshMeEvent;
 import com.queatz.snappy.logic.mines.PersonMine;
-import com.queatz.snappy.service.Api;
 import com.queatz.snappy.shared.Config;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +17,7 @@ import java.io.IOException;
  *
  * Created by jacob on 4/11/15.
  */
-public class Admin extends Api.Path {
+public class Admin extends Path {
 
     private final PersonMine personMine;
     private final PersonEditor personEditor;
@@ -62,7 +59,7 @@ public class Admin extends Api.Path {
         try {
             response.getWriter().write(string);
         } catch (IOException e) {
-            throw new PrintingError(Api.Error.SERVER_ERROR, e.toString());
+            throw new PrintingError(Error.SERVER_ERROR, e.toString());
         }
     }
 

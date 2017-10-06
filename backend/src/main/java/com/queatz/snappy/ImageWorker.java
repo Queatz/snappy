@@ -2,7 +2,7 @@ package com.queatz.snappy;
 
 import com.image.SnappyImage;
 import com.queatz.earth.EarthField;
-import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.api.EarthAs;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.shared.Config;
 
@@ -30,7 +30,7 @@ public class ImageWorker extends HttpServlet {
 
         SnappyImage snappyImage = new SnappyImage();
 
-        String fileName = "earth/thing/photo/" + thingId;
+        String fileName = Config.PHOTO_FILES_BUCKET + thingId;
 
         InputStream inputStream = snappyImage.openInputStream(fileName, 2, 2);
         float aspect = snappyImage.getAspectRatio(fileName);

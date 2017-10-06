@@ -3,13 +3,11 @@ package com.queatz.snappy.logic.interfaces;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.queatz.snappy.backend.ApiUtil;
-import com.queatz.snappy.backend.Util;
-import com.queatz.snappy.logic.EarthAs;
 import com.queatz.earth.EarthField;
-import com.queatz.snappy.shared.EarthJson;
-import com.queatz.snappy.logic.EarthStore;
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.api.ApiUtil;
+import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
@@ -19,6 +17,8 @@ import com.queatz.snappy.logic.eventables.FormSubmissionEvent;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.EarthJson;
+import com.queatz.snappy.shared.Shared;
 
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -79,12 +79,12 @@ public class FormSubmissionInterface implements Interfaceable {
 
                 if (!item.isFormField() && item.getFieldName().startsWith(Config.PARAM_PHOTO + "---")) {
                     String answerId = item.getFieldName().split("---", 2)[1];
-                    String photoName = "form-submission-" + Util.randomToken() + Util.randomToken();
-                    ApiUtil.putPhotoRaw(photoName, item.getName(), as.getApi(), item);
+                    String photoName = "form-submission-" + Shared.randomToken() + Shared.randomToken();
+                    ApiUtil.putPhotoRaw(photoName, item.getName(), as.getApi().snappyImage, item);
                     photos.put(answerId, photoName);
                 } else if (!item.isFormField() && item.getFieldName().startsWith(Config.PARAM_FILE + "---")) {
                     String answerId = item.getFieldName().split("---", 2)[1];
-                    String fileName = ApiUtil.putFile(as.getApi(), item);
+                    String fileName = ApiUtil.putFile(as.getApi().snappyFiles, item);
                     files.put(answerId, fileName);
                 } else if (Config.PARAM_DATA.equals(item.getFieldName())) {
                     data = Streams.asString(stream, "UTF-8");

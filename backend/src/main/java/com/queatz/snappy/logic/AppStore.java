@@ -8,10 +8,12 @@ import com.arangodb.ArangoDatabase;
 import com.arangodb.entity.BaseDocument;
 import com.arangodb.model.DocumentCreateOptions;
 import com.google.common.collect.ImmutableMap;
-import com.queatz.snappy.backend.Util;
+import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.appstore.AppStoreField;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.shared.Gateway;
+import com.queatz.snappy.shared.Shared;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -80,7 +82,7 @@ public class AppStore {
         BaseDocument token = new BaseDocument();
         token.addAttribute(AppStoreField.DOMAIN, domain);
         token.addAttribute(AppStoreField.USER, as.getUser().key().name());
-        token.addAttribute(AppStoreField.TOKEN, Util.randomToken());
+        token.addAttribute(AppStoreField.TOKEN, Shared.randomToken());
 
         token = collection.insertDocument(token, options).getNew();
 

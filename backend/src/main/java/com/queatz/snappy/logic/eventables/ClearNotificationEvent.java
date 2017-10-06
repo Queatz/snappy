@@ -3,7 +3,7 @@ package com.queatz.snappy.logic.eventables;
 import com.google.common.collect.ImmutableMap;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.backend.PushSpec;
+import com.queatz.snappy.notifications.PushSpec;
 
 /**
  * Created by jacob on 6/19/16.

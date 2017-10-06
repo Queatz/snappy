@@ -1,6 +1,6 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.api.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthKind;
 import com.queatz.snappy.shared.earth.EarthRef;
@@ -206,7 +206,7 @@ public class PersonInterface extends CommonThingInterface {
         as.requireUser();
 
         EarthThing sent = new MessageEditor(as).stageMessage(as.getUser(), person);
-        String photoName = "earth/thing/photo/" + sent.key().name();
+        String photoName = Config.PHOTO_FILES_BUCKET + sent.key().name();
 
         String message = null;
         String localId = null;

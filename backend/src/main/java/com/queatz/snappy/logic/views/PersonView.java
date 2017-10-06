@@ -1,8 +1,9 @@
 package com.queatz.snappy.logic.views;
 
-import com.queatz.snappy.backend.Util;
-import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.events.Util;
+import com.queatz.snappy.api.EarthAs;
 import com.queatz.earth.EarthField;
+import com.queatz.snappy.shared.Shared;
 import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.earth.EarthKind;
 import com.queatz.snappy.logic.EarthStore;
@@ -53,7 +54,7 @@ public class PersonView extends CommonThingView {
         }
 
         if (as.hasUser() && as.getUser().has(EarthField.GEO) && person.has(EarthField.GEO)) {
-            infoDistance = Util.distance(as.getUser().getGeo(EarthField.GEO), person.getGeo(EarthField.GEO));
+            infoDistance = Shared.distance(as.getUser().getGeo(EarthField.GEO), person.getGeo(EarthField.GEO));
 
             boolean isBacking = use(FollowerMine.class).getFollower(person, as.getUser()) != null;
 

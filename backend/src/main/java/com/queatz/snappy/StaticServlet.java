@@ -1,8 +1,8 @@
 package com.queatz.snappy;
 
 import com.google.common.base.Joiner;
-import com.queatz.snappy.backend.PrintingError;
-import com.queatz.snappy.service.Api;
+import com.queatz.snappy.api.PrintingError;
+import com.queatz.snappy.api.Error;
 import com.queatz.snappy.shared.Config;
 
 import org.omnifaces.servlet.FileServlet;
@@ -31,11 +31,11 @@ public class StaticServlet extends FileServlet {
         }
 
         if(path.length < 3) {
-            throw new PrintingError(Api.Error.NOT_FOUND, "bad request length");
+            throw new PrintingError(Error.NOT_FOUND, "bad request length");
         }
 
         if(!Config.PATH_RAW.equals(path[1])) {
-            throw new PrintingError(Api.Error.NOT_FOUND, "bad request path");
+            throw new PrintingError(Error.NOT_FOUND, "bad request path");
         }
 
         String file = Joiner.on("/").join(Arrays.asList(path).subList(2, path.length));

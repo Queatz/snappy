@@ -1,13 +1,13 @@
 package com.queatz.snappy.logic.editors;
 
-import com.queatz.snappy.backend.Util;
-import com.queatz.snappy.logic.EarthAs;
-import com.queatz.snappy.logic.EarthControl;
 import com.queatz.earth.EarthField;
-import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.earth.EarthKind;
-import com.queatz.snappy.logic.EarthStore;
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.api.EarthControl;
+import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.shared.Shared;
+import com.queatz.snappy.shared.earth.EarthGeo;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +29,7 @@ public class GeoSubscribeEditor extends EarthControl {
                 .set(EarthField.GEO, EarthGeo.of(latitude, longitude))
                 .set(EarthField.EMAIL, email)
                 .set(EarthField.NAME, locality)
-                .set(EarthField.UNSUBSCRIBE_TOKEN, Util.randomToken())
+                .set(EarthField.UNSUBSCRIBE_TOKEN, Shared.randomToken())
                 .set(EarthField.UPDATED_ON, new Date())
                 .set(EarthField.CREATED_ON, new Date());
 

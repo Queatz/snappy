@@ -5,7 +5,7 @@ import com.google.common.html.HtmlEscapers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.api.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.snappy.shared.EarthJson;
 import com.queatz.earth.EarthKind;

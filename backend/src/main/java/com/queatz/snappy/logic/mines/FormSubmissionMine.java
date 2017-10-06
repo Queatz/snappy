@@ -1,7 +1,7 @@
 package com.queatz.snappy.logic.mines;
 
-import com.queatz.snappy.logic.EarthAs;
-import com.queatz.snappy.logic.EarthControl;
+import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.api.EarthControl;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -1,7 +1,6 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.snappy.backend.Util;
-import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.api.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.earth.EarthThing;
@@ -17,6 +16,7 @@ import com.queatz.snappy.logic.mines.JoinMine;
 import com.queatz.snappy.logic.views.JoinView;
 import com.queatz.snappy.logic.views.PartyView;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.Shared;
 
 import java.util.Date;
 
@@ -47,7 +47,7 @@ public class PartyInterface implements Interfaceable {
                 String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
                 String original = as.getRequest().getParameter(Config.PARAM_ID);
                 String name = as.getRequest().getParameter(Config.PARAM_NAME);
-                Date date = Util.stringToDate(as.getRequest().getParameter(Config.PARAM_DATE));
+                Date date = Shared.stringToDate(as.getRequest().getParameter(Config.PARAM_DATE));
                 String locationParam = as.getRequest().getParameter(Config.PARAM_LOCATION);
                 String details = as.getRequest().getParameter(Config.PARAM_DETAILS);
 

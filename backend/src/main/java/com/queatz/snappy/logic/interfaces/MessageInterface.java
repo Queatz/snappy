@@ -1,15 +1,15 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.snappy.backend.ApiUtil;
-import com.queatz.snappy.backend.PrintingError;
-import com.queatz.snappy.logic.EarthAs;
+import com.queatz.snappy.api.ApiUtil;
+import com.queatz.snappy.api.PrintingError;
+import com.queatz.snappy.api.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
-import com.queatz.snappy.service.Api;
+import com.queatz.snappy.api.Error;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
@@ -47,16 +47,16 @@ public class MessageInterface implements Interfaceable {
         EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
 
         if (!thing.getBoolean(EarthField.PHOTO)) {
-            throw new PrintingError(Api.Error.NOT_FOUND, "thing - photo not set");
+            throw new PrintingError(Error.NOT_FOUND, "thing - photo not set");
         }
 
         try {
-            if(!ApiUtil.getPhoto(thing.key().name(), as.getApi(), as.getRequest(), as.getResponse())) {
-                throw new PrintingError(Api.Error.NOT_FOUND, "thing - no photo");
+            if(!ApiUtil.getPhoto(thing.key().name(), as.getApi().snappyImage, as.getRequest(), as.getResponse())) {
+                throw new PrintingError(Error.NOT_FOUND, "thing - no photo");
             }
         } catch (IOException e) {
             e.printStackTrace();
-            throw new PrintingError(Api.Error.NOT_FOUND, "thing - photo io error");
+            throw new PrintingError(Error.NOT_FOUND, "thing - photo io error");
         }
     }
 }

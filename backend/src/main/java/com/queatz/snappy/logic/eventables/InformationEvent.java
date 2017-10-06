@@ -1,6 +1,6 @@
 package com.queatz.snappy.logic.eventables;
 
-import com.queatz.snappy.backend.PushSpec;
+import com.queatz.snappy.notifications.PushSpec;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
 

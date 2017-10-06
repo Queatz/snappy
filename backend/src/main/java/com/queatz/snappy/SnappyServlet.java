@@ -1,12 +1,16 @@
 package com.queatz.snappy;
 
-import com.queatz.snappy.backend.PrintingError;
-import com.queatz.snappy.backend.StringResponse;
 import com.queatz.earth.EarthThing;
-import com.queatz.snappy.service.Api;
+import com.queatz.snappy.api.Admin;
+import com.queatz.snappy.api.Api;
+import com.queatz.snappy.api.Logic;
+import com.queatz.snappy.api.Pirate;
+import com.queatz.snappy.api.PrintingError;
+import com.queatz.snappy.api.RequestMethod;
+import com.queatz.snappy.api.StringResponse;
 import com.queatz.snappy.service.Auth;
-import com.queatz.snappy.service.ImageQueue;
-import com.queatz.snappy.service.Queue;
+import com.queatz.snappy.images.ImageQueue;
+import com.queatz.snappy.events.Queue;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
@@ -24,11 +28,10 @@ import javax.servlet.http.HttpServletResponse;
 
 public class SnappyServlet extends HttpServlet {
 
-    public enum RequestMethod {
-        GET, POST, PUT, DELETE
-    }
-
     public SnappyServlet() {
+        Api.getService().register(Config.PATH_EARTH, Logic.class);
+        Api.getService().register(Config.PATH_PIRATE, Pirate.class);
+        Api.getService().register(Config.PATH_ADMIN, Admin.class);
     }
 
     @Override
