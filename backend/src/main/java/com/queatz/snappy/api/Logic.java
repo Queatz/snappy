@@ -1,7 +1,8 @@
 package com.queatz.snappy.api;
 
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.logic.Earth;
-import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.exceptions.NothingLogicResponse;
 
 import java.io.IOException;
 
@@ -23,11 +24,11 @@ public class Logic extends Path {
     public void call() throws IOException {
         String jsonResponse;
 
-        EarthAs as = new EarthAs(api, request, response, path, user);
+        EarthAs as = new EarthAs(request, response, path, user);
 
         switch (method) {
             case GET:
-                jsonResponse = new Earth(as).get(new EarthAs(api, request, response, path, user));
+                jsonResponse = new Earth(as).get(new EarthAs(request, response, path, user));
 
                 if (jsonResponse != null) {
                     response.getWriter().write(jsonResponse);
@@ -35,7 +36,7 @@ public class Logic extends Path {
                 }
                 break;
             case POST:
-                jsonResponse = new Earth(as).post(new EarthAs(api, request, response, path, user));
+                jsonResponse = new Earth(as).post(new EarthAs(request, response, path, user));
 
                 if (jsonResponse != null) {
                     response.getWriter().write(jsonResponse);

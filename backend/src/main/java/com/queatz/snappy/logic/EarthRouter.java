@@ -1,10 +1,10 @@
 package com.queatz.snappy.logic;
 
 import com.queatz.earth.EarthKind;
-import com.queatz.snappy.api.EarthAs;
-import com.queatz.snappy.api.EarthControl;
-import com.queatz.snappy.logic.concepts.Interfaceable;
-import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.as.EarthAs;
+import com.queatz.snappy.as.EarthControl;
+import com.queatz.snappy.api.Interfaceable;
+import com.queatz.snappy.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.interfaces.AppInterface;
 import com.queatz.snappy.logic.interfaces.ByNameInterface;
 import com.queatz.snappy.logic.interfaces.ClubInterface;

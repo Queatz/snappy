@@ -1,0 +1,11 @@
+apply plugin: 'java'
+
+dependencies {
+    compile project(':shared')
+    compile project(':image')
+    compile project(':earth')
+    compile project(':view')
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8

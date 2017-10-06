@@ -1,11 +1,11 @@
 package com.queatz.snappy.service;
 
 import com.google.gson.JsonObject;
-import com.queatz.snappy.api.Error;
+import com.queatz.snappy.exceptions.Error;
 import com.queatz.snappy.shared.Shared;
 import com.queatz.snappy.util.HttpUtil;
-import com.queatz.snappy.api.PrintingError;
-import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.exceptions.PrintingError;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.snappy.shared.EarthJson;
 import com.queatz.earth.EarthThing;

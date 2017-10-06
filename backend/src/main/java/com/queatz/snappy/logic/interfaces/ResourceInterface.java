@@ -1,10 +1,10 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.editors.ResourceEditor;
-import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.exceptions.NothingLogicResponse;
 
 /**
  * Created by jacob on 5/22/16.

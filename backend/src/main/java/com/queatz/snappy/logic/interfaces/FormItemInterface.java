@@ -1,7 +1,7 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.snappy.api.EarthAs;
-import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.as.EarthAs;
+import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.editors.FormItemEditor;
 import com.queatz.snappy.shared.Config;

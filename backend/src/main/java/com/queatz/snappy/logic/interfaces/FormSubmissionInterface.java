@@ -3,22 +3,24 @@ package com.queatz.snappy.logic.interfaces;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.image.SnappyImage;
 import com.queatz.earth.EarthField;
+import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.api.ApiUtil;
-import com.queatz.snappy.api.EarthAs;
-import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.as.EarthAs;
+import com.queatz.snappy.api.Interfaceable;
+import com.queatz.snappy.exceptions.NothingLogicResponse;
+import com.queatz.snappy.files.SnappyFiles;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthViewer;
-import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.FormSubmissionEditor;
 import com.queatz.snappy.logic.editors.MemberEditor;
 import com.queatz.snappy.logic.eventables.FormSubmissionEvent;
-import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
-import com.queatz.snappy.logic.views.SuccessView;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.EarthJson;
 import com.queatz.snappy.shared.Shared;
+import com.queatz.snappy.view.SuccessView;
 
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -80,11 +82,11 @@ public class FormSubmissionInterface implements Interfaceable {
                 if (!item.isFormField() && item.getFieldName().startsWith(Config.PARAM_PHOTO + "---")) {
                     String answerId = item.getFieldName().split("---", 2)[1];
                     String photoName = "form-submission-" + Shared.randomToken() + Shared.randomToken();
-                    ApiUtil.putPhotoRaw(photoName, item.getName(), as.getApi().snappyImage, item);
+                    ApiUtil.putPhotoRaw(photoName, item.getName(), as.s(SnappyImage.class), item);
                     photos.put(answerId, photoName);
                 } else if (!item.isFormField() && item.getFieldName().startsWith(Config.PARAM_FILE + "---")) {
                     String answerId = item.getFieldName().split("---", 2)[1];
-                    String fileName = ApiUtil.putFile(as.getApi().snappyFiles, item);
+                    String fileName = ApiUtil.putFile(as.s(SnappyFiles.class), item);
                     files.put(answerId, fileName);
                 } else if (Config.PARAM_DATA.equals(item.getFieldName())) {
                     data = Streams.asString(stream, "UTF-8");
@@ -119,7 +121,7 @@ public class FormSubmissionInterface implements Interfaceable {
                         case "photo":
                             Logger.getAnonymousLogger().warning("(FORM SUBMISSION) PHOTO!");
                             if (photos.containsKey(id)) {
-                                jsonObject.addProperty("answer", as.getApi().snappyImage.getServingUrl(photos.get(id), 800));
+                                jsonObject.addProperty("answer", as.s(SnappyImage.class).getServingUrl(photos.get(id), 800));
                                 Logger.getAnonymousLogger().warning("(FORM SUBMISSION) added answer: " + jsonObject.get("answer"));
                             }
                             break;

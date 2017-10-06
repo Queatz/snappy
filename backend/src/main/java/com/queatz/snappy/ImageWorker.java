@@ -2,8 +2,8 @@ package com.queatz.snappy;
 
 import com.image.SnappyImage;
 import com.queatz.earth.EarthField;
-import com.queatz.snappy.api.EarthAs;
-import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.as.EarthAs;
+import com.queatz.earth.EarthStore;
 import com.queatz.snappy.shared.Config;
 
 import org.apache.commons.codec.binary.Base64;

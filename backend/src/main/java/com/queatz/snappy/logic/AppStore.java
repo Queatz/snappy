@@ -8,10 +8,10 @@ import com.arangodb.ArangoDatabase;
 import com.arangodb.entity.BaseDocument;
 import com.arangodb.model.DocumentCreateOptions;
 import com.google.common.collect.ImmutableMap;
-import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.appstore.AppStoreField;
-import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
-import com.queatz.snappy.logic.views.SuccessView;
+import com.queatz.snappy.exceptions.NothingLogicResponse;
+import com.queatz.snappy.view.SuccessView;
 import com.queatz.snappy.shared.Gateway;
 import com.queatz.snappy.shared.Shared;
 

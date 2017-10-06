@@ -1,6 +1,6 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.editors.ContactEditor;

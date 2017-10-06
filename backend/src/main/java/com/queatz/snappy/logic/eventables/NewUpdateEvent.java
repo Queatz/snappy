@@ -2,12 +2,12 @@ package com.queatz.snappy.logic.eventables;
 
 import com.google.common.collect.ImmutableMap;
 import com.queatz.snappy.notifications.PushSpec;
-import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthKind;
-import com.queatz.snappy.logic.EarthStore;
+import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
-import com.queatz.snappy.logic.concepts.Eventable;
+import com.queatz.snappy.events.Eventable;
 import com.queatz.snappy.shared.Config;
 
 import java.util.ArrayList;

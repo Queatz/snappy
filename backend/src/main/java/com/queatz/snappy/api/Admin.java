@@ -2,6 +2,9 @@ package com.queatz.snappy.api;
 
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.as.EarthAs;
+import com.queatz.snappy.exceptions.Error;
+import com.queatz.snappy.exceptions.PrintingError;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.eventables.RefreshMeEvent;
@@ -26,7 +29,7 @@ public class Admin extends Path {
     public Admin(Api api) {
         super(api);
 
-        EarthAs as = new EarthAs(api, request, response, path, user);
+        EarthAs as = new EarthAs(request, response, path, user);
         personMine = new PersonMine(as);
         personEditor = new PersonEditor(as);
         earthUpdate = new EarthUpdate(as);

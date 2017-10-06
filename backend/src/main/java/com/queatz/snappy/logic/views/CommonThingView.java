@@ -1,9 +1,9 @@
 package com.queatz.snappy.logic.views;
 
-import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthThing;
-import com.queatz.snappy.logic.EarthView;
-import com.queatz.snappy.logic.concepts.Viewable;
+import com.queatz.snappy.view.EarthView;
+import com.queatz.snappy.view.Viewable;
 import com.queatz.snappy.logic.mines.FollowerMine;
 import com.queatz.snappy.logic.mines.MemberMine;
 import com.queatz.snappy.shared.Config;

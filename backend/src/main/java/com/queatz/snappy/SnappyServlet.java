@@ -1,16 +1,19 @@
 package com.queatz.snappy;
 
+import com.queatz.earth.EarthAuthority;
+import com.queatz.earth.EarthKind;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.api.Admin;
 import com.queatz.snappy.api.Api;
 import com.queatz.snappy.api.Logic;
 import com.queatz.snappy.api.Pirate;
-import com.queatz.snappy.api.PrintingError;
+import com.queatz.snappy.exceptions.PrintingError;
 import com.queatz.snappy.api.RequestMethod;
 import com.queatz.snappy.api.StringResponse;
-import com.queatz.snappy.service.Auth;
-import com.queatz.snappy.images.ImageQueue;
 import com.queatz.snappy.events.Queue;
+import com.queatz.snappy.images.ImageQueue;
+import com.queatz.snappy.logic.authorities.*;
+import com.queatz.snappy.service.Auth;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
@@ -32,6 +35,18 @@ public class SnappyServlet extends HttpServlet {
         Api.getService().register(Config.PATH_EARTH, Logic.class);
         Api.getService().register(Config.PATH_PIRATE, Pirate.class);
         Api.getService().register(Config.PATH_ADMIN, Admin.class);
+
+        EarthAuthority.register(EarthKind.PERSON_KIND, new PersonAuthority());
+        EarthAuthority.register(EarthKind.MESSAGE_KIND, new MessageAuthority());
+        EarthAuthority.register(EarthKind.HUB_KIND, new HubAuthority());
+        EarthAuthority.register(EarthKind.PROJECT_KIND, new ProjectAuthority());
+        EarthAuthority.register(EarthKind.RESOURCE_KIND, new ResourceAuthority());
+        EarthAuthority.register(EarthKind.UPDATE_KIND, new UpdateAuthority());
+        EarthAuthority.register(EarthKind.OFFER_KIND, new OfferAuthority());
+        EarthAuthority.register(EarthKind.PARTY_KIND, new PartyAuthority());
+        EarthAuthority.register(EarthKind.MEMBER_KIND, new MemberAuthority());
+        EarthAuthority.register(EarthKind.FORM_KIND, new FormAuthority());
+        EarthAuthority.register(EarthKind.CLUB_KIND, new ClubAuthority());
     }
 
     @Override

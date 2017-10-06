@@ -4,10 +4,10 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.queatz.snappy.logic.AppStore;
 import com.queatz.snappy.appstore.AppStoreField;
-import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.shared.EarthJson;
-import com.queatz.snappy.logic.concepts.Interfaceable;
-import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.api.Interfaceable;
+import com.queatz.snappy.exceptions.NothingLogicResponse;
 import com.queatz.snappy.shared.Config;
 
 import org.apache.commons.fileupload.util.Streams;

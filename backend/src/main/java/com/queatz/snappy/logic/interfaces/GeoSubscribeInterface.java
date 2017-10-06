@@ -1,14 +1,14 @@
 package com.queatz.snappy.logic.interfaces;
 
 import com.google.common.base.Strings;
-import com.queatz.snappy.api.EarthAs;
-import com.queatz.snappy.logic.EarthStore;
+import com.queatz.snappy.as.EarthAs;
+import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
-import com.queatz.snappy.logic.concepts.Interfaceable;
+import com.queatz.snappy.api.Interfaceable;
 import com.queatz.snappy.logic.editors.GeoSubscribeEditor;
-import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.mines.GeoSubscribeMine;
-import com.queatz.snappy.logic.views.SuccessView;
+import com.queatz.snappy.view.SuccessView;
 import com.queatz.snappy.shared.Config;
 
 /**

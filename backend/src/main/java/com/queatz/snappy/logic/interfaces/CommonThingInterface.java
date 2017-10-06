@@ -3,23 +3,24 @@ package com.queatz.snappy.logic.interfaces;
 import com.google.common.base.Strings;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
+import com.image.SnappyImage;
 import com.queatz.snappy.api.ApiUtil;
-import com.queatz.snappy.api.PrintingError;
-import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.exceptions.PrintingError;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthField;
-import com.queatz.snappy.api.Error;
+import com.queatz.snappy.exceptions.Error;
 import com.queatz.snappy.shared.EarthJson;
-import com.queatz.snappy.logic.EarthStore;
+import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthViewer;
-import com.queatz.snappy.logic.EarthVisibility;
-import com.queatz.snappy.logic.concepts.Interfaceable;
+import com.queatz.earth.EarthVisibility;
+import com.queatz.snappy.api.Interfaceable;
 import com.queatz.snappy.logic.editors.ContactEditor;
 import com.queatz.snappy.logic.editors.MemberEditor;
 import com.queatz.snappy.logic.eventables.NewThingEvent;
-import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
-import com.queatz.snappy.logic.views.SuccessView;
+import com.queatz.snappy.exceptions.NothingLogicResponse;
+import com.queatz.snappy.view.SuccessView;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
@@ -256,7 +257,7 @@ public abstract class CommonThingInterface implements Interfaceable {
         }
 
         try {
-            if(!ApiUtil.getPhoto(thing.key().name(), as.getApi().snappyImage, as.getRequest(), as.getResponse())) {
+            if(!ApiUtil.getPhoto(thing.key().name(), as.s(SnappyImage.class), as.getRequest(), as.getResponse())) {
                 throw new PrintingError(Error.NOT_FOUND, "thing - no photo");
             }
         } catch (IOException e) {
@@ -267,7 +268,7 @@ public abstract class CommonThingInterface implements Interfaceable {
 
     protected EarthThing postPhoto(EarthThing thing, EarthAs as) {
         try {
-            boolean photo = ApiUtil.putPhoto(thing.key().name(), as.getApi().snappyImage, as.getRequest());
+            boolean photo = ApiUtil.putPhoto(thing.key().name(), as.s(SnappyImage.class), as.getRequest());
 
             EarthStore earthStore = new EarthStore(as);
             return earthStore.save(earthStore.edit(thing)

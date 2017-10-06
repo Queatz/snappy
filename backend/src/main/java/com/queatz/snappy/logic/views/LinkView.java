@@ -1,12 +1,12 @@
 package com.queatz.snappy.logic.views;
 
-import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthField;
-import com.queatz.snappy.logic.EarthStore;
+import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
-import com.queatz.snappy.logic.EarthView;
+import com.queatz.snappy.view.EarthView;
 import com.queatz.snappy.logic.EarthViewer;
-import com.queatz.snappy.logic.concepts.Viewable;
+import com.queatz.snappy.view.Viewable;
 
 /**
  * Created by jacob on 5/8/16.

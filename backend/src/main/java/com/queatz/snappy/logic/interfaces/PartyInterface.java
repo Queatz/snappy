@@ -1,17 +1,17 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthField;
-import com.queatz.snappy.logic.EarthStore;
+import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthViewer;
-import com.queatz.snappy.logic.concepts.Interfaceable;
+import com.queatz.snappy.api.Interfaceable;
 import com.queatz.snappy.logic.editors.JoinEditor;
 import com.queatz.snappy.logic.editors.PartyEditor;
 import com.queatz.snappy.logic.eventables.JoinRequestEvent;
 import com.queatz.snappy.logic.eventables.NewPartyEvent;
-import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.mines.JoinMine;
 import com.queatz.snappy.logic.views.JoinView;
 import com.queatz.snappy.logic.views.PartyView;

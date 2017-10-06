@@ -1,27 +1,27 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.snappy.api.EarthAs;
-import com.queatz.snappy.logic.EarthEmail;
+import com.queatz.snappy.as.EarthAs;
+import com.queatz.snappy.email.EarthEmail;
 import com.queatz.earth.EarthField;
-import com.queatz.snappy.logic.WebsiteHelper;
+import com.queatz.snappy.shared.WebsiteHelper;
 import com.queatz.snappy.logic.mines.PersonMine;
 import com.queatz.snappy.shared.earth.EarthGeo;
-import com.queatz.snappy.logic.EarthStore;
+import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
-import com.queatz.snappy.logic.EarthView;
+import com.queatz.snappy.view.EarthView;
 import com.queatz.snappy.logic.EarthViewer;
-import com.queatz.snappy.logic.concepts.Interfaceable;
+import com.queatz.snappy.api.Interfaceable;
 import com.queatz.snappy.logic.editors.DeviceEditor;
 import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.eventables.ClearNotificationEvent;
-import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
-import com.queatz.snappy.logic.mines.ClubMine;
+import com.queatz.snappy.exceptions.NothingLogicResponse;
+import com.queatz.earth.ClubMine;
 import com.queatz.snappy.logic.mines.MessageMine;
 import com.queatz.snappy.logic.mines.RecentMine;
 import com.queatz.snappy.logic.views.EntityListView;
 import com.queatz.snappy.logic.views.MessagesAndContactsView;
-import com.queatz.snappy.logic.views.SuccessView;
+import com.queatz.snappy.view.SuccessView;
 import com.queatz.snappy.shared.Config;
 
 import org.apache.commons.lang3.StringUtils;

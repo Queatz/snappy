@@ -30,6 +30,8 @@
     <orderEntry type="module" module-name="api" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
+    <orderEntry type="module" module-name="as" exported="" />
+    <orderEntry type="module" module-name="exceptions" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="module" module-name="app-store" exported="" />
@@ -39,9 +41,15 @@
     <orderEntry type="module" module-name="email" exported="" />
     <orderEntry type="module" module-name="events" exported="" />
     <orderEntry type="module" module-name="images" exported="" />
+    <orderEntry type="module" module-name="view" exported="" />
+    <orderEntry type="module" module-name="earth-authority" exported="" />
+    <orderEntry type="module" module-name="earth-store" exported="" />
+    <orderEntry type="module" module-name="village-people" exported="" />
     <orderEntry type="module" module-name="api" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
+    <orderEntry type="module" module-name="as" exported="" />
+    <orderEntry type="module" module-name="exceptions" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="module" module-name="app-store" exported="" />
@@ -51,9 +59,15 @@
     <orderEntry type="module" module-name="email" exported="" />
     <orderEntry type="module" module-name="events" exported="" />
     <orderEntry type="module" module-name="images" exported="" />
+    <orderEntry type="module" module-name="view" exported="" />
+    <orderEntry type="module" module-name="earth-authority" exported="" />
+    <orderEntry type="module" module-name="earth-store" exported="" />
+    <orderEntry type="module" module-name="village-people" exported="" />
     <orderEntry type="module" module-name="api" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
+    <orderEntry type="module" module-name="as" exported="" />
+    <orderEntry type="module" module-name="exceptions" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="module" module-name="app-store" exported="" />
@@ -63,6 +77,10 @@
     <orderEntry type="module" module-name="email" exported="" />
     <orderEntry type="module" module-name="events" exported="" />
     <orderEntry type="module" module-name="images" exported="" />
+    <orderEntry type="module" module-name="view" exported="" />
+    <orderEntry type="module" module-name="earth-authority" exported="" />
+    <orderEntry type="module" module-name="earth-store" exported="" />
+    <orderEntry type="module" module-name="village-people" exported="" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="servlet-api-2.5" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-fileupload-1.3" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="gson-2.8.0" level="project" />

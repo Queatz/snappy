@@ -1,6 +1,6 @@
 package com.queatz.snappy.logic.authorities;
 
-import com.queatz.snappy.logic.EarthRule;
+import com.queatz.earth.EarthRule;
 import com.queatz.earth.EarthThing;
 
 /**

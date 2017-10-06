@@ -1,8 +1,8 @@
 package com.queatz.snappy.api;
 
-import com.image.SnappyImage;
 import com.queatz.earth.EarthThing;
-import com.queatz.snappy.files.SnappyFiles;
+import com.queatz.snappy.exceptions.Error;
+import com.queatz.snappy.exceptions.PrintingError;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;
@@ -29,16 +29,10 @@ public class Api {
         return _service;
     }
 
-    public SnappyImage snappyImage;
-    public SnappyFiles snappyFiles;
-
     private HashMap<String, Class<? extends Path>> paths;
 
     public Api() {
         paths = new HashMap<>();
-
-        snappyImage = new SnappyImage();
-        snappyFiles = new SnappyFiles();
     }
 
     public void register(final String path, final Class<? extends Path> clazz) {

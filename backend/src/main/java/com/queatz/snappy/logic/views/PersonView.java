@@ -1,14 +1,14 @@
 package com.queatz.snappy.logic.views;
 
 import com.queatz.snappy.events.Util;
-import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.snappy.shared.Shared;
 import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.earth.EarthKind;
-import com.queatz.snappy.logic.EarthStore;
+import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
-import com.queatz.snappy.logic.EarthView;
+import com.queatz.snappy.view.EarthView;
 import com.queatz.snappy.logic.mines.DeviceMine;
 import com.queatz.snappy.logic.mines.FollowerMine;
 

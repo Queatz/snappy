@@ -1,11 +1,12 @@
 package com.queatz.snappy.logic;
 
 import com.queatz.earth.EarthField;
+import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
-import com.queatz.snappy.api.EarthAs;
-import com.queatz.snappy.api.EarthControl;
-import com.queatz.snappy.logic.concepts.Interfaceable;
-import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.as.EarthAs;
+import com.queatz.snappy.as.EarthControl;
+import com.queatz.snappy.api.Interfaceable;
+import com.queatz.snappy.exceptions.NothingLogicResponse;
 
 import org.jetbrains.annotations.NotNull;
 

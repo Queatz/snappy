@@ -39,6 +39,12 @@ dependencies {
     compile project(':email')
     compile project(':events')
     compile project(':images')
+    compile project(':view')
+
+    compile project(':earth-authority')
+    compile project(':earth-store')
+
+    compile project(':village-people')
 
     testCompile 'org.testng:testng:6.9.4'
     compile project(path: ':files')

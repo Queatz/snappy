@@ -1,27 +1,28 @@
 package com.queatz.snappy.logic.interfaces;
 
 import com.google.gson.JsonArray;
+import com.image.SnappyImage;
 import com.queatz.snappy.api.ApiUtil;
-import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.snappy.shared.EarthJson;
 import com.queatz.earth.EarthKind;
 import com.queatz.snappy.shared.earth.EarthRef;
-import com.queatz.snappy.logic.EarthStore;
+import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
-import com.queatz.snappy.logic.EarthView;
+import com.queatz.snappy.view.EarthView;
 import com.queatz.snappy.logic.editors.LikeEditor;
 import com.queatz.snappy.logic.editors.UpdateEditor;
 import com.queatz.snappy.logic.eventables.LikeEvent;
 import com.queatz.snappy.logic.eventables.NewCommentEvent;
 import com.queatz.snappy.logic.eventables.NewUpdateEvent;
-import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.mines.LikeMine;
 import com.queatz.snappy.logic.views.EntityListView;
 import com.queatz.snappy.logic.views.LikeView;
-import com.queatz.snappy.logic.views.SuccessView;
+import com.queatz.snappy.view.SuccessView;
 import com.queatz.snappy.shared.Config;
 
 import org.apache.commons.fileupload.FileItemIterator;
@@ -107,7 +108,7 @@ public class UpdateInterface extends CommonThingInterface {
                 InputStream stream = item.openStream();
 
                 if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
-                    ApiUtil.putPhoto(update.key().name(), as.getApi().snappyImage, as.getRequest());
+                    ApiUtil.putPhoto(update.key().name(), as.s(SnappyImage.class), as.getRequest());
                     photoUploaded = true;
                 }
                 else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {
@@ -167,7 +168,7 @@ public class UpdateInterface extends CommonThingInterface {
                 InputStream stream = item.openStream();
 
                 if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
-                    ApiUtil.putPhoto(update.key().name(), item.getName(), as.getApi().snappyImage, item);
+                    ApiUtil.putPhoto(update.key().name(), item.getName(), as.s(SnappyImage.class), item);
                     photoUploaded = true;
                 }
                 else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {

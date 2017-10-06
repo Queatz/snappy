@@ -1,7 +1,7 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.snappy.api.EarthAs;
-import com.queatz.snappy.logic.concepts.Interfaceable;
+import com.queatz.snappy.as.EarthAs;
+import com.queatz.snappy.api.Interfaceable;
 
 /**
  * Created by jacob on 5/9/16.

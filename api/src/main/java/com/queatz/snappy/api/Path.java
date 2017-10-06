@@ -1,6 +1,7 @@
 package com.queatz.snappy.api;
 
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.exceptions.PrintingError;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,11 +1,11 @@
 package com.queatz.snappy.logic.authorities;
 
-import com.queatz.snappy.api.EarthAs;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthField;
-import com.queatz.snappy.logic.EarthRule;
-import com.queatz.snappy.logic.EarthStore;
+import com.queatz.earth.EarthRule;
+import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
-import com.queatz.snappy.logic.concepts.Authority;
+import com.queatz.earth.Authority;
 
 /**
  * Created by jacob on 4/9/17.

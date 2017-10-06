@@ -1,13 +1,14 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.snappy.api.EarthAs;
+import com.image.SnappyImage;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthKind;
 import com.queatz.snappy.shared.earth.EarthRef;
-import com.queatz.snappy.logic.EarthStore;
+import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
-import com.queatz.snappy.logic.EarthView;
+import com.queatz.snappy.view.EarthView;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.editors.FollowerEditor;
 import com.queatz.snappy.logic.editors.MessageEditor;
@@ -15,12 +16,12 @@ import com.queatz.snappy.logic.editors.RecentEditor;
 import com.queatz.snappy.logic.eventables.FollowEvent;
 import com.queatz.snappy.logic.eventables.InformationEvent;
 import com.queatz.snappy.logic.eventables.MessageEvent;
-import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
+import com.queatz.snappy.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.mines.FollowerMine;
 import com.queatz.snappy.logic.mines.MessageMine;
 import com.queatz.snappy.logic.mines.RecentMine;
 import com.queatz.snappy.logic.views.EntityListView;
-import com.queatz.snappy.logic.views.SuccessView;
+import com.queatz.snappy.view.SuccessView;
 import com.queatz.snappy.shared.Config;
 
 import org.apache.commons.fileupload.FileItemIterator;
@@ -224,7 +225,7 @@ public class PersonInterface extends CommonThingInterface {
                     int len;
                     byte[] buffer = new byte[8192];
 
-                    OutputStream outputChannel = as.getApi().snappyImage.openOutputStream(photoName, item.getName());
+                    OutputStream outputChannel = as.s(SnappyImage.class).openOutputStream(photoName, item.getName());
 
                     while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
                         outputChannel.write(buffer, 0, len);

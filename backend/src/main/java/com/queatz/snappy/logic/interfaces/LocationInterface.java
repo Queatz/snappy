@@ -1,14 +1,15 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.snappy.api.ApiUtil;
-import com.queatz.snappy.api.EarthAs;
-import com.queatz.snappy.logic.EarthStore;
+import com.image.SnappyImage;
+import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
-import com.queatz.snappy.logic.concepts.Interfaceable;
-import com.queatz.snappy.logic.exceptions.LogicException;
-import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
-import com.queatz.snappy.logic.views.SuccessView;
+import com.queatz.snappy.api.ApiUtil;
+import com.queatz.snappy.as.EarthAs;
+import com.queatz.snappy.api.Interfaceable;
+import com.queatz.snappy.exceptions.LogicException;
+import com.queatz.snappy.exceptions.NothingLogicResponse;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.view.SuccessView;
 
 import java.io.IOException;
 
@@ -47,7 +48,7 @@ public class LocationInterface implements Interfaceable {
 
     private void getPhoto(EarthAs as, String locationId) {
         try {
-            if (!ApiUtil.getPhoto(locationId, as.getApi().snappyImage, as.getRequest(), as.getResponse())) {
+            if (!ApiUtil.getPhoto(locationId, as.s(SnappyImage.class), as.getRequest(), as.getResponse())) {
                 throw new NothingLogicResponse("location photo - not found");
             }
         } catch (IOException e) {
@@ -59,7 +60,7 @@ public class LocationInterface implements Interfaceable {
         EarthThing location = new EarthStore(as).get(locationId);
 
         try {
-            if (!ApiUtil.putPhoto(location.key().name(), as.getApi().snappyImage, as.getRequest())) {
+            if (!ApiUtil.putPhoto(location.key().name(), as.s(SnappyImage.class), as.getRequest())) {
                 throw new LogicException("location photo - not all good");
             }
         } catch (IOException e) {
