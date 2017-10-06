@@ -3,13 +3,13 @@ package com.queatz.snappy.logic.editors;
 import com.google.gson.JsonObject;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
-import com.queatz.snappy.logic.EarthField;
+import com.queatz.earth.EarthField;
 import com.queatz.snappy.shared.earth.EarthGeo;
-import com.queatz.snappy.logic.EarthJson;
-import com.queatz.snappy.logic.EarthKind;
-import com.queatz.snappy.logic.EarthRef;
+import com.queatz.snappy.shared.EarthJson;
+import com.queatz.earth.EarthKind;
+import com.queatz.snappy.shared.earth.EarthRef;
 import com.queatz.snappy.logic.EarthStore;
-import com.queatz.snappy.logic.EarthThing;
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.shared.Config;
 
 import java.util.Date;

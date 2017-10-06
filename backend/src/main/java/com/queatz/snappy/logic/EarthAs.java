@@ -1,5 +1,6 @@
 package com.queatz.snappy.logic;
 
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.shared.Config;

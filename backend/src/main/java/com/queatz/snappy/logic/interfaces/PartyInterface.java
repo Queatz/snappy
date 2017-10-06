@@ -2,9 +2,9 @@ package com.queatz.snappy.logic.interfaces;
 
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.logic.EarthAs;
-import com.queatz.snappy.logic.EarthField;
+import com.queatz.earth.EarthField;
 import com.queatz.snappy.logic.EarthStore;
-import com.queatz.snappy.logic.EarthThing;
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.EarthViewer;
 import com.queatz.snappy.logic.concepts.Interfaceable;

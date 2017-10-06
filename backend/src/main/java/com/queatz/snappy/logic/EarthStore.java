@@ -8,6 +8,7 @@ import com.arangodb.ArangoDatabase;
 import com.arangodb.entity.BaseDocument;
 import com.arangodb.entity.CollectionType;
 import com.arangodb.entity.EdgeDefinition;
+import com.arangodb.entity.QueryCachePropertiesEntity;
 import com.arangodb.model.CollectionCreateOptions;
 import com.arangodb.model.DocumentCreateOptions;
 import com.arangodb.model.FulltextIndexOptions;
@@ -18,6 +19,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterators;
+import com.queatz.earth.EarthField;
+import com.queatz.earth.EarthKind;
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.mines.ClubMine;
 import com.queatz.snappy.logic.query.EarthQueryAppendFilter;
@@ -25,6 +29,7 @@ import com.queatz.snappy.logic.query.EarthQueryNearFilter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.Gateway;
 import com.queatz.snappy.shared.earth.EarthGeo;
+import com.queatz.snappy.shared.earth.EarthRef;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -99,6 +104,11 @@ public class EarthStore extends EarthControl {
         } catch (ArangoDBException ignored) {
             // Whatever
         }
+
+        QueryCachePropertiesEntity queryCachePropertiesEntity = new QueryCachePropertiesEntity();
+        queryCachePropertiesEntity.setMode(QueryCachePropertiesEntity.CacheMode.on);
+
+        __arangoDatabase.setQueryCacheProperties(queryCachePropertiesEntity);
 
         return __arangoDatabase;
     }

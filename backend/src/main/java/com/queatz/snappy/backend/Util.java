@@ -1,6 +1,6 @@
 package com.queatz.snappy.backend;
 
-import com.queatz.snappy.logic.EarthThing;
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.Shared;
 import com.queatz.snappy.shared.earth.EarthGeo;

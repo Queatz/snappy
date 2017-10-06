@@ -121,8 +121,9 @@ public class MessagePushHandler extends PushHandler {
             public void success(String response) {
                 DynamicRealmObject m = team.things.put(response);
 
-                if(m != null)
+                if(m != null) {
                     team.local.updateRecentsForMessage(m);
+                }
             }
 
             @Override

@@ -2,8 +2,8 @@ package com.queatz.snappy.api;
 
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.logic.EarthAs;
-import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.logic.EarthThing;
+import com.queatz.earth.EarthField;
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.editors.PersonEditor;
 import com.queatz.snappy.logic.eventables.RefreshMeEvent;

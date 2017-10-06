@@ -1,6 +1,6 @@
 package com.queatz.snappy.logic.views;
 
-import com.queatz.snappy.logic.EarthJson;
+import com.queatz.snappy.shared.EarthJson;
 import com.queatz.snappy.logic.concepts.Viewable;
 
 /**

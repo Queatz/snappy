@@ -1,4 +1,4 @@
-package com.queatz.snappy.logic;
+package com.queatz.earth;
 
 /**
  * Created by jacob on 4/3/16.

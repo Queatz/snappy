@@ -7,7 +7,7 @@ import com.queatz.snappy.api.Logic;
 import com.queatz.snappy.api.Pirate;
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.files.SnappyFiles;
-import com.queatz.snappy.logic.EarthThing;
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.shared.Config;
 
 import java.io.IOException;

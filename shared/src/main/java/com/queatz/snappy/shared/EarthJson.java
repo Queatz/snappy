@@ -1,4 +1,4 @@
-package com.queatz.snappy.logic;
+package com.queatz.snappy.shared;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -4,10 +4,10 @@ import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.chat.actions.AdAdd;
 import com.queatz.snappy.chat.actions.ChatMessage;
 import com.queatz.snappy.chat.actions.MessageSend;
-import com.queatz.snappy.logic.EarthField;
+import com.queatz.earth.EarthField;
 import com.queatz.snappy.shared.chat.BasicChatMessage;
 import com.queatz.snappy.shared.earth.EarthGeo;
-import com.queatz.snappy.logic.EarthThing;
+import com.queatz.earth.EarthThing;
 
 import java.util.ArrayList;
 import java.util.HashSet;

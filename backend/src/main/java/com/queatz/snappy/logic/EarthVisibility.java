@@ -1,5 +1,8 @@
 package com.queatz.snappy.logic;
 
+import com.queatz.earth.EarthField;
+import com.queatz.earth.EarthThing;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;

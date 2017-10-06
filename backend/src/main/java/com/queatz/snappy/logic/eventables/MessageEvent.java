@@ -5,9 +5,9 @@ import com.google.common.html.HtmlEscapers;
 import com.queatz.snappy.backend.PushSpec;
 import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.logic.EarthAs;
-import com.queatz.snappy.logic.EarthField;
+import com.queatz.earth.EarthField;
 import com.queatz.snappy.logic.EarthStore;
-import com.queatz.snappy.logic.EarthThing;
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.shared.Config;
 

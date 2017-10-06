@@ -1,6 +1,7 @@
 package com.queatz.snappy.logic;
 
 import com.google.common.collect.HashBiMap;
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.concepts.Eventable;
 import com.queatz.snappy.logic.eventables.ChatEvent;
 import com.queatz.snappy.logic.eventables.ClearNotificationEvent;
@@ -23,6 +24,7 @@ import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.service.Queue;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.earth.EarthGeo;
+import com.queatz.snappy.shared.earth.EarthRef;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;

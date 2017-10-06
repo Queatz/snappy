@@ -145,7 +145,7 @@ public class PersonUptoSlide extends TeamFragment {
 
         refresh();
 
-        mFloatingAction = (FloatingActionButton) view.findViewById(R.id.floatingAction);
+        mFloatingAction = view.findViewById(R.id.floatingAction);
 
         final boolean itsMe = mPerson != null && team.auth.getUser() != null && team.auth.getUser().equals(mPerson.getString(Thing.ID));
 

@@ -2,7 +2,7 @@ package com.queatz.snappy;
 
 import com.queatz.snappy.backend.PrintingError;
 import com.queatz.snappy.backend.StringResponse;
-import com.queatz.snappy.logic.EarthThing;
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.service.Api;
 import com.queatz.snappy.service.Auth;
 import com.queatz.snappy.service.ImageQueue;

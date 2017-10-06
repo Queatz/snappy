@@ -2,8 +2,8 @@ package com.queatz.snappy.logic.views;
 
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthControl;
-import com.queatz.snappy.logic.EarthJson;
-import com.queatz.snappy.logic.EarthThing;
+import com.queatz.snappy.shared.EarthJson;
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.EarthView;
 import com.queatz.snappy.logic.concepts.Viewable;
 

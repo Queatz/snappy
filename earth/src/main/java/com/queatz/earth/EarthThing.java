@@ -1,9 +1,10 @@
-package com.queatz.snappy.logic;
+package com.queatz.earth;
 
 import com.arangodb.entity.BaseDocument;
 import com.arangodb.velocypack.internal.util.DateUtil;
 import com.google.common.collect.ImmutableList;
 import com.queatz.snappy.shared.earth.EarthGeo;
+import com.queatz.snappy.shared.earth.EarthRef;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -86,7 +87,7 @@ public class EarthThing {
         return new Builder(raw);
     }
 
-    protected BaseDocument getRaw() {
+    public BaseDocument getRaw() {
         return raw;
     }
 

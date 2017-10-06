@@ -1,15 +1,14 @@
 package com.queatz.snappy.logic;
 
+import com.queatz.earth.EarthField;
 import com.queatz.snappy.logic.query.EarthQueryFilter;
 import com.queatz.snappy.logic.query.EarthQueryLet;
-import com.queatz.snappy.shared.Config;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.queatz.snappy.logic.EarthStore.CLUB_GRAPH;
@@ -117,7 +116,7 @@ public class EarthQuery extends EarthControl {
                 (of == null ? "" : " return" + (distinct ? " distinct" : "") + " " + of) +
                 (count ? ")" : "");
 
-        Logger.getLogger(Config.NAME).info(result);
+//        Logger.getLogger(Config.NAME).info(result);
 
         return result;
     }

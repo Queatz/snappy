@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.queatz.snappy.logic.AppStore;
 import com.queatz.snappy.logic.AppStoreField;
 import com.queatz.snappy.logic.EarthAs;
-import com.queatz.snappy.logic.EarthJson;
+import com.queatz.snappy.shared.EarthJson;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.shared.Config;

@@ -1,5 +1,6 @@
 package com.queatz.snappy.logic;
 
+import com.queatz.earth.EarthKind;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;
 import com.queatz.snappy.logic.interfaces.AppInterface;

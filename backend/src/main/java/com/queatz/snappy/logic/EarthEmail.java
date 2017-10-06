@@ -1,5 +1,7 @@
 package com.queatz.snappy.logic;
 
+import com.queatz.earth.EarthField;
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.Gateway;
 

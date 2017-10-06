@@ -1,7 +1,7 @@
 package com.queatz.snappy.service;
 
 import com.google.common.collect.ImmutableMap;
-import com.queatz.snappy.logic.EarthJson;
+import com.queatz.snappy.shared.EarthJson;
 import com.queatz.snappy.queue.SnappyQueue;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.earth.EarthGeo;

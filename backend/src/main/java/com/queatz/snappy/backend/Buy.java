@@ -1,6 +1,6 @@
 package com.queatz.snappy.backend;
 
-import com.queatz.snappy.logic.EarthJson;
+import com.queatz.snappy.shared.EarthJson;
 
 /**
  * Handles the Android app's purchase states.

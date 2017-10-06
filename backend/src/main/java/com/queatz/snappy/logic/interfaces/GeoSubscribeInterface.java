@@ -3,7 +3,7 @@ package com.queatz.snappy.logic.interfaces;
 import com.google.common.base.Strings;
 import com.queatz.snappy.logic.EarthAs;
 import com.queatz.snappy.logic.EarthStore;
-import com.queatz.snappy.logic.EarthThing;
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.concepts.Interfaceable;
 import com.queatz.snappy.logic.editors.GeoSubscribeEditor;
 import com.queatz.snappy.logic.exceptions.NothingLogicResponse;

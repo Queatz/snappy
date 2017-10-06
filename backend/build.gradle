@@ -28,9 +28,11 @@ dependencies {
     compile group: 'javax.mail', name: 'javax.mail-api', version: '1.5.6'
     compile group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
 
-    compile project(':shared')
+    compile project(':chat')
+    compile project(':earth')
     compile project(':image')
     compile project(':queue')
+    compile project(':shared')
 
     testCompile 'org.testng:testng:6.9.4'
     compile project(path: ':files')

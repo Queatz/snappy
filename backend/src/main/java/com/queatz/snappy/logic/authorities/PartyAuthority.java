@@ -1,8 +1,8 @@
 package com.queatz.snappy.logic.authorities;
 
-import com.queatz.snappy.logic.EarthField;
+import com.queatz.earth.EarthField;
 import com.queatz.snappy.logic.EarthRule;
-import com.queatz.snappy.logic.EarthThing;
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.concepts.Authority;
 
 /**

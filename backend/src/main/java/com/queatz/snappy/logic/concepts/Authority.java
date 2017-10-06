@@ -1,7 +1,7 @@
 package com.queatz.snappy.logic.concepts;
 
 import com.queatz.snappy.logic.EarthRule;
-import com.queatz.snappy.logic.EarthThing;
+import com.queatz.earth.EarthThing;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

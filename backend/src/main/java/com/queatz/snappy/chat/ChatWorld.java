@@ -9,8 +9,8 @@ import com.arangodb.entity.BaseDocument;
 import com.arangodb.model.DocumentCreateOptions;
 import com.arangodb.model.GeoIndexOptions;
 import com.google.common.collect.ImmutableSet;
-import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.logic.EarthThing;
+import com.queatz.earth.EarthField;
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.shared.Gateway;
 import com.queatz.snappy.shared.earth.EarthGeo;
 

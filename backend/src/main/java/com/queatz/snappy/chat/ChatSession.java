@@ -2,15 +2,15 @@ package com.queatz.snappy.chat;
 
 import com.google.common.primitives.Bytes;
 import com.image.SnappyImage;
-import com.queatz.snappy.backend.Util;
 import com.queatz.snappy.chat.actions.ChatMessage;
 import com.queatz.snappy.chat.actions.MessageSend;
 import com.queatz.snappy.logic.EarthAs;
-import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.logic.EarthJson;
-import com.queatz.snappy.logic.EarthThing;
+import com.queatz.earth.EarthField;
+import com.queatz.snappy.shared.EarthJson;
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.EarthUpdate;
 import com.queatz.snappy.logic.eventables.ChatEvent;
+import com.queatz.snappy.shared.Shared;
 import com.queatz.snappy.shared.chat.BasicChatMessage;
 import com.queatz.snappy.shared.earth.EarthGeo;
 
@@ -74,7 +74,7 @@ public class ChatSession {
 
 
         SnappyImage snappyImage = new SnappyImage();
-        String name = "chat/" + Util.randomToken();
+        String name = "chat/" + Shared.randomToken();
         OutputStream outputChannel = snappyImage.openOutputStream(name, null);
 
         if (outputChannel == null) {

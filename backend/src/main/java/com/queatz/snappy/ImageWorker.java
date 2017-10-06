@@ -1,8 +1,8 @@
 package com.queatz.snappy;
 
 import com.image.SnappyImage;
+import com.queatz.earth.EarthField;
 import com.queatz.snappy.logic.EarthAs;
-import com.queatz.snappy.logic.EarthField;
 import com.queatz.snappy.logic.EarthStore;
 import com.queatz.snappy.shared.Config;
 

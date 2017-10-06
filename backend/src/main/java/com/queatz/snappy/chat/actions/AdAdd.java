@@ -4,8 +4,8 @@ import com.queatz.snappy.chat.ChatKind;
 import com.queatz.snappy.chat.ChatSession;
 import com.queatz.snappy.chat.ChatWorld;
 import com.queatz.snappy.logic.EarthAs;
-import com.queatz.snappy.logic.EarthField;
-import com.queatz.snappy.logic.EarthThing;
+import com.queatz.earth.EarthField;
+import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.mines.PersonMine;
 import com.queatz.snappy.shared.chat.AdAddChatMessage;
 
