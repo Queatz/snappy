@@ -13,6 +13,10 @@ dependencies {
     compile project(':view')
     compile project(':router')
     compile project(':as')
+
+    compile project(':village-recent')
+    compile project(':village-message')
+    compile project(':village-follower')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

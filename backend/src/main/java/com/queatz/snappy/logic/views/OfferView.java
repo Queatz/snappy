@@ -6,6 +6,7 @@ import com.queatz.earth.EarthKind;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.view.EarthView;
+import com.village.things.CommonThingView;
 
 import java.util.Date;
 

@@ -9,7 +9,8 @@ import com.queatz.earth.EarthThing;
 import com.queatz.snappy.view.EarthView;
 import com.queatz.snappy.view.EarthViewer;
 import com.queatz.snappy.view.Viewable;
-import com.vlllage.things.EntityListView;
+import com.village.things.CommonThingView;
+import com.village.things.EntityListView;
 
 import java.util.Date;
 import java.util.List;

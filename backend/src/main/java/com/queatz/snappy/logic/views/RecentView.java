@@ -5,6 +5,7 @@ import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.view.EarthView;
+import com.village.things.LinkView;
 
 import java.util.Date;
 

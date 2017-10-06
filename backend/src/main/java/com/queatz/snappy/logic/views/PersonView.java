@@ -9,8 +9,9 @@ import com.queatz.earth.EarthKind;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.view.EarthView;
-import com.queatz.snappy.logic.mines.DeviceMine;
-import com.queatz.snappy.logic.mines.FollowerMine;
+import com.village.things.CommonThingView;
+import com.village.things.DeviceMine;
+import com.village.things.FollowerMine;
 
 import java.util.Date;
 

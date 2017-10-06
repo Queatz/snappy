@@ -5,7 +5,7 @@ import com.queatz.earth.EarthThing;
 import com.queatz.snappy.view.EarthViewer;
 import com.queatz.snappy.router.Interfaceable;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
-import com.vlllage.things.PersonMine;
+import com.village.things.PersonMine;
 
 /**
  * Created by jacob on 5/14/16.

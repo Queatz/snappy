@@ -5,6 +5,7 @@ import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.editors.FormItemEditor;
 import com.queatz.snappy.shared.Config;
+import com.village.things.CommonLinkInterface;
 
 import javax.servlet.http.HttpServletRequest;
 

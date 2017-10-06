@@ -8,7 +8,8 @@ import com.queatz.earth.EarthThing;
 import com.queatz.snappy.view.EarthView;
 import com.queatz.snappy.view.EarthViewer;
 import com.queatz.snappy.view.Viewable;
-import com.vlllage.things.EntityListView;
+import com.village.things.EntityListView;
+import com.village.things.ThingView;
 
 import java.util.Date;
 import java.util.List;

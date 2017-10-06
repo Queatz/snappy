@@ -10,6 +10,10 @@ dependencies {
     compile project(':api')
     compile project(':router')
     compile project(':notifications')
+
+    compile project(':village-contact')
+    compile project(':village-follower')
+    compile project(':village-member')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

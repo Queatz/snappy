@@ -3,8 +3,9 @@ package com.queatz.snappy.logic.interfaces;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.events.EarthUpdate;
-import com.queatz.snappy.logic.editors.ContactEditor;
-import com.queatz.snappy.logic.eventables.NewContactEvent;
+import com.village.things.CommonLinkInterface;
+import com.village.things.ContactEditor;
+import com.village.things.NewContactEvent;
 
 import javax.servlet.http.HttpServletRequest;
 

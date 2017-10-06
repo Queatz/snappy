@@ -1,7 +1,6 @@
 package com.queatz.snappy.api;
 
 import com.queatz.snappy.as.EarthAs;
-import com.queatz.snappy.logic.Earth;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
 
 import java.io.IOException;

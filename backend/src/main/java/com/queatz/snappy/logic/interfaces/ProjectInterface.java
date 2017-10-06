@@ -5,6 +5,7 @@ import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.logic.editors.ProjectEditor;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
+import com.village.things.CommonThingInterface;
 
 /**
  * Created by jacob on 5/23/16.

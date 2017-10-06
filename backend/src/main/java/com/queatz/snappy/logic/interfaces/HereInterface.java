@@ -5,9 +5,9 @@ import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.earth.EarthStore;
 import com.queatz.snappy.view.EarthView;
 import com.queatz.snappy.router.Interfaceable;
-import com.vlllage.things.PersonEditor;
+import com.village.things.PersonEditor;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
-import com.vlllage.things.EntityListView;
+import com.village.things.EntityListView;
 import com.queatz.snappy.shared.Config;
 
 /**

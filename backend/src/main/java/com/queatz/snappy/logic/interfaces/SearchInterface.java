@@ -9,8 +9,8 @@ import com.queatz.earth.EarthThing;
 import com.queatz.snappy.view.EarthView;
 import com.queatz.snappy.router.Interfaceable;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
-import com.queatz.snappy.logic.mines.RecentMine;
-import com.vlllage.things.EntityListView;
+import com.village.things.RecentMine;
+import com.village.things.EntityListView;
 import com.queatz.snappy.shared.Config;
 
 import java.util.List;

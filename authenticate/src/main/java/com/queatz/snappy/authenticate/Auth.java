@@ -9,8 +9,8 @@ import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.snappy.shared.EarthJson;
 import com.queatz.earth.EarthThing;
-import com.vlllage.things.PersonEditor;
-import com.vlllage.things.PersonMine;
+import com.village.things.PersonEditor;
+import com.village.things.PersonMine;
 import com.queatz.snappy.shared.Config;
 
 import org.apache.commons.lang3.StringUtils;

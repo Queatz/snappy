@@ -15,7 +15,7 @@ import com.queatz.snappy.files.SnappyFiles;
 import com.queatz.snappy.events.EarthUpdate;
 import com.queatz.snappy.view.EarthViewer;
 import com.queatz.snappy.logic.editors.FormSubmissionEditor;
-import com.queatz.snappy.logic.editors.MemberEditor;
+import com.village.things.MemberEditor;
 import com.queatz.snappy.logic.eventables.FormSubmissionEvent;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.EarthJson;

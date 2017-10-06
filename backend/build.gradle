@@ -48,6 +48,13 @@ dependencies {
     compile project(':earth-store')
 
     compile project(':village-people')
+    compile project(':village-club')
+    compile project(':village-contact')
+    compile project(':village-device')
+    compile project(':village-follower')
+    compile project(':village-member')
+    compile project(':village-message')
+    compile project(':village-recent')
 
     testCompile 'org.testng:testng:6.9.4'
     compile project(path: ':files')

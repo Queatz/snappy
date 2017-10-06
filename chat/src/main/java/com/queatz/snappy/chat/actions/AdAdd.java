@@ -7,7 +7,7 @@ import com.queatz.earth.EarthThing;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.chat.ChatSession;
 import com.queatz.snappy.shared.chat.AdAddChatMessage;
-import com.vlllage.things.PersonMine;
+import com.village.things.PersonMine;
 
 /**
  * Created by jacob on 8/9/17.

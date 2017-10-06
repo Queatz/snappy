@@ -44,6 +44,11 @@
     <orderEntry type="module" module-name="api" exported="" />
     <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="module" module-name="router" exported="" />
+    <orderEntry type="module" module-name="village-contact" exported="" />
+    <orderEntry type="module" module-name="village-follower" exported="" />
+    <orderEntry type="module" module-name="village-member" exported="" />
+    <orderEntry type="module" module-name="village-recent" exported="" />
+    <orderEntry type="module" module-name="village-message" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
@@ -61,6 +66,11 @@
     <orderEntry type="module" module-name="api" exported="" />
     <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="module" module-name="router" exported="" />
+    <orderEntry type="module" module-name="village-contact" exported="" />
+    <orderEntry type="module" module-name="village-follower" exported="" />
+    <orderEntry type="module" module-name="village-member" exported="" />
+    <orderEntry type="module" module-name="village-recent" exported="" />
+    <orderEntry type="module" module-name="village-message" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
@@ -78,6 +88,11 @@
     <orderEntry type="module" module-name="api" exported="" />
     <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="module" module-name="router" exported="" />
+    <orderEntry type="module" module-name="village-contact" exported="" />
+    <orderEntry type="module" module-name="village-follower" exported="" />
+    <orderEntry type="module" module-name="village-member" exported="" />
+    <orderEntry type="module" module-name="village-recent" exported="" />
+    <orderEntry type="module" module-name="village-message" exported="" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="servlet-api-2.5" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="javax.websocket-api-1.1" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="arangodb-java-driver-4.2.1" level="project" />
