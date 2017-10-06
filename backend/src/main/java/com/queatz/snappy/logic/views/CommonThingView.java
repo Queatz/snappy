@@ -7,6 +7,7 @@ import com.queatz.snappy.view.Viewable;
 import com.queatz.snappy.logic.mines.FollowerMine;
 import com.queatz.snappy.logic.mines.MemberMine;
 import com.queatz.snappy.shared.Config;
+import com.vlllage.things.EntityListView;
 
 import java.util.List;
 

@@ -3,8 +3,8 @@ package com.queatz.snappy.logic.interfaces;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
-import com.queatz.snappy.logic.EarthViewer;
-import com.queatz.snappy.api.Interfaceable;
+import com.queatz.snappy.view.EarthViewer;
+import com.queatz.snappy.router.Interfaceable;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
 
 /**

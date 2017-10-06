@@ -9,6 +9,7 @@ dependencies {
 
     compile project(':shared')
     compile project(':earth')
+    compile project(':earth-store')
     compile project(':image')
     compile project(':queue')
 }

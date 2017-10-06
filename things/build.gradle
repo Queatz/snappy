@@ -1,0 +1,16 @@
+apply plugin: 'java'
+
+dependencies {
+    compile project(':view')
+    compile project(':images')
+    compile project(':earth')
+    compile project(':earth-store')
+    compile project(':earth-authority')
+    compile project(':events')
+    compile project(':api')
+    compile project(':router')
+    compile project(':notifications')
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8

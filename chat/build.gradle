@@ -9,6 +9,13 @@ dependencies {
     compile project(':shared')
     compile project(':image')
     compile project(':earth')
+    compile project(':earth-store')
+    compile project(':as')
+    compile project(':events')
+    compile project(':notifications')
+    compile project(':as')
+
+    compile project(':village-people')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

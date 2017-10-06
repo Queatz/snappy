@@ -14,7 +14,7 @@
     </servlet>
     <servlet>
         <servlet-name>ImageWorker</servlet-name>
-        <servlet-class>com.queatz.snappy.ImageWorker</servlet-class>
+        <servlet-class>com.queatz.snappy.images.ImageWorker</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Worker</servlet-name>

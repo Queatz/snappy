@@ -5,7 +5,8 @@ import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.view.EarthView;
-import com.queatz.snappy.logic.EarthViewer;
+import com.queatz.snappy.view.EarthViewer;
+import com.vlllage.things.ExistenceView;
 import com.queatz.snappy.view.Viewable;
 
 /**

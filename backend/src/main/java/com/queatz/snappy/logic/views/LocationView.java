@@ -5,6 +5,7 @@ import com.queatz.earth.EarthField;
 import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.view.EarthView;
+import com.vlllage.things.ExistenceView;
 
 /**
  * Created by jacob on 5/14/16.

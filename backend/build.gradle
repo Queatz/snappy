@@ -29,6 +29,7 @@ dependencies {
     compile group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
 
     compile project(':api')
+    compile project(':authenticate')
     compile project(':app-store')
     compile project(':chat')
     compile project(':earth')
@@ -40,6 +41,8 @@ dependencies {
     compile project(':events')
     compile project(':images')
     compile project(':view')
+    compile project(':things')
+    compile project(':router')
 
     compile project(':earth-authority')
     compile project(':earth-store')

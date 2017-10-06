@@ -29,14 +29,26 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
+    <orderEntry type="module" module-name="earth-store" exported="" />
+    <orderEntry type="module" module-name="as" exported="" />
+    <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="earth-authority" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="queue" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
+    <orderEntry type="module" module-name="earth-store" exported="" />
+    <orderEntry type="module" module-name="as" exported="" />
+    <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="earth-authority" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="queue" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
+    <orderEntry type="module" module-name="earth-store" exported="" />
+    <orderEntry type="module" module-name="as" exported="" />
+    <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="earth-authority" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="queue" exported="" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="servlet-api-2.5" level="project" />

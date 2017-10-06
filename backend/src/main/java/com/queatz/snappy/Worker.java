@@ -12,7 +12,7 @@ import com.queatz.earth.EarthKind;
 import com.queatz.snappy.shared.earth.EarthRef;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
-import com.queatz.snappy.logic.EarthUpdate;
+import com.queatz.snappy.events.EarthUpdate;
 import com.queatz.snappy.events.Eventable;
 import com.queatz.snappy.logic.editors.DeviceEditor;
 import com.queatz.snappy.logic.mines.DeviceMine;

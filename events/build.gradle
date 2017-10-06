@@ -10,6 +10,8 @@ dependencies {
     compile project(':shared')
     compile project(':earth')
     compile project(':queue')
+    compile project(':as')
+    compile project(':exceptions')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

@@ -5,10 +5,10 @@ import com.queatz.earth.EarthThing;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.exceptions.Error;
 import com.queatz.snappy.exceptions.PrintingError;
-import com.queatz.snappy.logic.EarthUpdate;
-import com.queatz.snappy.logic.editors.PersonEditor;
+import com.queatz.snappy.events.EarthUpdate;
+import com.vlllage.things.PersonEditor;
 import com.queatz.snappy.logic.eventables.RefreshMeEvent;
-import com.queatz.snappy.logic.mines.PersonMine;
+import com.vlllage.things.PersonMine;
 import com.queatz.snappy.shared.Config;
 
 import org.apache.commons.lang3.StringUtils;

@@ -1,1 +1,1 @@
-include ':app', ':backend', ':web', ':shared', ':image', ':queue', ':files', ':branch', ':chat', ':earth', ':app-store', ':api', ':notifications', ':email', ':events', ':images', ':village-people', ':view', ':as', ':exceptions', ':earth-authority', ':earth-store', ':router'
+include ':app', ':backend', ':web', ':shared', ':image', ':queue', ':files', ':branch', ':chat', ':earth', ':app-store', ':api', ':notifications', ':email', ':events', ':images', ':village-people', ':view', ':as', ':exceptions', ':earth-authority', ':earth-store', ':router', ':things', ':authenticate'

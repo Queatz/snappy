@@ -5,10 +5,12 @@ import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthKind;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.view.EarthView;
+import com.vlllage.things.ExistenceView;
 import com.queatz.snappy.view.Viewable;
 import com.queatz.earth.ClubMine;
 import com.queatz.snappy.logic.mines.FollowerMine;
 import com.queatz.snappy.images.ImageQueue;
+import com.vlllage.things.EntityListView;
 
 import java.util.List;
 

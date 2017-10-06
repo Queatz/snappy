@@ -1,0 +1,15 @@
+apply plugin: 'java'
+
+dependencies {
+    compile 'org.apache.commons:commons-lang3:3.0'
+    compile 'org.jetbrains:annotations-java5:15.0'
+    compile 'com.google.guava:guava:21.0'
+
+    compile project(':shared')
+    compile project(':as')
+    compile project(':earth')
+    compile project(':village-people')
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
