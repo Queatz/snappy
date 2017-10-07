@@ -1,6 +1,7 @@
 package com.village.things;
 
 import com.google.common.collect.ImmutableMap;
+import com.queatz.snappy.plugins.ContactMinePlugin;
 import com.queatz.snappy.shared.PushSpec;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthField;
@@ -13,10 +14,11 @@ import com.queatz.snappy.shared.Config;
  * Created by jacob on 6/26/16.
  */
 public class NewThingEvent implements Eventable {
-    EarthStore earthStore = new EarthStore(new EarthAs());
-    ContactMine contactMine = new ContactMine(new EarthAs());
 
-    EarthThing thing;
+    private EarthStore earthStore = new EarthStore(new EarthAs());
+    private ContactMinePlugin contactMine = new EarthAs().s(ContactMinePlugin.class);
+
+    private EarthThing thing;
 
     // Serialization
 

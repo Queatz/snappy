@@ -1,0 +1,8 @@
+apply plugin: 'java'
+
+dependencies {
+    compile project(path: ':earth')
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8

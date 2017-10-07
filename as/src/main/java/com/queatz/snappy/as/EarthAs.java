@@ -3,6 +3,7 @@ package com.queatz.snappy.as;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.exceptions.Error;
 import com.queatz.snappy.exceptions.PrintingError;
+import com.queatz.snappy.plugins.EarthPlugin;
 import com.queatz.snappy.shared.Config;
 
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +51,10 @@ public class EarthAs {
     @SuppressWarnings("unchecked")
     public <T> T s(Class<T> clazz) {
         if (!singletons.containsKey(clazz)) {
+            if (clazz.isInterface()) {
+                clazz = EarthPlugin.plugin(clazz);
+            }
+
             try {
                 try {
                     singletons.put(clazz, clazz.getConstructor(EarthAs.class).newInstance(this));

@@ -32,6 +32,7 @@
     <orderEntry type="module" module-name="earth" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="module" module-name="authenticate" exported="" />
@@ -47,14 +48,17 @@
     <orderEntry type="module" module-name="notifications" exported="" />
     <orderEntry type="module" module-name="email" exported="" />
     <orderEntry type="module" module-name="village-device" exported="" />
-    <orderEntry type="module" module-name="village-contact" exported="" />
-    <orderEntry type="module" module-name="village-follower" exported="" />
-    <orderEntry type="module" module-name="village-member" exported="" />
+    <orderEntry type="module" module-name="plugin-contact" exported="" />
+    <orderEntry type="module" module-name="plugin-follower" exported="" />
+    <orderEntry type="module" module-name="plugin-member" exported="" />
     <orderEntry type="module" module-name="village-recent" exported="" />
     <orderEntry type="module" module-name="village-message" exported="" />
+    <orderEntry type="module" module-name="village-follower" exported="" />
     <orderEntry type="module" module-name="app-store" exported="" />
     <orderEntry type="module" module-name="chat" exported="" />
     <orderEntry type="module" module-name="village-club" exported="" />
+    <orderEntry type="module" module-name="village-contact" exported="" />
+    <orderEntry type="module" module-name="village-member" exported="" />
     <orderEntry type="module" module-name="village-form" exported="" />
     <orderEntry type="module" module-name="village-hub" exported="" />
     <orderEntry type="module" module-name="village-offer" exported="" />
@@ -71,6 +75,7 @@
     <orderEntry type="module" module-name="earth" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="module" module-name="authenticate" exported="" />
@@ -86,14 +91,17 @@
     <orderEntry type="module" module-name="notifications" exported="" />
     <orderEntry type="module" module-name="email" exported="" />
     <orderEntry type="module" module-name="village-device" exported="" />
-    <orderEntry type="module" module-name="village-contact" exported="" />
-    <orderEntry type="module" module-name="village-follower" exported="" />
-    <orderEntry type="module" module-name="village-member" exported="" />
+    <orderEntry type="module" module-name="plugin-contact" exported="" />
+    <orderEntry type="module" module-name="plugin-follower" exported="" />
+    <orderEntry type="module" module-name="plugin-member" exported="" />
     <orderEntry type="module" module-name="village-recent" exported="" />
     <orderEntry type="module" module-name="village-message" exported="" />
+    <orderEntry type="module" module-name="village-follower" exported="" />
     <orderEntry type="module" module-name="app-store" exported="" />
     <orderEntry type="module" module-name="chat" exported="" />
     <orderEntry type="module" module-name="village-club" exported="" />
+    <orderEntry type="module" module-name="village-contact" exported="" />
+    <orderEntry type="module" module-name="village-member" exported="" />
     <orderEntry type="module" module-name="village-form" exported="" />
     <orderEntry type="module" module-name="village-hub" exported="" />
     <orderEntry type="module" module-name="village-offer" exported="" />
@@ -110,6 +118,7 @@
     <orderEntry type="module" module-name="earth" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="module" module-name="authenticate" exported="" />
@@ -125,14 +134,17 @@
     <orderEntry type="module" module-name="notifications" exported="" />
     <orderEntry type="module" module-name="email" exported="" />
     <orderEntry type="module" module-name="village-device" exported="" />
-    <orderEntry type="module" module-name="village-contact" exported="" />
-    <orderEntry type="module" module-name="village-follower" exported="" />
-    <orderEntry type="module" module-name="village-member" exported="" />
+    <orderEntry type="module" module-name="plugin-contact" exported="" />
+    <orderEntry type="module" module-name="plugin-follower" exported="" />
+    <orderEntry type="module" module-name="plugin-member" exported="" />
     <orderEntry type="module" module-name="village-recent" exported="" />
     <orderEntry type="module" module-name="village-message" exported="" />
+    <orderEntry type="module" module-name="village-follower" exported="" />
     <orderEntry type="module" module-name="app-store" exported="" />
     <orderEntry type="module" module-name="chat" exported="" />
     <orderEntry type="module" module-name="village-club" exported="" />
+    <orderEntry type="module" module-name="village-contact" exported="" />
+    <orderEntry type="module" module-name="village-member" exported="" />
     <orderEntry type="module" module-name="village-form" exported="" />
     <orderEntry type="module" module-name="village-hub" exported="" />
     <orderEntry type="module" module-name="village-offer" exported="" />

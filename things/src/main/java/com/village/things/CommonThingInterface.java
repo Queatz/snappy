@@ -9,6 +9,8 @@ import com.queatz.snappy.exceptions.PrintingError;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.snappy.exceptions.Error;
+import com.queatz.snappy.plugins.ContactEditorPlugin;
+import com.queatz.snappy.plugins.MemberEditorPlugin;
 import com.queatz.snappy.shared.EarthJson;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
@@ -62,7 +64,7 @@ public abstract class CommonThingInterface implements Interfaceable {
      * @return If the thing was deleted.
      */
     public boolean deleteThing(EarthAs as, EarthThing thing) {
-        new EarthStore(as).conclude(thing);
+        as.s(EarthStore.class).conclude(thing);
         return true;
     }
 
@@ -97,18 +99,18 @@ public abstract class CommonThingInterface implements Interfaceable {
             case 0:
                 throw new NothingLogicResponse("thing - empty route");
             case 1: {
-                EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
+                EarthThing thing = as.s(EarthStore.class).get(as.getRoute().get(0));
 
                 onGet(as, thing);
 
-                return new EarthViewer(as).getViewForEntityOrThrow(thing).toJson();
+                return as.s(EarthViewer.class).getViewForEntityOrThrow(thing).toJson();
             } case 2:
                 switch (as.getRoute().get(1)) {
                     case Config.PATH_PHOTO:
                         getPhoto(as);
                         return null;
                     default:
-                        EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
+                        EarthThing thing = as.s(EarthStore.class).get(as.getRoute().get(0));
 
                         String string = getThing(as, thing);
                         if (string == null) {
@@ -131,21 +133,21 @@ public abstract class CommonThingInterface implements Interfaceable {
                 EarthThing thing = this.createThing(as);
 
                 // Add contact
-                EarthThing contact = new ContactEditor(as).newContact(thing, as.getUser());
-                new MemberEditor(as).create(contact, thing, Config.MEMBER_STATUS_ACTIVE);
+                EarthThing contact = as.s(ContactEditorPlugin.class).newContact(thing, as.getUser());
+                as.s(MemberEditorPlugin.class).create(contact, thing, Config.MEMBER_STATUS_ACTIVE);
 
                 if (!Strings.isNullOrEmpty(thing.getString(EarthField.NAME))) {
-                    new EarthUpdate(as).send(new NewThingEvent(thing)).toFollowersOf(as.getUser());
+                    as.s(EarthUpdate.class).send(new NewThingEvent(thing)).toFollowersOf(as.getUser());
                 }
 
                 isIn(as, thing, extract(as.getParameters().get(Config.PARAM_IN)));
 
                 setVisibility(as, thing);
 
-                return new EarthViewer(as).getViewForEntityOrThrow(thing).toJson();
+                return as.s(EarthViewer.class).getViewForEntityOrThrow(thing).toJson();
             }
             case 1: {
-                EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
+                EarthThing thing = as.s(EarthStore.class).get(as.getRoute().get(0));
 
                 thing = this.editThing(as, thing);
 
@@ -155,18 +157,18 @@ public abstract class CommonThingInterface implements Interfaceable {
 
                 setVisibility(as, thing);
 
-                return new EarthViewer(as).getViewForEntityOrThrow(thing).toJson();
+                return as.s(EarthViewer.class).getViewForEntityOrThrow(thing).toJson();
             }
 
             case 2: {
                 if (Config.PATH_PHOTO.equals(as.getRoute().get(1))) {
-                    postPhoto(new EarthStore(as).get(as.getRoute().get(0)), as);
+                    postPhoto(as.s(EarthStore.class).get(as.getRoute().get(0)), as);
                     return new SuccessView(true).toJson();
                 } else if (Config.PATH_DELETE.equals(as.getRoute().get(1))) {
-                    EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
+                    EarthThing thing = as.s(EarthStore.class).get(as.getRoute().get(0));
                     return new SuccessView(deleteThing(as, thing)).toJson();
                 } else {
-                    EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
+                    EarthThing thing = as.s(EarthStore.class).get(as.getRoute().get(0));
                     String string = postThing(as, thing);
                     if (string != null) {
                         return string;
@@ -176,7 +178,7 @@ public abstract class CommonThingInterface implements Interfaceable {
                 throw new NothingLogicResponse("thing - bad path");
             }
             case 3: {
-                EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
+                EarthThing thing = as.s(EarthStore.class).get(as.getRoute().get(0));
 
                 if (Config.PATH_PHOTO.equals(as.getRoute().get(1))) {
                     if (Config.PATH_DELETE.equals(as.getRoute().get(2))) {
@@ -199,7 +201,7 @@ public abstract class CommonThingInterface implements Interfaceable {
 
     protected void isIn(EarthAs as, EarthThing thing, String in) {
         if (!Strings.isNullOrEmpty(in)) {
-            EarthThing of = new EarthStore(as).get(in);
+            EarthThing of = as.s(EarthStore.class).get(in);
 
             isIn(as, thing, of);
         }
@@ -208,7 +210,7 @@ public abstract class CommonThingInterface implements Interfaceable {
     protected void isIn(EarthAs as, EarthThing thing, EarthThing of) {
         if (of != null) {
             // TODO: Make suggestion if not owned by me
-            new MemberEditor(as).create(thing, of, Config.MEMBER_STATUS_ACTIVE);
+            as.s(MemberEditorPlugin.class).create(thing, of, Config.MEMBER_STATUS_ACTIVE);
         } else {
             // Silent fail
         }
@@ -231,7 +233,7 @@ public abstract class CommonThingInterface implements Interfaceable {
 
     protected void setVisibilityClubs(EarthAs as, EarthThing thing, String clubs) {
         try {
-            Map<String, Boolean> clubsMap = new EarthJson().fromJson(
+            Map<String, Boolean> clubsMap = as.s(EarthJson.class).fromJson(
                     clubs,
                     new TypeToken<Map<String, Boolean>>() {}.getType()
             );
@@ -247,7 +249,7 @@ public abstract class CommonThingInterface implements Interfaceable {
     }
 
     private void getPhoto(EarthAs as) {
-        EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
+        EarthThing thing = as.s(EarthStore.class).get(as.getRoute().get(0));
 
         if (!thing.getBoolean(EarthField.PHOTO)) {
             throw new PrintingError(Error.NOT_FOUND, "thing - photo not set");
@@ -267,7 +269,7 @@ public abstract class CommonThingInterface implements Interfaceable {
         try {
             boolean photo = ApiUtil.putPhoto(thing.key().name(), as.s(SnappyImage.class), as.getRequest());
 
-            EarthStore earthStore = new EarthStore(as);
+            EarthStore earthStore = as.s(EarthStore.class);
             return earthStore.save(earthStore.edit(thing)
                     .set(EarthField.PLACEHOLDER)
                     .set(EarthField.ASPECT_RATIO)
@@ -279,7 +281,7 @@ public abstract class CommonThingInterface implements Interfaceable {
     }
 
     protected EarthThing removePhoto(EarthThing thing, EarthAs as) {
-        EarthStore earthStore = new EarthStore(as);
+        EarthStore earthStore = as.s(EarthStore.class);
         return earthStore.save(earthStore.edit(thing).set(EarthField.PHOTO, false));
     }
 

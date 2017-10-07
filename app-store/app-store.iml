@@ -31,18 +31,21 @@
     <orderEntry type="module" module-name="earth" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="view" exported="" />
     <orderEntry type="module" module-name="router" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="view" exported="" />
     <orderEntry type="module" module-name="router" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="view" exported="" />
     <orderEntry type="module" module-name="router" exported="" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-fileupload-1.3" level="project" />

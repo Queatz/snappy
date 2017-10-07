@@ -18,9 +18,9 @@ public class ContactInterface extends CommonLinkInterface {
         EarthThing contact;
 
         if (role != null) {
-            contact = new ContactEditor(as).newContact(target, source, role);
+            contact = as.s(ContactEditor.class).newContact(target, source, role);
         } else {
-            contact = new ContactEditor(as).newContact(target, source);
+            contact = as.s(ContactEditor.class).newContact(target, source);
         }
 
         new EarthUpdate(as).send(new NewContactEvent(as.getUser(), contact)).to(source);

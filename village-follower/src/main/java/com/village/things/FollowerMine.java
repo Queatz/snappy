@@ -1,23 +1,25 @@
 package com.village.things;
 
 import com.google.common.collect.ImmutableMap;
-import com.queatz.snappy.as.EarthAs;
-import com.queatz.snappy.as.EarthControl;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthKind;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.as.EarthAs;
+import com.queatz.snappy.as.EarthControl;
+import com.queatz.snappy.plugins.FollowerMinePlugin;
 
 import java.util.List;
 
 /**
  * Created by jacob on 5/14/16.
  */
-public class FollowerMine extends EarthControl {
+public class FollowerMine extends EarthControl implements FollowerMinePlugin {
     public FollowerMine(final EarthAs as) {
         super(as);
     }
 
+    @Override
     public EarthThing getFollower(EarthThing person, EarthThing isFollowingPerson) {
         List<EarthThing> result = use(EarthStore.class).query(
                 "x." + EarthField.KIND + " == @kind and " +
@@ -36,10 +38,12 @@ public class FollowerMine extends EarthControl {
         }
     }
 
+    @Override
     public int countFollowers(EarthThing entity) {
         return use(EarthStore.class).count(EarthKind.FOLLOWER_KIND, EarthField.TARGET, entity.key());
     }
 
+    @Override
     public int countFollowing(EarthThing entity) {
         return use(EarthStore.class).count(EarthKind.FOLLOWER_KIND, EarthField.SOURCE, entity.key());
     }

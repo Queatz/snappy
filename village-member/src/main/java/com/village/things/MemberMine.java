@@ -7,6 +7,7 @@ import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthKind;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.plugins.MemberMinePlugin;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +17,7 @@ import java.util.List;
  * Created by jacob on 4/9/17.
  */
 
-public class MemberMine extends EarthControl {
+public class MemberMine extends EarthControl implements MemberMinePlugin {
     public MemberMine(@NotNull EarthAs as) {
         super(as);
     }

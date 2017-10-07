@@ -32,6 +32,7 @@
     <orderEntry type="module" module-name="earth-store" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="earth-authority" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="queue" exported="" />
@@ -40,6 +41,7 @@
     <orderEntry type="module" module-name="earth-store" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="earth-authority" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="queue" exported="" />
@@ -48,6 +50,7 @@
     <orderEntry type="module" module-name="earth-store" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="earth-authority" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="queue" exported="" />

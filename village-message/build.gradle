@@ -11,8 +11,6 @@ dependencies {
     compile project(':view')
     compile project(':router')
     compile project(':as')
-
-    compile project(':village-people')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

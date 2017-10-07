@@ -4,6 +4,7 @@ import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
+import com.queatz.snappy.plugins.MemberEditorPlugin;
 import com.queatz.snappy.router.Interfaceable;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.view.EarthViewer;
@@ -34,9 +35,9 @@ public abstract class CommonLinkInterface implements Interfaceable {
             case 0:
                 throw new NothingLogicResponse("link - empty route");
             case 1:
-                EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
+                EarthThing thing = as.s(EarthStore.class).get(as.getRoute().get(0));
 
-                return new EarthViewer(as).getViewForEntityOrThrow(thing).toJson();
+                return as.s(EarthViewer.class).getViewForEntityOrThrow(thing).toJson();
             default:
                 throw new NothingLogicResponse("link - bad path");
         }
@@ -46,7 +47,7 @@ public abstract class CommonLinkInterface implements Interfaceable {
     public String post(EarthAs as) {
         as.requireUser();
 
-        EarthStore earthStore = new EarthStore(as);
+        EarthStore earthStore = as.s(EarthStore.class);
 
         switch (as.getRoute().size()) {
             case 0: {
@@ -60,16 +61,16 @@ public abstract class CommonLinkInterface implements Interfaceable {
                 String role = extract(as.getParameters().get(Config.PARAM_ROLE));
 
                 EarthThing link = create(as, source, target, Config.MEMBER_STATUS_ACTIVE, role);
-                new MemberEditor(as).create(link, target, Config.MEMBER_STATUS_ACTIVE);
+                as.s(MemberEditorPlugin.class).create(link, target, Config.MEMBER_STATUS_ACTIVE);
 
-                return new EarthViewer(as).getViewForEntityOrThrow(link).toJson();
+                return as.s(EarthViewer.class).getViewForEntityOrThrow(link).toJson();
             }
             case 1: {
                 EarthThing link = earthStore.get(as.getRoute().get(0));
 
                 link = edit(as, link, as.getRequest());
 
-                return new EarthViewer(as).getViewForEntityOrThrow(link).toJson();
+                return as.s(EarthViewer.class).getViewForEntityOrThrow(link).toJson();
             }
 
             case 2: {

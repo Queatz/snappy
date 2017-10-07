@@ -4,6 +4,7 @@ import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
+import com.queatz.snappy.plugins.MemberEditorPlugin;
 import com.queatz.snappy.shared.Config;
 
 /**
@@ -23,7 +24,7 @@ public class ClubInterface extends CommonThingInterface {
         EarthThing club = new ClubEditor(as).newClub(name[0], as.getUser());
 
         // Add yourself as the first club member
-        new MemberEditor(as).create(as.getUser(), club, Config.MEMBER_STATUS_ACTIVE);
+        as.s(MemberEditorPlugin.class).create(as.getUser(), club, Config.MEMBER_STATUS_ACTIVE);
 
         return club;
     }

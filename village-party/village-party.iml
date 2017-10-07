@@ -34,6 +34,7 @@
     <orderEntry type="module" module-name="queue" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="earth-store" exported="" />
     <orderEntry type="module" module-name="earth-authority" exported="" />
     <orderEntry type="module" module-name="things" exported="" />
@@ -45,12 +46,13 @@
     <orderEntry type="module" module-name="notifications" exported="" />
     <orderEntry type="module" module-name="email" exported="" />
     <orderEntry type="module" module-name="village-device" exported="" />
-    <orderEntry type="module" module-name="village-contact" exported="" />
-    <orderEntry type="module" module-name="village-follower" exported="" />
-    <orderEntry type="module" module-name="village-member" exported="" />
+    <orderEntry type="module" module-name="plugin-contact" exported="" />
+    <orderEntry type="module" module-name="plugin-follower" exported="" />
+    <orderEntry type="module" module-name="plugin-member" exported="" />
     <orderEntry type="module" module-name="village-people" exported="" />
     <orderEntry type="module" module-name="village-recent" exported="" />
     <orderEntry type="module" module-name="village-message" exported="" />
+    <orderEntry type="module" module-name="village-follower" exported="" />
     <orderEntry type="module" module-name="village-join" exported="" />
     <orderEntry type="module" module-name="village-update" exported="" />
     <orderEntry type="module" module-name="village-like" exported="" />
@@ -62,6 +64,7 @@
     <orderEntry type="module" module-name="queue" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="earth-store" exported="" />
     <orderEntry type="module" module-name="earth-authority" exported="" />
     <orderEntry type="module" module-name="things" exported="" />
@@ -73,12 +76,13 @@
     <orderEntry type="module" module-name="notifications" exported="" />
     <orderEntry type="module" module-name="email" exported="" />
     <orderEntry type="module" module-name="village-device" exported="" />
-    <orderEntry type="module" module-name="village-contact" exported="" />
-    <orderEntry type="module" module-name="village-follower" exported="" />
-    <orderEntry type="module" module-name="village-member" exported="" />
+    <orderEntry type="module" module-name="plugin-contact" exported="" />
+    <orderEntry type="module" module-name="plugin-follower" exported="" />
+    <orderEntry type="module" module-name="plugin-member" exported="" />
     <orderEntry type="module" module-name="village-people" exported="" />
     <orderEntry type="module" module-name="village-recent" exported="" />
     <orderEntry type="module" module-name="village-message" exported="" />
+    <orderEntry type="module" module-name="village-follower" exported="" />
     <orderEntry type="module" module-name="village-join" exported="" />
     <orderEntry type="module" module-name="village-update" exported="" />
     <orderEntry type="module" module-name="village-like" exported="" />
@@ -90,6 +94,7 @@
     <orderEntry type="module" module-name="queue" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="earth-store" exported="" />
     <orderEntry type="module" module-name="earth-authority" exported="" />
     <orderEntry type="module" module-name="things" exported="" />
@@ -101,12 +106,13 @@
     <orderEntry type="module" module-name="notifications" exported="" />
     <orderEntry type="module" module-name="email" exported="" />
     <orderEntry type="module" module-name="village-device" exported="" />
-    <orderEntry type="module" module-name="village-contact" exported="" />
-    <orderEntry type="module" module-name="village-follower" exported="" />
-    <orderEntry type="module" module-name="village-member" exported="" />
+    <orderEntry type="module" module-name="plugin-contact" exported="" />
+    <orderEntry type="module" module-name="plugin-follower" exported="" />
+    <orderEntry type="module" module-name="plugin-member" exported="" />
     <orderEntry type="module" module-name="village-people" exported="" />
     <orderEntry type="module" module-name="village-recent" exported="" />
     <orderEntry type="module" module-name="village-message" exported="" />
+    <orderEntry type="module" module-name="village-follower" exported="" />
     <orderEntry type="module" module-name="village-join" exported="" />
     <orderEntry type="module" module-name="village-update" exported="" />
     <orderEntry type="module" module-name="village-like" exported="" />

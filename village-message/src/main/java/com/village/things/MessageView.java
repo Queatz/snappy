@@ -5,6 +5,8 @@ import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.view.EarthView;
+import com.queatz.snappy.view.EarthViewer;
+import com.queatz.snappy.view.Viewable;
 
 import java.util.Date;
 
@@ -15,8 +17,8 @@ public class MessageView extends ExistenceView {
 
     final Date date;
     final String message;
-    final PersonView from;
-    final PersonView to;
+    final Viewable from;
+    final Viewable to;
     final boolean photo;
 
     public MessageView(EarthAs as, EarthThing message) {
@@ -42,7 +44,7 @@ public class MessageView extends ExistenceView {
             photo = false;
         }
 
-        from = new PersonView(as, earthStore.get(message.getKey(EarthField.SOURCE)), EarthView.SHALLOW);
-        to = new PersonView(as, earthStore.get(message.getKey(EarthField.TARGET)), EarthView.SHALLOW);
+        from = use(EarthViewer.class).getViewForEntityOrThrow(earthStore.get(message.getKey(EarthField.SOURCE)), EarthView.SHALLOW);
+        to = use(EarthViewer.class).getViewForEntityOrThrow(earthStore.get(message.getKey(EarthField.TARGET)), EarthView.SHALLOW);
     }
 }

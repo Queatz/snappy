@@ -162,7 +162,7 @@ public class PersonInterface extends CommonThingInterface {
         follow = new FollowerMine(as).getFollower(as.getUser(), person);
 
         if (follow == null) {
-            follow = new FollowerEditor(as).newFollower(as.getUser(), person);
+            follow = as.s(FollowerEditor.class).newFollower(as.getUser(), person);
 
             new EarthUpdate(as).send(new FollowEvent(follow))
                     .to(follow.getKey(EarthField.TARGET));

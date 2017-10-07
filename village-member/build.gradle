@@ -11,6 +11,8 @@ dependencies {
     compile project(':things')
     compile project(':router')
     compile project(':as')
+
+    compile project(':plugin-member')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

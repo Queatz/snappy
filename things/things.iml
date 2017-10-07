@@ -32,6 +32,7 @@
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="images" exported="" />
     <orderEntry type="module" module-name="earth-store" exported="" />
     <orderEntry type="module" module-name="earth-authority" exported="" />
@@ -44,14 +45,15 @@
     <orderEntry type="module" module-name="notifications" exported="" />
     <orderEntry type="module" module-name="email" exported="" />
     <orderEntry type="module" module-name="village-device" exported="" />
-    <orderEntry type="module" module-name="village-contact" exported="" />
-    <orderEntry type="module" module-name="village-follower" exported="" />
-    <orderEntry type="module" module-name="village-member" exported="" />
+    <orderEntry type="module" module-name="plugin-contact" exported="" />
+    <orderEntry type="module" module-name="plugin-follower" exported="" />
+    <orderEntry type="module" module-name="plugin-member" exported="" />
     <orderEntry type="module" module-name="view" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="images" exported="" />
     <orderEntry type="module" module-name="earth-store" exported="" />
     <orderEntry type="module" module-name="earth-authority" exported="" />
@@ -64,14 +66,15 @@
     <orderEntry type="module" module-name="notifications" exported="" />
     <orderEntry type="module" module-name="email" exported="" />
     <orderEntry type="module" module-name="village-device" exported="" />
-    <orderEntry type="module" module-name="village-contact" exported="" />
-    <orderEntry type="module" module-name="village-follower" exported="" />
-    <orderEntry type="module" module-name="village-member" exported="" />
+    <orderEntry type="module" module-name="plugin-contact" exported="" />
+    <orderEntry type="module" module-name="plugin-follower" exported="" />
+    <orderEntry type="module" module-name="plugin-member" exported="" />
     <orderEntry type="module" module-name="view" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="images" exported="" />
     <orderEntry type="module" module-name="earth-store" exported="" />
     <orderEntry type="module" module-name="earth-authority" exported="" />
@@ -84,9 +87,9 @@
     <orderEntry type="module" module-name="notifications" exported="" />
     <orderEntry type="module" module-name="email" exported="" />
     <orderEntry type="module" module-name="village-device" exported="" />
-    <orderEntry type="module" module-name="village-contact" exported="" />
-    <orderEntry type="module" module-name="village-follower" exported="" />
-    <orderEntry type="module" module-name="village-member" exported="" />
+    <orderEntry type="module" module-name="plugin-contact" exported="" />
+    <orderEntry type="module" module-name="plugin-follower" exported="" />
+    <orderEntry type="module" module-name="plugin-member" exported="" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="servlet-api-2.5" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="arangodb-java-driver-4.2.1" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-lang3-3.0" level="project" />

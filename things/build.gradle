@@ -11,9 +11,9 @@ dependencies {
     compile project(':router')
     compile project(':notifications')
 
-    compile project(':village-contact')
-    compile project(':village-follower')
-    compile project(':village-member')
+    compile project(':plugin-contact')
+    compile project(':plugin-follower')
+    compile project(':plugin-member')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

@@ -43,6 +43,7 @@ dependencies {
     compile project(':view')
     compile project(':things')
     compile project(':router')
+    compile project(':plugins')
 
     compile project(':earth-authority')
     compile project(':earth-store')
@@ -66,6 +67,10 @@ dependencies {
     compile project(':village-join')
     compile project(':village-location')
     compile project(':village-geosubscribe')
+
+    compile project(':plugin-member')
+    compile project(':plugin-contact')
+    compile project(':plugin-follower')
 
     testCompile 'org.testng:testng:6.9.4'
     compile project(path: ':files')

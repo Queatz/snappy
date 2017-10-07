@@ -31,18 +31,21 @@
     <orderEntry type="module" module-name="earth" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="image" exported="" />
     <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="servlet-api-2.5" level="project" />

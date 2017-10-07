@@ -12,6 +12,8 @@ dependencies {
     compile project(':things')
     compile project(':as')
     compile project(':notifications')
+
+    compile project(':plugin-follower')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

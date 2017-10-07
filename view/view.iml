@@ -31,14 +31,17 @@
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="arangodb-java-driver-4.2.1" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-lang3-3.0" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="annotations-java5-15.0" level="project" />

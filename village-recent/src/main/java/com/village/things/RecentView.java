@@ -5,6 +5,8 @@ import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.view.EarthView;
+import com.queatz.snappy.view.EarthViewer;
+import com.queatz.snappy.view.Viewable;
 
 import java.util.Date;
 
@@ -15,7 +17,7 @@ public class RecentView extends LinkView {
 
     final Date updated;
     final boolean seen;
-    final MessageView latest;
+    final Viewable latest;
 
     public RecentView(EarthAs as, EarthThing recent) {
         this(as, recent, EarthView.DEEP);
@@ -24,10 +26,10 @@ public class RecentView extends LinkView {
     public RecentView(EarthAs as, EarthThing recent, EarthView view) {
         super(as, recent, view);
 
-        final EarthStore earthStore = use(EarthStore.class);
+        final EarthStore earthStore = as.s(EarthStore.class);
 
         updated = recent.getDate(EarthField.UPDATED_ON);
         seen = recent.getBoolean(EarthField.SEEN);
-        latest = new MessageView(as, earthStore.get(recent.getKey(EarthField.LATEST)));
+        latest = use(EarthViewer.class).getViewForEntityOrThrow(earthStore.get(recent.getKey(EarthField.LATEST)));
     }
 }

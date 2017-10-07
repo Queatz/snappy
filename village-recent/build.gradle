@@ -7,13 +7,10 @@ dependencies {
     compile project(':events')
     compile project(':earth-store')
     compile project(':earth-authority')
-    compile project(':things')
     compile project(':view')
     compile project(':router')
     compile project(':as')
-
-    compile project(':village-people')
-    compile project(':village-message')
+    compile project(path: ':things')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

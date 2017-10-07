@@ -2,6 +2,8 @@ package com.village.things;
 
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.plugins.FollowerMinePlugin;
+import com.queatz.snappy.plugins.MemberMinePlugin;
 import com.queatz.snappy.view.EarthView;
 import com.queatz.snappy.view.Viewable;
 import com.queatz.snappy.shared.Config;
@@ -35,8 +37,8 @@ public class CommonThingView extends ThingView {
     public CommonThingView(EarthAs as, EarthThing thing, EarthView view) {
         super(as, thing, view);
 
-        backers = use(FollowerMine.class).countFollowers(thing);
-        final MemberMine memberMine = use(MemberMine.class);
+        backers = use(FollowerMinePlugin.class).countFollowers(thing);
+        final MemberMinePlugin memberMine = use(MemberMinePlugin.class);
 
         switch (view) {
             case DEEP:
