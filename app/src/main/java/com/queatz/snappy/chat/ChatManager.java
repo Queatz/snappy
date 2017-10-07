@@ -250,6 +250,8 @@ public class ChatManager {
                     break;
                 }
             }
+        } else {
+            setSeen(chat.getTopic());
         }
 
         // Yes, it's true that someone else uploading a photo will cause this to trigger.
