@@ -1,7 +1,6 @@
 package com.queatz.snappy.team.push;
 
 import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;

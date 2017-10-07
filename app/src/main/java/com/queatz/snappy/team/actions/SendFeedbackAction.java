@@ -7,12 +7,10 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
-import com.queatz.branch.Branch;
 import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
-import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.ui.EditText;
 
 /**

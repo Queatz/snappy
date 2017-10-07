@@ -1,14 +1,14 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.snappy.as.EarthAs;
-import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.earth.EarthStore;
-import com.queatz.snappy.view.EarthView;
-import com.queatz.snappy.router.Interfaceable;
-import com.village.things.PersonEditor;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
-import com.village.things.EntityListView;
+import com.queatz.snappy.router.Interfaceable;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.earth.EarthGeo;
+import com.queatz.snappy.view.EarthView;
+import com.village.things.EntityListView;
+import com.village.things.PersonEditor;
 
 /**
  * Created by jacob on 4/9/16.

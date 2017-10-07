@@ -1,12 +1,12 @@
 package com.village.things;
 
-import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.plugins.FollowerMinePlugin;
 import com.queatz.snappy.plugins.MemberMinePlugin;
+import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.view.EarthView;
 import com.queatz.snappy.view.Viewable;
-import com.queatz.snappy.shared.Config;
 
 import java.util.List;
 

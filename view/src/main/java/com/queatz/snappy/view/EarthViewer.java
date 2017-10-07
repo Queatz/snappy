@@ -5,8 +5,6 @@ import com.queatz.earth.EarthThing;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.as.EarthControl;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
-import com.queatz.snappy.view.EarthView;
-import com.queatz.snappy.view.Viewable;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 

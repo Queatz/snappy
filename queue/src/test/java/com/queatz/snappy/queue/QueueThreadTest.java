@@ -4,8 +4,6 @@ import org.testng.annotations.Test;
 
 import java.util.logging.Logger;
 
-import static org.testng.Assert.*;
-
 /**
  * Created by jacob on 4/5/17.
  */

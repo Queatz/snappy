@@ -1,7 +1,5 @@
 package com.queatz.snappy.exceptions;
 
-import java.lang.*;
-
 /**
  * Throwing this exception will be caught by the servlet and expose to the client.
  *

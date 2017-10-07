@@ -1,7 +1,5 @@
 package com.queatz.snappy.exceptions;
 
-import java.lang.*;
-
 /**
  * Created by jacob on 4/2/16.
  */

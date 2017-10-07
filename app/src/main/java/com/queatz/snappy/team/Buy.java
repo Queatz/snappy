@@ -15,12 +15,10 @@ import android.os.RemoteException;
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.util.Json;
-import com.queatz.snappy.util.ResponseUtil;
 
 import java.util.ArrayList;
 import java.util.HashSet;

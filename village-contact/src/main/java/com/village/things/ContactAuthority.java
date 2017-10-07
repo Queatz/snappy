@@ -1,8 +1,8 @@
 package com.village.things;
 
+import com.queatz.earth.Authority;
 import com.queatz.earth.EarthRule;
 import com.queatz.earth.EarthThing;
-import com.queatz.earth.Authority;
 
 /**
  * Created by jacob on 7/19/16.

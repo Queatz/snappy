@@ -1,18 +1,14 @@
 package com.queatz.snappy.team.push;
 
 import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Person;
-import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Team;
 
 /**

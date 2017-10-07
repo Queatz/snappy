@@ -3,12 +3,7 @@ package com.queatz.snappy.team;
 import android.Manifest;
 import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.media.Image;
-import android.media.ImageReader;
 import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 

@@ -11,7 +11,8 @@ import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * Created by jacob on 4/1/17.

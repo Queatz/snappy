@@ -3,13 +3,13 @@ package com.queatz.snappy.api;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.as.EarthAs;
+import com.queatz.snappy.events.EarthUpdate;
 import com.queatz.snappy.exceptions.Error;
 import com.queatz.snappy.exceptions.PrintingError;
-import com.queatz.snappy.events.EarthUpdate;
-import com.village.things.PersonEditor;
-import com.village.things.RefreshMeEvent;
-import com.village.things.PersonMine;
 import com.queatz.snappy.shared.Config;
+import com.village.things.PersonEditor;
+import com.village.things.PersonMine;
+import com.village.things.RefreshMeEvent;
 
 import org.apache.commons.lang3.StringUtils;
 

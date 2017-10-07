@@ -8,12 +8,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.ExifInterface;
-import android.util.Log;
-
-import com.queatz.snappy.shared.Config;
-
-import static com.queatz.snappy.R.color.event;
 
 /**
  * Created by abdelhady on 9/23/14.

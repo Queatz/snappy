@@ -1,9 +1,9 @@
 package com.queatz.snappy.events;
 
 import com.google.common.collect.ImmutableMap;
-import com.queatz.snappy.shared.EarthJson;
 import com.queatz.snappy.queue.SnappyQueue;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.EarthJson;
 import com.queatz.snappy.shared.earth.EarthGeo;
 
 /**

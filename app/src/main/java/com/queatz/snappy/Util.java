@@ -38,9 +38,6 @@ import com.queatz.snappy.ui.camera.CameraImageSaver;
 import com.queatz.snappy.util.Functions;
 import com.queatz.snappy.util.Images;
 import com.queatz.snappy.util.TimeUtil;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.picasso.OkHttpDownloader;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,9 +46,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import cz.msebera.android.httpclient.conn.ssl.AllowAllHostnameVerifier;
-import cz.msebera.android.httpclient.conn.ssl.SSLContextBuilder;
-import cz.msebera.android.httpclient.conn.ssl.TrustSelfSignedStrategy;
 import io.realm.DynamicRealmObject;
 import io.realm.RealmResults;
 

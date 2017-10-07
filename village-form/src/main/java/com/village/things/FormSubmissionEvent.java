@@ -5,14 +5,14 @@ import com.google.common.html.HtmlEscapers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthField;
-import com.queatz.snappy.shared.EarthJson;
 import com.queatz.earth.EarthKind;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.events.Eventable;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.EarthJson;
 
 /**
  * Created by jacob on 6/4/17.

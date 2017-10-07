@@ -5,9 +5,9 @@ import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.as.EarthControl;
+import com.queatz.snappy.exceptions.NothingLogicResponse;
 import com.queatz.snappy.router.EarthRouter;
 import com.queatz.snappy.router.Interfaceable;
-import com.queatz.snappy.exceptions.NothingLogicResponse;
 
 import org.jetbrains.annotations.NotNull;
 

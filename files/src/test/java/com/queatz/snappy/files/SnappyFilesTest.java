@@ -5,7 +5,8 @@ import org.testng.annotations.Test;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * Created by jacob on 6/4/17.

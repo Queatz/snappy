@@ -7,12 +7,8 @@ package com.queatz.snappy;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
-import com.queatz.snappy.shared.Config;
-
-import java.util.logging.Logger;
 
 public class GCMIntentService extends GcmListenerService {
 

@@ -1,12 +1,12 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.snappy.as.EarthAs;
-import com.queatz.snappy.email.EarthEmail;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.as.EarthAs;
+import com.queatz.snappy.email.EarthEmail;
 import com.queatz.snappy.router.Interfaceable;
-import com.queatz.snappy.view.SuccessView;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.view.SuccessView;
 
 /**
  * Created by jacob on 6/11/16.

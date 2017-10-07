@@ -1,11 +1,11 @@
 package com.queatz.snappy.chat;
 
 import com.google.common.collect.ImmutableMap;
-import com.queatz.snappy.shared.PushSpec;
-import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthStore;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.events.Eventable;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.PushSpec;
 
 /**
  * Created by jacob on 9/18/17.

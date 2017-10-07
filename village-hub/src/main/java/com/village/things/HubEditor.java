@@ -1,12 +1,12 @@
 package com.village.things;
 
-import com.queatz.snappy.as.EarthAs;
-import com.queatz.snappy.as.EarthControl;
 import com.queatz.earth.EarthField;
-import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.earth.EarthKind;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.as.EarthAs;
+import com.queatz.snappy.as.EarthControl;
+import com.queatz.snappy.shared.earth.EarthGeo;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

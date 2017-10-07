@@ -1,9 +1,9 @@
 package com.village.things;
 
-import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.events.Eventable;
 import com.queatz.snappy.shared.Config;
 

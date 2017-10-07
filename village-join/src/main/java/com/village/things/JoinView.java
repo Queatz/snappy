@@ -1,10 +1,9 @@
 package com.village.things;
 
-import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.view.EarthView;
-import com.village.things.LinkView;
 
 /**
  * Created by jacob on 5/14/16.

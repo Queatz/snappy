@@ -1,17 +1,17 @@
 package com.queatz.snappy.authenticate;
 
 import com.google.gson.JsonObject;
+import com.queatz.earth.EarthField;
+import com.queatz.earth.EarthThing;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.exceptions.Error;
+import com.queatz.snappy.exceptions.PrintingError;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.EarthJson;
 import com.queatz.snappy.shared.Shared;
 import com.queatz.snappy.util.HttpUtil;
-import com.queatz.snappy.exceptions.PrintingError;
-import com.queatz.snappy.as.EarthAs;
-import com.queatz.earth.EarthField;
-import com.queatz.snappy.shared.EarthJson;
-import com.queatz.earth.EarthThing;
 import com.village.things.PersonEditor;
 import com.village.things.PersonMine;
-import com.queatz.snappy.shared.Config;
 
 import org.apache.commons.lang3.StringUtils;
 

@@ -1,11 +1,11 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthThing;
-import com.village.things.CommonLinkInterface;
-import com.village.things.MemberEditor;
+import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
 import com.queatz.snappy.shared.Config;
+import com.village.things.CommonLinkInterface;
+import com.village.things.MemberEditor;
 
 import javax.servlet.http.HttpServletRequest;
 

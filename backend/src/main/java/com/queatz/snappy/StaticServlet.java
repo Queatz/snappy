@@ -1,8 +1,8 @@
 package com.queatz.snappy;
 
 import com.google.common.base.Joiner;
-import com.queatz.snappy.exceptions.PrintingError;
 import com.queatz.snappy.exceptions.Error;
+import com.queatz.snappy.exceptions.PrintingError;
 import com.queatz.snappy.shared.Config;
 
 import org.omnifaces.servlet.FileServlet;
