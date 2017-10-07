@@ -9,10 +9,8 @@ dependencies {
 
     compile project(':shared')
     compile project(':earth')
-    compile project(':as')
     compile project(':exceptions')
 
-    // TODO: remove from here
     compile project(':image')
     compile project(':files')
 }
