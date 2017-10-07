@@ -55,7 +55,7 @@ public class PersonInterface extends CommonThingInterface {
 
     @Override
     public EarthThing editThing(EarthAs as, EarthThing thing) {
-            EarthThing person = new EarthStore(as).get(as.getRoute().get(0));
+            EarthThing person = as.s(EarthStore.class).get(as.getRoute().get(0));
 
             if (Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_SEEN))) {
                postSeen(as, person);
@@ -79,7 +79,7 @@ public class PersonInterface extends CommonThingInterface {
         // Update location of other person if auth'd
         if (person != null && as.hasUser()) {
             if (!as.getUser().key().equals(person.key())) {
-                new EarthUpdate(as).send(new InformationEvent()).to(person);
+                as.s(EarthUpdate.class).send(new InformationEvent()).to(person);
             }
         }
     }
@@ -90,8 +90,8 @@ public class PersonInterface extends CommonThingInterface {
             case 2:
                 switch (as.getRoute().get(1)) {
                     case Config.PATH_MESSAGE:
-                        return new EarthViewer(as).getViewForEntityOrThrow(
-                                postMessage(as, new EarthStore(as).get(as.getRoute().get(0)))
+                        return as.s(EarthViewer.class).getViewForEntityOrThrow(
+                                postMessage(as, as.s(EarthStore.class).get(as.getRoute().get(0)))
                         ).toJson();
                 }
                 break;
@@ -106,9 +106,9 @@ public class PersonInterface extends CommonThingInterface {
     }
 
     private String getFollows(EarthAs as, boolean followers, String personId) {
-        EarthThing person = new EarthStore(as).get(personId);
+        EarthThing person = as.s(EarthStore.class).get(personId);
 
-        List<EarthThing> follows = new EarthStore(as).find(EarthKind.FOLLOWER_KIND,
+        List<EarthThing> follows = as.s(EarthStore.class).find(EarthKind.FOLLOWER_KIND,
                 followers ? EarthField.TARGET : EarthField.SOURCE,
                 person.key());
 
@@ -116,9 +116,9 @@ public class PersonInterface extends CommonThingInterface {
     }
 
     private String getParties(EarthAs as, String personId) {
-        EarthThing person = new EarthStore(as).get(personId);
+        EarthThing person = as.s(EarthStore.class).get(personId);
 
-        List<EarthThing> follows = new EarthStore(as).find(EarthKind.FOLLOWER_KIND,
+        List<EarthThing> follows = as.s(EarthStore.class).find(EarthKind.FOLLOWER_KIND,
                 EarthField.HOST,
                 person.key());
 
@@ -129,8 +129,8 @@ public class PersonInterface extends CommonThingInterface {
         as.requireUser();
 
         // XXX TODO when Datastore supports OR expressions, combine these
-        List<EarthThing> messagesToMe = new MessageMine(as).messagesFromTo(as.getUser().key(), EarthRef.of(personId));
-        List<EarthThing> messagesFromMe = new MessageMine(as).messagesFromTo(EarthRef.of(personId), as.getUser().key());
+        List<EarthThing> messagesToMe = as.s(MessageMine.class).messagesFromTo(as.getUser().key(), EarthRef.of(personId));
+        List<EarthThing> messagesFromMe = as.s(MessageMine.class).messagesFromTo(EarthRef.of(personId), as.getUser().key());
 
         List<EarthThing> messages = new ArrayList<>();
         messages.addAll(messagesToMe);
@@ -142,13 +142,13 @@ public class PersonInterface extends CommonThingInterface {
     private String postSeen(EarthAs as, EarthThing personId) {
         as.requireUser();
 
-        EarthThing recent = new RecentMine(as).byPerson(as.getUser(), personId);
+        EarthThing recent = as.s(RecentMine.class).byPerson(as.getUser(), personId);
 
         if (recent == null) {
             throw new NothingLogicResponse("people - recent - not found");
         }
 
-        new RecentEditor(as).markSeen(recent);
+        as.s(RecentEditor.class).markSeen(recent);
         return new SuccessView(true).toJson();
     }
 
@@ -159,12 +159,12 @@ public class PersonInterface extends CommonThingInterface {
 
         EarthThing follow;
 
-        follow = new FollowerMine(as).getFollower(as.getUser(), person);
+        follow = as.s(FollowerMine.class).getFollower(as.getUser(), person);
 
         if (follow == null) {
             follow = as.s(FollowerEditor.class).newFollower(as.getUser(), person);
 
-            new EarthUpdate(as).send(new FollowEvent(follow))
+            as.s(EarthUpdate.class).send(new FollowEvent(follow))
                     .to(follow.getKey(EarthField.TARGET));
         }
 
@@ -174,8 +174,8 @@ public class PersonInterface extends CommonThingInterface {
     private String postStopFollowing(EarthAs as, EarthThing person) {
         as.requireUser();
 
-        EarthThing follower = new FollowerMine(as).getFollower(as.getUser(), person);
-        new EarthStore(as).conclude(follower);
+        EarthThing follower = as.s(FollowerMine.class).getFollower(as.getUser(), person);
+        as.s(EarthStore.class).conclude(follower);
 
         return new SuccessView(true).toJson();
     }
@@ -184,11 +184,11 @@ public class PersonInterface extends CommonThingInterface {
         as.requireUser();
 
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
-        EarthThing sent = new MessageEditor(as).newMessage(as.getUser(), person, message, false);
+        EarthThing sent = as.s(MessageEditor.class).newMessage(as.getUser(), person, message, false);
 
-        new RecentEditor(as).updateWithMessage(sent);
+        as.s(RecentEditor.class).updateWithMessage(sent);
 
-        new EarthUpdate(as).send(new MessageEvent(sent)).to(person);
+        as.s(EarthUpdate.class).send(new MessageEvent(sent)).to(person);
 
         return sent.setLocalId(localId);
     }
@@ -196,7 +196,7 @@ public class PersonInterface extends CommonThingInterface {
     private EarthThing postMessage(EarthAs as, EarthThing person)  {
         as.requireUser();
 
-        EarthThing sent = new MessageEditor(as).stageMessage(as.getUser(), person);
+        EarthThing sent = as.s(MessageEditor.class).stageMessage(as.getUser(), person);
         String photoName = Config.PHOTO_FILES_BUCKET + sent.key().name();
 
         String message = null;
@@ -242,11 +242,11 @@ public class PersonInterface extends CommonThingInterface {
             throw new NothingLogicResponse("message - nothing to post");
         }
 
-        sent = new MessageEditor(as).setMessage(sent, message, photoUploaded);
+        sent = as.s(MessageEditor.class).setMessage(sent, message, photoUploaded);
 
-        new RecentEditor(as).updateWithMessage(sent);
+        as.s(RecentEditor.class).updateWithMessage(sent);
 
-        new EarthUpdate(as).send(new MessageEvent(sent)).to(person);
+        as.s(EarthUpdate.class).send(new MessageEvent(sent)).to(person);
 
         return sent.setLocalId(localId);
     }

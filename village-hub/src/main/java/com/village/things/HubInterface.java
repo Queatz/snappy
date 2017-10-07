@@ -30,7 +30,7 @@ public class HubInterface extends CommonThingInterface {
             throw new NothingLogicResponse("hub - name, address, geo, and about parameters are expected");
         }
 
-        return new HubEditor(as).newHub(
+        return as.s(HubEditor.class).newHub(
                 name[0],
                 address[0],
                 EarthGeo.of(Double.valueOf(latitude[0]), Double.valueOf(longitude[0])),
@@ -50,6 +50,6 @@ public class HubInterface extends CommonThingInterface {
             latLng = EarthGeo.of(Double.valueOf(latitude), Double.valueOf(longitude));
         }
 
-        return new HubEditor(as).edit(hub, extract(name), extract(address), latLng, extract(about));
+        return as.s(HubEditor.class).edit(hub, extract(name), extract(address), latLng, extract(about));
     }
 }

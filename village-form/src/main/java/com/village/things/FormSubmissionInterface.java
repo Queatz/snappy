@@ -9,14 +9,14 @@ import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.api.ApiUtil;
 import com.queatz.snappy.as.EarthAs;
-import com.queatz.snappy.router.Interfaceable;
+import com.queatz.snappy.events.EarthUpdate;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
 import com.queatz.snappy.files.SnappyFiles;
-import com.queatz.snappy.events.EarthUpdate;
-import com.queatz.snappy.view.EarthViewer;
+import com.queatz.snappy.router.Interfaceable;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.EarthJson;
 import com.queatz.snappy.shared.Shared;
+import com.queatz.snappy.view.EarthViewer;
 import com.queatz.snappy.view.SuccessView;
 
 import org.apache.commons.fileupload.FileItemIterator;
@@ -43,9 +43,9 @@ public class FormSubmissionInterface implements Interfaceable {
             case 0:
                 throw new NothingLogicResponse("form-submission - empty route");
             case 1:
-                EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
+                EarthThing thing = as.s(EarthStore.class).get(as.getRoute().get(0));
 
-                return new EarthViewer(as).getViewForEntityOrThrow(thing).toJson();
+                return as.s(EarthViewer.class).getViewForEntityOrThrow(thing).toJson();
             default:
                 throw new NothingLogicResponse("form-submission - bad path");
         }
@@ -53,7 +53,7 @@ public class FormSubmissionInterface implements Interfaceable {
 
     @Override
     public String post(EarthAs as) {
-        EarthStore earthStore = new EarthStore(as);
+        EarthStore earthStore = as.s(EarthStore.class);
 
         switch (as.getRoute().size()) {
             case 0: {
@@ -146,7 +146,7 @@ public class FormSubmissionInterface implements Interfaceable {
             throw new NothingLogicResponse("form-submission - no thing");
         }
 
-        EarthStore earthStore = new EarthStore(as);
+        EarthStore earthStore = as.s(EarthStore.class);
         EarthThing form = earthStore.get(thingId);
 
         if (form == null) {

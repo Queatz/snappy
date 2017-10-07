@@ -75,7 +75,7 @@ public class UpdateInterface extends CommonThingInterface {
 
         like = as.s(LikeEditor.class).newLike(as.getUser(), poster);
 
-        new EarthUpdate(as).send(new LikeEvent(like))
+        as.s(EarthUpdate.class).send(new LikeEvent(like))
                 .to(poster.getKey(EarthField.SOURCE));
 
         return new LikeView(as, like).setLocalId(localId).toJson();
@@ -121,7 +121,7 @@ public class UpdateInterface extends CommonThingInterface {
             throw new NothingLogicResponse("post update - nothing to post");
         }
 
-        update = new UpdateEditor(as).updateWith(update, message, photoUploaded);
+        update = as.s(UpdateEditor.class).updateWith(update, message, photoUploaded);
 
         if (hidden != null) {
             setVisibilityHidden(as, update, hidden);
@@ -211,14 +211,14 @@ public class UpdateInterface extends CommonThingInterface {
             geo = EarthGeo.of(latitude, longitude);
         }
 
-        update = new UpdateEditor(as).updateWith(update, thing, message, photoUploaded, geo, with, going);
+        update = as.s(UpdateEditor.class).updateWith(update, thing, message, photoUploaded, geo, with, going);
 
         isIn(as, update, thing);
 
         if (EarthKind.UPDATE_KIND.equals(thing.getString(EarthField.KIND))) {
-            new EarthUpdate(as).send(new NewCommentEvent(update)).to(thing.getKey(EarthField.SOURCE));
+            as.s(EarthUpdate.class).send(new NewCommentEvent(update)).to(thing.getKey(EarthField.SOURCE));
         } else {
-            new EarthUpdate(as).send(new NewUpdateEvent(update)).toFollowersOf(thing);
+            as.s(EarthUpdate.class).send(new NewUpdateEvent(update)).toFollowersOf(thing);
         }
 
         if (hidden != null) {

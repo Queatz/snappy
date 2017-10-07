@@ -43,7 +43,7 @@ public class GeoSubscribeInterface implements Interfaceable {
                     throw new NothingLogicResponse("geo-subscribe - no email");
                 }
 
-                new GeoSubscribeEditor(as).create(latitude, longitude, email, locality);
+                as.s(GeoSubscribeEditor.class).create(latitude, longitude, email, locality);
 
                 return new SuccessView(true).toJson();
             default:
@@ -52,13 +52,13 @@ public class GeoSubscribeInterface implements Interfaceable {
     }
 
     private String unsubscribe(EarthAs as, String unsubscribeToken) {
-        EarthThing geoSubscribe = new GeoSubscribeMine(as).byToken(unsubscribeToken);
+        EarthThing geoSubscribe = as.s(GeoSubscribeMine.class).byToken(unsubscribeToken);
 
         if (geoSubscribe == null) {
             return "This subscription doesn't exist or you've already unsubscribed.";
         }
 
-        new EarthStore(as).conclude(geoSubscribe);
+        as.s(EarthStore.class).conclude(geoSubscribe);
 
         return "You've been unsubscribed.";
     }

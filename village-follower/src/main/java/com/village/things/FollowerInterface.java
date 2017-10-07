@@ -16,9 +16,9 @@ public class FollowerInterface implements Interfaceable {
     public String get(EarthAs as) {
         switch (as.getRoute().size()) {
             case 1:
-                EarthThing follow = new EarthStore(as).get(as.getRoute().get(0));
+                EarthThing follow = as.s(EarthStore.class).get(as.getRoute().get(0));
 
-                return new EarthViewer(as).getViewForEntityOrThrow(follow).toJson();
+                return as.s(EarthViewer.class).getViewForEntityOrThrow(follow).toJson();
             default:
                 throw new NothingLogicResponse("follower - bad path");
         }

@@ -90,7 +90,7 @@ public class Worker extends HttpServlet {
 
         EarthAs as = new EarthAs();
 
-        Eventable eventable = new EarthUpdate(as).from(action, data);
+        Eventable eventable = as.s(EarthUpdate.class).from(action, data);
 
         HashSet<Object> toUsers = new HashSet<>();
 
@@ -103,7 +103,7 @@ public class Worker extends HttpServlet {
         // Social Mode: Friends
 
         if(fromUser != null) {
-            final EarthStore earthStore = new EarthStore(as);
+            final EarthStore earthStore = as.s(EarthStore.class);
 
             for(EarthThing follow : earthStore.find(EarthKind.FOLLOWER_KIND, EarthField.TARGET, EarthRef.of(fromUser))) {
                 toUsers.add(new SendInstance(follow.getKey(EarthField.SOURCE).name(), Config.SOCIAL_MODE_FRIENDS));
@@ -129,7 +129,7 @@ public class Worker extends HttpServlet {
         }
 
         if (latLng != null) {
-            for (EarthThing thing : new EarthStore(as).getNearby(latLng, EarthKind.PERSON_KIND + "|" + EarthKind.GEO_SUBSCRIBE_KIND, null)) {
+            for (EarthThing thing : as.s(EarthStore.class).getNearby(latLng, EarthKind.PERSON_KIND + "|" + EarthKind.GEO_SUBSCRIBE_KIND, null)) {
                 if (fromUser != null && fromUser.equals(thing.key().name())) {
                     continue;
                 }
@@ -181,7 +181,7 @@ public class Worker extends HttpServlet {
     }
 
     private void handlePersonSendInstance(SendInstance sendInstance, JsonObject push, EarthAs as, Eventable eventable) {
-        List<EarthThing> devices = new DeviceMine(as).forUser(sendInstance.userId);
+        List<EarthThing> devices = as.s(DeviceMine.class).forUser(sendInstance.userId);
 
         if (push == null || devices.isEmpty()) {
             if (!passesSocialMode(sendInstance, devices.isEmpty() ? Config.SOCIAL_MODE_FRIENDS : pickHighestSocialMode(devices))) {
@@ -208,13 +208,13 @@ public class Worker extends HttpServlet {
 
                 if (result.has("registration_id")) {
                     String canonicalRegId = result.get("registration_id").getAsString();
-                    new DeviceEditor(as).setRegId(device, canonicalRegId);
+                    as.s(DeviceEditor.class).setRegId(device, canonicalRegId);
                 }
 
                 if (result.has("error")) {
                     if ("MismatchSenderId".equals(result.get("error").getAsString()) ||
                             "NotRegistered".equals(result.get("error").getAsString())) {
-                        new DeviceEditor(as).remove(device);
+                        as.s(DeviceEditor.class).remove(device);
                     }
                 } else {
                     didSendPush = true;
@@ -294,7 +294,7 @@ public class Worker extends HttpServlet {
         }
 
         new EarthEmail().sendRawEmail(
-                new EarthStore(as).get(toUser).getString(EarthField.EMAIL),
+                as.s(EarthStore.class).get(toUser).getString(EarthField.EMAIL),
                 subject,
                 eventable.makeEmail());
     }

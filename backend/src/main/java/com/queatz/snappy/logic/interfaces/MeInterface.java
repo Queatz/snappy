@@ -1,28 +1,28 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.snappy.as.EarthAs;
-import com.queatz.snappy.email.EarthEmail;
+import com.queatz.earth.ClubMine;
 import com.queatz.earth.EarthField;
-import com.queatz.snappy.shared.WebsiteHelper;
-import com.village.things.PersonMine;
-import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.as.EarthAs;
+import com.queatz.snappy.email.EarthEmail;
 import com.queatz.snappy.events.EarthUpdate;
+import com.queatz.snappy.exceptions.NothingLogicResponse;
+import com.queatz.snappy.logic.views.MessagesAndContactsView;
+import com.queatz.snappy.router.Interfaceable;
+import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.WebsiteHelper;
+import com.queatz.snappy.shared.earth.EarthGeo;
 import com.queatz.snappy.view.EarthView;
 import com.queatz.snappy.view.EarthViewer;
-import com.queatz.snappy.router.Interfaceable;
-import com.village.things.DeviceEditor;
-import com.village.things.PersonEditor;
-import com.village.things.ClearNotificationEvent;
-import com.queatz.snappy.exceptions.NothingLogicResponse;
-import com.queatz.earth.ClubMine;
-import com.village.things.MessageMine;
-import com.village.things.RecentMine;
-import com.village.things.EntityListView;
-import com.queatz.snappy.logic.views.MessagesAndContactsView;
 import com.queatz.snappy.view.SuccessView;
-import com.queatz.snappy.shared.Config;
+import com.village.things.ClearNotificationEvent;
+import com.village.things.DeviceEditor;
+import com.village.things.EntityListView;
+import com.village.things.MessageMine;
+import com.village.things.PersonEditor;
+import com.village.things.PersonMine;
+import com.village.things.RecentMine;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -42,7 +42,7 @@ public class MeInterface implements Interfaceable {
                 if (!as.hasUser()) {
                     throw new NothingLogicResponse("sup dude");
                 }
-                return new EarthViewer(as).getViewForEntityOrThrow(as.getUser(), EarthView.SHALLOW).toJson();
+                return as.s(EarthViewer.class).getViewForEntityOrThrow(as.getUser(), EarthView.SHALLOW).toJson();
             case 2:
                 as.requireUser();
 
@@ -79,14 +79,14 @@ public class MeInterface implements Interfaceable {
                 String about = as.getRequest().getParameter(Config.PARAM_ABOUT);
 
                 if (about != null) {
-                    new PersonEditor(as).updateAbout(as.getUser(), about);
+                    as.s(PersonEditor.class).updateAbout(as.getUser(), about);
                     return new SuccessView(true).toJson();
                 }
 
                 String link = as.getRequest().getParameter(Config.PARAM_LINK);
 
                 if (link != null) {
-                    return new SuccessView(new PersonEditor(as)
+                    return new SuccessView(as.s(PersonEditor.class)
                             .updateLink(as.getUser(), link)).toJson();
                 }
 
@@ -138,7 +138,7 @@ public class MeInterface implements Interfaceable {
         double longitude = Double.valueOf(longitudeParam);
         final EarthGeo latLng = EarthGeo.of(latitude, longitude);
 
-        new PersonEditor(as).updateLocation(as.getUser(), latLng);
+        as.s(PersonEditor.class).updateLocation(as.getUser(), latLng);
 
         return new SuccessView(true).toJson();
     }
@@ -146,8 +146,8 @@ public class MeInterface implements Interfaceable {
     private String postReport(EarthAs as, String personId) {
         as.requireUser();
 
-        EarthThing jacob = new EarthStore(as).get(Config.JACOB);
-        EarthThing person = new EarthStore(as).get(personId);
+        EarthThing jacob = as.s(EarthStore.class).get(Config.JACOB);
+        EarthThing person = as.s(EarthStore.class).get(personId);
         String feedback = as.getRequest().getParameter(Config.PARAM_MESSAGE);
 
         String report = "reported person with email " +
@@ -162,8 +162,8 @@ public class MeInterface implements Interfaceable {
     private String getMessages(EarthAs as) {
         as.requireUser();
 
-        List<EarthThing> messages = new MessageMine(as).messagesFromOrTo(as.getUser().key());
-        List<EarthThing> contacts = new RecentMine(as).forPerson(as.getUser());
+        List<EarthThing> messages = as.s(MessageMine.class).messagesFromOrTo(as.getUser().key());
+        List<EarthThing> contacts = as.s(RecentMine.class).forPerson(as.getUser());
 
         return new MessagesAndContactsView(as, messages, contacts).toJson();
     }
@@ -177,7 +177,7 @@ public class MeInterface implements Interfaceable {
     private String postClearNotification(EarthAs as, String notification) {
         as.requireUser();
 
-        new EarthUpdate(as).send(new ClearNotificationEvent(notification))
+        as.s(EarthUpdate.class).send(new ClearNotificationEvent(notification))
                 .to(as.getUser());
 
         return new SuccessView(true).toJson();
@@ -185,7 +185,7 @@ public class MeInterface implements Interfaceable {
 
     private String postUnregisterDevice(EarthAs as, String deviceId) {
         if (deviceId != null && deviceId.length() > 0) {
-            new DeviceEditor(as).removeFor(as.getUser().key().name(), deviceId);
+            as.s(DeviceEditor.class).removeFor(as.getUser().key().name(), deviceId);
             return new SuccessView(true).toJson();
         } else {
             return new SuccessView(false).toJson();
@@ -196,7 +196,7 @@ public class MeInterface implements Interfaceable {
         as.requireUser();
 
         if (deviceId != null && deviceId.length() > 0) {
-            new DeviceEditor(as).newDevice(as.getUser().key().name(), deviceId, socialMode);
+            as.s(DeviceEditor.class).newDevice(as.getUser().key().name(), deviceId, socialMode);
             return new SuccessView(true).toJson();
         } else {
             return new SuccessView(false).toJson();

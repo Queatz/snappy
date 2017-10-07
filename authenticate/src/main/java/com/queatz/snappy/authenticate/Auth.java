@@ -38,9 +38,9 @@ public class Auth {
 
     public Auth() {
         EarthAs as = new EarthAs();
-        personMine = new PersonMine(as);
-        personEditor = new PersonEditor(as);
-        earthJson = new EarthJson();
+        personMine = as.s(PersonMine.class);
+        personEditor = as.s(PersonEditor.class);
+        earthJson = as.s(EarthJson.class);
     }
 
     public boolean isRealGoogleAuth(String email, String token) throws PrintingError {

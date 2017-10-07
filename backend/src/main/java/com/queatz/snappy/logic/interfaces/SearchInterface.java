@@ -49,16 +49,16 @@ public class SearchInterface implements Interfaceable {
 
         final EarthGeo latLng = EarthGeo.of(latitude, longitude);
 
-        List<EarthThing> results = new EarthStore(as).getNearby(latLng, kindFilter, qParam);
+        List<EarthThing> results = as.s(EarthStore.class).getNearby(latLng, kindFilter, qParam);
 
         // Hack to include recents for now...need to find a better way to "pick people" that are not nearby
         if (as.hasUser() && kindFilter != null && kindFilter.contains(EarthKind.PERSON_KIND)) {
-            List<EarthThing> recents = new RecentMine(as).forPerson(as.getUser());
+            List<EarthThing> recents = as.s(RecentMine.class).forPerson(as.getUser());
 
             if (qParam == null) {
                 results.addAll(recents);
             } else {
-                EarthStore earthStore = new EarthStore(as);
+                EarthStore earthStore = as.s(EarthStore.class);
 
                 for (EarthThing recent : recents) {
                     EarthThing with = earthStore.get(recent.getKey(EarthField.TARGET));

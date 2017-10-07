@@ -29,7 +29,7 @@ public class HereInterface implements Interfaceable {
         final EarthGeo latLng = EarthGeo.of(latitude, longitude);
 
         if (as.hasUser()) {
-            new PersonEditor(as).updateLocation(as.getUser(), latLng);
+            as.s(PersonEditor.class).updateLocation(as.getUser(), latLng);
         }
 
         boolean recent = false;

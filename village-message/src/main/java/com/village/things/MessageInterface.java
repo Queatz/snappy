@@ -25,9 +25,9 @@ public class MessageInterface implements Interfaceable {
             case 0:
                 throw new NothingLogicResponse("message - empty route");
             case 1:
-                EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
+                EarthThing thing = as.s(EarthStore.class).get(as.getRoute().get(0));
 
-                return new EarthViewer(as).getViewForEntityOrThrow(thing).toJson();
+                return as.s(EarthViewer.class).getViewForEntityOrThrow(thing).toJson();
             case 2:
                 switch (as.getRoute().get(1)) {
                     case Config.PATH_PHOTO:
@@ -45,7 +45,7 @@ public class MessageInterface implements Interfaceable {
     }
 
     private void getPhoto(EarthAs as) {
-        EarthThing thing = new EarthStore(as).get(as.getRoute().get(0));
+        EarthThing thing = as.s(EarthStore.class).get(as.getRoute().get(0));
 
         if (!thing.getBoolean(EarthField.PHOTO)) {
             throw new PrintingError(Error.NOT_FOUND, "thing - photo not set");

@@ -39,7 +39,7 @@ public class ImageWorker extends HttpServlet {
             return;
         }
 
-        EarthStore earthStore = new EarthStore(as);
+        EarthStore earthStore = as.s(EarthStore.class);
 
         earthStore.save(earthStore.edit(earthStore.get(thingId))
                 .set(EarthField.PLACEHOLDER, Base64.encodeBase64String(IOUtils.toByteArray(inputStream)))

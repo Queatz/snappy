@@ -14,7 +14,7 @@ public class FormInterface extends CommonThingInterface {
     public EarthThing createThing(EarthAs as) {
         String name = extract(as.getParameters().get(Config.PARAM_NAME));
 
-        return new FormEditor(as).newForm(as.getUser(), name);
+        return as.s(FormEditor.class).newForm(as.getUser(), name);
     }
 
     @Override
@@ -25,6 +25,6 @@ public class FormInterface extends CommonThingInterface {
         String about = extract(as.getParameters().get(EarthField.ABOUT));
         String data = extract(as.getParameters().get(EarthField.DATA));
 
-        return new FormEditor(as).edit(thing, name, about, data);
+        return as.s(FormEditor.class).edit(thing, name, about, data);
     }
 }

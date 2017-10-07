@@ -21,7 +21,7 @@ public class ClubInterface extends CommonThingInterface {
             throw new NothingLogicResponse("club - name was expected");
         }
 
-        EarthThing club = new ClubEditor(as).newClub(name[0], as.getUser());
+        EarthThing club = as.s(ClubEditor.class).newClub(name[0], as.getUser());
 
         // Add yourself as the first club member
         as.s(MemberEditorPlugin.class).create(as.getUser(), club, Config.MEMBER_STATUS_ACTIVE);
@@ -34,6 +34,6 @@ public class ClubInterface extends CommonThingInterface {
         String[] name = as.getParameters().get(EarthField.NAME);
         String[] about = as.getParameters().get(EarthField.ABOUT);
 
-        return new ClubEditor(as).edit(club, extract(name), extract(about));
+        return as.s(ClubEditor.class).edit(club, extract(name), extract(about));
     }
 }

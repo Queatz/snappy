@@ -22,8 +22,8 @@ public class PartyInterface implements Interfaceable {
     public String get(EarthAs as) {
         switch (as.getRoute().size()) {
             case 1:
-                return new EarthViewer(as).getViewForEntityOrThrow(
-                        new EarthStore(as).get(as.getRoute().get(0))).toJson();
+                return as.s(EarthViewer.class).getViewForEntityOrThrow(
+                        as.s(EarthStore.class).get(as.getRoute().get(0))).toJson();
         }
 
         throw new NothingLogicResponse("party - bad path");
@@ -44,7 +44,7 @@ public class PartyInterface implements Interfaceable {
                 String locationParam = as.getRequest().getParameter(Config.PARAM_LOCATION);
                 String details = as.getRequest().getParameter(Config.PARAM_DETAILS);
 
-                party = new PartyEditor(as).newParty(
+                party = as.s(PartyEditor.class).newParty(
                         original,
                         as.getUser(),
                         name,
@@ -53,21 +53,21 @@ public class PartyInterface implements Interfaceable {
                         details
                 );
 
-                new EarthUpdate(as)
+                as.s(EarthUpdate.class)
                         .send(new NewPartyEvent(party))
                         .toFollowersOf(as.getUser());
 
                 return new PartyView(as, party).setLocalId(localId).toJson();
             case 1:
-                party = new EarthStore(as).get(as.getRoute().get(0));
+                party = as.s(EarthStore.class).get(as.getRoute().get(0));
 
                 if (Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_JOIN))) {
                     return postJoin(as, party);
                 } else if (Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_CANCEL_JOIN))) {
                     return postCancelJoin(as, party);
                 } else if (Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_FULL))) {
-                    return new EarthViewer(as).getViewForEntityOrThrow(
-                            new PartyEditor(as).setFull(party)).toJson();
+                    return as.s(EarthViewer.class).getViewForEntityOrThrow(
+                            as.s(PartyEditor.class).setFull(party)).toJson();
                 } else {
                     throw new NothingLogicResponse("party - bad path");
                 }
@@ -79,10 +79,10 @@ public class PartyInterface implements Interfaceable {
     private String postJoin(EarthAs as, EarthThing party) {
         as.requireUser();
 
-        EarthThing join = new JoinEditor(as).newJoin(as.getUser(), party);
+        EarthThing join = as.s(JoinEditor.class).newJoin(as.getUser(), party);
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
-        new EarthUpdate(as).send(new JoinRequestEvent(join))
+        as.s(EarthUpdate.class).send(new JoinRequestEvent(join))
                 .to(party.getKey(EarthField.HOST));
 
         return new JoinView(as, join).setLocalId(localId).toJson();
@@ -91,9 +91,9 @@ public class PartyInterface implements Interfaceable {
     private String postCancelJoin(EarthAs as, EarthThing party) {
         as.requireUser();
 
-        EarthThing join = new JoinMine(as).byPersonAndParty(as.getUser(), party);
+        EarthThing join = as.s(JoinMine.class).byPersonAndParty(as.getUser(), party);
 
-        new JoinEditor(as).setStatus(join, Config.JOIN_STATUS_WITHDRAWN);
+        as.s(JoinEditor.class).setStatus(join, Config.JOIN_STATUS_WITHDRAWN);
         return null;
     }
 }

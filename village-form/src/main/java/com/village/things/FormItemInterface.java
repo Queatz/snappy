@@ -14,12 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 public class FormItemInterface extends CommonLinkInterface {
     @Override
     public EarthThing create(EarthAs as, EarthThing source, EarthThing target, String status, String role) {
-        EarthStore earthStore = new EarthStore(as);
+        EarthStore earthStore = as.s(EarthStore.class);
 
         String form = extract(as.getParameters().get(Config.PARAM_IN));
         String type = extract(as.getParameters().get(Config.PARAM_TYPE));
 
-        return new FormItemEditor(as).newFormItem(earthStore.get(form), type);
+        return as.s(FormItemEditor.class).newFormItem(earthStore.get(form), type);
     }
 
     @Override

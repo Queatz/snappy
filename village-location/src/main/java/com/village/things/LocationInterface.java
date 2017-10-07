@@ -57,7 +57,7 @@ public class LocationInterface implements Interfaceable {
     }
 
     private String putPhoto(EarthAs as, String locationId) {
-        EarthThing location = new EarthStore(as).get(locationId);
+        EarthThing location = as.s(EarthStore.class).get(locationId);
 
         try {
             if (!ApiUtil.putPhoto(location.key().name(), as.s(SnappyImage.class), as.getRequest())) {

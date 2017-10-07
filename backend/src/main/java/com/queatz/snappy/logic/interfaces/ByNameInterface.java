@@ -28,12 +28,12 @@ public class ByNameInterface implements Interfaceable {
     }
 
     private String getPersonByName(EarthAs as, String personName) {
-        EarthThing person = new PersonMine(as).byGoogleUrl(personName.toLowerCase());
+        EarthThing person = as.s(PersonMine.class).byGoogleUrl(personName.toLowerCase());
 
         if (person == null) {
             throw new NothingLogicResponse("by name - nobody");
         }
 
-        return new EarthViewer(as).getViewForEntityOrThrow(person).toJson();
+        return as.s(EarthViewer.class).getViewForEntityOrThrow(person).toJson();
     }
 }

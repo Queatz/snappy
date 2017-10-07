@@ -20,7 +20,7 @@ public class ResourceInterface extends CommonThingInterface {
             throw new NothingLogicResponse("resource - name parameter is expected");
         }
 
-        EarthThing resource = new ResourceEditor(as).newResource(name[0], as.getUser());
+        EarthThing resource = as.s(ResourceEditor.class).newResource(name[0], as.getUser());
         resource = postPhoto(resource, as);
 
         return resource;
@@ -33,6 +33,6 @@ public class ResourceInterface extends CommonThingInterface {
         String[] name = as.getParameters().get(EarthField.NAME);
         String[] about = as.getParameters().get(EarthField.ABOUT);
 
-        return new ResourceEditor(as).edit(resource, extract(name), extract(about));
+        return as.s(ResourceEditor.class).edit(resource, extract(name), extract(about));
     }
 }

@@ -30,9 +30,9 @@ public class Admin extends Path {
         super(api);
 
         EarthAs as = new EarthAs(request, response, path, user);
-        personMine = new PersonMine(as);
-        personEditor = new PersonEditor(as);
-        earthUpdate = new EarthUpdate(as);
+        personMine = as.s(PersonMine.class);
+        personEditor = as.s(PersonEditor.class);
+        earthUpdate = as.s(EarthUpdate.class);
     }
 
     @Override

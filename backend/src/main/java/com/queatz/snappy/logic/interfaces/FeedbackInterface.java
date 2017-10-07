@@ -22,7 +22,7 @@ public class FeedbackInterface implements Interfaceable {
     public String post(EarthAs as) {
         as.requireUser();
 
-        EarthThing jacob = new EarthStore(as).get(Config.JACOB);
+        EarthThing jacob = as.s(EarthStore.class).get(Config.JACOB);
         String feedback = as.getRequest().getParameter("feedback");
 
         new EarthEmail().sendRawEmail(as.getUser(), jacob, "Village Feedback", feedback);

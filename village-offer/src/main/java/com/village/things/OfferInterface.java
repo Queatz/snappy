@@ -63,10 +63,10 @@ public class OfferInterface extends CommonThingInterface {
                 }
             }
 
-            EarthThing offer = new OfferEditor(as).newOffer(as.getUser(), details, want, price, unit);
+            EarthThing offer = as.s(OfferEditor.class).newOffer(as.getUser(), details, want, price, unit);
 
             if (offer != null) {
-                new EarthUpdate(as).send(new NewOfferEvent(offer))
+                as.s(EarthUpdate.class).send(new NewOfferEvent(offer))
                         .toFollowersOf(as.getUser());
 
                 return offer.setLocalId(localId);
@@ -109,7 +109,7 @@ public class OfferInterface extends CommonThingInterface {
                 }
             }
 
-            thing = new OfferEditor(as).edit(thing, details, price, unit).setLocalId(localId);
+            thing = as.s(OfferEditor.class).edit(thing, details, price, unit).setLocalId(localId);
         }
 
         return thing;
@@ -135,9 +135,9 @@ public class OfferInterface extends CommonThingInterface {
     }
 
     private String getLikers(EarthAs as, String offerId) {
-        EarthThing offer = new EarthStore(as).get(offerId);
+        EarthThing offer = as.s(EarthStore.class).get(offerId);
 
-        List<EarthThing> likers = new EarthStore(as).find(EarthKind.LIKE_KIND, EarthField.TARGET, offer.key());
+        List<EarthThing> likers = as.s(EarthStore.class).find(EarthKind.LIKE_KIND, EarthField.TARGET, offer.key());
 
         return new EntityListView(as, likers, EarthView.SHALLOW).toJson();
     }
@@ -145,19 +145,19 @@ public class OfferInterface extends CommonThingInterface {
     private String like(EarthAs as, String offerId) {
         as.requireUser();
 
-        EarthThing offer = new EarthStore(as).get(offerId);
+        EarthThing offer = as.s(EarthStore.class).get(offerId);
 
         String localId = as.getRequest().getParameter(Config.PARAM_LOCAL_ID);
 
-        EarthThing like = new LikeMine(as).getLike(as.getUser(), offer);
+        EarthThing like = as.s(LikeMine.class).getLike(as.getUser(), offer);
 
         if (like != null) {
             return new SuccessView(false).toJson();
         }
 
-        like = new LikeEditor(as).newLike(as.getUser(), offer);
+        like = as.s(LikeEditor.class).newLike(as.getUser(), offer);
 
-        new EarthUpdate(as).send(new OfferLikeEvent(like))
+        as.s(EarthUpdate.class).send(new OfferLikeEvent(like))
                 .to(offer.getKey(EarthField.SOURCE));
 
         return new LikeView(as, like).setLocalId(localId).toJson();

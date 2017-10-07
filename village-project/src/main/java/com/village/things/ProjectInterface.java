@@ -20,7 +20,7 @@ public class ProjectInterface extends CommonThingInterface {
             throw new NothingLogicResponse("resource - name parameter is expected");
         }
 
-        return new ProjectEditor(as).newProject(name[0], as.getUser());
+        return as.s(ProjectEditor.class).newProject(name[0], as.getUser());
     }
 
     @Override
@@ -30,6 +30,6 @@ public class ProjectInterface extends CommonThingInterface {
         String[] name = as.getParameters().get(EarthField.NAME);
         String[] about = as.getParameters().get(EarthField.ABOUT);
 
-        return new ProjectEditor(as).edit(resource, extract(name), extract(about));
+        return as.s(ProjectEditor.class).edit(resource, extract(name), extract(about));
     }
 }

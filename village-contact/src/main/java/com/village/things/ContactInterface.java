@@ -23,7 +23,7 @@ public class ContactInterface extends CommonLinkInterface {
             contact = as.s(ContactEditor.class).newContact(target, source);
         }
 
-        new EarthUpdate(as).send(new NewContactEvent(as.getUser(), contact)).to(source);
+        as.s(EarthUpdate.class).send(new NewContactEvent(as.getUser(), contact)).to(source);
 
         return contact;
     }

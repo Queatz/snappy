@@ -17,7 +17,7 @@ public class RecentInterface implements Interfaceable {
             case 2:
                 switch (as.getRoute().get(1)) {
                     case Config.PATH_DELETE:
-                        new EarthStore(as).conclude(as.getRoute().get(0));
+                        as.s(EarthStore.class).conclude(as.getRoute().get(0));
                         return new SuccessView(true).toJson();
                 }
 
