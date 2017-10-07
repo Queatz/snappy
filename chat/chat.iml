@@ -37,7 +37,8 @@
     <orderEntry type="module" module-name="events" exported="" />
     <orderEntry type="module" module-name="queue" exported="" />
     <orderEntry type="module" module-name="notifications" exported="" />
-    <orderEntry type="module" module-name="village-people" exported="" />
+    <orderEntry type="module" module-name="email" exported="" />
+    <orderEntry type="module" module-name="village-device" exported="" />
     <orderEntry type="module" module-name="things" exported="" />
     <orderEntry type="module" module-name="view" exported="" />
     <orderEntry type="module" module-name="images" exported="" />
@@ -47,6 +48,7 @@
     <orderEntry type="module" module-name="village-contact" exported="" />
     <orderEntry type="module" module-name="village-follower" exported="" />
     <orderEntry type="module" module-name="village-member" exported="" />
+    <orderEntry type="module" module-name="village-people" exported="" />
     <orderEntry type="module" module-name="village-recent" exported="" />
     <orderEntry type="module" module-name="village-message" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
@@ -59,7 +61,8 @@
     <orderEntry type="module" module-name="events" exported="" />
     <orderEntry type="module" module-name="queue" exported="" />
     <orderEntry type="module" module-name="notifications" exported="" />
-    <orderEntry type="module" module-name="village-people" exported="" />
+    <orderEntry type="module" module-name="email" exported="" />
+    <orderEntry type="module" module-name="village-device" exported="" />
     <orderEntry type="module" module-name="things" exported="" />
     <orderEntry type="module" module-name="view" exported="" />
     <orderEntry type="module" module-name="images" exported="" />
@@ -69,6 +72,7 @@
     <orderEntry type="module" module-name="village-contact" exported="" />
     <orderEntry type="module" module-name="village-follower" exported="" />
     <orderEntry type="module" module-name="village-member" exported="" />
+    <orderEntry type="module" module-name="village-people" exported="" />
     <orderEntry type="module" module-name="village-recent" exported="" />
     <orderEntry type="module" module-name="village-message" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
@@ -81,7 +85,8 @@
     <orderEntry type="module" module-name="events" exported="" />
     <orderEntry type="module" module-name="queue" exported="" />
     <orderEntry type="module" module-name="notifications" exported="" />
-    <orderEntry type="module" module-name="village-people" exported="" />
+    <orderEntry type="module" module-name="email" exported="" />
+    <orderEntry type="module" module-name="village-device" exported="" />
     <orderEntry type="module" module-name="things" exported="" />
     <orderEntry type="module" module-name="view" exported="" />
     <orderEntry type="module" module-name="images" exported="" />
@@ -91,6 +96,7 @@
     <orderEntry type="module" module-name="village-contact" exported="" />
     <orderEntry type="module" module-name="village-follower" exported="" />
     <orderEntry type="module" module-name="village-member" exported="" />
+    <orderEntry type="module" module-name="village-people" exported="" />
     <orderEntry type="module" module-name="village-recent" exported="" />
     <orderEntry type="module" module-name="village-message" exported="" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="servlet-api-2.5" level="project" />
@@ -109,6 +115,7 @@
     <orderEntry type="library" exported="" scope="PROVIDED" name="httpcore-4.4.6" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-logging-1.2" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-codec-1.9" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="javax.mail-api-1.5.6" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="junit-4.10" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="hamcrest-core-1.1" level="project" />
   </component>

@@ -6,6 +6,8 @@ import com.queatz.snappy.shared.EarthJson;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.view.EarthView;
 import com.queatz.snappy.view.Viewable;
+import com.village.things.MessageView;
+import com.village.things.RecentView;
 
 import java.util.ArrayList;
 import java.util.List;

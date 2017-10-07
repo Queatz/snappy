@@ -6,7 +6,7 @@ import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.events.Eventable;
-import com.queatz.snappy.notifications.PushSpec;
+import com.queatz.snappy.shared.PushSpec;
 import com.queatz.snappy.shared.Config;
 
 /**

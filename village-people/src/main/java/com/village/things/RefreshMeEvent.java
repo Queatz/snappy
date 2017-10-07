@@ -2,7 +2,7 @@ package com.village.things;
 
 import com.queatz.snappy.events.Eventable;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.notifications.PushSpec;
+import com.queatz.snappy.shared.PushSpec;
 
 /**
  * Created by jacob on 6/19/16.

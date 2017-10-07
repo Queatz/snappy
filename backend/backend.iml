@@ -45,6 +45,8 @@
     <orderEntry type="module" module-name="images" exported="" />
     <orderEntry type="module" module-name="router" exported="" />
     <orderEntry type="module" module-name="notifications" exported="" />
+    <orderEntry type="module" module-name="email" exported="" />
+    <orderEntry type="module" module-name="village-device" exported="" />
     <orderEntry type="module" module-name="village-contact" exported="" />
     <orderEntry type="module" module-name="village-follower" exported="" />
     <orderEntry type="module" module-name="village-member" exported="" />
@@ -52,9 +54,18 @@
     <orderEntry type="module" module-name="village-message" exported="" />
     <orderEntry type="module" module-name="app-store" exported="" />
     <orderEntry type="module" module-name="chat" exported="" />
-    <orderEntry type="module" module-name="email" exported="" />
     <orderEntry type="module" module-name="village-club" exported="" />
-    <orderEntry type="module" module-name="village-device" exported="" />
+    <orderEntry type="module" module-name="village-form" exported="" />
+    <orderEntry type="module" module-name="village-hub" exported="" />
+    <orderEntry type="module" module-name="village-offer" exported="" />
+    <orderEntry type="module" module-name="village-like" exported="" />
+    <orderEntry type="module" module-name="village-party" exported="" />
+    <orderEntry type="module" module-name="village-join" exported="" />
+    <orderEntry type="module" module-name="village-update" exported="" />
+    <orderEntry type="module" module-name="village-location" exported="" />
+    <orderEntry type="module" module-name="village-project" exported="" />
+    <orderEntry type="module" module-name="village-resource" exported="" />
+    <orderEntry type="module" module-name="village-geosubscribe" exported="" />
     <orderEntry type="module" module-name="api" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
@@ -73,6 +84,8 @@
     <orderEntry type="module" module-name="images" exported="" />
     <orderEntry type="module" module-name="router" exported="" />
     <orderEntry type="module" module-name="notifications" exported="" />
+    <orderEntry type="module" module-name="email" exported="" />
+    <orderEntry type="module" module-name="village-device" exported="" />
     <orderEntry type="module" module-name="village-contact" exported="" />
     <orderEntry type="module" module-name="village-follower" exported="" />
     <orderEntry type="module" module-name="village-member" exported="" />
@@ -80,9 +93,18 @@
     <orderEntry type="module" module-name="village-message" exported="" />
     <orderEntry type="module" module-name="app-store" exported="" />
     <orderEntry type="module" module-name="chat" exported="" />
-    <orderEntry type="module" module-name="email" exported="" />
     <orderEntry type="module" module-name="village-club" exported="" />
-    <orderEntry type="module" module-name="village-device" exported="" />
+    <orderEntry type="module" module-name="village-form" exported="" />
+    <orderEntry type="module" module-name="village-hub" exported="" />
+    <orderEntry type="module" module-name="village-offer" exported="" />
+    <orderEntry type="module" module-name="village-like" exported="" />
+    <orderEntry type="module" module-name="village-party" exported="" />
+    <orderEntry type="module" module-name="village-join" exported="" />
+    <orderEntry type="module" module-name="village-update" exported="" />
+    <orderEntry type="module" module-name="village-location" exported="" />
+    <orderEntry type="module" module-name="village-project" exported="" />
+    <orderEntry type="module" module-name="village-resource" exported="" />
+    <orderEntry type="module" module-name="village-geosubscribe" exported="" />
     <orderEntry type="module" module-name="api" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
@@ -101,6 +123,8 @@
     <orderEntry type="module" module-name="images" exported="" />
     <orderEntry type="module" module-name="router" exported="" />
     <orderEntry type="module" module-name="notifications" exported="" />
+    <orderEntry type="module" module-name="email" exported="" />
+    <orderEntry type="module" module-name="village-device" exported="" />
     <orderEntry type="module" module-name="village-contact" exported="" />
     <orderEntry type="module" module-name="village-follower" exported="" />
     <orderEntry type="module" module-name="village-member" exported="" />
@@ -108,9 +132,18 @@
     <orderEntry type="module" module-name="village-message" exported="" />
     <orderEntry type="module" module-name="app-store" exported="" />
     <orderEntry type="module" module-name="chat" exported="" />
-    <orderEntry type="module" module-name="email" exported="" />
     <orderEntry type="module" module-name="village-club" exported="" />
-    <orderEntry type="module" module-name="village-device" exported="" />
+    <orderEntry type="module" module-name="village-form" exported="" />
+    <orderEntry type="module" module-name="village-hub" exported="" />
+    <orderEntry type="module" module-name="village-offer" exported="" />
+    <orderEntry type="module" module-name="village-like" exported="" />
+    <orderEntry type="module" module-name="village-party" exported="" />
+    <orderEntry type="module" module-name="village-join" exported="" />
+    <orderEntry type="module" module-name="village-update" exported="" />
+    <orderEntry type="module" module-name="village-location" exported="" />
+    <orderEntry type="module" module-name="village-project" exported="" />
+    <orderEntry type="module" module-name="village-resource" exported="" />
+    <orderEntry type="module" module-name="village-geosubscribe" exported="" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="servlet-api-2.5" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-fileupload-1.3" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="gson-2.8.0" level="project" />

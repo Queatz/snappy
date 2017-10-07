@@ -10,7 +10,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Worker</servlet-name>
-        <servlet-class>com.queatz.snappy.Worker</servlet-class>
+        <servlet-class>com.queatz.snappy.notifications.Worker</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ImageWorker</servlet-name>

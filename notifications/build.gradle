@@ -1,10 +1,17 @@
 apply plugin: 'java'
 
 dependencies {
+    compile 'javax.servlet:servlet-api:2.5'
     compile 'org.apache.commons:commons-lang3:3.0'
     compile 'org.jetbrains:annotations-java5:15.0'
+    compile 'com.google.code.gson:gson:2.7'
 
     compile project(':shared')
+    compile project(':earth')
+    compile project(':email')
+    compile project(':events')
+    compile project(':earth-store')
+    compile project(':village-device')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

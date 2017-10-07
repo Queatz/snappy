@@ -43,6 +43,8 @@
     <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="module" module-name="router" exported="" />
     <orderEntry type="module" module-name="notifications" exported="" />
+    <orderEntry type="module" module-name="email" exported="" />
+    <orderEntry type="module" module-name="village-device" exported="" />
     <orderEntry type="module" module-name="village-contact" exported="" />
     <orderEntry type="module" module-name="village-follower" exported="" />
     <orderEntry type="module" module-name="village-member" exported="" />
@@ -62,6 +64,8 @@
     <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="module" module-name="router" exported="" />
     <orderEntry type="module" module-name="notifications" exported="" />
+    <orderEntry type="module" module-name="email" exported="" />
+    <orderEntry type="module" module-name="village-device" exported="" />
     <orderEntry type="module" module-name="village-contact" exported="" />
     <orderEntry type="module" module-name="village-follower" exported="" />
     <orderEntry type="module" module-name="village-member" exported="" />
@@ -81,6 +85,8 @@
     <orderEntry type="module" module-name="files" exported="" />
     <orderEntry type="module" module-name="router" exported="" />
     <orderEntry type="module" module-name="notifications" exported="" />
+    <orderEntry type="module" module-name="email" exported="" />
+    <orderEntry type="module" module-name="village-device" exported="" />
     <orderEntry type="module" module-name="village-contact" exported="" />
     <orderEntry type="module" module-name="village-follower" exported="" />
     <orderEntry type="module" module-name="village-member" exported="" />
@@ -96,6 +102,7 @@
     <orderEntry type="library" exported="" scope="PROVIDED" name="httpcore-4.4.6" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-logging-1.2" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-codec-1.9" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="javax.mail-api-1.5.6" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="velocypack-1.0.9" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="slf4j-api-1.7.13" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="json-simple-1.1.1" level="project" />

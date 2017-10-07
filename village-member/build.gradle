@@ -8,6 +8,7 @@ dependencies {
     compile project(':earth-store')
     compile project(':earth-authority')
     compile project(':view')
+    compile project(':things')
     compile project(':router')
     compile project(':as')
 }

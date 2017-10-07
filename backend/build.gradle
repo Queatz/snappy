@@ -55,6 +55,17 @@ dependencies {
     compile project(':village-member')
     compile project(':village-message')
     compile project(':village-recent')
+    compile project(':village-form')
+    compile project(':village-hub')
+    compile project(':village-offer')
+    compile project(':village-party')
+    compile project(':village-project')
+    compile project(':village-resource')
+    compile project(':village-update')
+    compile project(':village-like')
+    compile project(':village-join')
+    compile project(':village-location')
+    compile project(':village-geosubscribe')
 
     testCompile 'org.testng:testng:6.9.4'
     compile project(path: ':files')

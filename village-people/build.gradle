@@ -17,6 +17,7 @@ dependencies {
     compile project(':village-recent')
     compile project(':village-message')
     compile project(':village-follower')
+    compile project(':village-device')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

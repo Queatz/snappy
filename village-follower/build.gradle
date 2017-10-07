@@ -9,8 +9,9 @@ dependencies {
     compile project(':earth-authority')
     compile project(':view')
     compile project(':router')
+    compile project(':things')
     compile project(':as')
-    compile project(path: ':notifications')
+    compile project(':notifications')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

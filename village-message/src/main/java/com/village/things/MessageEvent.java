@@ -2,7 +2,7 @@ package com.village.things;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.html.HtmlEscapers;
-import com.queatz.snappy.notifications.PushSpec;
+import com.queatz.snappy.shared.PushSpec;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthStore;
