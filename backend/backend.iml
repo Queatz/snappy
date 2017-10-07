@@ -70,6 +70,7 @@
     <orderEntry type="module" module-name="village-project" exported="" />
     <orderEntry type="module" module-name="village-resource" exported="" />
     <orderEntry type="module" module-name="village-geosubscribe" exported="" />
+    <orderEntry type="module" module-name="village-mode" exported="" />
     <orderEntry type="module" module-name="api" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
@@ -113,6 +114,7 @@
     <orderEntry type="module" module-name="village-project" exported="" />
     <orderEntry type="module" module-name="village-resource" exported="" />
     <orderEntry type="module" module-name="village-geosubscribe" exported="" />
+    <orderEntry type="module" module-name="village-mode" exported="" />
     <orderEntry type="module" module-name="api" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
@@ -156,6 +158,7 @@
     <orderEntry type="module" module-name="village-project" exported="" />
     <orderEntry type="module" module-name="village-resource" exported="" />
     <orderEntry type="module" module-name="village-geosubscribe" exported="" />
+    <orderEntry type="module" module-name="village-mode" exported="" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="servlet-api-2.5" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-fileupload-1.3" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="gson-2.8.0" level="project" />

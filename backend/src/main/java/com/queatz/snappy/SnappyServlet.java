@@ -70,6 +70,9 @@ import com.village.things.MessageAuthority;
 import com.village.things.MessageEvent;
 import com.village.things.MessageInterface;
 import com.village.things.MessageView;
+import com.village.things.ModeAuthority;
+import com.village.things.ModeInterface;
+import com.village.things.ModeView;
 import com.village.things.NewCommentEvent;
 import com.village.things.NewContactEvent;
 import com.village.things.NewOfferEvent;
@@ -130,6 +133,7 @@ public class SnappyServlet extends HttpServlet {
         EarthAuthority.register(EarthKind.MEMBER_KIND, new MemberAuthority());
         EarthAuthority.register(EarthKind.FORM_KIND, new FormAuthority());
         EarthAuthority.register(EarthKind.CLUB_KIND, new ClubAuthority());
+        EarthAuthority.register(EarthKind.MODE_KIND, new ModeAuthority());
 
         EarthUpdate.register(Config.PUSH_ACTION_JOIN_ACCEPTED, JoinAcceptedEvent.class);
         EarthUpdate.register(Config.PUSH_ACTION_JOIN_REQUEST, JoinRequestEvent.class);
@@ -166,6 +170,7 @@ public class SnappyServlet extends HttpServlet {
         EarthViewer.register(EarthKind.MEMBER_KIND, MemberView.class);
         EarthViewer.register(EarthKind.FORM_KIND, FormView.class);
         EarthViewer.register(EarthKind.FORM_SUBMISSION_KIND, FormSubmissionView.class);
+        EarthViewer.register(EarthKind.MODE_KIND, ModeView.class);
 
         EarthRouter.register(EarthKind.HUB_KIND, new HubInterface());
         EarthRouter.register(EarthKind.CLUB_KIND, new ClubInterface());
@@ -186,6 +191,7 @@ public class SnappyServlet extends HttpServlet {
         EarthRouter.register(EarthKind.FORM_KIND, new FormInterface());
         EarthRouter.register(EarthKind.FORM_ITEM_KIND, new FormItemInterface());
         EarthRouter.register(EarthKind.FORM_SUBMISSION_KIND, new FormSubmissionInterface());
+        EarthRouter.register(EarthKind.MODE_KIND, new ModeInterface());
 
         EarthRouter.registerSpecial(EarthSpecialRoute.HERE_ROUTE, new HereInterface());
         EarthRouter.registerSpecial(EarthSpecialRoute.ME_ROUTE, new MeInterface());

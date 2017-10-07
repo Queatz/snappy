@@ -67,6 +67,7 @@ dependencies {
     compile project(':village-join')
     compile project(':village-location')
     compile project(':village-geosubscribe')
+    compile project(':village-mode')
 
     compile project(':plugin-member')
     compile project(':plugin-contact')
