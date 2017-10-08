@@ -34,6 +34,10 @@ public class SettingsSlide extends TeamFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        if (mPerson == null) {
+            return;
+        }
+
         outState.putString(Config.EXTRA_PERSON_ID, mPerson.getString(Thing.ID));
     }
 

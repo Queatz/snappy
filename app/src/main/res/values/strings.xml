@@ -204,6 +204,18 @@
     <string name="my_apps">My Apps</string>
     <string name="tap_and_hold_on_apps_to_add_them_here">Tap and hold on apps to add them here.</string>
     <string name="reconnecting">Reconnecting…</string>
+    <string name="add_a_mode">Add a mode</string>
+    <string name="add_mode">Turn on mode</string>
+    <string name="enter_name">Enter name</string>
+    <string name="mode_name">Mode name</string>
+    <string name="mode_about">Describe what this mode means</string>
+    <string name="couldnt_add_mode">Couldn\'t add mode</string>
+    <string name="modes">Modes</string>
+    <string name="details">Details</string>
+    <string name="person_has_not_turned_on_any_modes_yet">%1$s has not turned on any modes yet.</string>
+    <string name="got_it">Got it</string>
+    <string name="turn_on_mode">Turn on mode</string>
+    <string name="turn_off_mode">Turn off mode</string>
 
     <plurals name="likes">
         <item quantity="one">%1$s Liker</item>

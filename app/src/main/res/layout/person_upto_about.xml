@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:elevation="2dp">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/pad_md">
 
         <FrameLayout
             android:id="@+id/topGlass"
@@ -20,7 +20,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
+            android:elevation="4dp"
+            android:layout_marginBottom="@dimen/pad_md"
             android:orientation="vertical">
+
+            <View
+                android:id="@+id/highlight"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/card_highlight"
+                android:background="@color/red" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -31,13 +39,75 @@
 
                 <com.queatz.snappy.ui.TextView
                     android:id="@+id/name"
-                    android:textSize="@dimen/font_md"
+                    android:textSize="@dimen/font_lg"
                     android:textColor="@color/text"
+                    android:padding="@dimen/pad_md"
+                    android:text="First Last"
                     android:layout_width="wrap_content"
                     android:textAlignment="center"
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:paddingTop="@dimen/pad_lg"
+                android:paddingLeft="@dimen/pad_lg"
+                android:paddingBottom="@dimen/pad_md"
+                android:text="@string/modes"
+                android:textColor="@color/info"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textSize="@dimen/font_sm" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.queatz.snappy.ui.TextView
+                    android:id="@+id/noModes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:padding="@dimen/pad_lg"
+                    android:text="@string/person_has_not_turned_on_any_modes_yet"
+                    android:textColor="@color/info"
+                    android:textSize="@dimen/font_md" />
+
+                <com.queatz.snappy.ui.ExpandedListView
+                    android:id="@+id/modesList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@null"
+                    android:dividerHeight="0dp" />
+
+                <Button style="@style/Widget.AppCompat.Button.Borderless"
+                    android:id="@+id/action_add_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:padding="@dimen/pad_lg"
+                    android:text="@string/add_a_mode"
+                    android:textSize="@dimen/font_md"
+                    android:textColor="@color/thing_mode" />
+
+            </LinearLayout>
+
+            <com.queatz.snappy.ui.TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:paddingTop="@dimen/pad_lg"
+                android:paddingLeft="@dimen/pad_lg"
+                android:paddingBottom="@dimen/pad_md"
+                android:text="@string/about"
+                android:textColor="@color/info"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:textSize="@dimen/font_sm" />
 
             <LinearLayout
                 android:layout_width="match_parent"

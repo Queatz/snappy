@@ -2,7 +2,9 @@ package com.village.things;
 
 import com.queatz.earth.Authority;
 import com.queatz.earth.EarthRule;
+import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
+import com.queatz.snappy.as.EarthAs;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +19,7 @@ public class ModeAuthority implements Authority {
             case ACCESS:
                 return true;
             case MODIFY:
-                return as == null;
+                return new EarthAs().s(EarthStore.class).isOwnerOf(entity, as);
         }
 
         return false;

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal">
+
+    <com.queatz.snappy.ui.SquareLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:riv_oval="true"
+            android:scaleType="centerCrop"
+            android:src="@color/spacer"
+            android:adjustViewBounds="false"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/pad_lg" />
+
+    </com.queatz.snappy.ui.SquareLayout>
+
+    <com.queatz.snappy.ui.TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingLeft="@dimen/pad_md"
+        android:paddingRight="@dimen/pad_md"
+        android:paddingTop="@dimen/pad_lg"
+        android:paddingBottom="@dimen/pad_lg"
+        android:textSize="@dimen/font_lg"
+        android:text="Table Sharer"
+        android:textColor="@color/thing_mode" />
+
+    <com.queatz.snappy.ui.TextView
+        android:id="@+id/about"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="left"
+        android:padding="@dimen/pad_lg"
+        android:textSize="@dimen/font_md"
+        android:text="About the Table Sharer"
+        android:textColor="@color/text" />
+
+
+</LinearLayout>

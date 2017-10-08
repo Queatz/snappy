@@ -21,6 +21,7 @@ import com.queatz.snappy.logic.interfaces.HereInterface;
 import com.queatz.snappy.logic.interfaces.MeInterface;
 import com.queatz.snappy.logic.interfaces.MemberInterface;
 import com.queatz.snappy.logic.interfaces.SearchInterface;
+import com.queatz.snappy.plugins.ContactEditorPlugin;
 import com.queatz.snappy.plugins.ContactMinePlugin;
 import com.queatz.snappy.plugins.EarthPlugin;
 import com.queatz.snappy.plugins.FollowerMinePlugin;
@@ -34,6 +35,7 @@ import com.village.things.ClearNotificationEvent;
 import com.village.things.ClubAuthority;
 import com.village.things.ClubInterface;
 import com.village.things.ClubView;
+import com.village.things.ContactEditor;
 import com.village.things.ContactInterface;
 import com.village.things.ContactMine;
 import com.village.things.ContactView;
@@ -204,6 +206,7 @@ public class SnappyServlet extends HttpServlet {
         EarthPlugin.register(MemberEditorPlugin.class, MemberEditor.class);
         EarthPlugin.register(MemberMinePlugin.class, MemberMine.class);
         EarthPlugin.register(ContactMinePlugin.class, ContactMine.class);
+        EarthPlugin.register(ContactEditorPlugin.class, ContactEditor.class);
         EarthPlugin.register(FollowerMinePlugin.class, FollowerMine.class);
     }
 

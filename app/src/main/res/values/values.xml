@@ -9,6 +9,7 @@
     <dimen name="pad_md">8dp</dimen>
     <dimen name="pad_lg">16dp</dimen>
 
+    <dimen name="font_sm">14sp</dimen>
     <dimen name="font_md">18sp</dimen>
     <dimen name="font_lg">24sp</dimen>
 </resources>

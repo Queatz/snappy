@@ -14,6 +14,7 @@ import android.media.Image;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.text.Html;
 import android.text.Spannable;
@@ -213,6 +214,33 @@ public class Util {
 
     public static boolean liked(@NonNull DynamicRealmObject update, @NonNull DynamicRealmObject person) {
         return team.realm.where("Thing").equalTo("source.id", person.getString(Thing.ID)).equalTo("target.id", update.getString(Thing.ID)).count() != 0;
+    }
+
+    public static boolean isModeOn(@NonNull DynamicRealmObject mode, @Nullable DynamicRealmObject person) {
+        if (person == null) {
+            return false;
+        }
+
+        DynamicRealmObject member = team.realm.where("Thing")
+                .equalTo(Thing.KIND, ThingKinds.MEMBER)
+                .equalTo("target.id", person.getString(Thing.ID))
+                .equalTo("source.id", mode.getString(Thing.ID))
+                .findFirst();
+
+        return member != null;
+    }
+
+    @Nullable
+    public static DynamicRealmObject getModeMember(@Nullable DynamicRealmObject mode, @Nullable DynamicRealmObject person) {
+        if (person == null || mode == null) {
+            return null;
+        }
+
+        return team.realm.where("Thing")
+                .equalTo(Thing.KIND, ThingKinds.MEMBER)
+                .equalTo("target.id", person.getString(Thing.ID))
+                .equalTo("source.id", mode.getString(Thing.ID))
+                .findFirst();
     }
 
     public static Matrix transformationFromExif(Uri uri) {

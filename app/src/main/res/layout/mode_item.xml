@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/photo"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:riv_oval="true"
+        android:layout_gravity="center_vertical"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="false"
+        android:src="@color/spacer"
+        android:layout_margin="@dimen/pad_lg" />
+
+    <com.queatz.snappy.ui.TextView
+        android:id="@+id/name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:paddingRight="@dimen/pad_md"
+        android:paddingTop="@dimen/pad_lg"
+        android:paddingBottom="@dimen/pad_lg"
+        android:textSize="@dimen/font_lg"
+        android:text="Table Sharer"
+        android:textColor="@color/thing_mode" />
+
+    <com.queatz.snappy.ui.TextView
+        android:id="@+id/state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingTop="@dimen/pad_lg"
+        android:paddingRight="@dimen/pad_lg"
+        android:paddingBottom="@dimen/pad_lg"
+        android:textSize="@dimen/font_md"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:text="@string/on"
+        android:textColor="@color/green" />
+
+</LinearLayout>

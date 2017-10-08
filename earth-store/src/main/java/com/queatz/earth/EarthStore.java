@@ -304,6 +304,11 @@ public class EarthStore extends EarthControl {
         }
     }
 
+    public boolean isOwnerOf(@NotNull EarthThing entity, @NotNull EarthThing as) {
+        EarthThing owner = ownerOf(entity);
+        return owner != null && owner.id().equals(as.id());
+    }
+
     public void removeFromClub(@NotNull EarthThing thing, @NotNull EarthThing club) {
         ArangoCursor<BaseDocument> c = db.query(
                 "for x in " + CLUB_RELATIONSHIPS +

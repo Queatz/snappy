@@ -10,14 +10,14 @@ public class Config {
     // Village admin user id (i.e. who gets feedback emails)
     public static final String JACOB = "8393";
 
-    public static final String LOCAL_IP = "192.168.1.114";
+    public static final String LOCAL_IP = "192.168.1.108";
 
     // Android
 
     /**
      * Force this to use the beta configuration.
      */
-    public static final boolean BETA_VERSION = false;
+    public static final boolean BETA_VERSION = true;
 
     /**
      * During app upgrades, this value is compared against the app version code, and if it is less
@@ -403,7 +403,6 @@ public class Config {
     public static final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/token";
     public static final String GOOGLE_AUTH_URL_POST_PARAMS = "grant_type=refresh_token&refresh_token=%s&client_id=%s";
     public static final String subscriptionProductId = "com.queatz.snappy.monthly";
-    public static final String refreshToken = Gateway.refreshToken;
 
     // Apps
 

@@ -22,4 +22,5 @@ public class ThingKinds {
     public static final String PROJECT = "project";
     public static final String CLUB = "club";
     public static final String MEMBER = "member";
+    public static final String MODE = "mode";
 }

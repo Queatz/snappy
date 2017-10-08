@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -15,6 +16,7 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.activity.Person;
 import com.queatz.snappy.adapter.FeedAdapter;
+import com.queatz.snappy.adapter.ModeAdapter;
 import com.queatz.snappy.adapter.OpenMessagesAction;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
@@ -22,6 +24,7 @@ import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.TeamFragment;
 import com.queatz.snappy.team.Thing;
 import com.queatz.snappy.team.ThingKinds;
+import com.queatz.snappy.team.actions.AddModeAction;
 import com.queatz.snappy.team.actions.AuthenticatedAction;
 import com.queatz.snappy.team.actions.BackThingAction;
 import com.queatz.snappy.team.actions.ChangeAboutAction;
@@ -29,6 +32,7 @@ import com.queatz.snappy.team.actions.OfferSomethingAction;
 import com.queatz.snappy.team.actions.ShowBackersAction;
 import com.queatz.snappy.team.actions.ShowBackingAction;
 import com.queatz.snappy.team.actions.UpdateThings;
+import com.queatz.snappy.team.actions.ViewModeAction;
 import com.queatz.snappy.team.contexts.ActivityContext;
 import com.queatz.snappy.ui.TextView;
 import com.queatz.snappy.ui.slidescreen.SlideScreen;
@@ -39,6 +43,8 @@ import com.queatz.snappy.util.TimeUtil;
 import java.util.ArrayList;
 
 import io.realm.DynamicRealmObject;
+import io.realm.OrderedCollectionChangeSet;
+import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -108,9 +114,9 @@ public class PersonUptoSlide extends TeamFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.person_upto, container, false);
-        updateList = ((ListView) view.findViewById(R.id.updateList));
+        updateList = view.findViewById(R.id.updateList);
 
-        socialMode = (TextView) view.findViewById(R.id.socialMode);
+        socialMode = view.findViewById(R.id.socialMode);
 
         personAbout = View.inflate(getActivity(), R.layout.person_upto_about, null);
 
@@ -248,7 +254,7 @@ public class PersonUptoSlide extends TeamFragment {
             getActivity().registerForContextMenu(topGlass);
 
 
-            ImageView profile = (ImageView) view.findViewById(R.id.profile);
+            ImageView profile = view.findViewById(R.id.profile);
 
             Images.with(getActivity())
                     .load(Functions.getImageUrlForSize(mPerson, (int) Util.px(512)))
@@ -370,6 +376,58 @@ public class PersonUptoSlide extends TeamFragment {
                     }
                 });
             }
+        }
+
+        updateModes();
+    }
+
+    private void updateModes() {
+        final ListView modesList = personAbout.findViewById(R.id.modesList);
+        final Button addModeButton = personAbout.findViewById(R.id.action_add_mode);
+        final TextView noModes = personAbout.findViewById(R.id.noModes);
+
+        noModes.setText(getString(R.string.person_has_not_turned_on_any_modes_yet, mPerson.getString(Thing.FIRST_NAME)));
+
+        boolean isMe = mPerson.getString(Thing.ID).equals(team.auth.getUser());
+
+        if (isMe) {
+            addModeButton.setVisibility(View.VISIBLE);
+        } else {
+            addModeButton.setVisibility(View.GONE);
+        }
+
+        addModeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                to(new AddModeAction());
+            }
+        });
+
+        if (modesList.getAdapter() == null) {
+            RealmResults<DynamicRealmObject> q = team.realm.where("Thing")
+                    .equalTo(Thing.KIND, ThingKinds.MEMBER)
+                    .equalTo("target.id", mPerson.getString(Thing.ID))
+                    .equalTo("source.kind", ThingKinds.MODE)
+                    .findAll();
+
+            q.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<DynamicRealmObject>>() {
+                @Override
+                public void onChange(RealmResults<DynamicRealmObject> dynamicRealmObjects, OrderedCollectionChangeSet orderedCollectionChangeSet) {
+                    noModes.setVisibility(dynamicRealmObjects.isEmpty() ? View.VISIBLE : View.GONE);
+                }
+            });
+
+            noModes.setVisibility(q.isEmpty() ? View.VISIBLE : View.GONE);
+
+
+            modesList.setAdapter(new ModeAdapter(getActivity(), q));
+
+            modesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    to(new ViewModeAction(((DynamicRealmObject) modesList.getAdapter().getItem(i)).getObject(Thing.SOURCE)));
+                }
+            });
         }
     }
 
