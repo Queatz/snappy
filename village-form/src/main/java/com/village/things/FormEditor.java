@@ -24,6 +24,7 @@ public class FormEditor extends EarthControl {
 
         return earthStore.save(earthStore.edit(earthStore.create(EarthKind.FORM_KIND))
                         .set(EarthField.NAME, name)
+                        .set(EarthField.ABOUT, "")
                         .set(EarthField.SOURCE, creator.key().name()));
     }
 

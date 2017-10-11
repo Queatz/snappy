@@ -146,21 +146,24 @@ public class FormSubmissionInterface implements Interfaceable {
             throw new NothingLogicResponse("form-submission - no thing");
         }
 
-        EarthStore earthStore = as.s(EarthStore.class);
+        // Form submissions do not take into account the current user
+        EarthAs ass = new EarthAs();
+
+        EarthStore earthStore = ass.s(EarthStore.class);
         EarthThing form = earthStore.get(thingId);
 
         if (form == null) {
             throw new NothingLogicResponse("form-submission - null form");
         }
 
-        EarthThing formSubmission = new FormSubmissionEditor(new EarthAs()).newFormSubmission(form, data);
+        EarthThing formSubmission = new FormSubmissionEditor(ass).newFormSubmission(form, data);
 
         EarthThing formOwner = earthStore.get(form.getString(EarthField.SOURCE));
         earthStore.addToClub(formSubmission, formOwner);
         earthStore.setOwner(formSubmission, formOwner);
 
-        new MemberEditor(new EarthAs()).create(formSubmission, form, Config.MEMBER_STATUS_ACTIVE);
-        new EarthUpdate(new EarthAs()).send(new FormSubmissionEvent(formSubmission)).to(formOwner);
+        new MemberEditor(ass).create(formSubmission, form, Config.MEMBER_STATUS_ACTIVE);
+        new EarthUpdate(ass).send(new FormSubmissionEvent(formSubmission)).to(formOwner);
 
         return new SuccessView(true).toJson();
     }

@@ -17,7 +17,7 @@ public class Config {
     /**
      * Force this to use the beta configuration.
      */
-    public static final boolean BETA_VERSION = true;
+    public static final boolean BETA_VERSION = false;
 
     /**
      * During app upgrades, this value is compared against the app version code, and if it is less

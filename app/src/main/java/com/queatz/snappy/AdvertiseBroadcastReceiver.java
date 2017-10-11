@@ -24,7 +24,11 @@ public class AdvertiseBroadcastReceiver extends BroadcastReceiver {
             serviceIntent.putExtras(extras);
         }
 
-        context.startService(serviceIntent);
+        try {
+            context.startService(serviceIntent);
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
 
         if (intent != null) {
             if (Config.EXTRA_ACTION_HIDE.equals(intent.getStringExtra(Config.EXTRA_ACTION))) {
