@@ -252,6 +252,7 @@ public class Config {
     public static final String QUEUE_WORKER_NAME = "pushes";
     public static final String QUEUE_IMAGE_WORKER_NAME = "images";
     public static final String QUEUE_IMAGE_WORKER_URL = QUEUE_URL + "image-worker";
+    public static final String QUEUE_ACTION_CHANGE_WORKER_URL = QUEUE_URL + "action-change";
 
     // If the app is in a beta release period (unused)
     public static final boolean IN_BETA = false;
@@ -315,6 +316,7 @@ public class Config {
     public static final String PUSH_ACTION_INFORMATION = "information";
     public static final String PUSH_ACTION_FORM_SUBMISSION_EVENT = "form_submission";
     public static final String PUSH_ACTION_NEW_CHAT = "chat_new";
+    public static final String PUSH_ACTION_ACTION_CHANGE = "action_change";
 
     // Types of updates
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";
@@ -359,6 +361,7 @@ public class Config {
     public static final String PARAM_HIDE = "hide";
     public static final String PARAM_FOLLOW = "follow";
     public static final String PARAM_MESSAGE = "message";
+    public static final String PARAM_VALUE = "value";
     public static final String PARAM_LATITUDE = "latitude";
     public static final String PARAM_LONGITUDE = "longitude";
     public static final String PARAM_SEEN = "seen";
@@ -395,6 +398,8 @@ public class Config {
     public static final String PARAM_CLUBS = "clubs";
     public static final String PARAM_DATA = "data";
     public static final String PARAM_FILE = "file";
+    public static final String PARAM_TOKEN = "token";
+    public static final String PARAM_URL = "url";
 
     // Google login configuration
     public static final String GOOGLE_PLUS_PROFILE_URL = "https://www.googleapis.com/plus/v1/people/me";

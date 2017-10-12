@@ -7,12 +7,13 @@ import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.as.EarthAs;
 
-/**
- * Created by jacob on 7/19/16.
- */
-public class ContactAuthority implements Authority {
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public class ActionAuthority implements Authority {
+
     @Override
-    public boolean authorize(EarthThing as, EarthThing entity, EarthRule rule) {
+    public boolean authorize(@Nullable EarthThing as, @NotNull EarthThing entity, @NotNull EarthRule rule) {
         switch (rule) {
             case ACCESS:
                 // Anyone can see

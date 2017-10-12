@@ -8,21 +8,32 @@
         <servlet-name>Snappy</servlet-name>
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>Worker</servlet-name>
         <servlet-class>com.queatz.snappy.notifications.Worker</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ImageWorker</servlet-name>
-        <servlet-class>com.queatz.snappy.images.ImageWorker</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Worker</servlet-name>
         <url-pattern>/worker</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ImageWorker</servlet-name>
+        <servlet-class>com.queatz.snappy.images.ImageWorker</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ImageWorker</servlet-name>
         <url-pattern>/image-worker</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ActionWorker</servlet-name>
+        <servlet-class>com.village.things.ActionWorker</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ActionWorker</servlet-name>
+        <url-pattern>/action-change</url-pattern>
     </servlet-mapping>
 
     <servlet>

@@ -31,10 +31,15 @@ import com.queatz.snappy.router.EarthRouter;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.EarthSpecialRoute;
 import com.queatz.snappy.view.EarthViewer;
+import com.village.things.ActionAuthority;
+import com.village.things.ActionInterface;
+import com.village.things.ActionQueue;
+import com.village.things.ActionView;
 import com.village.things.ClearNotificationEvent;
 import com.village.things.ClubAuthority;
 import com.village.things.ClubInterface;
 import com.village.things.ClubView;
+import com.village.things.ContactAuthority;
 import com.village.things.ContactEditor;
 import com.village.things.ContactInterface;
 import com.village.things.ContactMine;
@@ -134,8 +139,10 @@ public class SnappyServlet extends HttpServlet {
         EarthAuthority.register(EarthKind.PARTY_KIND, new PartyAuthority());
         EarthAuthority.register(EarthKind.MEMBER_KIND, new MemberAuthority());
         EarthAuthority.register(EarthKind.FORM_KIND, new FormAuthority());
+        EarthAuthority.register(EarthKind.CONTACT_KIND, new ContactAuthority());
         EarthAuthority.register(EarthKind.CLUB_KIND, new ClubAuthority());
         EarthAuthority.register(EarthKind.MODE_KIND, new ModeAuthority());
+        EarthAuthority.register(EarthKind.ACTION_KIND, new ActionAuthority());
 
         EarthUpdate.register(Config.PUSH_ACTION_JOIN_ACCEPTED, JoinAcceptedEvent.class);
         EarthUpdate.register(Config.PUSH_ACTION_JOIN_REQUEST, JoinRequestEvent.class);
@@ -173,6 +180,7 @@ public class SnappyServlet extends HttpServlet {
         EarthViewer.register(EarthKind.FORM_KIND, FormView.class);
         EarthViewer.register(EarthKind.FORM_SUBMISSION_KIND, FormSubmissionView.class);
         EarthViewer.register(EarthKind.MODE_KIND, ModeView.class);
+        EarthViewer.register(EarthKind.ACTION_KIND, ActionView.class);
 
         EarthRouter.register(EarthKind.HUB_KIND, new HubInterface());
         EarthRouter.register(EarthKind.CLUB_KIND, new ClubInterface());
@@ -194,6 +202,7 @@ public class SnappyServlet extends HttpServlet {
         EarthRouter.register(EarthKind.FORM_ITEM_KIND, new FormItemInterface());
         EarthRouter.register(EarthKind.FORM_SUBMISSION_KIND, new FormSubmissionInterface());
         EarthRouter.register(EarthKind.MODE_KIND, new ModeInterface());
+        EarthRouter.register(EarthKind.ACTION_KIND, new ActionInterface());
 
         EarthRouter.registerSpecial(EarthSpecialRoute.HERE_ROUTE, new HereInterface());
         EarthRouter.registerSpecial(EarthSpecialRoute.ME_ROUTE, new MeInterface());
@@ -250,15 +259,15 @@ public class SnappyServlet extends HttpServlet {
             EarthThing user = new Auth().fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH));
 
             Api.getService().call(user, method, req, resp);
-        } catch (PrintingError e) {
-            e.printStackTrace();
-            errorOut(resp, e);
         } catch (StringResponse string) {
             try {
                 resp.getWriter().write(string.getString());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        } catch (PrintingError e) {
+            e.printStackTrace();
+            errorOut(resp, e);
         }
     }
 
@@ -290,6 +299,7 @@ public class SnappyServlet extends HttpServlet {
     public void destroy() {
         ImageQueue.getService().stop();
         Queue.getService().stop();
+        ActionQueue.getService().stop();
         super.destroy();
     }
 }

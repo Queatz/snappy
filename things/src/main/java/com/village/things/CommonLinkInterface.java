@@ -51,8 +51,8 @@ public abstract class CommonLinkInterface implements Interfaceable {
 
         switch (as.getRoute().size()) {
             case 0: {
-                EarthThing source = earthStore.get(as.getParameters().get(Config.PARAM_SOURCE)[0]);
-                EarthThing target = earthStore.get(as.getParameters().get(Config.PARAM_TARGET)[0]);
+                EarthThing source = earthStore.get(extract(as.getParameters().get(Config.PARAM_SOURCE)));
+                EarthThing target = earthStore.get(extract(as.getParameters().get(Config.PARAM_TARGET)));
 
                 if (source == null || target == null) {
                     return null;
