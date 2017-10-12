@@ -32,6 +32,7 @@ import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.EarthSpecialRoute;
 import com.queatz.snappy.view.EarthViewer;
 import com.village.things.ActionAuthority;
+import com.village.things.ActionChangeEvent;
 import com.village.things.ActionInterface;
 import com.village.things.ActionQueue;
 import com.village.things.ActionView;
@@ -160,6 +161,7 @@ public class SnappyServlet extends HttpServlet {
         EarthUpdate.register(Config.PUSH_ACTION_NEW_COMMENT, NewCommentEvent.class);
         EarthUpdate.register(Config.PUSH_ACTION_INFORMATION, InformationEvent.class);
         EarthUpdate.register(Config.PUSH_ACTION_FORM_SUBMISSION_EVENT, FormSubmissionEvent.class);
+        EarthUpdate.register(Config.PUSH_ACTION_ACTION_CHANGE, ActionChangeEvent.class);
 
         EarthViewer.register(EarthKind.HUB_KIND, HubView.class);
         EarthViewer.register(EarthKind.CLUB_KIND, ClubView.class);

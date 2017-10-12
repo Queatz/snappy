@@ -55,7 +55,7 @@ public abstract class CommonLinkInterface implements Interfaceable {
                 EarthThing target = earthStore.get(extract(as.getParameters().get(Config.PARAM_TARGET)));
 
                 if (source == null || target == null) {
-                    return null;
+                    return new SuccessView(false).toJson();
                 }
 
                 String role = extract(as.getParameters().get(Config.PARAM_ROLE));

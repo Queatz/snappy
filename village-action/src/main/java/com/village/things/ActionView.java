@@ -1,5 +1,6 @@
 package com.village.things;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthThing;
@@ -14,7 +15,7 @@ import com.queatz.snappy.view.EarthView;
 public class ActionView extends LinkView {
 
     private final String role;
-    private final String data;
+    private final JsonElement data;
     private final String token;
     private final String value;
     private final String type;
@@ -35,13 +36,13 @@ public class ActionView extends LinkView {
         // Only the action's owner gets to see the full action configuration
         if (owner) {
             this.token = action.getString(EarthField.TOKEN);
-            this.data = action.getString(EarthField.DATA);
+            this.data = use(EarthJson.class).fromJson(action.getString(EarthField.DATA), JsonElement.class);
         } else {
             this.token = null;
             JsonObject data = use(EarthJson.class).fromJson(action.getString(EarthField.DATA), JsonObject.class);
             JsonObject json = new JsonObject();
             json.add(ActionConfig.DATA_FIELD_CONFIG, data.get(ActionConfig.DATA_FIELD_CONFIG));
-            this.data = use(EarthJson.class).toJson(json);
+            this.data = json;
         }
     }
 }

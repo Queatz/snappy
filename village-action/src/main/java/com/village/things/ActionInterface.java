@@ -46,6 +46,38 @@ public class ActionInterface extends CommonLinkInterface {
     }
 
     @Override
+    public String post(EarthAs as) {
+        EarthStore earthStore = as.s(EarthStore.class);
+
+        switch (as.getRoute().size()) {
+            case 1:
+                EarthThing action = earthStore.get(as.getRoute().get(0));
+                String value = extract(as.getParameters().get(Config.PARAM_VALUE));
+
+                // Change value
+
+                if (!Strings.isNullOrEmpty(value)) {
+                    EarthThing source = as.s(EarthStore.class).get(action.getString(EarthField.SOURCE));
+
+                    new EarthAs().s(ActionEditor.class).setValue(action, value);
+
+                    if (source != null) {
+                        EarthThing user = as.hasUser() ? as.getUser() : null;
+                        ActionQueue.getService().enqueue(action, value, user);
+                        as.s(EarthUpdate.class).send(new ActionChangeEvent(user, action, value)).to(source);
+                        throw new StringResponse(new SuccessView(true).toJson());
+                    }
+
+                    return new SuccessView(false).toJson();
+                }
+
+                break;
+        }
+
+        return super.post(as);
+    }
+
+    @Override
     public EarthThing create(EarthAs as, EarthThing source, EarthThing target, String status, String role) {
         as.requireUser();
 
@@ -58,28 +90,6 @@ public class ActionInterface extends CommonLinkInterface {
 
     @Override
     public EarthThing edit(EarthAs as, EarthThing action, HttpServletRequest request) {
-        as.requireUser();
-
-        // Change value
-
-        String value = extract(as.getParameters().get(Config.PARAM_VALUE));
-
-        if (!Strings.isNullOrEmpty(value)) {
-            EarthThing source = as.s(EarthStore.class).get(action.getString(EarthField.SOURCE));
-
-            as.s(ActionEditor.class).setValue(action, value);
-
-            if (source != null) {
-                ActionQueue.getService().enqueue(action, value, as.getUser());
-                as.s(EarthUpdate.class).send(new ActionChangeEvent(as.getUser(), action, value)).to(source);
-                throw new StringResponse(new SuccessView(true).toJson());
-            }
-
-            throw new StringResponse(new SuccessView(false).toJson());
-        }
-
-        // Edit
-
         String role = extract(as.getParameters().get(Config.PARAM_ROLE));
         String data = extract(as.getParameters().get(Config.PARAM_DATA));
         String type = extract(as.getParameters().get(Config.PARAM_TYPE));

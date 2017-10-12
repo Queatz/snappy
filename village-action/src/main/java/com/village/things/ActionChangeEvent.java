@@ -19,26 +19,25 @@ public class ActionChangeEvent implements Eventable {
 
     private EarthThing person;
     private EarthThing action;
+    private String value;
 
-    public ActionChangeEvent(EarthThing user, EarthThing action, String value) {}
-
-    public ActionChangeEvent(EarthThing person, EarthThing action) {
+    public ActionChangeEvent(EarthThing person, EarthThing action, String value) {
         this.person = person;
         this.action = action;
-
+        this.value = value;
     }
 
     @Override
     public Eventable fromData(String data) {
         String[] string = data.split(",");
-        person = earthStore.get(string[0]);
+        person = "-".equals(string[0]) ? null : earthStore.get(string[0]);
         action = earthStore.get(string[1]);
         return this;
     }
 
     @Override
     public String toData() {
-        return person.key().name() + "," + action.key().name();
+        return (person == null ? "-" : person.key().name()) + "," + action.key().name();
     }
 
     @Override
@@ -50,7 +49,7 @@ public class ActionChangeEvent implements Eventable {
                 ImmutableMap.of(
                         "action", action.getString(EarthField.ROLE),
                         "value", action.getString(EarthField.MESSAGE),
-                        "source", ImmutableMap.of(
+                        "source", person == null ? ImmutableMap.of() : ImmutableMap.of(
                                 "id", person.key().name(),
                                 "firstName", person.getString(EarthField.FIRST_NAME)
                         ),
