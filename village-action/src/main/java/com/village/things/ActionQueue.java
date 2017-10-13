@@ -41,6 +41,23 @@ public class ActionQueue extends Queue {
             value = "";
         }
 
+        if ("color".equals(action.getString(EarthField.TYPE))) {
+            try {
+                String format = config.getAsJsonObject(ActionConfig.DATA_FIELD_CONFIG).get("format").getAsString();
+
+                if (format != null) {
+                    JsonArray colorArray = json.fromJson(value, JsonArray.class);
+
+                    value = format
+                            .replace("r", String.valueOf(colorArray.get(0).getAsInt()))
+                            .replace("g", String.valueOf(colorArray.get(1).getAsInt()))
+                            .replace("b", String.valueOf(colorArray.get(2).getAsInt()));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         String person = user == null ? "" : user.key().name();
 
         for (JsonElement j : changeNotificationUrls) {
