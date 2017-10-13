@@ -21,6 +21,8 @@ public class ActionChangeEvent implements Eventable {
     private EarthThing action;
     private String value;
 
+    public ActionChangeEvent() {}
+
     public ActionChangeEvent(EarthThing person, EarthThing action, String value) {
         this.person = person;
         this.action = action;

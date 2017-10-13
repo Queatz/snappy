@@ -32,9 +32,10 @@ public class ActionQueue extends Queue {
     }
 
     public void enqueue(EarthThing action, String value, EarthThing user) {
-        JsonArray changeNotificationUrls = new EarthJson()
-                .fromJson(action.getString(EarthField.DATA), JsonObject.class)
-                .getAsJsonArray(ActionConfig.DATA_FIELD_CHANGE_NOTIFICATION_URLS);
+        EarthJson json = new EarthJson();
+        JsonObject config = json.fromJson(action.getString(EarthField.DATA), JsonObject.class);
+
+        JsonArray changeNotificationUrls = config.getAsJsonArray(ActionConfig.DATA_FIELD_CHANGE_NOTIFICATION_URLS);
 
         if (value == null) {
             value = "";
@@ -43,12 +44,30 @@ public class ActionQueue extends Queue {
         String person = user == null ? "" : user.key().name();
 
         for (JsonElement j : changeNotificationUrls) {
-            String url = j.getAsString()
-                    .replace(ActionConfig.URL_PARAM_VALUE, value)
-                    .replace(ActionConfig.URL_PARAM_PERSON, person);
+            JsonObject c = j.getAsJsonObject();
+            String url = parse(c.get(ActionConfig.DATA_FIELD_URL).getAsString(), value, person);
 
-            queue.add(Config.QUEUE_ACTION_CHANGE_WORKER_URL, ImmutableMap.of(Config.PARAM_URL, url));
+            String method = c.has(ActionConfig.DATA_FIELD_REQUEST_METHOD) ? c.get(ActionConfig.DATA_FIELD_REQUEST_METHOD).getAsString() : ActionConfig.DATA_FIELD_REQUEST_METHOD_GET;
+
+            JsonObject params = new JsonObject();
+            JsonArray array = c.getAsJsonArray(ActionConfig.DATA_FIELD_REQUEST_PARAMS);
+
+            for (JsonElement p : array) {
+                params.addProperty(p.getAsJsonObject().get("key").getAsString(), parse(p.getAsJsonObject().get("value").getAsString(), value, person));
+            }
+
+            String data = c.has(ActionConfig.DATA_FIELD_REQUEST_PARAMS) ? json.toJson(params) : "";
+
+            queue.add(Config.QUEUE_ACTION_CHANGE_WORKER_URL, ImmutableMap.of(
+                    Config.PARAM_URL, url,
+                    Config.PARAM_DATA, data,
+                    Config.PARAM_TYPE, method));
         }
+    }
+
+    private String parse(String string, String value, String person) {
+        return string.replace(ActionConfig.URL_PARAM_VALUE, value)
+                .replace(ActionConfig.URL_PARAM_PERSON, person);
     }
 
     public void stop() {
