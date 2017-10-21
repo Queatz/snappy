@@ -11,12 +11,12 @@ Domain: `vlllage.com`
 
     sudo su -
         
-    curl -O https://www.arangodb.com/repositories/arangodb31/Debian_8.0/Release.key
-    apt-key add - < Release.key
+    curl -O https://download.arangodb.com/arangodb32/Debian_9.0/Release.key
+    sudo apt-key add - < Release.key
     
     apt-get install software-properties-common apt-transport-https -y --force-yes
     apt-add-repository 'http://deb.debian.org/debian/ sid main contrib'
-    echo 'deb https://www.arangodb.com/repositories/arangodb31/Debian_8.0/ /' | sudo tee /etc/apt/sources.list.d/arangodb.list
+    echo 'deb https://download.arangodb.com/arangodb32/Debian_9.0/ /' | sudo tee /etc/apt/sources.list.d/arangodb.list
 
     apt-get update
     apt-get install openjdk-8-jre openjdk-8-jre-headless openjdk-8-jdk ca-certificates-java -y
@@ -67,7 +67,11 @@ Modify `/etc/tomcat8/server.xml` to include within `<Service name="Catalina">`:
                URIEncoding="UTF-8"
                redirectPort="8443"
                address="0.0.0.0" />
-             
+   
+Restart Tomcat8
+
+`/etc/init.d/tomcat8 restart`
+
 #### 2) Setup Database
 
 `arangosh`

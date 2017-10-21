@@ -103,6 +103,7 @@ public class ApiUtil {
         }
 
         outputChannel.close();
+        stream.close();
 
         return true;
     }
@@ -124,6 +125,7 @@ public class ApiUtil {
         }
 
         outputChannel.close();
+        stream.close();
 
         return FILES_POOL + "/" + fileName;
     }

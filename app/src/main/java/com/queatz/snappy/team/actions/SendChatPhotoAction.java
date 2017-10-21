@@ -54,6 +54,7 @@ public class SendChatPhotoAction extends ActivityAction {
 
                         byte[] bytes = new byte[inputStream.available()];
                         inputStream.read(bytes, 0, inputStream.available());
+                        inputStream.close();
 
                         chatManager.sendPhoto(topic.getName(), bytes);
                     } catch (IOException e) {

@@ -34,6 +34,8 @@ public class SnappyFilesTest {
 
         int read = inputStream.read(readBytes);
 
+        inputStream.close();
+
         assertEquals(read, raw.length);
         assertEquals(raw, readBytes);
     }

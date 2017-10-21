@@ -39,6 +39,8 @@ public class SnappyImageTest {
 
         int read = inputStream.read(readBytes);
 
+        inputStream.close();
+
         assertEquals(read, imageBytes.length);
         assertEquals(imageBytes, readBytes);
     }
@@ -78,6 +80,8 @@ public class SnappyImageTest {
         assertNotNull(inputStream);
 
         BufferedImage scaledImage = ImageIO.read(inputStream);
+
+        inputStream.close();
 
         assertEquals(scaledImage.getWidth(), 8);
         assertEquals(scaledImage.getHeight(), 8);

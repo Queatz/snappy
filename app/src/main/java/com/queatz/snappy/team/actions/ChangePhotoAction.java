@@ -57,6 +57,8 @@ class ChangePhotoAction extends AuthenticatedAction {
                         byte[] bytes = new byte[inputStream.available()];
                         inputStream.read(bytes, 0, inputStream.available());
 
+                        inputStream.close();
+
                         uploadPhoto(String.format(Config.PATH_EARTH_PHOTO, thing.getString(Thing.ID)), photo);
                     } catch (IOException e) {
                         e.printStackTrace();

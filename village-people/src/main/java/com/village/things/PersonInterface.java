@@ -231,6 +231,8 @@ public class PersonInterface extends CommonThingInterface {
                 else if (Config.PARAM_LOCAL_ID.equals(item.getFieldName())) {
                     localId = Streams.asString(stream, "UTF-8");
                 }
+
+                stream.close();
             }
         }
         catch (FileUploadException | IOException e) {

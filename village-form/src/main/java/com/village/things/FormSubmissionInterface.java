@@ -90,6 +90,8 @@ public class FormSubmissionInterface implements Interfaceable {
                 } else if (Config.PARAM_IN.equals(item.getFieldName())) {
                     thingId = Streams.asString(stream, "UTF-8");
                 }
+
+                stream.close();
             }
         }
         catch (FileUploadException | IOException e) {

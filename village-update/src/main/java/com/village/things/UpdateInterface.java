@@ -110,6 +110,8 @@ public class UpdateInterface extends CommonThingInterface {
                 } else if (Config.PARAM_CLUBS.equals(item.getFieldName())) {
                     clubs = Streams.asString(stream, "UTF-8");
                 }
+
+                stream.close();
             }
         }
         catch (FileUploadException | IOException e) {
@@ -185,6 +187,8 @@ public class UpdateInterface extends CommonThingInterface {
                 } else if (Config.PARAM_CLUBS.equals(item.getFieldName())) {
                     clubs = Streams.asString(stream, "UTF-8");
                 }
+
+                stream.close();
             }
         }
         catch (FileUploadException | IOException e) {

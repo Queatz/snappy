@@ -44,5 +44,7 @@ public class ImageWorker extends HttpServlet {
         earthStore.save(earthStore.edit(earthStore.get(thingId))
                 .set(EarthField.PLACEHOLDER, Base64.encodeBase64String(IOUtils.toByteArray(inputStream)))
                 .set(EarthField.ASPECT_RATIO, aspect));
+
+        inputStream.close();
     }
 }
