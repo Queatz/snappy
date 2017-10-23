@@ -24,8 +24,8 @@ public class PartyAuthority implements Authority {
                 // XXX todo no source === just being created, so it's ok, but is it?
                 return !entity.has(EarthField.HOST) ||
                         as.key().equals(entity.getKey(EarthField.HOST));
+            default:
+                return true;
         }
-
-        return true;
     }
 }

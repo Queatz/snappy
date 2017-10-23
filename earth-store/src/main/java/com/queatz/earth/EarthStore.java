@@ -438,8 +438,14 @@ public class EarthStore extends EarthControl {
         BaseDocument entity = entityBuilder.build();
         EarthThing thing = new EarthThing(entity);
 
-        if (!earthAuthority.authorize(thing, EarthRule.MODIFY)) {
-            throw new NothingLogicResponse("unauthorized");
+        if (entityBuilder.isCreate()) {
+            if (!earthAuthority.authorize(thing, EarthRule.MODIFY)) {
+                throw new NothingLogicResponse("unauthorized");
+            }
+        } else {
+            if (!earthAuthority.authorize(thing, EarthRule.CREATE)) {
+                throw new NothingLogicResponse("unauthorized (create)");
+            }
         }
 
         // Don't allow concluding entities that have already concluded

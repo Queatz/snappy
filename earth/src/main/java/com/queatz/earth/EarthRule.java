@@ -5,5 +5,6 @@ package com.queatz.earth;
  */
 public enum EarthRule {
     ACCESS,
-    MODIFY
+    MODIFY,
+    CREATE,
 }

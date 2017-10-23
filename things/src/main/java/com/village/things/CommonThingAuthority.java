@@ -23,8 +23,8 @@ public class CommonThingAuthority implements Authority {
                 // XXX todo no source === just being created, so it's ok, but is it?
                 return !entity.has(EarthField.SOURCE) ||
                         as.key().equals(entity.getKey(EarthField.SOURCE));
+            default:
+                return true;
         }
-
-        return true;
     }
 }

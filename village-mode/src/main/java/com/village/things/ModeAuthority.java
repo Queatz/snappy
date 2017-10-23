@@ -20,8 +20,8 @@ public class ModeAuthority implements Authority {
                 return true;
             case MODIFY:
                 return new EarthAs().s(EarthStore.class).isOwnerOf(entity, as);
+            default:
+                return true;
         }
-
-        return false;
     }
 }

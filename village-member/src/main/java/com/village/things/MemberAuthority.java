@@ -37,8 +37,8 @@ public class MemberAuthority implements Authority {
                         return ownerOfTarget != null && ownerOfTarget.id().equals(as.id());
                     }
                 }
+            default:
+                return true;
         }
-
-        return false;
     }
 }
