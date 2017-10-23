@@ -20,6 +20,10 @@ public class ContactAuthority implements Authority {
             case MODIFY:
                 // Only owners of the thing can edit contacts related to the thing
 
+                if (!entity.has(EarthField.SOURCE)) {
+                    return true;
+                }
+
                 EarthAs ass = new EarthAs();
                 EarthThing thing = ass.s(EarthStore.class).get(entity.getKey(EarthField.SOURCE));
                 EarthThing owner = ass.s(EarthStore.class).ownerOf(thing);
