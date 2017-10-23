@@ -61,10 +61,10 @@ public class PersonMine extends EarthControl {
     public EarthThing byGoogleUrl(String googleUrl) {
         List<EarthThing> result = use(EarthStore.class).query(
                 "x." + EarthField.KIND + " == @kind and " +
-                "x." + EarthField.GOOGLE_URL + " == @google_url ",
+                "x." + EarthField.GOOGLE_URL + " == lower(@google_url) ",
                 ImmutableMap.of(
                         "kind", EarthKind.PERSON_KIND,
-                        "google_url", googleUrl
+                        "google_url", googleUrl.toLowerCase()
                 )
                 , 1);
 
