@@ -61,6 +61,7 @@ public class PersonUptoSlide extends TeamFragment {
     private RealmChangeListener<DynamicRealmObject> mChangeListener = null;
     private ListView updateList;
     private int topGlassHeight;
+    private TextView aboutText;
 
     @Override
     public void to(Branch<ActivityContext> branch) {
@@ -119,6 +120,7 @@ public class PersonUptoSlide extends TeamFragment {
         socialMode = view.findViewById(R.id.socialMode);
 
         personAbout = View.inflate(getActivity(), R.layout.person_upto_about, null);
+        aboutText = personAbout.findViewById(R.id.about);
 
         final View topGlass = personAbout.findViewById(R.id.topGlass);
 
@@ -298,14 +300,12 @@ public class PersonUptoSlide extends TeamFragment {
                 }
             });
 
-            final TextView about = (TextView) personAbout.findViewById(R.id.about);
-
             if(team.auth.getUser() != null && team.auth.getUser().equals(mPerson.getString(Thing.ID))) {
                 messageButton.setText(getString(R.string.view_settings));
 
-                about.setTextIsSelectable(false);
+                aboutText.setTextIsSelectable(false);
 
-                about.setOnClickListener(new View.OnClickListener() {
+                aboutText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         to(new ChangeAboutAction());
@@ -314,7 +314,7 @@ public class PersonUptoSlide extends TeamFragment {
             }
             else {
                 messageButton.setText(getString(R.string.message_person, mPerson.getString(Thing.FIRST_NAME)));
-                about.setTextIsSelectable(true);
+                aboutText.setTextIsSelectable(true);
             }
 
             if(mPerson.getString(Thing.ABOUT) == null || mPerson.getString(Thing.ABOUT).isEmpty()) {
@@ -322,24 +322,24 @@ public class PersonUptoSlide extends TeamFragment {
                     @Override
                     public void whenAuthenticated() {
                         if(getUser().get(Thing.ID).equals(mPerson.getString(Thing.ID))) {
-                            about.setVisibility(View.VISIBLE);
-                            about.setTextColor(getResources().getColor(R.color.clickable));
-                            about.setText(R.string.what_are_you_into);
+                            aboutText.setVisibility(View.VISIBLE);
+                            aboutText.setTextColor(getResources().getColor(R.color.clickable));
+                            aboutText.setText(R.string.what_are_you_into);
                         }
                         else {
-                            about.setVisibility(View.GONE);
+                            aboutText.setVisibility(View.GONE);
                         }
                     }
 
                     @Override
                     public void otherwise() {
-                        about.setVisibility(View.GONE);
+                        aboutText.setVisibility(View.GONE);
                     }
                 });
             } else {
-                about.setVisibility(View.VISIBLE);
-                about.setTextColor(getResources().getColor(R.color.text));
-                about.setText(mPerson.getString(Thing.ABOUT));
+                aboutText.setVisibility(View.VISIBLE);
+                aboutText.setTextColor(getResources().getColor(R.color.text));
+                aboutText.setText(mPerson.getString(Thing.ABOUT));
             }
 
             TextView proximity = (TextView) personAbout.findViewById(R.id.proximity);

@@ -26,10 +26,9 @@ public class ActionAuthority implements Authority {
                 }
 
                 EarthAs ass = new EarthAs();
-                EarthThing thing = ass.s(EarthStore.class).get(entity.getKey(EarthField.SOURCE));
-                EarthThing owner = ass.s(EarthStore.class).ownerOf(thing);
+                EarthThing source = ass.s(EarthStore.class).get(entity.getKey(EarthField.SOURCE));
 
-                return thing != null && as != null && owner != null && owner.id().equals(as.id());
+                return as != null && source != null && source.id().equals(as.id());
             default:
                 return true;
         }

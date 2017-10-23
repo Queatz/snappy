@@ -271,7 +271,7 @@ public class Config {
     public static final int SEARCH_MAXIMUM = 10;
     public static final int SEARCH_MAX_VISIBILITY = 1609 * 20;
     public static final int NEARBY_MAX_VISIBILITY = 1609 * 2;
-    public static final int NEARBY_MAX_COUNT = 50;
+    public static final int NEARBY_MAX_COUNT = 200;
     public static final long QUESTS_MAX_AGE = 1000L * 60L * 60L * 24L * 30L;
     public static final int QUEST_MAX_TEAM_SIZE = 6;
     public static final int QUESTS_MAXIMUM = 100;

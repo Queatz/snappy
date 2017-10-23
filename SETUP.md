@@ -232,3 +232,9 @@ If you want to backup all Village data
     arangodump --output-directory "dump"
     zip -r dump.zip dump/
     zip -r village-data.zip /var/lib/village
+
+## Environment
+
+To increase the memory available to the backend, do something like:
+
+    export CATALINA_OPTS="$CATALINA_OPTS -Xms12000m"

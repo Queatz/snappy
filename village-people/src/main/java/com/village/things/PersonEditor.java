@@ -43,6 +43,7 @@ public class PersonEditor extends EarthControl {
 
         // A person starts out as their own club
         earthStore.addToClub(person, person);
+        earthStore.setOwner(person, person);
 
         return person;
     }

@@ -67,6 +67,10 @@ public class ModeAdapter extends RealmBaseAdapter<DynamicRealmObject> implements
 
         name.setText(mode.getString(Thing.NAME));
 
+        TextView about = view.findViewById(R.id.about);
+
+        about.setText(mode.getString(Thing.ABOUT));
+
         ImageView photo = view.findViewById(R.id.photo);
 
         if (mode.getBoolean(Thing.PHOTO)) {

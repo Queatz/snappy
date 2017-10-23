@@ -10,30 +10,47 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         app:riv_oval="true"
-        android:layout_gravity="center_vertical"
+        android:layout_gravity="top"
         android:scaleType="centerCrop"
         android:adjustViewBounds="false"
         android:src="@color/spacer"
         android:layout_margin="@dimen/pad_lg" />
 
-    <com.queatz.snappy.ui.TextView
-        android:id="@+id/name"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_gravity="center_vertical"
-        android:paddingRight="@dimen/pad_md"
-        android:paddingTop="@dimen/pad_lg"
-        android:paddingBottom="@dimen/pad_lg"
-        android:textSize="@dimen/font_lg"
-        android:text="Table Sharer"
-        android:textColor="@color/thing_mode" />
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical">
+
+        <com.queatz.snappy.ui.TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/pad_md"
+            android:paddingTop="@dimen/pad_lg"
+            android:textSize="@dimen/font_lg"
+            android:text="Table Sharer"
+            android:textColor="@color/thing_mode" />
+
+        <com.queatz.snappy.ui.TextView
+            android:id="@+id/about"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/pad_md"
+            android:paddingRight="@dimen/pad_md"
+            android:paddingBottom="@dimen/pad_lg"
+            android:textSize="@dimen/font_sm"
+            android:text="Table Sharers agree to share empty seats at their tables at cafes and restaurants."
+            android:textColor="@color/text" />
+
+    </LinearLayout>
 
     <com.queatz.snappy.ui.TextView
         android:id="@+id/state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:layout_gravity="top"
         android:paddingTop="@dimen/pad_lg"
         android:paddingRight="@dimen/pad_lg"
         android:paddingBottom="@dimen/pad_lg"
