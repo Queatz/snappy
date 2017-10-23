@@ -5,7 +5,6 @@ import com.queatz.earth.EarthThing;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
 import com.queatz.snappy.plugins.MemberEditorPlugin;
-import com.queatz.snappy.router.Interfaceable;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.view.EarthViewer;
 import com.queatz.snappy.view.SuccessView;
@@ -24,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  * Delete = POST /12345/delete
  */
 
-public abstract class CommonLinkInterface implements Interfaceable {
+public abstract class CommonLinkInterface extends ExistenceInterface {
 
     public abstract EarthThing create(EarthAs as, EarthThing source, EarthThing target, String status, String role);
     protected abstract EarthThing edit(EarthAs as, EarthThing link, HttpServletRequest request);
@@ -63,12 +62,16 @@ public abstract class CommonLinkInterface implements Interfaceable {
                 EarthThing link = create(as, source, target, Config.MEMBER_STATUS_ACTIVE, role);
                 as.s(MemberEditorPlugin.class).create(link, target, Config.MEMBER_STATUS_ACTIVE);
 
+                setVisibility(as, link);
+
                 return as.s(EarthViewer.class).getViewForEntityOrThrow(link).toJson();
             }
             case 1: {
                 EarthThing link = earthStore.get(as.getRoute().get(0));
 
                 link = edit(as, link, as.getRequest());
+
+                setVisibility(as, link);
 
                 return as.s(EarthViewer.class).getViewForEntityOrThrow(link).toJson();
             }
