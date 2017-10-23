@@ -1,0 +1,20 @@
+
+// Rename to: gateway.gradle
+
+android {
+    signingConfigs {
+        debug {
+            storeFile file("../android.jks")
+            storePassword "android"
+            keyAlias "android"
+            keyPassword "android"
+        }
+
+        release {
+            storeFile file("../android.jks")
+            storePassword "android"
+            keyAlias "android"
+            keyPassword "android"
+        }
+    }
+}
