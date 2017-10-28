@@ -14,6 +14,8 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import static java.util.concurrent.TimeUnit.MINUTES;
+
 /**
  * Created by jacob on 8/7/17.
  */
@@ -32,6 +34,9 @@ public class ChatServer {
     public void onOpen(Session session, EndpointConfig endpointConfig) {
         Logger.getAnonymousLogger().info("WEBSOCKET (SESSION): " + session.getId());
         this.session = session;
+
+        session.setMaxIdleTimeout(MINUTES.toMillis(5));
+
         this.chatSession = new ChatSession(
                 session,
                 (ChatLogic) endpointConfig.getUserProperties().get("chat")
@@ -42,6 +47,14 @@ public class ChatServer {
 
     @OnClose
     public void onClose() {
+        if (session.isOpen()) {
+            try {
+                session.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         Logger.getAnonymousLogger().info("WEBSOCKET: END");
         chatSession.leave();
     }
