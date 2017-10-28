@@ -24,6 +24,7 @@ public class ClubMine extends EarthControl {
                 new EarthQuery(as)
                         .in("outbound @id graph @graph")
                         .filter(EarthField.KIND, "@club_kind")
+                        .filter(EarthStore.DEFAULT_FIELD_TO, "!=", "@id")
                         .distinct(true)
                         .sort("x." + EarthField.CREATED_ON + " desc")
                         .aql(),
