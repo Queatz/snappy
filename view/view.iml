@@ -13,7 +13,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/build/classes/java/main" />
     <output-test url="file://$MODULE_DIR$/build/classes/java/test" />
     <exclude-output />
@@ -27,11 +27,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="earth" exported="" />
-    <orderEntry type="module" module-name="shared" exported="" />
-    <orderEntry type="module" module-name="as" exported="" />
-    <orderEntry type="module" module-name="exceptions" exported="" />
-    <orderEntry type="module" module-name="plugins" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
     <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="as" exported="" />

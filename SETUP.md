@@ -14,7 +14,7 @@ Domain: `vlllage.com`
     curl -O https://download.arangodb.com/arangodb32/Debian_9.0/Release.key
     sudo apt-key add - < Release.key
     
-    apt-get install software-properties-common apt-transport-https -y --force-yes
+    apt-get install software-properties-common apt-transport-https -y --allow
     apt-add-repository 'http://deb.debian.org/debian/ sid main contrib'
     echo 'deb https://download.arangodb.com/arangodb32/Debian_9.0/ /' | sudo tee /etc/apt/sources.list.d/arangodb.list
 
@@ -25,7 +25,8 @@ Domain: `vlllage.com`
     apt-get install libservlet3.1-java -y
 
 Note, if you see `arangodb3 : Depends: libssl1.0.0 (>= 1.0.1) but it is not installable`,
-then make sure you have `jessie` in your `/etc/apt/sources.list` file.
+then make sure you have `jessie` in your `/etc/apt/sources.list` file. Alternatively, grab it from here:
+https://packages.debian.org/sid/amd64/libssl1.1/download
 
     deb http://deb.debian.org/debian/ jessie contrib main
 
