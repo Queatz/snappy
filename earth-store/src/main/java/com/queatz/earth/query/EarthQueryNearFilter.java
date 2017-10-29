@@ -12,14 +12,14 @@ import static com.queatz.earth.EarthStore.DEFAULT_COLLECTION;
 
 public class EarthQueryNearFilter extends EarthControl {
 
-    private String longitude;
     private String latitude;
+    private String longitude;
     private String limit;
 
-    public EarthQueryNearFilter(EarthAs as, String longitude, String latitude, String limit) {
+    public EarthQueryNearFilter(EarthAs as, String latitude, String longitude, String limit) {
         super(as);
-        this.longitude = longitude;
         this.latitude = latitude;
+        this.longitude = longitude;
         this.limit = limit;
     }
 
