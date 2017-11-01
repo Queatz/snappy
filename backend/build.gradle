@@ -23,7 +23,7 @@ dependencies {
     compile 'org.glassfish:javax.faces:2.2.8'
     compile 'org.jboss.weld.servlet:weld-servlet:2.4.1.Final'
     compile 'com.sun.mail:javax.mail:1.5.6'
-    compile 'org.omnifaces:omnifaces:2.6.1'
+    compile 'org.omnifaces:omnifaces:2.6.5'
 
     compile group: 'javax.mail', name: 'javax.mail-api', version: '1.5.6'
     compile group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
@@ -33,6 +33,7 @@ dependencies {
     compile project(':app-store')
     compile project(':chat')
     compile project(':earth')
+    compile project(':graph')
     compile project(':image')
     compile project(':queue')
     compile project(':shared')

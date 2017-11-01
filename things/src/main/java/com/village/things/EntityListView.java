@@ -40,7 +40,7 @@ public class EntityListView extends EarthControl implements Viewable {
 
     @Override
     public String toJson() {
-        return new EarthJson().toJson(this.entities);
+        return use(EarthJson.class).toJson(this.entities);
     }
 
     public List<Viewable> asList() {
