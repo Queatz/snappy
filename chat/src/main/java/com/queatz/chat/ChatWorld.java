@@ -8,12 +8,14 @@ import com.arangodb.ArangoDatabase;
 import com.arangodb.entity.BaseDocument;
 import com.arangodb.model.DocumentCreateOptions;
 import com.arangodb.model.GeoIndexOptions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthThing;
 import com.queatz.snappy.shared.Gateway;
 import com.queatz.snappy.shared.earth.EarthGeo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -70,15 +72,18 @@ public class ChatWorld {
         vars.put("longitude", location.getLongitude());
         vars.put("limit", ChatConfig.MAX_CHAT_BACKFILL);
 
-        ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class);
+        try (ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class)) {
+            List<EarthThing> result = new ArrayList<>();
 
-        List<EarthThing> result = new ArrayList<>();
+            while (cursor.hasNext()) {
+                result.add(0, EarthThing.from(cursor.next()));
+            }
 
-        while (cursor.hasNext()) {
-            result.add(0, EarthThing.from(cursor.next()));
+            return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ImmutableList.of();
         }
-
-        return result;
     }
 
     public EarthThing.Builder stage(String kind) {

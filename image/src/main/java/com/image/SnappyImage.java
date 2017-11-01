@@ -158,13 +158,17 @@ public class SnappyImage {
         Map<String, Object> vars = new HashMap<>();
         vars.put("path", path);
 
-        database.query(
-                "for x in " + IMAGES_DATABASE_COLLECTION +
-                " filter x.path == @path remove x in " + IMAGES_DATABASE_COLLECTION,
-                vars,
-                null,
-                Boolean.class
-        );
+        try {
+            database.query(
+                    "for x in " + IMAGES_DATABASE_COLLECTION +
+                    " filter x.path == @path remove x in " + IMAGES_DATABASE_COLLECTION,
+                    vars,
+                    null,
+                    Boolean.class
+            ).close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -218,11 +222,14 @@ public class SnappyImage {
             }
         }
 
-        ArangoCursor<SnappyImageMetadata> cursor = database.query(query, vars, null, SnappyImageMetadata.class);
-
-        if (cursor.hasNext()) {
-            return cursor.next();
-        } else {
+        try (ArangoCursor<SnappyImageMetadata> cursor = database.query(query, vars, null, SnappyImageMetadata.class)) {
+            if (cursor.hasNext()) {
+                return cursor.next();
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
             return null;
         }
     }

@@ -32,6 +32,7 @@ import com.queatz.snappy.shared.earth.EarthRef;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -163,21 +164,25 @@ public class EarthStore extends EarthControl {
      * @return The thing, or null if it could not be found
      */
     public EarthThing get(@NotNull EarthRef key) {
-        EarthThing entity;
-        ArangoCursor<BaseDocument> c = db.query(
+        EarthThing entity = null;
+
+        try (ArangoCursor<BaseDocument> c = db.query(
                 new EarthQuery(as)
                         .filter("_key", "'" + key.name() + "'")
                         .aql(),
                 null,
                 null,
                 BaseDocument.class
-        );
+        )) {
+            if (!c.hasNext()) {
+                return null;
+            }
 
-        if (!c.hasNext()) {
-            return null;
+            entity = EarthThing.from(c.next());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new NothingLogicResponse("io error");
         }
-
-        entity = EarthThing.from(c.next());
 
         if (entity == null) {
             return null;
@@ -282,7 +287,7 @@ public class EarthStore extends EarthControl {
             return null;
         }
 
-        ArangoCursor<BaseDocument> c = db.query(
+        try (ArangoCursor<BaseDocument> c = db.query(
                 new EarthQuery(as)
                         .as("other, relationship")
                         .in("inbound @thing graph '" + DEFAULT_GRAPH + "'")
@@ -295,12 +300,16 @@ public class EarthStore extends EarthControl {
                 ),
                 null,
                 BaseDocument.class
-        );
+        )) {
 
-        if (c.hasNext()) {
-            return EarthThing.from(c.next());
-        } else {
-            return null;
+            if (c.hasNext()) {
+                return EarthThing.from(c.next());
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new NothingLogicResponse("io error");
         }
     }
 
@@ -310,7 +319,7 @@ public class EarthStore extends EarthControl {
     }
 
     public void removeFromClub(@NotNull EarthThing thing, @NotNull EarthThing club) {
-        ArangoCursor<BaseDocument> c = db.query(
+        try (ArangoCursor<BaseDocument> c = db.query(
                 "for x in " + CLUB_RELATIONSHIPS +
                         " filter x." + DEFAULT_FIELD_FROM + " == @thing" +
                         " and x." + DEFAULT_FIELD_TO + " == @club return x",
@@ -320,10 +329,13 @@ public class EarthStore extends EarthControl {
                 ),
                 null,
                 BaseDocument.class
-        );
-
-        while (c.hasNext()) {
-            clubRelationships.deleteDocument(c.next().getKey());
+        )) {
+            while (c.hasNext()) {
+                clubRelationships.deleteDocument(c.next().getKey());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new NothingLogicResponse("io error");
         }
     }
 
@@ -334,7 +346,7 @@ public class EarthStore extends EarthControl {
      * @return True, if it is in the club
      */
     private boolean isInClub(EarthThing thing, EarthThing club) {
-        ArangoCursor<BaseDocument> c = db.query(
+        try (ArangoCursor<BaseDocument> c = db.query(
                 "for x in " + CLUB_RELATIONSHIPS +
                         " filter x." + DEFAULT_FIELD_FROM + " == @thing" +
                         " and x." + DEFAULT_FIELD_TO + " == @club limit 1 return x",
@@ -344,9 +356,12 @@ public class EarthStore extends EarthControl {
                 ),
                 null,
                 BaseDocument.class
-        );
-
-        return c.hasNext();
+        )) {
+            return c.hasNext();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new NothingLogicResponse("io error");
+        }
     }
 
     /**
@@ -473,7 +488,12 @@ public class EarthStore extends EarthControl {
                 .count(true)
                 .aql();
 
-        return db.query(aql, ImmutableMap.of(), null, Integer.class).next();
+        try (ArangoCursor<Integer> c  = db.query(aql, ImmutableMap.of(), null, Integer.class)) {
+            return c.next();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new NothingLogicResponse("io error");
+        }
     }
 
     public int count(Iterator queryResults) {
@@ -509,12 +529,15 @@ public class EarthStore extends EarthControl {
     }
 
     public List<EarthThing> queryRaw(String aql, Map<String, Object> vars) {
-        ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class);
-
         List<EarthThing> result = new ArrayList<>();
 
-        while (cursor.hasNext()) {
-            result.add(EarthThing.from(cursor.next()));
+        try (ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class)) {
+            while (cursor.hasNext()) {
+                result.add(EarthThing.from(cursor.next()));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new NothingLogicResponse("io error");
         }
 
         return result;
@@ -607,12 +630,15 @@ public class EarthStore extends EarthControl {
             vars.put(Q_PARAM, "%" + q.trim().toLowerCase() + "%");
         }
 
-        ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class);
-
         List<EarthThing> result = new ArrayList<>();
 
-        while (cursor.hasNext()) {
-            result.add(EarthThing.from(cursor.next()));
+        try (ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class)) {
+            while (cursor.hasNext()) {
+                result.add(EarthThing.from(cursor.next()));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new NothingLogicResponse("io error");
         }
 
         return result;
@@ -655,12 +681,15 @@ public class EarthStore extends EarthControl {
                 .internal(isInternalQuery)
                 .aql();
 
-        ArangoCursor<BaseDocument> cursor = db.query(aql, var, null, BaseDocument.class);
-
         List<EarthThing> result = new ArrayList<>();
 
-        while (cursor.hasNext()) {
-            result.add(EarthThing.from(cursor.next()));
+        try (ArangoCursor<BaseDocument> cursor = db.query(aql, var, null, BaseDocument.class)) {
+            while (cursor.hasNext()) {
+                result.add(EarthThing.from(cursor.next()));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new NothingLogicResponse("io error");
         }
 
         return result;
