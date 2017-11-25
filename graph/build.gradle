@@ -1,7 +1,7 @@
 apply plugin: 'java'
 
 dependencies {
-    compile 'com.arangodb:arangodb-java-driver:4.2.1'
+    compile 'com.arangodb:arangodb-java-driver:4.3.0'
     compile 'org.jetbrains:annotations-java5:15.0'
     compile project(':earth')
     compile project(':shared')

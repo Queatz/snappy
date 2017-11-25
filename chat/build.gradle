@@ -3,8 +3,8 @@ apply plugin: 'java'
 dependencies {
     compile 'javax.servlet:servlet-api:2.5'
     compile group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
-    compile 'com.arangodb:arangodb-java-driver:4.2.1'
-    compile 'org.apache.commons:commons-lang3:3.0'
+    compile 'com.arangodb:arangodb-java-driver:4.3.0'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
 
     compile project(':shared')
     compile project(':image')

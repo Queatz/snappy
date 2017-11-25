@@ -85,16 +85,16 @@ public class EarthStore extends EarthControl {
 
         // Index commonly searched fields
         try {
-            __arangoDatabase.collection(DEFAULT_COLLECTION).createHashIndex(ImmutableList.of(DEFAULT_FIELD_CONCLUDED), new HashIndexOptions());
-            __arangoDatabase.collection(DEFAULT_COLLECTION).createHashIndex(ImmutableList.of(EarthField.KIND), new HashIndexOptions());
-            __arangoDatabase.collection(DEFAULT_COLLECTION).createHashIndex(ImmutableList.of(EarthField.SOURCE), new HashIndexOptions());
-            __arangoDatabase.collection(DEFAULT_COLLECTION).createHashIndex(ImmutableList.of(EarthField.TARGET), new HashIndexOptions());
-            __arangoDatabase.collection(DEFAULT_COLLECTION).createHashIndex(ImmutableList.of(EarthField.HIDDEN), new HashIndexOptions());
-            __arangoDatabase.collection(DEFAULT_COLLECTION).createHashIndex(ImmutableList.of(EarthField.TOKEN), new HashIndexOptions());
-            __arangoDatabase.collection(DEFAULT_COLLECTION).createHashIndex(ImmutableList.of(EarthField.EMAIL), new HashIndexOptions());
-            __arangoDatabase.collection(DEFAULT_COLLECTION).createSkiplistIndex(ImmutableList.of(EarthField.EMAIL), new SkiplistIndexOptions().sparse(true));
+            __arangoDatabase.collection(DEFAULT_COLLECTION).ensureHashIndex(ImmutableList.of(DEFAULT_FIELD_CONCLUDED), new HashIndexOptions());
+            __arangoDatabase.collection(DEFAULT_COLLECTION).ensureHashIndex(ImmutableList.of(EarthField.KIND), new HashIndexOptions());
+            __arangoDatabase.collection(DEFAULT_COLLECTION).ensureHashIndex(ImmutableList.of(EarthField.SOURCE), new HashIndexOptions());
+            __arangoDatabase.collection(DEFAULT_COLLECTION).ensureHashIndex(ImmutableList.of(EarthField.TARGET), new HashIndexOptions());
+            __arangoDatabase.collection(DEFAULT_COLLECTION).ensureHashIndex(ImmutableList.of(EarthField.HIDDEN), new HashIndexOptions());
+            __arangoDatabase.collection(DEFAULT_COLLECTION).ensureHashIndex(ImmutableList.of(EarthField.TOKEN), new HashIndexOptions());
+            __arangoDatabase.collection(DEFAULT_COLLECTION).ensureHashIndex(ImmutableList.of(EarthField.EMAIL), new HashIndexOptions());
+            __arangoDatabase.collection(DEFAULT_COLLECTION).ensureSkiplistIndex(ImmutableList.of(EarthField.EMAIL), new SkiplistIndexOptions().sparse(true));
 
-            __arangoDatabase.collection(DEFAULT_COLLECTION).createFulltextIndex(ImmutableList.of(
+            __arangoDatabase.collection(DEFAULT_COLLECTION).ensureFulltextIndex(ImmutableList.of(
                     EarthField.NAME,
                     EarthField.FIRST_NAME,
                     EarthField.LAST_NAME,
@@ -120,7 +120,7 @@ public class EarthStore extends EarthControl {
         this.db = getDb();
 
         this.collection = db.collection(DEFAULT_COLLECTION);
-        this.collection.createGeoIndex(ImmutableSet.of(EarthField.GEO), new GeoIndexOptions());
+        this.collection.ensureGeoIndex(ImmutableSet.of(EarthField.GEO), new GeoIndexOptions());
 
         this.relationships = db.collection(DEFAULT_RELATIONSHIPS);
         this.clubRelationships = db.collection(CLUB_RELATIONSHIPS);

@@ -85,6 +85,11 @@ public class EarthQuery extends EarthControl {
         return this;
     }
 
+    public EarthQuery count(boolean count) {
+        this.count = count;
+        return this;
+    }
+
     public String aql() {
         return aql(x);
     }
@@ -107,7 +112,8 @@ public class EarthQuery extends EarthControl {
                         filters.stream()
                                 .map(f -> f.getValue() == null ? f.getKey() : (!f.getKey().contains(".") ? gX() + "." : "") + f.getKey() + " " + f.getComparator() + " " + f.getValue() + "")
                                 .collect(Collectors.joining(" and "))
-                )) + (internal ? "" : getVisibleQueryString()) +
+                )) +
+                (internal ? "" : getVisibleQueryString()) +
                 (sort == null ? "" : " sort " + sort) +
                 (limit == null ? "" : " limit " + limit) +
                 (of == null ? "" : " return" + (distinct ? " distinct" : "") + " " + of) +
@@ -128,10 +134,5 @@ public class EarthQuery extends EarthControl {
                 "            for t2, r2 in outbound " + x + " graph '" + EarthStore.CLUB_GRAPH + "'\n" +
                 "                filter r1._to == r2._to limit 1 return true\n" +
                 ")[0] == true\n" : "");
-    }
-
-    public EarthQuery count(boolean count) {
-        this.count = count;
-        return this;
     }
 }

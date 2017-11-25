@@ -2,8 +2,8 @@ apply plugin: 'java'
 
 dependencies {
     compile 'javax.servlet:servlet-api:2.5'
-    compile 'com.arangodb:arangodb-java-driver:4.2.1'
-    compile 'org.apache.commons:commons-lang3:3.0'
+    compile 'com.arangodb:arangodb-java-driver:4.3.0'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'org.jetbrains:annotations-java5:15.0'
     compile 'commons-fileupload:commons-fileupload:1.3'
 

@@ -2,7 +2,7 @@ apply plugin: 'java'
 
 dependencies {
     compile 'javax.servlet:servlet-api:2.5'
-    compile 'org.apache.commons:commons-lang3:3.0'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'org.jetbrains:annotations-java5:15.0'
     compile 'com.google.code.gson:gson:2.7'
 
