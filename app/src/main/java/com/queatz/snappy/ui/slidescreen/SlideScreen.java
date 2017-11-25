@@ -225,7 +225,12 @@ public class SlideScreen extends ViewGroup {
             view.setScaleY(currentScale);
 
             int l = (int) (currentScale * (width * child.position - (int) (mOffset * (float) width)));
-            view.layout(l, 0, l + getWidth(), getHeight());
+
+            try {
+                view.layout(l, 0, l + getWidth(), getHeight());
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -58,7 +58,7 @@ public class EarthAs {
             try {
                 try {
                     singletons.put(clazz, clazz.getConstructor(EarthAs.class).newInstance(this));
-                } catch (NoSuchMethodException e) {
+                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                     singletons.put(clazz, clazz.getConstructor().newInstance());
                 }
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {

@@ -13,7 +13,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/build/classes/java/main" />
     <output-test url="file://$MODULE_DIR$/build/classes/java/test" />
     <exclude-output />
@@ -27,5 +27,34 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="earth" exported="" />
+    <orderEntry type="module" module-name="shared" exported="" />
+    <orderEntry type="module" module-name="as" exported="" />
+    <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
+    <orderEntry type="module" module-name="earth" exported="" />
+    <orderEntry type="module" module-name="shared" exported="" />
+    <orderEntry type="module" module-name="as" exported="" />
+    <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="plugins" exported="" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="arangodb-java-driver-4.2.1" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="annotations-java5-15.0" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="velocypack-1.0.9" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="slf4j-api-1.7.13" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="json-simple-1.1.1" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="commons-lang3-3.0" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="guava-21.0" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="gson-2.8.0" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="httpclient-4.5.3" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="commons-io-2.5" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="servlet-api-2.5" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="junit-4.10" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="httpcore-4.4.6" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="commons-logging-1.2" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="commons-codec-1.9" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="hamcrest-core-1.1" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="testng-6.9.4" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="bsh-2.0b4" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="jcommander-1.48" level="project" />
   </component>
 </module>

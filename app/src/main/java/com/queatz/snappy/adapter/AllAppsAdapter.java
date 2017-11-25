@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.queatz.snappy.R;
+import com.queatz.snappy.util.AppImages;
 
 import java.util.List;
 
@@ -18,8 +19,11 @@ import java.util.List;
 
 public class AllAppsAdapter extends AllAppsBaseAdapter {
 
+    private AppImages appImages;
+
     public AllAppsAdapter(Context context, List<ResolveInfo> apps) {
         super(context, apps);
+        appImages = new AppImages();
     }
 
     @Override
@@ -36,11 +40,12 @@ public class AllAppsAdapter extends AllAppsBaseAdapter {
         ResolveInfo appInfo = getItem(position);
         view.setTag(appInfo);
 
-        final TextView appName = (TextView) view.findViewById(R.id.appName);
-        final ImageView appIcon = (ImageView) view.findViewById(R.id.appIcon);
+        final TextView appName = view.findViewById(R.id.appName);
+        final ImageView appIcon = view.findViewById(R.id.appIcon);
 
-        appName.setText(appInfo.loadLabel(context.getPackageManager()));
-        appIcon.setImageDrawable(appInfo.loadIcon(context.getPackageManager()));
+        appIcon.setImageDrawable(null);
+        appImages.loadIcon(appIcon, appInfo);
+        appImages.loadLabel(appName, appInfo);
 
         return view;
     }
