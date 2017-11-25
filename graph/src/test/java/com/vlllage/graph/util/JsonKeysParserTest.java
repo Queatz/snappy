@@ -108,6 +108,70 @@ public class JsonKeysParserTest {
         jsonKeysParser.parse("one((one),two");
     }
 
+    @Test
+    public void testParseNullStringOne() throws Exception {
+        expectJson(
+                jsonKeysParser.parse("one,,three"),
+                "['one', 'three']"
+        );
+    }
+
+    @Test
+    public void testParseNullStringTwo() throws Exception {
+        expectJson(
+                jsonKeysParser.parse("one,,,three"),
+                "['one', 'three']"
+        );
+    }
+
+    @Test
+    public void testParsePrependedSeparator() throws Exception {
+        expectJson(
+                jsonKeysParser.parse(",one,three"),
+                "['one', 'three']"
+        );
+    }
+
+    @Test
+    public void testParseTrailingSeparator() throws Exception {
+        expectJson(
+                jsonKeysParser.parse("one,three,"),
+                "['one', 'three']"
+        );
+    }
+
+    @Test
+    public void testParseMessOfSeparators() throws Exception {
+        expectJson(
+                jsonKeysParser.parse(",,,one,,,three,,,,"),
+                "['one', 'three']"
+        );
+    }
+
+    @Test
+    public void testParseBaseGrouping() throws Exception {
+        expectJson(
+                jsonKeysParser.parse("(one)"),
+                "[['one']]"
+        );
+    }
+
+    @Test
+    public void testParseBaseGroupingNested() throws Exception {
+        expectJson(
+                jsonKeysParser.parse("((one(two)))"),
+                "[[['one', ['two']]]]"
+        );
+    }
+
+    @Test
+    public void testParseBaseGroupingNestedMessyCommas() throws Exception {
+        expectJson(
+                jsonKeysParser.parse("((one,(,,two,,),),,,,)"),
+                "[[['one', ['two']]]]"
+        );
+    }
+
     private void expectJson(JsonArray actual, String expected) {
         assertEquals(actual.toString(), gson.fromJson(expected, JsonArray.class).toString());
     }
