@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 /**
@@ -133,8 +134,8 @@ public class EarthStore extends EarthControl {
     public static final String CLUB_RELATIONSHIPS = "Clubs";
 
     public static final String DEFAULT_KIND_OWNER = EarthRelationship.OWNER;
-    private static final String DEFAULT_FIELD_KIND = EarthField.KIND;
-    private static final String DEFAULT_FIELD_CREATED = EarthField.CREATED_ON;
+    public static final String DEFAULT_FIELD_KIND = EarthField.KIND;
+    public static final String DEFAULT_FIELD_CREATED = EarthField.CREATED_ON;
     public static final String DEFAULT_FIELD_CONCLUDED = "concluded_on";
     public static final String DEFAULT_FIELD_FROM = "_from";
     public static final String DEFAULT_FIELD_TO = "_to";
@@ -529,18 +530,19 @@ public class EarthStore extends EarthControl {
     }
 
     public List<EarthThing> queryRaw(String aql, Map<String, Object> vars) {
-        List<EarthThing> result = new ArrayList<>();
+        return queryRawAs(aql, vars, BaseDocument.class)
+                .stream()
+                .map(EarthThing::from)
+                .collect(Collectors.toList());
+    }
 
-        try (ArangoCursor<BaseDocument> cursor = db.query(aql, vars, null, BaseDocument.class)) {
-            while (cursor.hasNext()) {
-                result.add(EarthThing.from(cursor.next()));
-            }
+    public <T> List<T> queryRawAs(String aql, Map<String, Object> vars, Class<T> clazz) {
+            try (ArangoCursor<T> cursor = db.query(aql, vars, null, clazz)) {
+            return cursor.asListRemaining();
         } catch (IOException e) {
             e.printStackTrace();
             throw new NothingLogicResponse("io error");
         }
-
-        return result;
     }
 
     public List<EarthThing> find(String kind, String field, EarthRef key) {
@@ -548,8 +550,8 @@ public class EarthStore extends EarthControl {
     }
 
     // These kinds disappear from the searcher after the specified time of inactivity
-    private static final Collection TRANSIENT_KINDS = ImmutableSet.of(EarthKind.PERSON_KIND);
-    private static final long TRANSIENT_KIND_TIMEOUT_SECONDS = 60 * 60 * 24 * 5; // 5 days
+    public static final Collection TRANSIENT_KINDS = ImmutableSet.of(EarthKind.PERSON_KIND);
+    public static final long TRANSIENT_KIND_TIMEOUT_SECONDS = 60 * 60 * 24 * 5; // 5 days
 
     public List<EarthThing> getNearby(EarthGeo center, String kind, String q) {
         return getNearby(kind, q, center, null);

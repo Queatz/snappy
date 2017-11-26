@@ -108,7 +108,7 @@ public class Earth extends EarthControl implements Interfaceable {
         }
 
         if (kindParameter.length != 1) {
-            throw new NothingLogicResponse("earth - no kind parameter value was found");
+            throw new NothingLogicResponse("earth - no kind parameter view was found");
         }
 
         final String kind = kindParameter[0];

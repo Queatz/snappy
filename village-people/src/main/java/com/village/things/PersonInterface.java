@@ -3,16 +3,20 @@ package com.village.things;
 import com.image.SnappyImage;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthKind;
+import com.queatz.earth.EarthQueries;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
+import com.queatz.earth.FrozenQuery;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.events.EarthUpdate;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.EarthJson;
 import com.queatz.snappy.shared.earth.EarthRef;
 import com.queatz.snappy.view.EarthView;
 import com.queatz.snappy.view.EarthViewer;
 import com.queatz.snappy.view.SuccessView;
+import com.vlllage.graph.EarthGraph;
 
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -128,7 +132,17 @@ public class PersonInterface extends CommonThingInterface {
     private String getMessages(EarthAs as, String personId) {
         as.requireUser();
 
-        // XXX TODO when Datastore supports OR expressions, combine these
+        // Use graph
+        if (as.getParameters().containsKey(Config.PARAM_SELECT)) {
+            String select = as.getParameters().get(Config.PARAM_SELECT)[0];
+
+            FrozenQuery query = as.s(EarthQueries.class).messagesFromAndTo(as.getUser().key().name(), personId);
+
+            return as.s(EarthJson.class).toJson(
+                    as.s(EarthGraph.class).query(query.getEarthQuery(), select, query.getVars())
+            );
+        }
+
         List<EarthThing> messagesToMe = as.s(MessageMine.class).messagesFromTo(as.getUser().key(), EarthRef.of(personId));
         List<EarthThing> messagesFromMe = as.s(MessageMine.class).messagesFromTo(EarthRef.of(personId), as.getUser().key());
 

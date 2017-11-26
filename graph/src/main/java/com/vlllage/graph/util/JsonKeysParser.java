@@ -9,11 +9,23 @@ import java.util.Stack;
  * Created by jacob on 11/25/17.
  */
 
+/**
+ * @description
+ * Converts JSON Keys string into a JsonArray
+ *
+ * @example
+ * new JsonKeysParser().parse('one,two(three,four)')
+ * ['one', 'two', ['three', 'four']]
+ */
 public class JsonKeysParser {
 
     private final char startToken;
     private final char endToken;
     private final char separator;
+
+    public JsonKeysParser() {
+        this('(', ')', ',');
+    }
 
     public JsonKeysParser(char startToken, char endToken, char separator) {
         this.startToken = startToken;

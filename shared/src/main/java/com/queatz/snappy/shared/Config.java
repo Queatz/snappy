@@ -400,6 +400,7 @@ public class Config {
     public static final String PARAM_FILE = "file";
     public static final String PARAM_TOKEN = "token";
     public static final String PARAM_URL = "url";
+    public static final String PARAM_SELECT = "select";
 
     // Google login configuration
     public static final String GOOGLE_PLUS_PROFILE_URL = "https://www.googleapis.com/plus/v1/people/me";

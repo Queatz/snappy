@@ -15,6 +15,8 @@ import java.util.Map;
 
 /**
  * Created by jacob on 4/9/16.
+ *
+ * @deprecated see {@code GraphView}
  */
 public class EarthViewer extends EarthControl {
     public EarthViewer(final EarthAs as) {

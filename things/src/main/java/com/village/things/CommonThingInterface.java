@@ -3,19 +3,24 @@ package com.village.things;
 import com.google.common.base.Strings;
 import com.image.SnappyImage;
 import com.queatz.earth.EarthField;
+import com.queatz.earth.EarthQueries;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
+import com.queatz.earth.FrozenQuery;
 import com.queatz.snappy.api.ApiUtil;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.events.EarthUpdate;
 import com.queatz.snappy.exceptions.Error;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
 import com.queatz.snappy.exceptions.PrintingError;
+import com.queatz.snappy.images.ImageQueue;
 import com.queatz.snappy.plugins.ContactEditorPlugin;
 import com.queatz.snappy.plugins.MemberEditorPlugin;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.EarthJson;
 import com.queatz.snappy.view.EarthViewer;
 import com.queatz.snappy.view.SuccessView;
+import com.vlllage.graph.EarthGraph;
 
 import java.io.IOException;
 
@@ -96,6 +101,17 @@ public abstract class CommonThingInterface extends ExistenceInterface {
                 EarthThing thing = as.s(EarthStore.class).get(as.getRoute().get(0));
 
                 onGet(as, thing);
+
+                // Use graph
+                if (as.getParameters().containsKey(Config.PARAM_SELECT)) {
+                    String select = as.getParameters().get(Config.PARAM_SELECT)[0];
+
+                    FrozenQuery query = as.s(EarthQueries.class).byId(thing.key().name());
+
+                    return as.s(EarthJson.class).toJson(
+                            as.s(EarthGraph.class).queryOne(query.getEarthQuery(), select, query.getVars())
+                    );
+                }
 
                 return as.s(EarthViewer.class).getViewForEntityOrThrow(thing).toJson();
             } case 2:
@@ -215,6 +231,11 @@ public abstract class CommonThingInterface extends ExistenceInterface {
             boolean photo = ApiUtil.putPhoto(thing.key().name(), as.s(SnappyImage.class), as.getRequest());
 
             EarthStore earthStore = as.s(EarthStore.class);
+
+            if (photo) {
+                ImageQueue.getService().enqueue(thing.key().name());
+            }
+
             return earthStore.save(earthStore.edit(thing)
                     .set(EarthField.PLACEHOLDER)
                     .set(EarthField.ASPECT_RATIO)

@@ -16,6 +16,12 @@ public class EarthJson {
             .setDateFormat(DateFormat.FULL, DateFormat.FULL)
             .create();
 
+    private static EarthJson inst = new EarthJson();
+
+    public static EarthJson getDefault() {
+        return inst;
+    }
+
     public String toJson(Object object) {
         return gson.toJson(object);
     }

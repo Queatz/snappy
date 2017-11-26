@@ -4,12 +4,14 @@ import com.queatz.earth.query.EarthQueryFilter;
 import com.queatz.earth.query.EarthQueryLet;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.as.EarthControl;
+import com.queatz.snappy.shared.Config;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -110,7 +112,7 @@ public class EarthQuery extends EarthControl {
                 "for " + x + " in " + in +
                 (filters.isEmpty() ? "" : " filter " + (
                         filters.stream()
-                                .map(f -> f.getValue() == null ? f.getKey() : (!f.getKey().contains(".") ? gX() + "." : "") + f.getKey() + " " + f.getComparator() + " " + f.getValue() + "")
+                                .map(f -> f.getValue() == null ? f.getKey() : (!f.getKey().contains(".") ? var() + "." : "") + f.getKey() + " " + f.getComparator() + " " + f.getValue() + "")
                                 .collect(Collectors.joining(" and "))
                 )) +
                 (internal ? "" : getVisibleQueryString()) +
@@ -119,13 +121,17 @@ public class EarthQuery extends EarthControl {
                 (of == null ? "" : " return" + (distinct ? " distinct" : "") + " " + of) +
                 (count ? ")" : "");
 
-//        Logger.getLogger(Config.NAME).info(result);
+        Logger.getLogger(Config.NAME).info(result);
 
         return result;
     }
 
-    private String gX() {
-        return x.split(",")[0];
+    public String[] vars() {
+        return x.split(",");
+    }
+
+    public String var() {
+        return vars()[0];
     }
 
     private String getVisibleQueryString() {

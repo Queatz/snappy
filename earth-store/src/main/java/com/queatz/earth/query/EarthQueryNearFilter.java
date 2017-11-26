@@ -16,6 +16,10 @@ public class EarthQueryNearFilter extends EarthControl {
     private String longitude;
     private String limit;
 
+    public EarthQueryNearFilter(EarthAs as) {
+        this(as, "@latitude", "@longitude", "@limit");
+    }
+
     public EarthQueryNearFilter(EarthAs as, String latitude, String longitude, String limit) {
         super(as);
         this.latitude = latitude;
@@ -52,7 +56,7 @@ public class EarthQueryNearFilter extends EarthControl {
 
     public String aql() {
         return new EarthQuery(as)
-                .in("near(" + DEFAULT_COLLECTION + ", @latitude, @longitude, @limit)")
+                .in("near(" + DEFAULT_COLLECTION + ", " + latitude + ", " + longitude + ", " + limit + ")")
                 .aql();
     }
 }

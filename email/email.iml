@@ -37,12 +37,12 @@
     <orderEntry type="library" exported="" scope="PROVIDED" name="gson-2.8.0" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="httpclient-4.5.3" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-io-2.5" level="project" />
-    <orderEntry type="library" exported="" scope="PROVIDED" name="arangodb-java-driver-4.3.0" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="arangodb-java-driver-4.3.1" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="guava-21.0" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="httpcore-4.4.6" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-logging-1.2" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-codec-1.9" level="project" />
-    <orderEntry type="library" exported="" scope="PROVIDED" name="velocypack-1.0.13" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="velocypack-1.0.14" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="slf4j-api-1.7.13" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="json-simple-1.1.1" level="project" />
   </component>
