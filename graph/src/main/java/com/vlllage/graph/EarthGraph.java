@@ -121,7 +121,14 @@ public class EarthGraph extends EarthControl {
             String s = select.get(i).getAsString();
             EarthGraphField f = getField(s);
 
-            if (f.isQuery()) {
+            if (f.type() == EarthGraphField.Type.VALUE) {
+                JsonElement[] selectionResults = Arrays.stream(f.selection())
+                        .map(results::get)
+                        .collect(Collectors.toList())
+                        .toArray(new JsonElement[f.selection().length]);
+
+                transformed.add(s, f.view(as.hasUser() ? as.getUser() : null, selectionResults));
+            } else {
                 JsonElement r = results.get("@" + s);
                 GraphQuery q = queries.get("@" + s);
 
@@ -131,18 +138,15 @@ public class EarthGraph extends EarthControl {
 
                 JsonArray next = i < select.size() - 1 && select.get(i + 1).isJsonArray() ? select.get(i + 1).getAsJsonArray() : new JsonArray();
 
-                if (f.isSingle()) {
+                if (f.type() == EarthGraphField.Type.EXPRESSION) {
+                    transformed.add(s, f.view(as.hasUser() ? as.getUser() : null, new JsonElement[] { r }));
+                } else if (f.type() == EarthGraphField.Type.OBJECT) {
                     transformed.add(s, r.getAsJsonArray().size() > 0 ? transformObjectResult(next, q, r.getAsJsonArray().get(0).getAsJsonArray()) : null);
-                } else {
+                } else if (f.type() == EarthGraphField.Type.LIST) {
                     transformed.add(s, transformListResult(next, q, r.getAsJsonArray()));
+                } else {
+                    throw new IllegalStateException("Unsupported field type: " + f.type());
                 }
-            } else {
-                JsonElement[] selectionResults = Arrays.stream(f.selection())
-                        .map(results::get)
-                        .collect(Collectors.toList())
-                        .toArray(new JsonElement[f.selection().length]);
-
-                transformed.add(s, f.view(as.hasUser() ? as.getUser() : null, selectionResults));
             }
         }
 
@@ -161,7 +165,9 @@ public class EarthGraph extends EarthControl {
                 String fieldName = json.getAsString();
                 EarthGraphField field = getField(json.getAsString());
 
-                if (field.isQuery()) {
+                if (field.type() == EarthGraphField.Type.EXPRESSION) {
+                    cursor.add(field.query(as)).setTag("@" + fieldName);
+                } else if (field.type() != EarthGraphField.Type.VALUE) {
                     JsonElement next = i < select.size() - 1 ? select.get(i + 1) : null;
                     next = next != null && next.isJsonArray() ? next.getAsJsonArray() : null;
 

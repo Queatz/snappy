@@ -16,13 +16,8 @@ import com.queatz.snappy.shared.earth.EarthGeo;
 
 public class InfoDistanceEarthGraphField implements EarthGraphField {
     @Override
-    public boolean isQuery() {
-        return false;
-    }
-
-    @Override
-    public boolean isSingle() {
-        return false;
+    public Type type() {
+        return Type.VALUE;
     }
 
     @Override

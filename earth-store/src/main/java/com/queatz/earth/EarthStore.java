@@ -294,7 +294,8 @@ public class EarthStore extends EarthControl {
                         .in("inbound @thing graph '" + DEFAULT_GRAPH + "'")
                         .filter("relationship." + DEFAULT_FIELD_KIND, "@kind")
                         .limit("1")
-                        .aql("other"),
+                        .select("other")
+                        .aql(),
                 ImmutableMap.of(
                         "thing", thing.id(),
                         "kind", DEFAULT_KIND_OWNER
@@ -613,8 +614,9 @@ public class EarthStore extends EarthControl {
                                         .as("other, relationship")
                                         .in("outbound thing graph '" + DEFAULT_GRAPH + "'")
                                         .filter("relationship." + DEFAULT_FIELD_KIND, "@owner_kind")
-                                        .aql("other")
-                                ).aql(null)).aql())
+                                        .select("other")
+                                        .aql()
+                                ).aql(true)).aql())
                 .filter(EarthField.KIND, "!=", "'" + EarthKind.DEVICE_KIND + "'")
                 .filter(EarthField.KIND, "!=", "'" + EarthKind.GEO_SUBSCRIBE_KIND + "'")
                 .filter(filter)

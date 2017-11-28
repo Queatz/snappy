@@ -13,10 +13,6 @@ import static com.queatz.earth.EarthStore.CLUB_GRAPH;
  */
 
 public class ClubsEarthGraphField extends EarthThingListGraphField {
-    @Override
-    public boolean isSingle() {
-        return false;
-    }
 
     @Override
     public EarthQuery query(EarthAs as) {

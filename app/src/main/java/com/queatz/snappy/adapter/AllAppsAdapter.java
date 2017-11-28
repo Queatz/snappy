@@ -44,6 +44,7 @@ public class AllAppsAdapter extends AllAppsBaseAdapter {
         final ImageView appIcon = view.findViewById(R.id.appIcon);
 
         appIcon.setImageDrawable(null);
+        appName.setText("");
         appImages.loadIcon(appIcon, appInfo);
         appImages.loadLabel(appName, appInfo);
 

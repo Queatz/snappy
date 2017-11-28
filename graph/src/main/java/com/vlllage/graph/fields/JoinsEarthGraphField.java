@@ -10,10 +10,6 @@ import com.queatz.snappy.as.EarthAs;
  */
 
 public class JoinsEarthGraphField extends EarthThingListGraphField {
-    @Override
-    public boolean isSingle() {
-        return false;
-    }
 
     @Override
     public EarthQuery query(EarthAs as) {

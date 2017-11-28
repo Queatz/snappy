@@ -11,15 +11,14 @@ import com.queatz.snappy.as.EarthAs;
 
 public interface EarthGraphField {
 
-    /**
-     * @return true, if this field is a sub query.
-     */
-    boolean isQuery();
+    enum Type {
+        LIST,
+        OBJECT,
+        VALUE,
+        EXPRESSION
+    }
 
-    /**
-     * @return true, if query is a single thing or null, otherwise false, if this is a list query.
-     */
-    boolean isSingle();
+    Type type();
 
     /**
      * @return the sub query if isQuery() returns true, otherwise null.

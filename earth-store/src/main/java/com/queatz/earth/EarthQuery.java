@@ -7,7 +7,6 @@ import com.queatz.snappy.as.EarthControl;
 import com.queatz.snappy.shared.Config;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +26,8 @@ public class EarthQuery extends EarthControl {
     private boolean internal = false;
     private boolean distinct = false;
     private String x = "x";
+    public String select = null;
+    public boolean single = false;
     private String in = EarthStore.DEFAULT_COLLECTION;
     private boolean count = false;
 
@@ -87,28 +88,38 @@ public class EarthQuery extends EarthControl {
         return this;
     }
 
+    public EarthQuery select(String select) {
+        this.select = select;
+        return this;
+    }
+
     public EarthQuery count(boolean count) {
         this.count = count;
         return this;
     }
 
     public String aql() {
-        return aql(x);
+        return aql(false);
     }
 
-    public String aql(@Nullable String of) {
+    public String aql(boolean inline) {
         if (as.isInternal()) {
             this.internal = true;
         }
 
-        if (of != null) {
+        if (!inline) {
             filter(EarthStore.DEFAULT_FIELD_CONCLUDED, "null");
+        }
+
+        if (select == null) {
+            select = x;
         }
 
         String result = (lets.isEmpty() ? "" : lets.stream()
                 .map(l -> "let " + l.getVar() + " = (" + l.getValue() + ")\n")
                 .collect(Collectors.joining())) +
                 (count ? "return count(" : "") +
+                (single ? "(" : "") +
                 "for " + x + " in " + in +
                 (filters.isEmpty() ? "" : " filter " + (
                         filters.stream()
@@ -118,7 +129,8 @@ public class EarthQuery extends EarthControl {
                 (internal ? "" : getVisibleQueryString()) +
                 (sort == null ? "" : " sort " + sort) +
                 (limit == null ? "" : " limit " + limit) +
-                (of == null ? "" : " return" + (distinct ? " distinct" : "") + " " + of) +
+                (inline ? "" : " return" + (distinct ? " distinct" : "") + " " + select) +
+                (single ? ")[0]" : "") +
                 (count ? ")" : "");
 
         Logger.getLogger(Config.NAME).info(result);
@@ -140,5 +152,10 @@ public class EarthQuery extends EarthControl {
                 "            for t2, r2 in outbound " + x + " graph '" + EarthStore.CLUB_GRAPH + "'\n" +
                 "                filter r1._to == r2._to limit 1 return true\n" +
                 ")[0] == true\n" : "");
+    }
+
+    public EarthQuery single() {
+        this.single = true;
+        return this;
     }
 }

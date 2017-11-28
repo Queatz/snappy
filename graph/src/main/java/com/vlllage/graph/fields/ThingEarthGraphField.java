@@ -9,15 +9,9 @@ import com.queatz.earth.EarthThing;
 
 public abstract class ThingEarthGraphField implements EarthGraphField {
     @Override
-    public boolean isQuery() {
-        return true;
+    public Type type() {
+        return Type.OBJECT;
     }
-
-    @Override
-    public boolean isSingle() {
-        return true;
-    }
-
     @Override
     public String[] selection() {
         return new String[0];

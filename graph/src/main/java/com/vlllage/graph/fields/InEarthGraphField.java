@@ -11,10 +11,6 @@ import com.queatz.snappy.shared.Config;
  */
 
 public class InEarthGraphField extends EarthThingListGraphField {
-    @Override
-    public boolean isSingle() {
-        return false;
-    }
 
     @Override
     public EarthQuery query(EarthAs as) {

@@ -92,9 +92,9 @@ public class GraphQuery {
 
             if (earthQuery != null) {
                 if (parent == null) {
-                    return parse(earthQuery.aql(str));
+                    return parse(earthQuery.select(str).aql());
                 } else {
-                    return "(" + parse(earthQuery.aql(str)) + ")";
+                    return "(" + parse(earthQuery.select(str).aql()) + ")";
                 }
             } else {
                 return str;

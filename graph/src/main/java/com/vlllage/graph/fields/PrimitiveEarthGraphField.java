@@ -11,15 +11,9 @@ import com.queatz.snappy.as.EarthAs;
 
 public abstract class PrimitiveEarthGraphField implements EarthGraphField {
     @Override
-    public boolean isQuery() {
-        return false;
+    public Type type() {
+        return Type.VALUE;
     }
-
-    @Override
-    public boolean isSingle() {
-        return false;
-    }
-
     @Override
     public EarthQuery query(EarthAs as) {
         return null;

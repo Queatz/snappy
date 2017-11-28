@@ -9,8 +9,8 @@ import com.queatz.earth.EarthThing;
 
 public abstract class EarthThingListGraphField implements EarthGraphField {
     @Override
-    public boolean isQuery() {
-        return true;
+    public Type type() {
+        return Type.LIST;
     }
 
     @Override

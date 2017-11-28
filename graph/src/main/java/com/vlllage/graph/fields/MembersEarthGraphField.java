@@ -13,11 +13,6 @@ import com.queatz.snappy.shared.Config;
 public class MembersEarthGraphField extends EarthThingListGraphField {
 
     @Override
-    public boolean isSingle() {
-        return false;
-    }
-
-    @Override
     public EarthQuery query(EarthAs as) {
         return new EarthQuery(as)
                 .filter("{thing}." + EarthField.KIND + " == '" + EarthKind.MEMBER_KIND + "' and " +

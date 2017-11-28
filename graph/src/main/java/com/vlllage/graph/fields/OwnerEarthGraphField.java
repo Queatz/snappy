@@ -13,13 +13,8 @@ import com.queatz.snappy.as.EarthAs;
 
 public class OwnerEarthGraphField implements EarthGraphField {
     @Override
-    public boolean isQuery() {
-        return false;
-    }
-
-    @Override
-    public boolean isSingle() {
-        return false;
+    public Type type() {
+        return Type.VALUE;
     }
 
     @Override
