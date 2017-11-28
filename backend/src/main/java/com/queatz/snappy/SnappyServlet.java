@@ -112,6 +112,7 @@ import com.village.things.UpdateView;
 import com.vlllage.graph.EarthGraph;
 import com.vlllage.graph.fields.AboutEarthGraphField;
 import com.vlllage.graph.fields.ActionEarthGraphField;
+import com.vlllage.graph.fields.AroundEarthGraphField;
 import com.vlllage.graph.fields.AspectEarthGraphField;
 import com.vlllage.graph.fields.AuthEarthGraphField;
 import com.vlllage.graph.fields.ClubsEarthGraphField;
@@ -126,6 +127,7 @@ import com.vlllage.graph.fields.IdEarthGraphField;
 import com.vlllage.graph.fields.ImageUrlEarthGraphField;
 import com.vlllage.graph.fields.InEarthGraphField;
 import com.vlllage.graph.fields.InfoDistanceEarthGraphField;
+import com.vlllage.graph.fields.JoinsEarthGraphField;
 import com.vlllage.graph.fields.KindEarthGraphField;
 import com.vlllage.graph.fields.LastNameEarthGraphField;
 import com.vlllage.graph.fields.LatestEarthGraphField;
@@ -254,6 +256,7 @@ public class SnappyServlet extends HttpServlet {
         EarthGraph.register("about", new AboutEarthGraphField());
         EarthGraph.register("members", new MembersEarthGraphField());
         EarthGraph.register("in", new InEarthGraphField());
+        EarthGraph.register("joins", new JoinsEarthGraphField());
         EarthGraph.register("source", new SourceEarthGraphField());
         EarthGraph.register("target", new TargetEarthGraphField());
         EarthGraph.register("owner", new OwnerEarthGraphField());
@@ -281,6 +284,7 @@ public class SnappyServlet extends HttpServlet {
         EarthGraph.register("data", new DataEarthGraphField());
         EarthGraph.register("type", new TypeEarthGraphField());
         EarthGraph.register("role", new RoleEarthGraphField());
+        EarthGraph.register("around", new AroundEarthGraphField());
 
         EarthPlugin.register(MemberEditorPlugin.class, MemberEditor.class);
         EarthPlugin.register(MemberMinePlugin.class, MemberMine.class);
