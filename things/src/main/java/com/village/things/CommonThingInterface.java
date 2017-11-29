@@ -102,15 +102,10 @@ public abstract class CommonThingInterface extends ExistenceInterface {
 
                 onGet(as, thing);
 
-                // Use graph
-                if (as.getParameters().containsKey(Config.PARAM_SELECT)) {
-                    String select = as.getParameters().get(Config.PARAM_SELECT)[0];
+                String graph = returnIfGraph(as, thing);
 
-                    FrozenQuery query = as.s(EarthQueries.class).byId(thing.key().name());
-
-                    return as.s(EarthJson.class).toJson(
-                            as.s(EarthGraph.class).queryOne(query.getEarthQuery(), select, query.getVars())
-                    );
+                if (graph != null) {
+                    return graph;
                 }
 
                 return as.s(EarthViewer.class).getViewForEntityOrThrow(thing).toJson();
@@ -134,6 +129,21 @@ public abstract class CommonThingInterface extends ExistenceInterface {
         }
     }
 
+    protected String returnIfGraph(EarthAs as, EarthThing thing) {
+        // Use graph
+        if (as.getParameters().containsKey(Config.PARAM_SELECT)) {
+            String select = as.getParameters().get(Config.PARAM_SELECT)[0];
+
+            FrozenQuery query = as.s(EarthQueries.class).byId(thing.key().name());
+
+            return as.s(EarthJson.class).toJson(
+                    as.s(EarthGraph.class).queryOne(query.getEarthQuery(), select, query.getVars())
+            );
+        }
+
+        return null;
+    }
+
     @Override
     public String post(EarthAs as) {
         as.requireUser();
@@ -154,6 +164,12 @@ public abstract class CommonThingInterface extends ExistenceInterface {
 
                 setVisibility(as, thing);
 
+                String graph = returnIfGraph(as, thing);
+
+                if (graph != null) {
+                    return graph;
+                }
+
                 return as.s(EarthViewer.class).getViewForEntityOrThrow(thing).toJson();
             }
             case 1: {
@@ -166,6 +182,12 @@ public abstract class CommonThingInterface extends ExistenceInterface {
                 }
 
                 setVisibility(as, thing);
+
+                String graph = returnIfGraph(as, thing);
+
+                if (graph != null) {
+                    return graph;
+                }
 
                 return as.s(EarthViewer.class).getViewForEntityOrThrow(thing).toJson();
             }
@@ -180,6 +202,7 @@ public abstract class CommonThingInterface extends ExistenceInterface {
                 } else {
                     EarthThing thing = as.s(EarthStore.class).get(as.getRoute().get(0));
                     String string = postThing(as, thing);
+
                     if (string != null) {
                         return string;
                     }
@@ -198,6 +221,7 @@ public abstract class CommonThingInterface extends ExistenceInterface {
                 }
 
                 String string = postThing(as, thing);
+
                 if (string != null) {
                     return string;
                 }

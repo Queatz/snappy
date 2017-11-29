@@ -12,6 +12,5 @@ public abstract class BooleanEarthGraphField extends PrimitiveEarthGraphField {
     @Override
     public JsonElement view(EarthThing as, JsonElement[] selection) {
         return new JsonPrimitive(!selection[0].isJsonNull() && selection[0].getAsBoolean());
-
     }
 }
