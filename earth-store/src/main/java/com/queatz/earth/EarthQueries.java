@@ -106,7 +106,7 @@ public class EarthQueries extends EarthControl {
                                         .filter("relationship." + DEFAULT_FIELD_KIND, "@owner_kind")
                                         .select("other")
                                         .aql()
-                                ).aql(true)).aql())
+                                ).inline().aql()).aql())
                         .filter(EarthField.KIND, "!=", "'" + EarthKind.DEVICE_KIND + "'")
                         .filter(EarthField.KIND, "!=", "'" + EarthKind.GEO_SUBSCRIBE_KIND + "'")
                         .filter(filter)

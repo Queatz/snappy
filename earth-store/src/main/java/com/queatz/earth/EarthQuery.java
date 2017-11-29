@@ -30,6 +30,7 @@ public class EarthQuery extends EarthControl {
     public boolean single = false;
     private String in = EarthStore.DEFAULT_COLLECTION;
     private boolean count = false;
+    private boolean inline = false;
 
     public EarthQuery(@NotNull EarthAs as) {
         super(as);
@@ -99,15 +100,11 @@ public class EarthQuery extends EarthControl {
     }
 
     public String aql() {
-        return aql(false);
-    }
-
-    public String aql(boolean inline) {
         if (as.isInternal()) {
             this.internal = true;
         }
 
-        if (!inline) {
+        if (!inline && !count) {
             filter(EarthStore.DEFAULT_FIELD_CONCLUDED, "null");
         }
 
@@ -118,7 +115,7 @@ public class EarthQuery extends EarthControl {
         String result = (lets.isEmpty() ? "" : lets.stream()
                 .map(l -> "let " + l.getVar() + " = (" + l.getValue() + ")\n")
                 .collect(Collectors.joining())) +
-                (count ? "return count(" : "") +
+                (count ? (inline ? "" : "return ") + "count(" : "") +
                 (single ? "(" : "") +
                 "for " + x + " in " + in +
                 (filters.isEmpty() ? "" : " filter " + (
@@ -129,7 +126,7 @@ public class EarthQuery extends EarthControl {
                 (internal ? "" : getVisibleQueryString()) +
                 (sort == null ? "" : " sort " + sort) +
                 (limit == null ? "" : " limit " + limit) +
-                (inline ? "" : " return" + (distinct ? " distinct" : "") + " " + select) +
+                (inline && !count ? "" : " return" + (distinct ? " distinct" : "") + " " + select) +
                 (single ? ")[0]" : "") +
                 (count ? ")" : "");
 
@@ -156,6 +153,11 @@ public class EarthQuery extends EarthControl {
 
     public EarthQuery single() {
         this.single = true;
+        return this;
+    }
+
+    public EarthQuery inline() {
+        this.inline = true;
         return this;
     }
 }

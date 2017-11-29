@@ -115,6 +115,7 @@ import com.vlllage.graph.fields.ActionEarthGraphField;
 import com.vlllage.graph.fields.AroundEarthGraphField;
 import com.vlllage.graph.fields.AspectEarthGraphField;
 import com.vlllage.graph.fields.AuthEarthGraphField;
+import com.vlllage.graph.fields.BackersEarthGraphField;
 import com.vlllage.graph.fields.BackingEarthGraphField;
 import com.vlllage.graph.fields.ClubsEarthGraphField;
 import com.vlllage.graph.fields.DataEarthGraphField;
@@ -264,7 +265,7 @@ public class SnappyServlet extends HttpServlet {
         EarthGraph.register("photo", new PhotoEarthGraphField());
         EarthGraph.register("aspect", new AspectEarthGraphField());
         EarthGraph.register("backing", new BackingEarthGraphField());
-//        EarthGraph.register("backers", new BackersEarthGraphField());
+        EarthGraph.register("backers", new BackersEarthGraphField());
         EarthGraph.register("hidden", new HiddenEarthGraphField());
         EarthGraph.register("clubs", new ClubsEarthGraphField());
 

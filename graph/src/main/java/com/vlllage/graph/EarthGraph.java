@@ -128,6 +128,9 @@ public class EarthGraph extends EarthControl {
                         .toArray(new JsonElement[f.selection().length]);
 
                 transformed.add(s, f.view(as.hasUser() ? as.getUser() : null, selectionResults));
+            } else if (f.type() == EarthGraphField.Type.EXPRESSION) {
+                JsonElement r = results.get("@" + s);
+                transformed.add(s, f.view(as.hasUser() ? as.getUser() : null, new JsonElement[] { r }));
             } else {
                 JsonElement r = results.get("@" + s);
                 GraphQuery q = queries.get("@" + s);
@@ -138,9 +141,7 @@ public class EarthGraph extends EarthControl {
 
                 JsonArray next = i < select.size() - 1 && select.get(i + 1).isJsonArray() ? select.get(i + 1).getAsJsonArray() : new JsonArray();
 
-                if (f.type() == EarthGraphField.Type.EXPRESSION) {
-                    transformed.add(s, f.view(as.hasUser() ? as.getUser() : null, new JsonElement[] { r }));
-                } else if (f.type() == EarthGraphField.Type.OBJECT) {
+                if (f.type() == EarthGraphField.Type.OBJECT) {
                     transformed.add(s, r.getAsJsonArray().size() > 0 ? transformObjectResult(next, q, r.getAsJsonArray().get(0).getAsJsonArray()) : null);
                 } else if (f.type() == EarthGraphField.Type.LIST) {
                     transformed.add(s, transformListResult(next, q, r.getAsJsonArray()));
@@ -166,7 +167,11 @@ public class EarthGraph extends EarthControl {
                 EarthGraphField field = getField(json.getAsString());
 
                 if (field.type() == EarthGraphField.Type.EXPRESSION) {
-                    cursor.add(field.query(as)).setTag("@" + fieldName);
+                    EarthQuery q = field.query(as);
+
+                    if (q != null) {
+                        cursor.add(q).setTag("@" + fieldName);
+                    }
                 } else if (field.type() != EarthGraphField.Type.VALUE) {
                     JsonElement next = i < select.size() - 1 ? select.get(i + 1) : null;
                     next = next != null && next.isJsonArray() ? next.getAsJsonArray() : null;
