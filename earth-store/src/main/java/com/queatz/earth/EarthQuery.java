@@ -104,7 +104,7 @@ public class EarthQuery extends EarthControl {
             this.internal = true;
         }
 
-        if (!inline && !count) {
+        if (!inline || count) {
             filter(EarthStore.DEFAULT_FIELD_CONCLUDED, "null");
         }
 
