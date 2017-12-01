@@ -149,10 +149,10 @@ public class EarthQueries extends EarthControl {
     public FrozenQuery messagesFromAndTo(String id, String with) {
         return new FrozenQuery(
                 new EarthQuery(as).filter("{thing}." + EarthField.KIND + " == '" + EarthKind.MESSAGE_KIND + "' and " +
-                        "({thing}." + EarthField.SOURCE + " == @source and " +
+                        "(({thing}." + EarthField.SOURCE + " == @source and " +
                         "{thing}." + EarthField.TARGET + " == @target) or " +
                         "({thing}." + EarthField.SOURCE + " == @target and " +
-                        "{thing}." + EarthField.TARGET + " == @source)")
+                        "{thing}." + EarthField.TARGET + " == @source))")
                 .sort("{thing}." + EarthField.CREATED_ON + " desc")
                 .limit("@limit"),
                 ImmutableMap.<String, Object>of(
