@@ -71,7 +71,13 @@ public class PersonInterface extends CommonThingInterface {
                 String message = as.getRequest().getParameter(Config.PARAM_MESSAGE);
 
                 if (message != null) {
-                    person = postMessage(as, person, message);
+                    return postMessage(as, person, message);
+                }
+
+                String cover = as.getRequest().getParameter(Config.PARAM_COVER);
+
+                if (cover != null) {
+                    return postCover(as, cover);
                 }
         }
 
@@ -205,6 +211,12 @@ public class PersonInterface extends CommonThingInterface {
         as.s(EarthUpdate.class).send(new MessageEvent(sent)).to(person);
 
         return sent.setLocalId(localId);
+    }
+
+    private EarthThing postCover(EarthAs as, String coverId)  {
+        as.requireUser();
+
+        return as.s(PersonEditor.class).updateCover(as.getUser(), coverId);
     }
 
     private EarthThing postMessage(EarthAs as, EarthThing person)  {

@@ -9,6 +9,7 @@ import com.queatz.snappy.as.EarthControl;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.Shared;
 import com.queatz.snappy.shared.earth.EarthGeo;
+import com.queatz.snappy.shared.earth.EarthRef;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -125,5 +126,9 @@ public class PersonEditor extends EarthControl {
 
         earthStore.save(earthStore.edit(person).set(EarthField.GOOGLE_URL, link));
         return true;
+    }
+
+    public EarthThing updateCover(EarthThing person, String coverId) {
+        return earthStore.save(earthStore.edit(person).set(EarthField.COVER, EarthRef.of(coverId)));
     }
 }

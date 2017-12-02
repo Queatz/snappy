@@ -181,4 +181,5 @@ public class EarthField {
     public static final String GOING = "going";
     public static final String UNSUBSCRIBE_TOKEN = "unsubscribe_token";
     public static final String TYPE = "type";
+    public static final String COVER = "cover";
 }

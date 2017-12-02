@@ -3,12 +3,12 @@ package com.vlllage.graph.fields;
 import com.queatz.earth.EarthField;
 
 /**
- * Created by jacob on 11/27/17.
+ * Created by jacob on 12/2/17.
  */
 
-public class TargetEarthGraphField extends ThingEarthGraphField {
+public class CoverEarthGraphField extends ThingEarthGraphField {
     @Override
     protected String field() {
-        return EarthField.TARGET;
+        return EarthField.COVER;
     }
 }
