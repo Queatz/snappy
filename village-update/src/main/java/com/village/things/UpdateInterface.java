@@ -78,7 +78,7 @@ public class UpdateInterface extends CommonThingInterface {
         as.s(EarthUpdate.class).send(new LikeEvent(like))
                 .to(poster.getKey(EarthField.SOURCE));
 
-        return new LikeView(as, like).setLocalId(localId).toJson();
+        return new SuccessView(true).toJson();
     }
 
     private String getLikers(EarthAs as, String updateId) {
