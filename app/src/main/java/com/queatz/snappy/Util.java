@@ -181,7 +181,7 @@ public class Util {
                 break;
             case Config.UPDATE_ACTION_UPTO:
             default:
-                string = new SpannableString(update.getString(Thing.ABOUT));
+                string = new SpannableString(!update.isNull(Thing.ABOUT) ? update.getString(Thing.ABOUT) : "");
                 break;
         }
 
