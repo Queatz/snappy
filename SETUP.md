@@ -30,6 +30,10 @@ https://packages.debian.org/sid/amd64/libssl1.1/download
 
     deb http://deb.debian.org/debian/ jessie contrib main
 
+Note, if Tomcat is taking a looong time to start, try:
+
+    sudo apt-get install haveged
+
 Check https://www.arangodb.com/download-major/debian/ for latest information.
 
 Install `node` (see https://github.com/nodesource/distributions#debinstall)
@@ -236,6 +240,6 @@ If you want to backup all Village data
 
 ## Environment
 
-To increase the memory available to the backend, do something like:
+To increase the memory available to the backend, do something in `/usr/share/tomcat8/bin/setenv.sh` like:
 
-    export CATALINA_OPTS="$CATALINA_OPTS -Xms12000m"
+    export CATALINA_OPTS="$CATALINA_OPTS -Xms4096m -Xmx4096m"
