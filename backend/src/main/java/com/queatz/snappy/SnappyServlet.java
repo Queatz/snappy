@@ -150,6 +150,7 @@ import com.vlllage.graph.fields.TargetEarthGraphField;
 import com.vlllage.graph.fields.TokenEarthGraphField;
 import com.vlllage.graph.fields.TypeEarthGraphField;
 import com.vlllage.graph.fields.UpdatedEarthGraphField;
+import com.vlllage.graph.fields.WantEarthGraphField;
 
 import java.io.IOException;
 
@@ -276,6 +277,7 @@ public class SnappyServlet extends HttpServlet {
         EarthGraph.register("likers", new LikersEarthGraphField());
         EarthGraph.register("likes", new LikesEarthGraphField());
         EarthGraph.register("hidden", new HiddenEarthGraphField());
+        EarthGraph.register("want", new WantEarthGraphField());
         EarthGraph.register("clubs", new ClubsEarthGraphField());
 
         EarthGraph.register("googleUrl", new GoogleUrlEarthGraphField());
