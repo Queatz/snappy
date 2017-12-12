@@ -112,6 +112,7 @@ import com.village.things.UpdateView;
 import com.vlllage.graph.EarthGraph;
 import com.vlllage.graph.fields.AboutEarthGraphField;
 import com.vlllage.graph.fields.ActionEarthGraphField;
+import com.vlllage.graph.fields.AddressEarthGraphField;
 import com.vlllage.graph.fields.AroundEarthGraphField;
 import com.vlllage.graph.fields.AspectEarthGraphField;
 import com.vlllage.graph.fields.AuthEarthGraphField;
@@ -143,6 +144,7 @@ import com.vlllage.graph.fields.MessageEarthGraphField;
 import com.vlllage.graph.fields.NameEarthGraphField;
 import com.vlllage.graph.fields.OwnerEarthGraphField;
 import com.vlllage.graph.fields.PhotoEarthGraphField;
+import com.vlllage.graph.fields.PlaceholderEarthGraphField;
 import com.vlllage.graph.fields.RoleEarthGraphField;
 import com.vlllage.graph.fields.SeenEarthGraphField;
 import com.vlllage.graph.fields.SourceEarthGraphField;
@@ -293,6 +295,8 @@ public class SnappyServlet extends HttpServlet {
         EarthGraph.register("seen", new SeenEarthGraphField());
         EarthGraph.register("updated", new UpdatedEarthGraphField());
         EarthGraph.register("cover", new CoverEarthGraphField());
+        EarthGraph.register("address", new AddressEarthGraphField());
+        EarthGraph.register("placeholder", new PlaceholderEarthGraphField());
 
         EarthGraph.register("token", new TokenEarthGraphField());
         EarthGraph.register("data", new DataEarthGraphField());

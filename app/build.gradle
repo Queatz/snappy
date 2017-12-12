@@ -11,8 +11,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 27
 
-        versionCode 53
-        versionName "0.5.0"
+        versionCode 54
+        versionName "0.5.1"
     }
 
     buildTypes {
@@ -43,6 +43,10 @@ android {
 
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
     }
 }
 
