@@ -1,4 +1,4 @@
-include ':app', ':village-action', ':graph',
+include ':app', ':village-action', ':graph', ':village-goal',
         ':backend',
         ':shared',
         ':image',

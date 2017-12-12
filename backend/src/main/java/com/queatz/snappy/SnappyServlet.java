@@ -33,7 +33,6 @@ import com.queatz.snappy.shared.EarthSpecialRoute;
 import com.queatz.snappy.view.EarthViewer;
 import com.village.things.ActionAuthority;
 import com.village.things.ActionChangeEvent;
-import com.village.things.ActionInterface;
 import com.village.things.ActionQueue;
 import com.village.things.ActionView;
 import com.village.things.ClearNotificationEvent;
@@ -57,6 +56,8 @@ import com.village.things.FormSubmissionInterface;
 import com.village.things.FormSubmissionView;
 import com.village.things.FormView;
 import com.village.things.GeoSubscribeInterface;
+import com.village.things.GoalAuthority;
+import com.village.things.GoalInterface;
 import com.village.things.HubAuthority;
 import com.village.things.HubInterface;
 import com.village.things.HubView;
@@ -188,6 +189,7 @@ public class SnappyServlet extends HttpServlet {
         EarthAuthority.register(EarthKind.CLUB_KIND, new ClubAuthority());
         EarthAuthority.register(EarthKind.MODE_KIND, new ModeAuthority());
         EarthAuthority.register(EarthKind.ACTION_KIND, new ActionAuthority());
+        EarthAuthority.register(EarthKind.GOAL_KIND, new GoalAuthority());
 
         EarthUpdate.register(Config.PUSH_ACTION_JOIN_ACCEPTED, JoinAcceptedEvent.class);
         EarthUpdate.register(Config.PUSH_ACTION_JOIN_REQUEST, JoinRequestEvent.class);
@@ -207,6 +209,9 @@ public class SnappyServlet extends HttpServlet {
         EarthUpdate.register(Config.PUSH_ACTION_FORM_SUBMISSION_EVENT, FormSubmissionEvent.class);
         EarthUpdate.register(Config.PUSH_ACTION_ACTION_CHANGE, ActionChangeEvent.class);
 
+        /*
+         * Section is deprecated.  See EarthGraph.
+         */
         EarthViewer.register(EarthKind.HUB_KIND, HubView.class);
         EarthViewer.register(EarthKind.CLUB_KIND, ClubView.class);
         EarthViewer.register(EarthKind.CONTACT_KIND, ContactView.class);
@@ -248,7 +253,7 @@ public class SnappyServlet extends HttpServlet {
         EarthRouter.register(EarthKind.FORM_ITEM_KIND, new FormItemInterface());
         EarthRouter.register(EarthKind.FORM_SUBMISSION_KIND, new FormSubmissionInterface());
         EarthRouter.register(EarthKind.MODE_KIND, new ModeInterface());
-        EarthRouter.register(EarthKind.ACTION_KIND, new ActionInterface());
+        EarthRouter.register(EarthKind.GOAL_KIND, new GoalInterface());
 
         EarthRouter.registerSpecial(EarthSpecialRoute.HERE_ROUTE, new HereInterface());
         EarthRouter.registerSpecial(EarthSpecialRoute.ME_ROUTE, new MeInterface());

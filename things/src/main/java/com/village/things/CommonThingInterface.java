@@ -74,7 +74,7 @@ public abstract class CommonThingInterface extends ExistenceInterface {
      *
      * @return Any string response, or null to relay no action was taken
      */
-    public String getThing(EarthAs as,  EarthThing thing) {
+    public String getThing(EarthAs as, EarthThing thing) {
         return null;
     }
     /**
@@ -84,7 +84,7 @@ public abstract class CommonThingInterface extends ExistenceInterface {
      *
      * @return Any string response, or null to relay no action was taken
      */
-    public String postThing(EarthAs as,  EarthThing thing) {
+    public String postThing(EarthAs as, EarthThing thing) {
         return null;
     }
 

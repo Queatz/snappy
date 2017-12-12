@@ -27,4 +27,5 @@ public class EarthKind {
     public static final String FORM_SUBMISSION_KIND = "form-submission";
     public static final String MODE_KIND = "mode";
     public static final String ACTION_KIND = "action";
+    public static final String GOAL_KIND = "goal";
 }

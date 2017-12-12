@@ -13,7 +13,9 @@ import com.queatz.snappy.view.Viewable;
 import java.util.List;
 
 /**
- * Created by jacob on 4/3/16.
+ * Created by jacob on 4/3/16
+ *
+ * @deprecated see {@code GraphView}.
  */
 public class ThingView extends ExistenceView {
 

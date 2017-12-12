@@ -10,6 +10,8 @@ import com.queatz.snappy.view.Viewable;
 
 /**
  * Created by jacob on 4/3/16.
+ *
+ * @deprecated see {@code GraphView}
  */
 public class ExistenceView extends EarthControl implements Viewable {
 
