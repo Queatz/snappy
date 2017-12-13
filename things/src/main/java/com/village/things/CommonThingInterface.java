@@ -3,10 +3,8 @@ package com.village.things;
 import com.google.common.base.Strings;
 import com.image.SnappyImage;
 import com.queatz.earth.EarthField;
-import com.queatz.earth.EarthQueries;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
-import com.queatz.earth.FrozenQuery;
 import com.queatz.snappy.api.ApiUtil;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.events.EarthUpdate;
@@ -17,10 +15,8 @@ import com.queatz.snappy.images.ImageQueue;
 import com.queatz.snappy.plugins.ContactEditorPlugin;
 import com.queatz.snappy.plugins.MemberEditorPlugin;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.shared.EarthJson;
 import com.queatz.snappy.view.EarthViewer;
 import com.queatz.snappy.view.SuccessView;
-import com.vlllage.graph.EarthGraph;
 
 import java.io.IOException;
 
@@ -127,21 +123,6 @@ public abstract class CommonThingInterface extends ExistenceInterface {
             default:
                 throw new NothingLogicResponse("thing - bad path");
         }
-    }
-
-    protected String returnIfGraph(EarthAs as, EarthThing thing) {
-        // Use graph
-        if (as.getParameters().containsKey(Config.PARAM_SELECT)) {
-            String select = as.getParameters().get(Config.PARAM_SELECT)[0];
-
-            FrozenQuery query = as.s(EarthQueries.class).byId(thing.key().name());
-
-            return as.s(EarthJson.class).toJson(
-                    as.s(EarthGraph.class).queryOne(query.getEarthQuery(), select, query.getVars())
-            );
-        }
-
-        return null;
     }
 
     @Override

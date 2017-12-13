@@ -3,14 +3,17 @@ package com.village.things;
 import com.google.common.base.Strings;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
+import com.queatz.earth.EarthQueries;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
 import com.queatz.earth.EarthVisibility;
+import com.queatz.earth.FrozenQuery;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.plugins.MemberEditorPlugin;
 import com.queatz.snappy.router.Interfaceable;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.EarthJson;
+import com.vlllage.graph.EarthGraph;
 
 import java.util.Map;
 
@@ -69,6 +72,22 @@ public abstract class ExistenceInterface implements Interfaceable {
     protected void setVisibilityHidden(EarthAs as, EarthThing thing, String hidden) {
         as.s(EarthVisibility.class).setHidden(thing, Boolean.parseBoolean(hidden));
     }
+
+    protected String returnIfGraph(EarthAs as, EarthThing thing) {
+        // Use graph
+        if (as.getParameters().containsKey(Config.PARAM_SELECT)) {
+            String select = as.getParameters().get(Config.PARAM_SELECT)[0];
+
+            FrozenQuery query = as.s(EarthQueries.class).byId(thing.key().name());
+
+            return as.s(EarthJson.class).toJson(
+                    as.s(EarthGraph.class).queryOne(query.getEarthQuery(), select, query.getVars())
+            );
+        }
+
+        return null;
+    }
+
 
     protected String extract(String[] param) {
         return param == null || param.length != 1 ? null : param[0];

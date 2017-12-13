@@ -20,9 +20,6 @@ public class GoalInterface extends CommonThingInterface {
 
         EarthThing goal = as.s(GoalEditor.class).newGoal(name);
 
-        // Join goals you create
-        join(as, goal);
-
         return goal;
     }
 
