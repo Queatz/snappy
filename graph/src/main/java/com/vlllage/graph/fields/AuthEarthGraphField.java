@@ -11,7 +11,7 @@ import com.queatz.earth.EarthThing;
 public class AuthEarthGraphField extends PrimitiveEarthGraphField {
     @Override
     public String[] selection() {
-        return new String[] { EarthField.TOKEN };
+        return new String[] { "_key", EarthField.TOKEN };
     }
 
     @Override
@@ -20,6 +20,6 @@ public class AuthEarthGraphField extends PrimitiveEarthGraphField {
             return null;
         }
 
-        return super.view(as, selection);
+        return selection[1];
     }
 }
