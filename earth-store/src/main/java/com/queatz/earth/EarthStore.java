@@ -563,45 +563,45 @@ public class EarthStore extends EarthControl {
     }
 
     private List<EarthThing> getNearby(String kind, String q, EarthGeo location, Date afterDate) {
-        String filter = "";
+        StringBuilder filter = new StringBuilder();
 
         if (afterDate != null) {
-            filter += "x." + DEFAULT_FIELD_CREATED + " >= " + (afterDate.getTime());
+            filter.append("x." + DEFAULT_FIELD_CREATED + " >= ").append(afterDate.getTime());
         }
 
         if (kind != null) {
             String kinds[] = kind.split(Pattern.quote("|"));
 
             if (kinds.length > 0 && !kinds[0].isEmpty()) {
-                if (!filter.isEmpty()) {
-                    filter += " and ";
+                if (filter.length() > 0) {
+                    filter.append(" and ");
                 }
 
-                filter += "(";
+                filter.append("(");
 
                 for (int i = 0; i < kinds.length; i++) {
                     if (i > 0) {
-                        filter += " or ";
+                        filter.append(" or ");
                     }
 
                     if (TRANSIENT_KINDS.contains(kinds[i])) {
-                        filter += "(";
-                        filter += "x.kind == \"" + kinds[i] + "\" ";
-                        filter += "and date_timestamp(x." + EarthField.AROUND + ") >= date_timestamp(date_subtract(date_now(), " + TRANSIENT_KIND_TIMEOUT_SECONDS + ", 's'))";
-                        filter += ")";
+                        filter.append("(");
+                        filter.append("x.kind == \"").append(kinds[i]).append("\" ");
+                        filter.append("and date_timestamp(x." + EarthField.AROUND + ") >= date_timestamp(date_subtract(date_now(), " + TRANSIENT_KIND_TIMEOUT_SECONDS + ", 's'))");
+                        filter.append(")");
                     } else {
-                        filter += "x.kind == \"" + kinds[i] + "\"";
+                        filter.append("x.kind == \"").append(kinds[i]).append("\"");
                     }
                 }
 
-                filter += ")";
+                filter.append(")");
             }
         }
 
         final String Q_PARAM = "q";
 
         if (q != null) {
-            filter += " and " + and(Q_PARAM);
+            filter.append(" and ").append(and(Q_PARAM));
         }
 
         String aql = new EarthQuery(as)
@@ -619,7 +619,7 @@ public class EarthStore extends EarthControl {
                                 ).inline().aql()).aql())
                 .filter(EarthField.KIND, "!=", "'" + EarthKind.DEVICE_KIND + "'")
                 .filter(EarthField.KIND, "!=", "'" + EarthKind.GEO_SUBSCRIBE_KIND + "'")
-                .filter(filter)
+                .filter(filter.toString())
                 .limit("@limit")
                 .distinct(true)
                 .aql();
