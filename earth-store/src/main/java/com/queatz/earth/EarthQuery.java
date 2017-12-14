@@ -64,8 +64,17 @@ public class EarthQuery extends EarthControl {
         return this;
     }
 
+    public EarthQuery internal(boolean internal) {
+        this.internal = internal;
+        return this;
+    }
     public EarthQuery internal() {
         this.internal = true;
+        return this;
+    }
+
+    public EarthQuery distinct() {
+        this.distinct = true;
         return this;
     }
 
@@ -144,9 +153,9 @@ public class EarthQuery extends EarthControl {
     }
 
     private String getVisibleQueryString() {
-        return "\nfilter " + x + "." + EarthField.HIDDEN + " != true" + (as.hasUser() ? " or (\n" +
+        return "\nfilter " + var() + "." + EarthField.HIDDEN + " != true" + (as.hasUser() ? " or (\n" +
                 "        for t1, r1 in outbound '" + EarthStore.DEFAULT_COLLECTION + "/" + as.getUser().key().name() + "' graph '" + EarthStore.CLUB_GRAPH + "'\n" +
-                "            for t2, r2 in outbound " + x + " graph '" + EarthStore.CLUB_GRAPH + "'\n" +
+                "            for t2, r2 in outbound " + var() + " graph '" + EarthStore.CLUB_GRAPH + "'\n" +
                 "                filter r1._to == r2._to limit 1 return true\n" +
                 ")[0] == true\n" : "");
     }

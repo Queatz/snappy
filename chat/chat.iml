@@ -83,7 +83,7 @@
     <orderEntry type="module" module-name="village-follower" exported="" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="servlet-api-2.5" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="javax.websocket-api-1.1" level="project" />
-    <orderEntry type="library" exported="" scope="PROVIDED" name="arangodb-java-driver-4.3.1" level="project" />
+    <orderEntry type="library" exported="" scope="PROVIDED" name="arangodb-java-driver-4.3.2" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-lang3-3.3.2" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="velocypack-1.0.14" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="slf4j-api-1.7.13" level="project" />

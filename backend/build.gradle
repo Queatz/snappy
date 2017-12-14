@@ -16,7 +16,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'org.apache.httpcomponents:httpclient:4.5.3'
-    compile 'com.arangodb:arangodb-java-driver:4.3.1'
+    compile 'com.arangodb:arangodb-java-driver:4.3.2'
     compile 'com.google.guava:guava:21.0'
     compile 'org.jetbrains:annotations-java5:15.0'
 

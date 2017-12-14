@@ -1,5 +1,6 @@
 package com.queatz.snappy.logic.interfaces;
 
+import com.google.gson.JsonObject;
 import com.queatz.earth.EarthQueries;
 import com.queatz.earth.EarthThing;
 import com.queatz.earth.FrozenQuery;
@@ -40,9 +41,14 @@ public class ByNameInterface implements Interfaceable {
 
             FrozenQuery query = as.s(EarthQueries.class).byGoogleUrl(personName);
 
-            return as.s(EarthJson.class).toJson(
-                    as.s(EarthGraph.class).queryOne(query.getEarthQuery(), select, query.getVars())
-            );
+            JsonObject json = as.s(EarthGraph.class)
+                    .queryOne(query.getEarthQuery(), select, query.getVars());
+
+            if (json == null) {
+                throw new NothingLogicResponse("by name - nobody");
+            }
+
+            return as.s(EarthJson.class).toJson(json);
         }
 
         EarthThing person = as.s(PersonMine.class).byGoogleUrl(personName.toLowerCase());

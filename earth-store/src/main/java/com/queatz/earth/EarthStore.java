@@ -682,7 +682,7 @@ public class EarthStore extends EarthControl {
                 .filter(filter)
                 .sort("x.@sort desc")
                 .limit("@limit")
-                .internal()
+                .internal(isInternalQuery)
                 .aql();
 
         List<EarthThing> result = new ArrayList<>();
