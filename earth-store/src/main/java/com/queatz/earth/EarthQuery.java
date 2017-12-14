@@ -64,8 +64,8 @@ public class EarthQuery extends EarthControl {
         return this;
     }
 
-    public EarthQuery internal(boolean internal) {
-        this.internal = internal;
+    public EarthQuery internal() {
+        this.internal = true;
         return this;
     }
 

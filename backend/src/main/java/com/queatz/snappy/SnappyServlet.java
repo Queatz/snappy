@@ -142,6 +142,7 @@ import com.vlllage.graph.fields.LikersEarthGraphField;
 import com.vlllage.graph.fields.LikesEarthGraphField;
 import com.vlllage.graph.fields.MembersEarthGraphField;
 import com.vlllage.graph.fields.MessageEarthGraphField;
+import com.vlllage.graph.fields.ModesEarthGraphQuery;
 import com.vlllage.graph.fields.NameEarthGraphField;
 import com.vlllage.graph.fields.OwnerEarthGraphField;
 import com.vlllage.graph.fields.PhotoEarthGraphField;
@@ -308,6 +309,8 @@ public class SnappyServlet extends HttpServlet {
         EarthGraph.register("type", new TypeEarthGraphField());
         EarthGraph.register("role", new RoleEarthGraphField());
         EarthGraph.register("around", new AroundEarthGraphField());
+
+        EarthGraph.register("modes", new ModesEarthGraphQuery());
 
         EarthPlugin.register(MemberEditorPlugin.class, MemberEditor.class);
         EarthPlugin.register(MemberMinePlugin.class, MemberMine.class);

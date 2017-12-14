@@ -607,10 +607,10 @@ public class EarthStore extends EarthControl {
         String aql = new EarthQuery(as)
                 .let("things", new EarthQueryNearFilter(as, "@latitude", "@longitude", "@limit").aql())
                 .in(new EarthQueryAppendFilter("things", new EarthQuery(as)
-                                .internal(true)
+                                .internal()
                                 .as("thing")
                                 .in("things " + new EarthQuery(as)
-                                        .internal(true)
+                                        .internal()
                                         .as("other, relationship")
                                         .in("outbound thing graph '" + DEFAULT_GRAPH + "'")
                                         .filter("relationship." + DEFAULT_FIELD_KIND, "@owner_kind")
@@ -682,7 +682,7 @@ public class EarthStore extends EarthControl {
                 .filter(filter)
                 .sort("x.@sort desc")
                 .limit("@limit")
-                .internal(isInternalQuery)
+                .internal()
                 .aql();
 
         List<EarthThing> result = new ArrayList<>();
