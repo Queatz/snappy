@@ -152,8 +152,6 @@ public class UpdateInterface extends CommonThingInterface {
         JsonArray with = null;
         boolean going = false;
 
-        // XXX TODO Make this use ApiUtil.putPhoto (with support for reading other params)
-
         try {
             ServletFileUpload upload = new ServletFileUpload();
             FileItemIterator iterator = upload.getItemIterator(as.getRequest());

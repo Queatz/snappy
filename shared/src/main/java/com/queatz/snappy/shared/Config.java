@@ -218,6 +218,7 @@ public class Config {
     public static final String PATH_RAW = "raw";
     public static final String PATH_CLUBS = "clubs";
     public static final String PATH_TOKEN = "token";
+    public static final Object PATH_COMPLETE = "complete";
 
     // Google Play billing configuration (unused)
     public static final int BILLING_RESPONSE_RESULT_OK                  = 0;
@@ -321,6 +322,7 @@ public class Config {
     // Types of updates
     public static final String UPDATE_ACTION_JOIN_PARTY = "join_party";
     public static final String UPDATE_ACTION_HOST_PARTY = "host_party";
+    public static final String UPDATE_ACTION_COMPLETED_GOAL = "completed_goal";
     public static final String UPDATE_ACTION_UPTO = "upto";
 
     // Status of join requests (for parties)

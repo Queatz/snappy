@@ -13,7 +13,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/build/classes/java/main" />
     <output-test url="file://$MODULE_DIR$/build/classes/java/test" />
     <exclude-output />
@@ -55,6 +55,9 @@
     <orderEntry type="module" module-name="village-recent" exported="" />
     <orderEntry type="module" module-name="village-message" exported="" />
     <orderEntry type="module" module-name="village-follower" exported="" />
+    <orderEntry type="module" module-name="village-update" exported="" />
+    <orderEntry type="module" module-name="village-like" exported="" />
+    <orderEntry type="module" module-name="village-member" exported="" />
     <orderEntry type="module" module-name="things" exported="" />
     <orderEntry type="module" module-name="view" exported="" />
     <orderEntry type="module" module-name="earth" exported="" />
@@ -83,6 +86,9 @@
     <orderEntry type="module" module-name="village-recent" exported="" />
     <orderEntry type="module" module-name="village-message" exported="" />
     <orderEntry type="module" module-name="village-follower" exported="" />
+    <orderEntry type="module" module-name="village-update" exported="" />
+    <orderEntry type="module" module-name="village-like" exported="" />
+    <orderEntry type="module" module-name="village-member" exported="" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="servlet-api-2.5" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="arangodb-java-driver-4.3.2" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="commons-lang3-3.3.2" level="project" />

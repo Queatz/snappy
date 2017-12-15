@@ -53,10 +53,13 @@ public class UpdateEditor extends EarthControl {
 
     public EarthThing updateWith(EarthThing update, EarthThing thing, String message, boolean photo, EarthGeo geo, JsonArray with, boolean going) {
         EarthThing.Builder edit = earthStore.edit(update)
-                .set(EarthField.TARGET, thing.key())
                 .set(EarthField.ACTION, Config.UPDATE_ACTION_UPTO)
                 .set(EarthField.GOING, going)
                 .set(EarthField.PHOTO, photo);
+
+        if (thing != null) {
+            edit.set(EarthField.TARGET, thing.key());
+        }
 
         if (message == null) {
             edit.set(EarthField.ABOUT);
@@ -91,5 +94,27 @@ public class UpdateEditor extends EarthControl {
         }
 
         return earthStore.save(edit);
+    }
+
+    public EarthThing updateWith(EarthThing update, String message, boolean photo, JsonArray with) {
+        EarthThing.Builder edit = earthStore.edit(update)
+                .set(EarthField.PHOTO, photo);
+
+        if (message == null) {
+            edit.set(EarthField.ABOUT);
+        } else {
+            edit.set(EarthField.ABOUT, message);
+        }
+
+        EarthThing saved = earthStore.save(edit);
+
+        if (with != null && with.size() > 0) {
+            for (JsonElement peep : with) {
+                EarthThing person = earthStore.get(peep.getAsString());
+                joinEditor.newJoin(person, saved);
+            }
+        }
+
+        return saved;
     }
 }
