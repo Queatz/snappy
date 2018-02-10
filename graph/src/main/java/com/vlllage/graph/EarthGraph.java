@@ -44,7 +44,7 @@ public class EarthGraph extends EarthControl {
         return query(earthQuery, selectJsonKeys, null);
     }
 
-    public JsonArray query(@NotNull EarthQuery earthQuery, @NotNull String selectJsonKeys, @Nullable Map<String, Object> vars) {
+    public JsonArray query(@NotNull EarthQuery earthQuery, @Nullable String selectJsonKeys, @Nullable Map<String, Object> vars) {
         JsonArray select;
 
         if (vars == null) {

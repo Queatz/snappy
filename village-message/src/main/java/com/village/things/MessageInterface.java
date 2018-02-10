@@ -2,8 +2,10 @@ package com.village.things;
 
 import com.image.SnappyImage;
 import com.queatz.earth.EarthField;
+import com.queatz.earth.EarthQueries;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
+import com.queatz.earth.FrozenQuery;
 import com.queatz.snappy.api.ApiUtil;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.exceptions.Error;
@@ -11,7 +13,8 @@ import com.queatz.snappy.exceptions.NothingLogicResponse;
 import com.queatz.snappy.exceptions.PrintingError;
 import com.queatz.snappy.router.Interfaceable;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.view.EarthViewer;
+import com.queatz.snappy.shared.EarthJson;
+import com.vlllage.graph.EarthGraph;
 
 import java.io.IOException;
 
@@ -25,9 +28,12 @@ public class MessageInterface implements Interfaceable {
             case 0:
                 throw new NothingLogicResponse("message - empty route");
             case 1:
-                EarthThing thing = as.s(EarthStore.class).get(as.getRoute().get(0));
+                String select = as.getParameters().containsKey(Config.PARAM_SELECT) ? as.getParameters().get(Config.PARAM_SELECT)[0] : null;
+                FrozenQuery query = as.s(EarthQueries.class).byId(as.getRoute().get(0));
 
-                return as.s(EarthViewer.class).getViewForEntityOrThrow(thing).toJson();
+                return as.s(EarthJson.class).toJson(
+                        as.s(EarthGraph.class).queryOne(query.getEarthQuery(), select, query.getVars())
+                );
             case 2:
                 switch (as.getRoute().get(1)) {
                     case Config.PATH_PHOTO:

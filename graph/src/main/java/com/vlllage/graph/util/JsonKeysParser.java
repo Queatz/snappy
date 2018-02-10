@@ -36,6 +36,10 @@ public class JsonKeysParser {
     public JsonArray parse(String keysString) throws ParseException {
         JsonArray result = new JsonArray();
 
+        if (keysString == null) {
+            return result;
+        }
+
         int len = keysString.length();
         int currentAtomStartPosition = 0;
         Stack<JsonArray> jsonArrayCursor = new Stack<>();

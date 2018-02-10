@@ -1,10 +1,6 @@
 package com.queatz.snappy.logic.interfaces;
 
-import com.queatz.earth.EarthField;
-import com.queatz.earth.EarthKind;
 import com.queatz.earth.EarthQueries;
-import com.queatz.earth.EarthStore;
-import com.queatz.earth.EarthThing;
 import com.queatz.earth.FrozenQuery;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
@@ -12,12 +8,7 @@ import com.queatz.snappy.router.Interfaceable;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.EarthJson;
 import com.queatz.snappy.shared.earth.EarthGeo;
-import com.queatz.snappy.view.EarthView;
-import com.village.things.EntityListView;
-import com.village.things.RecentMine;
 import com.vlllage.graph.EarthGraph;
-
-import java.util.List;
 
 /**
  * Created by jacob on 7/9/16.
@@ -53,53 +44,12 @@ public class SearchInterface implements Interfaceable {
 
         final EarthGeo latLng = EarthGeo.of(latitude, longitude);
 
-        // Use graph
-        if (as.getParameters().containsKey(Config.PARAM_SELECT)) {
-            String select = as.getParameters().get(Config.PARAM_SELECT)[0];
+        String select = as.getParameters().containsKey(Config.PARAM_SELECT) ? as.getParameters().get(Config.PARAM_SELECT)[0] : null;
+        FrozenQuery query = as.s(EarthQueries.class).getNearby(latLng, kindFilter, qParam);
 
-            FrozenQuery query = as.s(EarthQueries.class).getNearby(latLng, kindFilter, qParam);
-
-            return as.s(EarthJson.class).toJson(
-                    as.s(EarthGraph.class).query(query.getEarthQuery(), select, query.getVars())
-            );
-        }
-
-        List<EarthThing> results = as.s(EarthStore.class).getNearby(latLng, kindFilter, qParam);
-
-        // Hack to include recents for now...need to find a better way to "pick people" that are not nearby
-        if (as.hasUser() && kindFilter != null && kindFilter.contains(EarthKind.PERSON_KIND)) {
-            List<EarthThing> recents = as.s(RecentMine.class).forPerson(as.getUser());
-
-            if (qParam == null) {
-                results.addAll(recents);
-            } else {
-                EarthStore earthStore = as.s(EarthStore.class);
-
-                for (EarthThing recent : recents) {
-                    EarthThing with = earthStore.get(recent.getKey(EarthField.TARGET));
-                    if (with != null && (
-                            with.getString(EarthField.FIRST_NAME).toLowerCase().startsWith(qParam.toLowerCase()) ||
-                                    with.getString(EarthField.LAST_NAME).toLowerCase().startsWith(qParam.toLowerCase())
-                    )) {
-                        boolean duplicate = false;
-                        for (EarthThing result : results) {
-                            if (result.key().equals(with.key())) {
-                                duplicate = true;
-                                break;
-                            }
-                        }
-
-                        if (duplicate) {
-                            continue;
-                        }
-
-                        results.add(with);
-                    }
-                }
-            }
-        }
-
-        return new EntityListView(as, results, EarthView.SHALLOW).toJson();
+        return as.s(EarthJson.class).toJson(
+                as.s(EarthGraph.class).query(query.getEarthQuery(), select, query.getVars())
+        );
     }
 
     @Override

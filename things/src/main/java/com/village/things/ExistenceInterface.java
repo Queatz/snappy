@@ -74,18 +74,12 @@ public abstract class ExistenceInterface implements Interfaceable {
     }
 
     protected String returnIfGraph(EarthAs as, EarthThing thing) {
-        // Use graph
-        if (as.getParameters().containsKey(Config.PARAM_SELECT)) {
-            String select = as.getParameters().get(Config.PARAM_SELECT)[0];
+        String select = extract(as.getParameters().get(Config.PARAM_SELECT));
+        FrozenQuery query = as.s(EarthQueries.class).byId(thing.key().name());
 
-            FrozenQuery query = as.s(EarthQueries.class).byId(thing.key().name());
-
-            return as.s(EarthJson.class).toJson(
-                    as.s(EarthGraph.class).queryOne(query.getEarthQuery(), select, query.getVars())
-            );
-        }
-
-        return null;
+        return as.s(EarthJson.class).toJson(
+                as.s(EarthGraph.class).queryOne(query.getEarthQuery(), select, query.getVars())
+        );
     }
 
 

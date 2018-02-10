@@ -1,7 +1,6 @@
 package com.queatz.snappy.logic.interfaces;
 
 import com.google.gson.JsonObject;
-import com.queatz.earth.ClubMine;
 import com.queatz.earth.EarthField;
 import com.queatz.earth.EarthQueries;
 import com.queatz.earth.EarthStore;
@@ -11,27 +10,19 @@ import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.email.EarthEmail;
 import com.queatz.snappy.events.EarthUpdate;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
-import com.queatz.snappy.logic.views.MessagesAndContactsView;
 import com.queatz.snappy.router.Interfaceable;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.EarthJson;
 import com.queatz.snappy.shared.WebsiteHelper;
 import com.queatz.snappy.shared.earth.EarthGeo;
-import com.queatz.snappy.view.EarthView;
-import com.queatz.snappy.view.EarthViewer;
 import com.queatz.snappy.view.SuccessView;
 import com.village.things.ClearNotificationEvent;
 import com.village.things.DeviceEditor;
-import com.village.things.EntityListView;
-import com.village.things.MessageMine;
 import com.village.things.PersonEditor;
 import com.village.things.PersonMine;
-import com.village.things.RecentMine;
 import com.vlllage.graph.EarthGraph;
 
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.List;
 
 /**
  * Created by jacob on 5/14/16.
@@ -48,18 +39,12 @@ public class MeInterface implements Interfaceable {
                     throw new NothingLogicResponse("sup dude");
                 }
 
-                // Use graph
-                if (as.getParameters().containsKey(Config.PARAM_SELECT)) {
-                    String select = as.getParameters().get(Config.PARAM_SELECT)[0];
+                String select = as.getParameters().containsKey(Config.PARAM_SELECT) ? as.getParameters().get(Config.PARAM_SELECT)[0] : null;
+                FrozenQuery query = as.s(EarthQueries.class).byId(as.getUser().key().name());
 
-                    FrozenQuery query = as.s(EarthQueries.class).byId(as.getUser().key().name());
-
-                    return as.s(EarthJson.class).toJson(
-                            as.s(EarthGraph.class).queryOne(query.getEarthQuery(), select, query.getVars())
-                    );
-                }
-
-                return as.s(EarthViewer.class).getViewForEntityOrThrow(as.getUser(), EarthView.SHALLOW).toJson();
+                return as.s(EarthJson.class).toJson(
+                        as.s(EarthGraph.class).queryOne(query.getEarthQuery(), select, query.getVars())
+                );
             case 2:
                 as.requireUser();
 
@@ -179,42 +164,28 @@ public class MeInterface implements Interfaceable {
     private String getMessages(EarthAs as) {
         as.requireUser();
 
-        // Use graph
-        if (as.getParameters().containsKey(Config.PARAM_SELECT)) {
-            String select = as.getParameters().get(Config.PARAM_SELECT)[0];
+        String select = as.getParameters().containsKey(Config.PARAM_SELECT) ? as.getParameters().get(Config.PARAM_SELECT)[0] : null;
 
-            FrozenQuery messagesQuery = as.s(EarthQueries.class).messagesFromOrTo(as.getUser().key().name());
-            FrozenQuery contactsQuery = as.s(EarthQueries.class).recentsFor(as.getUser().key().name());
+        FrozenQuery messagesQuery = as.s(EarthQueries.class).messagesFromOrTo(as.getUser().key().name());
+        FrozenQuery contactsQuery = as.s(EarthQueries.class).recentsFor(as.getUser().key().name());
 
-            JsonObject result = new JsonObject();
+        JsonObject result = new JsonObject();
 
-            result.add("messages", as.s(EarthGraph.class).query(messagesQuery.getEarthQuery(), select, messagesQuery.getVars()));
-            result.add("contacts", as.s(EarthGraph.class).query(contactsQuery.getEarthQuery(), select, contactsQuery.getVars()));
+        result.add("messages", as.s(EarthGraph.class).query(messagesQuery.getEarthQuery(), select, messagesQuery.getVars()));
+        result.add("contacts", as.s(EarthGraph.class).query(contactsQuery.getEarthQuery(), select, contactsQuery.getVars()));
 
-            return as.s(EarthJson.class).toJson(result);
-        }
-
-        List<EarthThing> messages = as.s(MessageMine.class).messagesFromOrTo(as.getUser().key());
-        List<EarthThing> contacts = as.s(RecentMine.class).forPerson(as.getUser());
-
-        return new MessagesAndContactsView(as, messages, contacts).toJson();
+        return as.s(EarthJson.class).toJson(result);
     }
 
     private String getClubs(EarthAs as) {
         as.requireUser();
 
-        // Use graph
-        if (as.getParameters().containsKey(Config.PARAM_SELECT)) {
-            String select = as.getParameters().get(Config.PARAM_SELECT)[0];
+        String select = as.getParameters().containsKey(Config.PARAM_SELECT) ? as.getParameters().get(Config.PARAM_SELECT)[0] : null;
+        FrozenQuery query = as.s(EarthQueries.class).clubsOf(as.getUser());
 
-            FrozenQuery query = as.s(EarthQueries.class).clubsOf(as.getUser());
-
-            return as.s(EarthJson.class).toJson(
-                    as.s(EarthGraph.class).query(query.getEarthQuery(), select, query.getVars())
-            );
-        }
-
-        return new EntityListView(as, new ClubMine(as).clubsOf(as.getUser())).toJson();
+        return as.s(EarthJson.class).toJson(
+                as.s(EarthGraph.class).query(query.getEarthQuery(), select, query.getVars())
+        );
     }
 
     private String postClearNotification(EarthAs as, String notification) {

@@ -12,9 +12,7 @@ import com.queatz.snappy.events.EarthUpdate;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.shared.EarthJson;
-import com.queatz.snappy.shared.earth.EarthRef;
 import com.queatz.snappy.view.EarthView;
-import com.queatz.snappy.view.EarthViewer;
 import com.queatz.snappy.view.SuccessView;
 import com.vlllage.graph.EarthGraph;
 
@@ -27,7 +25,6 @@ import org.apache.commons.fileupload.util.Streams;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -100,9 +97,12 @@ public class PersonInterface extends CommonThingInterface {
             case 2:
                 switch (as.getRoute().get(1)) {
                     case Config.PATH_MESSAGE:
-                        return as.s(EarthViewer.class).getViewForEntityOrThrow(
-                                postMessage(as, as.s(EarthStore.class).get(as.getRoute().get(0)))
-                        ).toJson();
+                        String select = extract(as.getParameters().get(Config.PARAM_SELECT));
+                        FrozenQuery query = as.s(EarthQueries.class).byId(as.getRoute().get(0));
+
+                        return as.s(EarthJson.class).toJson(
+                                as.s(EarthGraph.class).queryOne(query.getEarthQuery(), select, query.getVars())
+                        );
                 }
                 break;
         }
@@ -138,25 +138,12 @@ public class PersonInterface extends CommonThingInterface {
     private String getMessages(EarthAs as, String personId) {
         as.requireUser();
 
-        // Use graph
-        if (as.getParameters().containsKey(Config.PARAM_SELECT)) {
-            String select = as.getParameters().get(Config.PARAM_SELECT)[0];
+        String select = extract(as.getParameters().get(Config.PARAM_SELECT));
+        FrozenQuery query = as.s(EarthQueries.class).messagesFromAndTo(as.getUser().key().name(), personId);
 
-            FrozenQuery query = as.s(EarthQueries.class).messagesFromAndTo(as.getUser().key().name(), personId);
-
-            return as.s(EarthJson.class).toJson(
-                    as.s(EarthGraph.class).query(query.getEarthQuery(), select, query.getVars())
-            );
-        }
-
-        List<EarthThing> messagesToMe = as.s(MessageMine.class).messagesFromTo(as.getUser().key(), EarthRef.of(personId));
-        List<EarthThing> messagesFromMe = as.s(MessageMine.class).messagesFromTo(EarthRef.of(personId), as.getUser().key());
-
-        List<EarthThing> messages = new ArrayList<>();
-        messages.addAll(messagesToMe);
-        messages.addAll(messagesFromMe);
-
-        return new EntityListView(as, messages).toJson();
+        return as.s(EarthJson.class).toJson(
+                as.s(EarthGraph.class).query(query.getEarthQuery(), select, query.getVars())
+        );
     }
 
     private String postSeen(EarthAs as, EarthThing personId) {

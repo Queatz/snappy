@@ -15,7 +15,6 @@ import com.queatz.snappy.images.ImageQueue;
 import com.queatz.snappy.plugins.ContactEditorPlugin;
 import com.queatz.snappy.plugins.MemberEditorPlugin;
 import com.queatz.snappy.shared.Config;
-import com.queatz.snappy.view.EarthViewer;
 import com.queatz.snappy.view.SuccessView;
 
 import java.io.IOException;
@@ -98,13 +97,7 @@ public abstract class CommonThingInterface extends ExistenceInterface {
 
                 onGet(as, thing);
 
-                String graph = returnIfGraph(as, thing);
-
-                if (graph != null) {
-                    return graph;
-                }
-
-                return as.s(EarthViewer.class).getViewForEntityOrThrow(thing).toJson();
+                return returnIfGraph(as, thing);
             } case 2:
                 switch (as.getRoute().get(1)) {
                     case Config.PATH_PHOTO:
@@ -145,13 +138,7 @@ public abstract class CommonThingInterface extends ExistenceInterface {
 
                 setVisibility(as, thing);
 
-                String graph = returnIfGraph(as, thing);
-
-                if (graph != null) {
-                    return graph;
-                }
-
-                return as.s(EarthViewer.class).getViewForEntityOrThrow(thing).toJson();
+                return returnIfGraph(as, thing);
             }
             case 1: {
                 EarthThing thing = as.s(EarthStore.class).get(as.getRoute().get(0));
@@ -164,13 +151,7 @@ public abstract class CommonThingInterface extends ExistenceInterface {
 
                 setVisibility(as, thing);
 
-                String graph = returnIfGraph(as, thing);
-
-                if (graph != null) {
-                    return graph;
-                }
-
-                return as.s(EarthViewer.class).getViewForEntityOrThrow(thing).toJson();
+                return returnIfGraph(as, thing);
             }
 
             case 2: {

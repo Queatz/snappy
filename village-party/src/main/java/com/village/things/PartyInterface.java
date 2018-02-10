@@ -1,15 +1,18 @@
 package com.village.things;
 
 import com.queatz.earth.EarthField;
+import com.queatz.earth.EarthQueries;
 import com.queatz.earth.EarthStore;
 import com.queatz.earth.EarthThing;
+import com.queatz.earth.FrozenQuery;
 import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.events.EarthUpdate;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
 import com.queatz.snappy.router.Interfaceable;
 import com.queatz.snappy.shared.Config;
+import com.queatz.snappy.shared.EarthJson;
 import com.queatz.snappy.shared.Shared;
-import com.queatz.snappy.view.EarthViewer;
+import com.vlllage.graph.EarthGraph;
 
 import java.util.Date;
 
@@ -22,8 +25,12 @@ public class PartyInterface implements Interfaceable {
     public String get(EarthAs as) {
         switch (as.getRoute().size()) {
             case 1:
-                return as.s(EarthViewer.class).getViewForEntityOrThrow(
-                        as.s(EarthStore.class).get(as.getRoute().get(0))).toJson();
+                String select = as.getParameters().containsKey(Config.PARAM_SELECT) ? as.getParameters().get(Config.PARAM_SELECT)[0] : null;
+                FrozenQuery query = as.s(EarthQueries.class).byId(as.getRoute().get(0));
+
+                return as.s(EarthJson.class).toJson(
+                        as.s(EarthGraph.class).queryOne(query.getEarthQuery(), select, query.getVars())
+                );
         }
 
         throw new NothingLogicResponse("party - bad path");
@@ -66,8 +73,14 @@ public class PartyInterface implements Interfaceable {
                 } else if (Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_CANCEL_JOIN))) {
                     return postCancelJoin(as, party);
                 } else if (Boolean.valueOf(as.getRequest().getParameter(Config.PARAM_FULL))) {
-                    return as.s(EarthViewer.class).getViewForEntityOrThrow(
-                            as.s(PartyEditor.class).setFull(party)).toJson();
+                    as.s(PartyEditor.class).setFull(party);
+
+                    String select = as.getParameters().containsKey(Config.PARAM_SELECT) ? as.getParameters().get(Config.PARAM_SELECT)[0] : null;
+                    FrozenQuery query = as.s(EarthQueries.class).byId(party.key().name());
+
+                    return as.s(EarthJson.class).toJson(
+                            as.s(EarthGraph.class).queryOne(query.getEarthQuery(), select, query.getVars())
+                    );
                 } else {
                     throw new NothingLogicResponse("party - bad path");
                 }

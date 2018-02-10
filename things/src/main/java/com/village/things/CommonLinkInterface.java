@@ -36,13 +36,7 @@ public abstract class CommonLinkInterface extends ExistenceInterface {
             case 1:
                 EarthThing thing = as.s(EarthStore.class).get(as.getRoute().get(0));
 
-                String graph = returnIfGraph(as, thing);
-
-                if (graph != null) {
-                    return graph;
-                }
-
-                return as.s(EarthViewer.class).getViewForEntityOrThrow(thing).toJson();
+                return returnIfGraph(as, thing);
             default:
                 throw new NothingLogicResponse("link - bad path");
         }
@@ -70,13 +64,7 @@ public abstract class CommonLinkInterface extends ExistenceInterface {
 
                 setVisibility(as, link);
 
-                String graph = returnIfGraph(as, link);
-
-                if (graph != null) {
-                    return graph;
-                }
-
-                return as.s(EarthViewer.class).getViewForEntityOrThrow(link).toJson();
+                return returnIfGraph(as, link);
             }
             case 1: {
                 EarthThing link = earthStore.get(as.getRoute().get(0));
@@ -85,14 +73,7 @@ public abstract class CommonLinkInterface extends ExistenceInterface {
 
                 setVisibility(as, link);
 
-                String graph = returnIfGraph(as, link);
-
-                if (graph != null) {
-                    return graph;
-                }
-
-
-                return as.s(EarthViewer.class).getViewForEntityOrThrow(link).toJson();
+                return returnIfGraph(as, link);
             }
 
             case 2: {

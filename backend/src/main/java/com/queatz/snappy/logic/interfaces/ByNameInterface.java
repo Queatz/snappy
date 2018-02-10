@@ -34,29 +34,16 @@ public class ByNameInterface implements Interfaceable {
     }
 
     private String getPersonByName(EarthAs as, String personName) {
+        String select = as.getParameters().containsKey(Config.PARAM_SELECT) ? as.getParameters().get(Config.PARAM_SELECT)[0] : null;
+        FrozenQuery query = as.s(EarthQueries.class).byGoogleUrl(personName);
 
-        // Use graph
-        if (as.getParameters().containsKey(Config.PARAM_SELECT)) {
-            String select = as.getParameters().get(Config.PARAM_SELECT)[0];
+        JsonObject json = as.s(EarthGraph.class)
+                .queryOne(query.getEarthQuery(), select, query.getVars());
 
-            FrozenQuery query = as.s(EarthQueries.class).byGoogleUrl(personName);
-
-            JsonObject json = as.s(EarthGraph.class)
-                    .queryOne(query.getEarthQuery(), select, query.getVars());
-
-            if (json == null) {
-                throw new NothingLogicResponse("by name - nobody");
-            }
-
-            return as.s(EarthJson.class).toJson(json);
-        }
-
-        EarthThing person = as.s(PersonMine.class).byGoogleUrl(personName.toLowerCase());
-
-        if (person == null) {
+        if (json == null) {
             throw new NothingLogicResponse("by name - nobody");
         }
 
-        return as.s(EarthViewer.class).getViewForEntityOrThrow(person).toJson();
+        return as.s(EarthJson.class).toJson(json);
     }
 }
