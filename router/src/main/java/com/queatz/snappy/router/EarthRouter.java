@@ -39,7 +39,7 @@ public class EarthRouter extends EarthControl {
         Interfaceable interfaceable = mapping.get(kind);
 
         if (interfaceable == null) {
-            throw new NothingLogicResponse("earth - no interfaceable was found");
+            throw new NothingLogicResponse("earth - no interfaceable was found for kind: " + kind);
         }
 
         return interfaceable;

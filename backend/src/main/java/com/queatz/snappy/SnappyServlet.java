@@ -33,6 +33,7 @@ import com.queatz.snappy.shared.EarthSpecialRoute;
 import com.queatz.snappy.view.EarthViewer;
 import com.village.things.ActionAuthority;
 import com.village.things.ActionChangeEvent;
+import com.village.things.ActionInterface;
 import com.village.things.ActionQueue;
 import com.village.things.ActionView;
 import com.village.things.ClearNotificationEvent;
@@ -234,6 +235,7 @@ public class SnappyServlet extends HttpServlet {
         EarthViewer.register(EarthKind.MODE_KIND, ModeView.class);
         EarthViewer.register(EarthKind.ACTION_KIND, ActionView.class);
 
+        EarthRouter.register(EarthKind.ACTION_KIND, new ActionInterface());
         EarthRouter.register(EarthKind.HUB_KIND, new HubInterface());
         EarthRouter.register(EarthKind.CLUB_KIND, new ClubInterface());
         EarthRouter.register(EarthKind.CONTACT_KIND, new ContactInterface());

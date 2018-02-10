@@ -102,6 +102,7 @@ public class UpdateInterface extends CommonThingInterface {
                 if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
                     ApiUtil.putPhoto(update.key().name(), as.s(SnappyImage.class), as.getRequest());
                     photoUploaded = true;
+                    continue;
                 }
                 else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {
                     message = Streams.asString(stream, "UTF-8");
@@ -162,6 +163,7 @@ public class UpdateInterface extends CommonThingInterface {
                 if (!item.isFormField() && Config.PARAM_PHOTO.equals(item.getFieldName())) {
                     ApiUtil.putPhoto(update.key().name(), item.getName(), as.s(SnappyImage.class), item);
                     photoUploaded = true;
+                    continue;
                 }
                 else if (Config.PARAM_MESSAGE.equals(item.getFieldName())) {
                     message = Streams.asString(stream, "UTF-8");

@@ -41,7 +41,6 @@ public class ChatServer {
                 session,
                 (ChatLogic) endpointConfig.getUserProperties().get("chat")
         );
-        session.getUserProperties().put("chat", chatSession);
         chatSession.join();
     }
 
@@ -50,7 +49,7 @@ public class ChatServer {
         if (session.isOpen()) {
             try {
                 session.close();
-            } catch (IOException e) {
+            } catch (IOException | IllegalStateException e) {
                 e.printStackTrace();
             }
         }

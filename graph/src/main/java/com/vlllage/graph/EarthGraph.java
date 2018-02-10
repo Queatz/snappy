@@ -198,6 +198,6 @@ public class EarthGraph extends EarthControl {
 
     public JsonObject queryOne(EarthQuery earthQuery, String select, Map<String, Object> vars) {
         JsonArray result = query(earthQuery, select, vars);
-        return result.size() > 0 ? result.get(0).getAsJsonObject() : null;
+        return result != null && result.size() > 0 ? result.get(0).getAsJsonObject() : null;
     }
 }

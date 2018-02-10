@@ -11,12 +11,12 @@ Domain: `vlllage.com`
 
     sudo su -
         
-    curl -O https://download.arangodb.com/arangodb32/Debian_9.0/Release.key
+    curl -O https://download.arangodb.com/arangodb33/Debian_9.0/Release.key
     sudo apt-key add - < Release.key
     
     apt-get install software-properties-common apt-transport-https -y --allow
     apt-add-repository 'http://deb.debian.org/debian/ sid main contrib'
-    echo 'deb https://download.arangodb.com/arangodb32/Debian_9.0/ /' | sudo tee /etc/apt/sources.list.d/arangodb.list
+    echo 'deb https://download.arangodb.com/arangodb33/Debian_9.0/ /' | sudo tee /etc/apt/sources.list.d/arangodb.list
 
     apt-get update
     apt-get install openjdk-8-jre openjdk-8-jre-headless openjdk-8-jdk ca-certificates-java -y

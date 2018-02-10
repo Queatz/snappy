@@ -53,7 +53,7 @@ public class ChatWorld {
         }
 
         __arangoDatabase.collection(CHAT_COLLECTION)
-                .createGeoIndex(ImmutableSet.of(EarthField.GEO), new GeoIndexOptions());
+                .ensureGeoIndex(ImmutableSet.of(EarthField.GEO), new GeoIndexOptions());
 
         return __arangoDatabase;
     }

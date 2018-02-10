@@ -123,7 +123,7 @@ public class ChatSession {
     public void send(ChatMessage message) {
         try {
             session.getBasicRemote().sendText(json.toJson(ChatMessageConverter.convert(message)));
-        } catch (IOException e) {
+        } catch (IOException | IllegalStateException e) {
             e.printStackTrace();
             Logger.getAnonymousLogger().warning("CHAT SEND ERROR: " + e.getMessage());
         }
