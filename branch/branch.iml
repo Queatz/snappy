@@ -27,8 +27,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" scope="TEST" name="testng-6.9.4" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="bsh-2.0b4" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="jcommander-1.48" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="Gradle: testng-6.9.4" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="Gradle: bsh-2.0b4" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="Gradle: jcommander-1.48" level="project" />
   </component>
 </module>

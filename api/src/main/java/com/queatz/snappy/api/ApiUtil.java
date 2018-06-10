@@ -48,7 +48,6 @@ public class ApiUtil {
             size = 200;
         }
 
-        // Maximum supported by GCE
         size = Math.min(1600, size);
 
         response.sendRedirect(snappyImage.getServingUrl(fileName, size));

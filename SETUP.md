@@ -10,19 +10,18 @@ Using Debian 8.0...
 Domain: `vlllage.com`
 
     sudo su -
-        
-    curl -O https://download.arangodb.com/arangodb33/Debian_9.0/Release.key
+
+    curl -O https://download.arangodb.com/arangodb34/Debian_9.0/Release.key
     sudo apt-key add - < Release.key
-    
-    apt-get install software-properties-common apt-transport-https -y --allow
+
+    apt-get install software-properties-common apt-transport-https -y
     apt-add-repository 'http://deb.debian.org/debian/ sid main contrib'
-    echo 'deb https://download.arangodb.com/arangodb33/Debian_9.0/ /' | sudo tee /etc/apt/sources.list.d/arangodb.list
+    echo 'deb https://download.arangodb.com/arangodb34/Debian_9.0/ /' | sudo tee /etc/apt/sources.list.d/arangodb.list
 
     apt-get update
     apt-get install openjdk-8-jre openjdk-8-jre-headless openjdk-8-jdk ca-certificates-java -y
-    apt-get install apache2 tomcat8 tomcat8-admin git default-jdk -y
+    apt-get install apache2 tomcat8 tomcat8-admin git default-jdk libservlet3.1-java -y
     apt-get install arangodb3 -y
-    apt-get install libservlet3.1-java -y
 
 Note, if you see `arangodb3 : Depends: libssl1.0.0 (>= 1.0.1) but it is not installable`,
 then make sure you have `jessie` in your `/etc/apt/sources.list` file. Alternatively, grab it from here:
@@ -52,9 +51,9 @@ Modify `/etc/tomcat8/context.xml` to include:
     <Context antiResourceLocking="false" privilaged="true">
         <Valve className="org.apache.catalina.valves.RemoteAddrValve"
                 addConnectorPort="true" allow=".*;8080|.*;8443"/>
-        
+
         ...
-        
+
     </Context>
 
 
@@ -66,13 +65,13 @@ Modify `/etc/tomcat8/server.xml` to include within `<Service name="Catalina">`:
                SSLCertificateFile="/etc/letsencrypt/archive/vlllage.com/fullchain1.pem"
                SSLCertificateKeyFile="/etc/letsencrypt/archive/vlllage.com/privkey1.pem"
                SSLVerifyClient="none" SSLProtocol="TLSv1+TLSv1.1+TLSv1.2" />
-               
+
     <Connector port="8080" protocol="HTTP/1.1"
                connectionTimeout="20000"
                URIEncoding="UTF-8"
                redirectPort="8443"
                address="0.0.0.0" />
-   
+
 Restart Tomcat8
 
 `/etc/init.d/tomcat8 restart`
@@ -106,7 +105,7 @@ Upload `backend/build/libs/backend.war` to your server
 
 Install the backend in Tomcat8
 
-    curl --upload-file backend.war -u TOMCATSECRETUSER293:TOMCATSECRETPASSWORD3984 http://127.0.0.1:8080/manager/text/deploy?path=/backend&update=true
+    curl --upload-file ROOT.war -u TOMCATSECRETUSER293:TOMCATSECRETPASSWORD3984 http://127.0.0.1:8080/manager/text/deploy?update=true
     curl -u TOMCATSECRETUSER293:TOMCATSECRETPASSWORD3984 http://127.0.0.1:8080/manager/text/reload?path=/
 
 
@@ -165,22 +164,22 @@ Later, you can replace the file, like such:
 
     mv backend.war /var/lib/tomcat8/webapps/backend.war
 
-Edit /etc/apache2/sites-enabled/000-default-le-ssl.conf 
+Edit /etc/apache2/sites-enabled/000-default-le-ssl.conf
 
     <IfModule mod_ssl.c>
-    
+
     <VirtualHost *:443>
         SSLCertificateFile /etc/letsencrypt/live/vlllage.com/fullchain.pem
         SSLCertificateKeyFile /etc/letsencrypt/live/vlllage.com/privkey.pem
         Include /etc/letsencrypt/options-ssl-apache.conf
         ServerName vlllage.com
-    
+
         ProxyRequests off
-    
+
         <Proxy *>
                 Require all granted
         </Proxy>
-    
+
         SSLProxyEngine on
         ProxyPass / https://127.0.0.1:3000/
         ProxyPassReverse / https://127.0.0.1:3000/
@@ -189,7 +188,7 @@ Edit /etc/apache2/sites-enabled/000-default-le-ssl.conf
 
     </IfModule>
 
-Edit /etc/apache2/sites-enabled/000-default.conf 
+Edit /etc/apache2/sites-enabled/000-default.conf
 
     <VirtualHost *:80>
         ServerName vlllage.com
@@ -222,7 +221,7 @@ If you want production bundling, do:
 
     cd Snappy-Web-App/web-app/src/main/webapp
     ng build -prod -op dist/ --aot
-    
+
 Zip and upload `dist/` to your box and do:
 
     cd dist/

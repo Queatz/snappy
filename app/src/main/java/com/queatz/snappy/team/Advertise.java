@@ -174,8 +174,13 @@ public class Advertise {
         if (mService == null) {
             mService = new BluetoothGattService(Config.UUID_SERVICE, BluetoothGattService.SERVICE_TYPE_PRIMARY);
 
-            mService.addCharacteristic(mPersonIdCharacteristic);
-            mService.addCharacteristic(mPersonFirstNameCharacteristic);
+            if (mPersonIdCharacteristic != null) {
+                mService.addCharacteristic(mPersonIdCharacteristic);
+            }
+
+            if (mPersonFirstNameCharacteristic != null) {
+                mService.addCharacteristic(mPersonFirstNameCharacteristic);
+            }
         }
 
         if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
