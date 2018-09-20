@@ -418,7 +418,7 @@ public enum EarthGraphQuery {
     private final String query;
 
     EarthGraphQuery(String query) {
-        this.query = query;
+        this.query = query.replaceAll("\\s+", "");
     }
 
     public RequestParams params() {
