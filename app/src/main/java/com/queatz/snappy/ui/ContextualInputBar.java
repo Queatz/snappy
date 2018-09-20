@@ -383,7 +383,7 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
             query.notEqualTo(Thing.ID, with.getString(Thing.ID));
         }
 
-        final RealmResults<DynamicRealmObject> suggestions = query.findAllSorted(Thing.INFO_DISTANCE, Sort.ASCENDING);
+        final RealmResults<DynamicRealmObject> suggestions = query.sort(Thing.INFO_DISTANCE, Sort.ASCENDING).findAll();
 
         if (suggestions.size() > 0) {
             showInfo(true);

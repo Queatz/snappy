@@ -141,7 +141,8 @@ public class PersonUptoSlide extends TeamFragment {
             RealmResults<DynamicRealmObject> offers = team.realm.where("Thing")
                     .equalTo(Thing.KIND, ThingKinds.MEMBER)
                     .equalTo(Thing.TARGET + "." + Thing.ID, mPerson.getString(Thing.ID))
-                    .findAllSorted(Thing.SOURCE + "." + Thing.DATE, Sort.DESCENDING);
+                    .sort(Thing.SOURCE + "." + Thing.DATE, Sort.DESCENDING)
+                    .findAll();
 
             final ArrayList<RealmResults<DynamicRealmObject>> list = new ArrayList<>();
             list.add(offers);

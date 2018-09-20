@@ -73,7 +73,8 @@ public class MessagesSlide extends Fragment {
                             .or()
                             .equalTo("latest.from.id", team.auth.getUser())
                         .endGroup()
-                        .findAllSorted(Thing.UPDATED, Sort.DESCENDING);
+                        .sort(Thing.UPDATED, Sort.DESCENDING)
+                        .findAll();
 
                 recents.addChangeListener(new RealmChangeListener<RealmResults<DynamicRealmObject>>() {
                     @Override

@@ -74,7 +74,8 @@ public class PersonMessagesSlide extends TeamFragment {
                         .equalTo("from.id", mPerson.getString(Thing.ID))
                         .equalTo("to.id", getTeam().auth.me().getString(Thing.ID))
                         .endGroup()
-                        .findAllSorted(Thing.DATE, Sort.ASCENDING);
+                        .sort(Thing.DATE, Sort.ASCENDING)
+                        .findAll();
 
                 list.setAdapter(new PersonMessagesAdapter(getActivity(), messages, getTeam().auth.me()));
 

@@ -405,7 +405,8 @@ public class PartiesSlide extends MapSlide implements
                     .beginGroup()
                         .in(Thing.KIND, new String[] {ThingKinds.OFFER, ThingKinds.UPDATE, ThingKinds.PROJECT, ThingKinds.RESOURCE, ThingKinds.HUB})
                     .endGroup()
-                    .findAllSorted(Thing.DATE, Sort.DESCENDING);
+                    .sort(Thing.DATE, Sort.DESCENDING)
+                    .findAll();
 
             final ArrayList<RealmResults<DynamicRealmObject>> list = new ArrayList<>();
             list.add(queryParties);

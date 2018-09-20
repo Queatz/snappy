@@ -44,7 +44,8 @@ public class MessagePushHandler extends PushHandler {
         RealmResults<DynamicRealmObject> recents = team.realm.where("Thing")
                 .equalTo("source.id", team.auth.getUser())
                 .equalTo("seen", false)
-                .findAllSorted("updated");
+                .sort("updated")
+                .findAll();
 
         int count = 1;
         String summary = "";

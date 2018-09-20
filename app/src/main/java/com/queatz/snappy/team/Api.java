@@ -120,36 +120,16 @@ public class Api {
 
             switch(request.method) {
                 case GET:
-                    runnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            mApi.mClient.get(request.url, request.params, callback);
-                        }
-                    };
+                    runnable = () -> mApi.mClient.get(request.url, request.params, callback);
                     break;
                 case POST:
-                    runnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            mApi.mClient.post(request.url, request.params, callback);
-                        }
-                    };
+                    runnable = () -> mApi.mClient.post(request.url, request.params, callback);
                     break;
                 case PUT:
-                    runnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            mApi.mClient.put(request.url, request.params, callback);
-                        }
-                    };
+                    runnable = () -> mApi.mClient.put(request.url, request.params, callback);
                     break;
                 case DELETE:
-                    runnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            mApi.mClient.delete(request.url, callback);
-                        }
-                    };
+                    runnable = () -> mApi.mClient.delete(request.url, callback);
                     break;
                 default:
                     return false;

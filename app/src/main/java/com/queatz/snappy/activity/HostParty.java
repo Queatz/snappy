@@ -128,7 +128,8 @@ public class HostParty extends TeamActivity {
         RealmResults<DynamicRealmObject> recentParties = team.realm.where("Thing")
                 .equalTo(Thing.KIND, "party")
                 .equalTo("host.id", team.auth.getUser())
-                .findAllSorted("date", Sort.DESCENDING);
+                .sort("date", Sort.DESCENDING)
+                .findAll();
         partyList.setAdapter(new HostPartyAdapter(this, recentParties));
 
         TimeSlider timeSlider = (TimeSlider) mNewParty.findViewById(R.id.timeSlider);
@@ -453,7 +454,8 @@ public class HostParty extends TeamActivity {
                     .equalTo(Thing.KIND, "location")
                 .endGroup()
                 .beginsWith("name", q, Case.INSENSITIVE)
-                .findAllSorted("name", Sort.ASCENDING);
+                .sort("name", Sort.ASCENDING)
+                .findAll();
 
         mSuggestedLocationsList.setAdapter(new LocationAdapter(this, results, 3));
     }
