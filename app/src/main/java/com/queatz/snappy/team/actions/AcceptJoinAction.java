@@ -2,7 +2,6 @@ package com.queatz.snappy.team.actions;
 
 import android.widget.Toast;
 
-import com.loopj.android.http.RequestParams;
 import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Thing;
@@ -43,10 +42,7 @@ public class AcceptJoinAction extends AuthenticatedAction {
         join.setString(Thing.STATUS, Config.JOIN_STATUS_IN);
         getTeam().realm.commitTransaction();
 
-        RequestParams params = new RequestParams();
-        params.put(Config.PARAM_ACCEPT, true);
-
-        getTeam().api.post(Config.PATH_EARTH + "/" + join.getString(Thing.ID), params, new Api.Callback() {
+        getTeam().earth.acceptJoin(join, new Api.Callback() {
             @Override
             public void success(String response) {
                 getTeam().push.clear("join/" + join.getString(Thing.ID) + "/request");

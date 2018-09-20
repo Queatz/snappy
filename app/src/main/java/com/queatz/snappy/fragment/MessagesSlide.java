@@ -76,12 +76,7 @@ public class MessagesSlide extends Fragment {
                         .sort(Thing.UPDATED, Sort.DESCENDING)
                         .findAll();
 
-                recents.addChangeListener(new RealmChangeListener<RealmResults<DynamicRealmObject>>() {
-                    @Override
-                    public void onChange(RealmResults<DynamicRealmObject> element) {
-                        update();
-                    }
-                });
+                recents.addChangeListener(element -> update());
 
                 mList.setAdapter(new RecentAdapter(getActivity(), recents));
             }

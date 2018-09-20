@@ -30,6 +30,7 @@ public class Team implements Closeable {
     public View view;
     public Auth auth;
     public Api api;
+    public Earth earth;
     @Deprecated public Action action;
     public Things things;
     public Location location;
@@ -54,6 +55,7 @@ public class Team implements Closeable {
         buy = new Buy(this);
         auth = new Auth(this);
         api = new Api(this);
+        earth = new Earth(this);
         action = new Action(this);
         things = new Things(realm);
         view = new View(this);
