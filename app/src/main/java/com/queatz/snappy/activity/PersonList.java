@@ -116,7 +116,7 @@ public class PersonList extends FullscreenActivity {
     }
 
     private void fetchLikers() {
-        team.api.get(Config.PATH_EARTH + "/" + mUpdate.getString(Thing.ID) + "/" + Config.PATH_LIKERS, null, new Api.Callback() {
+        team.earth.thingLikers(mUpdate.getString(Thing.ID), new Api.Callback() {
             @Override
             public void success(String response) {
                 team.things.putAll(response);
@@ -130,7 +130,7 @@ public class PersonList extends FullscreenActivity {
     }
 
     private void fetchList() {
-        team.api.get(Config.PATH_EARTH + "/" + String.format(mShowFollowing ? Config.PATH_PEOPLE_FOLLOWING : Config.PATH_PEOPLE_FOLLOWERS, mPerson.getString(Thing.ID)), null, new Api.Callback() {
+        Api.Callback callback = new Api.Callback() {
             @Override
             public void success(String response) {
                 team.things.putAll(response);
@@ -140,7 +140,13 @@ public class PersonList extends FullscreenActivity {
             public void fail(String response) {
 
             }
-        });
+        };
+
+        if (mShowFollowing) {
+            team.earth.thingFollowers(mPerson.getString(Thing.ID), callback);
+        } else {
+            team.earth.thingFollowing(mPerson.getString(Thing.ID), callback);
+        }
     }
 
     @Override

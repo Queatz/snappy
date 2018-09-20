@@ -659,24 +659,19 @@ public class Advertise {
     }
 
     private void loadImage(final BlePerson blePerson) {
-        handler.post(new Runnable() {
+        handler.post(() -> team.earth.getPersonById(blePerson.personId, new Api.Callback() {
             @Override
-            public void run() {
-                team.api.get(Config.PATH_EARTH + "/" + blePerson.personId, new Api.Callback() {
-                    @Override
-                    public void success(String response) {
-                        DynamicRealmObject person = team.things.put(response);
+            public void success(String response) {
+                DynamicRealmObject person = team.things.put(response);
 
-                        blePerson.imageUrl = person.getString(Thing.IMAGE_URL);
-                        showNotification(blePerson);
-                    }
-
-                    @Override
-                    public void fail(String response) {
-
-                    }
-                });
+                blePerson.imageUrl = person.getString(Thing.IMAGE_URL);
+                showNotification(blePerson);
             }
-        });
+
+            @Override
+            public void fail(String response) {
+
+            }
+        }));
     }
 }

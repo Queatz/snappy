@@ -3,9 +3,7 @@ package com.queatz.snappy.team;
 import android.app.Activity;
 import android.support.v4.widget.SwipeRefreshLayout;
 
-import com.loopj.android.http.RequestParams;
 import com.queatz.branch.Branch;
-import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.actions.UpdateThings;
 import com.queatz.snappy.team.contexts.ActivityContext;
 
@@ -31,11 +29,7 @@ public class Here {
         team.location.get(activity, new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
             @Override
             public void onLocationFound(final android.location.Location location) {
-                final RequestParams params = new RequestParams();
-                params.put("latitude", location.getLatitude());
-                params.put("longitude", location.getLongitude());
-
-                team.api.get(Config.PATH_EARTH + "/" + Config.PATH_HERE + "/update?recent=true", params, new Api.Callback() {
+                team.earth.nearHere("update", location, new Api.Callback() {
                     @Override
                     public void success(String response) {
                         Branch.from((ActivityContext) activity).to(new UpdateThings(response));
@@ -57,11 +51,7 @@ public class Here {
         team.location.get(activity, new com.queatz.snappy.team.Location.OnLocationFoundCallback() {
             @Override
             public void onLocationFound(final android.location.Location location) {
-                final RequestParams params = new RequestParams();
-                params.put("latitude", location.getLatitude());
-                params.put("longitude", location.getLongitude());
-
-                team.api.get(Config.PATH_EARTH + "/" + Config.PATH_HERE + "/person|resource|project|offer|club|hub|form|party", params, new Api.Callback() {
+                team.earth.nearHere("person|resource|project|offer|club|hub|form|party", location, new Api.Callback() {
                     @Override
                     public void success(String response) {
                         if(refresher != null) {

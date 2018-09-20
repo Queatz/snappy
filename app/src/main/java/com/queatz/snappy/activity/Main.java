@@ -244,18 +244,23 @@ public class Main extends FullscreenActivity {
             }
         }
 
-        Drawable drawable = wallpaperManager.getDrawable();
+        try {
 
-        if (drawable == null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                drawable = wallpaperManager.getBuiltInDrawable();
+            Drawable drawable = wallpaperManager.getDrawable();
+
+            if (drawable == null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    drawable = wallpaperManager.getBuiltInDrawable();
+                }
             }
-        }
 
-        if (drawable == null) {
-            return;
-        }
+            if (drawable == null) {
+                return;
+            }
 
-        mSlideScreen.setBackground(drawable);
+            mSlideScreen.setBackground(drawable);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
     }
 }

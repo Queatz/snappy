@@ -171,29 +171,21 @@ public class PersonUptoSlide extends TeamFragment {
             mFloatingAction.setVisibility(View.GONE);
         }
 
-        socialMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getActivity() == null || !(getActivity() instanceof Person)) {
-                    return;
-                }
-
-                SlideScreen slideScreen = ((Person) getActivity()).getSlideScreen();
-
-                if (!itsMe) {
-                    ((PersonMessagesSlide) slideScreen.getSlideFragment(Person.SLIDE_MESSAGES)).setMessagePrefill(getString(R.string.hey_name, mPerson.getString(Thing.FIRST_NAME)));
-                }
-
-                slideScreen.setSlide(Person.SLIDE_MESSAGES);
+        socialMode.setOnClickListener(v -> {
+            if (getActivity() == null || !(getActivity() instanceof Person)) {
+                return;
             }
+
+            SlideScreen slideScreen = ((Person) getActivity()).getSlideScreen();
+
+            if (!itsMe) {
+                ((PersonMessagesSlide) slideScreen.getSlideFragment(Person.SLIDE_MESSAGES)).setMessagePrefill(getString(R.string.hey_name, mPerson.getString(Thing.FIRST_NAME)));
+            }
+
+            slideScreen.setSlide(Person.SLIDE_MESSAGES);
         });
 
-        view.post(new Runnable() {
-            @Override
-            public void run() {
-                scroll();
-            }
-        });
+        view.post(() -> scroll());
 
         scroll();
 
@@ -204,7 +196,7 @@ public class PersonUptoSlide extends TeamFragment {
         if(getActivity() == null || mPerson == null)
             return;
 
-        team.api.get(Config.PATH_EARTH + "/" + mPerson.getString(Thing.ID), new Api.Callback() {
+        team.earth.thing(mPerson.getString(Thing.ID), new Api.Callback() {
             @Override
             public void success(String response) {
                 to(new UpdateThings(response).when(Boolean.class, new Branch<Boolean>() {

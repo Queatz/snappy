@@ -11,7 +11,6 @@ import com.google.gson.JsonObject;
 import com.queatz.snappy.R;
 import com.queatz.snappy.activity.Main;
 import com.queatz.snappy.activity.Person;
-import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
 import com.queatz.snappy.team.Team;
 import com.queatz.snappy.team.Thing;
@@ -117,7 +116,7 @@ public class MessagePushHandler extends PushHandler {
             return;
         }
 
-        team.api.get(Config.PATH_EARTH + "/" + push.get("id").getAsString(), new Api.Callback() {
+        team.earth.thing(push.get("id").getAsString(), new Api.Callback() {
             @Override
             public void success(String response) {
                 DynamicRealmObject m = team.things.put(response);

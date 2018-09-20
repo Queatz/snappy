@@ -271,11 +271,7 @@ public class Auth {
                 fetchAuthToken();
             }
             else if(mUser == null) {
-                RequestParams params = new RequestParams();
-                params.put(Config.PARAM_EMAIL, mEmail);
-                params.put(Config.PARAM_AUTH, mGoogleAuthToken);
-
-                team.api.get(Config.PATH_EARTH + "/" + Config.PATH_ME, params, new Api.Callback() {
+                team.earth.me(mEmail, mGoogleAuthToken, new Api.Callback() {
                     @Override
                     public void success(String response) {
                         JsonObject o = Json.from(response, JsonObject.class);
@@ -468,7 +464,7 @@ public class Auth {
     }
 
     public void loadMe() {
-        team.api.get(Config.PATH_EARTH + "/" + Config.PATH_ME, new Api.Callback() {
+        team.earth.me(new Api.Callback() {
             @Override
             public void success(String response) {
                 team.things.put(response);

@@ -44,16 +44,11 @@ public class MessagesSlide extends Fragment {
         View view = inflater.inflate(R.layout.messages, container, false);
         emptyView = inflater.inflate(R.layout.messages_empty, null);
 
-        mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
+        mRefresh = view.findViewById(R.id.refresh);
         mRefresh.setColorSchemeResources(R.color.red);
-        mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh();
-            }
-        });
+        mRefresh.setOnRefreshListener(() -> refresh());
 
-        mList = (ListView) view.findViewById(R.id.recentList);
+        mList = view.findViewById(R.id.recentList);
         mList.addHeaderView(emptyView);
         mList.setSelectionAfterHeaderView();
 
@@ -88,15 +83,20 @@ public class MessagesSlide extends Fragment {
     }
 
     private void refresh() {
-        if(getActivity() == null)
+        if(getActivity() == null) {
             return;
+        }
 
-        team.api.get(Config.PATH_EARTH + "/" + Config.PATH_ME + "/" + Config.PATH_MESSAGES, new Api.Callback() {
+        team.earth.meMessages(new Api.Callback() {
             @Override
             public void success(String response) {
                 mRefresh.setRefreshing(false);
 
                 JsonObject o = Json.from(response, JsonObject.class);
+
+                if (o == null) {
+                    return;
+                }
 
                 if(o.has("messages"))
                     team.things.putAll(o.getAsJsonArray("messages"));

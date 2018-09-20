@@ -18,9 +18,7 @@ import com.queatz.snappy.R;
 import com.queatz.snappy.Util;
 import com.queatz.snappy.adapter.FeedAdapter;
 import com.queatz.snappy.adapter.PeopleNearHereAdapter;
-import com.queatz.snappy.shared.Config;
 import com.queatz.snappy.team.Api;
-import com.queatz.snappy.team.Here;
 import com.queatz.snappy.team.OnInfoChangedListener;
 import com.queatz.snappy.team.OnScrollActions;
 import com.queatz.snappy.team.ScrollActionsTouchListener;
@@ -424,36 +422,33 @@ public class PartiesSlide extends MapSlide implements
         if(getActivity() == null)
             return;
 
-        team.here.update(getActivity(), null, new Here.Callback() {
-            @Override
-            public void onSuccess(RealmList<DynamicRealmObject> things) {
-                RealmList<DynamicRealmObject> people = new RealmList<>();
-                RealmList<DynamicRealmObject> locations = new RealmList<>();
+        team.here.update(getActivity(), null, things -> {
+            RealmList<DynamicRealmObject> people = new RealmList<>();
+            RealmList<DynamicRealmObject> locations = new RealmList<>();
 
-                for (DynamicRealmObject thing : things) {
-                    if (ThingKinds.PERSON.equals(thing.getString(Thing.KIND))) {
-                        people.add(thing);
-                    } else if (ThingKinds.HUB.equals(thing.getString(Thing.KIND))) {
-                        locations.add(thing);
-                    } else if(ThingKinds.PARTY.equals(thing.getString(Thing.KIND))) {
-                        team.api.get(Config.PATH_EARTH + "/" + thing.getString(Thing.ID), new Api.Callback() {
-                            @Override
-                            public void success(String response) {
-                                // Do this to update party joins
-                                to(new UpdateThings(response));
-                            }
+            for (DynamicRealmObject thing : things) {
+                if (ThingKinds.PERSON.equals(thing.getString(Thing.KIND))) {
+                    people.add(thing);
+                } else if (ThingKinds.HUB.equals(thing.getString(Thing.KIND))) {
+                    locations.add(thing);
+                } else if(ThingKinds.PARTY.equals(thing.getString(Thing.KIND))) {
+                    team.earth.thing(thing.getString(Thing.ID), new Api.Callback() {
+                        @Override
+                        public void success(String response) {
+                            // Do this to update party joins
+                            to(new UpdateThings(response));
+                        }
 
-                            @Override
-                            public void fail(String response) {
+                        @Override
+                        public void fail(String response) {
 
-                            }
-                        });
-                    }
+                        }
+                    });
                 }
-
-                updateBanner(people, locations);
-                update();
             }
+
+            updateBanner(people, locations);
+            update();
         });
     }
 

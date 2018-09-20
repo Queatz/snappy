@@ -582,7 +582,7 @@ public class ContextualInputBar extends LinearLayout implements Branchable<Activ
             thing.addChangeListener(changeListener);
             changeListener.onChange(thing);
 
-            team.api.get(Config.PATH_EARTH + "/" + thing.getString(Thing.ID), new Api.Callback() {
+            team.earth.thing(thing.getString(Thing.ID), new Api.Callback() {
                 @Override
                 public void success(String response) {
                     to(new UpdateThings(response));
