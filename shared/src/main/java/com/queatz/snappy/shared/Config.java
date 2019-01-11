@@ -27,7 +27,7 @@ public class Config {
     public static final int WIPE_VERSIONS_BELOW = 47;
 
     // The email emails are sent from
-    public static final String VILLAGE_EMAIL_ADDRESS = "my@village.city";
+    public static final String VILLAGE_EMAIL_ADDRESS = "my@vlllage.com";
     public static final String VILLAGE_EMAIL = "Village <" + VILLAGE_EMAIL_ADDRESS + ">";
     public static final String VILLAGE_WEBSITE = "https://vlllage.com/";
 
