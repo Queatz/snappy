@@ -1,12 +1,12 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 dependencies {
-    compile 'com.arangodb:arangodb-java-driver:4.3.2'
-    compile 'org.apache.commons:commons-lang3:3.3.2'
-    compile 'org.jetbrains:annotations-java5:15.0'
-    compile 'com.google.guava:guava:21.0'
+    implementation 'com.arangodb:arangodb-java-driver:6.3.0'
+    implementation 'org.apache.commons:commons-lang3:3.3.2'
+    implementation 'org.jetbrains:annotations-java5:15.0'
+    implementation 'com.google.guava:guava:21.0'
 
-    compile project(':shared')
+    implementation project(':shared')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

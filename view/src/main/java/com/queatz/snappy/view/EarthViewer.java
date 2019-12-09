@@ -6,8 +6,8 @@ import com.queatz.snappy.as.EarthAs;
 import com.queatz.snappy.as.EarthControl;
 import com.queatz.snappy.exceptions.NothingLogicResponse;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -73,6 +73,13 @@ public class EarthViewer extends EarthControl {
         }
 
         throw new NothingLogicResponse("earth viewer - failed to create view for kind: "
-                + entity.getString(EarthField.KIND) + "\n\n" + ExceptionUtils.getStackTrace(error));
+                + entity.getString(EarthField.KIND) + "\n\n" + EarthViewer.getStackTrace(error));
+    }
+
+    private static String getStackTrace(Throwable throwable) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw, true);
+        throwable.printStackTrace(pw);
+        return sw.getBuffer().toString();
     }
 }

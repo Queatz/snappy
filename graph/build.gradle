@@ -1,13 +1,15 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 dependencies {
-    compile 'com.arangodb:arangodb-java-driver:4.3.2'
-    compile 'org.jetbrains:annotations-java5:15.0'
-    compile project(':earth')
-    compile project(':shared')
-    compile project(':as')
-    testCompile 'org.testng:testng:6.9.4'
-    compile project(path: ':earth-store')
+    implementation 'com.arangodb:arangodb-java-driver:6.3.0'
+    implementation 'org.jetbrains:annotations-java5:15.0'
+    implementation 'com.google.guava:guava:21.0'
+    implementation project(':earth')
+    implementation project(':exceptions')
+    implementation project(':shared')
+    implementation project(':as')
+    testImplementation 'org.testng:testng:6.9.4'
+    implementation project(path: ':earth-store')
 }
 
 test {

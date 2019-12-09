@@ -1,13 +1,13 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 dependencies {
     compile 'javax.servlet:servlet-api:2.5'
     compile 'org.jetbrains:annotations-java5:15.0'
 
-    compile project(':shared')
-    compile project(':earth')
-    compile project(':exceptions')
-    compile project(path: ':plugins')
+    implementation project(':shared')
+    implementation project(':earth')
+    implementation project(':exceptions')
+    implementation project(path: ':plugins')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

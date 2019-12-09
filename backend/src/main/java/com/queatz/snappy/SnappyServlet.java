@@ -358,7 +358,7 @@ public class SnappyServlet extends HttpServlet {
         resp.setCharacterEncoding("utf-8");
 
         try {
-            EarthThing user = new Auth().fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getParameter(Config.PARAM_AUTH));
+            EarthThing user = new Auth().fetchUserFromAuth(req.getParameter(Config.PARAM_EMAIL), req.getHeader(Config.HEADER_AUTH));
 
             Api.getService().call(user, method, req, resp);
         } catch (StringResponse string) {

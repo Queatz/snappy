@@ -1,10 +1,10 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 dependencies {
-    compile 'com.arangodb:arangodb-java-driver:4.3.2'
-    compile 'org.jetbrains:annotations-java5:15.0'
-    compile project(':shared')
-    testCompile 'org.testng:testng:6.9.4'
+    implementation 'com.arangodb:arangodb-java-driver:6.3.0'
+    implementation 'org.jetbrains:annotations-java5:15.0'
+    implementation project(':shared')
+    testImplementation 'org.testng:testng:6.9.4'
 }
 
 test {

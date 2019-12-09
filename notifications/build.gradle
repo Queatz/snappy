@@ -1,17 +1,19 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 dependencies {
     compile 'javax.servlet:servlet-api:2.5'
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'org.jetbrains:annotations-java5:15.0'
     compile 'com.google.code.gson:gson:2.7'
+    implementation 'com.google.guava:guava:21.0'
 
-    compile project(':shared')
-    compile project(':earth')
-    compile project(':email')
-    compile project(':events')
-    compile project(':earth-store')
-    compile project(':village-device')
+    implementation project(':as')
+    implementation project(':shared')
+    implementation project(':earth')
+    implementation project(':email')
+    implementation project(':events')
+    implementation project(':earth-store')
+    implementation project(':village-device')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

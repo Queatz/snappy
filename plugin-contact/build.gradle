@@ -1,7 +1,8 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 dependencies {
-    compile project(path: ':earth')
+    implementation project(path: ':earth')
+    implementation 'org.jetbrains:annotations-java5:15.0'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

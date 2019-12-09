@@ -1,20 +1,24 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 dependencies {
-    compile project(':view')
-    compile project(':images')
-    compile project(':earth')
-    compile project(':earth-store')
-    compile project(':earth-authority')
-    compile project(':events')
-    compile project(':api')
-    compile project(':router')
-    compile project(':notifications')
+    implementation project(':as')
+    implementation project(':view')
+    implementation project(':images')
+    implementation project(':shared')
+    implementation project(':image')
+    implementation project(':earth')
+    implementation project(':earth-store')
+    implementation project(':exceptions')
+    implementation project(':earth-authority')
+    implementation project(':events')
+    implementation project(':api')
+    implementation project(':router')
+    implementation project(':notifications')
 
-    compile project(':plugin-contact')
-    compile project(':plugin-follower')
-    compile project(':plugin-member')
-    compile project(path: ':graph')
+    implementation project(':plugin-contact')
+    implementation project(':plugin-follower')
+    implementation project(':plugin-member')
+    implementation project(path: ':graph')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

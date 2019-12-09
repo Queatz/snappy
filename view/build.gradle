@@ -1,8 +1,10 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 dependencies {
-    compile project(':earth')
-    compile project(':as')
+    implementation project(':earth')
+    implementation project(':shared')
+    implementation project(':exceptions')
+    implementation project(':as')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

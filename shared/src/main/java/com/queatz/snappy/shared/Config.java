@@ -1,5 +1,7 @@
 package com.queatz.snappy.shared;
 
+import org.apache.http.HttpHeaders;
+
 import java.util.UUID;
 
 /**
@@ -345,7 +347,6 @@ public class Config {
     public static final String PARAM_LINK = "link";
     public static final String PARAM_LINK_PRECHECK = "link_precheck";
     public static final String PARAM_EMAIL = "email";
-    public static final String PARAM_AUTH = "auth";
     public static final String PARAM_LOCATION = "location";
     public static final String PARAM_ADDRESS = "address";
     public static final String PARAM_CLAIM = "claim";
@@ -404,6 +405,8 @@ public class Config {
     public static final String PARAM_URL = "url";
     public static final String PARAM_SELECT = "select";
     public static final String PARAM_COVER = "cover";
+
+    public static final String HEADER_AUTH = HttpHeaders.AUTHORIZATION;
 
     // Google login configuration
     public static final String GOOGLE_PLUS_PROFILE_URL = "https://www.googleapis.com/plus/v1/people/me";

@@ -4,6 +4,8 @@
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
         <option name="GRADLE_PROJECT_PATH" value=":village-party" />
+        <option name="LAST_SUCCESSFUL_SYNC_AGP_VERSION" />
+        <option name="LAST_KNOWN_AGP_VERSION" />
       </configuration>
     </facet>
     <facet type="java-gradle" name="Java-Gradle">
@@ -27,54 +29,55 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="village-update" exported="" />
-    <orderEntry type="module" module-name="village-join" exported="" />
-    <orderEntry type="module" module-name="village-like" exported="" />
+    <orderEntry type="module" module-name="shared" exported="" />
+    <orderEntry type="module" module-name="image" exported="" />
+    <orderEntry type="module" module-name="earth" exported="" />
+    <orderEntry type="module" module-name="events" exported="" />
+    <orderEntry type="module" module-name="earth-store" exported="" />
+    <orderEntry type="module" module-name="earth-authority" exported="" />
+    <orderEntry type="module" module-name="things" exported="" />
+    <orderEntry type="module" module-name="view" exported="" />
+    <orderEntry type="module" module-name="router" exported="" />
+    <orderEntry type="module" module-name="as" exported="" />
+    <orderEntry type="module" module-name="exceptions" exported="" />
+    <orderEntry type="module" module-name="graph" exported="" />
     <orderEntry type="module" module-name="village-people" exported="" />
+    <orderEntry type="module" module-name="village-join" exported="" />
+    <orderEntry type="module" module-name="village-update" exported="" />
     <orderEntry type="module" module-name="village-location" exported="" />
+    <orderEntry type="module" module-name="village-like" exported="" />
     <orderEntry type="module" module-name="village-recent" exported="" />
     <orderEntry type="module" module-name="village-message" exported="" />
     <orderEntry type="module" module-name="village-follower" exported="" />
-    <orderEntry type="module" module-name="things" exported="" />
     <orderEntry type="module" module-name="images" exported="" />
     <orderEntry type="module" module-name="api" exported="" />
     <orderEntry type="module" module-name="notifications" exported="" />
     <orderEntry type="module" module-name="village-device" exported="" />
-    <orderEntry type="module" module-name="image" exported="" />
-    <orderEntry type="module" module-name="events" exported="" />
-    <orderEntry type="module" module-name="graph" exported="" />
-    <orderEntry type="module" module-name="earth-store" exported="" />
-    <orderEntry type="module" module-name="earth-authority" exported="" />
-    <orderEntry type="module" module-name="view" exported="" />
-    <orderEntry type="module" module-name="router" exported="" />
-    <orderEntry type="module" module-name="as" exported="" />
     <orderEntry type="module" module-name="plugin-contact" exported="" />
     <orderEntry type="module" module-name="plugin-follower" exported="" />
     <orderEntry type="module" module-name="plugin-member" exported="" />
     <orderEntry type="module" module-name="email" exported="" />
-    <orderEntry type="module" module-name="earth" exported="" />
     <orderEntry type="module" module-name="queue" exported="" />
     <orderEntry type="module" module-name="files" exported="" />
-    <orderEntry type="module" module-name="shared" exported="" />
     <orderEntry type="module" module-name="plugins" exported="" />
-    <orderEntry type="module" module-name="exceptions" exported="" />
     <orderEntry type="library" exported="" name="Gradle: gson-2.8.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: httpclient-4.5.3" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-fileupload-1.3" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-io-2.5" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: arangodb-java-driver-4.3.2" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: annotations-java5-15.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-lang3-3.3.2" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: annotations-java5-15.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: guava-21.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: servlet-api-2.5" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: junit-4.12" level="project" />
     <orderEntry type="library" exported="" name="Gradle: httpcore-4.4.6" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-logging-1.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-codec-1.9" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: velocypack-1.0.14" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: slf4j-api-1.7.13" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: hamcrest-core-1.3" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: json-simple-1.1.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: javax.mail-api-1.5.6" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="Gradle: arangodb-java-driver-6.3.0" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="Gradle: junit-4.12" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="Gradle: commons-codec-1.13" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="Gradle: velocypack-1.4.2" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="Gradle: slf4j-api-1.7.28" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="Gradle: hamcrest-core-1.3" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="Gradle: jackson-core-2.9.5" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="Gradle: javax.mail-api-1.5.6" level="project" />
   </component>
 </module>

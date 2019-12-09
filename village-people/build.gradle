@@ -1,23 +1,26 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 dependencies {
     compile 'commons-fileupload:commons-fileupload:1.3'
 
-    compile project(':shared')
-    compile project(':image')
-    compile project(':earth')
-    compile project(':events')
-    compile project(':earth-store')
-    compile project(':earth-authority')
-    compile project(':things')
-    compile project(':view')
-    compile project(':router')
-    compile project(':as')
+    implementation project(':shared')
+    implementation project(':image')
+    implementation project(':earth')
+    implementation project(':events')
+    implementation project(':earth-store')
+    implementation project(':earth-authority')
+    implementation project(':exceptions')
+    implementation project(':graph')
+    implementation project(':plugin-follower')
+    implementation project(':things')
+    implementation project(':view')
+    implementation project(':router')
+    implementation project(':as')
 
-    compile project(':village-recent')
-    compile project(':village-message')
-    compile project(':village-follower')
-    compile project(':village-device')
+    implementation project(':village-recent')
+    implementation project(':village-message')
+    implementation project(':village-follower')
+    implementation project(':village-device')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

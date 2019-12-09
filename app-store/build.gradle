@@ -1,16 +1,17 @@
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 dependencies {
-    compile 'commons-fileupload:commons-fileupload:1.3'
-    compile 'com.arangodb:arangodb-java-driver:4.3.2'
-    compile 'org.apache.commons:commons-lang3:3.3.2'
-    compile 'org.jetbrains:annotations-java5:15.0'
+    implementation 'commons-fileupload:commons-fileupload:1.3'
+    implementation 'com.arangodb:arangodb-java-driver:6.3.0'
+    implementation 'org.apache.commons:commons-lang3:3.3.2'
+    implementation 'org.jetbrains:annotations-java5:15.0'
 
-    compile project(':shared')
-    compile project(':earth')
-    compile project(':as')
-    compile project(':view')
-    compile project(':router')
+    implementation project(':shared')
+    implementation project(':earth')
+    implementation project(':as')
+    implementation project(':view')
+    implementation project(':exceptions')
+    implementation project(':router')
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8

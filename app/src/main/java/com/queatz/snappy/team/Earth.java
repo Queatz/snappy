@@ -31,7 +31,6 @@ public class Earth {
     public void me(String email, String googleAuthToken, Api.Callback callback) {
         RequestParams params = new RequestParams();
         params.put(Config.PARAM_EMAIL, email);
-        params.put(Config.PARAM_AUTH, googleAuthToken);
         team.api.get(Config.PATH_EARTH + "/" + Config.PATH_ME, SELECT_ME.appendTo(params), callback);
     }
 

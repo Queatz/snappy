@@ -164,14 +164,6 @@ public class Api {
     }
 
     private RequestParams auth(RequestParams params) {
-        if(params == null) {
-            params = new RequestParams();
-        }
-        else if(params.has(Config.PARAM_AUTH))
-            return params;
-
-        params.put(Config.PARAM_AUTH, team.auth.getAuthParam());
-
         return params;
     }
 
@@ -180,7 +172,7 @@ public class Api {
     }
 
     private String makeUrl(String url, RequestParams params) {
-        return Config.API_URL + url + (url.contains("?") ? "&" : "?") + auth(params).toString();
+        return Config.API_URL + url + (params != null ? (url.contains("?") ? "&" : "?") + params.toString() : "");
     }
 
     public RequestHandle get(String url) {
